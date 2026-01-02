@@ -36,13 +36,20 @@ const HomePage = () => {
                 const data = await experiencesAPI.getAllExperiences();
                 // Filter for Camping/Nature vibes
                 const natureEvents = data.filter(e =>
-                    ['Trek', 'Event', 'Camping', 'Glamping'].includes(e.category) ||
+                    ['Trek', 'Event', 'Camping', 'Glamping', 'Adventure'].includes(e.category) ||
                     e.title.toLowerCase().includes('camp') ||
                     e.title.toLowerCase().includes('trek')
                 );
-                setLiveEvents(natureEvents);
+
+                if (natureEvents.length > 0) {
+                    setLiveEvents(natureEvents);
+                } else {
+                    console.warn("No live events found in DB, using fallback static content.");
+                    setLiveEvents(events);
+                }
             } catch (error) {
-                console.error("Failed to load live events", error);
+                console.error("Failed to load live events, using fallback", error);
+                setLiveEvents(events);
             }
         };
         fetchEvents();
