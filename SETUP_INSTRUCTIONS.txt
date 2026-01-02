@@ -1,0 +1,354 @@
+# 🏠 AIRBNB CLONE - COMPLETE SETUP & RUN INSTRUCTIONS
+
+## 📋 **QUICK START GUIDE**
+
+### **Step 1: Start MongoDB**
+MongoDB should already be running as a Windows service.
+To verify:
+```powershell
+Get-Service MongoDB
+```
+
+If not running, start it:
+```powershell
+Start-Service MongoDB
+```
+
+---
+
+### **Step 2: Start Backend Server**
+Open PowerShell/Terminal in the project folder:
+
+```powershell
+cd "c:\Users\Asus\Desktop\airbnb clone\server"
+npm run dev
+```
+
+**Expected Output:**
+```
+✅ Connected to MongoDB
+🚀 Server running on http://localhost:5000
+```
+
+---
+
+### **Step 3: Start Frontend**
+Open a NEW PowerShell/Terminal window:
+
+```powershell
+cd "c:\Users\Asus\Desktop\airbnb clone\client"
+npm run dev
+```
+
+**Expected Output:**
+```
+VITE ready in XXX ms
+➜  Local:   http://localhost:5173/
+```
+
+---
+
+### **Step 4: Access the Application**
+Open your browser and go to:
+```
+http://localhost:5173
+```
+
+---
+
+## 🔑 **LOGIN CREDENTIALS**
+
+### **Admin Account:**
+- **Email:** `admin@airbnb.com`
+- **Password:** `password123`
+- **Access:** Full admin panel, manage users, bookings, listings
+
+### **Regular User Account:**
+- **Email:** `user@airbnb.com`
+- **Password:** `password123`
+- **Access:** Browse listings, make bookings, view own bookings
+
+---
+
+## 🗄️ **DATABASE INFORMATION**
+
+### **MongoDB Connection:**
+- **URI:** `mongodb://localhost:27017/airbnb-clone`
+- **Database Name:** `airbnb-clone`
+
+### **Collections:**
+1. **users** - 2 demo users (admin & regular user)
+2. **listings** - 12 properties with full details
+3. **bookings** - User reservations (empty initially)
+4. **experiences** - 2 activities/experiences
+
+---
+
+## 🛠️ **USEFUL COMMANDS**
+
+### **Reseed Database (Reset all data):**
+```powershell
+cd "c:\Users\Asus\Desktop\airbnb clone\server"
+npm run seed
+```
+
+This will:
+- Clear all existing data
+- Create 2 demo users
+- Add 12 listings
+- Add 2 experiences
+
+### **Install Dependencies (if needed):**
+
+**Backend:**
+```powershell
+cd "c:\Users\Asus\Desktop\airbnb clone\server"
+npm install
+```
+
+**Frontend:**
+```powershell
+cd "c:\Users\Asus\Desktop\airbnb clone\client"
+npm install
+```
+
+### **Stop Servers:**
+Press `Ctrl + C` in the terminal window running the server
+
+---
+
+## 🌐 **IMPORTANT URLs**
+
+### **Frontend:**
+- Homepage: `http://localhost:5173`
+- Login Page: `http://localhost:5173/login`
+- Signup Page: `http://localhost:5173/signup`
+- Admin Dashboard: `http://localhost:5173/admin`
+- Admin Users: `http://localhost:5173/admin/users`
+
+### **Backend API:**
+- API Base: `http://localhost:5000`
+- All Listings: `http://localhost:5000/api/listings`
+- Single Listing: `http://localhost:5000/api/listings/:id`
+
+---
+
+## 📊 **DATABASE CONTENTS**
+
+### **12 Listings:**
+1. Luxury Villa with Rice Field Views - $350/night (Abiansemal)
+2. Beachfront Paradise in Phuket - $120/night (Thailand)
+3. Traditional Balinese House - $210/night (Ubud)
+4. Modern Luxury Villa - $550/night (Badung)
+5. Peaceful Retreat - $180/night (Sidemen)
+6. Artistic Loft - $250/night (Gianyar)
+7. Cozy Cottage - $95/night (Singaraja)
+8. Stunning Villa - $400/night (Tabanan)
+9. Eco-Friendly Bamboo House - $280/night (Ubud)
+10. Cliffside Villa with Ocean Views - $620/night (Uluwatu)
+11. Jungle Treehouse Adventure - $195/night (Ubud)
+12. Beachfront Bungalow - $310/night (Canggu)
+
+### **2 Experiences:**
+1. Balinese Cooking Class - $45 (3 hours)
+2. Sunrise Volcano Hike - $65 (6 hours)
+
+---
+
+## 🎯 **HOW TO USE THE APP**
+
+### **As a Regular User:**
+
+1. **Browse Listings:**
+   - Go to `http://localhost:5173`
+   - See all 12 properties
+
+2. **View Listing Details:**
+   - Click on any listing
+   - See full details, amenities, reviews
+
+3. **Make a Booking:**
+   - Click "Reserve" button
+   - Select check-in date
+   - Select check-out date
+   - Choose number of guests
+   - See total price
+   - Click "Confirm Booking"
+   - ✅ Booking saved to database!
+
+4. **Login (optional):**
+   - Click "Log in" in navbar
+   - Use: `user@airbnb.com` / `password123`
+
+### **As an Admin:**
+
+1. **Login:**
+   - Go to `http://localhost:5173/login`
+   - Email: `admin@airbnb.com`
+   - Password: `password123`
+
+2. **Access Admin Panel:**
+   - Go to `http://localhost:5173/admin`
+   - See dashboard with statistics
+
+3. **Manage Users:**
+   - Go to `http://localhost:5173/admin/users`
+   - View all users
+   - Change user roles
+   - Delete users
+
+4. **View Bookings:**
+   - See "Recent Bookings" on dashboard
+   - See total bookings count
+   - View booking details
+
+---
+
+## 🔧 **TROUBLESHOOTING**
+
+### **Problem: "Cannot connect to MongoDB"**
+**Solution:**
+```powershell
+# Check if MongoDB is running
+Get-Service MongoDB
+
+# If stopped, start it
+Start-Service MongoDB
+```
+
+### **Problem: "Port 5000 already in use"**
+**Solution:**
+```powershell
+# Find process using port 5000
+netstat -ano | findstr :5000
+
+# Kill the process (replace PID with actual process ID)
+taskkill /PID <PID> /F
+```
+
+### **Problem: "Port 5173 already in use"**
+**Solution:**
+```powershell
+# Find process using port 5173
+netstat -ano | findstr :5173
+
+# Kill the process
+taskkill /PID <PID> /F
+```
+
+### **Problem: "Listing not found"**
+**Solution:**
+```powershell
+# Reseed the database
+cd "c:\Users\Asus\Desktop\airbnb clone\server"
+npm run seed
+```
+
+### **Problem: "Module not found"**
+**Solution:**
+```powershell
+# Reinstall dependencies
+cd "c:\Users\Asus\Desktop\airbnb clone\server"
+npm install
+
+cd "c:\Users\Asus\Desktop\airbnb clone\client"
+npm install
+```
+
+---
+
+## 📁 **PROJECT STRUCTURE**
+
+```
+airbnb clone/
+├── client/                 # Frontend (React + Vite)
+│   ├── src/
+│   │   ├── components/    # Reusable components
+│   │   ├── pages/         # Page components
+│   │   ├── services/      # API calls
+│   │   └── data/          # Mock data
+│   └── package.json
+│
+├── server/                # Backend (Node.js + Express)
+│   ├── models.js         # MongoDB schemas
+│   ├── index.js          # Main server file
+│   ├── seed.js           # Database seeder
+│   ├── .env              # Environment variables
+│   └── package.json
+│
+└── README.md
+```
+
+---
+
+## 🚀 **FEATURES IMPLEMENTED**
+
+✅ User Authentication (Login/Signup)
+✅ Role-based Access (Admin/User)
+✅ 12 Detailed Listings
+✅ Listing Details Page
+✅ Booking System (saves to database)
+✅ Admin Dashboard with Statistics
+✅ User Management (Admin only)
+✅ Booking Management
+✅ Experiences Section
+✅ Responsive Design
+✅ Premium UI/UX
+
+---
+
+## 📝 **ENVIRONMENT VARIABLES**
+
+Located in: `server/.env`
+
+```
+MONGODB_URI=mongodb://localhost:27017/airbnb-clone
+PORT=5000
+JWT_SECRET=airbnb-super-secret-key-2024
+```
+
+---
+
+## 💾 **BACKUP & RESTORE**
+
+### **Backup Database:**
+```powershell
+mongodump --db airbnb-clone --out "C:\backup\airbnb-clone"
+```
+
+### **Restore Database:**
+```powershell
+mongorestore --db airbnb-clone "C:\backup\airbnb-clone\airbnb-clone"
+```
+
+---
+
+## 🎓 **LEARNING RESOURCES**
+
+- **MongoDB:** https://docs.mongodb.com/
+- **Express.js:** https://expressjs.com/
+- **React:** https://react.dev/
+- **Vite:** https://vitejs.dev/
+
+---
+
+## 📞 **SUPPORT**
+
+If you encounter any issues:
+1. Check the troubleshooting section above
+2. Verify MongoDB is running
+3. Check that both servers are running
+4. Try reseeding the database
+
+---
+
+## ✨ **ENJOY YOUR AIRBNB CLONE!**
+
+Your full-stack application is ready to use with:
+- 12 beautiful listings
+- Working booking system
+- Admin panel
+- User authentication
+- MongoDB database
+
+**Happy coding! 🚀**

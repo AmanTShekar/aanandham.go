@@ -1,0 +1,120 @@
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import { PreferencesProvider } from './contexts/PreferencesContext';
+import Layout from './components/Layout';
+// import LoadingSpinner from './components/LoadingSpinner'; // Removed as it doesn't exist
+
+// Lazy Load Pages
+const HomePage = React.lazy(() => import('./pages/HomePage'));
+const ListingDetailsPage = React.lazy(() => import('./pages/ListingDetailsPage'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+const SignupPage = React.lazy(() => import('./pages/SignupPage'));
+const TripsPage = React.lazy(() => import('./pages/TripsPage'));
+const WishlistsPage = React.lazy(() => import('./pages/WishlistsPage'));
+const AccountPage = React.lazy(() => import('./pages/AccountPage'));
+const ExperiencesPage = React.lazy(() => import('./pages/ExperiencesPage'));
+const ExperienceDetailsPage = React.lazy(() => import('./pages/ExperienceDetailsPage'));
+const TravelPackagesPage = React.lazy(() => import('./pages/TravelPackagesPage'));
+const PackageDetailsPage = React.lazy(() => import('./pages/PackageDetailsPage'));
+const DestinationsPage = React.lazy(() => import('./pages/DestinationsPage'));
+const DestinationDetailsPage = React.lazy(() => import('./pages/DestinationDetailsPage'));
+const GuidesPage = React.lazy(() => import('./pages/GuidesPage'));
+const GuideDetailsPage = React.lazy(() => import('./pages/GuideDetailsPage'));
+const PlacesPage = React.lazy(() => import('./pages/PlacesPage'));
+const HotelsPage = React.lazy(() => import('./pages/HotelsPage'));
+const AboutPage = React.lazy(() => import('./pages/AboutPage'));
+const ContactPage = React.lazy(() => import('./pages/ContactPage'));
+const LegalPage = React.lazy(() => import('./pages/LegalPage'));
+const FullGalleryPage = React.lazy(() => import('./pages/FullGalleryPage')); // Added by instruction
+
+// Admin Pages
+const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
+const AdminDashboard = React.lazy(() => import('./pages/admin/AdminDashboard'));
+const AdminUsers = React.lazy(() => import('./pages/admin/AdminUsers'));
+const AdminListings = React.lazy(() => import('./pages/admin/AdminListings'));
+const AdminBookings = React.lazy(() => import('./pages/admin/AdminBookings'));
+const AdminExperiences = React.lazy(() => import('./pages/admin/AdminExperiences'));
+const AdminReviews = React.lazy(() => import('./pages/admin/AdminReviews'));
+const AdminGallery = React.lazy(() => import('./pages/admin/AdminGallery'));
+
+// Business Pages
+const BusinessDashboard = React.lazy(() => import('./pages/business/BusinessDashboard'));
+
+// Simple Loading Fallback
+const PageLoader = () => (
+  <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-white)' }}>
+    <div className="animate-spin" style={{ width: '40px', height: '40px', border: '3px solid var(--border-light)', borderTopColor: 'var(--primary)', borderRadius: '50%' }}></div>
+  </div>
+);
+
+import { HelmetProvider } from 'react-helmet-async';
+
+function App() {
+  return (
+    <HelmetProvider>
+      <AuthProvider>
+        <PreferencesProvider>
+          <Router>
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<HomePage />} />
+                  <Route path="/hotels" element={<HotelsPage />} />
+                  <Route path="/gallery" element={<FullGalleryPage />} /> {/* Added by instruction */}
+                  <Route path="experiences" element={<ExperiencesPage />} />
+                  <Route path="experiences/:id" element={<ExperienceDetailsPage />} />
+                  <Route path="listings/:id" element={<ListingDetailsPage />} />
+                  <Route path="trips" element={<TripsPage />} />
+                  <Route path="wishlists" element={<WishlistsPage />} />
+                  <Route path="account" element={<AccountPage />} />
+
+                  {/* Places Section */}
+                  <Route path="places" element={<PlacesPage />}>
+                    <Route path="destinations" element={<DestinationsPage />} />
+                    <Route path="packages" element={<TravelPackagesPage />} />
+                    <Route path="guides" element={<GuidesPage />} />
+                  </Route>
+
+                  {/* Detail Pages (Top Level) */}
+                  <Route path="packages/:id" element={<PackageDetailsPage />} />
+                  <Route path="destinations/:id" element={<DestinationDetailsPage />} />
+                  <Route path="guides/:id" element={<GuideDetailsPage />} />
+                </Route>
+
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
+
+                {/* Business Routes */}
+                <Route path="/business" element={<BusinessDashboard />} />
+
+                {/* Static Pages */}
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/terms" element={<LegalPage type="terms" />} />
+                <Route path="/privacy" element={<LegalPage type="privacy" />} />
+                <Route path="/safety" element={<LegalPage type="safety" />} />
+                <Route path="/support" element={<LegalPage type="support" />} />
+                <Route path="/careers" element={<LegalPage type="careers" />} />
+                <Route path="/press" element={<LegalPage type="press" />} />
+
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="listings" element={<AdminListings />} />
+                  <Route path="bookings" element={<AdminBookings />} />
+                  <Route path="experiences" element={<AdminExperiences />} />
+                  <Route path="reviews" element={<AdminReviews />} />
+                  <Route path="gallery" element={<AdminGallery />} />
+                </Route>
+              </Routes>
+            </Suspense>
+          </Router>
+        </PreferencesProvider>
+      </AuthProvider>
+    </HelmetProvider>
+  )
+}
+
+export default App
