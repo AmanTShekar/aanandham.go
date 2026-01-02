@@ -18,7 +18,7 @@ const Gallery = () => {
         const fetchImages = async () => {
             // Fallback to static if 0
             try {
-                const res = await axios.get('http://localhost:5000/api/admin/site-images');
+                const res = await axios.get('https://aanandham-go.onrender.com/api/admin/site-images');
                 if (res.data && res.data.length > 0) {
                     setImages(res.data.map(img => ({ ...img, src: img.url, alt: img.title })));
                 } else {

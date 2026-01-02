@@ -16,7 +16,7 @@ const AdminGallery = () => {
     const fetchImages = async () => {
         try {
             // Using direct axios for now, ideally move to api.js
-            const res = await axios.get('http://localhost:5000/api/admin/site-images');
+            const res = await axios.get('https://aanandham-go.onrender.com/api/admin/site-images');
             setImages(res.data);
         } catch (error) {
             console.error('Failed to fetch gallery:', error);
@@ -29,7 +29,7 @@ const AdminGallery = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/admin/site-images', newImage, {
+            await axios.post('https://aanandham-go.onrender.com/api/admin/site-images', newImage, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setNewImage({ url: '', title: '', order: 0 });
@@ -51,7 +51,7 @@ const AdminGallery = () => {
         setUploading(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/upload', formData, {
+            const res = await axios.post('https://aanandham-go.onrender.com/api/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`
@@ -70,7 +70,7 @@ const AdminGallery = () => {
         if (!window.confirm("Remove this image from the gallery?")) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/admin/site-images/${id}`, {
+            await axios.delete(`https://aanandham-go.onrender.com/api/admin/site-images/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchImages();
@@ -192,10 +192,10 @@ const AdminGallery = () => {
                                                 const formData = new FormData();
                                                 formData.append('image', file);
                                                 const token = localStorage.getItem('token');
-                                                axios.post('http://localhost:5000/api/upload', formData, {
+                                                axios.post('https://aanandham-go.onrender.com/api/upload', formData, {
                                                     headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }
                                                 }).then(res => {
-                                                    return axios.post('http://localhost:5000/api/admin/site-images', {
+                                                    return axios.post('https://aanandham-go.onrender.com/api/admin/site-images', {
                                                         url: res.data.url,
                                                         title: `Gallery Image ${order + 1}`,
                                                         order: order

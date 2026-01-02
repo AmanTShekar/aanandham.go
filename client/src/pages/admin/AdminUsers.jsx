@@ -44,7 +44,7 @@ const AdminUsers = () => {
         setCreatingHost(true);
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/admin/create-host', newHost, {
+            await axios.post('https://aanandham-go.onrender.com/api/admin/create-host', newHost, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Host created successfully');
