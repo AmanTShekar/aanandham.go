@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://aanandham-go.onrender.com/api';
 
 // Get token from localStorage
 const getAuthHeader = () => {
