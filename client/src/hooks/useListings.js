@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listingsAPI } from '../services/api';
+import { topSeoListings } from '../data/siteContent';
 
 export const useListings = (initialQuery = '') => {
     const [listings, setListings] = useState([]);
@@ -18,20 +19,16 @@ export const useListings = (initialQuery = '') => {
                 featured = data.listings.slice(0, 3);
             }
 
-            // Fallback to empty if nothing found, don't break
-            setListings(featured);
-        } catch (err) {
-            console.error("Failed to fetch listings", err);
-            setError(err);
-            // Try mock data as fallback if strictly needed
-            try {
-                const module = await import('../data/mockData.js');
-                if (module && module.listings) {
-                    setListings(module.listings.slice(0, 3));
-                }
-            } catch (mockErr) {
-                console.error("Mock data fallback failed", mockErr);
+            if (featured.length === 0) {
+                console.warn("API returned no listings, using static SEO content.");
+                setListings(topSeoListings);
+            } else {
+                setListings(featured);
             }
+        } catch (err) {
+            console.error("Failed to fetch listings, using SEO fallback", err);
+            setError(null);
+            setListings(topSeoListings);
         } finally {
             setLoading(false);
         }
