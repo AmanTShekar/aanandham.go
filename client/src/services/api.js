@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://aanandham-go.onrender.com/api';
+// Ensure API_URL always ends with /api
+let API_URL = import.meta.env.VITE_API_URL || 'https://aanandham-go.onrender.com';
+if (!API_URL.endsWith('/api')) {
+    API_URL = API_URL.replace(/\/$/, '') + '/api';
+}
 
 // Get token from localStorage
 const getAuthHeader = () => {
