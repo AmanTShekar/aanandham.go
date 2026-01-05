@@ -182,7 +182,7 @@ const Navbar = () => {
                       {user.role === 'business' && (
                         <MenuItem onClick={() => { navigate('/business'); setIsMenuOpen(false); }}>Business Dashboard</MenuItem>
                       )}
-                      <MenuItem onClick={() => navigate('/trips')}>My Trips</MenuItem>
+                      <MenuItem onClick={() => navigate('/bookings')}>My Bookings</MenuItem>
                       <MenuItem onClick={() => navigate('/wishlists')}>Wishlists</MenuItem>
                       <MenuItem onClick={() => navigate('/account')}>Account Settings</MenuItem>
                       <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />

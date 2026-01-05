@@ -33,8 +33,8 @@ const TripsPage = () => {
     if (!user) {
         return (
             <div style={{ padding: '80px 40px', maxWidth: '1280px', margin: '0 auto', textAlign: 'center' }}>
-                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Trips</h1>
-                <p style={{ fontSize: '18px', color: 'var(--text-secondary)', marginBottom: '32px' }}>Please log in to view your trips.</p>
+                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Your Bookings</h1>
+                <p style={{ fontSize: '18px', color: 'var(--text-secondary)', marginBottom: '32px' }}>Please log in to view your bookings.</p>
                 <Link to="/login" style={{
                     padding: '14px 32px',
                     background: 'var(--primary-gradient)',
@@ -54,8 +54,8 @@ const TripsPage = () => {
     if (loading) {
         return (
             <div style={{ padding: '80px 40px', maxWidth: '1280px', margin: '0 auto' }}>
-                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Trips</h1>
-                <div style={{ color: 'var(--text-secondary)' }}>Loading your trips...</div>
+                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Your Bookings</h1>
+                <div style={{ color: 'var(--text-secondary)' }}>Loading your bookings...</div>
             </div>
         );
     }
@@ -63,7 +63,7 @@ const TripsPage = () => {
     if (error) {
         return (
             <div style={{ padding: '80px 40px', maxWidth: '1280px', margin: '0 auto' }}>
-                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Trips</h1>
+                <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '24px', color: 'var(--text-main)' }}>Your Bookings</h1>
                 <div style={{ color: '#c13515' }}>{error}</div>
             </div>
         );
@@ -71,12 +71,12 @@ const TripsPage = () => {
 
     return (
         <div style={{ padding: '40px', maxWidth: '1280px', margin: '0 auto' }}>
-            <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '32px', color: 'var(--text-main)' }}>Trips</h1>
+            <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '32px', color: 'var(--text-main)' }}>Your Bookings</h1>
 
             {bookings.length === 0 ? (
                 <div style={{ padding: '40px 0', borderTop: '1px solid var(--border)' }}>
-                    <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-main)' }}>No trips booked... yet!</h2>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Time to dust off your bags and start planning your next adventure.</p>
+                    <h2 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '16px', color: 'var(--text-main)' }}>No bookings... yet!</h2>
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Time to dust off your bags and start planning your next luxury stay.</p>
                     <Link to="/" style={{
                         padding: '14px 24px',
                         border: '1px solid var(--text-main)',

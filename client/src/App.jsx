@@ -42,6 +42,7 @@ const AdminBookings = React.lazy(() => import('./pages/admin/AdminBookings'));
 const AdminExperiences = React.lazy(() => import('./pages/admin/AdminExperiences'));
 const AdminReviews = React.lazy(() => import('./pages/admin/AdminReviews'));
 const AdminGallery = React.lazy(() => import('./pages/admin/AdminGallery'));
+const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Business Pages
 const BusinessDashboard = React.lazy(() => import('./pages/business/BusinessDashboard'));
@@ -78,6 +79,7 @@ function App() {
                   <Route path="experiences/:id" element={<ExperienceDetailsPage />} />
                   <Route path="listings/:id" element={<ListingDetailsPage />} />
                   <Route path="trips" element={<TripsPage />} />
+                  <Route path="bookings" element={<TripsPage />} />
                   <Route path="wishlists" element={<WishlistsPage />} />
                   <Route path="account" element={<AccountPage />} />
 
@@ -121,6 +123,9 @@ function App() {
                   <Route path="reviews" element={<AdminReviews />} />
                   <Route path="gallery" element={<AdminGallery />} />
                 </Route>
+
+                {/* Catch-all Route for 404 - MUST be last */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
           </Router>

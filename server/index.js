@@ -609,5 +609,21 @@ if (process.env.NODE_ENV === 'production') {
     runPings();
 }
 
+// Serve index.html for all other routes to support client-side routing (SPA)
+if (process.env.NODE_ENV === 'production') {
+    app.get('*', (req, res) => {
+        const indexPath = path.join(__dirname, '../client/dist/index.html');
+        if (fs.existsSync(indexPath)) {
+            res.sendFile(indexPath);
+        } else {
+            // If it's an API route that reached here, return 404
+            if (req.path.startsWith('/api')) {
+                return res.status(404).json({ message: 'API route not found' });
+            }
+            res.status(404).send('Frontend build not found');
+        }
+    });
+}
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
