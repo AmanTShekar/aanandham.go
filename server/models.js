@@ -15,6 +15,28 @@ const listingSchema = new mongoose.Schema({
     rating: { type: Number, default: 0 },
     image: { type: String, required: true },
     images: [String],
+
+    // Property Type Classification
+    propertyType: {
+        type: String,
+        enum: ['hotel', 'tent', 'resort', 'villa', 'cottage', 'campsite'],
+        default: 'hotel',
+        index: true
+    },
+
+    // Booking Type
+    bookingType: {
+        type: String,
+        enum: ['instant', 'inquiry'], // instant = direct booking, inquiry = contact first
+        default: 'instant'
+    },
+
+    // Group & Event Support
+    supportsGroups: { type: Boolean, default: false },
+    supportsEvents: { type: Boolean, default: false },
+    maxGroupSize: { type: Number, default: 0 }, // 0 means no group bookings
+    eventTypes: [String], // e.g., ['wedding', 'corporate', 'birthday', 'retreat']
+
     host: {
         name: String,
         avatar: String,
@@ -149,6 +171,42 @@ const siteImageSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
+// Contact/Inquiry Schema
+const inquirySchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String },
+    subject: { type: String, required: true },
+    message: { type: String, required: true },
+    inquiryType: {
+        type: String,
+        enum: ['general', 'listing', 'experience', 'event', 'group'],
+        default: 'general'
+    },
+    // Reference to listing or experience if applicable
+    listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
+    experience: { type: mongoose.Schema.Types.ObjectId, ref: 'Experience' },
+    // Additional details for specific inquiries
+    checkIn: { type: Date },
+    checkOut: { type: Date },
+    guests: { type: Number },
+
+    // Group & Event Specific Fields
+    isGroupBooking: { type: Boolean, default: false },
+    groupSize: { type: Number },
+    eventType: { type: String }, // 'wedding', 'corporate', 'birthday', etc.
+    eventDate: { type: Date },
+    eventDuration: { type: String }, // '1 day', '2 days', etc.
+    specialRequirements: { type: String },
+    budget: { type: Number },
+
+    status: {
+        type: String,
+        enum: ['new', 'read', 'replied', 'closed'],
+        default: 'new'
+    }
+}, { timestamps: true });
+
 // Create compound index to prevent duplicate wishlist entries
 wishlistSchema.index({ user: 1, listing: 1 }, { unique: true });
 
@@ -162,5 +220,6 @@ module.exports = {
     Destination: mongoose.model('Destination', destinationSchema),
     Package: mongoose.model('Package', packageSchema),
     Guide: mongoose.model('Guide', guideSchema),
-    SiteImage: mongoose.model('SiteImage', siteImageSchema)
+    SiteImage: mongoose.model('SiteImage', siteImageSchema),
+    Inquiry: mongoose.model('Inquiry', inquirySchema)
 };

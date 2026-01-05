@@ -65,11 +65,14 @@ const PreviousEvents = () => {
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.2, type: 'spring', stiffness: 50 }}
                                 whileHover={{ y: -10 }}
+                                itemScope
+                                itemType="http://schema.org/Event"
                             >
                                 <div style={{ height: '240px', overflow: 'hidden' }}>
                                     <img
                                         src={evt.image}
                                         alt={evt.title}
+                                        itemProp="image"
                                         style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
                                         onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
                                         onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
@@ -86,12 +89,12 @@ const PreviousEvents = () => {
                                         fontWeight: '600',
                                         marginBottom: '20px'
                                     }}>
-                                        {evt.date}
+                                        <span itemProp="startDate">{evt.date}</span>
                                     </div>
-                                    <h3 className="event-card-title">
+                                    <h3 className="event-card-title" itemProp="name">
                                         {evt.title}
                                     </h3>
-                                    <p style={{ color: '#a1a1aa', lineHeight: '1.6', marginBottom: '24px' }}>
+                                    <p style={{ color: '#a1a1aa', lineHeight: '1.6', marginBottom: '24px' }} itemProp="description">
                                         {evt.description}
                                     </p>
                                     <button style={{

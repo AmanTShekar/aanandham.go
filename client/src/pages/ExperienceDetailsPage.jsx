@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { experiencesAPI } from '../services/api';
 import BookingModal from '../components/BookingModal';
+import InquiryModal from '../components/InquiryModal';
+import { FaEnvelope } from 'react-icons/fa';
 import SEO from '../components/SEO';
 const ExperienceDetailsPage = () => {
     const { id } = useParams();
     const [experience, setExperience] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchExperience = async () => {
@@ -195,12 +198,44 @@ const ExperienceDetailsPage = () => {
                                     fontWeight: '700',
                                     cursor: 'pointer',
                                     transition: 'transform 0.2s',
-                                    marginBottom: '16px'
+                                    marginBottom: '12px'
                                 }}
                                 onMouseEnter={e => e.target.style.transform = 'scale(1.02)'}
                                 onMouseLeave={e => e.target.style.transform = 'scale(1)'}
                             >
                                 Reserve Spot
+                            </button>
+
+                            <button
+                                onClick={() => setIsInquiryModalOpen(true)}
+                                style={{
+                                    width: '100%',
+                                    background: 'white',
+                                    color: '#222',
+                                    border: '2px solid #222',
+                                    padding: '16px',
+                                    borderRadius: '12px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    cursor: 'pointer',
+                                    marginBottom: '16px',
+                                    transition: 'all 0.2s ease',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '8px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = '#222';
+                                    e.currentTarget.style.color = 'white';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'white';
+                                    e.currentTarget.style.color = '#222';
+                                }}
+                            >
+                                <FaEnvelope size={16} />
+                                Send Inquiry
                             </button>
 
                             <div style={{ textAlign: 'center', fontSize: '14px', color: 'var(--text-secondary)' }}>
@@ -216,6 +251,13 @@ const ExperienceDetailsPage = () => {
                     onClose={() => setIsBookingModalOpen(false)}
                     listing={experience}
                     isExperience={true}
+                />
+
+                <InquiryModal
+                    isOpen={isInquiryModalOpen}
+                    onClose={() => setIsInquiryModalOpen(false)}
+                    inquiryType="experience"
+                    experience={experience}
                 />
             </div>
         </div>

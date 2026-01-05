@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Ensure API_URL always ends with /api
-let API_URL = import.meta.env.VITE_API_URL || 'https://aanandham-go.onrender.com';
+let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 if (!API_URL.endsWith('/api')) {
     API_URL = API_URL.replace(/\/$/, '') + '/api';
 }
@@ -339,3 +339,54 @@ export const guidesAPI = {
         return response.data;
     }
 };
+
+export const inquiryAPI = {
+    submitInquiry: async (inquiryData) => {
+        const response = await axios.post(`${API_URL}/inquiries`, inquiryData);
+        return response.data;
+    },
+
+    getAllInquiries: async (filters = {}) => {
+        const params = new URLSearchParams();
+        if (filters.status) params.append('status', filters.status);
+        if (filters.type) params.append('type', filters.type);
+        if (filters.page) params.append('page', filters.page);
+        if (filters.limit) params.append('limit', filters.limit);
+
+        const url = params.toString() ? `${API_URL}/inquiries?${params.toString()}` : `${API_URL}/inquiries`;
+        const response = await axios.get(url, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getInquiryById: async (id) => {
+        const response = await axios.get(`${API_URL}/inquiries/${id}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    updateInquiryStatus: async (id, status) => {
+        const response = await axios.patch(`${API_URL}/inquiries/${id}/status`,
+            { status },
+            { headers: getAuthHeader() }
+        );
+        return response.data;
+    },
+
+    deleteInquiry: async (id) => {
+        const response = await axios.delete(`${API_URL}/inquiries/${id}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getInquiryStats: async () => {
+        const response = await axios.get(`${API_URL}/inquiries/stats/overview`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    }
+};
+

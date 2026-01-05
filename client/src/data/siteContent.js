@@ -76,13 +76,13 @@ export const sightseeing = [
         id: 1,
         title: "Eravikulam National Park",
         location: "Munnar (Home of Nilgiri Tahr)",
-        image: "https://images.unsplash.com/photo-1585543805890-6051f7829f98?w=800&q=80"
+        image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80"
     },
     {
         id: 2,
         title: "Mattupetty Dam",
         location: "Munnar Boating & Views",
-        image: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&q=80"
+        image: "/images/gallery/mattupetty.jpg"
     },
     {
         id: 3,
@@ -135,16 +135,16 @@ export const topSeoListings = [
 ];
 
 export const whyChooseUs = {
-    title: "Why Choose Aanandham.go for Your Munnar Trip?",
-    description: "Experience the real magic of Munnar with Aanandham.go. We offer verified luxury tent stays in Suryanelli, transparent pricing for Kolukkumalai trekking packages, and dedicated support for international tourists visiting Kerala. Book your safe and premium camping experience today.",
+    title: "Why Choose Aanandham.go?",
+    description: "Aanandham.go is Kerala's most trusted platform for Glamping and Wild Trekking. We are the only agency offering 100% Verified Stays in Munnar and Wayanad.",
     features: [
         {
-            title: "Verified Luxury Tents",
-            description: "Sleeping in a tent doesn't mean roughing it. Our premium glamping partners offer plush bedding, attached washrooms, and safe environments."
+            title: "The Aanandham Guarantee",
+            description: "Every tent and trek is personally verified by the Aanandham team. We ensure safety, hygiene, and premium views."
         },
         {
-            title: "Expert Local Guides",
-            description: "Our trek leaders are locals who know every trail in the Western Ghats, ensuring you see the best sunrise views in Munnar safely."
+            title: "Exclusive Wild Access",
+            description: "Book restricted Kolukkumalai & Deep Forest zones only available through Aanandham.go. Experience the untouched wild."
         }
     ],
     images: [
@@ -154,12 +154,12 @@ export const whyChooseUs = {
 };
 
 export const galleryImages = [
-    "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=800&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1516685304081-de7947d419c5?w=800&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1544509747-642f4c3a2727?w=800&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1582650625119-3a31f8fa2699?w=800&auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1624551101836-84d593006d69?w=800&auto=format&fit=crop&q=80",
+    "/images/gallery/img-1.jpg",
+    "/images/gallery/img-2.jpg",
+    "/images/gallery/img-3.jpg",
+    "/images/gallery/img-4.jpg",
+    "/images/gallery/img-5.jpg",
+    "/images/gallery/img-6.jpg",
     "https://images.unsplash.com/photo-1533240332313-0db49b459ad6?w=800&auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800&auto=format&fit=crop&q=80"
 ];
@@ -200,5 +200,48 @@ export const previousEvents = [
             "https://images.unsplash.com/photo-1504280390367-361c6d9e6342?w=800&q=80",
             "https://images.unsplash.com/photo-1483385573906-8ae8ced90122?w=800&q=80"
         ]
+    }
+];
+
+export const travelStories = [
+    {
+        id: 'insta-1',
+        title: "Strangers to Friends: A Camping Story",
+        category: "Community Experience",
+        image: "https://scontent.cdninstagram.com/v/t51.75761-15/500481916_17872715106366614_3993402189379714778_n.webp?_nc_cat=100&ig_cache_key=MzYzODg5MTg5MTA5NTQzNTM0NA%3D%3D.3-ccb7-5&ccb=7-5&_nc_sid=58cdad&efg=eyJ2ZW5jb2RlX3RhZyI6InhwaWRzLjEwODB4MTI1MC5zZHIuQzMifQ%3D%3D&_nc_ohc=er9Te_WStokQ7kNvwFc8myz&_nc_oc=AdlAlJ2mln_7eFy0nzld8KRoV84AMOu1zR53d0KBNwjk71WSmBvXeZZrsIdBksI3WN97FaEyZm8aH1gVpQih9MjI&_nc_ad=z-m&_nc_cid=1174&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=0huGEjWwzPXyrcP1KXhAUA&oh=00_Afo1cYJLVycM3v9E0brmaTYWKkM-0iK8iITPbTsWdUZqEA&oe=6961B908",
+        link: "/stories/strangers-camp",
+        date: "Jan 5, 2025"
+    },
+    {
+        id: 1,
+        title: "The Ultimate Guide to Munnar Tent Camping",
+        category: "Camping Guide",
+        image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600&q=80",
+        link: "/stories/munnar-camping-guide",
+        date: "Jan 2, 2025"
+    },
+    {
+        id: 2,
+        title: "Top 5 Glamping Spots in Wayanad for Couples",
+        category: "Glamping Kerala",
+        image: "https://images.unsplash.com/photo-1496545672479-7ac372c7a611?w=600&q=80",
+        link: "/stories/wayanad-glamping",
+        date: "Dec 28, 2024"
+    },
+    {
+        id: 3,
+        title: "Is Kolukkumalai Trekking Safe? What You Need to Know",
+        category: "Trekking Tips",
+        image: "https://images.unsplash.com/photo-1544509747-642f4c3a2727?w=600&q=80",
+        link: "/stories/kolukkumalai-safety",
+        date: "Dec 15, 2024"
+    },
+    {
+        id: 4,
+        title: "Hidden Waterfalls & Secret Campgrounds in Suryanelli",
+        category: "Secret Spots",
+        image: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&q=80",
+        link: "/stories/suryanelli-spots",
+        date: "Dec 10, 2024"
     }
 ];

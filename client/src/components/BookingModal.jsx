@@ -1,19 +1,95 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaCalendar, FaUsers, FaUser, FaEnvelope, FaCreditCard, FaPrint, FaDownload, FaCheckCircle } from 'react-icons/fa';
+import { FaTimes, FaCalendar, FaUsers, FaUser, FaEnvelope, FaCreditCard, FaPrint, FaDownload, FaCheckCircle, FaUserFriends, FaRulerCombined, FaPlus, FaMinus } from 'react-icons/fa';
 import { bookingsAPI, authAPI } from '../services/api';
 import { usePreferences } from '../contexts/PreferencesContext';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 
-const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackage = false, initialData }) => {
-    // If initialData has a room, start at details. Else start at rooms.
-    const [step, setStep] = useState(initialData?.room ? 'details' : 'rooms');
-    const [selectedRoom, setSelectedRoom] = useState(initialData?.room || null);
-    const [startDate, setStartDate] = useState(initialData?.startDate || null);
-    const [endDate, setEndDate] = useState(initialData?.endDate || null);
-    const [guests, setGuests] = useState(initialData?.guests || 1);
+const DateTrigger = forwardRef(({ value, onClick, placeholder }, ref) => (
+    <div
+        ref={ref}
+        onClick={onClick}
+        style={{
+            width: '100%',
+            fontWeight: '600',
+            fontSize: '14px',
+            color: value ? '#222' : '#717171',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            paddingTop: '2px'
+        }}
+    >
+        {value || placeholder || "Add dates"}
+    </div>
+));
+
+const BookingModal = ({ isOpen, onClose, listing = null, isExperience = false, isPackage = false, initialData }) => {
+    // V3 - Hook Fix verification
+
+    // Initialize state lazily to ensure stability
+    const [step, setStep] = useState(() => initialData?.room ? 'details' : 'rooms');
+    const [selectedRoom, setSelectedRoom] = useState(() => initialData?.room || null);
+    const [startDate, setStartDate] = useState(() => initialData?.startDate || null);
+    const [endDate, setEndDate] = useState(() => initialData?.endDate || null);
+    const [guests, setGuests] = useState(() => initialData?.guests || 1);
+
+    // Guest Breakdown State
+    const [adults, setAdults] = useState(() => initialData?.guests || 1);
+    const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
+    const [showGuestPopup, setShowGuestPopup] = useState(false);
+
+    // Sync total guests
+    useEffect(() => {
+        setGuests(adults + children);
+    }, [adults, children]);
+
+    const [guestName, setGuestName] = useState('');
+    const [guestEmail, setGuestEmail] = useState('');
+    const [guestPhone, setGuestPhone] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [bookingDetails, setBookingDetails] = useState(null);
+    const { formatPrice, t } = usePreferences();
+    const receiptRef = useRef();
+
+    const user = authAPI.getCurrentUser();
+
+    // Sync initialData when modal opens
+    // Sync initialData or Reset when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            if (initialData) {
+                setStartDate(initialData.startDate);
+                setEndDate(initialData.endDate);
+                setAdults(initialData.adults !== undefined ? initialData.adults : (initialData.guests || 1));
+                setChildren(initialData.children || 0);
+                setInfants(initialData.infants || 0);
+                if (initialData.room) {
+                    setSelectedRoom(initialData.room);
+                    setStep('details');
+                } else {
+                    setSelectedRoom(null);
+                    setStep('rooms');
+                }
+            } else {
+                // Opened without data (e.g. Sidebar) - Start fresh
+                setStep('rooms');
+                setSelectedRoom(null);
+                setStartDate(null);
+                setEndDate(null);
+                setAdults(1);
+                setChildren(0);
+                setInfants(0);
+            }
+        }
+    }, [isOpen, initialData]);
+
+    // Safety checks - after all hooks
+    if (!isOpen || !listing) return null;
 
     // Mock Room Types with realistic OTA data
     const roomTypes = [
@@ -55,41 +131,6 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
             image: listing.images?.[2] || listing.images?.[0] || listing.image
         }
     ];
-    const [guestName, setGuestName] = useState('');
-    const [guestEmail, setGuestEmail] = useState('');
-    const [guestPhone, setGuestPhone] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [bookingDetails, setBookingDetails] = useState(null);
-    const { formatPrice, t } = usePreferences();
-    const receiptRef = useRef();
-
-    const user = authAPI.getCurrentUser();
-
-    // Sync initialData when modal opens
-    // Sync initialData or Reset when modal opens
-    useEffect(() => {
-        if (isOpen) {
-            if (initialData) {
-                setStartDate(initialData.startDate);
-                setEndDate(initialData.endDate);
-                setGuests(initialData.guests || 1);
-                if (initialData.room) {
-                    setSelectedRoom(initialData.room);
-                    setStep('details');
-                } else {
-                    setSelectedRoom(null);
-                    setStep('rooms');
-                }
-            } else {
-                // Opened without data (e.g. Sidebar) - Start fresh
-                setStep('rooms');
-                setSelectedRoom(null);
-                setStartDate(null);
-                setEndDate(null);
-                setGuests(1);
-            }
-        }
-    }, [isOpen, initialData]);
 
     const calculateNights = () => {
         if (isExperience || isPackage) return 1;
@@ -165,8 +206,6 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
         }, 500);
     };
 
-    if (!isOpen) return null;
-
     return (
         <AnimatePresence>
             <motion.div
@@ -217,39 +256,150 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
                                         <h2 style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-main)' }}>Select Your Room</h2>
                                         <button onClick={handleClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--text-secondary)' }}><FaTimes size={24} /></button>
                                     </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                                        <div>
-                                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', fontSize: '14px' }}>Dates</label>
-                                            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <FaCalendar color="#717171" />
-                                                <DatePicker
-                                                    selected={startDate}
-                                                    onChange={(dates) => {
-                                                        const [start, end] = dates;
-                                                        setStartDate(start);
-                                                        setEndDate(end);
-                                                    }}
-                                                    startDate={startDate}
-                                                    endDate={endDate}
-                                                    selectsRange
-                                                    placeholderText="Select Check-in - Check-out"
-                                                    className="custom-datepicker-input"
-                                                />
+                                    <div style={{
+                                        display: 'flex',
+                                        backgroundColor: '#fff',
+                                        border: '1px solid #DDDDDD',
+                                        borderRadius: '32px',
+                                        boxShadow: '0 6px 16px rgba(0,0,0,0.08)',
+                                        position: 'relative', // For popup absolute positioning
+                                        marginBottom: '16px'
+                                    }}>
+                                        {/* Dates Section */}
+                                        <div style={{ flex: '1.5', position: 'relative', borderRight: '1px solid #DDDDDD', padding: '14px 24px', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F7F7F7'}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{ background: '#F1F5F9', padding: '8px', borderRadius: '50%', color: 'var(--primary)' }}>
+                                                    <FaCalendar size={14} />
+                                                </div>
+                                                <div style={{ flex: 1 }}>
+                                                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#717171', marginBottom: '2px' }}>Check-in — Check-out</label>
+                                                    <DatePicker
+                                                        selected={startDate}
+                                                        onChange={(dates) => {
+                                                            const [start, end] = dates;
+                                                            setStartDate(start);
+                                                            setEndDate(end);
+                                                        }}
+                                                        startDate={startDate}
+                                                        endDate={endDate}
+                                                        selectsRange
+                                                        dateFormat="MMM d"
+                                                        customInput={<DateTrigger />}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div>
-                                            <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', fontSize: '14px' }}>Guests</label>
-                                            <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <FaUsers color="#717171" />
-                                                <input
-                                                    type="number"
-                                                    value={guests}
-                                                    onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                                                    min="1"
-                                                    max="20"
-                                                    style={{ border: 'none', outline: 'none', width: '100%', fontSize: '16px' }}
-                                                />
+
+                                        {/* Guests Section */}
+                                        <div
+                                            style={{ flex: '1', position: 'relative', padding: '14px 24px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}
+                                            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#F7F7F7'}
+                                            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                                            onClick={() => setShowGuestPopup(!showGuestPopup)}
+                                        >
+                                            <div style={{ background: '#F1F5F9', padding: '8px', borderRadius: '50%', color: 'var(--primary)' }}>
+                                                <FaUsers size={14} />
                                             </div>
+                                            <div style={{ flex: 1 }}>
+                                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#717171', marginBottom: '2px' }}>Guests</label>
+                                                <div style={{ fontWeight: '600', fontSize: '14px', color: '#222' }}>
+                                                    {guests} guest{guests !== 1 && 's'}{infants > 0 && `, ${infants} infant${infants !== 1 ? 's' : ''}`}
+                                                </div>
+                                            </div>
+
+                                            {/* Guest Selection Popup */}
+                                            {showGuestPopup && (
+                                                <div
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '120%',
+                                                        right: 0,
+                                                        width: 'min(350px, 90vw)',
+                                                        backgroundColor: 'white',
+                                                        borderRadius: '16px',
+                                                        boxShadow: '0 6px 20px rgba(0,0,0,0.2)',
+                                                        border: '1px solid #DDDDDD',
+                                                        padding: '24px',
+                                                        zIndex: 1000
+                                                    }}
+                                                >
+                                                    {/* Adults */}
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                                                        <div>
+                                                            <div style={{ fontWeight: '600', fontSize: '16px', color: '#222' }}>Adults</div>
+                                                            <div style={{ fontSize: '13px', color: '#717171' }}>Age 13+</div>
+                                                        </div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                            <button
+                                                                onClick={() => setAdults(Math.max(1, adults - 1))}
+                                                                disabled={adults <= 1}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: adults <= 1 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: adults <= 1 ? 0.3 : 1 }}
+                                                            >
+                                                                <FaMinus size={12} color="#717171" />
+                                                            </button>
+                                                            <span style={{ width: '20px', textAlign: 'center', fontWeight: '600' }}>{adults}</span>
+                                                            <button
+                                                                onClick={() => setAdults(Math.min(16, adults + 1))}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                            >
+                                                                <FaPlus size={12} color="#717171" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Children */}
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                                                        <div>
+                                                            <div style={{ fontWeight: '600', fontSize: '16px', color: '#222' }}>Children</div>
+                                                            <div style={{ fontSize: '13px', color: '#717171' }}>Ages 2–12</div>
+                                                        </div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                            <button
+                                                                onClick={() => setChildren(Math.max(0, children - 1))}
+                                                                disabled={children <= 0}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: children <= 0 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: children <= 0 ? 0.3 : 1 }}
+                                                            >
+                                                                <FaMinus size={12} color="#717171" />
+                                                            </button>
+                                                            <span style={{ width: '20px', textAlign: 'center', fontWeight: '600' }}>{children}</span>
+                                                            <button
+                                                                onClick={() => setChildren(Math.min(10, children + 1))}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                            >
+                                                                <FaPlus size={12} color="#717171" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Infants */}
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                        <div>
+                                                            <div style={{ fontWeight: '600', fontSize: '16px', color: '#222' }}>Infants</div>
+                                                            <div style={{ fontSize: '13px', color: '#717171' }}>Under 2</div>
+                                                        </div>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                                            <button
+                                                                onClick={() => setInfants(Math.max(0, infants - 1))}
+                                                                disabled={infants <= 0}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: infants <= 0 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: infants <= 0 ? 0.3 : 1 }}
+                                                            >
+                                                                <FaMinus size={12} color="#717171" />
+                                                            </button>
+                                                            <span style={{ width: '20px', textAlign: 'center', fontWeight: '600' }}>{infants}</span>
+                                                            <button
+                                                                onClick={() => setInfants(Math.min(5, infants + 1))}
+                                                                style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid #B0B0B0', background: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                            >
+                                                                <FaPlus size={12} color="#717171" />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -706,24 +856,17 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
                                         <FaUsers style={{ marginRight: '8px' }} />
                                         {t('guests')}
                                     </label>
-                                    <input
-                                        type="number"
-                                        value={guests}
-                                        onChange={(e) => setGuests(parseInt(e.target.value) || 1)}
-                                        min="1"
-                                        max={listing.details?.guests || 10}
-                                        style={{
-                                            width: '100%',
-                                            padding: '12px',
-                                            border: '1px solid var(--border)',
-                                            borderRadius: 'var(--radius-md)',
-                                            fontSize: '15px',
-                                            outline: 'none',
-                                            boxSizing: 'border-box',
-                                            backgroundColor: 'var(--bg-white)',
-                                            color: 'var(--text-main)'
-                                        }}
-                                    />
+                                    <div style={{
+                                        padding: '12px',
+                                        border: '1px solid var(--border)',
+                                        backgroundColor: '#F9FAFB',
+                                        borderRadius: 'var(--radius-md)',
+                                        fontSize: '15px',
+                                        color: 'var(--text-main)',
+                                        fontWeight: '600'
+                                    }}>
+                                        {guests} guest{guests !== 1 ? 's' : ''} {infants > 0 && `(+ ${infants} infant${infants !== 1 ? 's' : ''})`}
+                                    </div>
                                 </div>
 
                                 {(isExperience || isPackage || calculateNights() > 0) && (

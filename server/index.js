@@ -22,13 +22,14 @@ if (!process.env.NODE_ENV) {
 console.log(`🚀 Environment: ${process.env.NODE_ENV}`);
 console.log(`🔑 Google API Key: ${process.env.GOOGLE_MAPS_API_KEY ? 'Loaded' : 'Missing'}`);
 
-const { User, Listing, Booking, Experience, Review, Wishlist, SiteImage } = require('./models');
+const { User, Listing, Booking, Experience, Review, Wishlist, SiteImage, Inquiry } = require('./models');
 const bookingRoutes = require('./routes/bookings');
 const listingRoutes = require('./routes/listings');
 const wishlistRoutes = require('./routes/wishlists');
 const destinationRoutes = require('./routes/destinations');
 const packageRoutes = require('./routes/packages');
 const guideRoutes = require('./routes/guides');
+const inquiryRoutes = require('./routes/inquiries');
 
 const app = express();
 
@@ -43,12 +44,15 @@ app.use(express.json({ limit: '10kb' }));
 // Middleware
 app.use(cors({
     origin: [
-        process.env.CLIENT_URL || 'http://localhost:5173',
+        process.env.CLIENT_URL,
+        'http://localhost:5173',
         'http://localhost:5174',
         'http://localhost:5175',
         'http://localhost:5176',
+        'https://aanandham.in',
+        'https://www.aanandham.in',
         'https://booking-site-react.vercel.app'
-    ],
+    ].filter(Boolean),
     credentials: true
 }));
 
@@ -102,6 +106,7 @@ app.use('/api/wishlists', wishlistRoutes);
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/guides', guideRoutes);
+app.use('/api/inquiries', inquiryRoutes);
 
 // ==================== AUTH ROUTES ====================
 app.post('/api/auth/register', async (req, res) => {
@@ -566,6 +571,43 @@ app.delete('/api/admin/site-images/:id', auth, adminAuth, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+// Keep-Alive Route
+app.get('/api/health', (req, res) => {
+    res.status(200).send('OK');
+});
+
+// Ping System (Prevent Render spin-down & Indexing)
+if (process.env.NODE_ENV === 'production') {
+    const SELF_URL = 'https://aanandham-go.onrender.com/api/health';
+    const EXTERNAL_APP_URL = process.env.EXTERNAL_APP_URL || ''; // Can be set in Render env vars
+    const GOOGLE_PING = `http://www.google.com/ping?sitemap=https://aanandham.in/sitemap.xml`;
+
+    const runPings = () => {
+        // 1. Self Ping
+        axios.get(SELF_URL)
+            .then(() => console.log('✅ Keep-alive (Self) Success'))
+            .catch(err => console.error('❌ Keep-alive (Self) Failed:', err.message));
+
+        // 2. External App Ping (Optional)
+        if (EXTERNAL_APP_URL) {
+            axios.get(EXTERNAL_APP_URL)
+                .then(() => console.log(`🚀 External Ping to ${EXTERNAL_APP_URL} Success`))
+                .catch(err => console.warn(`⚠️ External Ping to ${EXTERNAL_APP_URL} Failed`));
+        }
+
+        // 3. Google Indexing Ping
+        axios.get(GOOGLE_PING)
+            .then(() => console.log('📡 Google Sitemap Pinged'))
+            .catch(() => console.log('📡 Google Ping Signal Sent'));
+    };
+
+    // Run every 14 minutes
+    setInterval(runPings, 14 * 60 * 1000);
+
+    // Run once on startup
+    runPings();
+}
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

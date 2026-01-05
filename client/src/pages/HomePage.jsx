@@ -8,7 +8,7 @@ import DateRangeSelector from '../components/SearchWidget/DateRangeSelector';
 import GuestSelector from '../components/SearchWidget/GuestSelector';
 import PremiumListingCard from '../components/PremiumListingCard';
 import EventModal from '../components/EventModal';
-import { events, sightseeing, whyChooseUs, topSeoListings } from '../data/siteContent';
+import { events, sightseeing, whyChooseUs, topSeoListings, travelStories } from '../data/siteContent';
 import Gallery from '../components/Gallery';
 import PreviousEvents from '../components/PreviousEvents';
 import { experiencesAPI } from '../services/api';
@@ -91,9 +91,9 @@ const HomePage = () => {
     return (
         <div style={{ position: 'relative', minHeight: '100vh', overflowX: 'hidden' }}>
             <SEO
-                title="Aanandham.go - Luxury Camping in Munnar, Suryanelli Tent Stays"
-                description="The best luxury camping in Munnar. Book safe tent stays in Suryanelli, sunrise treks at Kolukkumalai, and glamping experiences with Aanandham."
-                keywords="Munnar Camping, Suryanelli Tent Stay, Kolukkumalai Trek, Glamping Kerala, Munnar Tent Houses, Safe Camping Munnar, Aanandham"
+                title="Premium Camping & Trekking in Munnar & Wayanad | Verified Glamping - Aanandham.go"
+                description="Book verified premium camping in Munnar and Wayanad. Experience luxury glamping, wild trekking packages, and safe tent stays in Kerala's best hill stations."
+                keywords="Munnar Camping, Wayanad Tent Stay, Premium Glamping Kerala, Trekking Munnar, Wayanad Resorts, Luxury Tent Stay, Aanandham"
             />
             <AnimatePresence>
                 {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
@@ -128,27 +128,27 @@ const HomePage = () => {
                 <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '0 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '1200px' }}>
                     <div style={{ marginBottom: '24px' }}>
                         <h1 style={{
-                            fontSize: 'clamp(48px, 6vw, 96px)',
+                            fontSize: 'clamp(36px, 5vw, 72px)',
                             fontWeight: '900',
                             color: 'white',
                             marginBottom: '24px',
-                            letterSpacing: '-2px',
+                            letterSpacing: '-1px',
                             textShadow: '0 10px 40px rgba(0,0,0,0.6)',
                             textTransform: 'uppercase',
-                            lineHeight: '0.9'
+                            lineHeight: '1.1'
                         }}>
-                            Experience Munnar
+                            Curated Wilderness: <br /> Munnar & Wayanad
                         </h1>
                         <p style={{
                             fontSize: 'clamp(18px, 2vw, 24px)',
-                            color: 'rgba(255,255,255,0.9)',
+                            color: 'rgba(255,255,255,0.95)',
                             fontWeight: '300',
-                            maxWidth: '700px',
+                            maxWidth: '600px',
                             margin: '0 auto 48px auto',
                             lineHeight: '1.6',
                             letterSpacing: '1px'
                         }}>
-                            Verified <strong>Camping & Luxury Glamping in Munnar</strong>. Experience <strong>Suryanelli Tent Stays</strong> & <strong>Kolukkumalai Sunrise Treks</strong>.
+                            Verified Glamping & Trekking Expeditions.
                         </p>
                     </div>
 
@@ -250,8 +250,8 @@ const HomePage = () => {
                         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '50px' }}
                     >
                         <div style={{ marginBottom: '24px' }}>
-                            <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', fontSize: '12px', textTransform: 'uppercase' }}>HAPPENING NOW</span>
-                            <h2 style={{ fontSize: '48px', fontWeight: '800', color: 'white', marginTop: '8px' }}>Live in Munnar</h2>
+                            <span style={{ color: 'var(--primary)', fontWeight: '800', letterSpacing: '4px', fontSize: '14px', textTransform: 'uppercase', textShadow: '0 2px 10px rgba(212, 175, 55, 0.3)' }}>HAPPENING NOW</span>
+                            <h2 style={{ fontSize: 'clamp(48px, 6vw, 80px)', fontFamily: 'var(--font-serif)', fontWeight: '900', color: 'white', marginTop: '16px', letterSpacing: '-1px', lineHeight: '1' }}>Live in Munnar</h2>
                         </div>
                     </motion.div>
 
@@ -271,6 +271,11 @@ const HomePage = () => {
                                         itemScope
                                         itemType="http://schema.org/Event"
                                     >
+                                        <meta itemProp="eventStatus" content="https://schema.org/EventScheduled" />
+                                        <meta itemProp="description" content={evt.description || evt.title} />
+                                        <div itemProp="organizer" itemScope itemType="http://schema.org/Organization">
+                                            <meta itemProp="name" content="Aanandham" />
+                                        </div>
                                         <div style={{ height: '220px', overflow: 'hidden', position: 'relative' }}>
                                             <img
                                                 src={evt.image}
@@ -280,6 +285,7 @@ const HomePage = () => {
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
                                             />
                                             <meta itemProp="startDate" content={new Date().toISOString()} />
+                                            <meta itemProp="endDate" content={new Date(Date.now() + 14400000).toISOString()} />
                                         </div>
                                         <div className="event-card-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
@@ -288,7 +294,10 @@ const HomePage = () => {
                                                 </div>
                                                 <div style={{ padding: '6px 12px', background: 'var(--bg-glass)', color: 'white', borderRadius: '8px', fontSize: '12px', fontWeight: '700', border: '1px solid var(--border)' }} itemProp="offers" itemScope itemType="http://schema.org/Offer">
                                                     <meta itemProp="priceCurrency" content="INR" />
-                                                    <span itemProp="price">₹{evt.price}</span>
+                                                    <meta itemProp="price" content={evt.price ? String(evt.price).replace(/[^0-9]/g, '') : '0'} />
+                                                    <meta itemProp="url" content="https://aanandham.go/" />
+                                                    <meta itemProp="availability" content="https://schema.org/InStock" />
+                                                    <span>{evt.price}</span>
                                                 </div>
                                             </div>
                                             <h3 className="event-card-title" itemProp="name">{evt.title}</h3>
@@ -304,7 +313,6 @@ const HomePage = () => {
                             )}
                         </div>
 
-                        {/* Dots Indicator */}
                         {liveEvents.length > 0 && (
                             <div className="mobile-only" style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '30px' }}>
                                 {liveEvents.map((_, idx) => (
@@ -360,82 +368,6 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* Previous Events Section */}
-            <PreviousEvents />
-
-            {/* Gallery Section */}
-            <Gallery />
-
-            {/* Why Choose Annadnam */}
-            {/* Why Choose Annadnam */}
-            <section className="section-responsive" style={{ background: 'var(--bg-dark)' }}>
-                <div className="container">
-                    <div className="grid-2col-responsive">
-                        <div>
-                            <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', fontSize: '12px', textTransform: 'uppercase' }}>WHY ANNADNAM</span>
-                            <h2 style={{ fontSize: '48px', fontWeight: '900', color: 'var(--text-main)', margin: '16px 0 32px 0', lineHeight: '1.1', whiteSpace: 'pre-line' }}>
-                                {whyChooseUs.title}
-                            </h2>
-                            <p style={{ fontSize: '18px', color: 'var(--text-secondary)', lineHeight: '1.8', marginBottom: '40px' }}>
-                                {whyChooseUs.description}
-                            </p>
-
-                            <div className="features-grid-responsive">
-                                {whyChooseUs.features.map((feature, i) => (
-                                    <div key={i}>
-                                        <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px', color: 'var(--text-main)' }}>{feature.title}</h4>
-                                        <p style={{ color: 'var(--text-secondary)' }}>{feature.description}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className="feature-images-grid">
-                            <img src={whyChooseUs.images[0]} alt="Luxury Glamping Tent in Munnar" loading="lazy" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '24px', transform: 'translateY(40px)' }} />
-                            <img src={whyChooseUs.images[1]} alt="Campfire and Stargazing at Suryanelli" loading="lazy" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '24px' }} />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Sightseeing Section */}
-            <section className="section-responsive" style={{ background: 'var(--bg-off-white)' }}>
-                <div className="container">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        style={{ textAlign: 'center', marginBottom: '60px' }}
-                    >
-                        <h2 style={{ fontSize: '40px', fontWeight: '800', marginBottom: '16px', color: 'var(--text-main)' }}>Explore the Unseen</h2>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '18px' }}>Handpicked spots in Munnar and Suryanelli for the true explorer.</p>
-                    </motion.div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
-                        {sightseeing.map((spot, i) => (
-                            <motion.div
-                                key={spot.id || i}
-                                whileHover={{ y: -8 }}
-                                style={{ height: '400px', borderRadius: '30px', position: 'relative', overflow: 'hidden', cursor: 'pointer', boxShadow: 'var(--shadow-lg)' }}
-                            >
-                                <img src={spot.image} alt={spot.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    padding: '30px',
-                                    background: 'linear-gradient(to top, rgba(0,0,0,0.95), transparent)',
-                                    color: 'white'
-                                }}>
-                                    <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '4px' }}>{spot.title}</h3>
-                                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>{spot.location}</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* Featured Hotels Section */}
             <div className="section-responsive" style={{ backgroundColor: 'var(--bg-dark)', textAlign: 'center' }}>
                 <div className="container">
@@ -444,9 +376,9 @@ const HomePage = () => {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                     >
-                        <h2 style={{ fontSize: '40px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '24px' }}>Recommended Camping & Tent Stays</h2>
-                        <p style={{ color: 'var(--text-secondary)', fontSize: '20px', maxWidth: '600px', margin: '0 auto 60px auto' }}>
-                            Experience the best of Munnar with our verified luxury tent selections.
+                        <h2 style={{ fontSize: '40px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '24px' }}>Verified Stays in Munnar & Wayanad</h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '20px', maxWidth: '700px', margin: '0 auto 60px auto' }}>
+                            Discover the best <strong>IV-Verified Glamping</strong> spots and <strong>Trekking Camps</strong> in Kerala.
                         </p>
 
                         {/* Featured Listings Grid - Now using Real DB Listings */}
@@ -496,6 +428,141 @@ const HomePage = () => {
                     </motion.div>
                 </div>
             </div>
+
+            {/* Previous Events Section */}
+            <PreviousEvents />
+
+            {/* Gallery Section */}
+            <Gallery />
+
+            {/* SEO Blog / Travel Stories Section */}
+            <section className="section-responsive" style={{ background: '#000', padding: '80px 0' }}>
+                <div className="container">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        style={{ textAlign: 'center', marginBottom: '60px' }}
+                    >
+                        <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', fontSize: '12px', textTransform: 'uppercase' }}>TRAVEL DIARIES</span>
+                        <h2 style={{ fontSize: '40px', fontWeight: '800', color: 'white', marginTop: '16px', marginBottom: '16px' }}>Stories from the Wild</h2>
+                        <p style={{ color: '#a1a1aa', fontSize: '18px' }}>
+                            Read about <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Munnar Trekking</a>, camping tips, and our guests' <a href="#" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Instagram favorites</a>.
+                        </p>
+                    </motion.div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+                        {travelStories.map((story, i) => {
+                            const isInternal = story.link && story.link.startsWith('/');
+                            const CardContent = (
+                                <motion.div whileHover={{ y: -5 }} style={{ background: '#111', borderRadius: '20px', overflow: 'hidden', height: '100%', cursor: 'pointer' }}>
+                                    <div style={{ height: '200px', position: 'relative' }}>
+                                        <img src={story.image} alt={story.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} loading="lazy" />
+                                        <div style={{ position: 'absolute', top: '15px', left: '15px', background: 'var(--primary)', color: 'black', padding: '4px 12px', borderRadius: '4px', fontSize: '12px', fontWeight: '700' }}>
+                                            {story.category}
+                                        </div>
+                                    </div>
+                                    <div style={{ padding: '24px' }}>
+                                        <h3 style={{ fontSize: '20px', fontWeight: '700', color: 'white', marginBottom: '12px', lineHeight: '1.4' }}>{story.title}</h3>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <span style={{ color: '#666', fontSize: '12px' }}>{story.date}</span>
+                                            <span style={{ color: 'var(--primary)', fontSize: '14px', fontWeight: '600', textDecoration: 'none' }}>Read Story →</span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+
+                            return (
+                                <div key={i}>
+                                    {isInternal ? (
+                                        <Link to={story.link} style={{ textDecoration: 'none' }}>
+                                            {CardContent}
+                                        </Link>
+                                    ) : (
+                                        <a href={story.link} style={{ textDecoration: 'none' }}>
+                                            {CardContent}
+                                        </a>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* Why Choose Annadnam */}
+            {/* Why Choose Annadnam */}
+            <section className="section-responsive" style={{ background: 'var(--bg-dark)' }}>
+                <div className="container">
+                    <div className="grid-2col-responsive">
+                        <div>
+                            <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', fontSize: '12px', textTransform: 'uppercase' }}>WHY ANNADNAM</span>
+                            <h2 style={{ fontSize: '48px', fontWeight: '900', color: 'var(--text-main)', margin: '16px 0 32px 0', lineHeight: '1.1', whiteSpace: 'pre-line' }}>
+                                {whyChooseUs.title}
+                            </h2>
+                            <p style={{ fontSize: '18px', color: 'var(--text-secondary)', lineHeight: '1.8', marginBottom: '40px' }}>
+                                {whyChooseUs.description}
+                            </p>
+
+                            <div className="features-grid-responsive">
+                                {whyChooseUs.features.map((feature, i) => (
+                                    <div key={i}>
+                                        <h4 style={{ fontSize: '20px', fontWeight: '700', marginBottom: '12px', color: 'var(--text-main)' }}>{feature.title}</h4>
+                                        <p style={{ color: 'var(--text-secondary)' }}>{feature.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="feature-images-grid">
+                            <img src={whyChooseUs.images[0]} alt="Luxury Glamping Tent in Munnar" loading="lazy" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '24px', transform: 'translateY(40px)' }} />
+                            <img src={whyChooseUs.images[1]} alt="Campfire and Stargazing at Suryanelli" loading="lazy" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '24px' }} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Sightseeing Section */}
+            <section className="section-responsive" style={{ background: 'var(--bg-off-white)' }}>
+                <div className="container">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        style={{ textAlign: 'center', marginBottom: '60px' }}
+                    >
+                        <h2 style={{ fontSize: '40px', fontWeight: '800', marginBottom: '16px', color: 'var(--text-main)' }}>Explore Top Station & Kolukkumalai Trekking</h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '18px' }}>
+                            Visit the <strong>World's Highest Tea Estate</strong>, experience the <strong>Top Station Sunrise</strong>, and discover hidden waterfalls near Suryanelli.
+                        </p>
+                    </motion.div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px' }}>
+                        {sightseeing.map((spot, i) => (
+                            <motion.div
+                                key={spot.id || i}
+                                whileHover={{ y: -8 }}
+                                style={{ height: '400px', borderRadius: '30px', position: 'relative', overflow: 'hidden', cursor: 'pointer', boxShadow: 'var(--shadow-lg)' }}
+                            >
+                                <img src={spot.image} alt={spot.title} loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    padding: '30px',
+                                    background: 'linear-gradient(to top, rgba(0,0,0,0.95), transparent)',
+                                    color: 'white'
+                                }}>
+                                    <h3 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '4px' }}>{spot.title}</h3>
+                                    <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '16px' }}>{spot.location}</p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+
         </div>
     );
 };

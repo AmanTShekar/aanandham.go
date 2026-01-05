@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { listingsAPI, reviewsAPI, authAPI, wishlistAPI } from '../services/api';
 import BookingModal from '../components/BookingModal';
 import ReviewModal from '../components/ReviewModal';
+import InquiryModal from '../components/InquiryModal';
 
 // Import new separate components
 import ListingHeader from '../components/listing/ListingHeader';
@@ -21,6 +22,7 @@ const ListingDetailsPage = () => {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedBooking, setSelectedBooking] = useState(null);
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
     // Wishlist State
     const [isInWishlist, setIsInWishlist] = useState(false);
@@ -183,6 +185,7 @@ const ListingDetailsPage = () => {
                         listing={listing}
                         reviewsCount={reviews.length}
                         onReserve={handleReserve}
+                        onInquire={() => setIsInquiryModalOpen(true)}
                     />
                 </div>
             </div>
@@ -203,6 +206,13 @@ const ListingDetailsPage = () => {
                     setReviews([newReview, ...reviews]);
                     setIsReviewModalOpen(false);
                 }}
+            />
+
+            <InquiryModal
+                isOpen={isInquiryModalOpen}
+                onClose={() => setIsInquiryModalOpen(false)}
+                inquiryType="listing"
+                listing={listing}
             />
         </div>
     );

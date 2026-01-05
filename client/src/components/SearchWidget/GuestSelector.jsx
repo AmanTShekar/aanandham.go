@@ -48,9 +48,15 @@ const GuestCounter = ({ label, subLabel, count, onIncrement, onDecrement, canDec
     </div>
 );
 
-const GuestSelector = ({ guests, setGuests }) => {
+const GuestSelector = ({ guests, setGuests, theme = 'light' }) => {
+    const isDark = theme === 'dark';
+    const textColor = isDark ? 'white' : '#222';
+    const subTextColor = isDark ? '#a1a1aa' : '#717171';
+    const dropdownBg = isDark ? '#262626' : '#fff';
+    const borderColor = isDark ? '#404040' : '#ddd';
+
     const [isOpen, setIsOpen] = useState(false);
-    const [counts, setCounts] = useState({ adults: 1, children: 0, infants: 0 });
+    const [counts, setCounts] = useState({ adults: 1, children: 0, infants: 0, pets: 0 });
     const containerRef = useRef(null);
 
     useEffect(() => {
@@ -80,6 +86,52 @@ const GuestSelector = ({ guests, setGuests }) => {
         }));
     };
 
+    const CounterItem = ({ label, subLabel, count, onIncrement, onDecrement, canDecrement }) => (
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: `1px solid ${isDark ? '#404040' : '#f0f0f0'}` }}>
+            <div>
+                <div style={{ fontSize: '15px', fontWeight: '600', color: textColor, fontFamily: 'var(--font-sans)' }}>{label}</div>
+                <div style={{ fontSize: '13px', color: subTextColor }}>{subLabel}</div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <button
+                    onClick={onDecrement}
+                    disabled={!canDecrement}
+                    style={{
+                        width: '32px', height: '32px', borderRadius: '50%', border: `1px solid ${borderColor}`,
+                        background: 'transparent', cursor: canDecrement ? 'pointer' : 'not-allowed',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        opacity: canDecrement ? 1 : 0.3, transition: 'all 0.2s',
+                        color: subTextColor
+                    }}
+                    onMouseEnter={(e) => canDecrement && (e.currentTarget.style.borderColor = isDark ? 'white' : 'black')}
+                    onMouseLeave={(e) => canDecrement && (e.currentTarget.style.borderColor = borderColor)}
+                >
+                    <FaMinus size={10} />
+                </button>
+                <span style={{ fontSize: '16px', fontWeight: '600', minWidth: '24px', textAlign: 'center', fontFamily: 'var(--font-sans)', color: textColor }}>{count}</span>
+                <button
+                    onClick={onIncrement}
+                    style={{
+                        width: '32px', height: '32px', borderRadius: '50%', border: `1px solid ${borderColor}`,
+                        background: 'transparent', cursor: 'pointer',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        transition: 'all 0.2s', color: subTextColor
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--primary)';
+                        e.currentTarget.style.color = 'var(--primary)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = borderColor;
+                        e.currentTarget.style.color = subTextColor;
+                    }}
+                >
+                    <FaPlus size={10} />
+                </button>
+            </div>
+        </div>
+    );
+
     return (
         <div style={{ position: 'relative', width: '100%' }} ref={containerRef}>
             <div
@@ -96,7 +148,7 @@ const GuestSelector = ({ guests, setGuests }) => {
                 <div style={{
                     fontSize: '14px',
                     fontWeight: guests ? '600' : '400',
-                    color: guests ? '#222' : '#717171',
+                    color: guests ? textColor : subTextColor,
                     fontFamily: 'var(--font-sans)',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -105,7 +157,8 @@ const GuestSelector = ({ guests, setGuests }) => {
                     {guests > 0 ? (
                         <>
                             {guests} guest{guests > 1 ? 's' : ''}
-                            {counts.infants > 0 && <span style={{ color: '#717171', fontWeight: '400' }}>, {counts.infants} infant{counts.infants > 1 ? 's' : ''}</span>}
+                            {counts.infants > 0 && <span style={{ color: subTextColor, fontWeight: '400' }}>, {counts.infants} infant{counts.infants > 1 ? 's' : ''}</span>}
+                            {counts.pets > 0 && <span style={{ color: subTextColor, fontWeight: '400' }}>, {counts.pets} pet{counts.pets > 1 ? 's' : ''}</span>}
                         </>
                     ) : 'Add guests'}
                 </div>
@@ -120,18 +173,19 @@ const GuestSelector = ({ guests, setGuests }) => {
                         transition={{ duration: 0.2 }}
                         style={{
                             position: 'absolute',
-                            top: '55px',
+                            top: '100%',
                             right: 0,
-                            width: '380px',
-                            background: '#fff',
+                            minWidth: '350px',
+                            background: dropdownBg,
                             borderRadius: '24px',
-                            boxShadow: '0 15px 40px rgba(0,0,0,0.2)',
+                            boxShadow: '0 15px 40px rgba(0,0,0,0.3)',
                             padding: '24px',
                             zIndex: 1000,
-                            border: '1px solid rgba(0,0,0,0.05)'
+                            border: `1px solid ${isDark ? '#404040' : 'rgba(0,0,0,0.05)'}`,
+                            marginTop: '12px'
                         }}
                     >
-                        <GuestCounter
+                        <CounterItem
                             label="Adults"
                             subLabel="Ages 13 or above"
                             count={counts.adults}
@@ -139,7 +193,7 @@ const GuestSelector = ({ guests, setGuests }) => {
                             onDecrement={() => updateCount('adults', -1)}
                             canDecrement={counts.adults > 1}
                         />
-                        <GuestCounter
+                        <CounterItem
                             label="Children"
                             subLabel="Ages 2–12"
                             count={counts.children}
@@ -147,13 +201,21 @@ const GuestSelector = ({ guests, setGuests }) => {
                             onDecrement={() => updateCount('children', -1)}
                             canDecrement={counts.children > 0}
                         />
-                        <GuestCounter
+                        <CounterItem
                             label="Infants"
                             subLabel="Under 2"
                             count={counts.infants}
                             onIncrement={() => updateCount('infants', 1)}
                             onDecrement={() => updateCount('infants', -1)}
                             canDecrement={counts.infants > 0}
+                        />
+                        <CounterItem
+                            label="Pets"
+                            subLabel="Bringing a service animal?"
+                            count={counts.pets}
+                            onIncrement={() => updateCount('pets', 1)}
+                            onDecrement={() => updateCount('pets', -1)}
+                            canDecrement={counts.pets > 0}
                         />
                     </motion.div>
                 )}

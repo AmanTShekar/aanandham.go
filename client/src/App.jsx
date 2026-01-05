@@ -27,6 +27,11 @@ const AboutPage = React.lazy(() => import('./pages/AboutPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const LegalPage = React.lazy(() => import('./pages/LegalPage'));
 const FullGalleryPage = React.lazy(() => import('./pages/FullGalleryPage')); // Added by instruction
+const StrangersCampPage = React.lazy(() => import('./pages/StrangersCampPage'));
+const MunnarGuide = React.lazy(() => import('./pages/blogs/MunnarGuide'));
+const WayanadGlamping = React.lazy(() => import('./pages/blogs/WayanadGlamping'));
+const KolukkumalaiSafety = React.lazy(() => import('./pages/blogs/KolukkumalaiSafety'));
+const SuryanelliSpots = React.lazy(() => import('./pages/blogs/SuryanelliSpots'));
 
 // Admin Pages
 const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
@@ -58,10 +63,17 @@ function App() {
           <Router>
             <Suspense fallback={<PageLoader />}>
               <Routes>
+                {/* Main Layout - All pages with Navbar and Footer */}
                 <Route path="/" element={<Layout />}>
+                  {/* Home and Main Pages */}
                   <Route index element={<HomePage />} />
                   <Route path="/hotels" element={<HotelsPage />} />
-                  <Route path="/gallery" element={<FullGalleryPage />} /> {/* Added by instruction */}
+                  <Route path="/stories/strangers-camp" element={<StrangersCampPage />} />
+                  <Route path="/stories/munnar-camping-guide" element={<MunnarGuide />} />
+                  <Route path="/stories/wayanad-glamping" element={<WayanadGlamping />} />
+                  <Route path="/stories/kolukkumalai-safety" element={<KolukkumalaiSafety />} />
+                  <Route path="/stories/suryanelli-spots" element={<SuryanelliSpots />} />
+                  <Route path="/gallery" element={<FullGalleryPage />} />
                   <Route path="experiences" element={<ExperiencesPage />} />
                   <Route path="experiences/:id" element={<ExperienceDetailsPage />} />
                   <Route path="listings/:id" element={<ListingDetailsPage />} />
@@ -76,29 +88,30 @@ function App() {
                     <Route path="guides" element={<GuidesPage />} />
                   </Route>
 
-                  {/* Detail Pages (Top Level) */}
+                  {/* Detail Pages */}
                   <Route path="packages/:id" element={<PackageDetailsPage />} />
                   <Route path="destinations/:id" element={<DestinationDetailsPage />} />
                   <Route path="guides/:id" element={<GuideDetailsPage />} />
+
+                  {/* Auth Pages */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/signup" element={<SignupPage />} />
+
+                  {/* Static Pages */}
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/terms" element={<LegalPage type="terms" />} />
+                  <Route path="/privacy" element={<LegalPage type="privacy" />} />
+                  <Route path="/safety" element={<LegalPage type="safety" />} />
+                  <Route path="/support" element={<LegalPage type="support" />} />
+                  <Route path="/careers" element={<LegalPage type="careers" />} />
+                  <Route path="/press" element={<LegalPage type="press" />} />
                 </Route>
 
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignupPage />} />
-
-                {/* Business Routes */}
+                {/* Business Routes - Separate Layout */}
                 <Route path="/business" element={<BusinessDashboard />} />
 
-                {/* Static Pages */}
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/terms" element={<LegalPage type="terms" />} />
-                <Route path="/privacy" element={<LegalPage type="privacy" />} />
-                <Route path="/safety" element={<LegalPage type="safety" />} />
-                <Route path="/support" element={<LegalPage type="support" />} />
-                <Route path="/careers" element={<LegalPage type="careers" />} />
-                <Route path="/press" element={<LegalPage type="press" />} />
-
-                {/* Admin Routes */}
+                {/* Admin Routes - Separate Layout */}
                 <Route path="/admin" element={<AdminLayout />}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="users" element={<AdminUsers />} />
