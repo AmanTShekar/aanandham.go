@@ -32,6 +32,7 @@ const MunnarGuide = React.lazy(() => import('./pages/blogs/MunnarGuide'));
 const WayanadGlamping = React.lazy(() => import('./pages/blogs/WayanadGlamping'));
 const KolukkumalaiSafety = React.lazy(() => import('./pages/blogs/KolukkumalaiSafety'));
 const SuryanelliSpots = React.lazy(() => import('./pages/blogs/SuryanelliSpots'));
+const MunnarFAQ = React.lazy(() => import('./pages/blogs/MunnarFAQ'));
 
 // Admin Pages
 const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
@@ -74,6 +75,7 @@ function App() {
                   <Route path="/stories/wayanad-glamping" element={<WayanadGlamping />} />
                   <Route path="/stories/kolukkumalai-safety" element={<KolukkumalaiSafety />} />
                   <Route path="/stories/suryanelli-spots" element={<SuryanelliSpots />} />
+                  <Route path="/stories/munnar-faq" element={<MunnarFAQ />} />
                   <Route path="/gallery" element={<FullGalleryPage />} />
                   <Route path="experiences" element={<ExperiencesPage />} />
                   <Route path="experiences/:id" element={<ExperienceDetailsPage />} />

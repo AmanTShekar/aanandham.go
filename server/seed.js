@@ -63,6 +63,25 @@ const mockListings = [
         guestFavorite: true,
         category: "Glamping"
     },
+    {
+        title: "Vagamon Pine Forest Stay",
+        location: "Vagamon, Idukki",
+        latitude: 9.6865,
+        longitude: 76.8916,
+        price: 1200,
+        rating: 4.65,
+        image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&auto=format&fit=crop&q=80",
+        images: [
+            "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
+            "https://images.unsplash.com/photo-1579246132034-4a2420311d8c?w=800&q=80"
+        ],
+        host: { name: "Vagamon Host", avatar: "https://randomuser.me/api/portraits/men/45.jpg", isSuperhost: false },
+        details: { guests: 2, bedrooms: 1, beds: 1, baths: 1 },
+        amenities: ["Pine Forest View", "Campfire", "Orchid Garden Access"],
+        description: "Stay amidst the rolling hills and pine forests of Vagamon. A peaceful retreat perfect for nature lovers and paragliding enthusiasts.",
+        guestFavorite: false,
+        category: "Camping"
+    },
 
     // Top 3 Hotel Listings (Real-ish Data)
     {

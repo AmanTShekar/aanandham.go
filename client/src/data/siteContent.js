@@ -131,6 +131,17 @@ export const topSeoListings = [
         image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=800&auto=format&fit=crop&q=80",
         category: "Forest Glamping",
         amenities: ["Night Walk", "Music", "All Meals"]
+    },
+    {
+        id: 'seo-4',
+        title: "Vagamon Meadows Stay",
+        location: "Vagamon, Idukki",
+        price: 1200,
+        rating: 4.6,
+        reviews: 145,
+        image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?w=800&q=80",
+        category: "Meadow Camping",
+        amenities: ["Paragliding Info", "Pine Forest Trek", "Campfire"]
     }
 ];
 
@@ -243,5 +254,13 @@ export const travelStories = [
         image: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=600&q=80",
         link: "/stories/suryanelli-spots",
         date: "Dec 10, 2024"
+    },
+    {
+        id: 5,
+        title: "Munnar & Suryanelli FAQ: Everything About Tent Stays",
+        category: "Travel FAQ",
+        image: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?w=600&q=80",
+        link: "/stories/munnar-faq",
+        date: "Jan 7, 2025"
     }
 ];

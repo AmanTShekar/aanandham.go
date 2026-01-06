@@ -62,6 +62,16 @@ const destinations = [
         bestTimeToVisit: 'October to April',
         currency: 'INR (₹)',
         language: 'Malayalam, Tamil'
+    },
+    {
+        name: 'Vagamon',
+        image: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Meadows/Mist
+        description: 'The Scotland of Asia, famous for pine forests and meadows.',
+        details: 'Vagamon is a serene hill station located on the border of Kottayam and Idukki districts. Known for its rolling meadows, pine forests, and Orchid gardens, it offers a peaceful escape from the crowds. It is also a prime location for paragliding.',
+        highlights: ['Vagamon Meadows', 'Pine Forest', 'Thangal Para', 'Paragliding'],
+        bestTimeToVisit: 'December to February',
+        currency: 'INR (₹)',
+        language: 'Malayalam, English'
     }
 ];
 
