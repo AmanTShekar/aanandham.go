@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({ title, description, keywords, image, url, schema }) => {
-    const siteTitle = "Aanandham";
+    const siteTitle = "Aanandham.go";
     const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-    const metaDescription = description || "Book verified luxury tent stays in Munnar, Suryanelli, and Kolukkumalai. Experience glamping in Kerala with Aanandham.";
+    const metaDescription = description || "Book verified luxury tent stays in Munnar, Suryanelli, Vagamon and Wayanad. Experience glamping in Kerala with Aanandham.go.";
     const metaImage = image || "https://aanandham.in/og-image.jpg";
-    const metaUrl = url || "https://aanandham.in";
-    const metaKeywords = keywords || "Munnar Camping, Tent Stay Munnar, Kolukkumalai Trekking, Suryanelli, Glamping Kerala, Luxury Resorts India";
+    const metaUrl = url || "https://aanandham.in" + window.location.pathname;
+    const metaKeywords = keywords || "Munnar Camping, Vagamon Glamping, Wayanad Tent Stay, Kolukkumalai Trekking, Suryanelli, Glamping Kerala, Luxury Resorts India, Aanandham.go";
 
     return (
         <Helmet>
@@ -31,20 +31,42 @@ const SEO = ({ title, description, keywords, image, url, schema }) => {
 
             {/* Structured Data */}
             <script type="application/ld+json">
-                {JSON.stringify(schema || {
-                    "@context": "https://schema.org",
-                    "@type": "TravelAgency",
-                    "name": "Aanandham.go",
-                    "url": metaUrl,
-                    "email": "bookings@aanandhamgo.in",
-                    "description": metaDescription,
-                    "contactPoint": {
-                        "@type": "ContactPoint",
+                {JSON.stringify([
+                    schema || {
+                        "@context": "https://schema.org",
+                        "@type": "TravelAgency",
+                        "name": "Aanandham.go",
+                        "url": "https://aanandham.in",
+                        "logo": "https://aanandham.in/logo.png",
+                        "image": "https://aanandham.in/logo.png",
                         "email": "bookings@aanandhamgo.in",
-                        "contactType": "reservations",
-                        "areaServed": "IN"
+                        "description": metaDescription,
+                        "contactPoint": {
+                            "@type": "ContactPoint",
+                            "email": "bookings@aanandhamgo.in",
+                            "contactType": "reservations",
+                            "areaServed": "IN"
+                        }
+                    },
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "BreadcrumbList",
+                        "itemListElement": [
+                            {
+                                "@type": "ListItem",
+                                "position": 1,
+                                "name": "Home",
+                                "item": "https://aanandham.in"
+                            },
+                            {
+                                "@type": "ListItem",
+                                "position": 2,
+                                "name": title || "Luxury Camping",
+                                "item": metaUrl
+                            }
+                        ]
                     }
-                })}
+                ])}
             </script>
         </Helmet>
     );

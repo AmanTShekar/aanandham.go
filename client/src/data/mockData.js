@@ -6,9 +6,9 @@ export const listings = [
         longitude: 77.0595,
         price: 8500,
         rating: 4.88,
-        image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        image: "/images/listings/munnar_tea_hills.png",
         images: [
-            "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+            "/images/listings/munnar_tea_hills.png",
             "https://images.unsplash.com/photo-1544509747-642f4c3a2727?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
         ],
         host: { name: "Anand Menon", avatar: "https://randomuser.me/api/portraits/men/4.jpg", isSuperhost: true },
@@ -25,9 +25,9 @@ export const listings = [
         longitude: 77.0600,
         price: 12000,
         rating: 4.95,
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        image: "/images/listings/blanket_hotel.png",
         images: [
-            "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+            "/images/listings/blanket_hotel.png"
         ],
         host: { name: "Sarah Thomas", avatar: "https://randomuser.me/api/portraits/women/6.jpg", isSuperhost: true },
         details: { guests: 2, bedrooms: 1, beds: 1, baths: 1 },
@@ -43,9 +43,9 @@ export const listings = [
         longitude: 77.0500,
         price: 3500,
         rating: 4.75,
-        image: "https://images.unsplash.com/photo-1585543805890-6051f7829f98?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        image: "/images/listings/cloud_valley.png",
         images: [
-            "https://images.unsplash.com/photo-1585543805890-6051f7829f98?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+            "/images/listings/cloud_valley.png"
         ],
         host: { name: "Joseph Kurian", avatar: "https://randomuser.me/api/portraits/men/8.jpg", isSuperhost: false },
         details: { guests: 3, bedrooms: 1, beds: 2, baths: 1 },
@@ -61,9 +61,9 @@ export const listings = [
         longitude: 77.0400,
         price: 9500,
         rating: 4.82,
-        image: "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1450&q=80",
+        image: "/images/listings/amber_dale.png",
         images: [
-            "https://images.unsplash.com/photo-1582719508461-905c673771fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1450&q=80"
+            "/images/listings/amber_dale.png"
         ],
         host: { name: "Munnar Hospitality", avatar: "https://randomuser.me/api/portraits/men/11.jpg", isSuperhost: true },
         details: { guests: 4, bedrooms: 2, beds: 2, baths: 2 },
@@ -79,9 +79,9 @@ export const listings = [
         longitude: 77.2500,
         price: 4500,
         rating: 4.90,
-        image: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        image: "/images/listings/campy_resort.png",
         images: [
-            "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+            "/images/listings/campy_resort.png"
         ],
         host: { name: "Rahul Dravid", avatar: "https://randomuser.me/api/portraits/men/15.jpg", isSuperhost: true },
         details: { guests: 2, bedrooms: 1, beds: 1, baths: 1 },
@@ -97,9 +97,9 @@ export const listings = [
         longitude: 77.0550,
         price: 7800,
         rating: 4.78,
-        image: "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80",
+        image: "/images/listings/forest_glade.png",
         images: [
-            "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80"
+            "/images/listings/forest_glade.png"
         ],
         host: { name: "Nature Stays", avatar: "https://randomuser.me/api/portraits/women/22.jpg", isSuperhost: false },
         details: { guests: 4, bedrooms: 2, beds: 2, baths: 2 },
@@ -115,9 +115,9 @@ export const listings = [
         longitude: 76.9500,
         price: 6500,
         rating: 4.65,
-        image: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1498&q=80",
+        image: "/images/listings/whispering_waters.png",
         images: [
-            "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1498&q=80"
+            "/images/listings/whispering_waters.png"
         ],
         host: { name: "River Retreats", avatar: "https://randomuser.me/api/portraits/men/33.jpg", isSuperhost: false },
         details: { guests: 3, bedrooms: 1, beds: 2, baths: 1 },

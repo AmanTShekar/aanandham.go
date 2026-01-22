@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { motion, useInView, useSpring, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, useInView, useSpring, useMotionValue, useTransform, animate, useScroll } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { FaCampground, FaMountain, FaUsers, FaStar, FaMapMarkedAlt, FaFire, FaLeaf, FaQuoteLeft, FaCheckCircle, FaQuestionCircle, FaBinoculars, FaCompass, FaHistory, FaHeart, FaGraduationCap, FaInstagram } from 'react-icons/fa';
 import pngLogo from '../assets/pnglogo.png';
@@ -85,12 +85,21 @@ const AboutPage = () => {
     const structuredData = {
         "@context": "https://schema.org",
         "@type": "TravelAgency",
-        "name": "Aanandham",
+        "name": "Aanandham.go",
         "url": "https://aanandham.in",
         "image": pngLogo,
         "description": "Premier Munnar camping, Suryanelli tent stays, and Kolukkumalai trekking provider. Verified luxury tents and jeep safaris.",
         "founder": { "@type": "Person", "name": "Suryanarayanan" },
         "address": { "@type": "PostalAddress", "addressLocality": "Munnar", "addressRegion": "Kerala", "addressCountry": "IN" },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "10.0889",
+            "longitude": "77.0595"
+        },
+        "sameAs": [
+            "https://www.instagram.com/aanandham.go/",
+            "https://www.facebook.com/aanandham.go"
+        ],
         "priceRange": "$$"
     };
 
@@ -112,46 +121,73 @@ const AboutPage = () => {
 
     const team = [
         {
-            name: "Mystery Pathfinder",
+            name: "Suryanarayanan",
             role: "Founder & Lead Explorer",
-            image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
-            bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            expertise: ["High Altitude Trekking", "Wildlife Tracking", "Eco-Tourism"]
+            image: "https://images.unsplash.com/photo-1463453091185-61582044d556?w=500&q=80",
+            bio: "A native of the Western Ghats, Surya founded Aanandham to share his obsession with the misty peaks of Munnar. He personally verifies every secret trekking trail we list.",
+            expertise: ["High Altitude Trekking", "Wildlife Tracking", "Local Heritage"]
         },
         {
-            name: "Mystery Pathfinder",
+            name: "Ananya Iyer",
             role: "Head of Guest Experience",
-            image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
-            bio: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            expertise: ["Event Planning", "Guest Safety", "Local Cuisine"]
+            image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&q=80",
+            bio: "Ananya ensures that your wild camping experience doesn't compromise on comfort. She oversees our safety protocols and curated event itineraries.",
+            expertise: ["Event Planning", "Luxury Glamping", "Guest Safety"]
         },
         {
-            name: "Mystery Pathfinder",
-            role: "Senior Trekking Guard",
-            image: "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png",
-            bio: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-            expertise: ["Jeep Off-roading", "First Aid", "Flora & Fauna"]
+            name: "Rahul Chandran",
+            role: "Senior Operations Manager",
+            image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&q=80",
+            bio: "From coordinating Jeep safaris to managing on-ground campsites in Vagamon and Wayanad, Rahul is the backbone of our regional logistics.",
+            expertise: ["Jeep Off-roading", "Logistics", "Regional Operations"]
         }
     ];
 
+    // Parallax
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 500], [0, 200]);
+
     return (
-        <div style={{ background: 'var(--bg-white)', minHeight: '100vh', color: 'var(--text-main)', paddingTop: '80px', overflowX: 'hidden' }}>
-            <Navbar />
+        <div style={{ background: 'var(--bg-white)', minHeight: '100vh', color: 'var(--text-main)', paddingTop: '0', overflowX: 'hidden' }}>
             <SEO
-                title="About Aanandham - Our Story"
-                description="The Aanandham Story: From local college students to Kerala's #1 verified camping provider. Luxury tents in Suryanelli & Kolukkumalai trekking."
-                keywords="About Aanandham, Munnar Camping Story, Suryanelli Glamping Founders, Kerala Startup, Tent Stay Experts, Kolukkumalai Trekking"
+                title="About Aanandham.go - Our Story & Partnerships"
+                description="The Aanandham Story: From local students to Kerala's #1 verified camping partner. We offer collaborations for trip planners and travel influencers."
+                keywords="About Aanandham, Camping Partner Kerala, Travel Collaboration India, Trip Planner Munnar, Tent Stay Partner, Kolukkumalai Trekking Partner"
                 schema={structuredData}
             />
 
-            {/* Hero Section */}
-            <section style={{ position: 'relative', padding: '100px 20px 60px', textAlign: 'center', background: 'radial-gradient(circle at center, rgba(212, 175, 55, 0.05) 0%, transparent 70%)' }}>
+            {/* Hero Section with Parallax */}
+            <div style={{
+                position: 'relative',
+                height: '60vh',
+                minHeight: '500px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                marginBottom: '60px'
+            }}>
+                <motion.div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'url("/images/why_choose_us/campfire.png")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'brightness(0.4)',
+                    y: y,
+                    scale: 1.1,
+                    zIndex: 0
+                }} />
+
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     className="container"
-                    style={{ maxWidth: '1000px', margin: '0 auto' }}
+                    style={{ position: 'relative', zIndex: 1, maxWidth: '1000px', margin: '0 auto', textAlign: 'center' }}
                 >
                     <motion.img
                         initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}
@@ -159,9 +195,9 @@ const AboutPage = () => {
                         style={{ height: '140px', width: 'auto', marginBottom: '40px', objectFit: 'contain', filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.15))' }}
                     />
 
-                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: '800', marginBottom: '24px', lineHeight: '1.1', letterSpacing: '-1px', fontFamily: 'var(--font-serif)' }}>
-                        Aanandham
-                        <span style={{ display: 'block', fontSize: '0.4em', fontWeight: '400', color: '#71717a', marginTop: '10px', fontFamily: 'var(--font-sans)', letterSpacing: '3px', textTransform: 'uppercase' }}>Luxury Camping & Resorts in Munnar</span>
+                    <h1 style={{ fontSize: 'clamp(36px, 6vw, 64px)', fontWeight: '800', marginBottom: '24px', lineHeight: '1.1', letterSpacing: '-1px', fontFamily: 'var(--font-serif)', color: 'white' }}>
+                        Aanandham.go
+                        <span style={{ display: 'block', fontSize: '0.4em', fontWeight: '400', color: 'rgba(255,255,255,0.8)', marginTop: '10px', fontFamily: 'var(--font-sans)', letterSpacing: '3px', textTransform: 'uppercase' }}>Luxury Camping & Resorts in Kerala</span>
                     </h1>
 
                     {/* Stats Grid - CHANGED TO ONE LINE FLEXBOX */}
@@ -172,16 +208,17 @@ const AboutPage = () => {
                         alignItems: 'center',
                         gap: '30px',
                         padding: '40px',
-                        background: 'var(--bg-off-white)',
+                        background: 'rgba(255,255,255,0.1)',
+                        backdropFilter: 'blur(10px)',
                         borderRadius: '30px',
                         boxShadow: '0 20px 40px -10px rgba(0,0,0,0.3)',
                         marginBottom: '80px',
-                        border: '1px solid var(--border-light)'
+                        border: '1px solid rgba(255,255,255,0.2)'
                     }}>
                         {stats.map((stat, index) => <Counter key={index} value={stat.number} label={stat.label} />)}
                     </div>
                 </motion.div>
-            </section>
+            </div>
 
             {/* Did You Know / Fact Block */}
             <section style={{ padding: '60px 20px' }}>
@@ -255,7 +292,7 @@ const AboutPage = () => {
                                     We aren't a giant corporate agency. We started small, using our savings to rent our first campsite. We vetted every location ourselves. If we wouldn't let our own families stay there, we didn't list it.
                                 </p>
                                 <p>
-                                    Today, <strong>Aanandham</strong> is a collection of hand-picked stays, but we still consider ourselves students of these mountains—always exploring, always learning.
+                                    Today, <strong>Aanandham.go</strong> is a collection of hand-picked stays, but we still consider ourselves students of these mountains—always exploring, always learning.
                                 </p>
                             </div>
 
@@ -372,6 +409,54 @@ const AboutPage = () => {
                 </div>
             </section>
 
+            {/* Partnerships & Collaborations Section */}
+            <section style={{ padding: '100px 20px', background: 'var(--bg-dark)', color: 'white' }}>
+                <div className="container" style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', fontSize: '14px' }}>Let's Build Memories Together</span>
+                        <h2 style={{ fontSize: '42px', fontWeight: '800', margin: '20px 0', fontFamily: 'var(--font-serif)' }}>Partner with Aanandham.go</h2>
+                        <p style={{ color: '#a1a1aa', fontSize: '18px', maxWidth: '800px', margin: '0 auto 50px', lineHeight: '1.6' }}>
+                            Are you a <strong>Trip Planner</strong>, <strong>Event Organizer</strong>, or <strong>Travel Blogger</strong>? We love collaborating with passionate storytellers and community builders. Let's make Kerala's wilderness more accessible and magical for everyone.
+                        </p>
+                    </motion.div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '30px', textAlign: 'left' }}>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '30px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <h4 style={{ color: 'var(--primary)', marginBottom: '15px', fontSize: '20px', fontWeight: '700' }}>Trip Planners</h4>
+                            <p style={{ color: '#d1d5db', fontSize: '15px' }}>Access verified inventory, special group rates, and dedicated on-ground support for your curated trips.</p>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '30px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <h4 style={{ color: 'var(--primary)', marginBottom: '15px', fontSize: '20px', fontWeight: '700' }}>Collaborations</h4>
+                            <p style={{ color: '#d1d5db', fontSize: '15px' }}>Influencers and content creators are welcome! We provide the base; you tell the story through your lens.</p>
+                        </div>
+                        <div style={{ background: 'rgba(255,255,255,0.05)', padding: '30px', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                            <h4 style={{ color: 'var(--primary)', marginBottom: '15px', fontSize: '20px', fontWeight: '700' }}>Brand Partners</h4>
+                            <p style={{ color: '#d1d5db', fontSize: '15px' }}>Outdoor gear, apparel, or sustainable tech brands—let's create authentic placement experiences.</p>
+                        </div>
+                    </div>
+
+                    <div style={{ marginTop: '50px' }}>
+                        <Link to="/contact" style={{
+                            display: 'inline-block',
+                            background: 'var(--primary)',
+                            color: 'white',
+                            padding: '18px 50px',
+                            borderRadius: '50px',
+                            fontSize: '18px',
+                            fontWeight: '700',
+                            textDecoration: 'none',
+                            boxShadow: '0 10px 30px rgba(212, 175, 55, 0.3)'
+                        }}>
+                            Send Collaboration Enquiry
+                        </Link>
+                    </div>
+                </div>
+            </section>
+
             {/* FAQ Section */}
             <section style={{ padding: '80px 20px', background: 'var(--bg-white)' }}>
                 <div className="container" style={{ maxWidth: '800px', margin: '0 auto' }}>
@@ -414,7 +499,6 @@ const AboutPage = () => {
                 </div>
             </section>
 
-            <Footer />
         </div>
     );
 };

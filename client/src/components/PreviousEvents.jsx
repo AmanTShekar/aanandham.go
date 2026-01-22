@@ -1,14 +1,40 @@
-import { useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { previousEvents } from '../data/siteContent';
+import { useRef, useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { siteContentAPI } from '../services/api';
+// Fallback
+import { previousEvents as staticPreviousEvents } from '../data/siteContent';
 import { FaArrowRight } from 'react-icons/fa';
 import RecapModal from './RecapModal';
 
 const PreviousEvents = () => {
     const containerRef = useRef(null);
     const [selectedRecap, setSelectedRecap] = useState(null);
-
+    const [previousEvents, setPreviousEvents] = useState([]);
     const [activeIndex, setActiveIndex] = useState(0);
+    const [width, setWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const data = await siteContentAPI.getPreviousEvents();
+                if (data && data.length > 0) {
+                    setPreviousEvents(data);
+                } else {
+                    setPreviousEvents(staticPreviousEvents);
+                }
+            } catch (error) {
+                console.error("Error fetching previous events:", error);
+                setPreviousEvents(staticPreviousEvents);
+            }
+        };
+        fetchEvents();
+    }, []);
 
     const handleScroll = () => {
         if (containerRef.current) {
@@ -22,10 +48,6 @@ const PreviousEvents = () => {
             }
         }
     };
-
-    // Attach scroll listener to the specific div is tricky with ref scoping here if we didn't attach ref to the div directly.
-    // Let's modify the map to render the div with an ID or use a callback ref on the scroll container.
-    // For simplicity, let's just make the dots work by modifying the scroll container render.
 
     return (
         <>
@@ -47,89 +69,143 @@ const PreviousEvents = () => {
                         </motion.div>
                     </div>
 
-                    <div
-                        className="horizontal-scroll-container"
-                        onScroll={(e) => {
-                            const scrollLeft = e.target.scrollLeft;
-                            const width = e.target.offsetWidth;
-                            const index = Math.round(scrollLeft / (width * 0.8));
-                            setActiveIndex(index);
-                        }}
-                    >
+                    {/* Responsive Layout: Scroll on Mobile, Bento Grid on Desktop */}
+                    <div className={width < 768 ? "horizontal-scroll-container" : "bento-grid-container"}>
+                        <style>{`
+                            .bento-grid-container {
+                                display: grid;
+                                grid-template-columns: repeat(12, 1fr);
+                                gap: 24px;
+                                padding-bottom: 40px;
+                            }
+                            .bento-item {
+                                position: relative;
+                                border-radius: 32px;
+                                overflow: hidden;
+                                cursor: pointer;
+                                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                            }
+                            .bento-item:hover {
+                                transform: translateY(-8px) scale(1.02);
+                                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+                                z-index: 2;
+                            }
+                            /* Specific Spans for Bento Effect */
+                            .bento-item:nth-child(1) { grid-column: span 8; height: 450px; }
+                            .bento-item:nth-child(2) { grid-column: span 4; height: 450px; }
+                            .bento-item:nth-child(3) { grid-column: span 4; height: 350px; }
+                            .bento-item:nth-child(4) { grid-column: span 4; height: 350px; }
+                            .bento-item:nth-child(5) { grid-column: span 4; height: 350px; }
+
+                            @media (max-width: 1024px) {
+                                .bento-item:nth-child(n) { grid-column: span 6; height: 350px; }
+                            }
+                        `}</style>
+
                         {previousEvents.map((evt, i) => (
                             <motion.div
-                                key={evt.id}
-                                className="previous-event-card"
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
+                                key={evt.id || i}
+                                className={width < 768 ? "previous-event-card" : "bento-item"}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
-                                transition={{ delay: i * 0.2, type: 'spring', stiffness: 50 }}
-                                whileHover={{ y: -10 }}
+                                transition={{ delay: i * 0.1 }}
+                                onClick={() => setSelectedRecap(evt)}
                                 itemScope
                                 itemType="http://schema.org/Event"
                             >
-                                <div style={{ height: '240px', overflow: 'hidden' }}>
+                                <div style={{ height: '100%', width: '100%', position: 'relative' }}>
                                     <img
                                         src={evt.image}
                                         alt={evt.title}
                                         itemProp="image"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }}
-                                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
-                                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
-                                </div>
-                                <div className="event-card-content">
+                                    {/* Gradient Overlay */}
                                     <div style={{
-                                        display: 'inline-block',
-                                        padding: '6px 14px',
-                                        borderRadius: '50px',
-                                        border: '1px solid #3f3f46',
-                                        color: '#d4d4d8',
-                                        fontSize: '12px',
-                                        fontWeight: '600',
-                                        marginBottom: '20px'
+                                        position: 'absolute', inset: 0,
+                                        background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 50%, transparent 100%)'
+                                    }} />
+
+                                    {/* Content */}
+                                    <div style={{
+                                        position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '30px',
+                                        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end'
                                     }}>
-                                        <span itemProp="startDate">{evt.date}</span>
+                                        <div style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            background: 'rgba(255,255,255,0.1)',
+                                            backdropFilter: 'blur(10px)',
+                                            padding: '6px 16px',
+                                            borderRadius: '100px',
+                                            border: '1px solid rgba(255,255,255,0.2)',
+                                            color: '#e0e0e0',
+                                            fontSize: '12px',
+                                            fontWeight: '600',
+                                            marginBottom: '16px',
+                                            width: 'fit-content'
+                                        }}>
+                                            <span itemProp="startDate">{evt.date}</span>
+                                        </div>
+                                        <h3 style={{
+                                            fontSize: width < 768 ? '24px' : '32px',
+                                            fontWeight: '800',
+                                            color: 'white',
+                                            marginBottom: '8px',
+                                            lineHeight: '1.2',
+                                            textShadow: '0 2px 10px rgba(0,0,0,0.5)'
+                                        }} itemProp="name">
+                                            {evt.title}
+                                        </h3>
+                                        <p style={{
+                                            color: 'rgba(255,255,255,0.8)',
+                                            fontSize: '16px',
+                                            lineHeight: '1.5',
+                                            marginBottom: '0',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden'
+                                        }} itemProp="description">
+                                            {evt.description}
+                                        </p>
                                     </div>
-                                    <h3 className="event-card-title" itemProp="name">
-                                        {evt.title}
-                                    </h3>
-                                    <p style={{ color: '#a1a1aa', lineHeight: '1.6', marginBottom: '24px' }} itemProp="description">
-                                        {evt.description}
-                                    </p>
-                                    <button style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: 'var(--primary)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        fontSize: '14px',
-                                        fontWeight: '700'
-                                    }}
-                                        onClick={() => setSelectedRecap(evt)}
-                                    >
-                                        Recap <FaArrowRight size={12} />
-                                    </button>
+
+                                    {/* Hover Reveal Icon (Desktop) */}
+                                    {width >= 768 && (
+                                        <div style={{
+                                            position: 'absolute', top: '20px', right: '20px',
+                                            background: 'white', borderRadius: '50%', width: '40px', height: '40px',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            opacity: 0, transition: 'opacity 0.3s',
+                                            className: 'hover-reveal'
+                                        }}>
+                                            <FaArrowRight color="black" />
+                                        </div>
+                                    )}
                                 </div>
                             </motion.div>
                         ))}
                     </div>
                     {/* Dots Indicator */}
-                    <div className="mobile-only" style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '20px' }}>
-                        {previousEvents.map((_, idx) => (
-                            <div
-                                key={idx}
-                                style={{
-                                    width: idx === activeIndex ? '24px' : '8px',
-                                    height: '8px',
-                                    borderRadius: '4px',
-                                    background: idx === activeIndex ? 'var(--primary)' : '#333',
-                                    transition: 'all 0.3s ease'
-                                }}
-                            />
-                        ))}
-                    </div>
+                    {width < 768 && (
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginTop: '20px' }}>
+                            {previousEvents.map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    style={{
+                                        width: idx === activeIndex ? '24px' : '8px',
+                                        height: '8px',
+                                        borderRadius: '4px',
+                                        background: idx === activeIndex ? 'var(--primary)' : '#333',
+                                        transition: 'all 0.3s ease'
+                                    }}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
             <RecapModal event={selectedRecap} onClose={() => setSelectedRecap(null)} />

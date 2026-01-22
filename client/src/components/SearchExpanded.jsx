@@ -9,6 +9,12 @@ import usePlacesAutocomplete, {
     getLatLng,
 } from "use-places-autocomplete";
 import { useJsApiLoader } from '@react-google-maps/api';
+import axios from 'axios';
+
+let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+if (!API_URL.endsWith('/api')) {
+    API_URL = API_URL.replace(/\/$/, '') + '/api';
+}
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
@@ -22,6 +28,7 @@ const SearchExpanded = () => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [activeField, setActiveField] = useState(null); // 'location', 'dates', 'guests'
+    const [dbSuggestions, setDbSuggestions] = useState([]);
 
     // Guest State
     const [guests, setGuests] = useState({
@@ -63,6 +70,25 @@ const SearchExpanded = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [wrapperRef, clearSuggestions]);
+
+    // Fetch DB Suggestions
+    useEffect(() => {
+        const fetchSuggestions = async () => {
+            if (!value || value.length < 2) {
+                setDbSuggestions([]);
+                return;
+            }
+            try {
+                const { data } = await axios.get(`${API_URL}/search/suggestions?query=${encodeURIComponent(value)}`);
+                setDbSuggestions(data);
+            } catch (err) {
+                console.error("Error fetching suggestions:", err);
+            }
+        };
+
+        const timeoutId = setTimeout(fetchSuggestions, 300);
+        return () => clearTimeout(timeoutId);
+    }, [value]);
 
     const handleSearch = () => {
         const totalGuests = guests.adults + guests.children;
@@ -248,6 +274,52 @@ const SearchExpanded = () => {
                                     border: '1px solid var(--border-light)'
                                 }}
                             >
+                                {dbSuggestions.length > 0 && (
+                                    <>
+                                        <div style={{ padding: '8px 24px', fontSize: '12px', fontWeight: '700', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+                                            Top Destinations
+                                        </div>
+                                        {dbSuggestions.map((name, index) => (
+                                            <div
+                                                key={`db-${index}`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleLocationSelect(name);
+                                                }}
+                                                style={{
+                                                    padding: '12px 32px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '16px',
+                                                    cursor: 'pointer',
+                                                    transition: 'background-color 0.2s'
+                                                }}
+                                                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
+                                                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                            >
+                                                <div style={{
+                                                    backgroundColor: 'var(--bg-off-white)',
+                                                    padding: '10px',
+                                                    borderRadius: '12px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                }}>
+                                                    <FaMapMarkerAlt size={18} color="var(--primary)" />
+                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                    <span style={{ fontSize: '15px', color: 'var(--text-main)', fontWeight: '600' }}>
+                                                        {name}
+                                                    </span>
+                                                    <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                                                        Kerala, India
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {data.length > 0 && <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>}
+                                    </>
+                                )}
                                 {data.map(({ place_id, description, structured_formatting }) => (
                                     <div
                                         key={place_id}

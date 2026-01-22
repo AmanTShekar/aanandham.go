@@ -52,5 +52,5 @@
 Once both are deployed:
 1.  Copy the **Render Backend URL** (e.g., `https://aanandham-api.onrender.com`).
 2.  Go back to **Netlify > Site Settings > Environment Variables**.
-3.  Update/Add `VITE_API_BASE_URL` with that Render URL (ensure no trailing slash if your code adds it).
+3.  Update/Add `                ` with that Render URL (ensure no trailing slash if your code adds it).
 4.  **Trigger a new deploy** in Netlify for the change to take effect.

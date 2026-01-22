@@ -1,0 +1,31 @@
+{
+    "name": "Aanandham - Luxury Camping Munnar",
+    "short_name": "Aanandham",
+    "description": "Verified luxury tent stays and trekking in Munnar, Kerala.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#D4AF37",
+    "icons": [
+        {
+            "src": "/pnglogo.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "categories": [
+        "travel",
+        "hospitality"
+    ]
+}

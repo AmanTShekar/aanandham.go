@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { FaApple, FaFacebookF, FaEye, FaEyeSlash, FaPaperPlane } from 'react-icons/fa';
+import { FaApple, FaFacebookF, FaEye, FaEyeSlash, FaPaperPlane, FaArrowLeft } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authAPI } from '../services/api';
+import pngLogo from '../assets/pnglogo.png';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -42,8 +43,36 @@ const LoginPage = () => {
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: 'var(--bg-light)',
-            padding: '40px 20px'
+            padding: '40px 20px',
+            position: 'relative'
         }}>
+            {/* Back to Home Button */}
+            <Link to="/" style={{
+                position: 'absolute',
+                top: '24px',
+                left: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                textDecoration: 'none',
+                color: 'var(--text-secondary)',
+                fontSize: '14px',
+                fontWeight: '600',
+                transition: 'all 0.2s ease',
+                zIndex: 10
+            }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--primary)';
+                    e.currentTarget.style.transform = 'translateX(-4px)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--text-secondary)';
+                    e.currentTarget.style.transform = 'translateX(0)';
+                }}
+            >
+                <FaArrowLeft /> Back to Home
+            </Link>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -61,28 +90,35 @@ const LoginPage = () => {
                 {/* Logo */}
                 <Link to="/" style={{
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
-                    marginBottom: '48px',
+                    marginBottom: '40px',
                     textDecoration: 'none'
                 }}>
-                    <div style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'var(--primary-gradient)',
-                        borderRadius: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: '800',
-                        fontSize: '24px',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <FaPaperPlane size={20} style={{ transform: 'translate(-2px, 2px)' }} />
+                    <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '120px', height: 'auto', marginBottom: '12px' }} />
+                    <div style={{ textAlign: 'center' }}>
+                        <span style={{
+                            fontSize: '28px',
+                            fontWeight: '700',
+                            color: 'var(--primary)',
+                            letterSpacing: '-0.5px',
+                            display: 'block',
+                            lineHeight: '1'
+                        }}>
+                            Aanandham.go
+                        </span>
+                        <span style={{
+                            fontSize: '10px',
+                            color: 'var(--text-secondary)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '3px',
+                            marginTop: '4px',
+                            display: 'block'
+                        }}>
+                            Luxury Stays
+                        </span>
                     </div>
-                    <span style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Annadnam</span>
                 </Link>
 
                 {/* Header */}
@@ -395,7 +431,7 @@ const LoginPage = () => {
                     textAlign: 'center',
                     lineHeight: '1.6'
                 }}>
-                    By continuing, you agree to Annadnam's{' '}
+                    By continuing, you agree to Aanandham.go's{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Terms</a>
                     {' '}and{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Privacy Policy</a>

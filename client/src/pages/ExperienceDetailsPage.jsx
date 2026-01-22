@@ -36,12 +36,41 @@ const ExperienceDetailsPage = () => {
         return <div style={{ padding: '40px', textAlign: 'center' }}>Experience not found</div>;
     }
 
+    const experienceSchema = {
+        "@context": "https://schema.org",
+        "@type": "Event",
+        "name": experience.title,
+        "description": experience.description,
+        "image": experience.image,
+        "location": {
+            "@type": "Place",
+            "name": experience.location,
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": experience.location,
+                "addressRegion": "Kerala",
+                "addressCountry": "IN"
+            }
+        },
+        "offers": {
+            "@type": "Offer",
+            "price": experience.price,
+            "priceCurrency": "INR",
+            "availability": "https://schema.org/InStock"
+        },
+        "performer": {
+            "@type": "Person",
+            "name": experience.host?.name || "Local Guide"
+        }
+    };
+
     return (
         <div style={{ backgroundColor: 'var(--bg-white)', minHeight: '100vh', paddingBottom: '80px' }}>
             <SEO
-                title={`${experience.title} - Munnar Experiences | Aanandham.go`}
-                description={experience.description}
+                title={`${experience.title} - ${experience.location} Experience | Aanandham.go`}
+                description={experience.description?.substring(0, 160)}
                 image={experience.image}
+                schema={experienceSchema}
             />
 
             {/* Mobile Header Image */}

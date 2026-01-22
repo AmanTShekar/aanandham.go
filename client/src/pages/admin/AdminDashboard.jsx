@@ -34,24 +34,8 @@ const AdminDashboard = () => {
         { title: 'Total Revenue', value: `$${stats?.stats.totalRevenue || 0}`, icon: FaDollarSign, gradient: 'linear-gradient(135deg, #FFB75E 0%, #ED8F03 100%)', shadow: '0 10px 20px -10px rgba(237, 143, 3, 0.5)' }
     ];
 
-    // Mock data for charts
-    const revenueData = [
-        { month: 'Jan', revenue: 4000 },
-        { month: 'Feb', revenue: 3000 },
-        { month: 'Mar', revenue: 5000 },
-        { month: 'Apr', revenue: 4500 },
-        { month: 'May', revenue: 6000 },
-        { month: 'Jun', revenue: 5500 }
-    ];
-
-    const bookingsData = [
-        { month: 'Jan', bookings: 40 },
-        { month: 'Feb', bookings: 30 },
-        { month: 'Mar', bookings: 50 },
-        { month: 'Apr', bookings: 45 },
-        { month: 'May', bookings: 60 },
-        { month: 'Jun', bookings: 55 }
-    ];
+    // Use real chart data or fallback to empty array
+    const chartData = stats?.chartData || [];
 
     return (
         <div style={{ padding: '40px', backgroundColor: '#F7F7F7', minHeight: '100vh' }}>
@@ -150,7 +134,7 @@ const AdminDashboard = () => {
                             Revenue Overview
                         </h3>
                         <ResponsiveContainer width="100%" height={300}>
-                            <LineChart data={revenueData}>
+                            <LineChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#E8E8E8" />
                                 <XAxis dataKey="month" stroke="#717171" />
                                 <YAxis stroke="#717171" />
@@ -178,7 +162,7 @@ const AdminDashboard = () => {
                             Bookings Trend
                         </h3>
                         <ResponsiveContainer width="100%" height={300}>
-                            <BarChart data={bookingsData}>
+                            <BarChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#E8E8E8" />
                                 <XAxis dataKey="month" stroke="#717171" />
                                 <YAxis stroke="#717171" />

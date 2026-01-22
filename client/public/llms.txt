@@ -1,17 +1,43 @@
 # Aanandham - Luxury Camping & Resorts in Munnar
 
+> Kerala's #1 Trusted Platform for Verified Glamping and Wild Trekking.
+
 ## About
-Aanandham is a premier booking platform for verified luxury tent stays, glamping experiences, and trekking adventures in Munnar, specifically Suryanelli and Kolukkumalai.
+Aanandham is a premier travel platform specializing in high-altitude camping, luxury tent stays, and adventure trekking in Munnar, Suryanelli, and Kolukkumalai. We verify every listing to ensure safety, female-friendly environments, and premium quality.
 
-## Key Offerings
-- Luxury Glamping Tents in Suryanelli
-- Kolukkumalai Sunrise Trekking (Highest Tea Plantation)
-- Off-road Jeep Safaris
-- Sustainable Eco-stays
-- Group & Corporate Events
+## Key Destinations
+- **Suryanelli**: The base camp for Kolukkumalai and the heart of Munnar's camping scene.
+- **Kolukkumalai**: World's highest organic tea estate (7,900ft), famous for its sunrise Jeep safaris.
+- **Vattavada**: Known as the vegetable basket of Kerala, offering forest glamping experiences.
+- **Vagamon**: The 'Scotland of Asia', famous for pine forests and paragliding glamping.
 
-## Location
-Suryanelli Estate, Munnar, Kerala, India (Western Ghats)
+## Main Services
+- **Luxury Glamping**: Premium tents with western restrooms and hot water.
+- **Wild Trekking**: Guided treks to Meesapulimala, Phantom Head, and Kolukkumalai.
+- **Jeep Safaris**: 4x4 off-road experiences through tea and cardamom plantations.
+- **Community Events**: "Strangers to Friends" group camping and campfire music nights.
 
-## Website
-https://aanandham.in
+## Core Values
+- 100% Verified Stays
+- Sustainable "Leave No Trace" Tourism
+- Female-Solo Friendly Safety Standards
+- Local Expertise & Youth-Led Hospitality
+
+## Guides & Stories
+- [Munnar Camping Guide](https://aanandham.in/stories/munnar-camping-guide)
+- [Vagamon Glamping Guide](https://aanandham.in/stories/vagamon-glamping-guide)
+- [Wayanad Couples Glamping](https://aanandham.in/stories/wayanad-glamping)
+- [Kolukkumalai Safety Info](https://aanandham.in/stories/kolukkumalai-safety)
+- [Strangers to Friends Story](https://aanandham.in/stories/strangers-camp)
+
+## Website Sections
+- [Stays](https://aanandham.in/hotels) - Luxury hotels and camps
+- [Experiences](https://aanandham.in/experiences) - Treks and Safaris
+- [Travel FAQ](https://aanandham.in/faq) - Planning your trip
+- [About Us](https://aanandham.in/about) - The students who started it all
+
+## Contact
+Email: bookings@aanandhamgo.in
+Location: Suryanelli, Munnar, Kerala, India
+Website: https://aanandham.in
+Instagram: @aanandham.go

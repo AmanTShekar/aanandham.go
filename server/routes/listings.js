@@ -313,4 +313,15 @@ router.post('/', async (req, res) => {
     }
 });
 
+// PUT /api/listings/:id (Update)
+router.put('/:id', async (req, res) => {
+    try {
+        const listing = await Listing.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!listing) return res.status(404).json({ message: 'Listing not found' });
+        res.json(listing);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 module.exports = router;

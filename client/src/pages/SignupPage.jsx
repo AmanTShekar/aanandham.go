@@ -4,6 +4,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authAPI } from '../services/api';
+import pngLogo from '../assets/pnglogo.png';
 
 const SignupPage = () => {
     const [name, setName] = useState('');
@@ -76,28 +77,35 @@ const SignupPage = () => {
                 {/* Logo */}
                 <Link to="/" style={{
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
-                    marginBottom: '48px',
+                    marginBottom: '40px',
                     textDecoration: 'none'
                 }}>
-                    <div style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'var(--primary-gradient)',
-                        borderRadius: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: '800',
-                        fontSize: '24px',
-                        boxShadow: 'var(--shadow-md)'
-                    }}>
-                        <FaPaperPlane size={20} style={{ transform: 'translate(-2px, 2px)' }} />
+                    <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '120px', height: 'auto', marginBottom: '12px' }} />
+                    <div style={{ textAlign: 'center' }}>
+                        <span style={{
+                            fontSize: '28px',
+                            fontWeight: '700',
+                            color: 'var(--text-main)',
+                            letterSpacing: '-0.5px',
+                            display: 'block',
+                            lineHeight: '1'
+                        }}>
+                            Aanandham.go
+                        </span>
+                        <span style={{
+                            fontSize: '10px',
+                            color: 'var(--text-secondary)',
+                            textTransform: 'uppercase',
+                            letterSpacing: '3px',
+                            marginTop: '4px',
+                            display: 'block'
+                        }}>
+                            Luxury Stays
+                        </span>
                     </div>
-                    <span style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Annadnam</span>
                 </Link>
 
                 {/* Header */}
@@ -469,7 +477,7 @@ const SignupPage = () => {
                     textAlign: 'center',
                     lineHeight: '1.6'
                 }}>
-                    By signing up, you agree to Annadnam's{' '}
+                    By signing up, you agree to Aanandham.go's{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Terms</a>
                     {' '}and{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Privacy Policy</a>

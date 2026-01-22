@@ -1,7 +1,16 @@
 import axios from 'axios';
 
 // Ensure API_URL always ends with /api
-let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+// Ensure API_URL always ends with /api
+let API_URL = import.meta.env.VITE_API_URL;
+
+// Force localhost API if running locally
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    API_URL = 'http://localhost:5000';
+} else if (!API_URL) {
+    API_URL = 'http://localhost:5000';
+}
+
 if (!API_URL.endsWith('/api')) {
     API_URL = API_URL.replace(/\/$/, '') + '/api';
 }
@@ -97,6 +106,16 @@ export const listingsAPI = {
         }
     },
 
+    updateListing: async (id, listingData) => {
+        try {
+            const response = await axios.put(`${API_URL}/listings/${id}`, listingData);
+            return response.data;
+        } catch (error) {
+            console.error('Error updating listing:', error);
+            throw error;
+        }
+    },
+
     getListingsByBounds: async (bounds) => {
         try {
             const response = await axios.get(`${API_URL}/listings/search/bounds`, {
@@ -170,6 +189,14 @@ export const experiencesAPI = {
     },
     createExperience: async (experienceData) => {
         const response = await axios.post(`${API_URL}/experiences`, experienceData);
+        return response.data;
+    },
+    updateExperience: async (id, experienceData) => {
+        const response = await axios.put(`${API_URL}/experiences/${id}`, experienceData);
+        return response.data;
+    },
+    deleteExperience: async (id) => {
+        const response = await axios.delete(`${API_URL}/experiences/${id}`);
         return response.data;
     }
 };
@@ -384,6 +411,116 @@ export const inquiryAPI = {
 
     getInquiryStats: async () => {
         const response = await axios.get(`${API_URL}/inquiries/stats/overview`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    }
+};
+
+export const siteContentAPI = {
+    getContent: async (key) => {
+        const response = await axios.get(`${API_URL}/site/content/${key}`);
+        return response.data;
+    },
+    updateContent: async (key, content) => {
+        const response = await axios.put(`${API_URL}/site/content/${key}`, { content }, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getSiteImages: async () => {
+        const response = await axios.get(`${API_URL}/admin/site-images`);
+        return response.data;
+    },
+
+    getSightseeing: async () => {
+        const response = await axios.get(`${API_URL}/site/sightseeing`);
+        return response.data;
+    },
+    createSightseeing: async (data) => {
+        const response = await axios.post(`${API_URL}/site/sightseeing`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    updateSightseeing: async (id, data) => {
+        const response = await axios.put(`${API_URL}/site/sightseeing/${id}`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    deleteSightseeing: async (id) => {
+        const response = await axios.delete(`${API_URL}/site/sightseeing/${id}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getTravelStories: async () => {
+        const response = await axios.get(`${API_URL}/site/travel-stories`);
+        return response.data;
+    },
+    createTravelStory: async (data) => {
+        const response = await axios.post(`${API_URL}/site/travel-stories`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    updateTravelStory: async (id, data) => {
+        const response = await axios.put(`${API_URL}/site/travel-stories/${id}`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    deleteTravelStory: async (id) => {
+        const response = await axios.delete(`${API_URL}/site/travel-stories/${id}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getPreviousEvents: async () => {
+        const response = await axios.get(`${API_URL}/site/previous-events`);
+        return response.data;
+    },
+    createPreviousEvent: async (data) => {
+        const response = await axios.post(`${API_URL}/site/previous-events`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    updatePreviousEvent: async (id, data) => {
+        const response = await axios.put(`${API_URL}/site/previous-events/${id}`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    deletePreviousEvent: async (id) => {
+        const response = await axios.delete(`${API_URL}/site/previous-events/${id}`, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+
+    getGuides: async () => {
+        const response = await axios.get(`${API_URL}/site/guides`);
+        return response.data;
+    },
+    createGuide: async (data) => {
+        const response = await axios.post(`${API_URL}/site/guides`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    updateGuide: async (id, data) => {
+        const response = await axios.put(`${API_URL}/site/guides/${id}`, data, {
+            headers: getAuthHeader()
+        });
+        return response.data;
+    },
+    deleteGuide: async (id) => {
+        const response = await axios.delete(`${API_URL}/site/guides/${id}`, {
             headers: getAuthHeader()
         });
         return response.data;

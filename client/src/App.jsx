@@ -27,12 +27,15 @@ const AboutPage = React.lazy(() => import('./pages/AboutPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const LegalPage = React.lazy(() => import('./pages/LegalPage'));
 const FullGalleryPage = React.lazy(() => import('./pages/FullGalleryPage')); // Added by instruction
+const StoriesPage = React.lazy(() => import('./pages/StoriesPage'));
 const StrangersCampPage = React.lazy(() => import('./pages/StrangersCampPage'));
 const MunnarGuide = React.lazy(() => import('./pages/blogs/MunnarGuide'));
 const WayanadGlamping = React.lazy(() => import('./pages/blogs/WayanadGlamping'));
 const KolukkumalaiSafety = React.lazy(() => import('./pages/blogs/KolukkumalaiSafety'));
 const SuryanelliSpots = React.lazy(() => import('./pages/blogs/SuryanelliSpots'));
-const MunnarFAQ = React.lazy(() => import('./pages/blogs/MunnarFAQ'));
+const VagamonGuide = React.lazy(() => import('./pages/blogs/VagamonGuide'));
+const CampingPartnership = React.lazy(() => import('./pages/blogs/CampingPartnership'));
+const FAQPage = React.lazy(() => import('./pages/FAQPage'));
 
 // Admin Pages
 const AdminLayout = React.lazy(() => import('./pages/admin/AdminLayout'));
@@ -43,6 +46,7 @@ const AdminBookings = React.lazy(() => import('./pages/admin/AdminBookings'));
 const AdminExperiences = React.lazy(() => import('./pages/admin/AdminExperiences'));
 const AdminReviews = React.lazy(() => import('./pages/admin/AdminReviews'));
 const AdminGallery = React.lazy(() => import('./pages/admin/AdminGallery'));
+const AdminSiteContent = React.lazy(() => import('./pages/admin/AdminSiteContent'));
 const NotFound = React.lazy(() => import('./pages/NotFound'));
 
 // Business Pages
@@ -70,12 +74,15 @@ function App() {
                   {/* Home and Main Pages */}
                   <Route index element={<HomePage />} />
                   <Route path="/hotels" element={<HotelsPage />} />
+                  <Route path="/stories" element={<StoriesPage />} />
                   <Route path="/stories/strangers-camp" element={<StrangersCampPage />} />
                   <Route path="/stories/munnar-camping-guide" element={<MunnarGuide />} />
                   <Route path="/stories/wayanad-glamping" element={<WayanadGlamping />} />
                   <Route path="/stories/kolukkumalai-safety" element={<KolukkumalaiSafety />} />
                   <Route path="/stories/suryanelli-spots" element={<SuryanelliSpots />} />
-                  <Route path="/stories/munnar-faq" element={<MunnarFAQ />} />
+                  <Route path="/stories/vagamon-glamping-guide" element={<VagamonGuide />} />
+                  <Route path="/stories/camping-partner-collaboration" element={<CampingPartnership />} />
+                  <Route path="/faq" element={<FAQPage />} />
                   <Route path="/gallery" element={<FullGalleryPage />} />
                   <Route path="experiences" element={<ExperiencesPage />} />
                   <Route path="experiences/:id" element={<ExperienceDetailsPage />} />
@@ -124,6 +131,7 @@ function App() {
                   <Route path="experiences" element={<AdminExperiences />} />
                   <Route path="reviews" element={<AdminReviews />} />
                   <Route path="gallery" element={<AdminGallery />} />
+                  <Route path="content" element={<AdminSiteContent />} />
                 </Route>
 
                 {/* Catch-all Route for 404 - MUST be last */}

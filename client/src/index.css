@@ -1,5 +1,5 @@
 :root {
-  /* Annadnam Luxury Palette: Midnight & Bronze */
+  /* Aanandham Luxury Palette: Midnight & Bronze */
   --primary: #D4AF37;
   /* Metallic Gold */
   --primary-gradient: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
@@ -70,6 +70,26 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar - Premium Gold */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
+  border: 2px solid var(--bg-white);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
 }
 
 *,

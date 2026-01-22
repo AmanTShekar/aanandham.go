@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { bookingsAPI, authAPI } from '../services/api';
 import { Link } from 'react-router-dom';
 import { FaCalendar, FaMapMarkerAlt, FaMoneyBillWave } from 'react-icons/fa';
+import SEO from '../components/SEO';
 
 const TripsPage = () => {
     const [bookings, setBookings] = useState([]);
@@ -17,7 +18,7 @@ const TripsPage = () => {
 
         const fetchBookings = async () => {
             try {
-                const data = await bookingsAPI.getMyBookings();
+                const data = await bookingsAPI.getUserBookings(user.id || user._id);
                 setBookings(data);
             } catch (err) {
                 console.error('Failed to fetch bookings:', err);
@@ -70,7 +71,8 @@ const TripsPage = () => {
     }
 
     return (
-        <div style={{ padding: '40px', maxWidth: '1280px', margin: '0 auto' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '100px 40px 40px' }}>
+            <SEO title="My Trips & Bookings" />
             <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '32px', color: 'var(--text-main)' }}>Your Bookings</h1>
 
             {bookings.length === 0 ? (

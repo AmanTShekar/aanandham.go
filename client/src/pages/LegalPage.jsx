@@ -122,7 +122,7 @@ const LegalPage = ({ type }) => {
         <div style={{ paddingTop: '80px', minHeight: '100vh', background: 'var(--bg-white)', color: 'var(--text-main)' }}>
             <SEO
                 title={data.title}
-                description={`Read the ${data.title} for Aanandham - Luxury glamping and camping provider in Munnar, Kerala.`}
+                description={`Read the ${data.title} for Aanandham.go - Luxury glamping and camping provider in Munnar, Kerala.`}
             />
             <div className="container" style={{ maxWidth: '800px', margin: '0 auto', padding: '60px 20px' }}>
                 <motion.div

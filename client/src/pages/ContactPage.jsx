@@ -7,9 +7,9 @@ const ContactPage = () => {
     return (
         <>
             <SEO
-                title="Contact Us - Aanandham"
-                description="Get in touch with Aanandham for luxury camping bookings, trekking experiences, and travel inquiries in Munnar, Kerala."
-                keywords="contact aanandham, munnar camping contact, kerala travel support, booking inquiries"
+                title="Contact Us - Aanandham.go"
+                description="Get in touch with Aanandham.go for luxury camping bookings, trekking experiences, and travel inquiries in Munnar, Vagamon, Wayanad, and Kerala."
+                keywords="contact aanandham, munnar camping contact, vagamon glamping, wayanad stays, kerala travel support, booking inquiries"
             />
             <div style={{
                 paddingTop: '80px',
@@ -392,7 +392,7 @@ const ContactPage = () => {
                                 allowFullScreen=""
                                 loading="lazy"
                                 referrerPolicy="no-referrer-when-downgrade"
-                                title="Aanandham Location"
+                                title="Aanandham.go Location"
                             />
                         </div>
                     </div>

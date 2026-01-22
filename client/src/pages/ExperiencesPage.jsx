@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { experiencesAPI } from '../services/api';
 import { FaStar, FaHeart } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import CategoryBar from '../components/CategoryBar';
 import FilterModal from '../components/FilterModal';
 import { experienceCategories } from '../data/categories';
@@ -15,6 +15,10 @@ const ExperiencesPage = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [filters, setFilters] = useState({});
+
+    // Parallax
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 500], [0, 200]);
 
     useEffect(() => {
         const fetchExperiences = async () => {
@@ -43,27 +47,54 @@ const ExperiencesPage = () => {
     return (
         <div style={{ padding: '0', maxWidth: '100%', margin: '0', backgroundColor: 'var(--bg-off-white)', minHeight: '100vh', paddingBottom: '80px' }}>
             <SEO
-                title="Munnar Experiences - Camping, Trekking & Culture | Aanandham.go"
-                description="Book unique experiences in Munnar. From campfire nights in Suryanelli to tea tasting workshops and Kolukkumalai sunrises. Live the story of Kerala."
-                keywords="Munnar Things to Do, Camping Events, Trekking Packages, Tea Tasting, Kerala Culture"
+                title="Munnar, Vagamon & Wayanad Experiences - Camping & Trekking | Aanandham.go"
+                description="Book unique experiences in Kerala. From campfire nights in Suryanelli and Kolukkumalai sunrises to meadow treks in Vagamon and forest stays in Wayanad."
+                keywords="Munnar Things to Do, Vagamon Activities, Wayanad Trekking, Camping Events Kerala, Tea Tasting, Kolukkumalai Sunrise"
             />
 
-            <div style={{ paddingTop: '120px', paddingBottom: '40px', paddingLeft: '5%', paddingRight: '5%', textAlign: 'center' }}>
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                >
-                    <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', fontSize: '13px' }}>
-                        Curated Activities
-                    </span>
-                    <h1 style={{ fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: '900', color: 'var(--text-main)', marginTop: '16px', lineHeight: '1.1' }}>
-                        Experiences in Munnar
-                    </h1>
-                    <p style={{ fontSize: '18px', color: 'var(--text-secondary)', maxWidth: '700px', margin: '24px auto 0', lineHeight: '1.6' }}>
-                        Don't just visit, belong. Join our community events, guided treks, and cultural workshops designed for the modern traveler.
-                    </p>
-                </motion.div>
+            {/* Hero Section with Parallax */}
+            <div style={{
+                position: 'relative',
+                height: '60vh',
+                minHeight: '400px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                marginBottom: '40px'
+            }}>
+                <motion.div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'url("/images/previous_events/trekking_group.png")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'brightness(0.4)',
+                    y: y,
+                    scale: 1.1,
+                    zIndex: 0
+                }} />
+
+                <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px' }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <span style={{ color: 'var(--primary)', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', fontSize: '13px' }}>
+                            Premium Kerala Activities
+                        </span>
+                        <h1 style={{ fontSize: 'clamp(40px, 5vw, 64px)', fontWeight: '900', color: 'white', marginTop: '16px', lineHeight: '1.1' }}>
+                            Curated Experiences
+                        </h1>
+                        <p style={{ fontSize: '18px', color: 'rgba(255,255,255,0.9)', maxWidth: '700px', margin: '24px auto 0', lineHeight: '1.6' }}>
+                            Don't just visit, belong. Join our community events, guided treks, and cultural workshops across Munnar, Vagamon, and Wayanad.
+                        </p>
+                    </motion.div>
+                </div>
             </div>
 
             <CategoryBar

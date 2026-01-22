@@ -15,6 +15,8 @@ const listingSchema = new mongoose.Schema({
     rating: { type: Number, default: 0 },
     image: { type: String, required: true },
     images: [String],
+    latitude: { type: Number },
+    longitude: { type: Number },
 
     // Property Type Classification
     propertyType: {
@@ -135,6 +137,12 @@ const destinationSchema = new mongoose.Schema({
     description: { type: String, required: true },
     details: { type: String },
     highlights: [String],
+    gallery: [String],
+    topPlaces: [{
+        name: String,
+        image: String,
+        description: String
+    }],
     bestTimeToVisit: String,
     currency: String,
     language: String
@@ -221,5 +229,36 @@ module.exports = {
     Package: mongoose.model('Package', packageSchema),
     Guide: mongoose.model('Guide', guideSchema),
     SiteImage: mongoose.model('SiteImage', siteImageSchema),
-    Inquiry: mongoose.model('Inquiry', inquirySchema)
+    Inquiry: mongoose.model('Inquiry', inquirySchema),
+    Sightseeing: mongoose.model('Sightseeing', new mongoose.Schema({
+        title: { type: String, required: true },
+        location: { type: String, required: true },
+        image: { type: String, required: true },
+        description: { type: String, required: true },
+        order: { type: Number, default: 0 }
+    })),
+    TravelStory: mongoose.model('TravelStory', new mongoose.Schema({
+        title: { type: String, required: true },
+        category: { type: String, required: true },
+        image: { type: String, required: true },
+        link: { type: String, required: true },
+        date: { type: String, required: true }, // Keeping as String for flexibility or Date
+        order: { type: Number, default: 0 }
+    })),
+    SiteContent: mongoose.model('SiteContent', new mongoose.Schema({
+        key: { type: String, required: true, unique: true }, // e.g., 'whyChooseUs', 'heroSection'
+        content: { type: mongoose.Schema.Types.Mixed, required: true }
+    }, { timestamps: true })),
+    PreviousEvent: mongoose.model('PreviousEvent', new mongoose.Schema({
+        title: { type: String, required: true },
+        date: { type: String, required: true },
+        image: { type: String, required: true },
+        description: { type: String, required: true },
+        recapImages: [String],
+        order: { type: Number, default: 0 },
+        // New fields for "Happening Now" rich cards
+        price: { type: String }, // e.g., "₹2,500 / person"
+        location: { type: String },
+        duration: { type: String } // e.g., "2 Days"
+    }))
 };

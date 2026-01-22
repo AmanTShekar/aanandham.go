@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import { siteContentAPI } from '../services/api';
+import { galleryImages as staticImages } from '../data/siteContent';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { galleryImages as staticImages } from '../data/siteContent';
 
 const FullGalleryPage = () => {
     const [images, setImages] = useState([]);
@@ -12,10 +12,11 @@ const FullGalleryPage = () => {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const res = await axios.get('https://aanandham-go.onrender.com/api/admin/site-images');
-                if (res.data && res.data.length > 0) {
-                    setImages(res.data);
+                const data = await siteContentAPI.getSiteImages();
+                if (data && data.length > 0) {
+                    setImages(data);
                 } else {
+                    // Fallback formatting
                     setImages(staticImages.map((url, i) => ({ _id: `static-${i}`, url, title: "Munnar Experience" })));
                 }
             } catch (error) {
@@ -45,7 +46,7 @@ const FullGalleryPage = () => {
 
                     {/* SEO Hidden/Visible Content */}
                     <div style={{ marginTop: '20px', color: '#444', fontSize: '14px' }}>
-                        <p>Browse collection of: Tent stays in Suryanelli, Tea estate camping, Munnar glamping photos, and Campfire nights at Aanandham.</p>
+                        <p>Browse collection of: Tent stays in Suryanelli, Tea estate camping, Munnar glamping photos, and Campfire nights at Aanandham.go.</p>
                     </div>
                 </div>
 

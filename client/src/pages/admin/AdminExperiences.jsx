@@ -10,10 +10,14 @@ const AdminExperiences = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [editingId, setEditingId] = useState(null);
+
     // Detailed State for New/Edit Experience
     const [formData, setFormData] = useState({
         title: '',
         location: '',
+        latitude: '',
+        longitude: '',
         price: '',
         duration: '',
         image: '',
@@ -41,9 +45,28 @@ const AdminExperiences = () => {
 
     const handleDelete = async (id) => {
         if (window.confirm('Delete this experience?')) {
-            await adminAPI.deleteExperience(id);
+            await adminAPI.deleteExperience(id); // Use adminAPI for consistency if desired, or experiencesAPI.deleteExperience
             fetchExperiences();
         }
+    };
+
+    const handleEdit = (experience) => {
+        setEditingId(experience._id);
+        setFormData({
+            title: experience.title,
+            location: experience.location,
+            latitude: experience.latitude || '',
+            longitude: experience.longitude || '',
+            price: experience.price,
+            duration: experience.duration,
+            image: experience.image,
+            description: experience.description,
+            rating: experience.rating || 5.0,
+            itinerary: experience.itinerary || [{ time: '', activity: '' }],
+            coordinator: experience.coordinator || { name: '', role: '', image: '', phone: '' },
+            inclusions: experience.inclusions || ['']
+        });
+        setIsModalOpen(true);
     };
 
     const handleSubmit = async (e) => {
@@ -58,16 +81,23 @@ const AdminExperiences = () => {
                 inclusions: formData.inclusions.filter(i => i.trim()),
             };
 
-            await experiencesAPI.createExperience(cleanedData);
+            if (editingId) {
+                await experiencesAPI.updateExperience(editingId, cleanedData);
+                alert('Experience updated successfully!');
+            } else {
+                await experiencesAPI.createExperience(cleanedData);
+                alert('Experience created successfully!');
+            }
+
             fetchExperiences();
             setIsModalOpen(false);
+            setEditingId(null);
             setFormData({
-                title: '', location: '', price: '', duration: '', image: '', description: '', rating: 5.0,
+                title: '', location: '', latitude: '', longitude: '', price: '', duration: '', image: '', description: '', rating: 5.0,
                 itinerary: [{ time: '', activity: '' }],
                 coordinator: { name: '', role: '', image: '', phone: '' },
                 inclusions: ['']
             });
-            alert('Experience created successfully!');
         } catch (error) {
             alert('Failed to save experience');
         }
@@ -106,7 +136,16 @@ const AdminExperiences = () => {
                         <p style={{ color: '#64748b', fontSize: '16px', marginTop: '4px' }}>Manage your camps, workshops, and experiences.</p>
                     </div>
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => {
+                            setEditingId(null);
+                            setFormData({
+                                title: '', location: '', latitude: '', longitude: '', price: '', duration: '', image: '', description: '', rating: 5.0,
+                                itinerary: [{ time: '', activity: '' }],
+                                coordinator: { name: '', role: '', image: '', phone: '' },
+                                inclusions: ['']
+                            });
+                            setIsModalOpen(true);
+                        }}
                         style={{
                             background: '#0f172a', color: 'white', padding: '14px 28px', borderRadius: '12px',
                             fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px', border: 'none',
@@ -150,6 +189,9 @@ const AdminExperiences = () => {
                                     <button onClick={() => handleDelete(exp._id)} style={{ color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', padding: '8px' }}>
                                         <FaTrash />
                                     </button>
+                                    <button onClick={() => handleEdit(exp)} style={{ color: '#3b82f6', background: 'none', border: 'none', cursor: 'pointer', padding: '8px', fontWeight: '600', fontSize: '13px' }}>
+                                        Edit
+                                    </button>
                                 </div>
                             </div>
                         </motion.div>
@@ -179,7 +221,7 @@ const AdminExperiences = () => {
                             >
                                 <div style={{ padding: '32px' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-                                        <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a' }}>Create Camp/Event</h2>
+                                        <h2 style={{ fontSize: '24px', fontWeight: '800', color: '#0f172a' }}>{editingId ? 'Edit Experience' : 'Create Camp/Event'}</h2>
                                         <button onClick={() => setIsModalOpen(false)} style={{ background: '#f1f5f9', border: 'none', width: 36, height: 36, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                             <FaTimes color="#64748b" />
                                         </button>
@@ -200,20 +242,6 @@ const AdminExperiences = () => {
                                                 <option value="Tour">Tour</option>
                                                 <option value="Event">Event</option>
                                             </select>
-                                            <input placeholder="Location" value={formData.location} onChange={e => setFormData({ ...formData, location: e.target.value })} required style={inputStyle} />
-                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                                                <input type="number" placeholder="Price" value={formData.price} onChange={e => setFormData({ ...formData, price: e.target.value })} required style={inputStyle} />
-                                                <input type="number" placeholder="Duration (hrs)" value={formData.duration} onChange={e => setFormData({ ...formData, duration: e.target.value })} required style={inputStyle} />
-                                            </div>
-                                            <input placeholder="Cover Image URL" value={formData.image} onChange={e => setFormData({ ...formData, image: e.target.value })} required style={inputStyle} />
-                                            <textarea placeholder="Description" rows={4} value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} required style={inputStyle} />
-                                        </div>
-
-                                        {/* Coordinator Info */}
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', background: '#f8fafc', padding: '24px', borderRadius: '16px' }}>
-                                            <h3 style={{ fontSize: '14px', textTransform: 'uppercase', fontWeight: '700', color: '#94a3b8', letterSpacing: '1px', display: 'flex', alignItems: 'center', gap: '8px' }}><FaUserTie /> Coordinator Details</h3>
-                                            <input placeholder="Coordinator Name" value={formData.coordinator.name} onChange={e => setFormData({ ...formData, coordinator: { ...formData.coordinator, name: e.target.value } })} style={inputStyle} />
-                                            <input placeholder="Role (e.g. Guide)" value={formData.coordinator.role} onChange={e => setFormData({ ...formData, coordinator: { ...formData.coordinator, role: e.target.value } })} style={inputStyle} />
                                             <input placeholder="Phone / Contact" value={formData.coordinator.phone} onChange={e => setFormData({ ...formData, coordinator: { ...formData.coordinator, phone: e.target.value } })} style={inputStyle} />
                                             <input placeholder="Photo URL" value={formData.coordinator.image} onChange={e => setFormData({ ...formData, coordinator: { ...formData.coordinator, image: e.target.value } })} style={inputStyle} />
                                         </div>
@@ -237,7 +265,36 @@ const AdminExperiences = () => {
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <h3 style={{ fontSize: '14px', textTransform: 'uppercase', fontWeight: '700', color: '#94a3b8', letterSpacing: '1px' }}>Inclusions</h3>
-                                                <button type="button" onClick={addInclusion} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: '600', cursor: 'pointer' }}>+ Add Item</button>
+                                            </div>
+
+                                            {/* Common Inclusions Picker */}
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '16px' }}>
+                                                {['Transport', 'Meals', 'Guide', 'Entry Tickets', 'Campfire', 'Trekking Gear', 'First Aid', 'Refreshments', 'Photography'].map(inc => (
+                                                    <button
+                                                        key={inc}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            if (!formData.inclusions.includes(inc)) {
+                                                                setFormData({ ...formData, inclusions: [...formData.inclusions, inc] });
+                                                            } else {
+                                                                setFormData({ ...formData, inclusions: formData.inclusions.filter(i => i !== inc) });
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            padding: '6px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '600', cursor: 'pointer',
+                                                            border: formData.inclusions.includes(inc) ? '1px solid #0f172a' : '1px solid #e2e8f0',
+                                                            background: formData.inclusions.includes(inc) ? '#0f172a' : 'white',
+                                                            color: formData.inclusions.includes(inc) ? 'white' : '#64748b'
+                                                        }}
+                                                    >
+                                                        {inc}
+                                                    </button>
+                                                ))}
+                                            </div>
+
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                <span style={{ fontSize: '13px', color: '#64748b' }}>Custom Items</span>
+                                                <button type="button" onClick={addInclusion} style={{ color: 'var(--primary)', background: 'none', border: 'none', fontWeight: '600', cursor: 'pointer', fontSize: '13px' }}>+ Add Custom</button>
                                             </div>
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                                 {formData.inclusions.map((inc, index) => (
@@ -250,7 +307,7 @@ const AdminExperiences = () => {
                                         </div>
 
                                         <button type="submit" style={{ marginTop: '24px', background: '#0f172a', color: 'white', padding: '16px', borderRadius: '12px', fontSize: '16px', fontWeight: '700', border: 'none', cursor: 'pointer' }}>
-                                            Create Experience
+                                            {editingId ? 'Update Experience' : 'Create Experience'}
                                         </button>
                                         <div style={{ height: '40px' }} />
                                     </form>

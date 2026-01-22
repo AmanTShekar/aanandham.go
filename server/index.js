@@ -107,6 +107,8 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/guides', guideRoutes);
 app.use('/api/inquiries', inquiryRoutes);
+app.use('/api/search', require('./routes/search'));
+app.use('/api/site', require('./routes/siteContent')); // New Route for dynamic site content
 
 // ==================== AUTH ROUTES ====================
 app.post('/api/auth/register', async (req, res) => {
@@ -372,21 +374,57 @@ app.get('/api/admin/stats', auth, adminAuth, async (req, res) => {
         const totalBookings = await Booking.countDocuments();
         const totalExperiences = await Experience.countDocuments();
 
-        const totalRevenue = await Booking.aggregate([
-            { $match: { status: 'confirmed' } },
-            { $group: { _id: null, total: { $sum: '$totalPrice' } } }
+        // Monthly Revenue & Bookings (Last 6 Months)
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+        sixMonthsAgo.setDate(1); // Start of the month
+
+        const monthlyStats = await Booking.aggregate([
+            {
+                $match: {
+                    createdAt: { $gte: sixMonthsAgo },
+                    status: 'confirmed'
+                }
+            },
+            {
+                $group: {
+                    _id: {
+                        month: { $month: "$createdAt" },
+                        year: { $year: "$createdAt" }
+                    },
+                    revenue: { $sum: "$totalPrice" },
+                    bookings: { $sum: 1 }
+                }
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } }
         ]);
 
-        const recentBookings = await Booking.find()
-            .populate('user listing')
-            .sort({ createdAt: -1 })
-            .limit(10);
+        // Format for Chart (e.g., "Jan", "Feb")
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        // Fill in missing months
+        const chartData = [];
+        for (let i = 0; i < 6; i++) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - 5 + i);
+            const monthIndex = d.getMonth();
+            const year = d.getFullYear();
+
+            const found = monthlyStats.find(item => item._id.month === (monthIndex + 1) && item._id.year === year);
+
+            chartData.push({
+                month: monthNames[monthIndex],
+                revenue: found ? found.revenue : 0,
+                bookings: found ? found.bookings : 0
+            });
+        }
 
         res.json({
             stats: {
                 totalUsers, totalListings, totalBookings, totalExperiences,
                 totalRevenue: totalRevenue[0]?.total || 0
             },
+            chartData,
             recentBookings
         });
     } catch (error) {

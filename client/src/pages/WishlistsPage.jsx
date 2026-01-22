@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import { FaStar } from 'react-icons/fa';
 import { usePreferences } from '../contexts/PreferencesContext';
+import SEO from '../components/SEO';
 
 const WishlistsPage = () => {
     const [wishlists, setWishlists] = useState([]);
@@ -51,7 +52,8 @@ const WishlistsPage = () => {
     }
 
     return (
-        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '40px' }}>
+        <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '100px 40px 40px' }}>
+            <SEO title="My Wishlists" />
             <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '32px', color: 'var(--text-main)' }}>Wishlists</h1>
 
             {wishlists.length === 0 ? (

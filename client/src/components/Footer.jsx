@@ -23,7 +23,7 @@ const Footer = () => {
                 }}>
                     {/* Brand Column */}
                     <div>
-                        <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'white', marginBottom: '24px', letterSpacing: '-1px' }}>Aanandham.</h3>
+                        <h3 style={{ fontSize: '24px', fontWeight: '800', color: 'white', marginBottom: '24px', letterSpacing: '-1px' }}>Aanandham.go</h3>
                         <p style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '24px' }}>
                             Curated experiences and premium stays in the heart of Munnar. Discover the unseen.
                             <br />
@@ -63,6 +63,7 @@ const Footer = () => {
                         <h4 style={{ color: 'white', fontWeight: '600', marginBottom: '20px' }}>Support</h4>
                         <ul style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: 0 }}>
                             <li><a href="/support" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}>Help Center</a></li>
+                            <li><a href="/faq" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}>Travel FAQ</a></li>
                             <li><a href="/safety" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}>Safety Information</a></li>
                             <li><a href="/terms" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}>Terms of Service</a></li>
                             <li><a href="/privacy" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }}>Privacy Policy</a></li>
@@ -112,7 +113,7 @@ const Footer = () => {
                     gap: '20px'
                 }}>
                     <div style={{ fontSize: '14px' }}>
-                        © 2025 Aanandham, Inc. All rights reserved.
+                        <p>&copy; 2025 Aanandham.go. All rights reserved.</p>
                     </div>
 
                     <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>

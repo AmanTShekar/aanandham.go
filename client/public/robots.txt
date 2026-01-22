@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /account
+Disallow: /bookings
+
 Sitemap: https://aanandham.in/sitemap.xml

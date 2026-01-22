@@ -4,72 +4,162 @@ require('dotenv').config();
 
 const destinations = [
     {
-        name: 'Kolukkumalai',
-        image: 'https://images.unsplash.com/photo-1591012911204-61aa3daaf73f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Sunrise/Hills
-        description: 'The world\'s highest organic tea plantation.',
-        details: 'Kolukkumalai is about 38 km from Munnar. The hilltop is accessible only by jeep and offers a panoramic view of the misty plains of Tamil Nadu and the hills of Kerala. It is famous for its sunrise which is a spectacle to behold.',
-        highlights: ['World\'s Highest Tea Estate', 'Sunrise Jeep Safari', 'Tiger Rock', 'Organic Tea Factory'],
+        name: 'Munnar',
+        image: '/images/destinations/munnar_user/munnar_user_1.jpg',
+        description: 'Green hill station with tea gardens.',
+        details: 'Munnar is a town in the Western Ghats mountain range in India’s Kerala state. A hill station and former resort for the British Raj elite, it\'s surrounded by rolling hills dotted with tea plantations established in the late 19th century.',
+        highlights: ['Tea Gardens', 'Eravikulam National Park', 'Mattupetty Dam', 'Anamudi Peak', 'Top Station'],
+        gallery: [
+            '/images/destinations/munnar_user/munnar_user_2.jpg',
+            '/images/destinations/munnar_eravikulam.png',
+            '/images/destinations/munnar_user/munnar_user_mattupetty.jpg',
+            '/images/destinations/munnar_user/munnar_user_top_station.jpg',
+            '/images/destinations/munnar_user/munnar_user_3.jpg',
+            '/images/destinations/munnar_user/munnar_user_4.jpg',
+            '/images/destinations/munnar_user/munnar_user_5.jpg'
+        ],
+        topPlaces: [
+            {
+                name: 'Eravikulam National Park',
+                image: '/images/destinations/munnar_eravikulam.png',
+                description: 'Home to the endangered Nilgiri Tahr, offering breathtaking views of the rolling hills and tea plantations.'
+            },
+            {
+                name: 'Mattupetty Dam',
+                image: '/images/destinations/munnar_user/munnar_user_mattupetty.jpg',
+                description: 'A concrete gravity dam built in the mountains, famous for its storage masonry dam and the beautiful lake.'
+            },
+            {
+                name: 'Tea Museum',
+                image: '/images/destinations/munnar_tea_museum.png',
+                description: 'Showcases the history of tea plantations in Munnar, featuring photographs and machinery used in tea processing.'
+            },
+            {
+                name: 'Anamudi Peak',
+                image: '/images/destinations/munnar_anamudi.png',
+                description: 'The highest peak in South India, standing at an elevation of 2,695 meters, offering trekking opportunities and scenic views.'
+            },
+            {
+                name: 'Top Station',
+                image: '/images/destinations/munnar_user/munnar_user_top_station.jpg',
+                description: 'The highest point in Munnar, offering panoramic views of the Western Ghats and the valley of Theni district below.'
+            }
+        ],
         bestTimeToVisit: 'September to March',
         currency: 'INR (₹)',
-        language: 'Malayalam, Tamil'
+        language: 'Malayalam, English'
     },
     {
-        name: 'Eravikulam National Park',
-        image: 'https://images.unsplash.com/photo-1588863644078-43d7c713c4cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Tahr/Hills
-        description: 'Home to the endangered Nilgiri Tahr and Anamudi Peak.',
-        details: 'Eravikulam National Park is the first national park in Kerala. It is located in the Western Ghats and is home to the largest surviving population of the Nilgiri Tahr. The park also houses Anamudi, the highest peak in South India.',
-        highlights: ['Nilgiri Tahr Sighting', 'Anamudi Peak View', 'Neelakurinji Blooms', 'Eco-Bus Safari'],
-        bestTimeToVisit: 'September to February (Closed Feb-March for calving)',
+        name: 'Wayanad',
+        image: '/images/destinations/wayanad_main.png',
+        description: 'A spice garden in the hills.',
+        details: 'Wayanad is known for its spice plantations, prehistoric caves, and lush greenery. It is a perfect destination for adventure seekers and nature lovers.',
+        highlights: ['Banasura Sagar Dam', 'Edakkal Caves', 'Chembra Peak', 'Soochipara Falls'],
+        gallery: [
+            'https://images.unsplash.com/photo-1591873322143-6d0d249ceb8b?w=800&q=80',
+            'https://images.unsplash.com/photo-1627341235121-65355609439b?w=800&q=80',
+            'https://images.unsplash.com/photo-1616641835706-03f392265008?w=800&q=80',
+            'https://images.unsplash.com/photo-1544980649-6f92025e14cb?w=800&q=80'
+        ],
+        topPlaces: [
+            {
+                name: 'Banasura Sagar Dam',
+                image: '/images/destinations/wayanad_banasura.png',
+                description: 'The largest earth dam in India and the second largest in Asia, offering a spectacular view of the Banasura hills.'
+            },
+            {
+                name: 'Edakkal Caves',
+                image: '/images/destinations/wayanad_edakkal.png',
+                description: 'Natural caves featuring prehistoric carvings dating back to the Neolithic era, located at an altitude of 1,200m.'
+            },
+            {
+                name: 'Chembra Peak',
+                image: '/images/destinations/wayanad_chembra.png',
+                description: 'The highest peak in Wayanad, famous for its heart-shaped lake that is believed to have never dried up.'
+            },
+            {
+                name: 'Lakkidi View Point',
+                image: 'https://images.unsplash.com/photo-1616641835706-03f392265008?w=600&q=80',
+                description: 'A gateway to Wayanad, offering a bird\'s eye view of the winding ghat roads and misty valleys below.'
+            }
+        ],
+        bestTimeToVisit: 'October to May',
         currency: 'INR (₹)',
         language: 'Malayalam, English'
     },
     {
-        name: 'Vattavada',
-        image: 'https://images.unsplash.com/photo-1627896676100-3aa012c499f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Vegetable farms/Village
-        description: 'The vegetable basket of Kerala, famous for cool weather.',
-        details: 'Vattavada is known for its terraced vegetable farms and temperate climate. Unlike other parts of Munnar, Vattavada produces apples, plums, pears, strawberries, and winter vegetables. It offers a rustic village experience.',
-        highlights: ['Strawberry Farms', 'Terraced Agriculture', 'Pampadum Shola Trek', 'Cool Climate'],
-        bestTimeToVisit: 'August to April',
-        currency: 'INR (₹)',
-        language: 'Tamil, Malayalam'
-    },
-    {
-        name: 'Mattupetty & Echo Point',
-        image: 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Lake/Dam
-        description: 'Scenic dam, boating, and the famous Echo Point.',
-        details: 'Mattupetty Dam is a gravity dam known for its boating facilities and the surrounding tea gardens. Nearby is Echo Point, where the natural acoustics reproduce your voice. It is a popular spot for families and photographers.',
-        highlights: ['Speed Boating', 'Echo Point', 'Elephant Sightings', 'Tea Garden Walks'],
-        bestTimeToVisit: 'August to May',
+        name: 'Alleppey',
+        image: '/images/destinations/alleppey_main.png',
+        description: 'Venice of the East.',
+        details: 'Alappuzha (Alleppey) is famous for its houseboat cruises through the serene backwaters, beautiful beaches, and vibrant culture.',
+        highlights: ['Houseboat Cruise', 'Alleppey Beach', 'Marari Beach', 'Vembanad Lake'],
+        gallery: [
+            '/images/destinations/alleppey_houseboat.png',
+            'https://images.unsplash.com/photo-1593181629936-11c609b8db9b?w=800&q=80',
+            'https://images.unsplash.com/photo-1563911302283-d2bc129e7570?w=800&q=80',
+            'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=800&q=80'
+        ],
+        topPlaces: [
+            {
+                name: 'Marari Beach',
+                image: '/images/destinations/alleppey_marari.png',
+                description: 'A serene and pristine beach destination, perfect for relaxation and witnessing authentic Keralan village life.'
+            },
+            {
+                name: 'Pathiramanal Island',
+                image: '/images/destinations/alleppey_pathiramanal.png',
+                description: 'A small island in the Vembanad Lake, home to a wide variety of migratory birds and rare flora.'
+            },
+            {
+                name: 'Krishnapuram Palace',
+                image: '/images/destinations/alleppey_krishnapuram.png',
+                description: 'An 18th-century palace featuring traditional Kerala architecture and famous for its mural paintings and museum.'
+            },
+            {
+                name: 'Revi Karunakaran Museum',
+                image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&q=80',
+                description: 'A private museum showcasing classic art, artifacts, and a large collection of Swarovski crystal and porcelain.'
+            }
+        ],
+        bestTimeToVisit: 'November to February',
         currency: 'INR (₹)',
         language: 'Malayalam, English'
-    },
-    {
-        name: 'Marayoor',
-        image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Forest/Sandalwood
-        description: 'Ancient dolmens and natural sandalwood forests.',
-        details: 'Marayoor is the only place in Kerala with natural sandalwood forests. It is also famous for its ancient dolmens (Muniyaras) from the Stone Age and prehistoric rock paintings. The Pambar river flows through this rain-shadow village.',
-        highlights: ['Sandalwood Forest', 'Muniyara Dolmens', 'Rock Paintings', 'Jaggery Making'],
-        bestTimeToVisit: 'All Year Round',
-        currency: 'INR (₹)',
-        language: 'Malayalam, Tamil'
-    },
-    {
-        name: 'Top Station',
-        image: 'https://images.unsplash.com/photo-1579246132034-4a2420311d8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Viewpoint/Clouds
-        description: 'Highest point in Munnar with breathtaking views.',
-        details: 'Located on the Kerala-Tamil Nadu border, Top Station offers a panoramic view of the Western Ghats and the plains of Theni. It was historically a transshipment point for tea delivered by ropeway. It is often covered in low-lying clouds.',
-        highlights: ['Panoramic View', 'Ropeway Ruins', 'Kurinjimala Sanctuary', 'Camping'],
-        bestTimeToVisit: 'October to April',
-        currency: 'INR (₹)',
-        language: 'Malayalam, Tamil'
     },
     {
         name: 'Vagamon',
-        image: 'https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80', // Meadows/Mist
-        description: 'The Scotland of Asia, famous for pine forests and meadows.',
-        details: 'Vagamon is a serene hill station located on the border of Kottayam and Idukki districts. Known for its rolling meadows, pine forests, and Orchid gardens, it offers a peaceful escape from the crowds. It is also a prime location for paragliding.',
-        highlights: ['Vagamon Meadows', 'Pine Forest', 'Thangal Para', 'Paragliding'],
-        bestTimeToVisit: 'December to February',
+        image: '/images/destinations/vagamon_main.png',
+        description: 'The Scotland of Asia.',
+        details: 'Vagamon is an offbeat hill station with pine forests, meadows, and rolling hills. It is a peaceful retreat far from the city noise.',
+        highlights: ['Pine Forests', 'Vagamon Meadows', 'Kurisumala', 'Thangal Para'],
+        gallery: [
+            '/images/destinations/vagamon_pine.png',
+            '/images/destinations/vagamon_meadows.png',
+            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',
+            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80'
+        ],
+        topPlaces: [
+            {
+                name: 'Pine Forest',
+                image: '/images/destinations/vagamon_pine.png',
+                description: 'A man-made forest of pine trees, providing a hauntingly beautiful and cool atmosphere for walks and photography.'
+            },
+            {
+                name: 'Vagamon Meadows',
+                image: '/images/destinations/vagamon_meadows.png',
+                description: 'Endless rolling lush green hills that seem to touch the sky, perfect for a picnic or just soaking in the views.'
+            },
+            {
+                name: 'Kurisumala',
+                image: '/images/destinations/vagamon_kurisumala.png',
+                description: 'A significant pilgrimage center and a trekking spot, known for its serenity and the cross at its summit.'
+            },
+            {
+                name: 'Thangal Para',
+                image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=600&q=80',
+                description: 'A spherical rock formation that has a religious significance and offers a breathtaking view of the valley.'
+            }
+        ],
+        bestTimeToVisit: 'March to May',
         currency: 'INR (₹)',
         language: 'Malayalam, English'
     }

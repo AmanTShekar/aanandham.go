@@ -7,6 +7,7 @@ import { listingsAPI } from '../services/api';
 import { stayCategories } from '../data/categories';
 import PremiumListingCard from '../components/PremiumListingCard';
 import SEO from '../components/SEO';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const HotelsPage = () => {
     const [loading, setLoading] = useState(true);
@@ -22,6 +23,10 @@ const HotelsPage = () => {
     const checkIn = searchParams.get('checkIn');
     const checkOut = searchParams.get('checkOut');
     const guests = searchParams.get('guests');
+
+    // Parallax
+    const { scrollY } = useScroll();
+    const y = useTransform(scrollY, [0, 500], [0, 200]);
 
     useEffect(() => {
         const fetchListings = async () => {
@@ -56,15 +61,62 @@ const HotelsPage = () => {
     };
 
     return (
-        <div style={{ backgroundColor: 'var(--bg-off-white)', minHeight: '100vh', padding: '100px 0 40px 0' }}>
+        <div style={{ backgroundColor: 'var(--bg-off-white)', minHeight: '100vh', padding: '0 0 40px 0' }}>
             <SEO
-                title="Book Luxury Tents & Resorts in Munnar"
-                description="Browse confirmed luxury tent stays in Suryanelli and resorts in Munnar. Filter by price, amenities, and location for your perfect Kerala getaway."
-                keywords="Book Tent Stay Munnar, Suryanelli Camping Booking, Munnar Resorts Price, Best Glamping Kerala, Luxury Stays Western Ghats"
+                title={
+                    searchQuery?.toLowerCase().includes('vagamon') ? "Vagamon Camping & Luxury Glamping | Best Stays - Aanandham.go" :
+                        searchQuery?.toLowerCase().includes('wayanad') ? "Wayanad Glamping & Forest Stays | Verified Tents - Aanandham.go" :
+                            searchQuery?.toLowerCase().includes('munnar') ? "Luxury Tents & Resorts in Munnar | Book Verified Stays - Aanandham.go" :
+                                "Luxury Stays & Glamping in Kerala | Munnar, Vagamon, Wayanad - Aanandham.go"
+                }
+                description={
+                    searchQuery?.toLowerCase().includes('vagamon') ? "Book the best camping stays in Vagamon. Experience luxury glamping, pine forest stays, and verified tent camps in Vagamon, Kerala." :
+                        searchQuery?.toLowerCase().includes('wayanad') ? "Discover premium glamping and forest stays in Wayanad. Verified inventory for the best camping experience in Wayanad, Kerala." :
+                            "Browse confirmed luxury tent stays, glamping pods, and premium resorts in Munnar, Vagamon, and Wayanad. Filter by price and amenities for your perfect Kerala getaway."
+                }
+                keywords="Book Tent Stay Munnar, Suryanelli Camping, Vagamon Glamping, Wayanad Forest Stay, Kerala Tourism, Premium Camping India"
             />
-            <div className="container" style={{ marginBottom: '40px' }}>
-                <h1 style={{ fontSize: '40px', fontWeight: '800', color: 'var(--text-main)', marginBottom: '16px' }}>Find your perfect stay</h1>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '18px' }}>Explore premium hotels, resorts, and homestays in Munnar.</p>
+
+            {/* Hero Section with Parallax */}
+            <div style={{
+                position: 'relative',
+                height: '50vh',
+                minHeight: '350px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                marginBottom: '40px'
+            }}>
+                <motion.div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundImage: 'url("/images/why_choose_us/luxury_tent.png")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'brightness(0.5)',
+                    y: y,
+                    scale: 1.1,
+                    zIndex: 0
+                }} />
+
+                <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 20px' }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <h1 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: '900', color: 'white', marginBottom: '16px', letterSpacing: '-1.5px' }}>
+                            {searchQuery ? `Verified Stays in ${searchQuery}` : "Find Your Perfect Stay"}
+                        </h1>
+                        <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '20px' }}>
+                            Luxury Glamping, Premium Resorts, and Verified Tents in Kerala's Prettiest Locations.
+                        </p>
+                    </motion.div>
+                </div>
             </div>
 
             <div className="container" style={{ marginTop: '0' }}>

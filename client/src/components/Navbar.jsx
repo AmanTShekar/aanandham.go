@@ -73,15 +73,14 @@ const Navbar = () => {
           <img src={pngLogo} alt="Logo" style={{ width: isScrolled ? '90px' : '110px', height: 'auto', transition: 'width 0.4s' }} />
           <div className="brand-text">
             <span style={{
-              color: '#fff',
+              color: 'var(--primary)',
               fontSize: isScrolled ? '24px' : '28px',
               fontWeight: '700',
-              fontFamily: 'var(--font-serif)',
               letterSpacing: '-0.02em',
               lineHeight: '1',
               transition: 'all 0.4s'
             }}>
-              Aanandham
+              Aanandham.go
             </span>
             <span style={{
               color: 'rgba(255,255,255,0.6)',
@@ -105,6 +104,7 @@ const Navbar = () => {
           <NavLink to="/hotels">Stays</NavLink>
           <NavLink to="/experiences">Experiences</NavLink>
           <NavLink to="/places">Destinations</NavLink>
+          <NavLink to="/stories">Stories</NavLink>
           <NavLink to="/about">About</NavLink>
         </nav>
 
@@ -168,6 +168,9 @@ const Navbar = () => {
                     <MenuItem onClick={() => { navigate('/places'); setIsMenuOpen(false); }}>Destinations</MenuItem>
                     <MenuItem onClick={() => { navigate('/about'); setIsMenuOpen(false); }}>About</MenuItem>
                     <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />
+                    <MenuItem onClick={() => { navigate('/faq'); setIsMenuOpen(false); }}>Travel FAQ</MenuItem>
+                    <MenuItem onClick={() => { navigate('/support'); setIsMenuOpen(false); }}>Help Center</MenuItem>
+                    <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />
                   </div>
 
                   {user ? (
@@ -186,14 +189,18 @@ const Navbar = () => {
                       <MenuItem onClick={() => navigate('/wishlists')}>Wishlists</MenuItem>
                       <MenuItem onClick={() => navigate('/account')}>Account Settings</MenuItem>
                       <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />
+                      <MenuItem onClick={() => { navigate('/faq'); setIsMenuOpen(false); }}>Travel FAQ</MenuItem>
+                      <MenuItem onClick={() => { navigate('/support'); setIsMenuOpen(false); }}>Help Center</MenuItem>
+                      <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />
                       <MenuItem onClick={handleLogout} danger>Log Out</MenuItem>
                     </>
                   ) : (
                     <>
-                      <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }} bold>Log in</MenuItem>
-                      <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }}>Sign up</MenuItem>
+                      <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }} bold primary>Log in</MenuItem>
+                      <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }} primary>Sign up</MenuItem>
                       <div style={{ height: '1px', background: '#333', margin: '8px 0' }} />
-                      <MenuItem onClick={() => { setIsMenuOpen(false); }}>Help Center</MenuItem>
+                      <MenuItem onClick={() => { navigate('/faq'); setIsMenuOpen(false); }}>Travel FAQ</MenuItem>
+                      <MenuItem onClick={() => { navigate('/support'); setIsMenuOpen(false); }}>Help Center</MenuItem>
                     </>
                   )}
                 </motion.div>
@@ -234,7 +241,7 @@ const NavLink = ({ to, children }) => (
   </Link>
 );
 
-const MenuItem = ({ children, onClick, bold, danger }) => (
+const MenuItem = ({ children, onClick, bold, danger, primary }) => (
   <div
     onClick={onClick}
     style={{
@@ -242,7 +249,7 @@ const MenuItem = ({ children, onClick, bold, danger }) => (
       cursor: 'pointer',
       fontSize: '14px',
       fontWeight: bold ? '600' : '500',
-      color: danger ? '#EF4444' : '#FAFAFA', // Dark theme text
+      color: danger ? '#EF4444' : primary ? 'var(--primary)' : '#FAFAFA', // Dark theme text
       transition: 'background 0.2s',
       display: 'flex',
       alignItems: 'center',

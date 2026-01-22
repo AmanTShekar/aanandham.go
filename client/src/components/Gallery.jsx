@@ -1,8 +1,9 @@
 import { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { galleryImages as staticImages } from '../data/siteContent'; // Fallback
-import axios from 'axios';
+import { siteContentAPI } from '../services/api';
+// Fallback
+import { galleryImages as staticImages } from '../data/siteContent';
 
 const Gallery = () => {
     const [images, setImages] = useState([]);
@@ -16,11 +17,10 @@ const Gallery = () => {
 
     useEffect(() => {
         const fetchImages = async () => {
-            // Fallback to static if 0
             try {
-                const res = await axios.get('https://aanandham-go.onrender.com/api/admin/site-images');
-                if (res.data && res.data.length > 0) {
-                    setImages(res.data.map(img => ({ ...img, src: img.url, alt: img.title })));
+                const data = await siteContentAPI.getSiteImages();
+                if (data && data.length > 0) {
+                    setImages(data.map(img => ({ ...img, src: img.url, alt: img.title })));
                 } else {
                     setImages(staticImages.map(url => ({ src: url, alt: "Gallery", title: "Experience" })));
                 }
@@ -60,20 +60,19 @@ const Gallery = () => {
                 grid-template-columns: repeat(2, 1fr);
                 grid-template-rows: repeat(4, 250px);
             }
-            .bento-item-0 { grid-area: 1 / 1 / 3 / 3; } /* Hero */
+            .bento-item-0 { grid-area: 1 / 1 / 3 / 3; } /* Hero 2x2 */
             .bento-item-1 { grid-area: 3 / 1 / 5 / 2; } 
             .bento-item-2 { grid-area: 3 / 2 / 4 / 3; }
             .bento-item-3 { grid-area: 4 / 2 / 5 / 3; }
-            .bento-item-4 { display: none; } /* Hide 5th on tablet if tricky, or adjust */
+            .bento-item-4 { display: none; }
         }
         @media (min-width: 1024px) {
             .bento-grid {
                 grid-template-columns: repeat(3, 1fr);
-                grid-templates-rows: repeat(3, 280px); /* Specific rows */
-                grid-auto-rows: 280px;
+                grid-auto-rows: 240px;
             }
-            .bento-item-0 { grid-column: span 2; grid-row: span 2; }
-            .bento-item-1 { grid-column: span 1; grid-row: span 2; }
+            .bento-item-0 { grid-column: span 2; grid-row: span 2; } /* Hero 2x2 */
+            .bento-item-1 { grid-column: span 1; grid-row: span 2; } /* Tall Side */
             .bento-item-2 { grid-column: span 1; grid-row: span 1; }
             .bento-item-3 { grid-column: span 1; grid-row: span 1; }
             .bento-item-4, .bento-item-5, .bento-item-6, .bento-item-7 { display: block; grid-column: span 1; grid-row: span 1; }
@@ -100,7 +99,15 @@ const Gallery = () => {
 
                 {/* Bento Grid */}
                 <div className="bento-grid" style={{ maxWidth: '1200px', margin: '0 auto' }}>
-                    {(images.length > 0 ? images.slice(0, 8) : []).map((img, i) => (
+                    {(() => {
+                        const displayImages = images.length > 0 ? images.slice(0, 8) : [];
+                        if (displayImages.length >= 2) {
+                            const temp = displayImages[0];
+                            displayImages[0] = displayImages[1];
+                            displayImages[1] = temp;
+                        }
+                        return displayImages;
+                    })().map((img, i) => (
                         <motion.div
                             key={i}
                             className={`bento-item-${i} ${i > 3 ? 'mobile-hidden-gallery' : ''}`}
