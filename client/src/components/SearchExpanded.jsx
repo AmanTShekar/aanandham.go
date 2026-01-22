@@ -3,6 +3,7 @@ import { FaSearch, FaMapMarkerAlt, FaMinus, FaPlus } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
+import logo2 from '../assets/logo2.png';
 import "react-datepicker/dist/react-datepicker.css";
 import usePlacesAutocomplete, {
     getGeocode,
@@ -491,7 +492,7 @@ const SearchExpanded = () => {
                             e.currentTarget.style.boxShadow = '0 4px 12px rgba(79, 70, 229, 0.4)';
                         }}
                     >
-                        <FaSearch size={18} />
+                        <img src={logo2} alt="Search" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
                     </div>
 
                     {/* Guest Dropdown */}

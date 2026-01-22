@@ -53,7 +53,8 @@ app.use(cors({
         'https://www.aanandham.in',
         'https://booking-site-react.vercel.app'
     ].filter(Boolean),
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }));
 
 // Serve static files in production if they exist
@@ -570,14 +571,7 @@ app.delete('/api/admin/reviews/:id', auth, adminAuth, async (req, res) => {
 });
 
 // Handle React routing, return all requests to React app
-if (process.env.NODE_ENV === 'production') {
-    const clientBuildPath = path.join(__dirname, '../client/dist');
-    if (fs.existsSync(clientBuildPath)) {
-        app.get('*', (req, res) => {
-            res.sendFile(path.join(clientBuildPath, 'index.html'));
-        });
-    }
-}
+// Premature catch-all route removed
 
 // --- Admin Site Images Routes ---
 app.get('/api/admin/site-images', async (req, res) => {

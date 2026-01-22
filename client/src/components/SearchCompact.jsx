@@ -1,5 +1,6 @@
 import { FaSearch } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import logo2 from '../assets/logo2.png';
 
 const SearchCompact = ({ onClick }) => {
     return (
@@ -45,7 +46,7 @@ const SearchCompact = ({ onClick }) => {
                 marginLeft: '-8px',
                 boxShadow: '0 2px 8px rgba(79, 70, 229, 0.4)'
             }}>
-                <FaSearch size={12} />
+                <img src={logo2} alt="Search" style={{ width: '16px', height: '16px', objectFit: 'contain' }} />
             </div>
         </motion.div>
     );
