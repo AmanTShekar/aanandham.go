@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --font-heading: 'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  --bg-page: #F8F9F5;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F1F3EC;
+  --bg-dark-footer: #101E13;
+  
+  --accent-lime: #D5ED55;
+  --accent-lime-hover: #C5DD45;
+  --accent-lime-glow: rgba(213, 237, 85, 0.4);
+  
+  --text-dark: #121613;
+  --text-muted: #59655D;
+  --text-light-muted: #8E9B92;
+  --text-white: #FFFFFF;
+  --text-white-muted: #A2B6A6;
+  
+  --border-light: rgba(18, 22, 19, 0.08);
+  --border-card: rgba(18, 22, 19, 0.06);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 20px 45px rgba(0, 0, 0, 0.06);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.03em;
+}
+
+/* Floating on-scroll navbar */
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  padding: 20px 32px;
+  background: transparent;
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.top-header.scrolled {
+  background: rgba(14, 24, 17, 0.94);
+  backdrop-filter: blur(16px);
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.brand-name {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 800;
+  color: #FFFFFF;
+  text-decoration: none;
+  letter-spacing: -0.8px;
+}
+.date-pill {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
+  font-weight: 600;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.nav-links a {
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  opacity: 0.9;
+}
+.btn-lime {
+  background-color: var(--accent-lime);
+  color: #121613;
+  font-weight: 700;
+  border-radius: 999px;
+  border: none;
+  padding: 10px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px var(--accent-lime-glow);
+}
+.btn-lime:hover {
+  transform: translateY(-1px);
+  filter: brightness(0.96);
+  box-shadow: 0 6px 20px rgba(213, 237, 85, 0.5);
+}
+
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.star-badge {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.star-badge .star-icon {
+  color: var(--accent-lime);
+  font-size: 15px;
+}
+
+.deep-footer {
+  background: linear-gradient(180deg, #101E13 0%, #08120A 100%);
+  padding: 100px 24px 40px;
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+.footer-watermark {
+  font-family: var(--font-heading);
+  font-size: clamp(70px, 17vw, 210px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: rgba(255, 255, 255, 0.05);
+  text-align: center;
+  line-height: 0.85;
+  user-select: none;
+  margin: 30px 0 40px;
+  text-transform: lowercase;
+}

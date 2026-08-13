@@ -1,0 +1,263 @@
+:root {
+  --font-heading: var(--font-bricolage), 'Bricolage Grotesque', Arial, sans-serif;
+  --font-body: var(--font-jakarta), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Natural Aesthetic Color Palette */
+  --bg-page: #F8F9F5;
+  --bg-card: #FFFFFF;
+  --bg-card-alt: #F1F3EC;
+  --bg-dark-footer: #0E1A11;
+  --bg-dark-footer-grad: linear-gradient(180deg, #101E13 0%, #08120A 100%);
+  
+  --accent-lime: #D5ED55;
+  --accent-lime-hover: #C5DD45;
+  --accent-lime-glow: rgba(213, 237, 85, 0.35);
+  
+  --text-dark: #121613;
+  --text-muted: #59655D;
+  --text-light-muted: #8E9B92;
+  --text-white: #FFFFFF;
+  --text-white-muted: #A2B6A6;
+  
+  --border-light: rgba(18, 22, 19, 0.08);
+  --border-card: rgba(18, 22, 19, 0.06);
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.03);
+  --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  overflow-x: clip;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-page);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: var(--font-heading) !important;
+  letter-spacing: -0.035em;
+}
+
+::selection {
+  background: var(--accent-lime);
+  color: #000000;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F0F2EB;
+}
+::-webkit-scrollbar-thumb {
+  background: #C4CCC6;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A6B0A8;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CLEAN, SUBTLE HOVER & TRANSITION PHYSICS
+───────────────────────────────────────────────────────────── */
+.hover-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.06);
+  border-color: rgba(18, 22, 19, 0.16);
+}
+
+/* Smooth zoom for card images on parent hover */
+.card-img-zoom {
+  overflow: hidden;
+}
+.card-img-zoom img {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-img-zoom:hover img {
+  transform: scale(1.05);
+}
+
+.btn-lime {
+  background-color: var(--accent-lime);
+  color: #121613;
+  font-weight: 700;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+}
+.btn-lime:hover {
+  background-color: var(--accent-lime-hover);
+  box-shadow: 0 0 24px var(--accent-lime-glow);
+  transform: scale(1.02);
+}
+
+/* Star category tag (e.g. ★ OVERVIEW, ★ LEVELS) */
+.star-badge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #121613;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.star-badge .star-icon {
+  color: #121613;
+  font-size: 13px;
+}
+
+/* Modern Rounded Arrow Action Pill */
+.action-arrow-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid rgba(18, 22, 19, 0.12);
+  color: #121613;
+  padding: 8px 10px 8px 24px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action-arrow-btn:hover {
+  border-color: rgba(18, 22, 19, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+.btn-arrow-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #F1F3EC;
+  color: #121613;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.action-arrow-btn:hover .btn-arrow-circle {
+  background: #121613;
+  color: var(--accent-lime);
+  transform: translate(3px, -3px) rotate(8deg);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SMOOTH WATERMARK LIGHT-UP WITH SINGLE INTERACTIVE LETTERS
+───────────────────────────────────────────────────────────── */
+.watermark-brand {
+  font-family: var(--font-heading);
+  font-size: clamp(60px, 15vw, 200px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  text-align: center;
+  line-height: 0.85;
+  user-select: none;
+  margin: 40px 0;
+  text-transform: lowercase;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  cursor: default;
+}
+
+.watermark-char {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.06);
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.watermark-char:hover {
+  color: #D5ED55;
+  transform: translateY(-8px) scale(1.08);
+  text-shadow: 0 0 40px rgba(213, 237, 85, 0.6);
+}
+
+.watermark-char.dot-char {
+  color: rgba(213, 237, 85, 0.3);
+  margin: 0 2px;
+}
+
+.watermark-char.dot-char:hover {
+  color: #D5ED55;
+  text-shadow: 0 0 50px rgba(213, 237, 85, 0.9);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   PROGRAM FLOATING CURSOR FOLLOWER & RESPONSIVE PREVIEWS
+───────────────────────────────────────────────────────────── */
+.mobile-only {
+  display: block;
+}
+.desktop-only {
+  display: none !important;
+}
+
+@media (min-width: 900px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .desktop-only {
+    display: block !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   STICKY PINNED SPLIT-COLUMN LAYOUTS (Experience, Steps, FAQ)
+───────────────────────────────────────────────────────────── */
+.sticky-split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: start !important;
+}
+
+@media (min-width: 900px) {
+  .sticky-split-grid {
+    grid-template-columns: 440px 1fr;
+    gap: 68px;
+    align-items: start !important;
+  }
+  
+  .sticky-pinned-col {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 110px !important;
+    align-self: flex-start !important;
+    height: -webkit-fit-content !important;
+    height: -moz-fit-content !important;
+    height: fit-content !important;
+    max-height: calc(100vh - 130px);
+    z-index: 10;
+  }
+}
