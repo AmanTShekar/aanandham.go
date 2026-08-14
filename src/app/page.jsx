@@ -759,7 +759,8 @@ export default function HomePage() {
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
     const [activeLevelIdx, setActiveLevelIdx] = useState(1);           // Card 2 ("Still Learning") active by default (Ref media_1786655245980.png)
-    const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active by default (Ref media_1786657185483.png)
+    const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active hover by default
+    const [expandedDayIdx, setExpandedDayIdx] = useState(0);           // Day 1 expanded by default
     const [activeWhyIdx, setActiveWhyIdx] = useState(0);               // Safety & Comfort active by default
     const [activeStayAcc, setActiveStayAcc] = useState(3);             // Common Areas active by default (Ref media_1786655246091.png)
     const [activeFaq, setActiveFaq] = useState(0);
@@ -1695,7 +1696,8 @@ export default function HomePage() {
                     {/* Interactive Days List */}
                     <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
                         {PROGRAM_DAYS.map((item, idx) => {
-                            const isActive = activeDayIdx === idx;
+                            const isHovered = activeDayIdx === idx;
+                            const isExpanded = expandedDayIdx === idx;
                             return (
                                 <motion.div
                                     key={idx}
@@ -1704,35 +1706,34 @@ export default function HomePage() {
                                         setActiveDayIdx(idx);
                                         setIsHoveringProgram(true);
                                     }}
-                                    onClick={() => setActiveDayIdx(isActive ? -1 : idx)}
+                                    onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
                                     style={{
                                         borderTop: '1px solid rgba(18, 22, 19, 0.1)',
                                         padding: '28px 0',
                                         cursor: 'pointer',
                                         position: 'relative',
-                                        transition: 'all 0.2s ease'
+                                        transition: 'background-color 0.2s ease'
                                     }}
                                 >
-                                    {/* Active Lime Underline Bar (Ref Screenshot 1) */}
-                                    {isActive && (
-                                        <motion.div 
-                                            layoutId="activeDayBar"
-                                            style={{
-                                                position: 'absolute',
-                                                top: '-1px',
-                                                left: 0,
-                                                width: '180px',
-                                                height: '3px',
-                                                backgroundColor: '#E5A93B',
-                                                borderRadius: '999px',
-                                                boxShadow: '0 0 10px rgba(213, 237, 85, 0.6)'
-                                            }} 
-                                        />
-                                    )}
+                                    {/* Smooth Active Underline Bar (Zero stutter / Zero jumping) */}
+                                    <div 
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-1.5px',
+                                            left: 0,
+                                            width: isHovered || isExpanded ? '180px' : '0px',
+                                            height: '3px',
+                                            backgroundColor: '#E5A93B',
+                                            borderRadius: '999px',
+                                            boxShadow: isHovered || isExpanded ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
+                                            transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                                            opacity: isHovered || isExpanded ? 1 : 0
+                                        }} 
+                                    />
 
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '6px' }}>
+                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isHovered ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
                                                 {item.day}
                                             </span>
                                             <h3 style={{
@@ -1750,26 +1751,26 @@ export default function HomePage() {
                                             width: '36px',
                                             height: '36px',
                                             borderRadius: '50%',
-                                            background: '#F1F3EC',
+                                            background: isExpanded ? '#121613' : '#F1F3EC',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             fontSize: '12px',
-                                            color: '#121613',
-                                            transform: isActive ? 'rotate(180deg)' : 'none',
-                                            transition: 'transform 0.3s'
+                                            color: isExpanded ? '#E5A93B' : '#121613',
+                                            transform: isExpanded ? 'rotate(180deg)' : 'none',
+                                            transition: 'all 0.3s ease'
                                         }}>
                                             <i className="fa-solid fa-chevron-down"></i>
                                         </div>
                                     </div>
 
                                     <AnimatePresence>
-                                        {isActive && (
+                                        {isExpanded && (
                                             <motion.div 
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                                 style={{ paddingTop: '16px', maxWidth: '640px', overflow: 'hidden' }}
                                             >
                                                 <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
@@ -1787,39 +1788,38 @@ export default function HomePage() {
                         })}
                     </div>
 
-                    {/* Floating Mouse Cursor Follower Preview Card (Small, follows cursor naturally) */}
+                    {/* Floating Mouse Cursor Follower Preview Card (Smooth Spring Physics & Seamless Image Cross-fade) */}
                     <AnimatePresence>
                         {isHoveringProgram && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.8, rotate: 4 }}
+                                initial={{ opacity: 0, scale: 0.85 }}
                                 animate={{ 
                                     opacity: 1, 
                                     scale: 1, 
-                                    rotate: 3,
-                                    x: mousePos.x + 22, 
-                                    y: mousePos.y - 100 
+                                    x: mousePos.x + 24, 
+                                    y: mousePos.y - 110 
                                 }}
-                                exit={{ opacity: 0, scale: 0.8 }}
-                                transition={{ type: 'spring', damping: 26, stiffness: 320, mass: 0.2 }}
+                                exit={{ opacity: 0, scale: 0.85 }}
+                                transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.18 }}
                                 style={{
                                     position: 'absolute',
                                     top: 0,
                                     left: 0,
-                                    width: '170px',
-                                    height: '215px',
-                                    borderRadius: '20px',
+                                    width: '185px',
+                                    height: '235px',
+                                    borderRadius: '22px',
                                     overflow: 'hidden',
                                     pointerEvents: 'none',
                                     zIndex: 30,
-                                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.25)',
-                                    border: '3.5px solid #FFFFFF'
+                                    boxShadow: '0 25px 55px rgba(0, 0, 0, 0.22)',
+                                    border: '4px solid #FFFFFF'
                                 }}
                                 className="desktop-only"
                             >
                                 <img
                                     src={PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.img || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'}
                                     alt="Activity preview"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
                                 />
                             </motion.div>
                         )}
