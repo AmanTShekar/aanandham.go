@@ -96,15 +96,16 @@ export default function ContactPage() {
                 top: 0,
                 left: 0,
                 right: 0,
-                zIndex: 999,
+                zIndex: 100000,
                 padding: '16px 28px',
-                backgroundColor: 'rgba(14, 24, 17, 0.96)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                backgroundColor: isMobileMenuOpen ? 'transparent' : 'rgba(14, 24, 17, 0.96)',
+                backdropFilter: isMobileMenuOpen ? 'none' : 'blur(16px)',
+                WebkitBackdropFilter: isMobileMenuOpen ? 'none' : 'blur(16px)',
+                borderBottom: isMobileMenuOpen ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                transition: 'all 0.3s ease'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <Link href="/" className="text-hover-marker text-hover-marker-dark">
@@ -175,7 +176,7 @@ export default function ContactPage() {
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            zIndex: 998,
+                            zIndex: 99999,
                             background: 'radial-gradient(circle at calc(100% - 44px) 44px, rgba(229, 169, 59, 0.16) 0%, rgba(14, 26, 17, 0.98) 55%)',
                             backdropFilter: 'blur(32px)',
                             WebkitBackdropFilter: 'blur(32px)',

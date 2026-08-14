@@ -1006,13 +1006,13 @@ export default function HomePage() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    zIndex: 999,
+                    zIndex: 100000,
                     padding: scrolled ? '12px 24px' : '22px 32px',
-                    backgroundColor: scrolled ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
-                    backdropFilter: scrolled ? 'blur(16px)' : 'none',
-                    WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
-                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
-                    boxShadow: scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
+                    backgroundColor: isMobileMenuOpen ? 'transparent' : (scrolled ? 'rgba(11, 21, 14, 0.98)' : 'transparent'),
+                    backdropFilter: isMobileMenuOpen ? 'none' : (scrolled ? 'blur(16px)' : 'none'),
+                    WebkitBackdropFilter: isMobileMenuOpen ? 'none' : (scrolled ? 'blur(16px)' : 'none'),
+                    borderBottom: isMobileMenuOpen ? '1px solid transparent' : (scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent'),
+                    boxShadow: isMobileMenuOpen ? 'none' : (scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none'),
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
             >
@@ -1296,7 +1296,7 @@ export default function HomePage() {
                 </div>
             </motion.header>
 
-            {/* ── LIQUID WAVE EXPANDING MOBILE DRAWER (Expanding outward from hamburger button) ── */}
+            {/* ── LIQUID WAVE EXPANDING MOBILE DRAWER (Expanding outward beneath persistent navbar) ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
@@ -1314,40 +1314,16 @@ export default function HomePage() {
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
-                            padding: '24px 28px 36px',
+                            padding: 'calc(80px + 16px) 28px 36px',
                             overflowY: 'auto'
                         }}
                     >
-                        {/* Top Drawer Header with Logo & Morphing Close Button */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '22px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <img
-                                    src="/logo.png"
-                                    alt="Aanandham.go"
-                                    style={{ height: '34px', width: 'auto', borderRadius: '6px' }}
-                                />
-                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                                </span>
-                            </div>
-                            <button
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                aria-label="Close menu"
-                                className="nav-mobile-toggle is-open"
-                                style={{ width: '42px', height: '42px', background: 'rgba(255, 255, 255, 0.1)' }}
-                            >
-                                <span className="burger-line line-top" />
-                                <span className="burger-line line-mid" />
-                                <span className="burger-line line-bot" />
-                            </button>
-                        </div>
-
                         {/* Staggered Cascading Navigation Links */}
                         <motion.nav 
                             variants={drawerStaggerVariants}
                             initial="hidden"
                             animate="visible"
-                            style={{ display: 'flex', flexDirection: 'column', padding: '16px 0' }}
+                            style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}
                         >
                             <motion.div variants={drawerItemVariants}>
                                 <Link 
