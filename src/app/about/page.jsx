@@ -69,7 +69,7 @@ const NEARBY_PLACES = [
     }
 ];
 
-// ── 4 BESPOKE WILDERNESS PILLARS WITH CINEMATIC PHOTOGRAPHY ──
+// ── 4 BESPOKE WILDERNESS PILLARS ──
 const WILDERNESS_PILLARS = [
     {
         num: '01',
@@ -156,8 +156,8 @@ export default function AboutPage() {
     return (
         <div style={{
             minHeight: '100vh',
-            backgroundColor: '#070E08',
-            color: '#FFFFFF',
+            backgroundColor: '#F8F9F5',
+            color: '#121613',
             fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif',
             position: 'relative',
             overflowX: 'clip'
@@ -171,208 +171,214 @@ export default function AboutPage() {
 
             <main>
                 {/* ─────────────────────────────────────────────────────────────
-                    1. HERO SECTION: CINEMATIC ATMOSPHERIC MOUNTAIN BANNER
+                    1. HERO SECTION: CINEMATIC ATMOSPHERIC MOUNTAIN HERO
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    position: 'relative',
-                    minHeight: '88vh',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: 'clamp(140px, 16vh, 180px) 24px clamp(70px, 8vh, 100px)',
-                    backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=90")',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center 35%',
-                    backgroundAttachment: 'fixed',
-                    color: '#FFFFFF',
-                    textAlign: 'center',
-                    overflow: 'hidden'
-                }}>
-                    {/* Layered Obsidian & Forest Canopy Gradients */}
+                <section 
+                    className="hero-defensive-height"
+                    style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        padding: 'clamp(120px, 16vh, 160px) 24px clamp(50px, 8vh, 80px)',
+                        backgroundImage: 'url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=2560&q=95")',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center 40%',
+                        color: '#FFFFFF'
+                    }}
+                >
+                    {/* Radial Obsidian Overlay (Matching Home Hero Lighting) */}
                     <div style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.85) 0%, rgba(11, 21, 14, 0.65) 50%, rgba(7, 14, 8, 0.98) 100%)',
-                        zIndex: 1
+                        background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.4) 0%, rgba(11, 21, 14, 0.88) 100%)'
                     }} />
 
-                    {/* Radial Sunrise Glow in Center */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '42%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: '800px',
-                        height: '450px',
-                        background: 'radial-gradient(circle, rgba(229, 169, 59, 0.25) 0%, rgba(213, 237, 85, 0.08) 45%, transparent 70%)',
-                        zIndex: 1,
-                        filter: 'blur(70px)',
-                        pointerEvents: 'none'
-                    }} />
-
-                    <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-                        
-                        {/* Big Prominent Aanandham Brand Logo & Coordinates Emblem */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 2 }}
+                    >
+                        {/* Centered Brand Logo */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.88 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.7 }}
                             style={{
                                 display: 'flex',
-                                flexDirection: 'column',
+                                justifyContent: 'center',
                                 alignItems: 'center',
-                                gap: '18px',
-                                marginBottom: '28px'
+                                marginBottom: '24px'
                             }}
                         >
-                            <div style={{
-                                position: 'relative',
-                                padding: '14px',
-                                borderRadius: '28px',
-                                background: 'rgba(11, 21, 14, 0.85)',
-                                border: '1.5px solid rgba(229, 169, 59, 0.55)',
-                                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.7), 0 0 45px rgba(229, 169, 59, 0.3)',
-                                backdropFilter: 'blur(20px)',
-                                WebkitBackdropFilter: 'blur(20px)'
-                            }}>
-                                <img
-                                    src="/logo.png"
-                                    alt="Aanandham.go Wilderness Logo"
-                                    style={{
-                                        height: '92px',
-                                        width: 'auto',
-                                        objectFit: 'contain',
-                                        borderRadius: '16px'
-                                    }}
-                                />
-                            </div>
-
-                            <div style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: 'rgba(11, 21, 14, 0.85)',
-                                border: '1px solid rgba(229, 169, 59, 0.4)',
-                                padding: '7px 20px',
-                                borderRadius: '999px',
-                                color: '#E5A93B',
-                                fontSize: '12px',
-                                fontWeight: '800',
-                                letterSpacing: '1px',
-                                textTransform: 'uppercase',
-                                boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
-                                backdropFilter: 'blur(12px)',
-                                WebkitBackdropFilter: 'blur(12px)'
-                            }}>
-                                <span className="live-beacon"></span>
-                                <span>AANANDHAM.GO · SURYANELLI RIDGE · 7,900 FT</span>
-                            </div>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham Logo"
+                                style={{
+                                    height: '92px',
+                                    width: 'auto',
+                                    objectFit: 'contain',
+                                    filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6))'
+                                }}
+                            />
                         </motion.div>
 
-                        {/* Grand Editorial Headline */}
-                        <motion.h1
-                            initial={{ opacity: 0, y: 24 }}
+                        {/* Main Headline in Bricolage Grotesque */}
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.15 }}
+                            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                             style={{
-                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(38px, 6.2vw, 74px)',
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(42px, 7vw, 84px)',
                                 fontWeight: '800',
-                                lineHeight: 1.08,
-                                letterSpacing: '-0.035em',
+                                lineHeight: 1.05,
+                                letterSpacing: '-0.04em',
                                 color: '#FFFFFF',
-                                maxWidth: '1000px',
-                                margin: '0 auto 24px',
-                                textShadow: '0 8px 30px rgba(0,0,0,0.7)'
+                                marginBottom: '24px'
                             }}
                         >
-                            Born from the Mountains. Built for <span style={{ color: '#E5A93B' }}>Real Explorers</span>.
+                            <span className="text-hover-marker text-hover-marker-dark" style={{ cursor: 'pointer', display: 'inline-block' }}>
+                                <span className="marker-text">
+                                    Our Story<span style={{ color: '#E5A93B' }}> & Ethos</span>
+                                </span>
+                            </span>
+                            <br />
+                            <span style={{ fontSize: '0.65em', fontWeight: '700', color: '#E1E9E2', letterSpacing: '-0.02em' }}>
+                                Out of the Textbooks, Into the Wild
+                            </span>
                         </motion.h1>
 
-                        {/* Evocative Narrative Subhead */}
+                        {/* Subtitle Description */}
                         <motion.p
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.25 }}
+                            transition={{ duration: 0.75, delay: 0.2 }}
                             style={{
-                                fontSize: 'clamp(17px, 2.2vw, 21px)',
-                                color: '#E1E9E2',
+                                fontSize: 'clamp(16px, 2vw, 19px)',
+                                color: 'rgba(255, 255, 255, 0.88)',
                                 lineHeight: 1.65,
-                                maxWidth: '800px',
-                                margin: '0 auto 38px',
-                                textShadow: '0 4px 16px rgba(0,0,0,0.6)'
+                                maxWidth: '760px',
+                                margin: '0 auto clamp(24px, 4vh, 40px)'
                             }}
                         >
-                            We traded fluorescent desks and rigid textbook classrooms for the raw ridges of the Western Ghats. Here is where the mist breathes, campfires roar, and nature teaches what screens never could.
+                            We built Aanandham to trade lecture halls, cubicles, and fluorescent screens for the raw 7,900 FT ridges of Kerala. Experience real nature with safety, warmth, and zero compromises.
                         </motion.p>
 
-                        {/* Direct Action CTAs */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.35 }}
+                        {/* Quick Action Button Cluster */}
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                             style={{
                                 display: 'flex',
-                                alignItems: 'center',
                                 justifyContent: 'center',
-                                gap: '16px',
-                                flexWrap: 'wrap'
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                                gap: '14px'
                             }}
                         >
                             <Link
                                 href="/#packages"
                                 className="btn-lime"
                                 style={{
-                                    padding: '15px 36px',
+                                    padding: '14px 34px',
                                     fontSize: '15px',
-                                    fontWeight: '800',
                                     textDecoration: 'none',
-                                    boxShadow: '0 8px 30px rgba(213, 237, 85, 0.4)'
+                                    boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                                 }}
                             >
-                                Explore Campsite Packages ↗
+                                ⛺ Explore Our Camps ↗
                             </Link>
-                            <Link
-                                href="/contact"
+
+                            <a
+                                href="#ethos"
                                 style={{
-                                    padding: '15px 28px',
-                                    borderRadius: '999px',
-                                    background: 'rgba(11, 21, 14, 0.85)',
-                                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                                    color: '#FFFFFF',
-                                    fontSize: '15px',
-                                    fontWeight: '700',
-                                    textDecoration: 'none',
-                                    backdropFilter: 'blur(16px)',
-                                    WebkitBackdropFilter: 'blur(16px)',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '8px'
+                                    justifyContent: 'center',
+                                    textDecoration: 'none',
+                                    background: 'rgba(0, 0, 0, 0.45)',
+                                    border: '1px solid rgba(255, 255, 255, 0.4)',
+                                    color: '#FFFFFF',
+                                    padding: '13px 30px',
+                                    borderRadius: '999px',
+                                    fontWeight: '600',
+                                    fontSize: '15px',
+                                    backdropFilter: 'blur(10px)',
+                                    transition: 'all 0.25s ease'
                                 }}
                             >
-                                <span>💬 Talk to Concierge</span>
-                            </Link>
+                                📜 Read Our Charter ↓
+                            </a>
+
+                            <a
+                                href="https://instagram.com/aanandham.go"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    textDecoration: 'none',
+                                    background: 'rgba(255, 255, 255, 0.12)',
+                                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                                    color: '#FFFFFF',
+                                    padding: '13px 24px',
+                                    borderRadius: '999px',
+                                    fontWeight: '700',
+                                    fontSize: '14px',
+                                    backdropFilter: 'blur(10px)',
+                                    transition: 'all 0.25s ease'
+                                }}
+                            >
+                                <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }}></i>
+                                <span>@aanandham.go</span>
+                            </a>
                         </motion.div>
-                    </div>
+                    </motion.div>
                 </section>
+
+                {/* ── LIVE BASECAMP MARQUEE TICKER ── */}
+                <div className="marquee-container" aria-hidden="true">
+                    <div className="marquee-track">
+                        {[
+                            { icon: '★', label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
+                            { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                            { icon: '🔥', label: 'STARLIT CAMPFIRE & FARM-TO-TABLE DINING' },
+                            { icon: '⛺', label: 'THERMAL INSULATED PODS & CLEAN SHOWERS', highlight: true },
+                            { icon: '🥾', label: 'SECRET PHANTOM HEAD PEAK TRAILS' },
+                            { icon: '🔭', label: 'ZERO LIGHT-POLLUTION MILKY WAY STARGAZING', highlight: true },
+                            { icon: '🌿', label: '100% LEAVE NO TRACE ECO CHARTER' },
+                            { icon: '★', label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
+                            { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' }
+                        ].map((item, idx) => (
+                            <div key={idx} className="marquee-item" style={{ color: item.highlight ? '#E5A93B' : '#FFFFFF' }}>
+                                <span>{item.icon}</span>
+                                <span>{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
                 {/* ─────────────────────────────────────────────────────────────
                     2. OUT OF THE CLASSROOM: THE EDITORIAL STORY SECTION
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
+                <section id="ethos" style={{
                     padding: '110px 24px',
-                    background: '#0B150E',
+                    background: '#F8F9F5',
                     position: 'relative'
                 }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                        
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
                             gap: '56px',
                             alignItems: 'center'
                         }}>
-                            {/* Left: Editorial Narrative & Origin Charter */}
+                            {/* Left: Editorial Narrative */}
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '16px' }}>
                                     <span className="star-icon">★</span> OUR FOUNDING ETHOS
@@ -384,57 +390,57 @@ export default function AboutPage() {
                                     fontWeight: '800',
                                     lineHeight: 1.12,
                                     letterSpacing: '-0.03em',
-                                    color: '#FFFFFF',
+                                    color: '#0B150E',
                                     margin: '0 0 24px'
                                 }}>
-                                    From Rigid Textbooks to Living <span style={{ color: '#E5A93B' }}>Mountain Geography</span>
+                                    From Textbook Theory to Living <span style={{ color: '#E5A93B' }}>Mountain Geography</span>
                                 </h2>
 
-                                <p style={{ fontSize: '16px', color: '#A2B6A6', lineHeight: 1.75, marginBottom: '20px' }}>
-                                    In modern life, most of what we learn is second-hand: trapped in PDFs, lecture slides, fluorescent conference rooms, and 6-inch phone screens. We talk about weather, but never feel the icy morning wind bite our cheeks. We read about stars, but haven’t looked up into an unpolluted Milky Way in years.
+                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '20px' }}>
+                                    In modern life, most of what we experience is second-hand: trapped inside slide decks, fluorescent lecture rooms, and endless phone notifications. We study weather systems, but never stand above a raging sea of morning mist. We read about stars, but haven’t looked into a crystal clear Milky Way in years.
                                 </p>
 
-                                <p style={{ fontSize: '16px', color: '#A2B6A6', lineHeight: 1.75, marginBottom: '32px' }}>
-                                    Aanandham was founded in 2021 on a singular conviction: <strong style={{ color: '#FFFFFF' }}>true human revitalization happens outdoors</strong>. By engineering weather-proof, insulated dome sanctuaries on private mountain ridges, we made the raw wilderness accessible to everyone — without the hardships of leaking tents or compromised hygiene.
+                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '32px' }}>
+                                    Aanandham was founded in 2021 with a simple mission: <strong style={{ color: '#0B150E' }}>reconnecting people with raw nature without compromising comfort</strong>. By engineering weather-sealed, insulated dome sanctuaries on private mountain ridges, we made the wild accessible to families, couples, and solo travelers alike.
                                 </p>
 
                                 {/* Founder Quote Card */}
                                 <div style={{
-                                    background: 'linear-gradient(135deg, rgba(229, 169, 59, 0.12) 0%, rgba(213, 237, 85, 0.04) 100%)',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(11, 21, 14, 0.08)',
                                     borderLeft: '4px solid #E5A93B',
                                     borderRadius: '0 20px 20px 0',
                                     padding: '24px 28px',
-                                    position: 'relative'
+                                    boxShadow: '0 12px 30px rgba(0,0,0,0.04)'
                                 }}>
                                     <p style={{
                                         fontSize: '15px',
                                         fontStyle: 'italic',
-                                        color: '#FFFFFF',
+                                        color: '#0B150E',
                                         lineHeight: 1.65,
                                         margin: '0 0 14px'
                                     }}>
-                                        “No textbook or digital screen can replace the raw sensory awakening of standing above a rolling sea of clouds at 7,900 FT with hot cardamom tea in hand.”
+                                        “No screen or textbook can replicate the sensory awakening of standing above a rolling sea of clouds at 7,900 FT with hot cardamom tea in hand.”
                                     </p>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E5A93B', color: '#070E08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '14px' }}>
+                                        <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E5A93B', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '14px' }}>
                                             S
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF' }}>Suryanarayanan K.</div>
+                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>Suryanarayanan K.</div>
                                             <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Founder & Mountain Director · Aanandham.go</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Right: Bespoke Visual Collage with Real Mountain Photos */}
+                            {/* Right: Bespoke Visual Collage with Real Photography */}
                             <div style={{ position: 'relative' }}>
-                                {/* Main Large Image */}
                                 <div style={{
                                     borderRadius: '32px',
                                     overflow: 'hidden',
-                                    boxShadow: '0 24px 60px rgba(0,0,0,0.7)',
-                                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                                    boxShadow: '0 24px 60px rgba(0,0,0,0.12)',
+                                    border: '1px solid rgba(11, 21, 14, 0.08)',
                                     position: 'relative'
                                 }}>
                                     <img
@@ -448,7 +454,7 @@ export default function AboutPage() {
                                         left: 0,
                                         right: 0,
                                         padding: '24px',
-                                        background: 'linear-gradient(to top, rgba(7, 14, 8, 0.95) 0%, transparent 100%)'
+                                        background: 'linear-gradient(to top, rgba(7, 14, 8, 0.92) 0%, transparent 100%)'
                                     }}>
                                         <div style={{ display: 'inline-block', background: '#E5A93B', color: '#070E08', fontSize: '11px', fontWeight: '900', padding: '4px 12px', borderRadius: '999px', marginBottom: '6px' }}>
                                             PRIVATE RIDGE SANCTUARY
@@ -459,32 +465,30 @@ export default function AboutPage() {
                                     </div>
                                 </div>
 
-                                {/* Overlapping Floating Feature Card */}
                                 <div style={{
                                     position: 'absolute',
                                     bottom: '-28px',
                                     left: '-24px',
-                                    background: 'rgba(17, 34, 22, 0.95)',
+                                    background: '#0B150E',
                                     border: '1px solid rgba(213, 237, 85, 0.35)',
-                                    backdropFilter: 'blur(20px)',
-                                    WebkitBackdropFilter: 'blur(20px)',
                                     borderRadius: '24px',
                                     padding: '18px 24px',
-                                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                                    boxShadow: '0 20px 50px rgba(0,0,0,0.25)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '16px',
-                                    maxWidth: '320px'
+                                    maxWidth: '320px',
+                                    color: '#FFFFFF'
                                 }}>
                                     <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(229, 169, 59, 0.2)', color: '#E5A93B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>
                                         <i className="fa-solid fa-cloud-sun"></i>
                                     </div>
                                     <div>
                                         <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                            360° Cloud Bed Bedding
+                                            360° Cloud Bed Views
                                         </div>
                                         <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                            Sunrise views above the cloud line
+                                            Sunrise directly above cloud lines
                                         </div>
                                     </div>
                                 </div>
@@ -494,11 +498,11 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Photo Cards)
+                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '110px 24px',
-                    background: '#070E08',
+                    background: '#0B150E',
                     position: 'relative'
                 }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
@@ -545,15 +549,13 @@ export default function AboutPage() {
                                         boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
                                     }}
                                 >
-                                    {/* Cinematic Background Image with Dark Fade */}
                                     <div style={{
                                         position: 'absolute',
                                         inset: 0,
                                         backgroundImage: `url(${pillar.bg})`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
-                                        opacity: 0.35,
-                                        transition: 'opacity 0.4s ease, transform 0.4s ease'
+                                        opacity: 0.35
                                     }} />
 
                                     <div style={{
@@ -622,15 +624,14 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    4. SURROUNDING LANDMARKS & HIGH PEAKS (Interactive Tabs)
+                    4. SURROUNDING LANDMARKS & HIGH PEAKS
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '110px 24px',
-                    background: '#0B150E',
+                    background: '#F8F9F5',
                     position: 'relative'
                 }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                        
                         <div style={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -647,10 +648,10 @@ export default function AboutPage() {
                                     fontFamily: 'var(--font-heading)',
                                     fontSize: 'clamp(30px, 4.5vw, 48px)',
                                     fontWeight: '800',
-                                    color: '#FFFFFF',
+                                    color: '#0B150E',
                                     margin: 0
                                 }}>
-                                    High Ridges & Wonders Around Us
+                                    High Ridges & Landmarks Around Us
                                 </h2>
                             </div>
 
@@ -658,10 +659,11 @@ export default function AboutPage() {
                             <div style={{
                                 display: 'flex',
                                 gap: '8px',
-                                background: 'rgba(255, 255, 255, 0.06)',
+                                background: '#FFFFFF',
                                 padding: '6px',
                                 borderRadius: '999px',
-                                border: '1px solid rgba(255, 255, 255, 0.1)'
+                                border: '1px solid rgba(11, 21, 14, 0.1)',
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
                             }}>
                                 {['All', 'High Peaks', 'Trails', 'Lakes & Waterfalls'].map((cat) => (
                                     <button
@@ -672,7 +674,7 @@ export default function AboutPage() {
                                             borderRadius: '999px',
                                             border: 'none',
                                             background: activeCategory === cat ? '#E5A93B' : 'transparent',
-                                            color: activeCategory === cat ? '#070E08' : '#A2B6A6',
+                                            color: activeCategory === cat ? '#070E08' : '#59655D',
                                             fontWeight: '800',
                                             fontSize: '13px',
                                             cursor: 'pointer',
@@ -702,13 +704,13 @@ export default function AboutPage() {
                                         transition={{ duration: 0.3 }}
                                         className="card-hover-lift"
                                         style={{
-                                            background: '#112115',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            background: '#FFFFFF',
+                                            border: '1px solid rgba(11, 21, 14, 0.08)',
                                             borderRadius: '28px',
                                             overflow: 'hidden',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            boxShadow: '0 16px 40px rgba(0,0,0,0.5)'
+                                            boxShadow: '0 16px 40px rgba(0,0,0,0.06)'
                                         }}
                                     >
                                         <div style={{ height: '240px', position: 'relative', overflow: 'hidden' }}>
@@ -736,8 +738,8 @@ export default function AboutPage() {
                                                 position: 'absolute',
                                                 top: '14px',
                                                 right: '14px',
-                                                background: 'rgba(255, 255, 255, 0.18)',
-                                                color: '#FFFFFF',
+                                                background: 'rgba(255, 255, 255, 0.9)',
+                                                color: '#0B150E',
                                                 fontSize: '11.5px',
                                                 fontWeight: '700',
                                                 padding: '4px 12px',
@@ -758,13 +760,13 @@ export default function AboutPage() {
                                                 fontFamily: 'var(--font-heading)',
                                                 fontSize: '22px',
                                                 fontWeight: '800',
-                                                color: '#FFFFFF',
+                                                color: '#0B150E',
                                                 margin: '0 0 12px'
                                             }}>
                                                 {place.title}
                                             </h3>
 
-                                            <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 24px', flex: 1 }}>
+                                            <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, margin: '0 0 24px', flex: 1 }}>
                                                 {place.desc}
                                             </p>
 
@@ -797,11 +799,10 @@ export default function AboutPage() {
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '110px 24px',
-                    background: '#070E08',
+                    background: '#0B150E',
                     position: 'relative'
                 }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                        
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION LEADERSHIP
@@ -900,69 +901,11 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    6. ZERO-TRACE ENVIRONMENTAL PLEDGE
-                ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '80px 24px',
-                    background: '#0B150E'
-                }}>
-                    <div style={{
-                        maxWidth: '1240px',
-                        margin: '0 auto',
-                        background: 'linear-gradient(135deg, rgba(17, 34, 22, 0.9) 0%, rgba(11, 21, 14, 0.95) 100%)',
-                        border: '1px solid rgba(229, 169, 59, 0.3)',
-                        borderRadius: '32px',
-                        padding: 'clamp(36px, 5vw, 60px)',
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                        gap: '40px',
-                        alignItems: 'center'
-                    }}>
-                        <div>
-                            <div className="star-badge" style={{ marginBottom: '14px' }}>
-                                <span className="star-icon">★</span> OUR CONSERVATION PLEDGE
-                            </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(26px, 3.5vw, 40px)',
-                                fontWeight: '800',
-                                color: '#FFFFFF',
-                                margin: '0 0 16px',
-                                lineHeight: 1.2
-                            }}>
-                                Leaving the Western Ghats Cleaner Than We Found It
-                            </h2>
-                            <p style={{ fontSize: '14.5px', color: '#A2B6A6', lineHeight: 1.7, margin: 0 }}>
-                                We are stewards of these mountains, not just hosts. Every camper who visits our ridge signs our digital Leave-No-Trace charter, supporting native reforestation and strict waste reclamation.
-                            </p>
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                            {[
-                                'Zero Single-Use Plastic Bottle policy (refill stations across all pods)',
-                                'Solar-powered ambient lighting & low-noise emergency backup',
-                                '100% locally sourced plantation timber & low-impact platform decks',
-                                'Local tribal youth employment with certified mountain rescue training'
-                            ].map((pledge, pIdx) => (
-                                <div key={pIdx} style={{ display: 'flex', alignItems: 'center', gap: '14px', background: 'rgba(255, 255, 255, 0.04)', padding: '14px 18px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                                    <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#E5A93B', color: '#070E08', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '900', flexShrink: 0 }}>
-                                        ✓
-                                    </div>
-                                    <span style={{ fontSize: '13.5px', color: '#E1E9E2', fontWeight: '600' }}>
-                                        {pledge}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ─────────────────────────────────────────────────────────────
-                    7. ORGANIC CURVED NATURE CTA BANNER
+                    6. ORGANIC CURVED NATURE CTA BANNER
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '60px 24px 110px',
-                    background: '#070E08'
+                    background: '#F8F9F5'
                 }}>
                     <div style={{
                         maxWidth: '1240px',
@@ -975,7 +918,7 @@ export default function AboutPage() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         textAlign: 'center',
-                        boxShadow: '0 30px 80px rgba(0,0,0,0.7)',
+                        boxShadow: '0 30px 80px rgba(0,0,0,0.2)',
                         position: 'relative',
                         overflow: 'hidden'
                     }}>
