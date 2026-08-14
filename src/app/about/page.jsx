@@ -175,12 +175,12 @@ export default function AboutPage() {
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     position: 'relative',
-                    minHeight: '92vh',
+                    minHeight: '88vh',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: 'clamp(140px, 18vh, 180px) 24px clamp(60px, 8vh, 100px)',
-                    backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2200&q=85")',
+                    padding: 'clamp(140px, 16vh, 180px) 24px clamp(70px, 8vh, 100px)',
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=90")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center 35%',
                     backgroundAttachment: 'fixed',
@@ -192,19 +192,19 @@ export default function AboutPage() {
                     <div style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.82) 0%, rgba(11, 21, 14, 0.65) 45%, rgba(7, 14, 8, 0.98) 100%)',
+                        background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.85) 0%, rgba(11, 21, 14, 0.65) 50%, rgba(7, 14, 8, 0.98) 100%)',
                         zIndex: 1
                     }} />
 
                     {/* Radial Sunrise Glow in Center */}
                     <div style={{
                         position: 'absolute',
-                        top: '40%',
+                        top: '42%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: '800px',
                         height: '450px',
-                        background: 'radial-gradient(circle, rgba(229, 169, 59, 0.22) 0%, rgba(213, 237, 85, 0.08) 45%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(229, 169, 59, 0.25) 0%, rgba(213, 237, 85, 0.08) 45%, transparent 70%)',
                         zIndex: 1,
                         filter: 'blur(70px)',
                         pointerEvents: 'none'
@@ -212,37 +212,58 @@ export default function AboutPage() {
 
                     <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         
-                        {/* Aanandham Brand Emblem & Coordinates Badge */}
+                        {/* Big Prominent Aanandham Brand Logo & Coordinates Emblem */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
+                            initial={{ opacity: 0, scale: 0.88 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.6 }}
+                            transition={{ duration: 0.7 }}
                             style={{
-                                display: 'inline-flex',
+                                display: 'flex',
+                                flexDirection: 'column',
                                 alignItems: 'center',
-                                gap: '14px',
-                                background: 'rgba(11, 21, 14, 0.85)',
-                                border: '1px solid rgba(229, 169, 59, 0.45)',
-                                backdropFilter: 'blur(16px)',
-                                WebkitBackdropFilter: 'blur(16px)',
-                                padding: '8px 22px 8px 14px',
-                                borderRadius: '999px',
-                                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.5)',
+                                gap: '18px',
                                 marginBottom: '28px'
                             }}
                         >
-                            <img
-                                src="/logo.png"
-                                alt="Aanandham Logo"
-                                style={{
-                                    height: '32px',
-                                    width: '32px',
-                                    objectFit: 'contain',
-                                    borderRadius: '50%',
-                                    border: '1px solid #E5A93B'
-                                }}
-                            />
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', fontWeight: '800', letterSpacing: '0.8px', color: '#E5A93B', textTransform: 'uppercase' }}>
+                            <div style={{
+                                position: 'relative',
+                                padding: '14px',
+                                borderRadius: '28px',
+                                background: 'rgba(11, 21, 14, 0.85)',
+                                border: '1.5px solid rgba(229, 169, 59, 0.55)',
+                                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.7), 0 0 45px rgba(229, 169, 59, 0.3)',
+                                backdropFilter: 'blur(20px)',
+                                WebkitBackdropFilter: 'blur(20px)'
+                            }}>
+                                <img
+                                    src="/logo.png"
+                                    alt="Aanandham.go Wilderness Logo"
+                                    style={{
+                                        height: '92px',
+                                        width: 'auto',
+                                        objectFit: 'contain',
+                                        borderRadius: '16px'
+                                    }}
+                                />
+                            </div>
+
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                background: 'rgba(11, 21, 14, 0.85)',
+                                border: '1px solid rgba(229, 169, 59, 0.4)',
+                                padding: '7px 20px',
+                                borderRadius: '999px',
+                                color: '#E5A93B',
+                                fontSize: '12px',
+                                fontWeight: '800',
+                                letterSpacing: '1px',
+                                textTransform: 'uppercase',
+                                boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                                backdropFilter: 'blur(12px)',
+                                WebkitBackdropFilter: 'blur(12px)'
+                            }}>
                                 <span className="live-beacon"></span>
                                 <span>AANANDHAM.GO · SURYANELLI RIDGE · 7,900 FT</span>
                             </div>
@@ -252,17 +273,17 @@ export default function AboutPage() {
                         <motion.h1
                             initial={{ opacity: 0, y: 24 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.1 }}
+                            transition={{ duration: 0.7, delay: 0.15 }}
                             style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(40px, 6.5vw, 76px)',
+                                fontSize: 'clamp(38px, 6.2vw, 74px)',
                                 fontWeight: '800',
                                 lineHeight: 1.08,
                                 letterSpacing: '-0.035em',
                                 color: '#FFFFFF',
-                                maxWidth: '1040px',
+                                maxWidth: '1000px',
                                 margin: '0 auto 24px',
-                                textShadow: '0 8px 30px rgba(0,0,0,0.6)'
+                                textShadow: '0 8px 30px rgba(0,0,0,0.7)'
                             }}
                         >
                             Born from the Mountains. Built for <span style={{ color: '#E5A93B' }}>Real Explorers</span>.
@@ -272,69 +293,65 @@ export default function AboutPage() {
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.2 }}
+                            transition={{ duration: 0.7, delay: 0.25 }}
                             style={{
                                 fontSize: 'clamp(17px, 2.2vw, 21px)',
                                 color: '#E1E9E2',
                                 lineHeight: 1.65,
-                                maxWidth: '820px',
-                                margin: '0 auto 48px',
-                                textShadow: '0 4px 16px rgba(0,0,0,0.5)'
+                                maxWidth: '800px',
+                                margin: '0 auto 38px',
+                                textShadow: '0 4px 16px rgba(0,0,0,0.6)'
                             }}
                         >
                             We traded fluorescent desks and rigid textbook classrooms for the raw ridges of the Western Ghats. Here is where the mist breathes, campfires roar, and nature teaches what screens never could.
                         </motion.p>
 
-                        {/* Floating Frosted Glass Metrics */}
+                        {/* Direct Action CTAs */}
                         <motion.div
-                            initial={{ opacity: 0, y: 24 }}
+                            initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.7, delay: 0.3 }}
+                            transition={{ duration: 0.7, delay: 0.35 }}
                             style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 gap: '16px',
-                                maxWidth: '1020px',
-                                margin: '0 auto'
+                                flexWrap: 'wrap'
                             }}
                         >
-                            {[
-                                { val: '7,900 FT', label: 'Summit Peak Altitude', sub: 'Kolukkumalai Sunrise Ridge' },
-                                { val: '15,000+', label: 'Verified Campers', sub: 'Families, Solo & Groups Hosted' },
-                                { val: '100%', label: 'Zero-Trace Sanctuary', sub: 'Strict Plastic-Free Protocol' },
-                                { val: '4.98 ★', label: 'Expedition Score', sub: 'Over 1,200 Direct Reviews' }
-                            ].map((stat, i) => (
-                                <div
-                                    key={i}
-                                    style={{
-                                        background: 'rgba(11, 21, 14, 0.75)',
-                                        border: '1px solid rgba(255, 255, 255, 0.14)',
-                                        backdropFilter: 'blur(16px)',
-                                        WebkitBackdropFilter: 'blur(16px)',
-                                        borderRadius: '24px',
-                                        padding: '24px 20px',
-                                        textAlign: 'center',
-                                        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.4)'
-                                    }}
-                                >
-                                    <div style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '34px',
-                                        fontWeight: '800',
-                                        color: '#E5A93B',
-                                        letterSpacing: '-0.02em',
-                                        marginBottom: '4px'
-                                    }}>
-                                        {stat.val}
-                                    </div>
-                                    <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF', marginBottom: '2px' }}>
-                                        {stat.label}
-                                    </div>
-                                    <div style={{ fontSize: '11.5px', color: '#A2B6A6' }}>
-                                        {stat.sub}
-                                    </div>
-                                </div>
-                            ))}
+                            <Link
+                                href="/#packages"
+                                className="btn-lime"
+                                style={{
+                                    padding: '15px 36px',
+                                    fontSize: '15px',
+                                    fontWeight: '800',
+                                    textDecoration: 'none',
+                                    boxShadow: '0 8px 30px rgba(213, 237, 85, 0.4)'
+                                }}
+                            >
+                                Explore Campsite Packages ↗
+                            </Link>
+                            <Link
+                                href="/contact"
+                                style={{
+                                    padding: '15px 28px',
+                                    borderRadius: '999px',
+                                    background: 'rgba(11, 21, 14, 0.85)',
+                                    border: '1px solid rgba(255, 255, 255, 0.25)',
+                                    color: '#FFFFFF',
+                                    fontSize: '15px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none',
+                                    backdropFilter: 'blur(16px)',
+                                    WebkitBackdropFilter: 'blur(16px)',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <span>💬 Talk to Concierge</span>
+                            </Link>
                         </motion.div>
                     </div>
                 </section>
