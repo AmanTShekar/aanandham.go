@@ -245,19 +245,21 @@ export default function AboutPage() {
                 </button>
             </header>
 
-            {/* ── RESPONSIVE MOBILE DRAWER ── */}
+            {/* ── RESPONSIVE MOBILE DRAWER (Liquid Wave Expansion) ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, x: '100%' }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: '100%' }}
-                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0 }}
+                        animate={{ clipPath: 'circle(150% at calc(100% - 44px) 44px)', opacity: 1 }}
+                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0 }}
+                        transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
                         style={{
                             position: 'fixed',
                             inset: 0,
                             zIndex: 998,
-                            background: '#0E1A11',
+                            background: 'radial-gradient(circle at calc(100% - 44px) 44px, rgba(229, 169, 59, 0.16) 0%, rgba(14, 26, 17, 0.98) 55%)',
+                            backdropFilter: 'blur(32px)',
+                            WebkitBackdropFilter: 'blur(32px)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',

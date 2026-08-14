@@ -737,24 +737,51 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
     );
 }
 
-// ── MOBILE DRAWER CASCADE MOTION VARIANTS ──
+// ── MOBILE DRAWER LIQUID WAVE EXPANSION MOTION VARIANTS ──
+const drawerWaveVariants = {
+    hidden: { 
+        clipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        opacity: 0
+    },
+    visible: { 
+        clipPath: 'circle(150% at calc(100% - 44px) 44px)',
+        WebkitClipPath: 'circle(150% at calc(100% - 44px) 44px)',
+        opacity: 1,
+        transition: { 
+            duration: 0.55, 
+            ease: [0.16, 1, 0.3, 1] 
+        }
+    },
+    exit: { 
+        clipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        opacity: 0,
+        transition: { 
+            duration: 0.42, 
+            ease: [0.32, 0, 0.67, 0] 
+        }
+    }
+};
+
 const drawerStaggerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.055,
-            delayChildren: 0.08
+            staggerChildren: 0.065,
+            delayChildren: 0.16
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, x: 26 },
+    hidden: { opacity: 0, y: 22, scale: 0.96 },
     visible: {
         opacity: 1,
-        x: 0,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
@@ -1269,19 +1296,19 @@ export default function HomePage() {
                 </div>
             </motion.header>
 
-            {/* ── CLEAN THEMED RESPONSIVE MOBILE SLIDE-IN DRAWER (Frosted Dark Glass) ── */}
+            {/* ── LIQUID WAVE EXPANDING MOBILE DRAWER (Expanding outward from hamburger button) ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, x: '100%' }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: '100%' }}
-                        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                        variants={drawerWaveVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
                         style={{
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'rgba(11, 21, 14, 0.94)',
+                            background: 'radial-gradient(circle at calc(100% - 44px) 44px, rgba(229, 169, 59, 0.16) 0%, rgba(213, 237, 85, 0.05) 25%, rgba(11, 21, 14, 0.96) 60%)',
                             backdropFilter: 'blur(36px)',
                             WebkitBackdropFilter: 'blur(36px)',
                             color: '#FFFFFF',
