@@ -628,9 +628,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
             style={{ position: 'relative', padding: '40px 24px 80px', background: '#F8F9F5' }}
         >
             <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                <motion.div 
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                <div 
                     style={{
                         position: 'relative',
                         borderRadius: '40px',
@@ -747,7 +745,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             </a>
                         </div>
                     </motion.div>
-                </motion.div>
+                </div>
             </div>
         </motion.section>
     );
@@ -2829,25 +2827,142 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
                         
-                        {/* Video Diaries Card */}
+                        {/* Organic Polaroid & Sticky Note Video Diaries Element (No standard outer box) */}
                         <motion.div 
                             variants={cardReveal}
                             onClick={() => setIsVideoModalOpen(true)} 
-                            className="hover-lift card-img-zoom" 
-                            style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '20px', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 6px 25px rgba(0,0,0,0.02)' }}
+                            style={{ 
+                                position: 'relative', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                padding: '16px 8px',
+                                minHeight: '380px'
+                            }}
                         >
-                            <div style={{ position: 'relative', height: '280px', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
-                                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80" alt="Campfire" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '64px', height: '64px', borderRadius: '50%', background: '#FFFFFF', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
-                                    <i className="fa-solid fa-play" style={{ fontSize: '18px', marginLeft: '3px' }}></i>
+                            {/* Secondary Tilted Polaroid Snapshot in the background */}
+                            <motion.div
+                                whileHover={{ rotate: 8, scale: 1.05 }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '20px',
+                                    right: '10px',
+                                    width: '180px',
+                                    background: '#FFFFFF',
+                                    padding: '8px 8px 18px 8px',
+                                    borderRadius: '12px',
+                                    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12)',
+                                    transform: 'rotate(6deg)',
+                                    zIndex: 1,
+                                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                }}
+                            >
+                                <div style={{ height: '135px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px' }}>
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=500&q=80" 
+                                        alt="Kolukkumalai Sunrise" 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
                                 </div>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#121613', fontWeight: '800', fontSize: '15px' }}>
-                                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#121613', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>
-                                    <i className="fa-solid fa-play" style={{ marginLeft: '2px' }}></i>
+                                <div style={{ fontSize: '10px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.5px' }}>
+                                    🏔️ 7,900 FT Sunrise Batch
                                 </div>
-                                <span>Watch our video diaries!</span>
-                            </div>
+                            </motion.div>
+
+                            {/* Primary Foreground Polaroid Photo */}
+                            <motion.div
+                                whileHover={{ rotate: 0, scale: 1.03, y: -4 }}
+                                whileTap={{ scale: 0.98 }}
+                                style={{
+                                    position: 'relative',
+                                    width: '92%',
+                                    maxWidth: '310px',
+                                    background: '#FFFFFF',
+                                    padding: '12px 12px 20px 12px',
+                                    borderRadius: '16px',
+                                    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.14)',
+                                    transform: 'rotate(-3deg)',
+                                    zIndex: 2,
+                                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                }}
+                            >
+                                {/* Washi Tape / Pinned Note Header */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-12px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    background: 'rgba(213, 237, 85, 0.95)',
+                                    color: '#121613',
+                                    fontSize: '10.5px',
+                                    fontWeight: '900',
+                                    letterSpacing: '1px',
+                                    textTransform: 'uppercase',
+                                    padding: '4px 14px',
+                                    borderRadius: '4px',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                    zIndex: 10,
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    🔥 CAMPFIRE DIARIES
+                                </div>
+
+                                {/* Polaroid Photo Image */}
+                                <div style={{ position: 'relative', height: '220px', borderRadius: '10px', overflow: 'hidden', marginBottom: '14px', background: '#0E1A11' }}>
+                                    <img 
+                                        src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80" 
+                                        alt="Aanandham Wilderness Campfire" 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                    
+                                    {/* Play Button */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        width: '58px',
+                                        height: '58px',
+                                        borderRadius: '50%',
+                                        background: '#FFFFFF',
+                                        color: '#121613',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
+                                        transition: 'all 0.2s ease'
+                                    }}>
+                                        <i className="fa-solid fa-play" style={{ fontSize: '16px', marginLeft: '3px' }}></i>
+                                    </div>
+
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '10px',
+                                        right: '10px',
+                                        background: 'rgba(0, 0, 0, 0.7)',
+                                        backdropFilter: 'blur(6px)',
+                                        color: '#FFFFFF',
+                                        fontSize: '10px',
+                                        fontWeight: '800',
+                                        padding: '3px 8px',
+                                        borderRadius: '6px'
+                                    }}>
+                                        4K HDR · 02:45
+                                    </div>
+                                </div>
+
+                                {/* Polaroid Caption */}
+                                <div style={{ padding: '0 4px' }}>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613', marginBottom: '2px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <span>Watch our video diaries!</span>
+                                        <span style={{ fontSize: '14px', color: '#59655D' }}>↗</span>
+                                    </div>
+                                    <p style={{ fontSize: '12px', color: '#8E9B92', margin: 0, fontWeight: '500' }}>
+                                        Raw camp vibes, guitars & starry skies
+                                    </p>
+                                </div>
+                            </motion.div>
                         </motion.div>
 
                         {/* Testimonial Cards (Circular modulo wrapping 2 cards to prevent layout jump) */}
