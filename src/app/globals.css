@@ -1211,54 +1211,54 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   DEFENSIVE VIEWPORT RULES (Edge Cases, 1366x768 & Short Screens)
+   FULL-HEIGHT CINEMATIC HERO SECTIONS (100vh / 100svh / 100dvh)
 ───────────────────────────────────────────────────────────── */
-
-/* Hero defensive height fallbacks (100vh -> 100svh -> 100dvh) */
 .hero-defensive-height {
   min-height: 100vh;
   min-height: 100svh;
   min-height: 100dvh;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   LAPTOP & COMPACT MONITOR OPTIMIZATIONS (1366x768, 1389x786, 1440x900)
+   RESPONSIVE SCALING FOR 1366x768, 1389x786 & COMPACT MONITORS
 ───────────────────────────────────────────────────────────── */
-@media screen and (max-height: 860px), screen and (max-width: 1440px) {
+@media screen and (max-height: 860px) {
   .hero-defensive-height {
-    min-height: auto !important;
-    padding-top: clamp(84px, 11vh, 115px) !important;
-    padding-bottom: clamp(30px, 4.5vh, 48px) !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    min-height: 100dvh !important;
+    padding-top: clamp(80px, 12vh, 120px) !important;
+    padding-bottom: clamp(40px, 6vh, 60px) !important;
   }
   
   .hero-headline {
-    font-size: clamp(32px, 4.8vw, 56px) !important;
-    line-height: 1.1 !important;
-    margin-bottom: 12px !important;
-  }
-
-  .hero-brand-logo {
-    height: clamp(52px, 7.5vh, 74px) !important;
+    font-size: clamp(34px, 5.2vw, 64px) !important;
+    line-height: 1.08 !important;
     margin-bottom: 14px !important;
   }
 
+  .hero-brand-logo {
+    height: clamp(56px, 8.5vh, 84px) !important;
+    margin-bottom: 16px !important;
+  }
+
   .hero-subtitle {
-    font-size: clamp(14.5px, 1.5vw, 17px) !important;
-    line-height: 1.55 !important;
-    margin-bottom: 22px !important;
-    max-width: 680px !important;
+    font-size: clamp(15px, 1.6vw, 18px) !important;
+    line-height: 1.6 !important;
+    margin-bottom: 26px !important;
+    max-width: 720px !important;
   }
 
   .defensive-section-pad {
-    padding-top: clamp(36px, 5.5vh, 60px) !important;
-    padding-bottom: clamp(36px, 5.5vh, 60px) !important;
-  }
-
-  .pillars-sticky-grid {
-    gap: 24px !important;
-    max-width: 1080px !important;
+    padding-top: clamp(48px, 7vh, 80px) !important;
+    padding-bottom: clamp(48px, 7vh, 80px) !important;
   }
 }
+
 
 /* Touch-Optimized Minimum Hit-Targets (44x44px standard) */
 button, a, input, select, textarea {
