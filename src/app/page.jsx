@@ -737,6 +737,27 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
     );
 }
 
+// ── MOBILE DRAWER CASCADE MOTION VARIANTS ──
+const drawerStaggerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.055,
+            delayChildren: 0.08
+        }
+    }
+};
+
+const drawerItemVariants = {
+    hidden: { opacity: 0, x: 26 },
+    visible: {
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
 export default function HomePage() {
     const [scrolled, setScrolled] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
@@ -1233,14 +1254,16 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    {/* Mobile Header: Clean Hamburger Toggle (Auth links remain inside the menu drawer) */}
+                    {/* Mobile Header: Animated 3-Bar Morphing Hamburger Button */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <button
-                            className="nav-mobile-toggle"
+                            className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                         >
-                            <i className={isMobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
+                            <span className="burger-line line-top" />
+                            <span className="burger-line line-mid" />
+                            <span className="burger-line line-bot" />
                         </button>
                     </div>
                 </div>
@@ -1253,14 +1276,14 @@ export default function HomePage() {
                         initial={{ opacity: 0, x: '100%' }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: '100%' }}
-                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
                         style={{
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'rgba(11, 21, 14, 0.92)',
-                            backdropFilter: 'blur(32px)',
-                            WebkitBackdropFilter: 'blur(32px)',
+                            background: 'rgba(11, 21, 14, 0.94)',
+                            backdropFilter: 'blur(36px)',
+                            WebkitBackdropFilter: 'blur(36px)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
@@ -1268,7 +1291,7 @@ export default function HomePage() {
                             overflowY: 'auto'
                         }}
                     >
-                        {/* Top Drawer Header with Logo & Close Button */}
+                        {/* Top Drawer Header with Logo & Morphing Close Button */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '22px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                 <img
@@ -1283,148 +1306,172 @@ export default function HomePage() {
                             <button
                                 onClick={() => setIsMobileMenuOpen(false)}
                                 aria-label="Close menu"
-                                className="modal-close-btn"
-                                style={{ width: '40px', height: '40px', fontSize: '15px' }}
+                                className="nav-mobile-toggle is-open"
+                                style={{ width: '42px', height: '42px', background: 'rgba(255, 255, 255, 0.1)' }}
                             >
-                                ✕
+                                <span className="burger-line line-top" />
+                                <span className="burger-line line-mid" />
+                                <span className="burger-line line-bot" />
                             </button>
                         </div>
 
-                        {/* Heading-Font Typography Streamlined Navigation Links */}
-                        <nav style={{ display: 'flex', flexDirection: 'column', padding: '16px 0' }}>
-                            <Link 
-                                href="/" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark is-active-link" 
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">Home</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </Link>
-                            <Link 
-                                href="/about" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">About</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </Link>
-                            <a 
-                                href="#packages" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">The Camps</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </a>
-                            <a 
-                                href="#program" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">Events</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </a>
-                            <a 
-                                href="#stories" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">Poetry & Tales</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </a>
-                            <Link 
-                                href="/contact" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                    fontWeight: '800',
-                                    letterSpacing: '-0.025em',
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    padding: '16px 0',
-                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                    width: '100%'
-                                }}
-                            >
-                                <span className="marker-text">Contact</span>
-                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
-                            </Link>
-                        </nav>
+                        {/* Staggered Cascading Navigation Links */}
+                        <motion.nav 
+                            variants={drawerStaggerVariants}
+                            initial="hidden"
+                            animate="visible"
+                            style={{ display: 'flex', flexDirection: 'column', padding: '16px 0' }}
+                        >
+                            <motion.div variants={drawerItemVariants}>
+                                <Link 
+                                    href="/" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark is-active-link" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">Home</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </Link>
+                            </motion.div>
+
+                            <motion.div variants={drawerItemVariants}>
+                                <Link 
+                                    href="/about" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">About</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </Link>
+                            </motion.div>
+
+                            <motion.div variants={drawerItemVariants}>
+                                <a 
+                                    href="#packages" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">The Camps</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </a>
+                            </motion.div>
+
+                            <motion.div variants={drawerItemVariants}>
+                                <a 
+                                    href="#program" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">Events</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </a>
+                            </motion.div>
+
+                            <motion.div variants={drawerItemVariants}>
+                                <a 
+                                    href="#stories" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">Poetry & Tales</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </a>
+                            </motion.div>
+
+                            <motion.div variants={drawerItemVariants}>
+                                <Link 
+                                    href="/contact" 
+                                    onClick={() => setIsMobileMenuOpen(false)} 
+                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                    style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.025em',
+                                        color: '#FFFFFF',
+                                        textDecoration: 'none',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '16px 0',
+                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                        width: '100%'
+                                    }}
+                                >
+                                    <span className="marker-text">Contact</span>
+                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                </Link>
+                            </motion.div>
+                        </motion.nav>
 
                         {/* Bottom Actions: Dynamic Camper Profile / Auth State & Direct Aanandham Desk */}
                         <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>

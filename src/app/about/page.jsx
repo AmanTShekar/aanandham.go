@@ -233,13 +233,15 @@ export default function AboutPage() {
                     </Link>
                 </div>
 
-                {/* Mobile Toggle Button */}
+                {/* Mobile Toggle Button (Animated 3-Bar Morphing Hamburger) */}
                 <button
-                    className="nav-mobile-toggle"
+                    className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 >
-                    <i className={isMobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
+                    <span className="burger-line line-top" />
+                    <span className="burger-line line-mid" />
+                    <span className="burger-line line-bot" />
                 </button>
             </header>
 
