@@ -25,8 +25,8 @@ const NEARBY_PLACES = [
         desc: 'A secret ridge formation that resembles a phantom skull when viewed from the valley. Unobstructed 360-degree panorama of the Western Ghats and Suryanelli tea hills.'
     },
     {
-        id: 'anaerangal',
-        title: 'Anaerangal Lake & Meadows',
+        id: 'anayirangal',
+        title: 'Anayirangal Lake & Meadows',
         category: 'Lakeside & Kayaking',
         distance: '6.0 km · 15 mins drive',
         altitude: '5,500 FT',
@@ -360,9 +360,9 @@ export default function AboutPage() {
                     }}>
                         {[
                             { val: '500+', label: 'Expeditions Hosted' },
-                            { val: '15,000+', label: 'Happy Campers' },
+                            { val: '3,500+', label: 'Happy Campers' },
                             { val: '50+', label: 'Verified Ridge Pods' },
-                            { val: '4.9 ★', label: 'Guest Rating' }
+                            { val: '4.98 ★', label: 'Guest Rating' }
                         ].map((stat, idx) => (
                             <div key={idx} style={{ textAlign: 'center' }}>
                                 <div style={{

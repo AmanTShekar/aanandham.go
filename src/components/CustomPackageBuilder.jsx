@@ -14,7 +14,7 @@ const DESTINATIONS = [
     { id: 'kolukkumalai', name: 'Kolukkumalai Sunrise (7,900 FT)', alt: 'Highest Peak' },
     { id: 'suryanelli', name: 'Suryanelli Tea Ridge', alt: 'Tea Hills' },
     { id: 'phantom', name: 'Phantom Head Peak', alt: 'Sunset Ridge' },
-    { id: 'anaerangal', name: 'Anaerangal Lakeside', alt: 'Lakeside Camp' },
+    { id: 'anayirangal', name: 'Anayirangal Lakeside', alt: 'Lakeside Camp' },
     { id: 'vagamon', name: 'Vagamon Pine Valley', alt: 'Pine Forest' },
     { id: 'wayanad', name: 'Wayanad 900 Kandi', alt: 'Rainforest' }
 ];
@@ -326,7 +326,7 @@ export default function CustomPackageBuilder() {
                                 <div style={{ display: 'flex', gap: '12px' }}>
                                     <div style={{ color: '#E5A93B', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 3</div>
                                     <div style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.5 }}>
-                                        Anaerangal lake trail walk & scenic transfer / outdoor departure brunch.
+                                        Anayirangal lake trail walk & scenic transfer / outdoor departure brunch.
                                     </div>
                                 </div>
                             )}

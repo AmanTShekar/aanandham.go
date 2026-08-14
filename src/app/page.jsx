@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
@@ -386,8 +386,8 @@ const KERALA_WILDERNESS_GALLERY = [
         badge: '360° Mountain Vista'
     },
     {
-        id: 'anaerangal',
-        name: 'Anaerangal Lake Mist Campsite',
+        id: 'anayirangal',
+        name: 'Anayirangal Lake Mist Campsite',
         location: 'Munnar Valley, Kerala',
         altitude: '5,500 FT',
         category: 'Lakeside Wilderness',
@@ -450,18 +450,18 @@ const EVENT_ARRANGEMENTS = [
 const FOUR_STEPS = [
     {
         num: '01',
-        title: 'Choose your package',
-        desc: 'We have three options: Neighbor (twin room with 2 single beds), Double (king bed for couples or solo travelers), and Squad (group suite for friends). Pick what fits your budget and travel style.'
+        title: 'Choose your signature campsite',
+        desc: 'Select from high-altitude geodesic dome pods, weatherproof alpine tents, or lakeside ridge glamps tailored for couples, solo travelers, and squads.'
     },
     {
         num: '02',
-        title: 'Leave your contact details',
-        desc: 'Fill out a quick form with your name, email, trek level, and preferred package. Our team guides you through every step from booking to arrival – just show up ready for waves & peaks.'
+        title: 'Reserve dates & custom add-ons',
+        desc: 'Pick your check-in weekend and personalize your journey with live campfire barbecue platters, private 4x4 off-road convoys, or mountain yoga.'
     },
     {
         num: '03',
-        title: 'Complete payment',
-        desc: 'Once everything is confirmed, secure your spot with payment. You’ll receive a welcome pack with all camp details and a packing list, and be added to your camp WhatsApp group to meet everyone before departure.'
+        title: 'Confirm booking & receive permits',
+        desc: 'Secure your pass with instant confirmation. You’ll receive a verified arrival kit, packing checklist, and direct WhatsApp coordinator access.'
     },
     {
         num: '04',
@@ -474,7 +474,7 @@ const FOUR_STEPS = [
 const TESTIMONIALS = [
     {
         id: 1,
-        quote: "Best decision I made this year. I was burnt out from work and needed a reset – this camp delivered exactly that. The coaches really know their stuff, the vibe is super chill, and I made friends from all over the world. Went from barely standing on a trail to actually riding the Kolukkumalai sunrise. Already booked my spot for next season.",
+        quote: "Best decision I made this year. I was burnt out from work and needed a reset – this camp delivered exactly that. The mountain marshals really know their stuff, the vibe is super chill, and I made friends from all over the country. Experiencing the Kolukkumalai cloud sunrise above 7,900 FT was unforgettable.",
         author: "Daniel Kim",
         campBadge: "camp '25",
         batchDate: "Aanandham, August 2025",
@@ -482,7 +482,7 @@ const TESTIMONIALS = [
     },
     {
         id: 2,
-        quote: "I was nervous about traveling alone, but this crew made me feel at home immediately. We trekked every morning, explored the peaks, and had the kind of deep conversations you usually only have with childhood friends. Already planning my trip back.",
+        quote: "I was nervous about traveling alone as a female solo camper, but this crew made me feel safe and at home immediately. We trekked every morning, explored the peaks, and had the kind of deep conversations around the campfire you remember for life.",
         author: "Emma Rodriguez",
         campBadge: "camp '25",
         batchDate: "Aanandham, March 2025",
@@ -499,7 +499,7 @@ const TESTIMONIALS = [
     {
         id: 4,
         quote: "The heart-shaped lake at Chembra Peak took my breath away. Our trek leader paced the entire group patiently, carried medical kits, and pointed out endemic bird species. The food at basecamp felt just like home-cooked Kerala Sadhya.",
-        author: "Ananya Iyer",
+        author: "Dr. Sneha Pillai",
         campBadge: "camp '26",
         batchDate: "Aanandham, January 2026",
         avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
@@ -511,7 +511,7 @@ const FAQ_DATA = [
     {
         id: 'faq-01',
         num: '01',
-        question: 'Do I need to know how to surf / trek already?',
+        question: 'Do I need prior high-altitude trekking or camping experience?',
         answer: 'Not at all! We offer beginner-friendly ridge glamping and scenic walks as well as moderate to challenging summit climbs. Every expedition is guided by certified Wilderness First Aid trek marshals who pace the hike according to the group’s comfort.'
     },
     {
@@ -3602,7 +3602,7 @@ export default function HomePage() {
                             </button>
                             <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
                                 <iframe
-                                    src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
+                                    src="https://www.youtube-nocookie.com/embed/1s-P5_Lq0pI?autoplay=1"
                                     title="Aanandham Wilderness Camp Video Diaries"
                                     style={{
                                         position: 'absolute',
@@ -3707,8 +3707,14 @@ export default function HomePage() {
                                 </div>
                                 <button
                                     onClick={() => {
+                                        const matchingPkg = EXPEDITION_PACKAGES.find(p => 
+                                            p.id === `pkg-${selectedLightboxImg.id}` ||
+                                            p.id.includes(selectedLightboxImg.id) || 
+                                            selectedLightboxImg.id.includes(p.id.replace('pkg-', '')) ||
+                                            p.title.toLowerCase().includes(selectedLightboxImg.name.toLowerCase().split(' ')[0])
+                                        ) || EXPEDITION_PACKAGES[0];
                                         setSelectedLightboxImg(null);
-                                        setIsBookingModalOpen(true);
+                                        handleOpenBooking(matchingPkg);
                                     }}
                                     className="btn-lime"
                                     style={{ padding: '12px 32px', fontSize: '14px', fontWeight: '800' }}

@@ -5,62 +5,89 @@ import CustomThemeCalendar from './CustomThemeCalendar';
 
 const PACKAGES_LIST = [
     {
-        id: 'kolukkumalai',
-        title: 'Kolukkumalai Sunrise 4x4 Expedition',
-        location: 'Munnar · 7,900 FT',
+        id: 'pkg-kolukkumalai',
+        title: 'Kolukkumalai Sunrise & Cloud Bed Ridge Glamp',
+        location: 'Suryanelli / Kolukkumalai · 7,900 FT',
         price: 2499,
         duration: '2D / 1N',
         image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
         badge: 'Bestseller'
     },
     {
-        id: 'suryanelli',
-        title: 'Suryanelli Valley Ridge Glamping',
-        location: 'Suryanelli · 6,500 FT',
+        id: 'pkg-meesapulimala',
+        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
+        location: 'Silent Valley, Munnar · 8,661 FT',
+        price: 3199,
+        duration: '2D / 1N',
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+        badge: 'Summit Challenge'
+    },
+    {
+        id: 'pkg-suryanelli',
+        title: 'Suryanelli Valley Ridge Geodesic Glamping',
+        location: 'Suryanelli, Idukki · 6,500 FT',
         price: 1999,
         duration: '2D / 1N',
         image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
-        badge: 'Private Pods'
+        badge: 'Geodesic Pods'
     },
     {
-        id: 'phantom',
-        title: 'Phantom Head Sunset Peak Trek',
-        location: 'Munnar · 6,800 FT',
+        id: 'pkg-phantom',
+        title: 'Phantom Head Peak & Golden Hour Sunset Trek',
+        location: 'Munnar Ridge · 6,800 FT',
         price: 1799,
         duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-        badge: 'Guided Trek'
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+        badge: 'Golden Sunset'
     },
     {
-        id: 'vagamon',
-        title: 'Vagamon Pine Valley & Paragliding Camp',
-        location: 'Vagamon · 4,800 FT',
-        price: 2299,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=800&q=80',
-        badge: 'Mist Valley'
+        id: 'pkg-chembra',
+        title: 'Wayanad Chembra Peak & Heart Lake Expedition',
+        location: 'Meppadi, Wayanad · 6,900 FT',
+        price: 3799,
+        duration: '3D / 2N',
+        image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=800&q=80',
+        badge: 'Heart Lake Trek'
     },
     {
-        id: 'wayanad',
-        title: 'Wayanad 900 Kandi Rain Canopy Camp',
-        location: 'Wayanad · 3,200 FT',
+        id: 'pkg-wayanad',
+        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
+        location: 'Meppadi, Wayanad · 3,200 FT',
         price: 2699,
         duration: '2D / 1N',
         image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
-        badge: 'Tree Canopy'
+        badge: 'Glass Bridge'
+    },
+    {
+        id: 'pkg-vagamon',
+        title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
+        location: 'Pine Forest, Vagamon · 4,800 FT',
+        price: 2199,
+        duration: '2D / 1N',
+        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=800&q=80',
+        badge: 'Pine Forest'
+    },
+    {
+        id: 'pkg-athirappilly',
+        title: 'Athirappilly Jungle Rapids & Riverbank Glamping',
+        location: 'Chalakudy River, Athirappilly · 1,200 FT',
+        price: 2499,
+        duration: '2D / 1N',
+        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=800&q=80',
+        badge: 'River Rapids'
     }
 ];
 
 const ADDONS_LIST = [
     { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true, icon: '🔥' },
     { id: 'jeep', name: 'Private 4x4 Off-Road Jeep Upgrade', price: 1200, perPerson: false, icon: '🚙' },
-    { id: 'drone', name: '4K Drone Mountain Video Reel', price: 1500, perPerson: false, icon: '📸' },
+    { id: 'drone', name: '4K Drone Mountain Video Reel Shoot', price: 1500, perPerson: false, icon: '📸' },
     { id: 'yoga', name: 'Sunrise Mountain Yoga & Pranayama', price: 250, perPerson: true, icon: '🧘' },
-    { id: 'guitar', name: 'Acoustic Guitarist for Campfire', price: 2000, perPerson: false, icon: '🎸' }
+    { id: 'guitar', name: 'Acoustic Guitarist for Campfire Circle', price: 2000, perPerson: false, icon: '🎸' }
 ];
 
 export default function BookingEngineModal({ isOpen, onClose, initialPackage }) {
-    const [selectedPkgId, setSelectedPkgId] = useState(initialPackage ? (PACKAGES_LIST.find(p => p.title === initialPackage.title)?.id || 'kolukkumalai') : 'kolukkumalai');
+    const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
     const [travelDate, setTravelDate] = useState('');
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
@@ -69,8 +96,43 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [customerPhone, setCustomerPhone] = useState('');
     const [specialNotes, setSpecialNotes] = useState('');
     const [step, setStep] = useState(1); // 1: Package & Details, 2: Addons & Review
+    const [validationError, setValidationError] = useState('');
 
-    // Disable background page scrolling when modal is open (unconditionally declared at top)
+    // Synchronize selected package and reset step whenever modal opens or initialPackage updates
+    useEffect(() => {
+        if (isOpen) {
+            setStep(1);
+            setValidationError('');
+            if (initialPackage) {
+                const targetId = initialPackage.id || '';
+                const targetTitle = (initialPackage.title || '').toLowerCase();
+                const matched = PACKAGES_LIST.find(p => 
+                    p.id === targetId || 
+                    p.id === `pkg-${targetId}` ||
+                    p.id.replace('pkg-', '') === targetId.replace('pkg-', '') ||
+                    p.title.toLowerCase() === targetTitle ||
+                    p.title.toLowerCase().includes(targetTitle.slice(0, 12)) ||
+                    targetTitle.includes(p.title.toLowerCase().slice(0, 12))
+                );
+                if (matched) {
+                    setSelectedPkgId(matched.id);
+                }
+            }
+        }
+    }, [isOpen, initialPackage]);
+
+    // Handle ESC key to dismiss modal
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape' && isOpen) {
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
+
+    // Disable background page scrolling when modal is open
     useEffect(() => {
         if (isOpen) {
             const origOverflow = document.body.style.overflow;
@@ -108,8 +170,26 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         );
     };
 
+    const handleProceedToStep2 = () => {
+        if (!travelDate) {
+            setValidationError('Please choose your tentative expedition date.');
+            return;
+        }
+        setValidationError('');
+        setStep(2);
+    };
+
     const handleConfirmBookingWhatsApp = (e) => {
-        e.preventDefault();
+        e?.preventDefault();
+        if (!customerName.trim()) {
+            setValidationError('Please enter your full name to generate permit request.');
+            return;
+        }
+        if (!customerPhone.trim()) {
+            setValidationError('Please enter your WhatsApp / mobile number.');
+            return;
+        }
+
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
         
         const summaryText = `🏕️ *NEW AANANDHAM.GO RESERVATION REQUEST*\n\n` +
@@ -118,9 +198,9 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             `👥 *Guests:* ${adults} Adults${children > 0 ? `, ${children} Children` : ''} (Total: ${totalGuests})\n` +
             `✨ *Add-ons:* ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None'}\n` +
             `💰 *Est. Total:* ₹${grandTotal.toLocaleString('en-IN')}${discountPercent > 0 ? ` (Includes ${discountPercent}% Squad Discount!)` : ''}\n\n` +
-            `👤 *Name:* ${customerName || 'Explorer'}\n` +
-            `📞 *Phone:* ${customerPhone || 'Not provided'}\n` +
-            `📝 *Notes:* ${specialNotes || 'None'}\n\n` +
+            `👤 *Name:* ${customerName.trim()}\n` +
+            `📞 *Phone:* ${customerPhone.trim()}\n` +
+            `📝 *Notes:* ${specialNotes.trim() || 'None'}\n\n` +
             `Please confirm campsite availability & payment link! 🏔️`;
 
         const encoded = encodeURIComponent(summaryText);
@@ -129,316 +209,434 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     };
 
     return (
-        <div className="booking-mobile-overlay" style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 9999,
-            background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 'clamp(8px, 2.5vw, 20px)'
-        }}>
+        <div 
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="booking-modal-title"
+            className="booking-mobile-overlay" 
+            style={{
+                position: 'fixed',
+                inset: 0,
+                zIndex: 100002,
+                background: 'rgba(0, 0, 0, 0.86)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 'clamp(8px, 2.5vw, 20px)'
+            }}
+        >
             <motion.div
                 initial={{ opacity: 0, scale: 0.96, y: 24 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 24 }}
-                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="modal-rounded-card booking-mobile-sheet"
                 style={{
                     background: '#FFFFFF',
                     width: '100%',
-                    maxWidth: '860px',
-                    maxHeight: 'min(94vh, 840px)',
+                    maxWidth: '880px',
+                    maxHeight: 'min(94vh, 860px)',
                     borderRadius: 'clamp(22px, 4vw, 32px)',
-                    boxShadow: '0 25px 70px rgba(0, 0, 0, 0.35)',
+                    boxShadow: '0 25px 70px rgba(0, 0, 0, 0.45)',
                     position: 'relative',
-                    color: '#121613'
+                    color: '#121613',
+                    transform: 'translateZ(0)',
+                    willChange: 'transform, opacity'
                 }}
             >
-                {/* Modal Header */}
+                {/* Header */}
                 <div style={{
-                    padding: 'clamp(14px, 2.5vw, 22px) clamp(16px, 3.5vw, 32px)',
-                    borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
-                    background: '#F8F9F5',
-                    flexShrink: 0
+                    padding: '24px 28px 18px',
+                    borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    background: '#FAFAF7',
+                    borderTopLeftRadius: 'inherit',
+                    borderTopRightRadius: 'inherit'
                 }}>
-                    {/* Mobile Bottom Sheet Pull Bar */}
-                    <div className="mobile-only" style={{ width: '38px', height: '4px', background: 'rgba(18, 22, 19, 0.2)', borderRadius: '999px', margin: '0 auto 12px' }} />
-
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span className="live-beacon"></span>
-                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#59655D', textTransform: 'uppercase' }}>
-                                    AANANDHAM.GO INSTANT BOOKING ENGINE
-                                </span>
-                            </div>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 2.5vw, 22px)', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                                {step === 1 ? 'Select Campsite & Travel Dates' : 'Customize Experience & Confirm'}
-                            </h3>
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                            <span style={{
+                                background: '#D5ED55',
+                                color: '#121613',
+                                fontSize: '10.5px',
+                                fontWeight: '800',
+                                padding: '3px 9px',
+                                borderRadius: '999px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px'
+                            }}>
+                                Instant Reservation
+                            </span>
+                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>
+                                Verified High-Altitude Basecamps
+                            </span>
                         </div>
-                        <button
-                            onClick={onClose}
-                            aria-label="Close reservation modal"
-                            className="modal-close-btn-light"
-                        >
-                            ✕
-                        </button>
+                        <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
+                            {step === 1 ? '1. Select Campsite & Dates' : '2. Add-Ons & Explorer Details'}
+                        </h2>
                     </div>
+
+                    <button
+                        onClick={onClose}
+                        aria-label="Close booking modal"
+                        className="modal-close-btn"
+                        style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            background: '#ECEEE6',
+                            border: 'none',
+                            color: '#121613',
+                            fontSize: '15px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s ease'
+                        }}
+                    >
+                        ✕
+                    </button>
                 </div>
 
-                <div className="modal-rounded-body" style={{ flex: 1, padding: 'clamp(16px, 3.5vw, 32px)' }}>
+                {/* Body Content */}
+                <div style={{ padding: '24px 28px 30px', overflowY: 'auto', maxHeight: 'calc(min(94vh, 860px) - 90px)' }}>
+                    {validationError && (
+                        <div style={{
+                            background: 'rgba(255, 90, 95, 0.12)',
+                            border: '1px solid rgba(255, 90, 95, 0.35)',
+                            borderRadius: '12px',
+                            padding: '12px 16px',
+                            color: '#D9383D',
+                            fontSize: '13.5px',
+                            fontWeight: '700',
+                            marginBottom: '18px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}>
+                            <span>⚠️</span>
+                            <span>{validationError}</span>
+                        </div>
+                    )}
+
                     {step === 1 ? (
                         <div>
-                            {/* Step 1: Package Grid / Mobile Swipeable Track */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', margin: 0 }}>
-                                    1. CHOOSE EXPEDITION / CAMP
+                            {/* Package Selector (Horizontal Cards) */}
+                            <div style={{ marginBottom: '22px' }}>
+                                <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                    Select Signature Campsite (8 Destinations)
                                 </label>
-                                <span className="mobile-only" style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
-                                    Swipe →
-                                </span>
-                            </div>
-                            <div className="booking-camps-track" style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                                gap: '14px',
-                                marginBottom: '28px'
-                            }}>
-                                {PACKAGES_LIST.map((pkg) => {
-                                    const isSelected = pkg.id === selectedPkgId;
-                                    return (
-                                        <div
-                                            key={pkg.id}
-                                            onClick={() => setSelectedPkgId(pkg.id)}
-                                            style={{
-                                                border: isSelected ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
-                                                background: isSelected ? '#F8F9F5' : '#FFFFFF',
-                                                borderRadius: '20px',
-                                                padding: '12px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s ease',
-                                                position: 'relative',
-                                                boxShadow: isSelected ? '0 8px 25px rgba(0,0,0,0.06)' : 'none'
-                                            }}
-                                        >
-                                            <div style={{ height: '100px', borderRadius: '14px', overflow: 'hidden', marginBottom: '10px', position: 'relative' }}>
-                                                <img src={pkg.image} alt={pkg.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                <span style={{
-                                                    position: 'absolute',
-                                                    top: '8px',
-                                                    left: '8px',
-                                                    background: isSelected ? '#E5A93B' : 'rgba(0,0,0,0.6)',
-                                                    color: isSelected ? '#121613' : '#FFFFFF',
-                                                    fontSize: '10px',
-                                                    fontWeight: '800',
-                                                    padding: '3px 8px',
-                                                    borderRadius: '999px'
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+                                    gap: '12px'
+                                }}>
+                                    {PACKAGES_LIST.map((pkg) => {
+                                        const isSelected = pkg.id === selectedPkgId;
+                                        return (
+                                            <div
+                                                key={pkg.id}
+                                                onClick={() => setSelectedPkgId(pkg.id)}
+                                                style={{
+                                                    borderRadius: '16px',
+                                                    border: isSelected ? '2px solid #121613' : '1px solid rgba(0, 0, 0, 0.08)',
+                                                    background: isSelected ? '#F4F7EB' : '#FFFFFF',
+                                                    padding: '12px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                                                    position: 'relative',
+                                                    boxShadow: isSelected ? '0 4px 18px rgba(0, 0, 0, 0.08)' : 'none'
+                                                }}
+                                            >
+                                                <div style={{
+                                                    height: '75px',
+                                                    borderRadius: '10px',
+                                                    backgroundImage: `url(${pkg.image})`,
+                                                    backgroundSize: 'cover',
+                                                    backgroundPosition: 'center',
+                                                    marginBottom: '10px',
+                                                    position: 'relative'
                                                 }}>
-                                                    {pkg.badge}
-                                                </span>
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        top: '6px',
+                                                        left: '6px',
+                                                        background: isSelected ? '#121613' : 'rgba(0,0,0,0.6)',
+                                                        color: isSelected ? '#D5ED55' : '#FFFFFF',
+                                                        fontSize: '9.5px',
+                                                        fontWeight: '800',
+                                                        padding: '2px 7px',
+                                                        borderRadius: '999px'
+                                                    }}>
+                                                        {pkg.badge}
+                                                    </span>
+                                                </div>
+                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '4px' }}>
+                                                    {pkg.title}
+                                                </div>
+                                                <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
+                                                    {pkg.location}
+                                                </div>
+                                                <div style={{ fontSize: '14px', fontWeight: '900', color: '#121613' }}>
+                                                    ₹{pkg.price.toLocaleString('en-IN')} <span style={{ fontSize: '11px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
+                                                </div>
                                             </div>
-                                            <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '4px' }}>
-                                                {pkg.title}
-                                            </div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                                                <span style={{ fontSize: '11.5px', color: '#8E9B92' }}>{pkg.location}</span>
-                                                <span style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>₹{pkg.price}</span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
                             </div>
 
-                            {/* Step 1: Dates & Guests */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '28px' }}>
+                            {/* Date & Guests Layout */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '24px' }}>
                                 <div>
-                                    <CustomThemeCalendar
-                                        selectedDate={travelDate}
-                                        onDateSelect={(date) => setTravelDate(date)}
-                                        theme="light"
-                                        label="2. TRAVEL DATE"
+                                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                        Check-In Date
+                                    </label>
+                                    <CustomThemeCalendar 
+                                        selectedDate={travelDate} 
+                                        onSelectDate={(date) => {
+                                            setTravelDate(date);
+                                            setValidationError('');
+                                        }} 
                                     />
                                 </div>
-                                <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', marginBottom: '8px' }}>
-                                        3. ADULTS (12+ YRS)
-                                    </label>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                        <button
-                                            type="button"
-                                            onClick={() => setAdults(Math.max(1, adults - 1))}
-                                            style={{ width: '42px', height: '42px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.15)', background: '#F8F9F5', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
-                                        >-</button>
-                                        <span style={{ fontSize: '16px', fontWeight: '800', minWidth: '24px', textAlign: 'center' }}>{adults}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => setAdults(adults + 1)}
-                                            style={{ width: '42px', height: '42px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.15)', background: '#F8F9F5', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
-                                        >+</button>
-                                        {discountPercent > 0 && (
-                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                                {discountPercent}% SQUAD DISCOUNT!
-                                            </span>
-                                        )}
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                            Number of Campers
+                                        </label>
+                                        <div style={{ display: 'flex', gap: '12px' }}>
+                                            <div style={{ flex: 1, padding: '12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Adults (12+ yrs)</div>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setAdults(Math.max(1, adults - 1))}
+                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span style={{ fontSize: '16px', fontWeight: '800' }}>{adults}</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setAdults(adults + 1)}
+                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ flex: 1, padding: '12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Kids (5–11 yrs)</div>
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setChildren(Math.max(0, children - 1))}
+                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                    >
+                                                        -
+                                                    </button>
+                                                    <span style={{ fontSize: '16px', fontWeight: '800' }}>{children}</span>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setChildren(children + 1)}
+                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                    >
+                                                        +
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', marginBottom: '8px' }}>
-                                        4. CHILDREN (5-11 YRS)
-                                    </label>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                        <button
-                                            type="button"
-                                            onClick={() => setChildren(Math.max(0, children - 1))}
-                                            style={{ width: '42px', height: '42px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.15)', background: '#F8F9F5', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
-                                        >-</button>
-                                        <span style={{ fontSize: '16px', fontWeight: '800', minWidth: '24px', textAlign: 'center' }}>{children}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => setChildren(children + 1)}
-                                            style={{ width: '42px', height: '42px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.15)', background: '#F8F9F5', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
-                                        >+</button>
-                                        <span style={{ fontSize: '12px', color: '#8E9B92' }}>50% off</span>
+
+                                    {/* Price Preview Card */}
+                                    <div style={{ marginTop: 'auto', padding: '16px', background: '#121613', borderRadius: '20px', color: '#FFFFFF' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#A2B6A6' }}>
+                                            <span>Base Rate ({totalGuests} Campers):</span>
+                                            <span>₹{baseTotal.toLocaleString('en-IN')}</span>
+                                        </div>
+                                        {discountPercent > 0 && (
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#D5ED55' }}>
+                                                <span>Squad Discount ({discountPercent}%):</span>
+                                                <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <span style={{ fontSize: '13px', fontWeight: '700' }}>Estimated Total:</span>
+                                            <span style={{ fontSize: '20px', fontWeight: '900', color: '#D5ED55' }}>
+                                                ₹{(baseTotal - discountAmount).toLocaleString('en-IN')}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Proceed to Step 2 Button */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(18,22,19,0.08)', paddingTop: '20px' }}>
-                                <div>
-                                    <div style={{ fontSize: '12px', color: '#8E9B92' }}>Estimated Base Rate</div>
-                                    <div style={{ fontSize: '24px', fontWeight: '800', color: '#121613' }}>
-                                        ₹{(baseTotal - discountAmount).toLocaleString('en-IN')}
-                                        <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '500' }}> for {totalGuests} guests</span>
-                                    </div>
-                                </div>
+                            {/* Step 1 Actions */}
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px' }}>
                                 <button
                                     type="button"
-                                    onClick={() => setStep(2)}
+                                    onClick={handleProceedToStep2}
                                     className="btn-lime"
-                                    style={{ padding: '14px 36px', fontSize: '15px', fontWeight: '800' }}
+                                    style={{
+                                        padding: '14px 34px',
+                                        fontSize: '15px',
+                                        fontWeight: '800',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}
                                 >
-                                    Customize Add-ons & Review ↗
+                                    <span>Continue to Add-Ons & Explorer Details</span>
+                                    <span>→</span>
                                 </button>
                             </div>
                         </div>
                     ) : (
                         <div>
-                            {/* Step 2: Experience Add-ons */}
-                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', marginBottom: '14px' }}>
-                                SELECT LUXURY & ADVENTURE ADD-ONS
-                            </label>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '28px' }}>
-                                {ADDONS_LIST.map((addon) => {
-                                    const isChecked = selectedAddons.includes(addon.id);
-                                    return (
-                                        <div
-                                            key={addon.id}
-                                            onClick={() => toggleAddon(addon.id)}
-                                            style={{
-                                                padding: '14px 18px',
-                                                borderRadius: '18px',
-                                                border: isChecked ? '2px solid #121613' : '1px solid rgba(18,22,19,0.1)',
-                                                background: isChecked ? '#F8F9F5' : '#FFFFFF',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                transition: 'all 0.2s ease'
-                                            }}
-                                        >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                                <span style={{ fontSize: '20px' }}>{addon.icon}</span>
-                                                <div>
-                                                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>{addon.name}</div>
-                                                    <div style={{ fontSize: '12px', color: '#8E9B92' }}>
-                                                        +₹{addon.price} {addon.perPerson ? '/ person' : '/ group'}
+                            {/* Step 2: Addons & Explorer Details */}
+                            <div style={{ marginBottom: '24px' }}>
+                                <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                    Enhance Your Mountain Experience (Optional Add-ons)
+                                </label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                                    {ADDONS_LIST.map((addon) => {
+                                        const isChecked = selectedAddons.includes(addon.id);
+                                        return (
+                                            <div
+                                                key={addon.id}
+                                                onClick={() => toggleAddon(addon.id)}
+                                                style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    padding: '12px 14px',
+                                                    borderRadius: '14px',
+                                                    border: isChecked ? '2px solid #121613' : '1px solid rgba(0,0,0,0.08)',
+                                                    background: isChecked ? '#F4F7EB' : '#FFFFFF',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={() => toggleAddon(addon.id)}
+                                                        style={{ width: '17px', height: '17px', accentColor: '#121613', cursor: 'pointer' }}
+                                                    />
+                                                    <div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>
+                                                            {addon.icon} {addon.name}
+                                                        </div>
+                                                        <div style={{ fontSize: '11px', color: '#59655D' }}>
+                                                            +₹{addon.price} {addon.perPerson ? '/ person' : 'flat fee'}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <input
-                                                type="checkbox"
-                                                checked={isChecked}
-                                                onChange={() => {}}
-                                                style={{ width: '18px', height: '18px', accentColor: '#121613', cursor: 'pointer' }}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Contact Details */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', display: 'block', marginBottom: '6px' }}>
-                                        Full Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="e.g. Rahul Nair"
-                                        value={customerName}
-                                        onChange={(e) => setCustomerName(e.target.value)}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.15)', fontSize: '13.5px', outline: 'none' }}
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', display: 'block', marginBottom: '6px' }}>
-                                        WhatsApp Number
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        required
-                                        placeholder="e.g. +91 98765 43210"
-                                        value={customerPhone}
-                                        onChange={(e) => setCustomerPhone(e.target.value)}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.15)', fontSize: '13.5px', outline: 'none' }}
-                                    />
+                                        );
+                                    })}
                                 </div>
                             </div>
 
-                            {/* Summary Receipt Card */}
-                            <div style={{
-                                background: '#101E13',
-                                color: '#FFFFFF',
-                                borderRadius: '24px',
-                                padding: '24px',
-                                marginBottom: '24px',
-                                boxShadow: '0 15px 40px rgba(0,0,0,0.15)'
-                            }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px' }}>
+                            {/* Explorer Details Form */}
+                            <div style={{ marginBottom: '24px' }}>
+                                <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                    Lead Explorer Contact Information
+                                </label>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '12px' }}>
                                     <div>
-                                        <div style={{ fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>{currentPkg.title}</div>
-                                        <div style={{ fontSize: '12px', color: '#A2B6A6' }}>{travelDate || 'Selected Dates'} · {totalGuests} Guests</div>
+                                        <input
+                                            type="text"
+                                            placeholder="Your Full Name *"
+                                            value={customerName}
+                                            onChange={(e) => {
+                                                setCustomerName(e.target.value);
+                                                if (validationError) setValidationError('');
+                                            }}
+                                            required
+                                            style={{
+                                                width: '100%',
+                                                padding: '12px 16px',
+                                                borderRadius: '12px',
+                                                border: '1px solid rgba(0,0,0,0.15)',
+                                                fontSize: '14px',
+                                                outline: 'none'
+                                            }}
+                                        />
                                     </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '24px', fontWeight: '800', color: '#E5A93B' }}>
-                                            ₹{grandTotal.toLocaleString('en-IN')}
-                                        </div>
-                                        <div style={{ fontSize: '11px', color: '#A2B6A6' }}>All-Inclusive Est.</div>
+                                    <div>
+                                        <input
+                                            type="tel"
+                                            placeholder="WhatsApp Number (e.g. +91 9400...) *"
+                                            value={customerPhone}
+                                            onChange={(e) => {
+                                                setCustomerPhone(e.target.value);
+                                                if (validationError) setValidationError('');
+                                            }}
+                                            required
+                                            style={{
+                                                width: '100%',
+                                                padding: '12px 16px',
+                                                borderRadius: '12px',
+                                                border: '1px solid rgba(0,0,0,0.15)',
+                                                fontSize: '14px',
+                                                outline: 'none'
+                                            }}
+                                        />
                                     </div>
                                 </div>
+                                <textarea
+                                    placeholder="Special requests (e.g. Dietary preferences, campfire acoustic guitar, sunrise wake-up call)"
+                                    value={specialNotes}
+                                    onChange={(e) => setSpecialNotes(e.target.value)}
+                                    rows={2}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        borderRadius: '12px',
+                                        border: '1px solid rgba(0,0,0,0.15)',
+                                        fontSize: '13px',
+                                        outline: 'none',
+                                        resize: 'vertical'
+                                    }}
+                                />
+                            </div>
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#A2B6A6', marginBottom: '6px' }}>
-                                    <span>Base Stay & Summit Expedition:</span>
-                                    <span style={{ color: '#FFFFFF' }}>₹{baseTotal.toLocaleString('en-IN')}</span>
+                            {/* Summary Box */}
+                            <div style={{
+                                padding: '16px 20px',
+                                background: '#121613',
+                                borderRadius: '20px',
+                                color: '#FFFFFF',
+                                marginBottom: '22px'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px' }}>
+                                    <span style={{ color: '#A2B6A6' }}>{currentPkg.title} ({totalGuests} Campers):</span>
+                                    <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
                                 </div>
-                                {discountAmount > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#E5A93B', marginBottom: '6px' }}>
-                                        <span>Squad Discount ({discountPercent}%):</span>
-                                        <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
-                                    </div>
-                                )}
                                 {addonsTotal > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#A2B6A6', marginBottom: '6px' }}>
-                                        <span>Custom Add-ons Total:</span>
-                                        <span style={{ color: '#FFFFFF' }}>+₹{addonsTotal.toLocaleString('en-IN')}</span>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px', color: '#D5ED55' }}>
+                                        <span>Selected Add-ons ({selectedAddons.length}):</span>
+                                        <span>+₹{addonsTotal.toLocaleString('en-IN')}</span>
                                     </div>
                                 )}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                    <div>
+                                        <div style={{ fontSize: '15px', fontWeight: '800' }}>Grand Total Payable:</div>
+                                        <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Pay 20% advance on WhatsApp to confirm permits</div>
+                                    </div>
+                                    <div style={{ fontSize: '24px', fontWeight: '900', color: '#D5ED55' }}>
+                                        ₹{grandTotal.toLocaleString('en-IN')}
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Actions */}
@@ -446,7 +644,15 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <button
                                     type="button"
                                     onClick={() => setStep(1)}
-                                    style={{ background: 'none', border: 'none', fontSize: '14px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px' }}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        fontSize: '14px',
+                                        fontWeight: '700',
+                                        color: '#59655D',
+                                        cursor: 'pointer',
+                                        padding: '10px 16px'
+                                    }}
                                 >
                                     ← Back to Selection
                                 </button>

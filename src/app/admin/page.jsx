@@ -771,13 +771,13 @@ export default function AdminPortal() {
                     <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                         <input
                             type="password"
-                            placeholder="Enter 4-digit PIN (e.g. 2026)"
+                            placeholder="Enter Coordinator Passcode"
                             value={passcode}
                             onChange={(e) => setPasscode(e.target.value)}
                             autoFocus
-                            style={{ width: '100%', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.06)', border: passcodeError ? '2px solid #FF5A5F' : '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '16px', textAlign: 'center', letterSpacing: '4px', outline: 'none' }}
+                            style={{ width: '100%', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.06)', border: passcodeError ? '2px solid #FF5A5F' : '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '16px', textAlign: 'center', letterSpacing: '3px', outline: 'none' }}
                         />
-                        {passcodeError && <div style={{ fontSize: '12.5px', color: '#FF5A5F', fontWeight: '600' }}>Invalid PIN code. (Default: 2026)</div>}
+                        {passcodeError && <div style={{ fontSize: '12.5px', color: '#FF5A5F', fontWeight: '600' }}>Invalid Passcode. Access restricted to authorized basecamp coordinators.</div>}
                         <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', width: '100%', cursor: 'pointer' }}>
                             Unlock Dashboard ↗
                         </button>

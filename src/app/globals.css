@@ -1303,4 +1303,46 @@ button, a, input, select, textarea {
   box-shadow: 0 10px 25px rgba(229, 184, 74, 0.45);
 }
 
+/* ─────────────────────────────────────────────────────────────
+   FOOTER & NAV INTERACTIVE ARROW LINKS & GPU ACCELERATION
+───────────────────────────────────────────────────────────── */
+.interactive-arrow-link {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.interactive-arrow-link:hover {
+  color: #FFFFFF !important;
+  padding-left: 6px !important;
+  border-bottom-color: rgba(213, 237, 85, 0.4) !important;
+}
+
+.interactive-arrow-link .arrow-icon {
+  font-size: 13px;
+  color: #718376;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s ease;
+}
+
+.interactive-arrow-link:hover .arrow-icon {
+  color: #D5ED55;
+  transform: translateX(4px);
+}
+
+/* Hardware GPU Acceleration & High-Performance Rendering */
+.gpu-accel,
+.modal-rounded-card,
+.nav-mobile-toggle,
+.card-hover-lift {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+img, video, iframe {
+  content-visibility: auto;
+}
+
 
