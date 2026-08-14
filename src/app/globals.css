@@ -600,24 +600,90 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ELEGANT TEXT HIGHLIGHTER STYLES (Book / Marker Accent)
+   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Square Stroke Edges)
 ───────────────────────────────────────────────────────────── */
+.text-marker-chisel,
 .text-highlight-gold {
-  background: linear-gradient(120deg, rgba(229, 169, 59, 0.28) 0%, rgba(252, 213, 166, 0.42) 100%);
-  padding: 2px 8px;
-  border-radius: 6px;
+  position: relative;
   display: inline-block;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  color: #121613;
+  z-index: 1;
+  padding: 0 4px;
+}
+
+.text-marker-chisel::before,
+.text-highlight-gold::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: 8%;
+  bottom: 6%;
+  background: linear-gradient(
+    95deg,
+    rgba(229, 169, 59, 0.45) 0%,
+    rgba(255, 238, 120, 0.55) 50%,
+    rgba(229, 169, 59, 0.48) 100%
+  );
+  /* Authentic square chisel marker pen start & stop stroke edges */
+  border-left: 3.5px solid rgba(212, 138, 34, 0.88);
+  border-right: 3.5px solid rgba(212, 138, 34, 0.88);
+  border-radius: 1px;
+  transform: skewX(-3deg) rotate(-0.3deg);
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(212, 138, 34, 0.15);
 }
 
 .text-highlight-subtle {
-  background: rgba(229, 169, 59, 0.16);
-  padding: 2px 8px;
-  border-radius: 6px;
+  position: relative;
+  display: inline-block;
   color: #121613;
   font-weight: 700;
+  z-index: 1;
+  padding: 0 3px;
+}
+
+.text-highlight-subtle::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 14%;
+  bottom: 10%;
+  background: rgba(229, 169, 59, 0.22);
+  border-left: 2.5px solid rgba(212, 138, 34, 0.75);
+  border-right: 2.5px solid rgba(212, 138, 34, 0.75);
+  border-radius: 1px;
+  transform: skewX(-2.5deg);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Authentic Marker Highlight on Dark Backgrounds */
+.text-marker-dark {
+  position: relative;
   display: inline-block;
+  color: #FFFFFF;
+  z-index: 1;
+  padding: 0 4px;
+}
+
+.text-marker-dark::before {
+  content: "";
+  position: absolute;
+  left: -3px;
+  right: -3px;
+  top: 10%;
+  bottom: 8%;
+  background: rgba(229, 169, 59, 0.32);
+  border-left: 3.5px solid #E5A93B;
+  border-right: 3.5px solid #E5A93B;
+  border-radius: 1px;
+  transform: skewX(-3deg) rotate(-0.3deg);
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 0 14px rgba(229, 169, 59, 0.28);
 }
 
 /* ─────────────────────────────────────────────────────────────

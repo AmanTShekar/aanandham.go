@@ -696,7 +696,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             lineHeight: 1.15,
                             marginBottom: '32px'
                         }}>
-                            Reserve your spot and join the adventure today
+                            Reserve your spot and <span className="text-marker-dark">join the adventure</span> today
                         </h2>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
                             <motion.button
