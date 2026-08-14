@@ -41,34 +41,40 @@ const ELEVATION_TIERS = [
     }
 ];
 
-// ── 2. THE 4 PILLARS OF AANANDHAM HOSPITALITY (Luxury Expedition Dossiers) ──
+// ── 2. THE 4 PILLARS OF AANANDHAM HOSPITALITY (Vibrant Colored Sticky Notes) ──
 const WILDERNESS_PILLARS = [
     {
         id: '01',
         title: 'Certified Native Mountain Marshals',
-        tag: 'DISPATCH · 01',
+        tag: 'FIELD DISPATCH · 01',
         stamp: '100% MARSHAL GUIDED',
-        stampColor: '#2D6A4F',
-        bgGradient: 'linear-gradient(135deg, #142517 0%, #0B160E 100%)',
-        accentColor: '#D5ED55',
+        stampColor: '#1E3A1E',
+        paperBg: '#FEF08A', // Sunlit Canary Yellow
+        inkColor: '#1A1D0E',
+        tapeColor: 'rgba(234, 179, 8, 0.85)',
+        tapeRotation: '-2.5deg',
+        rotation: '-1.5deg',
         icon: 'fa-solid fa-shield-halved',
-        metric: '1:6 Guide Ratio',
-        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by local mountain marshals certified in high-altitude terrain, first-aid, and wildlife tracking.',
+        metric: '1:6 Guide-to-Camper Ratio',
+        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain marshals trained in high-altitude topography, medical response, and wildlife tracking.',
         specs: [
             '100% native Suryanelli ridge navigators',
             'Real-time satellite & radio coordination',
-            'State Forest Department clearance'
+            'State Forest Department clearance & permits'
         ],
         memo: '“The mountain demands respect. We ensure you feel the raw power of the ridge with total peace of mind.”'
     },
     {
         id: '02',
         title: 'Thermal Insulated Pods & En-Suites',
-        tag: 'DISPATCH · 02',
+        tag: 'FIELD DISPATCH · 02',
         stamp: 'ALL-WEATHER SEALED',
-        stampColor: '#C86D14',
-        bgGradient: 'linear-gradient(135deg, #241D12 0%, #0E120D 100%)',
-        accentColor: '#E5A93B',
+        stampColor: '#1A381E',
+        paperBg: '#D9F99D', // Electric Mountain Lime
+        inkColor: '#0F2414',
+        tapeColor: 'rgba(132, 204, 22, 0.85)',
+        tapeRotation: '2.2deg',
+        rotation: '1.4deg',
         icon: 'fa-solid fa-tent',
         metric: '12°C Weather Insulated',
         desc: 'Engineered for true mountain comfort: double-walled waterproof canvas, premium pocket-spring mattresses, 300-threadcount duvets, and private hot-water washrooms.',
@@ -82,11 +88,14 @@ const WILDERNESS_PILLARS = [
     {
         id: '03',
         title: 'Farm-to-Campfire Culinary Craft',
-        tag: 'DISPATCH · 03',
+        tag: 'FIELD DISPATCH · 03',
         stamp: 'LIVE MOUNTAIN GRILL',
-        stampColor: '#A43E1B',
-        bgGradient: 'linear-gradient(135deg, #251612 0%, #0D100C 100%)',
-        accentColor: '#F28B66',
+        stampColor: '#4A1D08',
+        paperBg: '#FED7AA', // Warm Sunburst Amber / Peach
+        inkColor: '#2D1406',
+        tapeColor: 'rgba(251, 146, 60, 0.85)',
+        tapeRotation: '-1.8deg',
+        rotation: '-1.2deg',
         icon: 'fa-solid fa-fire-burner',
         metric: 'Live Earthen Pot BBQ',
         desc: 'Live campfire grills, authentic Kerala earthen-pot curries cooked over open woodfire, and estate-plucked organic cardamom chai brewed fresh on the ridge.',
@@ -100,11 +109,14 @@ const WILDERNESS_PILLARS = [
     {
         id: '04',
         title: '100% Zero-Trace Conservation Charter',
-        tag: 'DISPATCH · 04',
+        tag: 'FIELD DISPATCH · 04',
         stamp: 'LEAVE NO TRACE',
-        stampColor: '#1F6B43',
-        bgGradient: 'linear-gradient(135deg, #122419 0%, #08110A 100%)',
-        accentColor: '#72D696',
+        stampColor: '#0A331E',
+        paperBg: '#A7F3D0', // Fresh Alpine Mint
+        inkColor: '#062817',
+        tapeColor: 'rgba(52, 211, 153, 0.85)',
+        tapeRotation: '2.0deg',
+        rotation: '1.6deg',
         icon: 'fa-solid fa-leaf',
         metric: '0g Single-Use Plastic',
         desc: 'Strict environmental ethics: zero single-use plastics permitted, 100% solar ambient night lighting, organic composting, and direct reinvestment into local tribal youth employment.',
@@ -773,10 +785,10 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    4. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Luxury Expedition Dossiers)
+                    4. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Vibrant Colored Sticky Notes)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '120px 24px',
+                    padding: '120px 24px 140px',
                     background: '#0B150E',
                     position: 'relative',
                     overflow: 'hidden'
@@ -784,22 +796,38 @@ export default function AboutPage() {
                     {/* Atmospheric Ridge Glow & Mist Backlight */}
                     <div style={{
                         position: 'absolute',
-                        top: '20%',
+                        top: '15%',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         width: '1000px',
                         height: '450px',
-                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.08) 0%, rgba(229, 169, 59, 0.04) 45%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(229, 169, 59, 0.14) 0%, rgba(213, 237, 85, 0.08) 45%, transparent 70%)',
                         pointerEvents: 'none',
                         filter: 'blur(80px)'
                     }} />
 
                     <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         
-                        <div style={{ textAlign: 'center', marginBottom: '70px' }}>
-                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> EXPEDITION FIELD DOSSIERS
+                        <div style={{ textAlign: 'center', marginBottom: '74px' }}>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                background: 'rgba(229, 169, 59, 0.18)',
+                                border: '1.5px solid #E5A93B',
+                                color: '#E5A93B',
+                                padding: '8px 22px',
+                                borderRadius: '999px',
+                                fontSize: '12.5px',
+                                fontWeight: '900',
+                                letterSpacing: '1.2px',
+                                textTransform: 'uppercase',
+                                boxShadow: '0 0 24px rgba(229, 169, 59, 0.3)',
+                                marginBottom: '16px'
+                            }}>
+                                <span style={{ color: '#E5A93B', fontSize: '15px' }}>★</span> EXPEDITION FIELD DISPATCHES
                             </div>
+
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                                 fontSize: 'clamp(34px, 4.8vw, 54px)',
@@ -811,86 +839,159 @@ export default function AboutPage() {
                                 The 4 Pillars of <span style={{ color: '#E5A93B' }}>Aanandham Hospitality</span>
                             </h2>
                             <p style={{ fontSize: '16.5px', color: '#A2B6A6', maxWidth: '680px', margin: '0 auto' }}>
-                                Engineered for raw mountain weather with the hygiene, culinary warmth, and protocol of a boutique eco-lodge.
+                                Handcrafted wilderness standards written on the ridge. Hover or tap to inspect our unyielding comfort and safety protocols.
                             </p>
                         </div>
 
-                        {/* 4 Luxury Dossier Cards Grid with Buttery Framer Lift */}
+                        {/* 4 Vibrant Colored Sticky Notes Grid */}
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            gap: '32px'
+                            gap: '36px',
+                            paddingTop: '20px'
                         }}>
                             {WILDERNESS_PILLARS.map((pillar, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 32 }}
+                                    initial={{ opacity: 0, y: 36 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
                                     whileHover={{
-                                        y: -14,
-                                        boxShadow: '0 30px 65px rgba(0, 0, 0, 0.55), 0 0 30px rgba(229, 169, 59, 0.15)'
+                                        y: -18,
+                                        rotate: 0,
+                                        scale: 1.035,
+                                        boxShadow: '0 32px 70px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.25)'
                                     }}
+                                    whileTap={{ scale: 0.98 }}
                                     style={{
                                         position: 'relative',
-                                        background: pillar.bgGradient,
-                                        border: '1px solid rgba(255, 255, 255, 0.14)',
-                                        borderRadius: '30px',
-                                        padding: '38px 28px 32px',
-                                        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.4)',
-                                        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        background: pillar.paperBg,
+                                        color: pillar.inkColor,
+                                        borderRadius: '8px 8px 36px 8px',
+                                        padding: '42px 28px 34px',
+                                        boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.15)',
+                                        transform: `rotate(${pillar.rotation})`,
+                                        transition: 'box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         minHeight: '480px',
-                                        color: '#FFFFFF'
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 28px)',
+                                        cursor: 'grab'
                                     }}
                                 >
-                                    {/* Top Row: Dispatch Pill + Vintage Seal */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
-                                        <span style={{
-                                            fontSize: '11px',
-                                            fontWeight: '900',
-                                            letterSpacing: '1.2px',
-                                            textTransform: 'uppercase',
-                                            background: 'rgba(255, 255, 255, 0.08)',
-                                            color: pillar.accentColor,
-                                            padding: '5px 12px',
-                                            borderRadius: '999px',
-                                            border: '1px solid rgba(255, 255, 255, 0.12)'
-                                        }}>
-                                            {pillar.tag}
-                                        </span>
-
+                                    {/* Textured Washi Tape Strip with Brass Pin on Top */}
+                                    <motion.div
+                                        whileHover={{ y: -2, rotate: 0 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-14px',
+                                            left: '50%',
+                                            transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
+                                            width: '130px',
+                                            height: '28px',
+                                            background: pillar.tapeColor,
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                            boxShadow: '0 3px 8px rgba(0,0,0,0.2)',
+                                            borderLeft: '3px dashed rgba(0,0,0,0.25)',
+                                            borderRight: '3px dashed rgba(0,0,0,0.25)',
+                                            opacity: 0.95,
+                                            zIndex: 4,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
                                         <div style={{
-                                            border: `1.5px solid ${pillar.accentColor}`,
-                                            color: pillar.accentColor,
-                                            padding: '4px 10px',
-                                            borderRadius: '6px',
-                                            fontSize: '9.5px',
-                                            fontWeight: '900',
-                                            letterSpacing: '0.8px',
-                                            textTransform: 'uppercase',
-                                            background: 'rgba(0,0,0,0.3)'
-                                        }}>
-                                            {pillar.stamp}
+                                            width: '8px',
+                                            height: '8px',
+                                            borderRadius: '50%',
+                                            background: '#FFFFFF',
+                                            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.4)',
+                                            border: '1.5px solid #E5A93B'
+                                        }} />
+                                    </motion.div>
+
+                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        right: 0,
+                                        width: '36px',
+                                        height: '36px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
+                                        borderTopLeftRadius: '14px',
+                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.12)',
+                                        pointerEvents: 'none'
+                                    }} />
+
+                                    {/* Header Row: Dispatch Badge + Mini Logo + Vintage Ink Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <img
+                                                src="/logo.png"
+                                                alt="Aanandham Logo"
+                                                style={{
+                                                    height: '24px',
+                                                    width: '24px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '50%',
+                                                    border: '1px solid rgba(0,0,0,0.15)'
+                                                }}
+                                            />
+                                            <span style={{
+                                                fontSize: '11px',
+                                                fontWeight: '900',
+                                                letterSpacing: '1.2px',
+                                                textTransform: 'uppercase',
+                                                background: 'rgba(0,0,0,0.08)',
+                                                padding: '4px 10px',
+                                                borderRadius: '6px',
+                                                border: '1px solid rgba(0,0,0,0.06)'
+                                            }}>
+                                                {pillar.tag}
+                                            </span>
                                         </div>
+
+                                        {/* Vintage Double-Bordered Ink Stamp */}
+                                        <motion.div
+                                            whileHover={{ rotate: 0, scale: 1.05 }}
+                                            style={{
+                                                border: `2px solid ${pillar.stampColor}`,
+                                                outline: `1px dashed ${pillar.stampColor}`,
+                                                outlineOffset: '2px',
+                                                color: pillar.stampColor,
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                fontSize: '9px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.9px',
+                                                textTransform: 'uppercase',
+                                                transform: 'rotate(-5deg)',
+                                                opacity: 0.95,
+                                                userSelect: 'none',
+                                                background: 'rgba(255,255,255,0.4)'
+                                            }}
+                                        >
+                                            {pillar.stamp}
+                                        </motion.div>
                                     </div>
 
-                                    {/* Icon & Title */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+                                    {/* Icon & Bold Headline */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
                                         <div style={{
-                                            width: '48px',
-                                            height: '48px',
-                                            borderRadius: '16px',
-                                            background: 'rgba(255, 255, 255, 0.08)',
-                                            border: `1px solid ${pillar.accentColor}`,
+                                            width: '46px',
+                                            height: '46px',
+                                            borderRadius: '14px',
+                                            background: 'rgba(0, 0, 0, 0.08)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             fontSize: '20px',
-                                            color: pillar.accentColor,
-                                            flexShrink: 0
+                                            color: pillar.inkColor,
+                                            flexShrink: 0,
+                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                                         }}>
                                             <i className={pillar.icon}></i>
                                         </div>
@@ -898,9 +999,10 @@ export default function AboutPage() {
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                                             fontSize: '21px',
                                             fontWeight: '800',
-                                            lineHeight: 1.22,
+                                            lineHeight: 1.2,
                                             margin: 0,
-                                            color: '#FFFFFF'
+                                            color: pillar.inkColor,
+                                            letterSpacing: '-0.02em'
                                         }}>
                                             {pillar.title}
                                         </h3>
@@ -909,18 +1011,18 @@ export default function AboutPage() {
                                     {/* Description */}
                                     <p style={{
                                         fontSize: '13.5px',
-                                        color: '#B6C8BA',
                                         lineHeight: 1.7,
                                         margin: '0 0 20px',
-                                        fontWeight: '400'
+                                        opacity: 0.94,
+                                        fontWeight: '500'
                                     }}>
                                         {pillar.desc}
                                     </p>
 
-                                    {/* Specific Checklist Bullet Points */}
+                                    {/* Tactical Checklist Badges */}
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '22px' }}>
-                                        {pillar.specs.map((spec, sIdx) => (
-                                            <div key={sIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', color: '#E1ECE3' }}>
+                                        {pillar.specs.map((chk, cIdx) => (
+                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', fontWeight: '700', opacity: 0.92 }}>
                                                 <span style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -928,29 +1030,33 @@ export default function AboutPage() {
                                                     width: '18px',
                                                     height: '18px',
                                                     borderRadius: '50%',
-                                                    background: 'rgba(213, 237, 85, 0.15)',
-                                                    color: '#D5ED55',
+                                                    background: 'rgba(0,0,0,0.08)',
+                                                    color: pillar.stampColor,
                                                     fontSize: '11px',
                                                     fontWeight: '900'
                                                 }}>
                                                     ✓
                                                 </span>
-                                                <span>{spec}</span>
+                                                <span>{chk}</span>
                                             </div>
                                         ))}
                                     </div>
 
-                                    {/* Founder / Marshal Memo Quote at Bottom */}
+                                    {/* Field Quote with Signature */}
                                     <div style={{
                                         marginTop: 'auto',
                                         paddingTop: '16px',
-                                        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderTop: '1px dashed rgba(0, 0, 0, 0.18)',
                                         fontStyle: 'italic',
                                         fontSize: '12.5px',
-                                        color: '#A2B6A6',
-                                        lineHeight: 1.55
+                                        lineHeight: '1.55',
+                                        opacity: '0.9',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '6px'
                                     }}>
-                                        {pillar.memo}
+                                        <span>✍</span>
+                                        <span>{pillar.memo}</span>
                                     </div>
                                 </motion.div>
                             ))}
