@@ -96,31 +96,51 @@ const PROGRAM_DAYS = [
     }
 ];
 
-// ── INSTRUCTORS DATA (Ref Screenshot 4 Batch 3 - media_1786657199806.png) ──
-const INSTRUCTORS = [
+// ── WHY AANANDHAM.GO PILLARS DATA ──
+const WHY_AANANDHAM_PILLARS = [
     {
-        name: 'Wayan Bayu',
-        role: 'Lead Trek Marshal & Mountain Guide',
-        languages: 'ENG / MAL / HIN',
-        experience: '8+ Years Mountaineering',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80',
-        bio: 'Born in the high ranges of Idukki, Wayan has guided over 400 summits across the Western Ghats and Himalayas. Certified in Wilderness First Aid & Alpine Navigation.'
+        id: 'safety',
+        badge: '100% Verified Safe',
+        tagline: 'Gated Grounds & En-suite Washrooms',
+        title: '100% Female & Family-Safe Campgrounds',
+        desc: 'We eliminate the roughness from wilderness camping. Every campsite features private gated perimeters, dedicated on-site female & male coordinators, clean western washrooms with running hot water, and 24/7 power backup.',
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        stat: '350+ Solo Female Campers Hosted',
+        statIcon: '🛡️',
+        highlights: ['Gated Private Perimeter', '24/7 Marshals On-Site', 'Modern Western Washrooms & Hot Water', 'Zero-Tolerance Safety Protocol']
     },
     {
-        name: 'Arjun Das',
-        role: 'Wilderness Survival & Trail Lead',
-        languages: 'ENG / MAL / TAM',
-        experience: '6+ Years Trail Coach',
-        image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80',
-        bio: 'Former expedition athlete and certified search-and-rescue specialist. Passionate about empowering beginners to build confidence on steep rocky ridges.'
+        id: 'offroad',
+        badge: '7,900 FT Summit Access',
+        tagline: 'Exclusive 4x4 Off-Road Fleet',
+        title: 'High-Altitude 4x4 Off-Road Convoys',
+        desc: 'Our fleet of verified 4x4 off-road Mahindra jeeps takes you through rugged private tea estate tracks, crossing rolling cloud valleys to untouched summit vistas where ordinary transport cannot go.',
+        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+        stat: '7,900 FT Highest Camp in South India',
+        statIcon: '🚙',
+        highlights: ['Verified 4x4 Convoy Fleet', 'Professional Mountain Drivers', 'Private Tea Ridge Permits', 'Sunrise Tiger Rock Access']
     },
     {
-        name: 'Pooja Menon',
-        role: 'High-Altitude Yoga & Camp Coordinator',
-        languages: 'ENG / MAL / HIN',
-        experience: '5+ Years Holistic Wellness',
-        image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80',
-        bio: 'Certified Hatha Yoga instructor and community builder. Leads morning mountain breathwork sessions to enhance lung capacity and trail recovery.'
+        id: 'marshals',
+        badge: 'Certified Mountain Guides',
+        tagline: '1:6 Marshal-to-Camper Ratio',
+        title: 'WFA-Certified Local Mountain Guides',
+        desc: 'Led by Western Ghats natives who grew up traversing these mist valleys. They pace each group with small 1:6 ratios, carrying medical kits, pulse oximeters, and deep indigenous flora and mountain wisdom.',
+        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80',
+        stat: '1:6 Marshal-to-Camper Ratio',
+        statIcon: '🩺',
+        highlights: ['Small 1:6 Marshal Ratio', 'WFA & CPR First Aid Certified', 'Oxygen & Medical Kits on Trail', 'Local Cultural Storytelling']
+    },
+    {
+        id: 'gastronomy',
+        badge: 'Live BBQ & Stargazing',
+        tagline: 'Farm-to-Table Kerala Buffets',
+        title: 'Starlit Outdoor Gastronomy & Telescopes',
+        desc: 'Warm up around roaring campfires at 10°C with smoking hot barbecue platters, traditional Kerala feasts, live acoustic open-mic jams, and zero-light-pollution telescope observation of celestial nebulas.',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        stat: '4.98★ Food & Stargaze Rating',
+        statIcon: '🔥',
+        highlights: ['Farm-to-Table Kerala Buffets', 'Live Campfire Barbecue', 'Telescope Stargazing Deck', 'Open-Mic Acoustic Vibe']
     }
 ];
 
@@ -593,7 +613,7 @@ export default function HomePage() {
     const [activeTab, setActiveTab] = useState('All');
     const [activeLevelIdx, setActiveLevelIdx] = useState(1);           // Card 2 ("Still Learning") active by default (Ref media_1786655245980.png)
     const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active by default (Ref media_1786657185483.png)
-    const [activeInstructorIdx, setActiveInstructorIdx] = useState(0); // Wayan Bayu active by default (Ref media_1786657199806.png)
+    const [activeWhyIdx, setActiveWhyIdx] = useState(0);               // Safety & Comfort active by default
     const [activeStayAcc, setActiveStayAcc] = useState(3);             // Common Areas active by default (Ref media_1786655246091.png)
     const [activeFaq, setActiveFaq] = useState(0);
     const [highlightIdx, setHighlightIdx] = useState(0);
@@ -656,8 +676,8 @@ export default function HomePage() {
     const nextHighlight = () => setHighlightIdx((prev) => (prev + 1) % OVERVIEW_HIGHLIGHTS.length);
     const prevHighlight = () => setHighlightIdx((prev) => (prev === 0 ? OVERVIEW_HIGHLIGHTS.length - 1 : prev - 1));
     
-    const nextInstructor = () => setActiveInstructorIdx((prev) => (prev + 1) % INSTRUCTORS.length);
-    const prevInstructor = () => setActiveInstructorIdx((prev) => (prev === 0 ? INSTRUCTORS.length - 1 : prev - 1));
+    const nextWhyPillar = () => setActiveWhyIdx((prev) => (prev + 1) % WHY_AANANDHAM_PILLARS.length);
+    const prevWhyPillar = () => setActiveWhyIdx((prev) => (prev === 0 ? WHY_AANANDHAM_PILLARS.length - 1 : prev - 1));
 
     const handleOpenBooking = (pkg) => {
         setSelectedPackage(pkg);
@@ -822,8 +842,8 @@ export default function HomePage() {
                             <a href="#overview" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
                                 The Camp <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
                             </a>
-                            <a href="#instructors" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
-                                The Team <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
+                            <a href="#why-aanandham" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                Why Us
                             </a>
                             <a href="#program" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
                                 Program
@@ -895,6 +915,9 @@ export default function HomePage() {
                             </Link>
                             <a href="#overview" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Camp Overview
+                            </a>
+                            <a href="#why-aanandham" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                                Why Aanandham.go ★
                             </a>
                             <a href="#stay" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Accommodation & Pods
@@ -1640,27 +1663,6 @@ export default function HomePage() {
                                     alt="Activity preview"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '10px',
-                                    left: '10px',
-                                    right: '10px',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center'
-                                }}>
-                                    <span style={{
-                                        background: 'rgba(14, 24, 17, 0.75)',
-                                        color: '#D5ED55',
-                                        fontSize: '10.5px',
-                                        fontWeight: '800',
-                                        padding: '3px 10px',
-                                        borderRadius: '999px',
-                                        backdropFilter: 'blur(6px)'
-                                    }}>
-                                        {PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.day || 'Trail'}
-                                    </span>
-                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -1669,35 +1671,35 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                4. INSTRUCTORS SECTION (Exact Match to media_1786657199806.png)
+                4. WHY AANANDHAM.GO SECTION (Flagship Value & Trust Pillars)
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
-                id="instructors" 
+                id="why-aanandham" 
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: 'clamp(70px, 8vw, 110px) 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '60px', alignItems: 'center' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'clamp(36px, 5vw, 60px)', alignItems: 'center' }}>
                         
-                        {/* Left Coach Picture Card (Ref Screenshot 4 Batch 3) */}
+                        {/* Left Interactive Cinematic Showcase Card */}
                         <motion.div 
                             variants={fadeInLeft}
                             style={{
                                 position: 'relative',
-                                height: '500px',
+                                height: 'clamp(440px, 52vh, 540px)',
                                 borderRadius: '36px',
                                 overflow: 'hidden',
-                                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)'
+                                boxShadow: '0 25px 60px rgba(0, 0, 0, 0.12)'
                             }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
-                                    key={activeInstructorIdx}
-                                    src={INSTRUCTORS[activeInstructorIdx].image}
-                                    alt={INSTRUCTORS[activeInstructorIdx].name}
+                                    key={activeWhyIdx}
+                                    src={WHY_AANANDHAM_PILLARS[activeWhyIdx].image}
+                                    alt={WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
                                     initial={{ opacity: 0, scale: 1.05 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0 }}
@@ -1706,82 +1708,109 @@ export default function HomePage() {
                                 />
                             </AnimatePresence>
 
-                            {/* Top Left Coach Badge */}
+                            {/* Dark Gradient Overlay */}
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.3) 50%, rgba(14, 24, 17, 0.7) 100%)' }} />
+
+                            {/* Top Left Pillar Badge */}
                             <div style={{
                                 position: 'absolute',
                                 top: '24px',
                                 left: '24px',
-                                background: 'rgba(0, 0, 0, 0.55)',
-                                color: '#FFFFFF',
-                                fontSize: '13px',
-                                fontWeight: '700',
+                                background: 'rgba(0, 0, 0, 0.65)',
+                                color: '#D5ED55',
+                                fontSize: '12px',
+                                fontWeight: '800',
                                 padding: '8px 18px',
                                 borderRadius: '999px',
-                                backdropFilter: 'blur(8px)'
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(213, 237, 85, 0.3)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px'
                             }}>
-                                Coach: {INSTRUCTORS[activeInstructorIdx].name}
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D5ED55' }}></span>
+                                <span>{WHY_AANANDHAM_PILLARS[activeWhyIdx].badge}</span>
                             </div>
 
-                            {/* Top Right Plus Button */}
+                            {/* Top Right Live Stat Pill */}
                             <div style={{
                                 position: 'absolute',
                                 top: '24px',
                                 right: '24px',
-                                width: '40px',
-                                height: '40px',
-                                borderRadius: '50%',
-                                background: 'rgba(0, 0, 0, 0.55)',
+                                background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#FFFFFF',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '18px',
-                                backdropFilter: 'blur(8px)',
-                                cursor: 'pointer'
-                            }}>
-                                +
-                            </div>
-
-                            {/* Bottom Left Language Badge */}
-                            <div style={{
-                                position: 'absolute',
-                                bottom: '24px',
-                                left: '24px',
-                                background: 'rgba(0, 0, 0, 0.55)',
-                                color: '#FFFFFF',
-                                fontSize: '11px',
-                                fontWeight: '800',
-                                padding: '6px 14px',
+                                fontSize: '11.5px',
+                                fontWeight: '700',
+                                padding: '8px 16px',
                                 borderRadius: '999px',
-                                backdropFilter: 'blur(8px)',
-                                letterSpacing: '0.5px'
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.15)'
                             }}>
-                                {INSTRUCTORS[activeInstructorIdx].languages}
+                                {WHY_AANANDHAM_PILLARS[activeWhyIdx].statIcon} {WHY_AANANDHAM_PILLARS[activeWhyIdx].stat}
                             </div>
 
-                            {/* Bottom Right Carousel Controls */}
-                            <div style={{ position: 'absolute', bottom: '24px', right: '24px', display: 'flex', gap: '8px' }}>
-                                <button 
-                                    onClick={prevInstructor} 
-                                    aria-label="Previous instructor profile"
-                                    style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                                >
-                                    <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
-                                </button>
-                                <button 
-                                    onClick={nextInstructor} 
-                                    aria-label="Next instructor profile"
-                                    style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
-                                >
-                                    <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
-                                </button>
+                            {/* Bottom Content Card & Highlights */}
+                            <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px' }}>
+                                <div style={{ fontSize: '11px', color: '#D5ED55', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                    {WHY_AANANDHAM_PILLARS[activeWhyIdx].tagline}
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 12px', lineHeight: 1.25 }}>
+                                    {WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
+                                </h3>
+
+                                {/* Highlights Pills */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+                                    {WHY_AANANDHAM_PILLARS[activeWhyIdx].highlights.map((h, idx) => (
+                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '11px', fontWeight: '600', padding: '4px 10px', borderRadius: '6px', backdropFilter: 'blur(6px)' }}>
+                                            ✓ {h}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                {/* Carousel Controls & Indicator */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                                    <div style={{ display: 'flex', gap: '6px' }}>
+                                        {WHY_AANANDHAM_PILLARS.map((_, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setActiveWhyIdx(idx)}
+                                                style={{
+                                                    width: activeWhyIdx === idx ? '24px' : '8px',
+                                                    height: '8px',
+                                                    borderRadius: '999px',
+                                                    background: activeWhyIdx === idx ? '#D5ED55' : 'rgba(255,255,255,0.3)',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.25s ease'
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <button 
+                                            onClick={prevWhyPillar} 
+                                            aria-label="Previous reason"
+                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                        >
+                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
+                                        </button>
+                                        <button 
+                                            onClick={nextWhyPillar} 
+                                            aria-label="Next reason"
+                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                        >
+                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </motion.div>
 
-                        {/* Right Content */}
+                        {/* Right Content & Interactive Feature Grid */}
                         <motion.div variants={fadeInRight}>
                             <div className="star-badge">
-                                <span className="star-icon">★</span> INSTRUCTORS
+                                <span className="star-icon">★</span> WHY AANANDHAM.GO
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -1790,38 +1819,75 @@ export default function HomePage() {
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
                                 lineHeight: 1.15,
-                                marginBottom: '24px'
+                                marginBottom: '18px'
                             }}>
-                                Learn to conquer peaks with Kerala's <span style={{ color: '#8E9B92' }}>best guides</span>
+                                The gold standard in <span style={{ color: '#8E9B92' }}>Kerala wilderness glamping</span>
                             </h2>
 
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '16px' }}>
-                                Our instructors are Western Ghats locals who grew up exploring these cloud ridges as kids. They know which trail suits your endurance and exactly what you need to hear — whether it's your first summit or you're pushing for off-trail treks.
+                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '28px' }}>
+                                We believe nature should be experienced with absolute safety, deep local knowledge, and zero compromise on comfort. From 7,900 FT cloud ridges to private en-suite washrooms, here is why 350+ adventurers trust Aanandham.go.
                             </p>
 
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '36px' }}>
-                                They adapt to you. Total beginner? They’ll walk you through every step. Already confident? They’ll push your technique further. By the end of camp, you won’t just trust them—you’ll genuinely miss trekking with them.
-                            </p>
+                            {/* 4 Interactive Clickable Feature Pillar Cards */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '28px' }}>
+                                {WHY_AANANDHAM_PILLARS.map((pillar, idx) => {
+                                    const isSelected = activeWhyIdx === idx;
+                                    return (
+                                        <div
+                                            key={pillar.id}
+                                            onClick={() => setActiveWhyIdx(idx)}
+                                            style={{
+                                                background: isSelected ? '#FFFFFF' : '#F1F3EC',
+                                                border: isSelected ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
+                                                borderRadius: '20px',
+                                                padding: '18px 20px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                                                boxShadow: isSelected ? '0 10px 30px rgba(0,0,0,0.06)' : 'none'
+                                            }}
+                                        >
+                                            <div style={{ fontSize: '24px', marginBottom: '8px' }}>
+                                                {pillar.statIcon}
+                                            </div>
+                                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613', margin: '0 0 4px', lineHeight: 1.3 }}>
+                                                {pillar.title.split(' ')[0]} {pillar.title.split(' ')[1]}
+                                            </h4>
+                                            <p style={{ fontSize: '12px', color: '#59655D', margin: 0, lineHeight: 1.4 }}>
+                                                {pillar.tagline}
+                                            </p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
 
-                            {/* 2 Feature Boxes with Thumbs Up (Ref Screenshot 4) */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
-                                <div>
-                                    <div style={{ fontSize: '20px', marginBottom: '8px' }}>👍</div>
-                                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                                        WFA-Certified Pros
-                                    </h4>
-                                    <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
-                                        All instructors hold international Wilderness First Aid certification with 5+ years teaching experience.
-                                    </p>
+                            {/* 2 Trust / Guarantee Badges */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '18px', paddingTop: '20px', borderTop: '1px solid rgba(18,22,19,0.08)' }}>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                                    <div style={{ fontSize: '20px', background: 'rgba(213,237,85,0.3)', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        🛡️
+                                    </div>
+                                    <div>
+                                        <h5 style={{ fontFamily: 'var(--font-heading)', fontSize: '14.5px', fontWeight: '800', color: '#121613', margin: '0 0 2px' }}>
+                                            Authorized Permits
+                                        </h5>
+                                        <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
+                                            100% verified forest entry passes & wilderness first aiders.
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <div style={{ fontSize: '20px', marginBottom: '8px' }}>👍</div>
-                                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                                        Small Group Focus
-                                    </h4>
-                                    <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
-                                        Max 6 people per instructor. Personalized feedback, proper supervision, faster progression.
-                                    </p>
+
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                                    <div style={{ fontSize: '20px', background: 'rgba(213,237,85,0.3)', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                        ⭐
+                                    </div>
+                                    <div>
+                                        <h5 style={{ fontFamily: 'var(--font-heading)', fontSize: '14.5px', fontWeight: '800', color: '#121613', margin: '0 0 2px' }}>
+                                            4.98★ Rated Tribe
+                                        </h5>
+                                        <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
+                                            Over 350+ 5-star Google & Instagram verified camper reviews.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </motion.div>
