@@ -1,20 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 export default function Footer() {
-    const [subscriberEmail, setSubscriberEmail] = useState('');
-    const [isSubscribed, setIsSubscribed] = useState(false);
-
-    const handleSubscribe = (e) => {
-        e.preventDefault();
-        if (subscriberEmail) {
-            setIsSubscribed(true);
-            setTimeout(() => setIsSubscribed(false), 4000);
-            setSubscriberEmail('');
-        }
-    };
-
     return (
         <footer style={{
             background: 'linear-gradient(180deg, #101E13 0%, #08120A 100%)',
@@ -41,13 +29,13 @@ export default function Footer() {
                 <div style={{ 
                     display: 'grid', 
                     gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-                    gap: 'clamp(40px, 4.5vw, 64px)', 
+                    gap: 'clamp(48px, 6vw, 84px)', 
                     marginBottom: '70px',
                     alignItems: 'start'
                 }}>
                     
                     {/* Column 1: Brand & Coordinates */}
-                    <div style={{ maxWidth: '360px', paddingRight: '16px' }}>
+                    <div style={{ paddingRight: '12px' }}>
                         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', marginBottom: '14px' }}>
                             <img
                                 src="/logo.png"
@@ -148,7 +136,7 @@ export default function Footer() {
                     </div>
 
                     {/* Column 2: THE CAMP & SANCTUARIES */}
-                    <div style={{ minWidth: '220px' }}>
+                    <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
                             THE WILDERNESS
                         </span>
@@ -169,19 +157,19 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Column 3: LEGAL & POLICIES */}
-                    <div style={{ minWidth: '220px' }}>
+                    {/* Column 3: AANANDHAM.GO SUB-PAGES */}
+                    <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            LEGAL & POLICIES
+                            AANANDHAM<span style={{ color: '#D5ED55' }}>.GO</span>
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
-                                { name: 'Privacy Policy', href: '/about' },
-                                { name: 'Terms of Service & Stay', href: '/about' },
-                                { name: 'Cancellation & Refund Policy', href: '/about' },
-                                { name: 'Wilderness Safety & First Aid', href: '/#why-aanandham' },
-                                { name: 'Forest Permits & Eco-Ethics', href: '/#why-aanandham' },
-                                { name: 'Campground Rules & Marshals', href: '/about' }
+                                { name: 'About Our Mission', href: '/about' },
+                                { name: 'Member Portal & Logins', href: '/login' },
+                                { name: 'Join Adventure Tribe', href: '/signup' },
+                                { name: 'Campsite Host & Admin', href: '/admin' },
+                                { name: 'Expedition Concierge Desk', href: '/contact' },
+                                { name: 'Privacy, Safety & Permits', href: '/about' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>
@@ -189,52 +177,6 @@ export default function Footer() {
                                 </Link>
                             ))}
                         </div>
-                    </div>
-
-                    {/* Column 4: TRIBE VIP INVITATION */}
-                    <div style={{ minWidth: '260px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#D5ED55', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            JOIN THE TRIBE
-                        </span>
-                        <p style={{ fontSize: '13.5px', color: '#A2B6A6', lineHeight: 1.6, marginBottom: '18px' }}>
-                            Receive secret campsite drops, high-altitude sunrise Jeep batches, and private community trek invites.
-                        </p>
-                        
-                        <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            <div style={{ position: 'relative' }}>
-                                <input
-                                    type="email"
-                                    required
-                                    placeholder="Enter your email address..."
-                                    value={subscriberEmail}
-                                    onChange={(e) => setSubscriberEmail(e.target.value)}
-                                    style={{
-                                        width: '100%',
-                                        padding: '13px 18px',
-                                        borderRadius: '999px',
-                                        background: 'rgba(255, 255, 255, 0.08)',
-                                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                                        color: '#FFFFFF',
-                                        fontSize: '13.5px',
-                                        outline: 'none',
-                                        fontFamily: 'inherit'
-                                    }}
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="btn-lime"
-                                style={{
-                                    padding: '12px 24px',
-                                    fontSize: '13.5px',
-                                    fontWeight: '700',
-                                    border: 'none',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                {isSubscribed ? '✓ Welcome to Tribe!' : 'Join Wilderness Tribe ↗'}
-                            </button>
-                        </form>
                     </div>
 
                 </div>
