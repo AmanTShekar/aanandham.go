@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
+import BookingEngineModal from '../components/BookingEngineModal';
 
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
 const OVERVIEW_HIGHLIGHTS = [
@@ -17,7 +18,7 @@ const OVERVIEW_HIGHLIGHTS = [
         sub: 'Guided ridge walks through misty tea valleys'
     },
     {
-        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1000&q=80',
+        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80',
         title: 'Acoustic Campfires & Live BBQ',
         sub: 'Starlit night sessions under pristine mountain skies'
     }
@@ -73,7 +74,7 @@ const PROGRAM_DAYS = [
         day: 'Day 3',
         title: 'Trek Progress & Stargazing Deck',
         desc: 'Intermediate ridge navigation workshop, wilderness trail pacing, tea factory heritage tour, and starlit open-mic acoustic campfire circle.',
-        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=800&q=80'
+        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80'
     },
     {
         day: 'Day 4',
@@ -159,8 +160,8 @@ const STAY_ACCOMMODATIONS = [
         capacity: '2 Beds · 2 Guests',
         title: 'Twin Room',
         desc: 'Spacious double-canvas dome with two plush single beds, thick fleece blankets rated for 8°C, individual charging ports, and private mountain valley patio.',
-        mainImg: 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1200&q=80',
-        thumb: 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=400&q=80',
+        mainImg: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        thumb: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=400&q=80',
         amenities: ['2 Single Beds', 'Fleece Blankets (8°C)', 'Valley Patio', 'Charging Hub']
     },
     {
@@ -244,7 +245,7 @@ const EXPEDITION_PACKAGES = [
         originalPrice: 2900,
         rating: 4.92,
         reviewsCount: 184,
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1200&q=80',
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
         description: 'Unwind in the misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, starlit barbecues, and refreshing morning walks through tea valleys.',
         highlights: ['Pine Forest Glamping Site', 'Off-Road Jeep Trail to Kurisumala', 'Sunset at Vagamon Rolling Meadows', 'Open-Mic Acoustic Campfire', 'Live Barbecue Station']
     },
@@ -576,7 +577,7 @@ export default function HomePage() {
 
     const nextTestimonial = () => setTestimonialIdx((prev) => (prev + 1) % TESTIMONIALS.length);
     const prevTestimonial = () => setTestimonialIdx((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
-    const nextHighlight = () => setHighlightIdx((prev) => (prev === 0 ? OVERVIEW_HIGHLIGHTS.length - 1 : prev - 1));
+    const nextHighlight = () => setHighlightIdx((prev) => (prev + 1) % OVERVIEW_HIGHLIGHTS.length);
     const prevHighlight = () => setHighlightIdx((prev) => (prev === 0 ? OVERVIEW_HIGHLIGHTS.length - 1 : prev - 1));
     
     const nextInstructor = () => setActiveInstructorIdx((prev) => (prev + 1) % INSTRUCTORS.length);
@@ -2204,7 +2205,7 @@ export default function HomePage() {
                             style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '20px', cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', boxShadow: '0 6px 25px rgba(0,0,0,0.02)' }}
                         >
                             <div style={{ position: 'relative', height: '280px', borderRadius: '20px', overflow: 'hidden', marginBottom: '20px' }}>
-                                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=800&q=80" alt="Campfire" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80" alt="Campfire" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '64px', height: '64px', borderRadius: '50%', background: '#FFFFFF', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
                                     <i className="fa-solid fa-play" style={{ fontSize: '18px', marginLeft: '3px' }}></i>
                                 </div>
@@ -2217,10 +2218,10 @@ export default function HomePage() {
                             </div>
                         </motion.div>
 
-                        {/* Testimonial Cards */}
-                        {TESTIMONIALS.slice(testimonialIdx, testimonialIdx + 2).map((t) => (
+                        {/* Testimonial Cards (Circular modulo wrapping 2 cards to prevent layout jump) */}
+                        {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
                             <motion.div 
-                                key={t.id} 
+                                key={`${t.id}-${testimonialIdx}-${idx}`} 
                                 variants={cardReveal}
                                 className="hover-lift" 
                                 style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '36px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 25px rgba(0,0,0,0.02)' }}
@@ -2429,42 +2430,18 @@ export default function HomePage() {
                             <i className="fa-solid fa-xmark"></i>
                         </button>
                         <div style={{ height: '420px', position: 'relative' }}>
-                            <img src="https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1200&q=80" alt="Video frame" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80" alt="Video frame" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         </div>
                     </div>
                 </div>
             )}
 
-            {isBookingModalOpen && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                    <div style={{ width: '100%', maxWidth: '580px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '28px', padding: '36px', position: 'relative', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
-                        <button onClick={() => setIsBookingModalOpen(false)} style={{ position: 'absolute', top: '20px', right: '20px', width: '36px', height: '36px', borderRadius: '50%', background: '#F1F3EC', border: 'none', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                            <i className="fa-solid fa-xmark"></i>
-                        </button>
-
-                        <div className="star-badge" style={{ marginBottom: '8px' }}>
-                            <span className="star-icon">★</span> EXPEDITION RESERVATION
-                        </div>
-                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613', margin: '0 0 16px' }}>
-                            Lock Your Trail Spot
-                        </h3>
-                        
-                        <form onSubmit={handleBookingSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                            <div>
-                                <label style={{ fontSize: '12px', fontWeight: '700', color: '#59655D', display: 'block', marginBottom: '4px' }}>Your Name *</label>
-                                <input type="text" required placeholder="e.g. Rahul Nair" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }} />
-                            </div>
-                            <div>
-                                <label style={{ fontSize: '12px', fontWeight: '700', color: '#59655D', display: 'block', marginBottom: '4px' }}>WhatsApp Number *</label>
-                                <input type="tel" required placeholder="e.g. 9400 123 456" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }} />
-                            </div>
-                            <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '15px', fontWeight: '800', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                                <i className="fa-brands fa-whatsapp"></i> Confirm on WhatsApp
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            )}
+            {/* Interactive Full Booking Engine Modal */}
+            <BookingEngineModal
+                isOpen={isBookingModalOpen}
+                onClose={() => setIsBookingModalOpen(false)}
+                initialPackage={selectedPackage}
+            />
 
         </div>
     );

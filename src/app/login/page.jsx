@@ -607,7 +607,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                         <motion.img
                             key={mode}
                             src={mode === 'login' 
-                                ? 'https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1200&q=80'
+                                ? 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80'
                                 : 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80'
                             }
                             alt="Wilderness basecamp"
@@ -722,7 +722,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                 textAlign: 'center',
                 marginTop: '12px'
             }}>
-                Protected by 256-bit encryption · Aanandham Wilderness Platform © 2026
+                Aanandham.go Wilderness Member Access · Direct WhatsApp & Email Verification · © 2026
             </div>
         </div>
     );

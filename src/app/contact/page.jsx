@@ -722,14 +722,14 @@ export default function ContactPage() {
                     </div>
                     <div style={{ height: '380px', borderRadius: '22px', overflow: 'hidden' }}>
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125452.89283267634!2d77.00950000000001!3d10.0889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0799794d099a51%3A0x63250d6c5e5a0e5!2sMunnar%2C%20Kerala!5e0!3m2!1sen!2sin!4v1234567890"
+                            src="https://maps.google.com/maps?q=Suryanelli,Munnar,Idukki,Kerala&t=&z=13&ie=UTF8&iwloc=&output=embed"
                             width="100%"
                             height="100%"
                             style={{ border: 0 }}
                             allowFullScreen=""
                             loading="lazy"
                             referrerPolicy="no-referrer-when-downgrade"
-                            title="Aanandham.go Location"
+                            title="Aanandham.go Suryanelli Basecamp Location"
                         />
                     </div>
                 </div>

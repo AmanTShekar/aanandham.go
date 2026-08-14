@@ -350,7 +350,7 @@ export default function AboutPage() {
 
                     <div style={{ position: 'relative' }}>
                         <img
-                            src="https://images.unsplash.com/photo-1510312305653-8ed496efbe75?auto=format&fit=crop&w=1000&q=80"
+                            src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80"
                             alt="Aanandham Glamp"
                             style={{
                                 width: '100%',
