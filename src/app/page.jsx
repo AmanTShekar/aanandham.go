@@ -2827,9 +2827,8 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
                         
-                        {/* Organic Polaroid & Sticky Note Video Diaries Element (No standard outer box) */}
-                        <motion.div 
-                            variants={cardReveal}
+                        {/* Organic Polaroid Photo Video Diaries Element (Static, No Hover Transforms, No Sticky Notes) */}
+                        <div 
                             onClick={() => setIsVideoModalOpen(true)} 
                             style={{ 
                                 position: 'relative', 
@@ -2841,39 +2840,35 @@ export default function HomePage() {
                                 minHeight: '380px'
                             }}
                         >
-                            {/* Secondary Tilted Polaroid Snapshot in the background */}
-                            <motion.div
-                                whileHover={{ rotate: 8, scale: 1.05 }}
+                            {/* Secondary Background Polaroid Snapshot */}
+                            <div
                                 style={{
                                     position: 'absolute',
-                                    top: '20px',
-                                    right: '10px',
-                                    width: '180px',
+                                    top: '18px',
+                                    right: '12px',
+                                    width: '185px',
                                     background: '#FFFFFF',
                                     padding: '8px 8px 18px 8px',
                                     borderRadius: '12px',
                                     boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12)',
-                                    transform: 'rotate(6deg)',
-                                    zIndex: 1,
-                                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    transform: 'rotate(5deg)',
+                                    zIndex: 1
                                 }}
                             >
-                                <div style={{ height: '135px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px' }}>
+                                <div style={{ height: '140px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px' }}>
                                     <img 
                                         src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=500&q=80" 
                                         alt="Kolukkumalai Sunrise" 
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                     />
                                 </div>
-                                <div style={{ fontSize: '10px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.5px' }}>
+                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.5px' }}>
                                     🏔️ 7,900 FT Sunrise Batch
                                 </div>
-                            </motion.div>
+                            </div>
 
                             {/* Primary Foreground Polaroid Photo */}
-                            <motion.div
-                                whileHover={{ rotate: 0, scale: 1.03, y: -4 }}
-                                whileTap={{ scale: 0.98 }}
+                            <div
                                 style={{
                                     position: 'relative',
                                     width: '92%',
@@ -2882,32 +2877,10 @@ export default function HomePage() {
                                     padding: '12px 12px 20px 12px',
                                     borderRadius: '16px',
                                     boxShadow: '0 20px 50px rgba(0, 0, 0, 0.14)',
-                                    transform: 'rotate(-3deg)',
-                                    zIndex: 2,
-                                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    transform: 'rotate(-2.5deg)',
+                                    zIndex: 2
                                 }}
                             >
-                                {/* Washi Tape / Pinned Note Header */}
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '-12px',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)',
-                                    background: 'rgba(213, 237, 85, 0.95)',
-                                    color: '#121613',
-                                    fontSize: '10.5px',
-                                    fontWeight: '900',
-                                    letterSpacing: '1px',
-                                    textTransform: 'uppercase',
-                                    padding: '4px 14px',
-                                    borderRadius: '4px',
-                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                                    zIndex: 10,
-                                    whiteSpace: 'nowrap'
-                                }}>
-                                    🔥 CAMPFIRE DIARIES
-                                </div>
-
                                 {/* Polaroid Photo Image */}
                                 <div style={{ position: 'relative', height: '220px', borderRadius: '10px', overflow: 'hidden', marginBottom: '14px', background: '#0E1A11' }}>
                                     <img 
@@ -2930,8 +2903,7 @@ export default function HomePage() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
-                                        transition: 'all 0.2s ease'
+                                        boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
                                     }}>
                                         <i className="fa-solid fa-play" style={{ fontSize: '16px', marginLeft: '3px' }}></i>
                                     </div>
@@ -2962,8 +2934,8 @@ export default function HomePage() {
                                         Raw camp vibes, guitars & starry skies
                                     </p>
                                 </div>
-                            </motion.div>
-                        </motion.div>
+                            </div>
+                        </div>
 
                         {/* Testimonial Cards (Circular modulo wrapping 2 cards to prevent layout jump) */}
                         {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
