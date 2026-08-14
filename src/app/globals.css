@@ -576,48 +576,46 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SMOOTH WATERMARK LIGHT-UP WITH SINGLE INTERACTIVE LETTERS
+   SMOOTH WATERMARK LIGHT-UP WITH SINGLE INTERACTIVE LETTERS (Crisp & Unclipped)
 ───────────────────────────────────────────────────────────── */
 .watermark-brand {
   font-family: var(--font-heading);
-  font-size: clamp(32px, 10.5vw, 150px);
+  font-size: clamp(48px, 13.5vw, 180px);
   font-weight: 900;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   text-align: center;
   line-height: 0.9;
   user-select: none;
-  margin: clamp(24px, 4vh, 48px) 0;
+  margin: clamp(28px, 4.5vh, 56px) 0;
   text-transform: lowercase;
   display: flex;
   justify-content: center;
   align-items: baseline;
   cursor: default;
   width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-  white-space: nowrap;
+  padding: 12px 0;
+  overflow: visible;
 }
 
 .watermark-char {
   display: inline-block;
-  color: rgba(255, 255, 255, 0.06);
-  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), text-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  color: rgba(255, 255, 255, 0.07);
+  transition: color 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .watermark-char:hover {
   color: #E5A93B;
-  transform: translateY(-8px) scale(1.08);
-  text-shadow: 0 0 40px rgba(229, 169, 59, 0.6);
+  transform: translateY(-6px);
 }
 
 .watermark-char.dot-char {
-  color: rgba(229, 169, 59, 0.3);
+  color: rgba(229, 169, 59, 0.35);
   margin: 0 2px;
 }
 
 .watermark-char.dot-char:hover {
   color: #E5A93B;
-  text-shadow: 0 0 50px rgba(229, 169, 59, 0.9);
+  transform: translateY(-6px);
 }
 
 
