@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import BookingEngineModal from '../components/BookingEngineModal';
@@ -1505,326 +1505,7 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                2. SKILL LEVELS (Ref Screenshot 1 Batch 2 - media_1786655245980.png)
-                   - Dynamic onMouseEnter & onClick interactive card activation
-            ───────────────────────────────────────────────────────────── */}
-            <motion.section 
-                id="levels" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
-            >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
-                        <div>
-                            <div className="star-badge">
-                                <span className="star-icon">★</span> LEVELS
-                            </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(32px, 4.5vw, 48px)',
-                                fontWeight: '800',
-                                color: '#121613',
-                                letterSpacing: '-0.035em',
-                                margin: 0
-                            }}>
-                                Catch the wave regardless of <br />your <span className="text-marker-3">trekking skills</span>
-                            </h2>
-                        </div>
-
-                        <a href="#packages" className="action-arrow-btn">
-                            <span>See Full Program</span>
-                            <div className="btn-arrow-circle">
-                                ↗
-                            </div>
-                        </a>
-                    </div>
-
-                    <motion.div 
-                        variants={staggerContainer}
-                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}
-                    >
-                        {SKILL_LEVELS.map((level, idx) => {
-                            const isActive = activeLevelIdx === idx;
-                            return (
-                                <motion.div
-                                    key={level.id}
-                                    variants={cardReveal}
-                                    onMouseEnter={() => setActiveLevelIdx(idx)}
-                                    onClick={() => setActiveLevelIdx(idx)}
-                                    className="hover-lift"
-                                    layout
-                                    style={{
-                                        background: '#FFFFFF',
-                                        border: isActive ? '1.5px solid rgba(18, 22, 19, 0.18)' : '1px solid rgba(18, 22, 19, 0.06)',
-                                        borderRadius: '32px',
-                                        padding: '28px 26px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        minHeight: '390px',
-                                        cursor: 'pointer',
-                                        boxShadow: isActive ? '0 14px 40px rgba(0, 0, 0, 0.06)' : '0 4px 16px rgba(0, 0, 0, 0.02)',
-                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                                    }}
-                                >
-                                    {/* Top Row: Avatar + Level Badge */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                        <img
-                                            src={level.avatar}
-                                            alt={level.title}
-                                            style={{
-                                                width: '48px',
-                                                height: '48px',
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
-                                            }}
-                                        />
-                                        <span style={{
-                                            background: isActive ? '#E5A93B' : '#FFFFFF',
-                                            border: isActive ? 'none' : '1px solid rgba(18, 22, 19, 0.12)',
-                                            color: '#121613',
-                                            fontSize: '11.5px',
-                                            fontWeight: '800',
-                                            padding: '5px 16px',
-                                            borderRadius: '999px',
-                                            textTransform: 'lowercase',
-                                            transition: 'all 0.25s ease'
-                                        }}>
-                                            {level.badge}
-                                        </span>
-                                    </div>
-
-                                    {/* Bottom Row: Content */}
-                                    {isActive ? (
-                                        <motion.div 
-                                            initial={{ opacity: 0, y: 8 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            style={{ marginTop: 'auto' }}
-                                        >
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', margin: 0 }}>
-                                                {level.title}
-                                            </h3>
-                                            <div style={{ width: '100%', height: '1px', background: 'rgba(18, 22, 19, 0.08)', margin: '14px 0 14px' }} />
-                                            <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
-                                                {level.desc}
-                                            </p>
-                                        </motion.div>
-                                    ) : (
-                                        <div style={{ marginTop: 'auto' }}>
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '700', color: '#121613', margin: 0 }}>
-                                                {level.title}
-                                            </h3>
-                                        </div>
-                                    )}
-                                </motion.div>
-                            );
-                        })}
-                    </motion.div>
-                </div>
-            </motion.section>
-
-            {/* ─────────────────────────────────────────────────────────────
-                3. PROGRAM SECTION (Exact Match to media_1786657185483.png)
-                   "What we've planned for you:" + Interactive Small Mouse-Follow Floating Card
-            ───────────────────────────────────────────────────────────── */}
-            <motion.section 
-                id="program" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
-            >
-                <div 
-                    ref={programContainerRef}
-                    onMouseMove={handleProgramMouseMove}
-                    onMouseLeave={() => setIsHoveringProgram(false)}
-                    style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative' }}
-                >
-                    
-                    {/* Header Row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '60px' }}>
-                        <div>
-                            <div className="star-badge">
-                                <span className="star-icon">★</span> PROGRAM
-                            </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(34px, 5vw, 52px)',
-                                fontWeight: '800',
-                                color: '#121613',
-                                letterSpacing: '-0.035em',
-                                margin: 0
-                            }}>
-                                What we’ve <span className="text-marker-4">planned for you</span>:
-                            </h2>
-                        </div>
-
-                        <a
-                            href="#packages"
-                            style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: '#FFFFFF',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                padding: '10px 22px',
-                                borderRadius: '999px',
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                textDecoration: 'none',
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            <i className="fa-solid fa-download" style={{ fontSize: '12px' }}></i> Full Program
-                        </a>
-                    </div>
-
-                    {/* Interactive Days List */}
-                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
-                        {PROGRAM_DAYS.map((item, idx) => {
-                            const isHovered = activeDayIdx === idx;
-                            const isExpanded = expandedDayIdx === idx;
-                            return (
-                                <motion.div
-                                    key={idx}
-                                    variants={cardReveal}
-                                    onMouseEnter={() => {
-                                        setActiveDayIdx(idx);
-                                        setIsHoveringProgram(true);
-                                    }}
-                                    onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
-                                    style={{
-                                        borderTop: '1px solid rgba(18, 22, 19, 0.1)',
-                                        padding: '28px 0',
-                                        cursor: 'pointer',
-                                        position: 'relative',
-                                        transition: 'background-color 0.2s ease'
-                                    }}
-                                >
-                                    {/* Smooth Active Underline Bar (Zero stutter / Zero jumping) */}
-                                    <div 
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-1.5px',
-                                            left: 0,
-                                            width: isHovered || isExpanded ? '180px' : '0px',
-                                            height: '3px',
-                                            backgroundColor: '#E5A93B',
-                                            borderRadius: '999px',
-                                            boxShadow: isHovered || isExpanded ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
-                                            transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                                            opacity: isHovered || isExpanded ? 1 : 0
-                                        }} 
-                                    />
-
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isHovered ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
-                                                {item.day}
-                                            </span>
-                                            <h3 style={{
-                                                fontFamily: 'var(--font-heading)',
-                                                fontSize: 'clamp(20px, 2.5vw, 30px)',
-                                                fontWeight: '700',
-                                                color: '#121613',
-                                                margin: 0
-                                            }}>
-                                                {item.title}
-                                            </h3>
-                                        </div>
-
-                                        <div style={{
-                                            width: '36px',
-                                            height: '36px',
-                                            borderRadius: '50%',
-                                            background: isExpanded ? '#121613' : '#F1F3EC',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '12px',
-                                            color: isExpanded ? '#E5A93B' : '#121613',
-                                            transform: isExpanded ? 'rotate(180deg)' : 'none',
-                                            transition: 'all 0.3s ease'
-                                        }}>
-                                            <i className="fa-solid fa-chevron-down"></i>
-                                        </div>
-                                    </div>
-
-                                    <AnimatePresence>
-                                        {isExpanded && (
-                                            <motion.div 
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                                style={{ paddingTop: '16px', maxWidth: '640px', overflow: 'hidden' }}
-                                            >
-                                                <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
-                                                    {item.desc}
-                                                </p>
-                                                {/* Mobile In-line Image fallback */}
-                                                <div className="mobile-only" style={{ height: '200px', borderRadius: '18px', overflow: 'hidden', marginTop: '12px' }}>
-                                                    <img src={item.img} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-
-                    {/* Floating Mouse Cursor Follower Preview Card (Smooth Spring Physics & Seamless Image Cross-fade) */}
-                    <AnimatePresence>
-                        {isHoveringProgram && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.85 }}
-                                animate={{ 
-                                    opacity: 1, 
-                                    scale: 1, 
-                                    x: mousePos.x + 24, 
-                                    y: mousePos.y - 110 
-                                }}
-                                exit={{ opacity: 0, scale: 0.85 }}
-                                transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.18 }}
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '185px',
-                                    height: '235px',
-                                    borderRadius: '22px',
-                                    overflow: 'hidden',
-                                    pointerEvents: 'none',
-                                    zIndex: 30,
-                                    boxShadow: '0 25px 55px rgba(0, 0, 0, 0.22)',
-                                    border: '4px solid #FFFFFF'
-                                }}
-                                className="desktop-only"
-                            >
-                                <img
-                                    src={PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.img || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'}
-                                    alt="Activity preview"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
-                                />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                </div>
-            </motion.section>
-
-            {/* ─────────────────────────────────────────────────────────────
-                4. WHY AANANDHAM.GO SECTION (Flagship Value & Trust Pillars)
+                2. WHY AANANDHAM.GO SECTION (Flagship Value & Trust Pillars)
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
                 id="why-aanandham" 
@@ -2036,84 +1717,188 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                5. EXPERIENCE (Ref Screenshot 2 Batch 2 - media_1786655245998.png)
-                   - Pinned sticky left headline while right cards scroll until section end
+                3. PACKAGES PREVIEW (Liquid-Glide Sliding Tabs)
             ───────────────────────────────────────────────────────────── */}
-            <section 
-                id="experience" 
-                style={{ position: 'relative', padding: '120px 24px', background: '#F8F9F5' }}
+            <motion.section 
+                id="packages" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
+                style={{ position: 'relative', padding: '100px 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div className="sticky-split-grid">
-                        
-                        {/* Sticky Pinned Left Header */}
-                        <div className="sticky-pinned-col">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
+                        <div>
                             <div className="star-badge">
-                                <span className="star-icon">★</span> EXPERIENCE
+                                <span className="star-icon">★</span> PACKAGES PREVIEW
                             </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(34px, 4.5vw, 50px)',
-                                fontWeight: '800',
-                                color: '#121613',
-                                letterSpacing: '-0.035em',
-                                lineHeight: 1.15,
-                                marginBottom: '20px'
-                            }}>
-                                Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
+                                <span className="text-marker-2">Handcrafted</span> Wilderness Packages
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.65 }}>
-                                This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
-                            </p>
                         </div>
+                        {/* Smooth Liquid-Glide Animated Filter Pills */}
+                        <LayoutGroup id="packagesFilterTabsGroup">
+                            <div style={{ display: 'flex', gap: '6px', background: '#FFFFFF', padding: '6px', borderRadius: '999px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 4px 18px rgba(0,0,0,0.03)', position: 'relative' }}>
+                                {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
+                                    const isSelected = activeTab === tab;
+                                    const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
+                                    return (
+                                        <button 
+                                            key={tab} 
+                                            onClick={() => setActiveTab(tab)} 
+                                            style={{ 
+                                                position: 'relative',
+                                                border: 'none', 
+                                                background: 'transparent',
+                                                color: isSelected ? '#FFFFFF' : '#59655D', 
+                                                fontWeight: '800', 
+                                                fontSize: '13px', 
+                                                padding: '9px 20px', 
+                                                borderRadius: '999px', 
+                                                cursor: 'pointer',
+                                                zIndex: 2,
+                                                transition: 'color 0.22s ease',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}
+                                        >
+                                            {isSelected && (
+                                                <motion.div
+                                                    layoutId="activeFilterPill"
+                                                    transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.6 }}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        inset: 0,
+                                                        background: '#121613',
+                                                        borderRadius: '999px',
+                                                        zIndex: -1,
+                                                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.18)'
+                                                    }}
+                                                />
+                                            )}
+                                            <span>{label}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </LayoutGroup>
+                    </div>
 
-                        {/* Scrolling Right Cards */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                            {EXPERIENCE_ITEMS.map((exp, idx) => (
-                                <motion.div
-                                    key={idx}
-                                    variants={cardReveal}
-                                    initial="hidden"
-                                    whileInView="visible"
-                                    viewport={{ once: true, margin: "-40px" }}
-                                    className="hover-lift"
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px', position: 'relative' }}>
+                        <AnimatePresence mode="popLayout">
+                            {filteredPackages.map((pkg, idx) => (
+                                <motion.div 
+                                    key={pkg.id} 
+                                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                                    transition={{ duration: 0.26, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                                    className="hover-lift card-img-zoom" 
                                     style={{
+                                        borderRadius: '26px',
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(18, 22, 19, 0.08)',
-                                        borderRadius: '28px',
-                                        padding: '36px 36px',
+                                        overflow: 'hidden',
                                         display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        gap: '24px',
-                                        boxShadow: '0 6px 20px rgba(0,0,0,0.02)',
-                                        minHeight: '160px'
+                                        flexDirection: 'column',
+                                        boxShadow: '0 6px 24px rgba(0,0,0,0.03)',
+                                        transition: 'box-shadow 0.25s ease, transform 0.25s ease'
                                     }}
                                 >
-                                    <div>
-                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '6px' }}>
-                                            {exp.category}
-                                        </span>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
-                                            {exp.title}
-                                        </h3>
-                                        <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
-                                            {exp.desc}
-                                        </p>
+                                    {/* Image Container with Badges */}
+                                    <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                                        <img 
+                                            src={pkg.image} 
+                                            alt={pkg.title} 
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                        />
+                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.6) 0%, transparent 45%)' }} />
+                                        
+                                        {/* Top Badges */}
+                                        <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', letterSpacing: '0.2px' }}>
+                                                {pkg.tag}
+                                            </span>
+                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '5px 12px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
+                                                {pkg.altitude}
+                                            </span>
+                                        </div>
+
+                                        {/* Rating Pill */}
+                                        <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '5px 10px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                                            ★ {pkg.rating} <span style={{ color: '#59655D', fontWeight: '600', fontSize: '11px' }}>({pkg.reviewsCount})</span>
+                                        </div>
+
+                                        {/* Bottom Overlay Location & Duration */}
+                                        <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '12px', fontWeight: '700' }}>
+                                            <span>📍 {pkg.location}</span>
+                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
+                                        </div>
                                     </div>
-                                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', flexShrink: 0 }}>
-                                        {exp.icon}
+
+                                    {/* Card Content */}
+                                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '8px', lineHeight: 1.25 }}>
+                                            {pkg.title}
+                                        </h3>
+                                        
+                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, marginBottom: '16px' }}>
+                                            {pkg.description}
+                                        </p>
+                                        
+                                        {/* Key Highlights Chips */}
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+                                            {pkg.highlights.slice(0, 3).map((h, i) => (
+                                                <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '4px 10px', borderRadius: '999px', fontWeight: '600' }}>
+                                                    ✓ {h}
+                                                </span>
+                                            ))}
+                                            {pkg.highlights.length > 3 && (
+                                                <span style={{ fontSize: '11px', background: '#F1F3EC', color: '#121613', padding: '4px 8px', borderRadius: '999px', fontWeight: '700' }}>
+                                                    +{pkg.highlights.length - 3} more
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Bottom Price & Action Row */}
+                                        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>
+                                                        ₹{pkg.price.toLocaleString()}
+                                                    </span>
+                                                    {pkg.originalPrice && (
+                                                        <span style={{ fontSize: '13px', color: '#8E9B92', textDecoration: 'line-through' }}>
+                                                            ₹{pkg.originalPrice.toLocaleString()}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <span style={{ fontSize: '11px', color: '#59655D', display: 'block', marginTop: '1px' }}>
+                                                    per person all-inclusive
+                                                </span>
+                                            </div>
+                                            
+                                            <button 
+                                                onClick={() => handleOpenBooking(pkg)} 
+                                                className="btn-lime" 
+                                                style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                            >
+                                                <span>Book Spot</span>
+                                                <span>→</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
-
+                        </AnimatePresence>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                6. STAY / GLAMP SECTION (Ref Screenshot 4 Batch 2 - media_1786655246091.png)
+                4. STAY / GLAMP SECTION (Ref Screenshot 4 Batch 2 - media_1786655246091.png)
                    - Interactive hover-active room selector + photo cross-fade
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
@@ -2284,22 +2069,217 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                6.5. KERALA WILDERNESS & SCENIC STAYS GALLERY
+                5. PROGRAM SECTION (Exact Match to media_1786657185483.png)
+                   "What we've planned for you:" + Interactive Small Mouse-Follow Floating Card
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
-                id="kerala-wilderness"
+                id="program" 
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '100px 24px', background: '#F1F3EC' }}
+                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+            >
+                <div 
+                    ref={programContainerRef}
+                    onMouseMove={handleProgramMouseMove}
+                    onMouseLeave={() => setIsHoveringProgram(false)}
+                    style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative' }}
+                >
+                    
+                    {/* Header Row */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '60px' }}>
+                        <div>
+                            <div className="star-badge">
+                                <span className="star-icon">★</span> PROGRAM
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(34px, 5vw, 52px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.035em',
+                                margin: 0
+                            }}>
+                                What we’ve <span className="text-marker-4">planned for you</span>:
+                            </h2>
+                        </div>
+
+                        <a
+                            href="#packages"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.12)',
+                                color: '#121613',
+                                padding: '10px 22px',
+                                borderRadius: '999px',
+                                fontSize: '13px',
+                                fontWeight: '700',
+                                textDecoration: 'none',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                                transition: 'all 0.2s'
+                            }}
+                        >
+                            <i className="fa-solid fa-download" style={{ fontSize: '12px' }}></i> Full Program
+                        </a>
+                    </div>
+
+                    {/* Interactive Days List */}
+                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                        {PROGRAM_DAYS.map((item, idx) => {
+                            const isHovered = activeDayIdx === idx;
+                            const isExpanded = expandedDayIdx === idx;
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    variants={cardReveal}
+                                    onMouseEnter={() => {
+                                        setActiveDayIdx(idx);
+                                        setIsHoveringProgram(true);
+                                    }}
+                                    onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
+                                    style={{
+                                        borderTop: '1px solid rgba(18, 22, 19, 0.1)',
+                                        padding: '28px 0',
+                                        cursor: 'pointer',
+                                        position: 'relative',
+                                        transition: 'background-color 0.2s ease'
+                                    }}
+                                >
+                                    {/* Smooth Active Underline Bar (Zero stutter / Zero jumping) */}
+                                    <div 
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-1.5px',
+                                            left: 0,
+                                            width: isHovered || isExpanded ? '180px' : '0px',
+                                            height: '3px',
+                                            backgroundColor: '#E5A93B',
+                                            borderRadius: '999px',
+                                            boxShadow: isHovered || isExpanded ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
+                                            transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                                            opacity: isHovered || isExpanded ? 1 : 0
+                                        }} 
+                                    />
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div>
+                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isHovered ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
+                                                {item.day}
+                                            </span>
+                                            <h3 style={{
+                                                fontFamily: 'var(--font-heading)',
+                                                fontSize: 'clamp(20px, 2.5vw, 30px)',
+                                                fontWeight: '700',
+                                                color: '#121613',
+                                                margin: 0
+                                            }}>
+                                                {item.title}
+                                            </h3>
+                                        </div>
+
+                                        <div style={{
+                                            width: '36px',
+                                            height: '36px',
+                                            borderRadius: '50%',
+                                            background: isExpanded ? '#121613' : '#F1F3EC',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '12px',
+                                            color: isExpanded ? '#E5A93B' : '#121613',
+                                            transform: isExpanded ? 'rotate(180deg)' : 'none',
+                                            transition: 'all 0.3s ease'
+                                        }}>
+                                            <i className="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+
+                                    <AnimatePresence>
+                                        {isExpanded && (
+                                            <motion.div 
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                style={{ paddingTop: '16px', maxWidth: '640px', overflow: 'hidden' }}
+                                            >
+                                                <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
+                                                    {item.desc}
+                                                </p>
+                                                {/* Mobile In-line Image fallback */}
+                                                <div className="mobile-only" style={{ height: '200px', borderRadius: '18px', overflow: 'hidden', marginTop: '12px' }}>
+                                                    <img src={item.img} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Floating Mouse Cursor Follower Preview Card (Smooth Spring Physics & Seamless Image Cross-fade) */}
+                    <AnimatePresence>
+                        {isHoveringProgram && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.85 }}
+                                animate={{ 
+                                    opacity: 1, 
+                                    scale: 1, 
+                                    x: mousePos.x + 24, 
+                                    y: mousePos.y - 110 
+                                }}
+                                exit={{ opacity: 0, scale: 0.85 }}
+                                transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.18 }}
+                                style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    width: '185px',
+                                    height: '235px',
+                                    borderRadius: '22px',
+                                    overflow: 'hidden',
+                                    pointerEvents: 'none',
+                                    zIndex: 30,
+                                    boxShadow: '0 25px 55px rgba(0, 0, 0, 0.22)',
+                                    border: '4px solid #FFFFFF'
+                                }}
+                                className="desktop-only"
+                            >
+                                <img
+                                    src={PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.img || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'}
+                                    alt="Activity preview"
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                </div>
+            </motion.section>
+
+            {/* ─────────────────────────────────────────────────────────────
+                6. SKILL LEVELS (Ref Screenshot 1 Batch 2 - media_1786655245980.png)
+                   - Dynamic onMouseEnter & onClick interactive card activation
+            ───────────────────────────────────────────────────────────── */}
+            <motion.section 
+                id="levels" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
+                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                     
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '48px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
                         <div>
                             <div className="star-badge">
-                                <span className="star-icon">★</span> KERALA WILDERNESS & STAYS
+                                <span className="star-icon">★</span> LEVELS
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -2307,321 +2287,182 @@ export default function HomePage() {
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
-                                lineHeight: 1.12
+                                margin: 0
                             }}>
-                                Scenic mountain peaks & verified camp sanctuaries
+                                Catch the wave regardless of <br />your <span className="text-marker-3">trekking skills</span>
                             </h2>
                         </div>
-                        <Link
-                            href="/about"
-                            className="action-arrow-btn"
-                        >
-                            <span>Explore Nearby Places</span>
-                            <div className="btn-arrow-circle">↗</div>
-                        </Link>
+
+                        <a href="#packages" className="action-arrow-btn">
+                            <span>See Full Program</span>
+                            <div className="btn-arrow-circle">
+                                ↗
+                            </div>
+                        </a>
                     </div>
 
-                    {/* Gallery Grid */}
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                        gap: '28px'
-                    }}>
-                        {KERALA_WILDERNESS_GALLERY.map((spot, idx) => (
-                            <motion.div
-                                key={spot.id}
-                                variants={fadeInUp}
-                                whileHover={{ y: -6 }}
-                                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                style={{
-                                    background: '#FFFFFF',
-                                    borderRadius: '28px',
-                                    overflow: 'hidden',
-                                    border: '1px solid rgba(18, 22, 19, 0.08)',
-                                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.03)',
-                                    display: 'flex',
-                                    flexDirection: 'column'
-                                }}
-                            >
-                                <div style={{ position: 'relative', height: '230px', overflow: 'hidden' }}>
-                                    <motion.img
-                                        src={spot.img}
-                                        alt={spot.name}
-                                        whileHover={{ scale: 1.06 }}
-                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '16px',
-                                        left: '16px',
-                                        background: 'rgba(14, 24, 17, 0.85)',
-                                        backdropFilter: 'blur(8px)',
-                                        color: '#E5A93B',
-                                        fontSize: '11px',
-                                        fontWeight: '800',
-                                        padding: '5px 12px',
-                                        borderRadius: '999px',
-                                        letterSpacing: '0.5px'
-                                    }}>
-                                        {spot.badge}
-                                    </div>
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: '16px',
-                                        right: '16px',
-                                        background: 'rgba(255, 255, 255, 0.95)',
-                                        backdropFilter: 'blur(8px)',
-                                        color: '#121613',
-                                        fontSize: '11.5px',
-                                        fontWeight: '800',
-                                        padding: '4px 10px',
-                                        borderRadius: '999px',
-                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                                    }}>
-                                        📍 {spot.altitude}
-                                    </div>
-                                </div>
-
-                                <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                                    <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                            <span style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '700' }}>
-                                                {spot.location}
-                                            </span>
-                                            <span style={{ color: '#C4CCC6' }}>•</span>
-                                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>
-                                                {spot.category}
-                                            </span>
-                                        </div>
-                                        <h3 style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: '20px',
+                    <motion.div 
+                        variants={staggerContainer}
+                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}
+                    >
+                        {SKILL_LEVELS.map((level, idx) => {
+                            const isActive = activeLevelIdx === idx;
+                            return (
+                                <motion.div
+                                    key={level.id}
+                                    variants={cardReveal}
+                                    onMouseEnter={() => setActiveLevelIdx(idx)}
+                                    onClick={() => setActiveLevelIdx(idx)}
+                                    className="hover-lift"
+                                    layout
+                                    style={{
+                                        background: '#FFFFFF',
+                                        border: isActive ? '1.5px solid rgba(18, 22, 19, 0.18)' : '1px solid rgba(18, 22, 19, 0.06)',
+                                        borderRadius: '32px',
+                                        padding: '28px 26px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        minHeight: '390px',
+                                        cursor: 'pointer',
+                                        boxShadow: isActive ? '0 14px 40px rgba(0, 0, 0, 0.06)' : '0 4px 16px rgba(0, 0, 0, 0.02)',
+                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    }}
+                                >
+                                    {/* Top Row: Avatar + Level Badge */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                                        <img
+                                            src={level.avatar}
+                                            alt={level.title}
+                                            style={{
+                                                width: '48px',
+                                                height: '48px',
+                                                borderRadius: '50%',
+                                                objectFit: 'cover',
+                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+                                            }}
+                                        />
+                                        <span style={{
+                                            background: isActive ? '#E5A93B' : '#FFFFFF',
+                                            border: isActive ? 'none' : '1px solid rgba(18, 22, 19, 0.12)',
+                                            color: '#121613',
+                                            fontSize: '11.5px',
                                             fontWeight: '800',
-                                            color: '#121613',
-                                            letterSpacing: '-0.02em',
-                                            marginBottom: '16px'
+                                            padding: '5px 16px',
+                                            borderRadius: '999px',
+                                            textTransform: 'lowercase',
+                                            transition: 'all 0.25s ease'
                                         }}>
-                                            {spot.name}
-                                        </h3>
+                                            {level.badge}
+                                        </span>
                                     </div>
 
-                                    <button
-                                        onClick={() => handleOpenBooking({ title: spot.name, price: 2999 })}
-                                        style={{
-                                            width: '100%',
-                                            padding: '11px',
-                                            borderRadius: '999px',
-                                            background: '#F8F9F5',
-                                            border: '1px solid rgba(18, 22, 19, 0.1)',
-                                            color: '#121613',
-                                            fontSize: '13.5px',
-                                            fontWeight: '700',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '8px',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                        onMouseOver={(e) => {
-                                            e.currentTarget.style.background = '#121613';
-                                            e.currentTarget.style.color = '#E5A93B';
-                                        }}
-                                        onMouseOut={(e) => {
-                                            e.currentTarget.style.background = '#F8F9F5';
-                                            e.currentTarget.style.color = '#121613';
-                                        }}
-                                    >
-                                        <span>Check Camp Dates</span>
-                                        <span>↗</span>
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-
+                                    {/* Bottom Row: Content */}
+                                    {isActive ? (
+                                        <motion.div 
+                                            initial={{ opacity: 0, y: 8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.3 }}
+                                            style={{ marginTop: 'auto' }}
+                                        >
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', margin: 0 }}>
+                                                {level.title}
+                                            </h3>
+                                            <div style={{ width: '100%', height: '1px', background: 'rgba(18, 22, 19, 0.08)', margin: '14px 0 14px' }} />
+                                            <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+                                                {level.desc}
+                                            </p>
+                                        </motion.div>
+                                    ) : (
+                                        <div style={{ marginTop: 'auto' }}>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '700', color: '#121613', margin: 0 }}>
+                                                {level.title}
+                                            </h3>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
                 </div>
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                7. PACKAGES PREVIEW
+                7. EXPERIENCE (Ref Screenshot 2 Batch 2 - media_1786655245998.png)
+                   - Pinned sticky left headline while right cards scroll until section end
             ───────────────────────────────────────────────────────────── */}
-            <motion.section 
-                id="packages" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={sectionReveal}
-                style={{ position: 'relative', padding: '100px 24px', background: '#F8F9F5' }}
+            <section 
+                id="experience" 
+                style={{ position: 'relative', padding: '120px 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
-                        <div>
+                    <div className="sticky-split-grid">
+                        
+                        {/* Sticky Pinned Left Header */}
+                        <div className="sticky-pinned-col">
                             <div className="star-badge">
-                                <span className="star-icon">★</span> PACKAGES PREVIEW
+                                <span className="star-icon">★</span> EXPERIENCE
                             </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
-                                <span className="text-marker-2">Handcrafted</span> Wilderness Packages
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(34px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.035em',
+                                lineHeight: 1.15,
+                                marginBottom: '20px'
+                            }}>
+                                Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
                             </h2>
+                            <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.65 }}>
+                                This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
+                            </p>
                         </div>
-                        {/* Smooth Animated Filter Pills (Sliding Spring Physics) */}
-                        <div style={{ display: 'flex', gap: '6px', background: '#FFFFFF', padding: '6px', borderRadius: '999px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 4px 18px rgba(0,0,0,0.03)', position: 'relative' }}>
-                            {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
-                                const isSelected = activeTab === tab;
-                                const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
-                                return (
-                                    <button 
-                                        key={tab} 
-                                        onClick={() => setActiveTab(tab)} 
-                                        style={{ 
-                                            position: 'relative',
-                                            border: 'none', 
-                                            background: 'transparent',
-                                            color: isSelected ? '#FFFFFF' : '#59655D', 
-                                            fontWeight: '800', 
-                                            fontSize: '13px', 
-                                            padding: '9px 20px', 
-                                            borderRadius: '999px', 
-                                            cursor: 'pointer',
-                                            zIndex: 2,
-                                            transition: 'color 0.25s ease',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >
-                                        {isSelected && (
-                                            <motion.div
-                                                layoutId="activeFilterPill"
-                                                transition={{ type: 'spring', damping: 26, stiffness: 350 }}
-                                                style={{
-                                                    position: 'absolute',
-                                                    inset: 0,
-                                                    background: '#121613',
-                                                    borderRadius: '999px',
-                                                    zIndex: -1,
-                                                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.18)'
-                                                }}
-                                            />
-                                        )}
-                                        <span>{label}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px', position: 'relative' }}>
-                        <AnimatePresence mode="popLayout">
-                            {filteredPackages.map((pkg, idx) => (
-                                <motion.div 
-                                    key={pkg.id} 
-                                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                                    transition={{ duration: 0.26, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                                    className="hover-lift card-img-zoom" 
+                        {/* Scrolling Right Cards */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                            {EXPERIENCE_ITEMS.map((exp, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    variants={cardReveal}
+                                    initial="hidden"
+                                    whileInView="visible"
+                                    viewport={{ once: true, margin: "-40px" }}
+                                    className="hover-lift"
                                     style={{
-                                        borderRadius: '26px',
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(18, 22, 19, 0.08)',
-                                        overflow: 'hidden',
+                                        borderRadius: '28px',
+                                        padding: '36px 36px',
                                         display: 'flex',
-                                        flexDirection: 'column',
-                                        boxShadow: '0 6px 24px rgba(0,0,0,0.03)',
-                                        transition: 'box-shadow 0.25s ease, transform 0.25s ease'
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        gap: '24px',
+                                        boxShadow: '0 6px 20px rgba(0,0,0,0.02)',
+                                        minHeight: '160px'
                                     }}
                                 >
-                                    {/* Image Container with Badges */}
-                                    <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                                        <img 
-                                            src={pkg.image} 
-                                            alt={pkg.title} 
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                        />
-                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.6) 0%, transparent 45%)' }} />
-                                        
-                                        {/* Top Badges */}
-                                        <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', letterSpacing: '0.2px' }}>
-                                                {pkg.tag}
-                                            </span>
-                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '5px 12px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
-                                                {pkg.altitude}
-                                            </span>
-                                        </div>
-
-                                        {/* Rating Pill */}
-                                        <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '5px 10px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                                            ★ {pkg.rating} <span style={{ color: '#59655D', fontWeight: '600', fontSize: '11px' }}>({pkg.reviewsCount})</span>
-                                        </div>
-
-                                        {/* Bottom Overlay Location & Duration */}
-                                        <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '12px', fontWeight: '700' }}>
-                                            <span>📍 {pkg.location}</span>
-                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Card Content */}
-                                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '8px', lineHeight: 1.25 }}>
-                                            {pkg.title}
+                                    <div>
+                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '6px' }}>
+                                            {exp.category}
+                                        </span>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
+                                            {exp.title}
                                         </h3>
-                                        
-                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, marginBottom: '16px' }}>
-                                            {pkg.description}
+                                        <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+                                            {exp.desc}
                                         </p>
-                                        
-                                        {/* Key Highlights Chips */}
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-                                            {pkg.highlights.slice(0, 3).map((h, i) => (
-                                                <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '4px 10px', borderRadius: '999px', fontWeight: '600' }}>
-                                                    ✓ {h}
-                                                </span>
-                                            ))}
-                                            {pkg.highlights.length > 3 && (
-                                                <span style={{ fontSize: '11px', background: '#F1F3EC', color: '#121613', padding: '4px 8px', borderRadius: '999px', fontWeight: '700' }}>
-                                                    +{pkg.highlights.length - 3} more
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Bottom Price & Action Row */}
-                                        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>
-                                                        ₹{pkg.price.toLocaleString()}
-                                                    </span>
-                                                    {pkg.originalPrice && (
-                                                        <span style={{ fontSize: '13px', color: '#8E9B92', textDecoration: 'line-through' }}>
-                                                            ₹{pkg.originalPrice.toLocaleString()}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <span style={{ fontSize: '11px', color: '#59655D', display: 'block', marginTop: '1px' }}>
-                                                    per person all-inclusive
-                                                </span>
-                                            </div>
-                                            
-                                            <button 
-                                                onClick={() => handleOpenBooking(pkg)} 
-                                                className="btn-lime" 
-                                                style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                            >
-                                                <span>Book Spot</span>
-                                                <span>→</span>
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', flexShrink: 0 }}>
+                                        {exp.icon}
                                     </div>
                                 </motion.div>
                             ))}
-                        </AnimatePresence>
+                        </div>
+
                     </div>
                 </div>
-            </motion.section>
+            </section>
 
             {/* ─────────────────────────────────────────────────────────────
                 8. CUSTOM ARRANGEMENTS & EVENTS
