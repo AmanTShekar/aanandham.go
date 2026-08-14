@@ -577,7 +577,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN ON HOVER (Just text!)
+   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN ON HOVER (Solid Light, Slanted Pen Edges)
 ───────────────────────────────────────────────────────────── */
 .text-hover-marker {
   position: relative;
@@ -597,53 +597,37 @@ button:focus-visible, a:focus-visible {
 .text-hover-marker .marker-text::before {
   content: "";
   position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 12%;
+  left: -6px;
+  right: -6px;
+  top: 16%;
   bottom: 8%;
-  background: linear-gradient(
-    95deg,
-    rgba(229, 169, 59, 0.5) 0%,
-    rgba(255, 238, 120, 0.6) 50%,
-    rgba(229, 169, 59, 0.52) 100%
-  );
-  /* Authentic square chisel marker pen start & stop stroke edges */
-  border-left: 3.5px solid #D48A22;
-  border-right: 3.5px solid #D48A22;
-  border-radius: 1px;
-  transform: scaleX(0) skewX(-4deg);
+  background-color: rgba(229, 169, 59, 0.35); /* Solid light, clear readable text */
+  /* Slanted stroke + skewed chisel pen cut edges */
+  transform: scaleX(0) skewX(-14deg) rotate(-0.8deg);
   transform-origin: left center;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 1px;
   z-index: -1;
   pointer-events: none;
-  box-shadow: 0 1px 4px rgba(212, 138, 34, 0.2);
 }
 
 .text-hover-marker:hover .marker-text::before {
-  transform: scaleX(1) skewX(-4deg);
+  transform: scaleX(1) skewX(-14deg) rotate(-0.8deg);
 }
 
 /* For dark backgrounds (Navbar & Footer) */
 .text-hover-marker-dark .marker-text::before {
-  background: linear-gradient(
-    95deg,
-    rgba(229, 169, 59, 0.42) 0%,
-    rgba(255, 238, 120, 0.52) 50%,
-    rgba(229, 169, 59, 0.45) 100%
-  );
-  border-left: 3.5px solid #E5A93B;
-  border-right: 3.5px solid #E5A93B;
-  box-shadow: 0 0 12px rgba(229, 169, 59, 0.35);
+  background-color: rgba(229, 169, 59, 0.42);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Square Stroke Edges)
+   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Solid Light, Slanted)
 ───────────────────────────────────────────────────────────── */
 .text-marker-chisel,
 .text-highlight-gold {
   position: relative;
   display: inline-block;
-  color: #121613;
+  color: inherit;
   z-index: 1;
   padding: 0 4px;
 }
@@ -652,24 +636,15 @@ button:focus-visible, a:focus-visible {
 .text-highlight-gold::before {
   content: "";
   position: absolute;
-  left: -3px;
-  right: -3px;
-  top: 8%;
-  bottom: 6%;
-  background: linear-gradient(
-    95deg,
-    rgba(229, 169, 59, 0.45) 0%,
-    rgba(255, 238, 120, 0.55) 50%,
-    rgba(229, 169, 59, 0.48) 100%
-  );
-  /* Authentic square chisel marker pen start & stop stroke edges */
-  border-left: 3.5px solid rgba(212, 138, 34, 0.88);
-  border-right: 3.5px solid rgba(212, 138, 34, 0.88);
+  left: -5px;
+  right: -5px;
+  top: 16%;
+  bottom: 8%;
+  background-color: rgba(229, 169, 59, 0.35); /* Solid light color */
+  transform: skewX(-14deg) rotate(-0.8deg); /* Slanted stroke with skewed pen edges */
   border-radius: 1px;
-  transform: skewX(-3deg) rotate(-0.3deg);
   z-index: -1;
   pointer-events: none;
-  box-shadow: 0 1px 3px rgba(212, 138, 34, 0.15);
 }
 
 .text-highlight-subtle {
@@ -684,15 +659,13 @@ button:focus-visible, a:focus-visible {
 .text-highlight-subtle::before {
   content: "";
   position: absolute;
-  left: -2px;
-  right: -2px;
-  top: 14%;
+  left: -3px;
+  right: -3px;
+  top: 16%;
   bottom: 10%;
-  background: rgba(229, 169, 59, 0.22);
-  border-left: 2.5px solid rgba(212, 138, 34, 0.75);
-  border-right: 2.5px solid rgba(212, 138, 34, 0.75);
+  background-color: rgba(229, 169, 59, 0.22);
+  transform: skewX(-12deg) rotate(-0.6deg);
   border-radius: 1px;
-  transform: skewX(-2.5deg);
   z-index: -1;
   pointer-events: none;
 }
@@ -709,18 +682,15 @@ button:focus-visible, a:focus-visible {
 .text-marker-dark::before {
   content: "";
   position: absolute;
-  left: -3px;
-  right: -3px;
-  top: 10%;
+  left: -5px;
+  right: -5px;
+  top: 16%;
   bottom: 8%;
-  background: rgba(229, 169, 59, 0.32);
-  border-left: 3.5px solid #E5A93B;
-  border-right: 3.5px solid #E5A93B;
+  background-color: rgba(229, 169, 59, 0.38); /* Solid light gold */
+  transform: skewX(-14deg) rotate(-0.8deg); /* Slanted stroke with skewed pen edges */
   border-radius: 1px;
-  transform: skewX(-3deg) rotate(-0.3deg);
   z-index: -1;
   pointer-events: none;
-  box-shadow: 0 0 14px rgba(229, 169, 59, 0.28);
 }
 
 /* ─────────────────────────────────────────────────────────────
