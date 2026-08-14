@@ -3,45 +3,53 @@ html {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CUSTOM LUXURY SCROLLBAR (Sunrise Amber Gold & Deep Obsidian)
+   CUSTOM REAL BROWSER SCROLLBAR (Sunrise Amber Gold & Deep Obsidian)
 ───────────────────────────────────────────────────────────── */
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #E5A93B rgba(11, 21, 14, 0.08);
-}
-
-/* WebKit & Chromium Browsers (Chrome, Edge, Safari, Brave) */
+/* WebKit & Chromium Browsers (Chrome, Edge, Safari, Brave, Opera) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
 ::-webkit-scrollbar {
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
 }
 
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
 ::-webkit-scrollbar-track {
-  background: rgba(11, 21, 14, 0.06);
-  border-radius: 999px;
+  background: #0B150E;
 }
 
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #E5A93B 0%, #D5ED55 100%);
   border-radius: 999px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  transition: all 0.25s ease;
+  border: 2px solid #0B150E;
 }
 
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #F5BD55 0%, #E2F87A 100%);
-  border-radius: 999px;
-  box-shadow: 0 0 12px rgba(229, 169, 59, 0.6);
+  background: linear-gradient(180deg, #F5BD55 0%, #E8FA88 100%);
+  box-shadow: 0 0 12px rgba(229, 169, 59, 0.8);
 }
 
+html::-webkit-scrollbar-thumb:active,
+body::-webkit-scrollbar-thumb:active,
 ::-webkit-scrollbar-thumb:active {
   background: #C86D14;
 }
 
 ::-webkit-scrollbar-corner {
-  background: transparent;
+  background: #0B150E;
+}
+
+/* Firefox standard scrollbar */
+@supports not selector(::-webkit-scrollbar) {
+  html, body {
+    scrollbar-width: thin;
+    scrollbar-color: #E5A93B #0B150E;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
