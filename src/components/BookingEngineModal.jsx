@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import CustomThemeCalendar from './CustomThemeCalendar';
 
 const PACKAGES_LIST = [
     {
@@ -249,22 +250,11 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             {/* Step 1: Dates & Guests */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px', marginBottom: '28px' }}>
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', marginBottom: '8px' }}>
-                                        2. TRAVEL DATE
-                                    </label>
-                                    <input
-                                        type="date"
-                                        value={travelDate}
-                                        onChange={(e) => setTravelDate(e.target.value)}
-                                        style={{
-                                            width: '100%',
-                                            padding: '13px 18px',
-                                            borderRadius: '16px',
-                                            border: '1px solid rgba(18, 22, 19, 0.15)',
-                                            fontSize: '14px',
-                                            outline: 'none',
-                                            background: '#F8F9F5'
-                                        }}
+                                    <CustomThemeCalendar
+                                        selectedDate={travelDate}
+                                        onDateSelect={(date) => setTravelDate(date)}
+                                        theme="light"
+                                        label="2. TRAVEL DATE"
                                     />
                                 </div>
                                 <div>

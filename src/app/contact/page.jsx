@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../../components/Footer';
+import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 
 export default function ContactPage() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -698,25 +699,11 @@ export default function ContactPage() {
 
                                 {/* Travel Dates */}
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                                        Preferred Dates / Month
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. Next weekend / 18-20 Oct / Flexible"
-                                        value={formData.travelDates}
-                                        onChange={(e) => setFormData({ ...formData, travelDates: e.target.value })}
-                                        style={{
-                                            width: '100%',
-                                            padding: '12px 16px',
-                                            borderRadius: '14px',
-                                            border: '1.5px solid rgba(18, 22, 19, 0.1)',
-                                            background: '#F8F9F5',
-                                            fontSize: '14px',
-                                            color: '#121613',
-                                            outline: 'none',
-                                            boxSizing: 'border-box'
-                                        }}
+                                    <CustomThemeCalendar
+                                        selectedDate={formData.travelDates}
+                                        onDateSelect={(date) => setFormData({ ...formData, travelDates: date })}
+                                        theme="light"
+                                        label="Preferred Expedition Date"
                                     />
                                 </div>
 
