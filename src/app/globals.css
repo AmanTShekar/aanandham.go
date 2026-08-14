@@ -103,31 +103,23 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ROUGHED-UP PAPER SCRAPS WITH SCOTCH TAPE (Tactile Field System)
+   ROUGHED-UP PAPER SCRAPS WITH SCOTCH TAPE (2x2 Balanced Spacious Grid)
 ───────────────────────────────────────────────────────────── */
 .scotch-scraps-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 26px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(32px, 3.5vw, 48px);
   justify-content: center;
   align-items: stretch;
-  max-width: 1240px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 
-@media (max-width: 1160px) {
-  .scotch-scraps-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-    max-width: 780px;
-  }
-}
-
-@media (max-width: 640px) {
+@media (max-width: 860px) {
   .scotch-scraps-grid {
     grid-template-columns: 1fr;
     gap: 40px;
-    max-width: 440px;
+    max-width: 580px;
   }
 }
 
@@ -135,12 +127,13 @@ body::-webkit-scrollbar-thumb:active,
   position: relative;
   background: #FAF8F2;
   color: #121613;
-  padding: 34px 24px 26px 24px;
+  padding: 40px 34px 30px 34px;
   box-shadow: 
-    0 12px 28px -4px rgba(0, 0, 0, 0.08),
-    0 4px 10px rgba(0, 0, 0, 0.04),
+    0 14px 32px -4px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.04),
     inset 0 0 40px rgba(229, 169, 59, 0.03);
   border: 1px solid rgba(18, 22, 19, 0.12);
+
   /* Organic Roughed Torn Edge Effect */
   clip-path: polygon(
     0% 4px, 2% 0px, 98% 2px, 100% 6px,

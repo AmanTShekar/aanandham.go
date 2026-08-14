@@ -2539,41 +2539,41 @@ export default function HomePage() {
                                 </div>
 
                                 {/* Icon & Title */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
                                     <div style={{
-                                        width: '40px',
-                                        height: '40px',
-                                        borderRadius: '12px',
+                                        width: '46px',
+                                        height: '46px',
+                                        borderRadius: '14px',
                                         background: 'rgba(18, 22, 19, 0.07)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         color: '#121613',
-                                        fontSize: '17px',
+                                        fontSize: '19px',
                                         flexShrink: 0
                                     }}>
                                         <i className={ev.iconClass}></i>
                                     </div>
                                     <div>
-                                        <span style={{ fontSize: '10px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
+                                        <span style={{ fontSize: '11px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '2px' }}>
                                             {ev.badge}
                                         </span>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.25 }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.2 }}>
                                             {ev.title}
                                         </h3>
                                     </div>
                                 </div>
 
                                 {/* Description */}
-                                <p style={{ fontSize: '12.5px', color: '#4E5A52', lineHeight: 1.6, margin: '0 0 12px' }}>
+                                <p style={{ fontSize: '14px', color: '#4E5A52', lineHeight: 1.65, margin: '0 0 16px' }}>
                                     {ev.desc}
                                 </p>
 
                                 {/* Features Checklist */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '18px' }}>
                                     {ev.features.map((feat, fIdx) => (
-                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#2B372E', fontWeight: '600' }}>
-                                            <span style={{ color: '#166534', fontWeight: '800' }}>✓</span>
+                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#2B372E', fontWeight: '600' }}>
+                                            <span style={{ color: '#166534', fontWeight: '800', fontSize: '13px' }}>✓</span>
                                             <span>{feat}</span>
                                         </div>
                                     ))}
@@ -2582,11 +2582,11 @@ export default function HomePage() {
                                 {/* Bottom Capacity Bar & Action */}
                                 <div style={{
                                     marginTop: 'auto',
-                                    paddingTop: '12px',
+                                    paddingTop: '14px',
                                     borderTop: '1px dashed rgba(18, 22, 19, 0.18)',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '8px'
+                                    gap: '10px'
                                 }}>
                                     <div style={{
                                         display: 'flex',
@@ -2594,18 +2594,21 @@ export default function HomePage() {
                                         alignItems: 'center'
                                     }}>
                                         <span style={{
-                                            fontSize: '10.5px',
+                                            fontSize: '11.5px',
                                             fontWeight: '800',
-                                            color: ev.stampColor
+                                            color: ev.stampColor,
+                                            background: 'rgba(0,0,0,0.04)',
+                                            padding: '4px 10px',
+                                            borderRadius: '6px'
                                         }}>
                                             {ev.statPill}
                                         </span>
                                         <span style={{
-                                            fontSize: '11px',
+                                            fontSize: '12px',
                                             fontWeight: '800',
                                             color: '#121613',
                                             background: '#E5A93B',
-                                            padding: '4px 10px',
+                                            padding: '5px 14px',
                                             borderRadius: '6px',
                                             boxShadow: '0 2px 8px rgba(229, 169, 59, 0.4)'
                                         }}>
@@ -2616,14 +2619,15 @@ export default function HomePage() {
                                     {/* Bottom Marginal Handwritten Note */}
                                     <div style={{
                                         fontStyle: 'italic',
-                                        fontSize: '11px',
-                                        lineHeight: '1.4',
+                                        fontSize: '12px',
+                                        lineHeight: '1.45',
                                         color: '#556358',
                                         display: 'flex',
                                         alignItems: 'flex-start',
-                                        gap: '5px'
+                                        gap: '6px',
+                                        paddingTop: '2px'
                                     }}>
-                                        <span style={{ fontSize: '12px' }}>✍</span>
+                                        <span style={{ fontSize: '13px' }}>✍</span>
                                         <span>{ev.marginalNote}</span>
                                     </div>
                                 </div>
