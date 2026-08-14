@@ -742,23 +742,33 @@ const drawerWaveVariants = {
     hidden: { 
         clipPath: 'circle(0% at calc(100% - 44px) 44px)',
         WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
-        opacity: 0
+        opacity: 0,
+        scale: 0.98,
+        filter: 'blur(10px)',
+        transition: { 
+            duration: 0.45, 
+            ease: [0.32, 0, 0.67, 0] 
+        }
     },
     visible: { 
-        clipPath: 'circle(150% at calc(100% - 44px) 44px)',
-        WebkitClipPath: 'circle(150% at calc(100% - 44px) 44px)',
+        clipPath: 'circle(160% at calc(100% - 44px) 44px)',
+        WebkitClipPath: 'circle(160% at calc(100% - 44px) 44px)',
         opacity: 1,
+        scale: 1,
+        filter: 'blur(0px)',
         transition: { 
-            duration: 0.55, 
-            ease: [0.16, 1, 0.3, 1] 
+            duration: 0.62, 
+            ease: [0.22, 1, 0.36, 1] 
         }
     },
     exit: { 
         clipPath: 'circle(0% at calc(100% - 44px) 44px)',
         WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
         opacity: 0,
+        scale: 0.98,
+        filter: 'blur(8px)',
         transition: { 
-            duration: 0.42, 
+            duration: 0.48, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -769,19 +779,19 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.065,
-            delayChildren: 0.16
+            staggerChildren: 0.06,
+            delayChildren: 0.18
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, y: 22, scale: 0.96 },
+    hidden: { opacity: 0, y: 26, scale: 0.95 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
     }
 };
 

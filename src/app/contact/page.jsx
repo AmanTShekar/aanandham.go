@@ -169,10 +169,10 @@ export default function ContactPage() {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0 }}
-                        animate={{ clipPath: 'circle(150% at calc(100% - 44px) 44px)', opacity: 1 }}
-                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0 }}
-                        transition={{ duration: 0.52, ease: [0.16, 1, 0.3, 1] }}
+                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0, filter: 'blur(10px)' }}
+                        animate={{ clipPath: 'circle(160% at calc(100% - 44px) 44px)', opacity: 1, filter: 'blur(0px)' }}
+                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0, filter: 'blur(8px)' }}
+                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                         style={{
                             position: 'fixed',
                             inset: 0,

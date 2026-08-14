@@ -113,6 +113,30 @@ html {
   color-scheme: light only;
   forced-color-adjust: none;
   -webkit-text-size-adjust: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   LENIS BUTTERY SMOOTH MOMENTUM SCROLL SYSTEM
+───────────────────────────────────────────────────────────── */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
 body {
@@ -121,6 +145,7 @@ body {
   color: var(--text-dark);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
   color-scheme: light only;
 }
@@ -391,7 +416,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ANIMATED 3-BAR MORPHING HAMBURGER TOGGLE (3-Line to X)
+   ANIMATED 3-BAR MORPHING HAMBURGER TOGGLE (Fluid 3-Line to X)
 ───────────────────────────────────────────────────────────── */
 .nav-mobile-toggle {
   display: flex !important;
@@ -407,9 +432,9 @@ button:focus-visible, a:focus-visible {
   color: #FFFFFF;
   cursor: pointer;
   padding: 0;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   position: relative;
   overflow: hidden;
   z-index: 100;
@@ -418,9 +443,9 @@ button:focus-visible, a:focus-visible {
 .nav-mobile-toggle:hover,
 .nav-mobile-toggle:active {
   background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(213, 237, 85, 0.45);
-  box-shadow: 0 4px 18px rgba(213, 237, 85, 0.25);
-  transform: scale(1.05);
+  border-color: rgba(213, 237, 85, 0.5);
+  box-shadow: 0 4px 22px rgba(213, 237, 85, 0.3);
+  transform: scale(1.06);
 }
 
 .nav-mobile-toggle .burger-line {
@@ -428,10 +453,10 @@ button:focus-visible, a:focus-visible {
   height: 2px;
   background: #FFFFFF;
   border-radius: 999px;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 0.25s ease,
-              width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.25s ease;
+  transition: transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
+              opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.3s ease;
   transform-origin: center;
 }
 
@@ -456,10 +481,11 @@ button:focus-visible, a:focus-visible {
   width: 20px;
 }
 
-/* Morph to 'X' close state */
+/* Fluid Morph to 'X' close state */
 .nav-mobile-toggle.is-open {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
 }
 
 .nav-mobile-toggle.is-open .burger-line.line-top {
