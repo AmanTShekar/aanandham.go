@@ -159,7 +159,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-IN" className={`${bricolage.variable} ${plusJakarta.variable}`}>
+    <html lang="en-IN" data-scroll-behavior="smooth" className={`${bricolage.variable} ${plusJakarta.variable}`}>
       <head>
         <link rel="icon" type="image/png" href="/logo.png" />
         <link rel="apple-touch-icon" href="/logo.png" />

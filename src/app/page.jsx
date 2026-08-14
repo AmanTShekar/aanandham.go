@@ -267,6 +267,64 @@ const EXPEDITION_PACKAGES = [
     }
 ];
 
+// ── KERALA WILDERNESS & CAMPSITES DATA ──
+const KERALA_WILDERNESS_GALLERY = [
+    {
+        id: 'kolukkumalai',
+        name: 'Kolukkumalai Sunrise Ridge',
+        location: 'Munnar, Kerala',
+        altitude: '7,900 FT',
+        category: 'High-Altitude 4x4 Safari',
+        img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        badge: 'Highest Organic Tea Camp'
+    },
+    {
+        id: 'suryanelli',
+        name: 'Suryanelli Valley Glamp Pods',
+        location: 'Suryanelli, Idukki',
+        altitude: '6,500 FT',
+        category: 'Private Ridge Glamping',
+        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        badge: 'Starlit Pod Stays'
+    },
+    {
+        id: 'phantom-head',
+        name: 'Phantom Head Peak & Ridge',
+        location: 'Munnar, Kerala',
+        altitude: '6,800 FT',
+        category: 'Guided Sunset Trek',
+        img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+        badge: '360° Mountain Vista'
+    },
+    {
+        id: 'anaerangal',
+        name: 'Anaerangal Lake Mist Campsite',
+        location: 'Munnar Valley, Kerala',
+        altitude: '5,500 FT',
+        category: 'Lakeside Wilderness',
+        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+        badge: 'Elephant Corridor Views'
+    },
+    {
+        id: 'vagamon',
+        name: 'Vagamon Pine Valley Meadows',
+        location: 'Vagamon, Idukki',
+        altitude: '4,800 FT',
+        category: 'Pine Forest Glamping',
+        img: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=800&q=80',
+        badge: 'Fog & Mist Trails'
+    },
+    {
+        id: 'wayanad',
+        name: 'Wayanad 900 Kandi Rain Canopy',
+        location: 'Wayanad, Kerala',
+        altitude: '3,200 FT',
+        category: 'Canopy & Treehouse Treks',
+        img: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+        badge: 'Deep Rainforest'
+    }
+];
+
 // ── CUSTOM ARRANGEMENTS & EVENTS DATA ──
 const EVENT_ARRANGEMENTS = [
     {
@@ -406,6 +464,15 @@ const sectionReveal = {
         opacity: 1,
         y: 0,
         transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 24 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
@@ -677,19 +744,41 @@ export default function HomePage() {
                             lineHeight: 1.02,
                             letterSpacing: '-0.04em',
                             color: '#FFFFFF',
-                            marginBottom: '36px'
+                            marginBottom: '32px'
                         }}
                     >
-                        Aanandham<br />Wilderness Camp
+                        Aanandham<span style={{ color: '#D5ED55' }}>.go</span><br />Wilderness Camp
                     </motion.h1>
 
-                    {/* Translucent Learn More Button */}
+                    {/* Quick Action Button Cluster */}
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                        style={{ display: 'flex', justifyContent: 'center', marginBottom: '80px' }}
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexWrap: 'wrap',
+                            gap: '14px',
+                            marginBottom: '60px'
+                        }}
                     >
+                        {/* Primary Explore Stays Button */}
+                        <a
+                            href="#packages"
+                            className="btn-lime"
+                            style={{
+                                padding: '14px 34px',
+                                fontSize: '15px',
+                                textDecoration: 'none',
+                                boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
+                            }}
+                        >
+                            ⛺ Explore Stays & Camps ↗
+                        </a>
+
+                        {/* Translucent Learn More Button */}
                         <a
                             href="#overview"
                             style={{
@@ -697,20 +786,53 @@ export default function HomePage() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 textDecoration: 'none',
-                                background: 'rgba(0, 0, 0, 0.35)',
+                                background: 'rgba(0, 0, 0, 0.4)',
                                 border: '1px solid rgba(255, 255, 255, 0.4)',
                                 color: '#FFFFFF',
-                                padding: '12px 32px',
+                                padding: '13px 30px',
                                 borderRadius: '999px',
                                 fontWeight: '600',
                                 fontSize: '15px',
                                 backdropFilter: 'blur(10px)',
                                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                             }}
-                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
-                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.35)'}
+                            onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                            onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.4)'}
                         >
-                            Learn More
+                            Learn More ↓
+                        </a>
+
+                        {/* Live Instagram Handle Pill */}
+                        <a
+                            href="https://instagram.com/aanandham.go"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                textDecoration: 'none',
+                                background: 'rgba(255, 255, 255, 0.12)',
+                                border: '1px solid rgba(255, 255, 255, 0.25)',
+                                color: '#FFFFFF',
+                                padding: '13px 24px',
+                                borderRadius: '999px',
+                                fontWeight: '700',
+                                fontSize: '14px',
+                                backdropFilter: 'blur(10px)',
+                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.background = 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)';
+                                e.currentTarget.style.borderColor = 'transparent';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)';
+                                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                            }}
+                        >
+                            <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }}></i>
+                            <span>@aanandham.go</span>
                         </a>
                     </motion.div>
 
@@ -1245,7 +1367,7 @@ export default function HomePage() {
                                 className="desktop-only"
                             >
                                 <img
-                                    src={PROGRAM_DAYS[activeDayIdx >= 0 ? activeDayIdx : 0].img}
+                                    src={PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.img || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'}
                                     alt="Activity preview"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
@@ -1267,7 +1389,7 @@ export default function HomePage() {
                                         borderRadius: '999px',
                                         backdropFilter: 'blur(6px)'
                                     }}>
-                                        {PROGRAM_DAYS[activeDayIdx >= 0 ? activeDayIdx : 0].day}
+                                        {PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.day || 'Trail'}
                                     </span>
                                 </div>
                             </motion.div>
@@ -1676,6 +1798,167 @@ export default function HomePage() {
                             </button>
                         </motion.div>
                     </div>
+                </div>
+            </motion.section>
+
+            {/* ─────────────────────────────────────────────────────────────
+                6.5. KERALA WILDERNESS & SCENIC STAYS GALLERY
+            ───────────────────────────────────────────────────────────── */}
+            <motion.section 
+                id="kerala-wilderness"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
+                style={{ position: 'relative', padding: '100px 24px', background: '#F1F3EC' }}
+            >
+                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '48px' }}>
+                        <div>
+                            <div className="star-badge">
+                                <span className="star-icon">★</span> KERALA WILDERNESS & STAYS
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(32px, 4.5vw, 48px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.035em',
+                                lineHeight: 1.12
+                            }}>
+                                Scenic mountain peaks & verified camp sanctuaries
+                            </h2>
+                        </div>
+                        <Link
+                            href="/about"
+                            className="action-arrow-btn"
+                        >
+                            <span>Explore Nearby Places</span>
+                            <div className="btn-arrow-circle">↗</div>
+                        </Link>
+                    </div>
+
+                    {/* Gallery Grid */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                        gap: '28px'
+                    }}>
+                        {KERALA_WILDERNESS_GALLERY.map((spot, idx) => (
+                            <motion.div
+                                key={spot.id}
+                                variants={fadeInUp}
+                                whileHover={{ y: -6 }}
+                                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                style={{
+                                    background: '#FFFFFF',
+                                    borderRadius: '28px',
+                                    overflow: 'hidden',
+                                    border: '1px solid rgba(18, 22, 19, 0.08)',
+                                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.03)',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
+                            >
+                                <div style={{ position: 'relative', height: '230px', overflow: 'hidden' }}>
+                                    <motion.img
+                                        src={spot.img}
+                                        alt={spot.name}
+                                        whileHover={{ scale: 1.06 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '16px',
+                                        left: '16px',
+                                        background: 'rgba(14, 24, 17, 0.85)',
+                                        backdropFilter: 'blur(8px)',
+                                        color: '#D5ED55',
+                                        fontSize: '11px',
+                                        fontWeight: '800',
+                                        padding: '5px 12px',
+                                        borderRadius: '999px',
+                                        letterSpacing: '0.5px'
+                                    }}>
+                                        {spot.badge}
+                                    </div>
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '16px',
+                                        right: '16px',
+                                        background: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(8px)',
+                                        color: '#121613',
+                                        fontSize: '11.5px',
+                                        fontWeight: '800',
+                                        padding: '4px 10px',
+                                        borderRadius: '999px',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                                    }}>
+                                        📍 {spot.altitude}
+                                    </div>
+                                </div>
+
+                                <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                    <div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                            <span style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '700' }}>
+                                                {spot.location}
+                                            </span>
+                                            <span style={{ color: '#C4CCC6' }}>•</span>
+                                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>
+                                                {spot.category}
+                                            </span>
+                                        </div>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '20px',
+                                            fontWeight: '800',
+                                            color: '#121613',
+                                            letterSpacing: '-0.02em',
+                                            marginBottom: '16px'
+                                        }}>
+                                            {spot.name}
+                                        </h3>
+                                    </div>
+
+                                    <button
+                                        onClick={() => handleOpenBooking({ title: spot.name, price: 2999 })}
+                                        style={{
+                                            width: '100%',
+                                            padding: '11px',
+                                            borderRadius: '999px',
+                                            background: '#F8F9F5',
+                                            border: '1px solid rgba(18, 22, 19, 0.1)',
+                                            color: '#121613',
+                                            fontSize: '13.5px',
+                                            fontWeight: '700',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '8px',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                        onMouseOver={(e) => {
+                                            e.currentTarget.style.background = '#121613';
+                                            e.currentTarget.style.color = '#D5ED55';
+                                        }}
+                                        onMouseOut={(e) => {
+                                            e.currentTarget.style.background = '#F8F9F5';
+                                            e.currentTarget.style.color = '#121613';
+                                        }}
+                                    >
+                                        <span>Check Camp Dates</span>
+                                        <span>↗</span>
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+
                 </div>
             </motion.section>
 
