@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
@@ -358,6 +358,14 @@ export default function AboutPage() {
         try { localStorage.removeItem('aanandham_user'); } catch (e) {}
         setCurrentUser(null);
     };
+
+    const ctaRef = useRef(null);
+    const { scrollYProgress: ctaScrollProgress } = useScroll({
+        target: ctaRef,
+        offset: ["start end", "end start"]
+    });
+    const ctaBgScale = useTransform(ctaScrollProgress, [0, 0.5, 1], [1.0, 1.16, 1.28]);
+    const ctaBgY = useTransform(ctaScrollProgress, [0, 1], ["-6%", "6%"]);
 
     const filteredPlaces = activeCategory === 'All' 
         ? NEARBY_PLACES 
@@ -922,13 +930,11 @@ export default function AboutPage() {
                             </p>
                         </div>
 
-                        {/* 4 Vibrant Colored Sticky Notes Grid with Staggered Cascading Reveal */}
+                        {/* 4 Vibrant Colored Sticky Notes Grid with Staggered Cascading Reveal (4 in a Row Centered) */}
                         <motion.div 
                             variants={staggerContainer}
+                            className="pillars-sticky-grid"
                             style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                                gap: '36px',
                                 paddingTop: '20px'
                             }}
                         >
@@ -1811,9 +1817,10 @@ export default function AboutPage() {
                 </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    10. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop & Spring Actions)
+                    10. ORGANIC CURVED NATURE CTA BANNER (With Dynamic Scroll-Zoom Mountain Backdrop)
                 ───────────────────────────────────────────────────────────── */}
                 <motion.section 
+                    ref={ctaRef}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-80px" }}
@@ -1826,9 +1833,6 @@ export default function AboutPage() {
                     <div style={{
                         maxWidth: '1240px',
                         margin: '0 auto',
-                        backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2200&q=90")',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center 40%',
                         border: '1.5px solid rgba(213, 237, 85, 0.45)',
                         borderRadius: '36px',
                         padding: 'clamp(56px, 8vw, 96px) 24px',
@@ -1840,11 +1844,25 @@ export default function AboutPage() {
                         position: 'relative',
                         overflow: 'hidden'
                     }}>
+                        {/* Dynamic Mountain Sunrise Backdrop with Parallax Scroll Zoom */}
+                        <motion.div
+                            style={{
+                                position: 'absolute',
+                                inset: '-15%',
+                                backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=95")',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center 38%',
+                                scale: ctaBgScale,
+                                y: ctaBgY,
+                                zIndex: 0
+                            }}
+                        />
+
                         {/* Layered Obsidian and Sunrise Gradient Backdrop */}
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.82) 0%, rgba(11, 21, 14, 0.88) 55%, rgba(7, 14, 8, 0.96) 100%), radial-gradient(circle at 80% 50%, rgba(229, 169, 59, 0.35) 0%, transparent 60%)',
+                            background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.84) 0%, rgba(11, 21, 14, 0.88) 55%, rgba(7, 14, 8, 0.96) 100%), radial-gradient(circle at 80% 50%, rgba(229, 169, 59, 0.4) 0%, transparent 65%)',
                             zIndex: 1
                         }} />
 
