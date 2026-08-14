@@ -356,6 +356,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
                                                 style={{
                                                     position: 'absolute',
                                                     right: '12px',
@@ -371,6 +372,20 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                                 <i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i>
                                             </button>
                                         </div>
+                                    </div>
+
+                                    {/* Remember Me Checkbox */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '-4px 0 4px' }}>
+                                        <input
+                                            type="checkbox"
+                                            id="remember-me-cb"
+                                            checked={loginData.remember}
+                                            onChange={(e) => setLoginData({ ...loginData, remember: e.target.checked })}
+                                            style={{ cursor: 'pointer', accentColor: '#121613' }}
+                                        />
+                                        <label htmlFor="remember-me-cb" style={{ fontSize: '12.5px', color: '#59655D', cursor: 'pointer', userSelect: 'none' }}>
+                                            Remember my login on this device
+                                        </label>
                                     </div>
 
                                     <button
@@ -553,6 +568,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
+                                                aria-label={showPassword ? "Hide password" : "Show password"}
                                                 style={{
                                                     position: 'absolute',
                                                     right: '12px',

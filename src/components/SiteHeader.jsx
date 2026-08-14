@@ -54,6 +54,21 @@ export default function SiteHeader({
     const scrolledRef = useRef(!transparentOnTop);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+    const accountMenuRef = useRef(null);
+
+    // Click outside handler for Account Menu
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (accountMenuRef.current && !accountMenuRef.current.contains(event.target)) {
+                setIsAccountMenuOpen(false);
+            }
+        };
+
+        if (isAccountMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }
+    }, [isAccountMenuOpen]);
 
     // Scroll listener with threshold debounce
     useEffect(() => {
@@ -104,13 +119,13 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: isHeaderSolid ? '12px 24px' : '20px 32px',
+                    padding: isHeaderSolid ? '12px 24px' : '18px 32px',
                     backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
                     backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
                     boxShadow: isHeaderSolid ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
-                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease'
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
                 }}
             >
                 <div style={{
@@ -216,9 +231,12 @@ export default function SiteHeader({
 
                         {/* Camper Account or Login */}
                         {currentUser ? (
-                            <div style={{ position: 'relative' }}>
+                            <div ref={accountMenuRef} style={{ position: 'relative' }}>
                                 <button
                                     onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                                    aria-expanded={isAccountMenuOpen}
+                                    aria-haspopup="menu"
+                                    aria-label="Camper account menu"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',
@@ -298,6 +316,7 @@ export default function SiteHeader({
                         className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                        aria-expanded={isMobileMenuOpen}
                     >
                         <span className="burger-line line-top" />
                         <span className="burger-line line-mid" />
@@ -320,15 +339,14 @@ export default function SiteHeader({
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 42px) 36px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
-                            backdropFilter: 'blur(36px) saturate(190%)',
-                            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
+                            background: 'radial-gradient(circle at calc(100% - 42px) 36px, #172B1E 0%, #0D1911 50%, #070E08 100%)',
                             border: '1px solid rgba(213, 237, 85, 0.12)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
                             overflowY: 'auto',
                             transform: 'translateZ(0)',
+                            WebkitTransform: 'translateZ(0)',
                             willChange: 'clip-path'
                         }}
                     >
