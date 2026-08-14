@@ -633,9 +633,9 @@ button:focus-visible, a:focus-visible {
 ───────────────────────────────────────────────────────────── */
 .footer-columns-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: clamp(32px, 5vw, 64px);
-  margin-bottom: clamp(40px, 6vh, 70px);
+  grid-template-columns: 1.25fr 1fr 1fr;
+  gap: clamp(28px, 4vw, 56px);
+  margin-bottom: clamp(36px, 5vh, 60px);
   align-items: start;
   width: 100%;
   box-sizing: border-box;
@@ -657,6 +657,7 @@ button:focus-visible, a:focus-visible {
     gap: 36px;
   }
 }
+
 
 .footer-bottom-bar {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
