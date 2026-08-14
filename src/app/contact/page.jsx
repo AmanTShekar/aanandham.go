@@ -166,13 +166,13 @@ export default function ContactPage() {
             </header>
 
             {/* ── RESPONSIVE MOBILE DRAWER (Liquid Wave Expansion) ── */}
-            <AnimatePresence mode="wait">
+            <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
                         key="contact-frosted-glass-drawer"
-                        initial={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 0 }}
-                        animate={{ clipPath: 'circle(260% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)', opacity: 1 }}
-                        exit={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 0 }}
+                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)' }}
+                        animate={{ clipPath: 'circle(260% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)' }}
+                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)' }}
                         transition={{ duration: 0.58, ease: [0.19, 1, 0.22, 1] }}
                         style={{
                             position: 'fixed',

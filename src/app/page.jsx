@@ -738,28 +738,26 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
 }
 
 // ── MOBILE DRAWER FROSTED GLASS LIQUID RIPPLE VARIANTS ──
-// Origin anchored to the exact 44px round button center: calc(100% - 44px) 34px
+// Origin anchored directly to the 44px toggle button: calc(100% - 44px) 34px
+// Pure clip-path geometry: expands to 260% and visibly contracts all the way to 0% with 100% solid opacity
 const drawerWaveVariants = {
     hidden: { 
-        clipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        opacity: 0
+        clipPath: 'circle(0% at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)',
     },
     visible: { 
         clipPath: 'circle(260% at calc(100% - 44px) 34px)',
         WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)',
-        opacity: 1,
         transition: { 
             duration: 0.62, 
             ease: [0.19, 1, 0.22, 1] 
         }
     },
     exit: { 
-        clipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        opacity: 0,
+        clipPath: 'circle(0% at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)',
         transition: { 
-            duration: 0.46, 
+            duration: 0.52, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -1022,11 +1020,11 @@ export default function HomePage() {
                     right: 0,
                     zIndex: 100000,
                     padding: scrolled ? '12px 24px' : '22px 32px',
-                    backgroundColor: isMobileMenuOpen ? 'transparent' : (scrolled ? 'rgba(11, 21, 14, 0.98)' : 'transparent'),
-                    backdropFilter: isMobileMenuOpen ? 'none' : (scrolled ? 'blur(16px)' : 'none'),
-                    WebkitBackdropFilter: isMobileMenuOpen ? 'none' : (scrolled ? 'blur(16px)' : 'none'),
-                    borderBottom: isMobileMenuOpen ? '1px solid transparent' : (scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent'),
-                    boxShadow: isMobileMenuOpen ? 'none' : (scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none'),
+                    backgroundColor: scrolled ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
+                    backdropFilter: scrolled ? 'blur(16px)' : 'none',
+                    WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
+                    boxShadow: scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
             >
