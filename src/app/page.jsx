@@ -97,50 +97,74 @@ const PROGRAM_DAYS = [
     }
 ];
 
-// ── WHY AANANDHAM.GO PILLARS DATA ──
+// ── WHY AANANDHAM.GO PILLARS DATA (Expedition Tag Field Notes) ──
 const WHY_AANANDHAM_PILLARS = [
     {
         id: 'safety',
         badge: '100% Verified Safe',
+        serial: 'EXP-TAG · 01',
+        seal: 'VERIFIED SAFE',
         tagline: 'Gated Grounds & En-suite Washrooms',
-        title: '100% Female & Family-Safe Campgrounds',
+        title: '100% Female & Family-Safe',
+        fullTitle: '100% Female & Family-Safe Campgrounds',
         desc: 'We eliminate the roughness from wilderness camping. Every campsite features private gated perimeters, dedicated on-site female & male coordinators, clean western washrooms with running hot water, and 24/7 power backup.',
         image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-        stat: '350+ Solo Female Campers Hosted',
+        stat: '350+ Solo Female Campers',
         statIcon: '🛡️',
+        rotation: '-1.2deg',
+        paperBg: '#FFFDF6',
+        accentColor: '#166534',
         highlights: ['Gated Private Perimeter', '24/7 Marshals On-Site', 'Modern Western Washrooms & Hot Water', 'Zero-Tolerance Safety Protocol']
     },
     {
         id: 'offroad',
         badge: '7,900 FT Summit Access',
+        serial: 'EXP-TAG · 02',
+        seal: 'SUMMIT ACCESS',
         tagline: 'Exclusive 4x4 Off-Road Fleet',
-        title: 'High-Altitude 4x4 Off-Road Convoys',
+        title: 'High-Altitude 4x4 Convoys',
+        fullTitle: 'High-Altitude 4x4 Off-Road Convoys',
         desc: 'Our fleet of verified 4x4 off-road Mahindra jeeps takes you through rugged private tea estate tracks, crossing rolling cloud valleys to untouched summit vistas where ordinary transport cannot go.',
         image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-        stat: '7,900 FT Highest Camp in South India',
+        stat: '7,900 FT Highest Camp',
         statIcon: '🚙',
+        rotation: '1.4deg',
+        paperBg: '#FAF8EE',
+        accentColor: '#B45309',
         highlights: ['Verified 4x4 Convoy Fleet', 'Professional Mountain Drivers', 'Private Tea Ridge Permits', 'Sunrise Tiger Rock Access']
     },
     {
         id: 'marshals',
         badge: 'Certified Mountain Guides',
+        serial: 'EXP-TAG · 03',
+        seal: 'WFA MEDICAL',
         tagline: '1:6 Marshal-to-Camper Ratio',
-        title: 'WFA-Certified Local Mountain Guides',
+        title: 'WFA-Certified Local Guides',
+        fullTitle: 'WFA-Certified Local Mountain Guides',
         desc: 'Led by Western Ghats natives who grew up traversing these mist valleys. They pace each group with small 1:6 ratios, carrying medical kits, pulse oximeters, and deep indigenous flora and mountain wisdom.',
         image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80',
         stat: '1:6 Marshal-to-Camper Ratio',
         statIcon: '🩺',
+        rotation: '-1.0deg',
+        paperBg: '#F7FAF4',
+        accentColor: '#047857',
         highlights: ['Small 1:6 Marshal Ratio', 'WFA & CPR First Aid Certified', 'Oxygen & Medical Kits on Trail', 'Local Cultural Storytelling']
     },
     {
         id: 'gastronomy',
         badge: 'Live BBQ & Stargazing',
+        serial: 'EXP-TAG · 04',
+        seal: 'STARLIT BBQ',
         tagline: 'Farm-to-Table Kerala Buffets',
-        title: 'Starlit Outdoor Gastronomy & Telescopes',
+        title: 'Starlit Outdoor Gastronomy',
+        fullTitle: 'Starlit Outdoor Gastronomy & Telescopes',
         desc: 'Warm up around roaring campfires at 10°C with smoking hot barbecue platters, traditional Kerala feasts, live acoustic open-mic jams, and zero-light-pollution telescope observation of celestial nebulas.',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
         stat: '4.98★ Food & Stargaze Rating',
         statIcon: '🔥',
+        rotation: '1.2deg',
+        paperBg: '#FEF6EE',
+        accentColor: '#C2410C',
         highlights: ['Farm-to-Table Kerala Buffets', 'Live Campfire Barbecue', 'Telescope Stargazing Deck', 'Open-Mic Acoustic Vibe']
     }
 ];
@@ -1490,34 +1514,144 @@ export default function HomePage() {
                                 })}
                             </div>
 
-                            {/* Desktop 4 Interactive Clickable Feature Pillar Cards */}
-                            <div className="why-desktop-pillars" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '26px' }}>
+                            {/* Desktop 4 Interactive Expedition Tag Note Cards (2x2 Balanced Grid) */}
+                            <div className="why-desktop-pillars" style={{ 
+                                display: 'grid', 
+                                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
+                                gap: '16px', 
+                                marginBottom: '28px',
+                                paddingTop: '6px'
+                            }}>
                                 {WHY_AANANDHAM_PILLARS.map((pillar, idx) => {
                                     const isSelected = activeWhyIdx === idx;
                                     return (
-                                        <div
+                                        <motion.div
                                             key={pillar.id}
                                             onClick={() => setActiveWhyIdx(idx)}
+                                            whileHover={{ 
+                                                y: -6, 
+                                                rotate: 0,
+                                                scale: 1.02,
+                                                boxShadow: isSelected 
+                                                    ? '0 20px 40px rgba(229, 169, 59, 0.25), 0 4px 12px rgba(0,0,0,0.08)' 
+                                                    : '0 16px 36px rgba(0,0,0,0.12)' 
+                                            }}
+                                            whileTap={{ scale: 0.98 }}
+                                            transition={{ type: 'spring', stiffness: 450, damping: 22 }}
                                             style={{
-                                                background: isSelected ? '#FFFFFF' : '#F1F3EC',
-                                                border: isSelected ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
-                                                borderRadius: '20px',
-                                                padding: '18px 20px',
+                                                position: 'relative',
+                                                background: isSelected ? '#FFFFFF' : pillar.paperBg,
+                                                border: isSelected 
+                                                    ? '2px solid #E5A93B' 
+                                                    : '1.5px solid rgba(18, 22, 19, 0.12)',
+                                                borderRadius: '16px',
+                                                padding: '22px 20px 18px 20px',
                                                 cursor: 'pointer',
-                                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                                                boxShadow: isSelected ? '0 10px 30px rgba(0,0,0,0.06)' : 'none'
+                                                transform: `rotate(${isSelected ? '0deg' : pillar.rotation})`,
+                                                transition: 'border-color 0.25s ease, background 0.25s ease',
+                                                boxShadow: isSelected 
+                                                    ? '0 14px 34px rgba(229, 169, 59, 0.2), 0 4px 12px rgba(0,0,0,0.06)' 
+                                                    : '0 4px 14px rgba(0,0,0,0.04)',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                minHeight: '175px'
                                             }}
                                         >
-                                            <div style={{ fontSize: '24px', marginBottom: '8px' }}>
-                                                {pillar.statIcon}
+                                            {/* Brass Metal Eyelet Ring at Top Left */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '12px',
+                                                left: '14px',
+                                                width: '12px',
+                                                height: '12px',
+                                                borderRadius: '50%',
+                                                background: 'radial-gradient(circle at 35% 35%, #FDE047 0%, #D97706 70%, #78350F 100%)',
+                                                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.6), 0 1px 3px rgba(0,0,0,0.3)',
+                                                border: '1px solid #92400E',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center'
+                                            }}>
+                                                <div style={{
+                                                    width: '4px',
+                                                    height: '4px',
+                                                    borderRadius: '50%',
+                                                    background: '#0B150E'
+                                                }} />
                                             </div>
-                                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613', margin: '0 0 4px', lineHeight: 1.3 }}>
-                                                {pillar.title.split(' ')[0]} {pillar.title.split(' ')[1]}
-                                            </h4>
-                                            <p style={{ fontSize: '12px', color: '#59655D', margin: 0, lineHeight: 1.4 }}>
-                                                {pillar.tagline}
-                                            </p>
-                                        </div>
+
+                                            {/* Top Row: Serial Tag + Seal Stamp Badge */}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', paddingLeft: '14px' }}>
+                                                <span style={{
+                                                    fontSize: '9.5px',
+                                                    fontWeight: '900',
+                                                    letterSpacing: '1px',
+                                                    color: isSelected ? '#E5A93B' : '#7D8880',
+                                                    textTransform: 'uppercase',
+                                                    fontFamily: 'monospace'
+                                                }}>
+                                                    {pillar.serial}
+                                                </span>
+
+                                                <span style={{
+                                                    fontSize: '8.5px',
+                                                    fontWeight: '900',
+                                                    letterSpacing: '0.8px',
+                                                    textTransform: 'uppercase',
+                                                    padding: '2px 7px',
+                                                    borderRadius: '4px',
+                                                    background: isSelected ? 'rgba(229, 169, 59, 0.15)' : 'rgba(0, 0, 0, 0.05)',
+                                                    color: isSelected ? '#B45309' : pillar.accentColor,
+                                                    border: `1px solid ${isSelected ? 'rgba(229, 169, 59, 0.4)' : 'rgba(0,0,0,0.08)'}`
+                                                }}>
+                                                    ✓ {pillar.seal}
+                                                </span>
+                                            </div>
+
+                                            {/* Main Content: Icon + Title */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                                                <div style={{
+                                                    width: '38px',
+                                                    height: '38px',
+                                                    borderRadius: '10px',
+                                                    background: isSelected ? '#121613' : 'rgba(0, 0, 0, 0.06)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontSize: '18px',
+                                                    flexShrink: 0,
+                                                    transition: 'background 0.25s ease'
+                                                }}>
+                                                    {pillar.statIcon}
+                                                </div>
+                                                <h4 style={{
+                                                    fontFamily: 'var(--font-heading)',
+                                                    fontSize: '15.5px',
+                                                    fontWeight: '800',
+                                                    color: '#121613',
+                                                    margin: 0,
+                                                    lineHeight: 1.25,
+                                                    letterSpacing: '-0.02em'
+                                                }}>
+                                                    {pillar.title}
+                                                </h4>
+                                            </div>
+
+                                            {/* High-Contrast Tagline Pill */}
+                                            <div style={{
+                                                fontSize: '11.5px',
+                                                fontWeight: '700',
+                                                color: isSelected ? '#121613' : '#49564E',
+                                                background: isSelected ? 'rgba(229, 169, 59, 0.18)' : 'rgba(0,0,0,0.04)',
+                                                padding: '4px 10px',
+                                                borderRadius: '6px',
+                                                marginTop: 'auto',
+                                                width: 'fit-content',
+                                                border: isSelected ? '1px solid rgba(229, 169, 59, 0.4)' : '1px solid transparent'
+                                            }}>
+                                                ✦ {pillar.tagline}
+                                            </div>
+                                        </motion.div>
                                     );
                                 })}
                             </div>
