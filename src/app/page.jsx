@@ -1371,14 +1371,15 @@ export default function HomePage() {
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(32px, 4.5vw, 48px)',
+                                fontSize: 'clamp(30px, 4vw, 46px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
-                                lineHeight: 1.12,
+                                lineHeight: 1.2,
                                 marginBottom: '20px'
                             }}>
-                                Spend a week living in a <span className="text-marker-2">trekker's paradise</span> — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
+                                Spend a week living in a <br />
+                                <span className="text-marker-2" style={{ whiteSpace: 'nowrap' }}>trekker's paradise</span> — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
                             </h2>
 
                             {/* 3 Checkmark Pills */}

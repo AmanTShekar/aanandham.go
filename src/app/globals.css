@@ -650,13 +650,13 @@ button:focus-visible, a:focus-visible {
 .text-marker-1::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 20%;
-  bottom: 12%;
+  left: -4px;
+  right: -4px;
+  top: 24%;
+  bottom: 14%;
   background: rgba(255, 230, 50, 0.55);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
-  transform: skewX(-15deg) rotate(-0.8deg);
+  transform: skewX(-14deg) rotate(-0.7deg);
   border-radius: 2px;
   z-index: -1;
   pointer-events: none;
@@ -667,13 +667,13 @@ button:focus-visible, a:focus-visible {
 .text-marker-2::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 22%;
+  left: -4px;
+  right: -4px;
+  top: 24%;
   bottom: 14%;
   background: rgba(255, 232, 55, 0.56);
   clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
-  transform: skewX(-12deg) rotate(0.7deg);
+  transform: skewX(-12deg) rotate(0.6deg);
   border-radius: 2px;
   z-index: -1;
   pointer-events: none;
@@ -684,13 +684,13 @@ button:focus-visible, a:focus-visible {
 .text-marker-3::before {
   content: "";
   position: absolute;
-  left: -7px;
-  right: -6px;
-  top: 20%;
-  bottom: 12%;
+  left: -5px;
+  right: -4px;
+  top: 24%;
+  bottom: 14%;
   background: rgba(255, 228, 48, 0.54);
   clip-path: polygon(0% 6%, 98% 1%, 100% 95%, 2% 99%);
-  transform: skewX(-17deg) rotate(-1.2deg);
+  transform: skewX(-15deg) rotate(-1deg);
   border-radius: 2px;
   z-index: -1;
   pointer-events: none;
@@ -701,9 +701,9 @@ button:focus-visible, a:focus-visible {
 .text-marker-4::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 22%;
+  left: -4px;
+  right: -4px;
+  top: 24%;
   bottom: 14%;
   background: rgba(255, 235, 60, 0.55);
   clip-path: polygon(1% 2%, 100% 0%, 99% 98%, 0% 97%);
