@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import BookingEngineModal from '../components/BookingEngineModal';
@@ -603,6 +603,155 @@ const fadeInRight = {
         transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
     }
 };
+
+// ── CTA PARALLAX BANNER WITH SCROLL-DRIVEN ZOOM & DEPTH ACTION ──
+function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
+    const bannerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: bannerRef,
+        offset: ["start end", "end start"]
+    });
+    
+    // Smooth scroll-driven zoom (from 1.0 to 1.25) & vertical shift (-5% to +5%)
+    const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.14, 1.28]);
+    const bgY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
+    const contentY = useTransform(scrollYProgress, [0, 1], [18, -18]);
+
+    return (
+        <motion.section 
+            ref={bannerRef}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            variants={sectionReveal}
+            id="cta"
+            style={{ position: 'relative', padding: '40px 24px 80px', background: '#F8F9F5' }}
+        >
+            <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <motion.div 
+                    whileHover={{ scale: 1.01 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    style={{
+                        position: 'relative',
+                        borderRadius: '40px',
+                        overflow: 'hidden',
+                        padding: 'clamp(80px, 10vw, 130px) 32px',
+                        textAlign: 'center',
+                        boxShadow: '0 25px 70px rgba(0, 0, 0, 0.12)',
+                        cursor: 'default'
+                    }}
+                >
+                    {/* Parallax Zooming & Scrolling Action Background */}
+                    <motion.div
+                        style={{
+                            position: 'absolute',
+                            inset: '-15%',
+                            width: '130%',
+                            height: '130%',
+                            scale: bgScale,
+                            y: bgY,
+                            willChange: 'transform'
+                        }}
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1600&q=80"
+                            alt="Canopy Wilderness"
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                filter: 'brightness(0.68) contrast(1.15)'
+                            }}
+                        />
+                    </motion.div>
+
+                    {/* Radial & Edge Vignette Gradients */}
+                    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.3) 0%, rgba(14, 24, 17, 0.75) 100%)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, transparent 60%)' }} />
+
+                    {/* Animated Content Layer */}
+                    <motion.div style={{ position: 'relative', zIndex: 2, maxWidth: '720px', margin: '0 auto', y: contentY }}>
+                        <div style={{
+                            fontSize: '12px',
+                            fontWeight: '900',
+                            letterSpacing: '2px',
+                            color: '#D5ED55',
+                            textTransform: 'uppercase',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            background: 'rgba(0, 0, 0, 0.5)',
+                            padding: '6px 18px',
+                            borderRadius: '999px',
+                            border: '1px solid rgba(213, 237, 85, 0.3)',
+                            backdropFilter: 'blur(8px)',
+                            marginBottom: '18px'
+                        }}>
+                            <span>★</span> READY FOR THE EXPEDITION?
+                        </div>
+                        <h2 style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'clamp(32px, 5vw, 54px)',
+                            fontWeight: '800',
+                            color: '#FFFFFF',
+                            letterSpacing: '-0.035em',
+                            lineHeight: 1.15,
+                            marginBottom: '32px'
+                        }}>
+                            Reserve your spot and join the adventure today
+                        </h2>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                            <motion.button
+                                whileHover={{ scale: 1.06, boxShadow: '0 12px 35px rgba(213, 237, 85, 0.4)' }}
+                                whileTap={{ scale: 0.96 }}
+                                onClick={() => onOpenBooking(defaultPackage)}
+                                style={{
+                                    background: '#D5ED55',
+                                    color: '#121613',
+                                    border: 'none',
+                                    padding: '16px 48px',
+                                    borderRadius: '999px',
+                                    fontSize: '15px',
+                                    fontWeight: '800',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 8px 30px rgba(0,0,0,0.3)',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '10px'
+                                }}
+                            >
+                                <span>Instant Reserve Spot ↗</span>
+                            </motion.button>
+                            <a
+                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20want%20to%20reserve%20a%20spot%20for%20the%20upcoming%20wilderness%20camp."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.15)',
+                                    color: '#FFFFFF',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    padding: '16px 36px',
+                                    borderRadius: '999px',
+                                    fontSize: '15px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none',
+                                    backdropFilter: 'blur(10px)',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px', color: '#25D366' }}></i>
+                                <span>WhatsApp Helpdesk</span>
+                            </a>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            </div>
+        </motion.section>
+    );
+}
 
 export default function HomePage() {
     const [scrolled, setScrolled] = useState(false);
@@ -2721,68 +2870,12 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                11. ORGANIC CURVED NATURE CTA BANNER (Ref Screenshot 3 & 5 Batch 3)
+                11. ORGANIC CURVED NATURE CTA BANNER WITH SCROLL-DRIVEN ZOOM
             ───────────────────────────────────────────────────────────── */}
-            <motion.section 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={sectionReveal}
-                style={{ position: 'relative', padding: '40px 24px 80px', background: '#F8F9F5' }}
-            >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{
-                        position: 'relative',
-                        borderRadius: '40px',
-                        overflow: 'hidden',
-                        padding: '110px 32px',
-                        textAlign: 'center',
-                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.06)'
-                    }}>
-                        <img
-                            src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1600&q=80"
-                            alt="Canopy"
-                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7) contrast(1.1)' }}
-                        />
-                        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.2) 0%, rgba(14, 24, 17, 0.65) 100%)' }} />
-                        
-                        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto' }}>
-                            <div style={{ fontSize: '12px', fontWeight: '900', letterSpacing: '2px', color: '#D5ED55', textTransform: 'uppercase', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', marginBottom: '14px' }}>
-                                <span>★</span> READY?
-                            </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(32px, 5vw, 52px)',
-                                fontWeight: '800',
-                                color: '#FFFFFF',
-                                letterSpacing: '-0.035em',
-                                lineHeight: 1.15,
-                                marginBottom: '32px'
-                            }}>
-                                Reserve your spot and join the adventure today
-                            </h2>
-                            <button
-                                onClick={() => handleOpenBooking(EXPEDITION_PACKAGES[0])}
-                                style={{
-                                    background: 'rgba(213, 237, 85, 0.94)',
-                                    color: '#121613',
-                                    border: '1px solid rgba(255, 255, 255, 0.4)',
-                                    padding: '14px 44px',
-                                    borderRadius: '999px',
-                                    fontSize: '15px',
-                                    fontWeight: '800',
-                                    cursor: 'pointer',
-                                    backdropFilter: 'blur(8px)',
-                                    boxShadow: '0 8px 30px rgba(0,0,0,0.25)',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                Apply Now
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </motion.section>
+            <CtaParallaxBanner 
+                onOpenBooking={handleOpenBooking} 
+                defaultPackage={EXPEDITION_PACKAGES[0]} 
+            />
 
             {/* ─────────────────────────────────────────────────────────────
                 12. FREQUENTLY ASKED QUESTIONS (Ref Screenshot 2 - media_1786656749472.png)

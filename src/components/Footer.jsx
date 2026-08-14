@@ -38,10 +38,16 @@ export default function Footer() {
 
             <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '50px', marginBottom: '70px' }}>
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                    gap: 'clamp(40px, 4.5vw, 64px)', 
+                    marginBottom: '70px',
+                    alignItems: 'start'
+                }}>
                     
                     {/* Column 1: Brand & Coordinates */}
-                    <div>
+                    <div style={{ maxWidth: '360px', paddingRight: '16px' }}>
                         <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', marginBottom: '14px' }}>
                             <img
                                 src="/logo.png"
@@ -142,7 +148,7 @@ export default function Footer() {
                     </div>
 
                     {/* Column 2: THE CAMP & SANCTUARIES */}
-                    <div>
+                    <div style={{ minWidth: '220px' }}>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
                             THE WILDERNESS
                         </span>
@@ -164,7 +170,7 @@ export default function Footer() {
                     </div>
 
                     {/* Column 3: POPULAR DESTINATIONS */}
-                    <div>
+                    <div style={{ minWidth: '220px' }}>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
                             KERALA HIGHLIGHTS
                         </span>
@@ -186,7 +192,7 @@ export default function Footer() {
                     </div>
 
                     {/* Column 4: TRIBE VIP INVITATION */}
-                    <div>
+                    <div style={{ minWidth: '260px' }}>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#D5ED55', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
                             JOIN THE TRIBE
                         </span>
