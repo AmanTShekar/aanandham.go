@@ -63,13 +63,37 @@ const NEARBY_PLACES = [
     }
 ];
 
-// ── WILDERNESS STANDARDS ──
+// ── FROM CLASSROOM TO MOUNTAIN: THE CONTRAST ──
+const CONTRAST_POINTS = [
+    {
+        classroom: 'Textbooks, screens & fluorescent classrooms',
+        mountain: 'Living geography: 360° cloud beds, Shola ecology & star maps',
+        icon: 'fa-solid fa-mountain'
+    },
+    {
+        classroom: 'Rigid daily routines & commuter traffic',
+        mountain: 'Sunrise 4x4 off-road safaris above 7,900 FT peaks',
+        icon: 'fa-solid fa-compass'
+    },
+    {
+        classroom: 'Virtual meetings & disconnected screen fatigue',
+        mountain: 'Acoustic campfires, live BBQ & real human connections',
+        icon: 'fa-solid fa-fire'
+    },
+    {
+        classroom: 'Standard commercial tourist crowd hotels',
+        mountain: 'Private ridge domes, thermal insulated pods & pure ozone',
+        icon: 'fa-solid fa-tent'
+    }
+];
+
+// ── WILDERNESS PILLARS ──
 const WILDERNESS_PILLARS = [
     {
         num: '01',
-        title: 'Safety First & High Altitude Marshals',
+        title: 'Safety First & Mountain Marshals',
         icon: 'fa-solid fa-shield-heart',
-        desc: 'Every trek and safari is guided by certified local mountain marshals trained in wilderness first-aid, high-altitude terrain management, and wildlife tracking.'
+        desc: 'Every trek and 4x4 expedition is guided by certified local mountain marshals trained in wilderness first-aid, high-altitude terrain management, and wildlife tracking.'
     },
     {
         num: '02',
@@ -91,31 +115,7 @@ const WILDERNESS_PILLARS = [
     }
 ];
 
-// ── MILESTONE JOURNEY (2021 - 2026) ──
-const TIMELINE_MILESTONES = [
-    {
-        year: '2021',
-        title: 'The First Suryanelli Ridge Pod',
-        desc: 'Started with 4 geodesic weather-proof pods on a private cliffside overlooking the cloud bed, guided by 2 local mountain drivers.'
-    },
-    {
-        year: '2023',
-        title: 'Kolukkumalai Sunrise 4x4 Network',
-        desc: 'Formed Kerala’s premier verified 4x4 off-road team, securing exclusive early sunrise permits for the world’s highest tea estate.'
-    },
-    {
-        year: '2024',
-        title: 'Expansion to Vagamon & Wayanad',
-        desc: 'Introduced eco-conscious pine hill glamping in Vagamon and remote rainforest treehouses in Wayanad, crossing 10,000 verified happy campers.'
-    },
-    {
-        year: '2026',
-        title: 'Digital Platform & Zero-Trace Charter',
-        desc: 'Launched real-time campsite availability, seamless WhatsApp dispatch, and full solar-powered energy across all 5 sanctuary locations.'
-    }
-];
-
-// ── WILDERNESS LEADERSHIP TEAM ──
+// ── EXPEDITION TEAM MEMBERS ──
 const TEAM_MEMBERS = [
     {
         name: 'Suryanarayanan K.',
@@ -186,7 +186,6 @@ export default function AboutPage() {
                     overflow: 'hidden',
                     background: 'radial-gradient(circle at 50% 20%, rgba(28, 54, 35, 0.6) 0%, #0B150E 75%)'
                 }}>
-                    {/* Atmospheric Ambient Glow */}
                     <div style={{
                         position: 'absolute',
                         top: '10%',
@@ -225,7 +224,7 @@ export default function AboutPage() {
                                 margin: '0 auto 24px'
                             }}
                         >
-                            Born on the Ridges of Kerala. Crafted for <span style={{ color: '#E5A93B' }}>True Explorers</span>.
+                            Out of the Textbooks. Into the <span style={{ color: '#E5A93B' }}>Wilderness</span>.
                         </motion.h1>
 
                         <motion.p
@@ -240,7 +239,7 @@ export default function AboutPage() {
                                 margin: '0 auto 48px'
                             }}
                         >
-                            We founded Aanandham to make the awe-inspiring cloud beds of Suryanelli, Kolukkumalai, and Wayanad safely accessible without sacrificing comfort, sanitation, or deep environmental ethics.
+                            Real discovery doesn't happen under classroom fluorescent lights or behind computer screens. It happens when you step out onto the 7,900 FT misty ridges of Suryanelli, breathe the mountain ozone, and rediscover the raw joy of living.
                         </motion.p>
 
                         {/* Fast Metrics Row */}
@@ -279,90 +278,73 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    2. THE ORIGIN & ETHOS STORY (Split Photographic Narrative)
+                    2. OUT OF THE CLASSROOM: THE CONTRAST
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{ padding: '100px 24px', background: '#0E1A11', position: 'relative' }}>
-                    <div style={{ maxWidth: '1240px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '60px', alignItems: 'center' }}>
-                        
-                        {/* Left Photographic Stack */}
-                        <div style={{ position: 'relative' }}>
-                            <div style={{ borderRadius: '32px', overflow: 'hidden', border: '1px solid rgba(255, 255, 255, 0.12)', boxShadow: '0 25px 60px rgba(0,0,0,0.5)' }}>
-                                <img
-                                    src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80"
-                                    alt="Aanandham Sunrise Ridge Camp"
-                                    style={{ width: '100%', height: '480px', objectFit: 'cover' }}
-                                />
+                <section style={{ padding: '100px 24px', background: '#0E1A11' }}>
+                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
+                                <span className="star-icon">★</span> THE TRANSFORMATION
                             </div>
-
-                            {/* Floating Quote Badge */}
-                            <div style={{
-                                position: 'absolute',
-                                bottom: '-24px',
-                                right: '20px',
-                                background: '#122316',
-                                border: '1px solid rgba(213, 237, 85, 0.3)',
-                                borderRadius: '20px',
-                                padding: '18px 24px',
-                                maxWidth: '300px',
-                                boxShadow: '0 15px 40px rgba(0,0,0,0.6)'
-                            }}>
-                                <div style={{ color: '#E5A93B', fontSize: '20px', fontWeight: '900', lineHeight: 1, marginBottom: '6px' }}>“</div>
-                                <div style={{ fontSize: '13px', color: '#FFFFFF', fontWeight: '600', lineHeight: 1.5, marginBottom: '8px' }}>
-                                    We don't conquer nature; we listen to the mist and protect every ridge.
-                                </div>
-                                <div style={{ fontSize: '11px', color: '#A2B6A6', fontWeight: '700' }}>
-                                    — Aanandham Wilderness Charter
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Right Narrative Text */}
-                        <div>
-                            <div className="star-badge" style={{ marginBottom: '16px' }}>
-                                <span className="star-icon">★</span> OUR ROOTS
-                            </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.025em', margin: '0 0 20px', lineHeight: 1.2 }}>
-                                From a Single Campfire in Suryanelli to Kerala’s Premier Wilderness Collective.
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 48px)', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.025em', margin: '0 0 12px' }}>
+                                From Routine to Pure Adventure
                             </h2>
-                            <p style={{ fontSize: '15px', color: '#A2B6A6', lineHeight: 1.75, marginBottom: '20px' }}>
-                                Aanandham began when a group of native Western Ghats naturalists and mountain 4x4 drivers saw that modern camping had become chaotic, crowded, and disrespectful to fragile mountain ecologies.
+                            <p style={{ fontSize: '15px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                                Why thousands of students, families, and creators swap the everyday grind for our ridge basecamps.
                             </p>
-                            <p style={{ fontSize: '15px', color: '#A2B6A6', lineHeight: 1.75, marginBottom: '32px' }}>
-                                We set out to build something entirely different: intimate, secluded sanctuary camps situated on private high-elevation cliffs where families, couples, and solo travelers can awaken above the clouds in total safety and luxury.
-                            </p>
-
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '16px' }}>
-                                    <div style={{ color: '#E5A93B', fontSize: '20px', marginBottom: '6px' }}>
-                                        <i className="fa-solid fa-seedling"></i>
-                                    </div>
-                                    <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF', marginBottom: '2px' }}>Local Native Guides</div>
-                                    <div style={{ fontSize: '12px', color: '#8E9B92' }}>100% of our marshals are born and raised in local tea hill villages.</div>
-                                </div>
-                                <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '16px' }}>
-                                    <div style={{ color: '#E5A93B', fontSize: '20px', marginBottom: '6px' }}>
-                                        <i className="fa-solid fa-lock"></i>
-                                    </div>
-                                    <div style={{ fontSize: '14px', fontWeight: '700', color: '#FFFFFF', marginBottom: '2px' }}>Private Cliff Estates</div>
-                                    <div style={{ fontSize: '12px', color: '#8E9B92' }}>Zero trespassing, gated camp perimeters with 24/7 onsite marshals.</div>
-                                </div>
-                            </div>
                         </div>
 
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+                            {CONTRAST_POINTS.map((item, idx) => (
+                                <div
+                                    key={idx}
+                                    className="card-hover-lift"
+                                    style={{
+                                        background: '#122316',
+                                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                                        borderRadius: '24px',
+                                        padding: '28px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '16px'
+                                    }}
+                                >
+                                    <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: 'rgba(229, 169, 59, 0.15)', color: '#E5A93B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                                        <i className={item.icon}></i>
+                                    </div>
+                                    <div style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '14px' }}>
+                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                                            THE CITY / CLASSROOM
+                                        </div>
+                                        <div style={{ fontSize: '13.5px', color: '#A2B6A6', textDecoration: 'line-through' }}>
+                                            {item.classroom}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                                            THE AANANDHAM RIDGE
+                                        </div>
+                                        <div style={{ fontSize: '14.5px', fontWeight: '700', color: '#FFFFFF', lineHeight: 1.5 }}>
+                                            {item.mountain}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. OUR 4 UNCOMPROMISING WILDERNESS PILLARS
+                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{ padding: '100px 24px', background: '#0B150E' }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> OUR COMMITMENT
+                                <span className="star-icon">★</span> WHY AANANDHAM
                             </div>
                             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(30px, 4.5vw, 48px)', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.025em', margin: '0 0 12px' }}>
-                                The Four Pillars of Aanandham Sanctuary
+                                The 4 Pillars of Aanandham Sanctuary
                             </h2>
                             <p style={{ fontSize: '15px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
                                 Designed to deliver the raw intensity of mountain heights with the refined comfort of a boutique resort.
@@ -515,46 +497,9 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    5. OUR MILESTONE TIMELINE (2021 TO 2026)
+                    5. WILDERNESS LEADERSHIP & GUIDE MARSHALS
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{ padding: '100px 24px', background: '#0B150E' }}>
-                    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> OUR TIMELINE
-                            </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#FFFFFF', margin: 0 }}>
-                                How We Grew Across the Western Ghats
-                            </h2>
-                        </div>
-
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', position: 'relative' }}>
-                            {/* Vertical Line */}
-                            <div style={{ position: 'absolute', left: '23px', top: '10px', bottom: '10px', width: '2px', background: 'rgba(213, 237, 85, 0.2)' }} />
-
-                            {TIMELINE_MILESTONES.map((m, idx) => (
-                                <div key={idx} style={{ display: 'flex', gap: '28px', alignItems: 'flex-start', position: 'relative', zIndex: 2 }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#122316', border: '2px solid #E5A93B', color: '#E5A93B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px', flexShrink: 0 }}>
-                                        {m.year}
-                                    </div>
-                                    <div style={{ background: '#101F14', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '24px 28px', flex: 1 }}>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 6px' }}>
-                                            {m.title}
-                                        </h3>
-                                        <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.6, margin: 0 }}>
-                                            {m.desc}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-                {/* ─────────────────────────────────────────────────────────────
-                    6. WILDERNESS LEADERSHIP & EXPEDITION MARSHALS
-                ───────────────────────────────────────────────────────────── */}
-                <section style={{ padding: '100px 24px', background: '#0E1A11' }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '60px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -603,9 +548,9 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    7. ORGANIC CURVED NATURE CTA BANNER
+                    6. ORGANIC CURVED NATURE CTA BANNER
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{ padding: '80px 24px 100px', background: '#0B150E' }}>
+                <section style={{ padding: '80px 24px 100px', background: '#0E1A11' }}>
                     <div style={{
                         maxWidth: '1240px',
                         margin: '0 auto',

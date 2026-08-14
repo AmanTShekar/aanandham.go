@@ -44,6 +44,19 @@ const drawerStaggerVariants = {
     }
 };
 
+const drawerItemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.28, ease: "easeOut" }
+    },
+    exit: {
+        opacity: 1,
+        transition: { duration: 0.38 }
+    }
+};
+
 export default function SiteHeader({ 
     transparentOnTop = true,
     activePage = 'home',
@@ -136,7 +149,7 @@ export default function SiteHeader({
                     justifyContent: 'space-between',
                     gap: '16px'
                 }}>
-                    {/* Brand Logo */}
+                    {/* Brand Logo & Name */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <Link href="/" className="text-hover-marker text-hover-marker-dark">
                             <img
@@ -162,166 +175,239 @@ export default function SiteHeader({
                     </div>
 
                     {/* Desktop Navigation Links */}
-                    <nav className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
-                        <Link 
-                            href="/" 
-                            style={{ 
-                                color: activePage === 'home' ? '#E5A93B' : '#FFFFFF', 
-                                textDecoration: 'none', 
-                                fontSize: '14.5px', 
-                                fontWeight: '700',
-                                opacity: activePage === 'home' ? 1 : 0.88,
-                                transition: 'color 0.2s ease'
-                            }}
-                        >
-                            Home
-                        </Link>
-                        <Link 
-                            href="/#overview" 
-                            style={{ 
-                                color: '#FFFFFF', 
-                                textDecoration: 'none', 
-                                fontSize: '14.5px', 
-                                fontWeight: '700',
-                                opacity: 0.88,
-                                transition: 'color 0.2s ease'
-                            }}
-                        >
-                            Overview
-                        </Link>
-                        <Link 
-                            href="/#packages" 
-                            style={{ 
-                                color: '#FFFFFF', 
-                                textDecoration: 'none', 
-                                fontSize: '14.5px', 
-                                fontWeight: '700',
-                                opacity: 0.88,
-                                transition: 'color 0.2s ease'
-                            }}
-                        >
-                            Packages
-                        </Link>
-                        <Link 
-                            href="/about" 
-                            style={{ 
-                                color: activePage === 'about' ? '#E5A93B' : '#FFFFFF', 
-                                textDecoration: 'none', 
-                                fontSize: '14.5px', 
-                                fontWeight: '700',
-                                opacity: activePage === 'about' ? 1 : 0.88,
-                                transition: 'color 0.2s ease'
-                            }}
-                        >
-                            About
-                        </Link>
-                        <Link 
-                            href="/contact" 
-                            style={{ 
-                                color: activePage === 'contact' ? '#E5A93B' : '#FFFFFF', 
-                                textDecoration: 'none', 
-                                fontSize: '14.5px', 
-                                fontWeight: '700',
-                                opacity: activePage === 'contact' ? 1 : 0.88,
-                                transition: 'color 0.2s ease'
-                            }}
-                        >
-                            Contact
-                        </Link>
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                            <Link 
+                                href="/" 
+                                className={`text-hover-marker text-hover-marker-dark ${activePage === 'home' ? 'is-active-link' : ''}`}
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">Home</span>
+                            </Link>
+                            <Link 
+                                href="/about" 
+                                className={`text-hover-marker text-hover-marker-dark ${activePage === 'about' ? 'is-active-link' : ''}`}
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">About</span>
+                            </Link>
+                            <Link 
+                                href="/#packages" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">The Camps</span>
+                            </Link>
+                            <Link 
+                                href="/#program" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">Events</span>
+                            </Link>
+                            <Link 
+                                href="/#stories" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">Tales</span>
+                            </Link>
+                            <Link 
+                                href="/contact" 
+                                className={`text-hover-marker text-hover-marker-dark ${activePage === 'contact' ? 'is-active-link' : ''}`}
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">Contact</span>
+                            </Link>
+                        </nav>
 
-                        {/* Camper Account or Login */}
-                        {currentUser ? (
-                            <div ref={accountMenuRef} style={{ position: 'relative' }}>
-                                <button
-                                    onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                                    aria-expanded={isAccountMenuOpen}
-                                    aria-haspopup="menu"
-                                    aria-label="Camper account menu"
+                        {/* Camper Account or Login Button */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            {currentUser ? (
+                                <div ref={accountMenuRef} style={{ position: 'relative' }}>
+                                    <button
+                                        onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                                        aria-expanded={isAccountMenuOpen}
+                                        aria-haspopup="menu"
+                                        aria-label="Camper account menu"
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            background: 'rgba(255, 255, 255, 0.12)',
+                                            border: '1px solid rgba(229, 169, 59, 0.4)',
+                                            color: '#FFFFFF',
+                                            padding: '6px 14px',
+                                            borderRadius: '999px',
+                                            cursor: 'pointer',
+                                            fontSize: '13.5px',
+                                            fontWeight: '700',
+                                            backdropFilter: 'blur(10px)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>
+                                            {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
+                                        </span>
+                                        <span>{currentUser.name || 'Camper'}</span>
+                                        <i className={`fa-solid fa-chevron-${isAccountMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '10px', color: '#E5A93B' }}></i>
+                                    </button>
+
+                                    {/* Account Dropdown */}
+                                    <AnimatePresence>
+                                        {isAccountMenuOpen && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 'calc(100% + 10px)',
+                                                    right: 0,
+                                                    width: '240px',
+                                                    background: 'rgba(11, 21, 14, 0.96)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                                                    borderRadius: '20px',
+                                                    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                                                    backdropFilter: 'blur(24px)',
+                                                    WebkitBackdropFilter: 'blur(24px)',
+                                                    padding: '16px',
+                                                    zIndex: 1000,
+                                                    color: '#FFFFFF'
+                                                }}
+                                            >
+                                                <div style={{ paddingBottom: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '10px' }}>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#8E9B92', wordBreak: 'break-all' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                    <Link
+                                                        href="/#packages"
+                                                        onClick={() => setIsAccountMenuOpen(false)}
+                                                        style={{ color: '#FFFFFF', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                        <span>⛺ My Bookings & Packages</span>
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => {
+                                                            if (onLogout) onLogout();
+                                                            setIsAccountMenuOpen(false);
+                                                        }}
+                                                        style={{ background: 'transparent', border: 'none', color: '#FF7B7B', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '700', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 123, 123, 0.1)'}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                        <span>🚪 Log Out</span>
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ) : (
+                                <Link
+                                    href="/login"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',
                                         gap: '8px',
-                                        background: 'rgba(213, 237, 85, 0.15)',
-                                        border: '1px solid #E5A93B',
-                                        color: '#FFFFFF',
-                                        padding: '8px 16px',
+                                        background: 'linear-gradient(135deg, #D5ED55 0%, #C8EC34 100%)',
+                                        color: '#121613',
+                                        padding: '7px 18px 7px 8px',
                                         borderRadius: '999px',
-                                        fontSize: '13.5px',
-                                        fontWeight: '700',
-                                        cursor: 'pointer'
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '14px',
+                                        fontWeight: '800',
+                                        letterSpacing: '-0.01em',
+                                        textDecoration: 'none',
+                                        boxShadow: '0 4px 20px rgba(213, 237, 85, 0.35)',
+                                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                                        transition: 'all 0.25s ease'
                                     }}
                                 >
-                                    <span>👤 {currentUser.name}</span>
-                                    <span style={{ fontSize: '10px' }}>▼</span>
-                                </button>
-
-                                {isAccountMenuOpen && (
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: 'calc(100% + 8px)',
-                                        right: 0,
-                                        background: '#0B150E',
-                                        border: '1px solid rgba(255,255,255,0.15)',
-                                        borderRadius: '16px',
-                                        padding: '12px',
-                                        minWidth: '180px',
-                                        boxShadow: '0 12px 30px rgba(0,0,0,0.5)',
+                                    <span style={{
+                                        width: '26px',
+                                        height: '26px',
+                                        borderRadius: '50%',
+                                        background: '#121613',
+                                        color: '#D5ED55',
                                         display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '8px',
-                                        zIndex: 1000
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10.5px'
                                     }}>
-                                        <div style={{ fontSize: '12px', color: '#A2B6A6', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '6px' }}>
-                                            {currentUser.email}
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                if (onLogout) onLogout();
-                                                setIsAccountMenuOpen(false);
-                                            }}
-                                            style={{
-                                                background: 'none',
-                                                border: 'none',
-                                                color: '#FF5A5F',
-                                                textAlign: 'left',
-                                                fontSize: '13px',
-                                                fontWeight: '700',
-                                                cursor: 'pointer',
-                                                padding: '4px 0'
-                                            }}
-                                        >
-                                            Log Out
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <Link 
-                                href="/login" 
-                                className="btn-lime" 
-                                style={{ 
-                                    padding: '9px 24px', 
-                                    fontSize: '13.5px', 
-                                    fontWeight: '800', 
-                                    textDecoration: 'none' 
-                                }}
-                            >
-                                Log In
-                            </Link>
-                        )}
-                    </nav>
+                                        <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                                    </span>
+                                    <span>Log In</span>
+                                </Link>
+                            )}
+                        </div>
+                    </div>
 
                     {/* Mobile 3-Bar Morphing Hamburger Toggle */}
-                    <button
-                        className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                        aria-expanded={isMobileMenuOpen}
-                    >
-                        <span className="burger-line line-top" />
-                        <span className="burger-line line-mid" />
-                        <span className="burger-line line-bot" />
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                            className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                            aria-expanded={isMobileMenuOpen}
+                        >
+                            <span className="burger-line line-top" />
+                            <span className="burger-line line-mid" />
+                            <span className="burger-line line-bot" />
+                        </button>
+                    </div>
                 </div>
             </motion.header>
 
@@ -344,6 +430,7 @@ export default function SiteHeader({
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
+                            padding: 'calc(80px + 16px) 28px 36px',
                             overflowY: 'auto',
                             transform: 'translateZ(0)',
                             WebkitTransform: 'translateZ(0)',
@@ -375,74 +462,121 @@ export default function SiteHeader({
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%', padding: '0 28px' }}
+                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
                         >
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800', paddingTop: '16px' }}>
-                                <Link 
-                                    href="/" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: activePage === 'home' ? '#E5A93B' : '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    Home
-                                </Link>
-                                <Link 
-                                    href="/#overview" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    Camp Overview
-                                </Link>
-                                <Link 
-                                    href="/#packages" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    All Packages & Domes
-                                </Link>
-                                <Link 
-                                    href="/about" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: activePage === 'about' ? '#E5A93B' : '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    About Aanandham
-                                </Link>
-                                <Link 
-                                    href="/contact" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: activePage === 'contact' ? '#E5A93B' : '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    Contact & Inquiries
-                                </Link>
-                                <Link 
-                                    href="/login" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    style={{ color: '#FFFFFF', textDecoration: 'none' }}
-                                >
-                                    Member Log In / Sign Up
-                                </Link>
-                            </div>
+                            <nav style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}>
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'home' ? 'is-active-link' : ''}`}
+                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                    >
+                                        <span className="marker-text">Home</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
 
-                            <div style={{ marginTop: 'auto', paddingTop: '28px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/about" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'about' ? 'is-active-link' : ''}`}
+                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                    >
+                                        <span className="marker-text">About</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/#packages" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                    >
+                                        <span className="marker-text">The Camps</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/#program" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                    >
+                                        <span className="marker-text">Events & Trails</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/contact" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'contact' ? 'is-active-link' : ''}`}
+                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                    >
+                                        <span className="marker-text">Contact</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+                            </nav>
+
+                            {/* Bottom Actions: User Account or Login / Signup */}
+                            <motion.div variants={drawerItemVariants} style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {currentUser ? (
+                                    <div style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(229,169,59,0.3)', borderRadius: '20px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '800' }}>
+                                                    {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
+                                                </span>
+                                                <div>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
+                                                    <div style={{ fontSize: '11px', color: '#8E9B92' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={onLogout}
+                                                style={{ background: 'rgba(255, 123, 123, 0.15)', border: '1px solid rgba(255, 123, 123, 0.3)', color: '#FF7B7B', padding: '6px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
+                                            >
+                                                Log Out
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#FFFFFF', padding: '12px', borderRadius: '999px', fontSize: '14px', fontWeight: '700', textDecoration: 'none' }}
+                                        >
+                                            Log In
+                                        </Link>
+                                        <Link
+                                            href="/signup"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="btn-lime"
+                                            style={{ padding: '12px', fontSize: '14px', textDecoration: 'none', fontWeight: '800', textAlign: 'center' }}
+                                        >
+                                            Sign Up
+                                        </Link>
+                                    </div>
+                                )}
+
                                 <a
-                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
+                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '10px',
-                                        color: '#25D366',
-                                        fontSize: '14px',
-                                        fontWeight: '700',
-                                        textDecoration: 'none',
-                                        padding: '12px'
-                                    }}
+                                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.1)', border: '1px solid rgba(229, 169, 59, 0.25)', fontSize: '14px', fontWeight: '700', textDecoration: 'none', padding: '12px', borderRadius: '999px' }}
                                 >
-                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                    <span>WhatsApp Concierge (24/7)</span>
+                                    <span>🏕️ WhatsApp Concierge (24/7) ↗</span>
                                 </a>
-                            </div>
+                            </motion.div>
                         </motion.div>
                     </motion.div>
                 )}
