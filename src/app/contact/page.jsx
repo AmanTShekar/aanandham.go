@@ -977,7 +977,7 @@ export default function ContactPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ width: '100%', maxWidth: 'min(100%, 1380px)', margin: '0 auto', boxSizing: 'border-box' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> ROUTE INTELLIGENCE

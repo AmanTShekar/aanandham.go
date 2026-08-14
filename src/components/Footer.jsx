@@ -24,7 +24,7 @@ export default function Footer() {
                 filter: 'blur(50px)'
             }} />
 
-            <div style={{ width: '100%', maxWidth: 'min(100%, 1240px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
+            <div style={{ width: '100%', maxWidth: 'min(100%, 1340px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
                 
                 <div className="footer-columns-grid">
                     

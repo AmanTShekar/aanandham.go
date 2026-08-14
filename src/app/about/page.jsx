@@ -882,7 +882,7 @@ export default function AboutPage() {
                         filter: 'blur(80px)'
                     }} />
 
-                    <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+                    <div style={{ width: '100%', maxWidth: 'min(100%, 1340px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
                         
                         <div style={{ textAlign: 'center', marginBottom: '74px' }}>
                             <div style={{
