@@ -169,19 +169,19 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Column 3: POPULAR DESTINATIONS */}
+                    {/* Column 3: LEGAL & POLICIES */}
                     <div style={{ minWidth: '220px' }}>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            KERALA HIGHLIGHTS
+                            LEGAL & POLICIES
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
-                                { name: 'Kolukkumalai Sunrise (7,900 FT)', href: '/about' },
-                                { name: 'Suryanelli Tea Glamping', href: '/about' },
-                                { name: 'Phantom Head Ridge Trek', href: '/about' },
-                                { name: 'Anaerangal Lake Camp', href: '/about' },
-                                { name: 'Vagamon Pine Valley', href: '/#kerala-wilderness' },
-                                { name: 'Wayanad 900 Kandi Canopy', href: '/#kerala-wilderness' }
+                                { name: 'Privacy Policy', href: '/about' },
+                                { name: 'Terms of Service & Stay', href: '/about' },
+                                { name: 'Cancellation & Refund Policy', href: '/about' },
+                                { name: 'Wilderness Safety & First Aid', href: '/#why-aanandham' },
+                                { name: 'Forest Permits & Eco-Ethics', href: '/#why-aanandham' },
+                                { name: 'Campground Rules & Marshals', href: '/about' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>
@@ -235,11 +235,6 @@ export default function Footer() {
                                 {isSubscribed ? '✓ Welcome to Tribe!' : 'Join Wilderness Tribe ↗'}
                             </button>
                         </form>
-                        
-                        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span className="live-beacon"></span>
-                            <span style={{ fontSize: '12px', color: '#8E9B92' }}>Next Kolukkumalai Batch: This Weekend</span>
-                        </div>
                     </div>
 
                 </div>
