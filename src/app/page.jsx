@@ -983,33 +983,30 @@ export default function HomePage() {
                     </div>
 
                     {/* Desktop Nav Links */}
-                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
-                        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
-                            <Link href="/about" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">About Us</span>
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '26px' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
+                            <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                <span className="marker-text">Home</span>
                             </Link>
-                            <a href="#overview" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
-                                <span className="marker-text">The Camp</span> <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
-                            </a>
-                            <a href="#why-aanandham" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">Why Us</span>
+                            <Link href="/about" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                <span className="marker-text">About</span>
+                            </Link>
+                            <a href="#packages" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                <span className="marker-text">The Camps</span>
                             </a>
                             <a href="#program" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">Program</span>
+                                <span className="marker-text">Events</span>
                             </a>
-                            <a href="#packages" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">Pricing</span>
+                            <a href="#stories" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                <span className="marker-text">Poetry & Tales</span>
                             </a>
-                            <a href="#faq" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">FAQ</span>
-                            </a>
+                            <Link href="/contact" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                <span className="marker-text">Contact</span>
+                            </Link>
                         </nav>
 
                         {/* Right Contact & Log In Button */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            <Link href="/contact" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                                <span className="marker-text">Contact</span>
-                            </Link>
                             <Link
                                 href="/login"
                                 className="btn-lime"
@@ -1102,40 +1099,31 @@ export default function HomePage() {
 
                         {/* Essential Streamlined Navigation Links with Subtle Dividing Lines & Highlight Pen Effect */}
                         <nav style={{ display: 'flex', flexDirection: 'column', padding: '16px 0', fontSize: '18px', fontWeight: '700' }}>
-                            <a 
-                                href="#overview" 
+                            <Link 
+                                href="/" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">The Camp Overview</span>
+                                <span className="marker-text">Home</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
-                            </a>
-                            <a 
-                                href="#why-aanandham" 
+                            </Link>
+                            <Link 
+                                href="/about" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">Why Aanandham<span style={{ color: '#E5A93B' }}>.go</span> ★</span>
+                                <span className="marker-text">About</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
-                            </a>
+                            </Link>
                             <a 
                                 href="#packages" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">Packages & Pricing</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
-                            </a>
-                            <a 
-                                href="#stay" 
-                                onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
-                            >
-                                <span className="marker-text">Accommodation & Pods</span>
+                                <span className="marker-text">The Camps</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
                             </a>
                             <a 
@@ -1144,25 +1132,25 @@ export default function HomePage() {
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">4-Day Program</span>
+                                <span className="marker-text">Events</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
                             </a>
-                            <Link 
-                                href="/about" 
+                            <a 
+                                href="#stories" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">About Us</span>
+                                <span className="marker-text">Poetry & Tales</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
-                            </Link>
+                            </a>
                             <Link 
                                 href="/contact" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
                                 style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
                             >
-                                <span className="marker-text">Contact & Inquiries</span>
+                                <span className="marker-text">Contact</span>
                                 <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
                             </Link>
                         </nav>
