@@ -737,34 +737,29 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
     );
 }
 
-// ── MOBILE DRAWER LIQUID CIRCULAR WAVE MOTION VARIANTS ──
-// Exact center of the 44px toggle button: calc(100% - 44px) 34px
-// Starts at 22px (matching the round button circumference) and expands to 250%
+// ── MOBILE DRAWER FROSTED GLASS LIQUID RIPPLE VARIANTS ──
+// Origin anchored to the exact 44px round button center: calc(100% - 44px) 34px
 const drawerWaveVariants = {
     hidden: { 
         clipPath: 'circle(22px at calc(100% - 44px) 34px)',
         WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        opacity: 1,
-        transition: { 
-            duration: 0.48, 
-            ease: [0.32, 0, 0.67, 0] 
-        }
+        opacity: 0
     },
     visible: { 
-        clipPath: 'circle(250% at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(250% at calc(100% - 44px) 34px)',
+        clipPath: 'circle(260% at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)',
         opacity: 1,
         transition: { 
-            duration: 0.65, 
-            ease: [0.16, 1, 0.3, 1] 
+            duration: 0.62, 
+            ease: [0.19, 1, 0.22, 1] 
         }
     },
     exit: { 
         clipPath: 'circle(22px at calc(100% - 44px) 34px)',
         WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
-        opacity: 1,
+        opacity: 0,
         transition: { 
-            duration: 0.52, 
+            duration: 0.46, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -775,22 +770,21 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.055,
+            staggerChildren: 0.05,
             delayChildren: 0.12
         }
     },
     exit: {
         opacity: 0,
         transition: {
-            staggerChildren: 0.025,
-            staggerDirection: -1,
-            duration: 0.18
+            duration: 0.15,
+            ease: "easeOut"
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, y: 24, scale: 0.96 },
+    hidden: { opacity: 0, y: 22, scale: 0.96 },
     visible: {
         opacity: 1,
         y: 0,
@@ -801,7 +795,7 @@ const drawerItemVariants = {
         opacity: 0,
         y: 10,
         scale: 0.96,
-        transition: { duration: 0.18, ease: "easeIn" }
+        transition: { duration: 0.15, ease: "easeOut" }
     }
 };
 
@@ -1317,50 +1311,66 @@ export default function HomePage() {
             </motion.header>
 
             {/* ── LIQUID WAVE EXPANDING MOBILE DRAWER (Expanding outward beneath persistent navbar) ── */}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {isMobileMenuOpen && (
-                    <>
-                        {/* Dynamic Origin Shockwave Burst Ring */}
+                    <motion.div
+                        key="mobile-frosted-glass-drawer"
+                        variants={drawerWaveVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 99999,
+                            background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
+                            backdropFilter: 'blur(36px) saturate(190%)',
+                            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
+                            border: '1px solid rgba(213, 237, 85, 0.12)',
+                            color: '#FFFFFF',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: 'calc(80px + 16px) 28px 36px',
+                            overflowY: 'auto',
+                            transform: 'translateZ(0)',
+                            willChange: 'clip-path'
+                        }}
+                    >
+                        {/* Concentric Frosted Glass Liquid Ripple Rings (Dispersing outward from button) */}
                         <motion.div
-                            initial={{ scale: 0.6, opacity: 0.9 }}
-                            animate={{ scale: 3.8, opacity: 0 }}
-                            exit={{ scale: 0.6, opacity: 0 }}
-                            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                            key="ripple-wave-1"
+                            initial={{ scale: 0.2, opacity: 0.9 }}
+                            animate={{ scale: [0.2, 2.0, 4.2], opacity: [0.9, 0.35, 0] }}
+                            transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
                             style={{
-                                position: 'fixed',
+                                position: 'absolute',
                                 top: scrolled ? '12px' : '22px',
                                 right: scrolled ? '24px' : '32px',
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
-                                border: '2px solid #D5ED55',
-                                boxShadow: '0 0 20px rgba(213, 237, 85, 0.6)',
-                                pointerEvents: 'none',
-                                zIndex: 100001
+                                border: '1.5px solid rgba(213, 237, 85, 0.65)',
+                                boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
+                                pointerEvents: 'none'
+                            }}
+                        />
+                        <motion.div
+                            key="ripple-wave-2"
+                            initial={{ scale: 0.2, opacity: 0.7 }}
+                            animate={{ scale: [0.2, 2.5, 5.5], opacity: [0.7, 0.2, 0] }}
+                            transition={{ duration: 0.95, delay: 0.08, ease: [0.19, 1, 0.22, 1] }}
+                            style={{
+                                position: 'absolute',
+                                top: scrolled ? '12px' : '22px',
+                                right: scrolled ? '24px' : '32px',
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '50%',
+                                border: '1px solid rgba(229, 169, 59, 0.45)',
+                                pointerEvents: 'none'
                             }}
                         />
 
-                        <motion.div
-                            variants={drawerWaveVariants}
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            style={{
-                                position: 'fixed',
-                                inset: 0,
-                                zIndex: 99999,
-                                background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(229, 169, 59, 0.24) 0%, rgba(213, 237, 85, 0.08) 40px, #0B150E 140px)',
-                                backdropFilter: 'blur(36px)',
-                                WebkitBackdropFilter: 'blur(36px)',
-                                color: '#FFFFFF',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                padding: 'calc(80px + 16px) 28px 36px',
-                                overflowY: 'auto',
-                                transform: 'translateZ(0)',
-                                willChange: 'clip-path'
-                            }}
-                        >
                         {/* Staggered Cascading Navigation Links */}
                         <motion.nav 
                             variants={drawerStaggerVariants}
@@ -1641,7 +1651,6 @@ export default function HomePage() {
                             </a>
                         </div>
                     </motion.div>
-                    </>
                 )}
             </AnimatePresence>
 

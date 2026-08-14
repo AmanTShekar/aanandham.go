@@ -247,49 +247,49 @@ export default function AboutPage() {
             </header>
 
             {/* ── RESPONSIVE MOBILE DRAWER (Liquid Wave Expansion) ── */}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {isMobileMenuOpen && (
-                    <>
+                    <motion.div
+                        key="about-frosted-glass-drawer"
+                        initial={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 0 }}
+                        animate={{ clipPath: 'circle(260% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)', opacity: 1 }}
+                        exit={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 0 }}
+                        transition={{ duration: 0.58, ease: [0.19, 1, 0.22, 1] }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 99999,
+                            background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
+                            backdropFilter: 'blur(36px) saturate(190%)',
+                            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
+                            border: '1px solid rgba(213, 237, 85, 0.12)',
+                            color: '#FFFFFF',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: '100px 32px 40px',
+                            overflowY: 'auto',
+                            transform: 'translateZ(0)',
+                            willChange: 'clip-path'
+                        }}
+                    >
+                        {/* Concentric Frosted Glass Liquid Ripple Rings */}
                         <motion.div
-                            initial={{ scale: 0.6, opacity: 0.9 }}
-                            animate={{ scale: 3.8, opacity: 0 }}
-                            exit={{ scale: 0.6, opacity: 0 }}
-                            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                            initial={{ scale: 0.2, opacity: 0.9 }}
+                            animate={{ scale: [0.2, 2.0, 4.2], opacity: [0.9, 0.35, 0] }}
+                            transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
                             style={{
-                                position: 'fixed',
+                                position: 'absolute',
                                 top: scrolled ? '12px' : '20px',
                                 right: scrolled ? '24px' : '32px',
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
-                                border: '2px solid #D5ED55',
-                                boxShadow: '0 0 20px rgba(213, 237, 85, 0.6)',
-                                pointerEvents: 'none',
-                                zIndex: 100001
+                                border: '1.5px solid rgba(213, 237, 85, 0.65)',
+                                boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
+                                pointerEvents: 'none'
                             }}
                         />
 
-                        <motion.div
-                            initial={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 1 }}
-                            animate={{ clipPath: 'circle(250% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(250% at calc(100% - 44px) 34px)', opacity: 1 }}
-                            exit={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 1 }}
-                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                            style={{
-                                position: 'fixed',
-                                inset: 0,
-                                zIndex: 99999,
-                                background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(229, 169, 59, 0.24) 0%, rgba(213, 237, 85, 0.08) 40px, #0B150E 140px)',
-                                backdropFilter: 'blur(36px)',
-                                WebkitBackdropFilter: 'blur(36px)',
-                                color: '#FFFFFF',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                padding: '100px 32px 40px',
-                                overflowY: 'auto',
-                                transform: 'translateZ(0)',
-                                willChange: 'clip-path'
-                            }}
-                        >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
                             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Home
@@ -327,7 +327,6 @@ export default function AboutPage() {
                             </a>
                         </div>
                     </motion.div>
-                    </>
                 )}
             </AnimatePresence>
 
