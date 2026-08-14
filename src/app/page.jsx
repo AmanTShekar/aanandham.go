@@ -950,7 +950,7 @@ export default function HomePage() {
                     
                     {/* Brand Logo & Name */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <Link href="/" className="logo-brand-pill">
+                        <Link href="/" className="text-hover-marker text-hover-marker-dark">
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go Logo"
@@ -961,7 +961,7 @@ export default function HomePage() {
                                     borderRadius: '6px'
                                 }}
                             />
-                            <span style={{
+                            <span className="marker-text" style={{
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: '26px',
                                 fontWeight: '800',

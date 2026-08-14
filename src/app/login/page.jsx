@@ -110,7 +110,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                     <i className="fa-solid fa-arrow-left" style={{ fontSize: '12px' }}></i> Back to Aanandham.go
                 </Link>
 
-                <Link href="/" className="logo-brand-pill" style={{
+                <Link href="/" className="text-hover-marker" style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '10px',
@@ -130,7 +130,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                             objectFit: 'contain'
                         }}
                     />
-                    <span>Aanandham<span style={{ color: '#E5A93B' }}>.go</span></span>
+                    <span className="marker-text">Aanandham<span style={{ color: '#E5A93B' }}>.go</span></span>
                 </Link>
             </header>
 

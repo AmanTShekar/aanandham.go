@@ -36,7 +36,7 @@ export default function Footer() {
                     
                     {/* Column 1: Brand & Coordinates */}
                     <div style={{ paddingRight: '12px' }}>
-                        <Link href="/" className="logo-brand-pill" style={{ marginBottom: '14px', paddingLeft: '8px' }}>
+                        <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ marginBottom: '14px' }}>
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go"
@@ -46,7 +46,7 @@ export default function Footer() {
                                     objectFit: 'contain'
                                 }}
                             />
-                            <h3 style={{
+                            <h3 className="marker-text" style={{
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: '32px',
                                 fontWeight: '800',

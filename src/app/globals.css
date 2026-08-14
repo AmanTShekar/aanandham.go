@@ -577,26 +577,63 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SEMI-TRANSPARENT FROSTED GLASS LOGO PILL HIGHLIGHT
+   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN ON HOVER (Just text!)
 ───────────────────────────────────────────────────────────── */
-.logo-brand-pill {
+.text-hover-marker {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid transparent;
   text-decoration: none;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
 }
 
-.logo-brand-pill:hover {
-  background: rgba(229, 169, 59, 0.14);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-color: rgba(229, 169, 59, 0.38);
-  box-shadow: 0 4px 20px rgba(229, 169, 59, 0.22);
-  transform: translateY(-1px);
+.text-hover-marker .marker-text {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.text-hover-marker .marker-text::before {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 12%;
+  bottom: 8%;
+  background: linear-gradient(
+    95deg,
+    rgba(229, 169, 59, 0.5) 0%,
+    rgba(255, 238, 120, 0.6) 50%,
+    rgba(229, 169, 59, 0.52) 100%
+  );
+  /* Authentic square chisel marker pen start & stop stroke edges */
+  border-left: 3.5px solid #D48A22;
+  border-right: 3.5px solid #D48A22;
+  border-radius: 1px;
+  transform: scaleX(0) skewX(-4deg);
+  transform-origin: left center;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(212, 138, 34, 0.2);
+}
+
+.text-hover-marker:hover .marker-text::before {
+  transform: scaleX(1) skewX(-4deg);
+}
+
+/* For dark backgrounds (Navbar & Footer) */
+.text-hover-marker-dark .marker-text::before {
+  background: linear-gradient(
+    95deg,
+    rgba(229, 169, 59, 0.42) 0%,
+    rgba(255, 238, 120, 0.52) 50%,
+    rgba(229, 169, 59, 0.45) 100%
+  );
+  border-left: 3.5px solid #E5A93B;
+  border-right: 3.5px solid #E5A93B;
+  box-shadow: 0 0 12px rgba(229, 169, 59, 0.35);
 }
 
 /* ─────────────────────────────────────────────────────────────

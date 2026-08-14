@@ -107,7 +107,7 @@ export default function ContactPage() {
                 justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/" className="logo-brand-pill">
+                    <Link href="/" className="text-hover-marker text-hover-marker-dark">
                         <img
                             src="/logo.png"
                             alt="Aanandham.go"
@@ -118,7 +118,7 @@ export default function ContactPage() {
                                 borderRadius: '6px'
                             }}
                         />
-                        <span style={{
+                        <span className="marker-text" style={{
                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                             fontSize: '26px',
                             fontWeight: '800',
