@@ -153,31 +153,31 @@ const WILDERNESS_PILLARS = [
     }
 ];
 
-// ── EXPEDITION TEAM MEMBERS ──
-const TEAM_MEMBERS = [
+// ── EXPEDITION CREATORS & MOUNTAIN MARSHALS ──
+const TEAM_CREATORS = [
     {
         name: 'Suryanarayanan K.',
-        role: 'Founder & Mountain Director',
-        img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=500&q=80',
-        exp: '14+ Years in Western Ghats',
-        bio: 'Born and raised along the Suryanelli ridgelines, Surya founded Aanandham to replace commercial mass-tourism with intimate, sustainable mountain living.',
-        tags: ['High Altitude Navigation', '4x4 Offroading', 'Eco-Architecture']
+        role: 'Founder & Wilderness Architect',
+        handle: '@surya.ridge',
+        img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85',
+        specialty: 'High-Altitude Navigation & 4x4 Offroading',
+        exp: '14+ Years in Western Ghats'
     },
     {
         name: 'Ananya Menon',
-        role: 'Head of Camper Care & Safety',
-        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=500&q=80',
-        exp: 'Wilderness Safety Specialist',
-        bio: 'Ananya oversees all camp operations, female solo-traveler safety, pristine hygiene standards, and bespoke family expedition hospitality.',
-        tags: ['Camp Hygiene', 'Wellness Retreats', 'First-Aid Certified']
+        role: 'Lead Expedition Host & Camp Marshal',
+        handle: '@ananya.wildlife',
+        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85',
+        specialty: 'Camper Care & High-Altitude Safety',
+        exp: 'Wilderness Safety Specialist'
     },
     {
         name: 'Muthuvel Pandian',
-        role: 'Chief 4x4 Trail Marshal',
-        img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=500&q=80',
-        exp: '20+ Years Kolukkumalai Driver',
-        bio: 'The undisputed master of the rocky Kolukkumalai terrain. Muthuvel navigates sheer drop-offs with absolute serenity and infectious mountain smiles.',
-        tags: ['Off-Road Safety', 'Wildlife Tracking', 'Trail Logistics']
+        role: 'Chief 4x4 Trail Master',
+        handle: '@muthuvel.kolukkumalai',
+        img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=85',
+        specialty: 'Rugged Rock Ascent & Cloud Bed Lead',
+        exp: '20+ Years Kolukkumalai Safari'
     }
 ];
 
@@ -546,36 +546,36 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Tactile Sticky Notes)
+                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Interactive Sticky Field Notes)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '120px 24px 130px',
+                    padding: '120px 24px 140px',
                     background: '#0B150E',
                     position: 'relative',
                     overflow: 'hidden'
                 }}>
-                    {/* Ambient subtle glow */}
+                    {/* Atmospheric Ridge Glow & Mist Backlight */}
                     <div style={{
                         position: 'absolute',
-                        top: '20%',
+                        top: '15%',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        width: '900px',
-                        height: '400px',
-                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.08) 0%, transparent 70%)',
+                        width: '1000px',
+                        height: '450px',
+                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.1) 0%, rgba(229, 169, 59, 0.05) 45%, transparent 70%)',
                         pointerEvents: 'none',
-                        filter: 'blur(70px)'
+                        filter: 'blur(80px)'
                     }} />
 
                     <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         
-                        <div style={{ textAlign: 'center', marginBottom: '70px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '74px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> EXPEDITION FIELD NOTES
+                                <span className="star-icon">★</span> EXPEDITION FIELD DISPATCHES
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(32px, 4.5vw, 52px)',
+                                fontSize: 'clamp(34px, 4.8vw, 54px)',
                                 fontWeight: '800',
                                 color: '#FFFFFF',
                                 letterSpacing: '-0.03em',
@@ -583,133 +583,159 @@ export default function AboutPage() {
                             }}>
                                 The 4 Pillars of <span style={{ color: '#E5A93B' }}>Aanandham Hospitality</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '660px', margin: '0 auto' }}>
-                                Handcrafted wilderness standards written on the ridge. Real comfort, pristine safety, and zero artificial gimmicks.
+                            <p style={{ fontSize: '16.5px', color: '#A2B6A6', maxWidth: '680px', margin: '0 auto' }}>
+                                Interactive field notes pinned directly from our 7,900 FT ridge basecamp. Hover or tap to inspect our unyielding wilderness protocols.
                             </p>
                         </div>
 
-                        {/* 4 Tactile Sticky Field Notes Grid */}
+                        {/* 4 Tactile Sticky Field Notes Grid with Spring Physics */}
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            gap: '36px',
-                            paddingTop: '20px'
+                            gap: '38px',
+                            paddingTop: '24px'
                         }}>
                             {WILDERNESS_PILLARS.map((pillar, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 30 }}
+                                    initial={{ opacity: 0, y: 36 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                    transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
                                     whileHover={{
-                                        y: -12,
+                                        y: -18,
                                         rotate: 0,
-                                        scale: 1.025,
-                                        boxShadow: '0 28px 60px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)'
+                                        scale: 1.035,
+                                        boxShadow: '0 32px 70px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.3)'
                                     }}
+                                    whileTap={{ scale: 0.98 }}
                                     style={{
                                         position: 'relative',
                                         background: pillar.paperBg,
                                         color: pillar.inkColor,
-                                        borderRadius: '6px 6px 36px 6px',
-                                        padding: '40px 28px 32px',
-                                        boxShadow: '0 16px 36px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0,0,0,0.1)',
+                                        borderRadius: '8px 8px 36px 8px',
+                                        padding: '42px 28px 34px',
+                                        boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.15)',
                                         transform: `rotate(${pillar.rotation})`,
-                                        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        transition: 'box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        minHeight: '440px',
-                                        backgroundImage: 'radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 0)',
-                                        backgroundSize: '16px 16px'
+                                        minHeight: '460px',
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 28px)',
+                                        cursor: 'grab'
                                     }}
                                 >
-                                    {/* Frosted Translucent Washi Tape on Top Center */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '-13px',
-                                        left: '50%',
-                                        transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
-                                        width: '120px',
-                                        height: '28px',
-                                        background: pillar.tapeColor,
-                                        backdropFilter: 'blur(6px)',
-                                        WebkitBackdropFilter: 'blur(6px)',
-                                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                                        borderLeft: '3px dashed rgba(0,0,0,0.2)',
-                                        borderRight: '3px dashed rgba(0,0,0,0.2)',
-                                        opacity: 0.9,
-                                        zIndex: 3
-                                    }} />
+                                    {/* Textured Washi Tape Strip with Brass Pin on Top */}
+                                    <motion.div
+                                        whileHover={{ y: -2, rotate: 0 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-14px',
+                                            left: '50%',
+                                            transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
+                                            width: '130px',
+                                            height: '28px',
+                                            background: pillar.tapeColor,
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                            boxShadow: '0 3px 8px rgba(0,0,0,0.18)',
+                                            borderLeft: '3px dashed rgba(0,0,0,0.25)',
+                                            borderRight: '3px dashed rgba(0,0,0,0.25)',
+                                            opacity: 0.95,
+                                            zIndex: 4,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '8px',
+                                            height: '8px',
+                                            borderRadius: '50%',
+                                            background: '#E5A93B',
+                                            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.4)',
+                                            border: '1px solid rgba(0,0,0,0.2)'
+                                        }} />
+                                    </motion.div>
 
-                                    {/* Dog-Eared Folded Bottom Right Corner Effect */}
+                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
                                     <div style={{
                                         position: 'absolute',
                                         bottom: 0,
                                         right: 0,
-                                        width: '32px',
-                                        height: '32px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0,0,0,0.06) 100%)',
-                                        borderTopLeftRadius: '12px',
+                                        width: '36px',
+                                        height: '36px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
+                                        borderTopLeftRadius: '14px',
+                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.12)',
                                         pointerEvents: 'none'
                                     }} />
 
-                                    {/* Top Metadata Header: Dispatch No + Circular Rubber Stamp */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                                    {/* Header Row: Dispatch Badge + Vintage Ink Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '22px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <span style={{
-                                                fontSize: '11.5px',
+                                                fontSize: '11px',
                                                 fontWeight: '900',
-                                                letterSpacing: '1px',
+                                                letterSpacing: '1.2px',
                                                 textTransform: 'uppercase',
                                                 background: 'rgba(0,0,0,0.08)',
                                                 padding: '4px 10px',
-                                                borderRadius: '6px'
+                                                borderRadius: '6px',
+                                                border: '1px solid rgba(0,0,0,0.06)'
                                             }}>
                                                 {pillar.tag}
                                             </span>
                                         </div>
 
-                                        {/* Vintage Rubber Stamp */}
-                                        <div style={{
-                                            border: `1.5px solid ${pillar.stampColor}`,
-                                            color: pillar.stampColor,
-                                            padding: '3px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '9.5px',
-                                            fontWeight: '900',
-                                            letterSpacing: '0.8px',
-                                            textTransform: 'uppercase',
-                                            transform: 'rotate(-4deg)',
-                                            opacity: 0.85
-                                        }}>
+                                        {/* Vintage Double-Bordered Ink Stamp */}
+                                        <motion.div
+                                            whileHover={{ rotate: 0, scale: 1.05 }}
+                                            style={{
+                                                border: `2px solid ${pillar.stampColor}`,
+                                                outline: `1px dashed ${pillar.stampColor}`,
+                                                outlineOffset: '2px',
+                                                color: pillar.stampColor,
+                                                padding: '4px 9px',
+                                                borderRadius: '4px',
+                                                fontSize: '9.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.9px',
+                                                textTransform: 'uppercase',
+                                                transform: 'rotate(-5deg)',
+                                                opacity: 0.9,
+                                                userSelect: 'none'
+                                            }}
+                                        >
                                             {pillar.stamp}
-                                        </div>
+                                        </motion.div>
                                     </div>
 
-                                    {/* Icon & Title */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+                                    {/* Icon & Bold Headline */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
                                         <div style={{
-                                            width: '42px',
-                                            height: '42px',
-                                            borderRadius: '12px',
-                                            background: 'rgba(0, 0, 0, 0.08)',
+                                            width: '46px',
+                                            height: '46px',
+                                            borderRadius: '14px',
+                                            background: 'rgba(0, 0, 0, 0.07)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '19px',
+                                            fontSize: '20px',
                                             color: pillar.inkColor,
-                                            flexShrink: 0
+                                            flexShrink: 0,
+                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                                         }}>
                                             <i className={pillar.icon}></i>
                                         </div>
                                         <h3 style={{
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                            fontSize: '20px',
+                                            fontSize: '21px',
                                             fontWeight: '800',
-                                            lineHeight: 1.25,
+                                            lineHeight: 1.2,
                                             margin: 0,
-                                            color: pillar.inkColor
+                                            color: pillar.inkColor,
+                                            letterSpacing: '-0.02em'
                                         }}>
                                             {pillar.title}
                                         </h3>
@@ -718,35 +744,52 @@ export default function AboutPage() {
                                     {/* Description */}
                                     <p style={{
                                         fontSize: '13.5px',
-                                        lineHeight: 1.65,
-                                        margin: '0 0 18px',
-                                        opacity: 0.9,
+                                        lineHeight: 1.7,
+                                        margin: '0 0 20px',
+                                        opacity: 0.92,
                                         fontWeight: '500'
                                     }}>
                                         {pillar.desc}
                                     </p>
 
-                                    {/* Field Verification Checkpoints */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' }}>
+                                    {/* Tactical Checklist Badges */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '22px' }}>
                                         {pillar.checkList.map((chk, cIdx) => (
-                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', fontWeight: '700', opacity: 0.88 }}>
-                                                <span style={{ color: pillar.stampColor, fontSize: '13px' }}>✓</span>
+                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', fontWeight: '700', opacity: 0.9 }}>
+                                                <span style={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    width: '18px',
+                                                    height: '18px',
+                                                    borderRadius: '50%',
+                                                    background: 'rgba(0,0,0,0.08)',
+                                                    color: pillar.stampColor,
+                                                    fontSize: '11px',
+                                                    fontWeight: '900'
+                                                }}>
+                                                    ✓
+                                                </span>
                                                 <span>{chk}</span>
                                             </div>
                                         ))}
                                     </div>
 
-                                    {/* Handwritten Field Note Quote */}
+                                    {/* Field Quote with Signature */}
                                     <div style={{
                                         marginTop: 'auto',
-                                        paddingTop: '14px',
-                                        borderTop: '1px dashed rgba(0, 0, 0, 0.15)',
+                                        paddingTop: '16px',
+                                        borderTop: '1px dashed rgba(0, 0, 0, 0.18)',
                                         fontStyle: 'italic',
                                         fontSize: '12.5px',
-                                        lineHeight: 1.5,
-                                        opacity: 0.85
+                                        lineHeight: 1.55,
+                                        opacity: 0.88,
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '6px'
                                     }}>
-                                        {pillar.noteQuote}
+                                        <span>✍</span>
+                                        <span>{pillar.noteQuote}</span>
                                     </div>
                                 </motion.div>
                             ))}
@@ -926,189 +969,254 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    5. WILDERNESS LEADERSHIP & EXPEDITION MARSHALS
+                    5. THE CREATORS & MOUNTAIN MARSHALS (Photo-First Portrait Showcase)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '110px 24px',
+                    padding: '120px 24px',
                     background: '#0B150E',
                     position: 'relative'
                 }}>
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> EXPEDITION LEADERSHIP
+                                <span className="star-icon">★</span> EXPEDITION CREATORS
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontSize: 'clamp(34px, 4.8vw, 54px)',
                                 fontWeight: '800',
                                 color: '#FFFFFF',
                                 letterSpacing: '-0.03em',
                                 margin: '0 0 14px'
                             }}>
-                                Guided by True Mountain People
+                                The Creators & <span style={{ color: '#E5A93B' }}>Mountain Marshals</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '620px', margin: '0 auto' }}>
-                                Our marshals and directors live on these ridges. They know every mist pocket, hairpin curve, and sunrise angle by heart.
+                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                                The wilderness architects, expedition leads, and local ridge masters who live here and craft your Aanandham mountain journeys.
                             </p>
                         </div>
 
+                        {/* Large Photo-First Portrait Cards */}
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
                             gap: '32px'
                         }}>
-                            {TEAM_MEMBERS.map((member, i) => (
-                                <div
+                            {TEAM_CREATORS.map((member, i) => (
+                                <motion.div
                                     key={i}
-                                    className="card-hover-lift"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.6, delay: i * 0.12 }}
+                                    whileHover={{ y: -10 }}
                                     style={{
-                                        background: '#0E1A11',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        position: 'relative',
+                                        height: '520px',
                                         borderRadius: '32px',
-                                        padding: '32px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        boxShadow: '0 20px 48px rgba(0,0,0,0.5)'
+                                        overflow: 'hidden',
+                                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                                        boxShadow: '0 24px 60px rgba(0,0,0,0.6)',
+                                        background: '#070E08',
+                                        cursor: 'pointer'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', gap: '18px', alignItems: 'center', marginBottom: '22px' }}>
-                                        <img
-                                            src={member.img}
-                                            alt={member.name}
-                                            style={{
-                                                width: '78px',
-                                                height: '78px',
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                border: '2px solid #E5A93B'
-                                            }}
-                                        />
-                                        <div>
-                                            <h3 style={{
-                                                fontFamily: 'var(--font-heading)',
-                                                fontSize: '20px',
-                                                fontWeight: '800',
-                                                color: '#FFFFFF',
-                                                margin: '0 0 4px'
-                                            }}>
-                                                {member.name}
-                                            </h3>
-                                            <div style={{ fontSize: '13px', color: '#E5A93B', fontWeight: '800' }}>
-                                                {member.role}
-                                            </div>
-                                            <div style={{ fontSize: '11.5px', color: '#8E9B92', marginTop: '2px' }}>
-                                                {member.exp}
-                                            </div>
+                                    {/* Full-bleed Portrait Photo */}
+                                    <img
+                                        src={member.img}
+                                        alt={member.name}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            objectPosition: 'center 20%',
+                                            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        }}
+                                        onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                                        onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                                    />
+
+                                    {/* Gradient Dark Scrim Overlay */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.15) 0%, rgba(7, 14, 8, 0.4) 45%, rgba(7, 14, 8, 0.95) 90%)',
+                                        pointerEvents: 'none'
+                                    }} />
+
+                                    {/* Top Corner Experience Pill */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '20px',
+                                        left: '20px',
+                                        background: 'rgba(7, 14, 8, 0.75)',
+                                        border: '1px solid rgba(229, 169, 59, 0.4)',
+                                        color: '#E5A93B',
+                                        fontSize: '12px',
+                                        fontWeight: '800',
+                                        padding: '6px 14px',
+                                        borderRadius: '999px',
+                                        backdropFilter: 'blur(12px)',
+                                        WebkitBackdropFilter: 'blur(12px)'
+                                    }}>
+                                        ★ {member.exp}
+                                    </div>
+
+                                    {/* Bottom Content Container */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        padding: '32px 28px',
+                                        zIndex: 2,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '6px'
+                                    }}>
+                                        <div style={{
+                                            fontSize: '13px',
+                                            fontWeight: '800',
+                                            color: '#D5ED55',
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            {member.handle}
+                                        </div>
+
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                            fontSize: '28px',
+                                            fontWeight: '800',
+                                            color: '#FFFFFF',
+                                            lineHeight: 1.15,
+                                            margin: '2px 0 4px',
+                                            textShadow: '0 4px 12px rgba(0,0,0,0.6)'
+                                        }}>
+                                            {member.name}
+                                        </h3>
+
+                                        <div style={{
+                                            fontSize: '15px',
+                                            color: '#E5A93B',
+                                            fontWeight: '800',
+                                            marginBottom: '6px'
+                                        }}>
+                                            {member.role}
+                                        </div>
+
+                                        <div style={{
+                                            fontSize: '13px',
+                                            color: '#C8D8CB',
+                                            lineHeight: 1.5,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px'
+                                        }}>
+                                            <span style={{ color: '#D5ED55' }}>✦</span>
+                                            <span>{member.specialty}</span>
                                         </div>
                                     </div>
-
-                                    <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.7, margin: '0 0 24px', flex: 1 }}>
-                                        {member.bio}
-                                    </p>
-
-                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                        {member.tags.map((tag, tIdx) => (
-                                            <span
-                                                key={tIdx}
-                                                style={{
-                                                    background: 'rgba(213, 237, 85, 0.1)',
-                                                    border: '1px solid rgba(213, 237, 85, 0.25)',
-                                                    color: '#D5ED55',
-                                                    fontSize: '11.5px',
-                                                    fontWeight: '700',
-                                                    padding: '5px 12px',
-                                                    borderRadius: '999px'
-                                                }}
-                                            >
-                                                ✓ {tag}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    6. ORGANIC CURVED NATURE CTA BANNER
+                    6. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '60px 24px 110px',
+                    padding: '80px 24px 120px',
                     background: '#F8F9F5'
                 }}>
                     <div style={{
                         maxWidth: '1240px',
                         margin: '0 auto',
-                        background: 'radial-gradient(circle at 80% 50%, rgba(229, 169, 59, 0.3) 0%, rgba(18, 35, 22, 0.95) 55%, #070E08 100%)',
-                        border: '1px solid rgba(213, 237, 85, 0.35)',
+                        backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2200&q=90")',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center 40%',
+                        border: '1.5px solid rgba(213, 237, 85, 0.45)',
                         borderRadius: '36px',
-                        padding: 'clamp(48px, 7vw, 84px)',
+                        padding: 'clamp(56px, 8vw, 96px) 24px',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         textAlign: 'center',
-                        boxShadow: '0 30px 80px rgba(0,0,0,0.2)',
+                        boxShadow: '0 30px 80px rgba(0,0,0,0.25)',
                         position: 'relative',
                         overflow: 'hidden'
                     }}>
-                        <div className="star-badge" style={{ marginBottom: '16px' }}>
-                            <span className="star-icon">★</span> EXPEDITIONS ARE LIVE
-                        </div>
-                        <h2 style={{
-                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                            fontSize: 'clamp(32px, 5vw, 54px)',
-                            fontWeight: '800',
-                            color: '#FFFFFF',
-                            letterSpacing: '-0.03em',
-                            maxWidth: '820px',
-                            margin: '0 0 18px',
-                            lineHeight: 1.15
-                        }}>
-                            Ready to Swap the Screen for the <span style={{ color: '#E5A93B' }}>Sunrise Cloud Bed</span>?
-                        </h2>
-                        <p style={{
-                            fontSize: '16px',
-                            color: '#C3D4C6',
-                            maxWidth: '640px',
-                            margin: '0 0 36px',
-                            lineHeight: 1.65
-                        }}>
-                            Reserve your verified geodesic dome, romantic cliffside tent, or 4x4 high-peak safari in Suryanelli & Kolukkumalai.
-                        </p>
+                        {/* Layered Obsidian and Sunrise Gradient Backdrop */}
+                        <div style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.82) 0%, rgba(11, 21, 14, 0.88) 55%, rgba(7, 14, 8, 0.96) 100%), radial-gradient(circle at 80% 50%, rgba(229, 169, 59, 0.35) 0%, transparent 60%)',
+                            zIndex: 1
+                        }} />
 
-                        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                            <Link
-                                href="/#packages"
-                                className="btn-lime"
-                                style={{
-                                    padding: '15px 38px',
-                                    fontSize: '15px',
-                                    fontWeight: '800',
-                                    textDecoration: 'none'
-                                }}
-                            >
-                                Explore Campsite Packages ↗
-                            </Link>
-                            <Link
-                                href="/contact"
-                                style={{
-                                    padding: '15px 30px',
-                                    borderRadius: '999px',
-                                    background: 'rgba(255, 255, 255, 0.08)',
-                                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                                    color: '#FFFFFF',
-                                    fontSize: '15px',
-                                    fontWeight: '700',
-                                    textDecoration: 'none',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px'
-                                }}
-                            >
-                                <span>💬 Talk to Concierge</span>
-                            </Link>
+                        <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <div className="star-badge" style={{ marginBottom: '18px' }}>
+                                <span className="star-icon">★</span> EXPEDITIONS ARE LIVE
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(34px, 5.2vw, 56px)',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                letterSpacing: '-0.03em',
+                                maxWidth: '840px',
+                                margin: '0 0 18px',
+                                lineHeight: 1.12,
+                                textShadow: '0 8px 30px rgba(0,0,0,0.7)'
+                            }}>
+                                Ready to Swap the Screen for the <span style={{ color: '#E5A93B' }}>Sunrise Cloud Bed</span>?
+                            </h2>
+                            <p style={{
+                                fontSize: '16.5px',
+                                color: '#DCE7DE',
+                                maxWidth: '660px',
+                                margin: '0 0 40px',
+                                lineHeight: 1.65,
+                                textShadow: '0 4px 16px rgba(0,0,0,0.6)'
+                            }}>
+                                Reserve your verified geodesic dome, romantic cliffside tent, or 4x4 high-peak safari in Suryanelli & Kolukkumalai.
+                            </p>
+
+                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                <Link
+                                    href="/#packages"
+                                    className="btn-lime"
+                                    style={{
+                                        padding: '16px 42px',
+                                        fontSize: '15.5px',
+                                        fontWeight: '800',
+                                        textDecoration: 'none',
+                                        boxShadow: '0 10px 30px rgba(213, 237, 85, 0.4)'
+                                    }}
+                                >
+                                    Explore Campsite Packages ↗
+                                </Link>
+                                <Link
+                                    href="/contact"
+                                    style={{
+                                        padding: '16px 32px',
+                                        borderRadius: '999px',
+                                        background: 'rgba(11, 21, 14, 0.85)',
+                                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                                        color: '#FFFFFF',
+                                        fontSize: '15.5px',
+                                        fontWeight: '700',
+                                        textDecoration: 'none',
+                                        backdropFilter: 'blur(16px)',
+                                        WebkitBackdropFilter: 'blur(16px)',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}
+                                >
+                                    <span>💬 Talk to Concierge</span>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </section>
