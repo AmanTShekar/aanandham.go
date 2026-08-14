@@ -1233,53 +1233,8 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    {/* Mobile Header: User Profile Badge or Log In Pill + Hamburger Toggle */}
+                    {/* Mobile Header: Clean Hamburger Toggle (Auth links remain inside the menu drawer) */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        {currentUser ? (
-                            <Link
-                                href="/login"
-                                className="mobile-only"
-                                style={{
-                                    width: '34px',
-                                    height: '34px',
-                                    borderRadius: '50%',
-                                    background: '#E5A93B',
-                                    color: '#121613',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '13px',
-                                    fontWeight: '800',
-                                    textDecoration: 'none'
-                                }}
-                            >
-                                {currentUser.name ? currentUser.name[0].toUpperCase() : '👤'}
-                            </Link>
-                        ) : (
-                            <Link
-                                href="/login"
-                                className="mobile-only"
-                                style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    background: 'rgba(213, 237, 85, 0.15)',
-                                    border: '1px solid rgba(213, 237, 85, 0.38)',
-                                    color: '#D5ED55',
-                                    padding: '6px 14px',
-                                    borderRadius: '999px',
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: '13px',
-                                    fontWeight: '800',
-                                    textDecoration: 'none',
-                                    backdropFilter: 'blur(10px)'
-                                }}
-                            >
-                                <i className="fa-solid fa-arrow-right-to-bracket" style={{ fontSize: '11px' }}></i>
-                                <span>Log In</span>
-                            </Link>
-                        )}
-
                         <button
                             className="nav-mobile-toggle"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
