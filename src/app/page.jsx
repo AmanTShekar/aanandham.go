@@ -1002,25 +1002,97 @@ export default function HomePage() {
                         </Link>
                     </div>
 
-                    {/* Desktop Nav Links */}
-                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '26px' }}>
-                        <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
-                            <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                    {/* Desktop Nav Links (Editorial Heading Font & Full-Height Highlighter) */}
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                            <Link 
+                                href="/" 
+                                className="text-hover-marker text-hover-marker-dark is-active-link" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">Home</span>
                             </Link>
-                            <Link href="/about" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                            <Link 
+                                href="/about" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">About</span>
                             </Link>
-                            <a href="#packages" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                            <a 
+                                href="#packages" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">The Camps</span>
                             </a>
-                            <a href="#program" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                            <a 
+                                href="#program" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">Events</span>
                             </a>
-                            <a href="#stories" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                            <a 
+                                href="#stories" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">Poetry & Tales</span>
                             </a>
-                            <Link href="/contact" className="text-hover-marker text-hover-marker-dark" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                            <Link 
+                                href="/contact" 
+                                className="text-hover-marker text-hover-marker-dark" 
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '16.5px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.02em',
+                                    padding: '4px 6px'
+                                }}
+                            >
                                 <span className="marker-text">Contact</span>
                             </Link>
                         </nav>
@@ -1215,7 +1287,7 @@ export default function HomePage() {
                             <Link 
                                 href="/" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
-                                className="text-hover-marker text-hover-marker-dark"
+                                className="text-hover-marker text-hover-marker-dark is-active-link" 
                                 style={{
                                     fontFamily: 'var(--font-heading)',
                                     fontSize: 'clamp(24px, 5.5vw, 30px)',

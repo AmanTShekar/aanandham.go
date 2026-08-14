@@ -619,7 +619,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN (Drawing Animation & Chisel Edges)
+   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN (Full Chisel Thickness & Active States)
 ───────────────────────────────────────────────────────────── */
 .text-hover-marker {
   position: relative;
@@ -633,49 +633,54 @@ button:focus-visible, a:focus-visible {
 .text-hover-marker .marker-text {
   position: relative;
   display: inline-block;
-  line-height: 1.05;
+  line-height: 1.1;
   z-index: 1;
+  padding: 0 4px;
 }
 
 .text-hover-marker .marker-text::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 20%;
-  bottom: 12%;
-  background: rgba(255, 230, 50, 0.58); /* Authentic bright textbook highlighter color */
+  left: -8px;
+  right: -8px;
+  top: 4%;
+  bottom: -4%;
+  background: rgba(255, 230, 50, 0.65); /* Authentic rich yellow textbook highlighter */
   /* Real chisel pen drawing edge slant */
   clip-path: polygon(0% 4%, 0% 0%, 0% 96%, 0% 100%);
   transform: skewX(-14deg) rotate(-0.6deg);
   transform-origin: left center;
   transition: clip-path 0.34s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
   opacity: 0;
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
 }
 
-.text-hover-marker:hover .marker-text::before {
-  clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
-  opacity: 1;
+.text-hover-marker:hover .marker-text::before,
+.text-hover-marker.is-active-link .marker-text::before,
+.text-hover-marker.is-active .marker-text::before {
+  clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%) !important;
+  opacity: 1 !important;
 }
 
 /* For dark backgrounds (Navbar & Footer) */
 .text-hover-marker-dark .marker-text::before {
-  background: rgba(255, 238, 75, 0.75);
+  background: rgba(255, 238, 75, 0.88);
   mix-blend-mode: normal;
-  box-shadow: 0 0 14px rgba(255, 238, 75, 0.35);
+  box-shadow: 0 0 16px rgba(255, 238, 75, 0.45);
 }
 
-.text-hover-marker-dark:hover .marker-text {
+.text-hover-marker-dark:hover .marker-text,
+.text-hover-marker-dark.is-active-link .marker-text,
+.text-hover-marker-dark.is-active .marker-text {
   color: #121613 !important;
   transition: color 0.18s ease;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Organic Natural Variations)
+   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Organic Natural Variations - Full Height)
 ───────────────────────────────────────────────────────────── */
 .text-marker-chisel,
 .text-highlight-gold,
@@ -685,10 +690,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-4 {
   position: relative;
   display: inline-block;
-  line-height: 1.05;
+  line-height: 1.1;
   color: inherit;
   z-index: 1;
-  padding: 0 4px;
+  padding: 0 6px;
 }
 
 /* Default / Variation 1: Natural subtle downward stroke */
@@ -697,14 +702,14 @@ button:focus-visible, a:focus-visible {
 .text-marker-1::before {
   content: "";
   position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 24%;
-  bottom: 14%;
-  background: rgba(255, 230, 50, 0.55);
+  left: -6px;
+  right: -6px;
+  top: 4%;
+  bottom: -4%;
+  background: rgba(255, 230, 50, 0.62);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
   transform: skewX(-14deg) rotate(-0.7deg);
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
@@ -714,14 +719,14 @@ button:focus-visible, a:focus-visible {
 .text-marker-2::before {
   content: "";
   position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 24%;
-  bottom: 14%;
-  background: rgba(255, 232, 55, 0.56);
+  left: -6px;
+  right: -6px;
+  top: 4%;
+  bottom: -4%;
+  background: rgba(255, 232, 55, 0.62);
   clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
   transform: skewX(-12deg) rotate(0.6deg);
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
@@ -731,14 +736,14 @@ button:focus-visible, a:focus-visible {
 .text-marker-3::before {
   content: "";
   position: absolute;
-  left: -5px;
-  right: -4px;
-  top: 24%;
-  bottom: 14%;
-  background: rgba(255, 228, 48, 0.54);
+  left: -7px;
+  right: -6px;
+  top: 4%;
+  bottom: -4%;
+  background: rgba(255, 228, 48, 0.62);
   clip-path: polygon(0% 6%, 98% 1%, 100% 95%, 2% 99%);
   transform: skewX(-15deg) rotate(-1deg);
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
@@ -748,14 +753,14 @@ button:focus-visible, a:focus-visible {
 .text-marker-4::before {
   content: "";
   position: absolute;
-  left: -4px;
-  right: -4px;
-  top: 24%;
-  bottom: 14%;
-  background: rgba(255, 235, 60, 0.55);
+  left: -6px;
+  right: -6px;
+  top: 4%;
+  bottom: -4%;
+  background: rgba(255, 235, 60, 0.62);
   clip-path: polygon(1% 2%, 100% 0%, 99% 98%, 0% 97%);
   transform: skewX(-10deg) rotate(0.4deg);
-  border-radius: 2px;
+  border-radius: 3px;
   z-index: -1;
   pointer-events: none;
   mix-blend-mode: multiply;
