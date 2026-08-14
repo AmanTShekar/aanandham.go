@@ -483,15 +483,16 @@ button:focus-visible, a:focus-visible {
 
 /* Fluid Morph to 'X' close state */
 .nav-mobile-toggle.is-open {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  background: rgba(213, 237, 85, 0.16) !important;
+  border-color: #D5ED55 !important;
+  box-shadow: 0 0 25px rgba(213, 237, 85, 0.45), 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  transform: scale(1.05);
 }
 
 .nav-mobile-toggle.is-open .burger-line.line-top {
   transform: translateY(7.5px) rotate(45deg);
   width: 22px;
-  background: #FFFFFF;
+  background: #D5ED55;
 }
 
 .nav-mobile-toggle.is-open .burger-line.line-mid {
@@ -502,7 +503,7 @@ button:focus-visible, a:focus-visible {
 .nav-mobile-toggle.is-open .burger-line.line-bot {
   transform: translateY(-7.5px) rotate(-45deg);
   width: 22px;
-  background: #FFFFFF;
+  background: #D5ED55;
 }
 
 /* Mobile Drawer Link Interactive Hover */

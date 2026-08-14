@@ -168,25 +168,47 @@ export default function ContactPage() {
             {/* ── RESPONSIVE MOBILE DRAWER (Liquid Wave Expansion) ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
-                    <motion.div
-                        initial={{ clipPath: 'circle(0% at calc(100% - 46px) 38px)', opacity: 0 }}
-                        animate={{ clipPath: 'circle(220% at calc(100% - 46px) 38px)', opacity: 1 }}
-                        exit={{ clipPath: 'circle(0% at calc(100% - 46px) 38px)', opacity: 0 }}
-                        transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
-                        style={{
-                            position: 'fixed',
-                            inset: 0,
-                            zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 46px) 38px, rgba(229, 169, 59, 0.18) 0%, rgba(213, 237, 85, 0.06) 24%, #0B150E 65%)',
-                            backdropFilter: 'blur(32px)',
-                            WebkitBackdropFilter: 'blur(32px)',
-                            color: '#FFFFFF',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            padding: '100px 32px 40px',
-                            overflowY: 'auto'
-                        }}
-                    >
+                    <>
+                        <motion.div
+                            initial={{ scale: 0.6, opacity: 0.9 }}
+                            animate={{ scale: 3.8, opacity: 0 }}
+                            exit={{ scale: 0.6, opacity: 0 }}
+                            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                position: 'fixed',
+                                top: scrolled ? '12px' : '20px',
+                                right: scrolled ? '24px' : '32px',
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '50%',
+                                border: '2px solid #D5ED55',
+                                boxShadow: '0 0 20px rgba(213, 237, 85, 0.6)',
+                                pointerEvents: 'none',
+                                zIndex: 100001
+                            }}
+                        />
+
+                        <motion.div
+                            initial={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 1 }}
+                            animate={{ clipPath: 'circle(250% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(250% at calc(100% - 44px) 34px)', opacity: 1 }}
+                            exit={{ clipPath: 'circle(22px at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)', opacity: 1 }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                position: 'fixed',
+                                inset: 0,
+                                zIndex: 99999,
+                                background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(229, 169, 59, 0.24) 0%, rgba(213, 237, 85, 0.08) 40px, #0B150E 140px)',
+                                backdropFilter: 'blur(36px)',
+                                WebkitBackdropFilter: 'blur(36px)',
+                                color: '#FFFFFF',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                padding: '100px 32px 40px',
+                                overflowY: 'auto',
+                                transform: 'translateZ(0)',
+                                willChange: 'clip-path'
+                            }}
+                        >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
                             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Home
@@ -224,6 +246,7 @@ export default function ContactPage() {
                             </a>
                         </div>
                     </motion.div>
+                    </>
                 )}
             </AnimatePresence>
 

@@ -737,32 +737,34 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
     );
 }
 
-// ── MOBILE DRAWER LIQUID WAVE EXPANSION MOTION VARIANTS ──
+// ── MOBILE DRAWER LIQUID CIRCULAR WAVE MOTION VARIANTS ──
+// Exact center of the 44px toggle button: calc(100% - 44px) 34px
+// Starts at 22px (matching the round button circumference) and expands to 250%
 const drawerWaveVariants = {
     hidden: { 
-        clipPath: 'circle(0% at calc(100% - 46px) 38px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 46px) 38px)',
-        opacity: 0,
+        clipPath: 'circle(22px at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
+        opacity: 1,
         transition: { 
-            duration: 0.42, 
+            duration: 0.48, 
             ease: [0.32, 0, 0.67, 0] 
         }
     },
     visible: { 
-        clipPath: 'circle(220% at calc(100% - 46px) 38px)',
-        WebkitClipPath: 'circle(220% at calc(100% - 46px) 38px)',
+        clipPath: 'circle(250% at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(250% at calc(100% - 44px) 34px)',
         opacity: 1,
         transition: { 
-            duration: 0.58, 
+            duration: 0.65, 
             ease: [0.16, 1, 0.3, 1] 
         }
     },
     exit: { 
-        clipPath: 'circle(0% at calc(100% - 46px) 38px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 46px) 38px)',
-        opacity: 0,
+        clipPath: 'circle(22px at calc(100% - 44px) 34px)',
+        WebkitClipPath: 'circle(22px at calc(100% - 44px) 34px)',
+        opacity: 1,
         transition: { 
-            duration: 0.45, 
+            duration: 0.52, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -773,8 +775,16 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05,
+            staggerChildren: 0.055,
             delayChildren: 0.12
+        }
+    },
+    exit: {
+        opacity: 0,
+        transition: {
+            staggerChildren: 0.025,
+            staggerDirection: -1,
+            duration: 0.18
         }
     }
 };
@@ -785,7 +795,13 @@ const drawerItemVariants = {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] }
+    },
+    exit: {
+        opacity: 0,
+        y: 10,
+        scale: 0.96,
+        transition: { duration: 0.18, ease: "easeIn" }
     }
 };
 
@@ -1303,27 +1319,48 @@ export default function HomePage() {
             {/* ── LIQUID WAVE EXPANDING MOBILE DRAWER (Expanding outward beneath persistent navbar) ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
-                    <motion.div
-                        variants={drawerWaveVariants}
-                        initial="hidden"
-                        animate="visible"
-                        exit="exit"
-                        style={{
-                            position: 'fixed',
-                            inset: 0,
-                            zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 46px) 38px, rgba(229, 169, 59, 0.18) 0%, rgba(213, 237, 85, 0.06) 24%, #0B150E 65%)',
-                            backdropFilter: 'blur(32px)',
-                            WebkitBackdropFilter: 'blur(32px)',
-                            color: '#FFFFFF',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            padding: 'calc(80px + 16px) 28px 36px',
-                            overflowY: 'auto',
-                            transform: 'translateZ(0)',
-                            willChange: 'clip-path, opacity'
-                        }}
-                    >
+                    <>
+                        {/* Dynamic Origin Shockwave Burst Ring */}
+                        <motion.div
+                            initial={{ scale: 0.6, opacity: 0.9 }}
+                            animate={{ scale: 3.8, opacity: 0 }}
+                            exit={{ scale: 0.6, opacity: 0 }}
+                            transition={{ duration: 0.62, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                position: 'fixed',
+                                top: scrolled ? '12px' : '22px',
+                                right: scrolled ? '24px' : '32px',
+                                width: '44px',
+                                height: '44px',
+                                borderRadius: '50%',
+                                border: '2px solid #D5ED55',
+                                boxShadow: '0 0 20px rgba(213, 237, 85, 0.6)',
+                                pointerEvents: 'none',
+                                zIndex: 100001
+                            }}
+                        />
+
+                        <motion.div
+                            variants={drawerWaveVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="exit"
+                            style={{
+                                position: 'fixed',
+                                inset: 0,
+                                zIndex: 99999,
+                                background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(229, 169, 59, 0.24) 0%, rgba(213, 237, 85, 0.08) 40px, #0B150E 140px)',
+                                backdropFilter: 'blur(36px)',
+                                WebkitBackdropFilter: 'blur(36px)',
+                                color: '#FFFFFF',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                padding: 'calc(80px + 16px) 28px 36px',
+                                overflowY: 'auto',
+                                transform: 'translateZ(0)',
+                                willChange: 'clip-path'
+                            }}
+                        >
                         {/* Staggered Cascading Navigation Links */}
                         <motion.nav 
                             variants={drawerStaggerVariants}
@@ -1604,6 +1641,7 @@ export default function HomePage() {
                             </a>
                         </div>
                     </motion.div>
+                    </>
                 )}
             </AnimatePresence>
 
