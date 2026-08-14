@@ -1182,7 +1182,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   DEFENSIVE VIEWPORT RULES (Edge Cases & Short Screens Matrix)
+   DEFENSIVE VIEWPORT RULES (Edge Cases, 1366x768 & Short Screens)
 ───────────────────────────────────────────────────────────── */
 
 /* Hero defensive height fallbacks (100vh -> 100svh -> 100dvh) */
@@ -1192,22 +1192,42 @@ button:focus-visible, a:focus-visible {
   min-height: 100dvh;
 }
 
-/* Short Desktop Viewports (e.g. 1366x768 @ 125% OS scaling, landscape phones) */
-@media (max-height: 800px) {
+/* ─────────────────────────────────────────────────────────────
+   LAPTOP & COMPACT MONITOR OPTIMIZATIONS (1366x768, 1389x786, 1440x900)
+───────────────────────────────────────────────────────────── */
+@media screen and (max-height: 860px), screen and (max-width: 1440px) {
   .hero-defensive-height {
-    padding-top: 85px !important;
-    padding-bottom: 35px !important;
+    min-height: auto !important;
+    padding-top: clamp(84px, 11vh, 115px) !important;
+    padding-bottom: clamp(30px, 4.5vh, 48px) !important;
   }
   
   .hero-headline {
-    font-size: clamp(34px, 6vh, 62px) !important;
+    font-size: clamp(32px, 4.8vw, 56px) !important;
     line-height: 1.1 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-brand-logo {
+    height: clamp(52px, 7.5vh, 74px) !important;
     margin-bottom: 14px !important;
   }
 
+  .hero-subtitle {
+    font-size: clamp(14.5px, 1.5vw, 17px) !important;
+    line-height: 1.55 !important;
+    margin-bottom: 22px !important;
+    max-width: 680px !important;
+  }
+
   .defensive-section-pad {
-    padding-top: clamp(40px, 6vh, 70px) !important;
-    padding-bottom: clamp(40px, 6vh, 70px) !important;
+    padding-top: clamp(36px, 5.5vh, 60px) !important;
+    padding-bottom: clamp(36px, 5.5vh, 60px) !important;
+  }
+
+  .pillars-sticky-grid {
+    gap: 24px !important;
+    max-width: 1080px !important;
   }
 }
 
@@ -1216,33 +1236,6 @@ button, a, input, select, textarea {
   touch-action: manipulation;
 }
 
-/* ─────────────────────────────────────────────────────────────
-   ULTRA-SLEEK LUXURY ROUNDED SCROLLBARS (Never straight / Never clipping)
-───────────────────────────────────────────────────────────── */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(18, 22, 19, 0.2) transparent;
-}
-
-/* WebKit (Chrome, Safari, Edge, Opera) */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 18px 0; /* Ensures scrollbar never touches the top or bottom rounded corners of any modal */
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(18, 22, 19, 0.22);
-  border-radius: 999px !important; /* Fully rounded pill thumb */
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(18, 22, 19, 0.45);
-}
 
 /* Dark Modal & Dark Surface Rounded Scrollbars */
 .dark-modal-scroll {

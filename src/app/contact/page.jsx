@@ -302,6 +302,7 @@ export default function ContactPage() {
                             <img
                                 src="/logo.png"
                                 alt="Aanandham Logo"
+                                className="hero-brand-logo"
                                 style={{
                                     height: '92px',
                                     width: 'auto',
@@ -313,6 +314,7 @@ export default function ContactPage() {
 
                         {/* Main Headline */}
                         <motion.h1 
+                            className="hero-headline"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
@@ -339,6 +341,7 @@ export default function ContactPage() {
 
                         {/* Subtitle Description */}
                         <motion.p
+                            className="hero-subtitle"
                             initial={{ opacity: 0, y: 16 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.75, delay: 0.2 }}
