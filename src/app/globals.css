@@ -591,16 +591,17 @@ button:focus-visible, a:focus-visible {
 .text-hover-marker .marker-text {
   position: relative;
   display: inline-block;
+  line-height: 1.05;
   z-index: 1;
 }
 
 .text-hover-marker .marker-text::before {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -8px;
-  top: 14%;
-  bottom: 6%;
+  left: -6px;
+  right: -6px;
+  top: 20%;
+  bottom: 12%;
   background: rgba(255, 230, 50, 0.58); /* Authentic bright textbook highlighter color */
   /* Real chisel pen drawing edge slant */
   clip-path: polygon(0% 4%, 0% 0%, 0% 96%, 0% 100%);
@@ -637,6 +638,7 @@ button:focus-visible, a:focus-visible {
 .text-marker-4 {
   position: relative;
   display: inline-block;
+  line-height: 1.05;
   color: inherit;
   z-index: 1;
   padding: 0 4px;
@@ -648,10 +650,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-1::before {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -8px;
-  top: 14%;
-  bottom: 6%;
+  left: -6px;
+  right: -6px;
+  top: 20%;
+  bottom: 12%;
   background: rgba(255, 230, 50, 0.55);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
   transform: skewX(-15deg) rotate(-0.8deg);
@@ -665,10 +667,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-2::before {
   content: "";
   position: absolute;
-  left: -7px;
-  right: -7px;
-  top: 12%;
-  bottom: 8%;
+  left: -6px;
+  right: -6px;
+  top: 22%;
+  bottom: 14%;
   background: rgba(255, 232, 55, 0.56);
   clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
   transform: skewX(-12deg) rotate(0.7deg);
@@ -682,10 +684,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-3::before {
   content: "";
   position: absolute;
-  left: -9px;
-  right: -7px;
-  top: 16%;
-  bottom: 5%;
+  left: -7px;
+  right: -6px;
+  top: 20%;
+  bottom: 12%;
   background: rgba(255, 228, 48, 0.54);
   clip-path: polygon(0% 6%, 98% 1%, 100% 95%, 2% 99%);
   transform: skewX(-17deg) rotate(-1.2deg);
@@ -700,9 +702,9 @@ button:focus-visible, a:focus-visible {
   content: "";
   position: absolute;
   left: -6px;
-  right: -8px;
-  top: 13%;
-  bottom: 7%;
+  right: -6px;
+  top: 22%;
+  bottom: 14%;
   background: rgba(255, 235, 60, 0.55);
   clip-path: polygon(1% 2%, 100% 0%, 99% 98%, 0% 97%);
   transform: skewX(-10deg) rotate(0.4deg);
@@ -726,8 +728,8 @@ button:focus-visible, a:focus-visible {
   position: absolute;
   left: -4px;
   right: -4px;
-  top: 14%;
-  bottom: 8%;
+  top: 20%;
+  bottom: 12%;
   background-color: rgba(255, 230, 50, 0.38);
   clip-path: polygon(0% 3%, 100% 0%, 99% 97%, 1% 100%);
   transform: skewX(-12deg) rotate(-0.5deg);
@@ -751,10 +753,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-dark-1::before {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -8px;
-  top: 14%;
-  bottom: 6%;
+  left: -6px;
+  right: -6px;
+  top: 20%;
+  bottom: 12%;
   background: rgba(255, 238, 75, 0.55);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
   transform: skewX(-14deg) rotate(-0.6deg);
@@ -775,10 +777,10 @@ button:focus-visible, a:focus-visible {
 .text-marker-dark-2::before {
   content: "";
   position: absolute;
-  left: -8px;
-  right: -8px;
-  top: 13%;
-  bottom: 7%;
+  left: -6px;
+  right: -6px;
+  top: 22%;
+  bottom: 14%;
   background: rgba(255, 238, 75, 0.55);
   clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
   transform: skewX(-12deg) rotate(0.8deg);
