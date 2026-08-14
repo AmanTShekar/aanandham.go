@@ -70,6 +70,17 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [specialNotes, setSpecialNotes] = useState('');
     const [step, setStep] = useState(1); // 1: Package & Details, 2: Addons & Review
 
+    // Disable background page scrolling when modal is open (unconditionally declared at top)
+    useEffect(() => {
+        if (isOpen) {
+            const origOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = origOverflow || 'unset';
+            };
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     const currentPkg = PACKAGES_LIST.find(p => p.id === selectedPkgId) || PACKAGES_LIST[0];
@@ -90,15 +101,6 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     }, 0);
 
     const grandTotal = baseTotal - discountAmount + addonsTotal;
-
-    // Disable background page scrolling when modal is open
-    useEffect(() => {
-        const origOverflow = document.body.style.overflow;
-        document.body.style.overflow = 'hidden';
-        return () => {
-            document.body.style.overflow = origOverflow || 'unset';
-        };
-    }, []);
 
     const toggleAddon = (id) => {
         setSelectedAddons(prev => 
