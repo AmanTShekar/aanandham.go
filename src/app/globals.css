@@ -362,33 +362,45 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   STICKY PINNED SPLIT-COLUMN LAYOUTS
+   STICKY PINNED SPLIT-COLUMN LAYOUTS (1440p & 1366px Proportional)
 ───────────────────────────────────────────────────────────── */
 .sticky-split-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 40px;
+  gap: 32px;
   align-items: start !important;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 960px) {
   .sticky-split-grid {
-    grid-template-columns: 440px 1fr;
-    gap: 68px;
+    grid-template-columns: minmax(300px, 380px) 1fr;
+    gap: clamp(32px, 4.5vw, 60px);
     align-items: start !important;
   }
   
   .sticky-pinned-col {
     position: -webkit-sticky !important;
     position: sticky !important;
-    top: 110px !important;
+    top: 85px !important;
     align-self: flex-start !important;
     height: -webkit-fit-content !important;
     height: -moz-fit-content !important;
     height: fit-content !important;
-    max-height: calc(100vh - 130px);
+    max-height: calc(100vh - 100px);
     z-index: 10;
   }
+}
+
+/* Proportional Container for 1366px / 1080p / 1440p */
+.site-container,
+[style*="maxWidth: '1240px'"],
+[style*="maxWidth: '1280px'"],
+[style*="maxWidth: '1360px'"] {
+  max-width: min(1180px, 86vw) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: clamp(20px, 3.5vw, 48px) !important;
+  padding-right: clamp(20px, 3.5vw, 48px) !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
