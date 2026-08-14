@@ -261,3 +261,130 @@ h1, h2, h3, h4, h5, h6, .font-heading {
     z-index: 10;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   ADVANCED WILDERNESS ANIMATIONS & MICRO-INTERACTIONS
+───────────────────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  user-select: none;
+  background: #101E13;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 0;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 40px;
+  animation: marquee-scroll 28s linear infinite;
+  min-width: 200%;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #A2B6A6;
+}
+
+.marquee-item .highlight {
+  color: #D5ED55;
+}
+
+@keyframes beacon-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(213, 237, 85, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(213, 237, 85, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(213, 237, 85, 0);
+  }
+}
+
+.live-beacon {
+  width: 9px;
+  height: 9px;
+  background-color: #D5ED55;
+  border-radius: 50%;
+  display: inline-block;
+  animation: beacon-pulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.2deg);
+  }
+}
+
+.float-animation {
+  animation: float-slow 5s ease-in-out infinite;
+}
+
+/* Glassmorphism Card Hover Polish */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
+}
+
+.glass-panel-dark {
+  background: rgba(14, 24, 17, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Shimmer Highlight on Buttons */
+.btn-lime {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-lime::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  transition: transform 0.75s ease-in-out;
+}
+
+.btn-lime:hover::after {
+  transform: rotate(30deg) translateX(100%);
+}
+

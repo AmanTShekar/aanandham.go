@@ -745,6 +745,55 @@ export default function HomePage() {
                 </motion.div>
             </section>
 
+            {/* ── LIVE BASECAMP MARQUEE TICKER ── */}
+            <div className="marquee-container" aria-hidden="true">
+                <div className="marquee-track">
+                    {[
+                        { icon: '★', label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
+                        { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                        { icon: '🔥', label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
+                        { icon: '⛺', label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
+                        { icon: '🥾', label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
+                        { icon: '🧘', label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
+                        { icon: '🔭', label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
+                        { icon: '🚙', label: 'VERIFIED OFF-ROAD SAFARI FLEET' },
+                        { icon: '★', label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
+                        { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                        { icon: '🔥', label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
+                        { icon: '⛺', label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
+                        { icon: '🥾', label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
+                        { icon: '🧘', label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
+                        { icon: '🔭', label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
+                        { icon: '🚙', label: 'VERIFIED OFF-ROAD SAFARI FLEET' }
+                    ].map((item, idx) => (
+                        <div key={idx} className="marquee-item">
+                            <span>{item.icon}</span>
+                            <span className={item.highlight ? 'highlight' : ''}>{item.label}</span>
+                            <span style={{ opacity: 0.3 }}>·</span>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* FAQ Structured Data for Google Rich Snippets */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": FAQ_DATA.map(f => ({
+                            "@type": "Question",
+                            "name": f.question,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": f.answer
+                            }
+                        }))
+                    })
+                }}
+            />
+
             {/* ─────────────────────────────────────────────────────────────
                 1. OVERVIEW SECTION (Ref Screenshot 3 Batch 2 - media_1786655246018.png)
             ───────────────────────────────────────────────────────────── */}

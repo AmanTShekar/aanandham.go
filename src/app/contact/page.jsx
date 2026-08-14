@@ -51,6 +51,37 @@ export default function ContactPage() {
             position: 'relative',
             overflowX: 'clip'
         }}>
+
+            {/* Contact & Breadcrumb Schema */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "ContactPage",
+                        "name": "Contact Aanandham.go Wilderness Camps",
+                        "description": "24/7 Camping and trekking inquiries for Suryanelli, Munnar, Vagamon, and Wayanad.",
+                        "url": "https://aanandham.in/contact",
+                        "breadcrumb": {
+                            "@type": "BreadcrumbList",
+                            "itemListElement": [
+                                {
+                                    "@type": "ListItem",
+                                    "position": 1,
+                                    "name": "Home",
+                                    "item": "https://aanandham.in"
+                                },
+                                {
+                                    "@type": "ListItem",
+                                    "position": 2,
+                                    "name": "Contact & Booking Inquiries",
+                                    "item": "https://aanandham.in/contact"
+                                }
+                            ]
+                        }
+                    })
+                }}
+            />
             
             {/* ── TOP HEADER ── */}
             <header style={{
