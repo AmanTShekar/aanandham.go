@@ -577,7 +577,7 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN ON HOVER (Solid Light, Slanted Pen Edges)
+   AUTHENTIC TEXTBOOK HIGHLIGHTER PEN (Drawing Animation & Chisel Edges)
 ───────────────────────────────────────────────────────────── */
 .text-hover-marker {
   position: relative;
@@ -597,31 +597,37 @@ button:focus-visible, a:focus-visible {
 .text-hover-marker .marker-text::before {
   content: "";
   position: absolute;
-  left: -6px;
-  right: -6px;
-  top: 16%;
-  bottom: 8%;
-  background-color: rgba(229, 169, 59, 0.35); /* Solid light, clear readable text */
-  /* Slanted stroke + skewed chisel pen cut edges */
-  transform: scaleX(0) skewX(-14deg) rotate(-0.8deg);
+  left: -8px;
+  right: -8px;
+  top: 14%;
+  bottom: 6%;
+  background: rgba(255, 230, 50, 0.58); /* Authentic bright textbook highlighter color */
+  /* Real chisel pen drawing edge slant */
+  clip-path: polygon(0% 4%, 0% 0%, 0% 96%, 0% 100%);
+  transform: skewX(-14deg) rotate(-0.6deg);
   transform-origin: left center;
-  transition: transform 0.26s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 1px;
+  transition: clip-path 0.34s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+  opacity: 0;
+  border-radius: 2px;
   z-index: -1;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .text-hover-marker:hover .marker-text::before {
-  transform: scaleX(1) skewX(-14deg) rotate(-0.8deg);
+  clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
+  opacity: 1;
 }
 
 /* For dark backgrounds (Navbar & Footer) */
 .text-hover-marker-dark .marker-text::before {
-  background-color: rgba(229, 169, 59, 0.42);
+  background: rgba(255, 238, 75, 0.65);
+  mix-blend-mode: normal;
+  box-shadow: 0 0 14px rgba(255, 238, 75, 0.35);
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Solid Light, Slanted)
+   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Static In-Text)
 ───────────────────────────────────────────────────────────── */
 .text-marker-chisel,
 .text-highlight-gold {
@@ -636,15 +642,17 @@ button:focus-visible, a:focus-visible {
 .text-highlight-gold::before {
   content: "";
   position: absolute;
-  left: -5px;
-  right: -5px;
-  top: 16%;
-  bottom: 8%;
-  background-color: rgba(229, 169, 59, 0.35); /* Solid light color */
-  transform: skewX(-14deg) rotate(-0.8deg); /* Slanted stroke with skewed pen edges */
-  border-radius: 1px;
+  left: -8px;
+  right: -8px;
+  top: 14%;
+  bottom: 6%;
+  background: rgba(255, 230, 50, 0.55); /* Real highlighter yellow-gold */
+  clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
+  transform: skewX(-14deg) rotate(-0.6deg);
+  border-radius: 2px;
   z-index: -1;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 .text-highlight-subtle {
@@ -659,15 +667,17 @@ button:focus-visible, a:focus-visible {
 .text-highlight-subtle::before {
   content: "";
   position: absolute;
-  left: -3px;
-  right: -3px;
-  top: 16%;
-  bottom: 10%;
-  background-color: rgba(229, 169, 59, 0.22);
-  transform: skewX(-12deg) rotate(-0.6deg);
+  left: -4px;
+  right: -4px;
+  top: 14%;
+  bottom: 8%;
+  background-color: rgba(255, 230, 50, 0.38);
+  clip-path: polygon(0% 3%, 100% 0%, 99% 97%, 1% 100%);
+  transform: skewX(-12deg) rotate(-0.5deg);
   border-radius: 1px;
   z-index: -1;
   pointer-events: none;
+  mix-blend-mode: multiply;
 }
 
 /* Authentic Marker Highlight on Dark Backgrounds */
@@ -682,15 +692,17 @@ button:focus-visible, a:focus-visible {
 .text-marker-dark::before {
   content: "";
   position: absolute;
-  left: -5px;
-  right: -5px;
-  top: 16%;
-  bottom: 8%;
-  background-color: rgba(229, 169, 59, 0.38); /* Solid light gold */
-  transform: skewX(-14deg) rotate(-0.8deg); /* Slanted stroke with skewed pen edges */
-  border-radius: 1px;
+  left: -8px;
+  right: -8px;
+  top: 14%;
+  bottom: 6%;
+  background: rgba(255, 238, 75, 0.55);
+  clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
+  transform: skewX(-14deg) rotate(-0.6deg);
+  border-radius: 2px;
   z-index: -1;
   pointer-events: none;
+  box-shadow: 0 0 14px rgba(255, 238, 75, 0.35);
 }
 
 /* ─────────────────────────────────────────────────────────────
