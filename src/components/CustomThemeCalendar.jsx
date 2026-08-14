@@ -40,10 +40,12 @@ export default function CustomThemeCalendar({
     // Prevent background scroll when calendar modal dialog is open (if not inline)
     useEffect(() => {
         if (isOpen && !inline) {
+            window.__lenis?.stop();
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
-                document.body.style.overflow = originalOverflow || 'unset';
+                window.__lenis?.start();
+                document.body.style.overflow = originalOverflow || '';
             };
         }
     }, [isOpen, inline]);

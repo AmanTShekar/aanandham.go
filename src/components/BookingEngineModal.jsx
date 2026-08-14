@@ -135,10 +135,12 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     // Disable background page scrolling when modal is open
     useEffect(() => {
         if (isOpen) {
+            window.__lenis?.stop();
             const origOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
-                document.body.style.overflow = origOverflow || 'unset';
+                window.__lenis?.start();
+                document.body.style.overflow = origOverflow || '';
             };
         }
     }, [isOpen]);

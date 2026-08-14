@@ -131,6 +131,19 @@ export default function AboutPage() {
     const [selectedPlace, setSelectedPlace] = useState(NEARBY_PLACES[0]);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    // Disable background page scrolling smoothly when mobile menu is open
+    React.useEffect(() => {
+        if (isMobileMenuOpen) {
+            window.__lenis?.stop();
+            const originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                window.__lenis?.start();
+                document.body.style.overflow = originalOverflow || '';
+            };
+        }
+    }, [isMobileMenuOpen]);
+
     return (
         <div style={{
             minHeight: '100vh',
@@ -172,22 +185,25 @@ export default function AboutPage() {
             />
 
             {/* ── TOP HEADER ── */}
-            <header style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 100000,
-                padding: '16px 28px',
-                backgroundColor: isMobileMenuOpen ? 'transparent' : 'rgba(14, 24, 17, 0.96)',
-                backdropFilter: isMobileMenuOpen ? 'none' : 'blur(16px)',
-                WebkitBackdropFilter: isMobileMenuOpen ? 'none' : 'blur(16px)',
-                borderBottom: isMobileMenuOpen ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                transition: 'all 0.3s ease'
-            }}>
+            <header 
+                className="site-header"
+                style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    zIndex: 100000,
+                    padding: '16px 28px',
+                    backgroundColor: 'rgba(14, 24, 17, 0.96)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    transition: 'all 0.3s ease'
+                }}
+            >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <Link href="/" className="text-hover-marker text-hover-marker-dark">
                         <img
@@ -251,15 +267,15 @@ export default function AboutPage() {
                 {isMobileMenuOpen && (
                     <motion.div
                         key="about-frosted-glass-drawer"
-                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)' }}
-                        animate={{ clipPath: 'circle(260% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)' }}
-                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 34px)', WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)' }}
-                        transition={{ duration: 0.58, ease: [0.19, 1, 0.22, 1] }}
+                        initial={{ clipPath: 'circle(0% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)' }}
+                        animate={{ clipPath: 'circle(260% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)' }}
+                        exit={{ clipPath: 'circle(0% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)' }}
+                        transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
                         style={{
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
+                            background: 'radial-gradient(circle at calc(100% - 42px) 36px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
                             backdropFilter: 'blur(36px) saturate(190%)',
                             WebkitBackdropFilter: 'blur(36px) saturate(190%)',
                             border: '1px solid rgba(213, 237, 85, 0.12)',
@@ -279,8 +295,8 @@ export default function AboutPage() {
                             transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
                             style={{
                                 position: 'absolute',
-                                top: scrolled ? '12px' : '20px',
-                                right: scrolled ? '24px' : '32px',
+                                top: '14px',
+                                right: '20px',
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
@@ -290,42 +306,50 @@ export default function AboutPage() {
                             }}
                         />
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
-                            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Home
-                            </Link>
-                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
-                                About Us
-                            </Link>
-                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Contact & Inquiries
-                            </Link>
-                            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Member Log In
-                            </Link>
-                        </div>
+                        {/* Unified Exit-Synchronized Drawer Body */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1, transition: { duration: 0.25 } }}
+                            exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
+                        >
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
+                                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                    Home
+                                </Link>
+                                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
+                                    About Us
+                                </Link>
+                                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                    Contact & Inquiries
+                                </Link>
+                                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                    Member Log In
+                                </Link>
+                            </div>
 
-                        <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                            <a
-                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '10px',
-                                    color: '#25D366',
-                                    fontSize: '14px',
-                                    fontWeight: '700',
-                                    textDecoration: 'none',
-                                    padding: '12px'
-                                }}
-                            >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                <span>WhatsApp Concierge (24/7)</span>
-                            </a>
-                        </div>
+                            <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                                <a
+                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '10px',
+                                        color: '#25D366',
+                                        fontSize: '14px',
+                                        fontWeight: '700',
+                                        textDecoration: 'none',
+                                        padding: '12px'
+                                    }}
+                                >
+                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                                    <span>WhatsApp Concierge (24/7)</span>
+                                </a>
+                            </div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>

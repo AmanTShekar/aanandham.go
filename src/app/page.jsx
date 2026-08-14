@@ -768,8 +768,8 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05,
-            delayChildren: 0.12
+            staggerChildren: 0.04,
+            delayChildren: 0.08
         }
     },
     exit: {
@@ -782,18 +782,14 @@ const drawerStaggerVariants = {
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, y: 20, scale: 0.96 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
-        y: 0,
-        scale: 1,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.25, ease: "easeOut" }
     },
     exit: {
         opacity: 0,
-        y: 8,
-        scale: 0.96,
-        transition: { duration: 0.12, ease: "easeOut" }
+        transition: { duration: 0.1, ease: "easeOut" }
     }
 };
 
@@ -870,10 +866,12 @@ export default function HomePage() {
     // Disable background page scrolling when video modal, lightbox modal, booking engine, or mobile menu is open
     useEffect(() => {
         if (isVideoModalOpen || selectedLightboxImg || isBookingModalOpen || isMobileMenuOpen) {
+            window.__lenis?.stop();
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
-                document.body.style.overflow = originalOverflow || 'unset';
+                window.__lenis?.start();
+                document.body.style.overflow = originalOverflow || '';
             };
         }
     }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen, isMobileMenuOpen]);
@@ -1370,285 +1368,292 @@ export default function HomePage() {
                             }}
                         />
 
-                        {/* Staggered Cascading Navigation Links */}
-                        <motion.nav 
+                        {/* Unified Exit-Synchronized Drawer Body (Fades out cleanly together on exit) */}
+                        <motion.div
                             variants={drawerStaggerVariants}
                             initial="hidden"
                             animate="visible"
-                            style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}
+                            exit="exit"
+                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
                         >
-                            <motion.div variants={drawerItemVariants}>
-                                <Link 
-                                    href="/" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark is-active-link" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">Home</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </Link>
-                            </motion.div>
+                            {/* Staggered Cascading Navigation Links */}
+                            <nav style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}>
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark is-active-link" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">Home</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </Link>
+                                </motion.div>
 
-                            <motion.div variants={drawerItemVariants}>
-                                <Link 
-                                    href="/about" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">About</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </Link>
-                            </motion.div>
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/about" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">About</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </Link>
+                                </motion.div>
 
-                            <motion.div variants={drawerItemVariants}>
-                                <a 
-                                    href="#packages" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">The Camps</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </a>
-                            </motion.div>
+                                <motion.div variants={drawerItemVariants}>
+                                    <a 
+                                        href="#packages" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">The Camps</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </a>
+                                </motion.div>
 
-                            <motion.div variants={drawerItemVariants}>
-                                <a 
-                                    href="#program" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">Events</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </a>
-                            </motion.div>
+                                <motion.div variants={drawerItemVariants}>
+                                    <a 
+                                        href="#program" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">Events</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </a>
+                                </motion.div>
 
-                            <motion.div variants={drawerItemVariants}>
-                                <a 
-                                    href="#stories" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">Poetry & Tales</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </a>
-                            </motion.div>
+                                <motion.div variants={drawerItemVariants}>
+                                    <a 
+                                        href="#stories" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">Poetry & Tales</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </a>
+                                </motion.div>
 
-                            <motion.div variants={drawerItemVariants}>
-                                <Link 
-                                    href="/contact" 
-                                    onClick={() => setIsMobileMenuOpen(false)} 
-                                    className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                    style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 5.5vw, 30px)',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.025em',
-                                        color: '#FFFFFF',
-                                        textDecoration: 'none',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        padding: '16px 0',
-                                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                                        width: '100%'
-                                    }}
-                                >
-                                    <span className="marker-text">Contact</span>
-                                    <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
-                                </Link>
-                            </motion.div>
-                        </motion.nav>
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/contact" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                            fontWeight: '800',
+                                            letterSpacing: '-0.025em',
+                                            color: '#FFFFFF',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            padding: '16px 0',
+                                            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                            width: '100%'
+                                        }}
+                                    >
+                                        <span className="marker-text">Contact</span>
+                                        <span className="drawer-arrow" style={{ color: '#8E9B92', fontSize: '18px', fontWeight: '400', transition: 'all 0.25s ease' }}>→</span>
+                                    </Link>
+                                </motion.div>
+                            </nav>
 
-                        {/* Bottom Actions: Dynamic Camper Profile / Auth State & Direct Aanandham Desk */}
-                        <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {currentUser ? (
-                                <div style={{
-                                    background: 'rgba(255, 255, 255, 0.06)',
-                                    border: '1px solid rgba(229, 169, 59, 0.3)',
-                                    borderRadius: '20px',
-                                    padding: '16px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '12px'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                            <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '800' }}>
-                                                {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
-                                            </span>
-                                            <div>
-                                                <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
-                                                <div style={{ fontSize: '11px', color: '#8E9B92' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                            {/* Bottom Actions: Dynamic Camper Profile / Auth State & Direct Aanandham Desk */}
+                            <motion.div 
+                                variants={drawerItemVariants}
+                                style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}
+                            >
+                                {currentUser ? (
+                                    <div style={{
+                                        background: 'rgba(255, 255, 255, 0.06)',
+                                        border: '1px solid rgba(229, 169, 59, 0.3)',
+                                        borderRadius: '20px',
+                                        padding: '16px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '12px'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '800' }}>
+                                                    {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
+                                                </span>
+                                                <div>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
+                                                    <div style={{ fontSize: '11px', color: '#8E9B92' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                                                </div>
                                             </div>
+                                            <button
+                                                onClick={handleLogout}
+                                                style={{
+                                                    background: 'rgba(255, 123, 123, 0.15)',
+                                                    border: '1px solid rgba(255, 123, 123, 0.3)',
+                                                    color: '#FF7B7B',
+                                                    padding: '6px 12px',
+                                                    borderRadius: '999px',
+                                                    fontSize: '12px',
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                Log Out
+                                            </button>
                                         </div>
                                         <button
-                                            onClick={handleLogout}
+                                            onClick={() => { setIsMobileMenuOpen(false); handleOpenBooking(EXPEDITION_PACKAGES[0]); }}
                                             style={{
-                                                background: 'rgba(255, 123, 123, 0.15)',
-                                                border: '1px solid rgba(255, 123, 123, 0.3)',
-                                                color: '#FF7B7B',
-                                                padding: '6px 12px',
+                                                background: '#E5A93B',
+                                                border: 'none',
+                                                color: '#121613',
+                                                padding: '10px',
                                                 borderRadius: '999px',
-                                                fontSize: '12px',
-                                                fontWeight: '700',
-                                                cursor: 'pointer'
+                                                fontSize: '13px',
+                                                fontWeight: '800',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px'
                                             }}
                                         >
-                                            Log Out
+                                            <span>⛺ My Bookings & Permits</span>
                                         </button>
                                     </div>
-                                    <button
-                                        onClick={() => { setIsMobileMenuOpen(false); handleOpenBooking(EXPEDITION_PACKAGES[0]); }}
-                                        style={{
-                                            background: '#E5A93B',
-                                            border: 'none',
-                                            color: '#121613',
-                                            padding: '10px',
-                                            borderRadius: '999px',
-                                            fontSize: '13px',
-                                            fontWeight: '800',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '6px'
-                                        }}
-                                    >
-                                        <span>⛺ My Bookings & Permits</span>
-                                    </button>
-                                </div>
-                            ) : (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                    <Link
-                                        href="/login"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            background: 'rgba(255, 255, 255, 0.1)',
-                                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                                            color: '#FFFFFF',
-                                            padding: '12px',
-                                            borderRadius: '999px',
-                                            fontSize: '14px',
-                                            fontWeight: '700',
-                                            textDecoration: 'none',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
-                                        Log In
-                                    </Link>
-                                    <Link
-                                        href="/signup"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                        className="btn-lime"
-                                        style={{
-                                            padding: '12px',
-                                            fontSize: '14px',
-                                            textDecoration: 'none',
-                                            fontWeight: '800'
-                                        }}
-                                    >
-                                        Sign Up
-                                    </Link>
-                                </div>
-                            )}
+                                ) : (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                        <Link
+                                            href="/login"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                background: 'rgba(255, 255, 255, 0.1)',
+                                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                color: '#FFFFFF',
+                                                padding: '12px',
+                                                borderRadius: '999px',
+                                                fontSize: '14px',
+                                                fontWeight: '700',
+                                                textDecoration: 'none',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            Log In
+                                        </Link>
+                                        <Link
+                                            href="/signup"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className="btn-lime"
+                                            style={{
+                                                padding: '12px',
+                                                fontSize: '14px',
+                                                textDecoration: 'none',
+                                                fontWeight: '800'
+                                            }}
+                                        >
+                                            Sign Up
+                                        </Link>
+                                    </div>
+                                )}
 
-                            {/* Aanandham Direct Helpdesk */}
-                            <a
-                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: '10px',
-                                    color: '#E5A93B',
-                                    background: 'rgba(229, 169, 59, 0.1)',
-                                    border: '1px solid rgba(229, 169, 59, 0.25)',
-                                    fontSize: '14px',
-                                    fontWeight: '700',
-                                    textDecoration: 'none',
-                                    padding: '12px',
-                                    borderRadius: '999px',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                <span>🏕️ Chat with Aanandham Desk</span>
-                                <span>↗</span>
-                            </a>
-                        </div>
+                                {/* Aanandham Direct Helpdesk */}
+                                <a
+                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '10px',
+                                        color: '#E5A93B',
+                                        background: 'rgba(229, 169, 59, 0.1)',
+                                        border: '1px solid rgba(229, 169, 59, 0.25)',
+                                        fontSize: '14px',
+                                        fontWeight: '700',
+                                        textDecoration: 'none',
+                                        padding: '12px',
+                                        borderRadius: '999px',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    <span>🏕️ Chat with Aanandham Desk</span>
+                                    <span>↗</span>
+                                </a>
+                            </motion.div>
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
