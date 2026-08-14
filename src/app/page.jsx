@@ -444,14 +444,17 @@ const EVENT_ARRANGEMENTS = [
     {
         tagCode: 'SCRAP · 01',
         stamp: '✓ SQUAD EXPEDITION',
-        stampColor: '#15803D',
+        stampColor: '#B45309',
+        accentColor: '#D97706',
+        btnBg: '#E5A93B',
         iconClass: 'fa-solid fa-graduation-cap',
         title: 'College & Youth Expeditions',
         badge: 'Squad Groups (10-80 pax)',
         desc: 'Curated high-energy student treks with budget-friendly tents, acoustic campfires, guided ridge hikes, and dedicated safety marshals.',
         rotation: '-2.2deg',
         tapeAngle: '-3deg',
-        paperBg: '#FAF8F2',
+        paperBg: '#FFF9E8',
+        borderTint: 'rgba(217, 119, 6, 0.3)',
         statPill: '✦ 10-80 Pax Capacity',
         marginalNote: 'Direct 4x4 convoy pickup from Munnar town.',
         features: ['Discounted group rates', '4x4 Convoy coordination', 'Campfire & acoustic mic setup', 'Strict safety & medical support']
@@ -459,14 +462,17 @@ const EVENT_ARRANGEMENTS = [
     {
         tagCode: 'SCRAP · 02',
         stamp: '✓ OFFSITE PRO',
-        stampColor: '#0284C7',
+        stampColor: '#047857',
+        accentColor: '#059669',
+        btnBg: '#10B981',
         iconClass: 'fa-solid fa-building',
         title: 'Corporate Ridge Offsites',
         badge: 'Team Building & Strategy',
         desc: 'Step out of boardrooms into the clouds. High-altitude glamping, off-road team challenges, outdoor strategy sessions, and curated dining.',
         rotation: '2.5deg',
         tapeAngle: '2.8deg',
-        paperBg: '#F5F8F4',
+        paperBg: '#EDF8EE',
+        borderTint: 'rgba(16, 185, 129, 0.3)',
         statPill: '✦ Custom Schedules',
         marginalNote: 'Projector & presentation setups under starlight.',
         features: ['Executive glamp suites', 'Outdoor team-building games', 'Projector & sound gear', 'Custom chef-curated menus']
@@ -474,14 +480,17 @@ const EVENT_ARRANGEMENTS = [
     {
         tagCode: 'SCRAP · 03',
         stamp: '✓ SOLO TRIBE',
-        stampColor: '#EA580C',
+        stampColor: '#C2410C',
+        accentColor: '#EA580C',
+        btnBg: '#F97316',
         iconClass: 'fa-solid fa-campground',
         title: 'Strangers Camp Meet',
         badge: 'Weekend Community Camp',
         desc: 'Travel alone and leave with a tribe. Safe, vibrant weekend camps where solo travelers bond over stargazing, icebreakers, and ridge sunrises.',
         rotation: '-1.8deg',
         tapeAngle: '-2.2deg',
-        paperBg: '#FEF8F4',
+        paperBg: '#FFF1E8',
+        borderTint: 'rgba(234, 88, 12, 0.3)',
         statPill: '✦ 45%+ Solo Attendees',
         marginalNote: 'Dedicated female camp leads & safe grounds.',
         features: ['Icebreaker games & trails', 'Dedicated female marshals', 'Telescope stargazing deck', 'Instant tribe WhatsApp group']
@@ -489,14 +498,17 @@ const EVENT_ARRANGEMENTS = [
     {
         tagCode: 'SCRAP · 04',
         stamp: '✓ BESPOKE',
-        stampColor: '#9333EA',
+        stampColor: '#7E22CE',
+        accentColor: '#9333EA',
+        btnBg: '#A855F7',
         iconClass: 'fa-solid fa-fire',
         title: 'Private Ridge Celebrations',
         badge: 'Bespoke Arrangements',
         desc: 'Celebrate birthdays, pre-weddings, and milestones amidst mist and mountain ridges with drone cinematography and starlit barbecue dinners.',
         rotation: '2.1deg',
         tapeAngle: '3.5deg',
-        paperBg: '#FAF6FD',
+        paperBg: '#F8EEFC',
+        borderTint: 'rgba(147, 51, 234, 0.3)',
         statPill: '✦ 100% Ridge Privacy',
         marginalNote: '4K Drone cinematography options included.',
         features: ['Exclusive campsite buyout', '4K Drone aerial coverage', 'Acoustic guitarist on request', 'Fairy light & candlelit dinner']
@@ -2472,10 +2484,14 @@ export default function HomePage() {
                                 transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                 style={{
                                     background: ev.paperBg,
+                                    borderColor: ev.borderTint,
                                     transform: `rotate(${ev.rotation})`
                                 }}
                                 onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
                             >
+                                {/* Realistic Crumpled Paper Crease & Fold Overlay */}
+                                <div className="crumpled-crease-overlay" />
+
                                 {/* Top Translucent Frosted Scotch Tape Strip */}
                                 <div 
                                     className="scotch-tape-strip" 
@@ -2486,7 +2502,7 @@ export default function HomePage() {
                                 <div className="corner-tape-scrap" />
 
                                 {/* Top Row: Mini Logo + Tag Code + Vintage Rubber Ink Stamp */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', position: 'relative', zIndex: 2 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <img
                                             src="/logo.png"
@@ -2505,7 +2521,7 @@ export default function HomePage() {
                                             letterSpacing: '1px',
                                             textTransform: 'uppercase',
                                             color: '#657268',
-                                            background: 'rgba(0,0,0,0.05)',
+                                            background: 'rgba(0,0,0,0.06)',
                                             padding: '2px 6px',
                                             borderRadius: '4px',
                                             fontFamily: 'monospace'
@@ -2530,7 +2546,7 @@ export default function HomePage() {
                                             letterSpacing: '0.8px',
                                             textTransform: 'uppercase',
                                             transform: 'rotate(-3deg)',
-                                            background: 'rgba(255,255,255,0.75)',
+                                            background: 'rgba(255,255,255,0.85)',
                                             userSelect: 'none'
                                         }}
                                     >
@@ -2539,7 +2555,7 @@ export default function HomePage() {
                                 </div>
 
                                 {/* Icon & Title */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px', position: 'relative', zIndex: 2 }}>
                                     <div style={{
                                         width: '46px',
                                         height: '46px',
@@ -2555,7 +2571,7 @@ export default function HomePage() {
                                         <i className={ev.iconClass}></i>
                                     </div>
                                     <div>
-                                        <span style={{ fontSize: '11px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '2px' }}>
+                                        <span style={{ fontSize: '11px', fontWeight: '800', color: ev.accentColor, letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '2px' }}>
                                             {ev.badge}
                                         </span>
                                         <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.2 }}>
@@ -2565,12 +2581,12 @@ export default function HomePage() {
                                 </div>
 
                                 {/* Description */}
-                                <p style={{ fontSize: '14px', color: '#4E5A52', lineHeight: 1.65, margin: '0 0 16px' }}>
+                                <p style={{ fontSize: '14px', color: '#4E5A52', lineHeight: 1.65, margin: '0 0 16px', position: 'relative', zIndex: 2 }}>
                                     {ev.desc}
                                 </p>
 
                                 {/* Features Checklist */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '18px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '18px', position: 'relative', zIndex: 2 }}>
                                     {ev.features.map((feat, fIdx) => (
                                         <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#2B372E', fontWeight: '600' }}>
                                             <span style={{ color: '#166534', fontWeight: '800', fontSize: '13px' }}>✓</span>
@@ -2586,7 +2602,9 @@ export default function HomePage() {
                                     borderTop: '1px dashed rgba(18, 22, 19, 0.18)',
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '10px'
+                                    gap: '10px',
+                                    position: 'relative',
+                                    zIndex: 2
                                 }}>
                                     <div style={{
                                         display: 'flex',
@@ -2596,7 +2614,7 @@ export default function HomePage() {
                                         <span style={{
                                             fontSize: '11.5px',
                                             fontWeight: '800',
-                                            color: ev.stampColor,
+                                            color: ev.accentColor,
                                             background: 'rgba(0,0,0,0.04)',
                                             padding: '4px 10px',
                                             borderRadius: '6px'
@@ -2607,10 +2625,10 @@ export default function HomePage() {
                                             fontSize: '12px',
                                             fontWeight: '800',
                                             color: '#121613',
-                                            background: '#E5A93B',
+                                            background: ev.btnBg,
                                             padding: '5px 14px',
                                             borderRadius: '6px',
-                                            boxShadow: '0 2px 8px rgba(229, 169, 59, 0.4)'
+                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)'
                                         }}>
                                             Inquire ↗
                                         </span>

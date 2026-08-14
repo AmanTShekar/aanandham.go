@@ -125,40 +125,51 @@ body::-webkit-scrollbar-thumb:active,
 
 .roughed-paper-scrap {
   position: relative;
-  background: #FAF8F2;
   color: #121613;
-  padding: 40px 34px 30px 34px;
+  padding: 42px 34px 30px 34px;
   box-shadow: 
-    0 14px 32px -4px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.04),
-    inset 0 0 40px rgba(229, 169, 59, 0.03);
-  border: 1px solid rgba(18, 22, 19, 0.12);
+    0 16px 36px -4px rgba(0, 0, 0, 0.09),
+    0 4px 14px rgba(0, 0, 0, 0.05),
+    inset 0 0 50px rgba(0, 0, 0, 0.02);
+  border: 1.5px solid rgba(18, 22, 19, 0.12);
 
-  /* Organic Roughed Torn Edge Effect */
+  /* Organic Roughed / Crumpled Torn Edge Effect */
   clip-path: polygon(
-    0% 4px, 2% 0px, 98% 2px, 100% 6px,
-    99.5% 45%, 100% 96%, 98% 100%, 3% 99%, 0% 95%,
-    0.5% 50%
+    0% 5px, 3% 0px, 97% 3px, 100% 7px,
+    99% 45%, 100% 95%, 97% 100%, 3% 98%, 0% 94%,
+    1% 50%
   );
-  /* Paper grain & subtle cross-texture */
-  background-image: 
-    linear-gradient(rgba(18, 22, 19, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 22, 19, 0.03) 1px, transparent 1px);
-  background-size: 16px 16px;
   display: flex;
   flex-direction: column;
   min-height: 440px;
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
   overflow: visible;
 }
 
 .roughed-paper-scrap:hover {
   transform: translateY(-14px) rotate(0deg) scale(1.025) !important;
   box-shadow: 
-    0 28px 65px -8px rgba(0, 0, 0, 0.16),
-    0 10px 24px rgba(0, 0, 0, 0.08) !important;
+    0 32px 70px -8px rgba(0, 0, 0, 0.18),
+    0 12px 28px rgba(0, 0, 0, 0.08) !important;
 }
+
+/* Realistic Crumpled Paper Crease & Fold Shadow Shading */
+.crumpled-crease-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(132deg, rgba(0,0,0,0.04) 0%, transparent 35%, rgba(255,255,255,0.7) 37%, rgba(0,0,0,0.045) 40%, transparent 68%),
+    linear-gradient(38deg, transparent 45%, rgba(255,255,255,0.6) 47%, rgba(0,0,0,0.035) 50%, transparent 75%),
+    radial-gradient(circle at 80% 20%, rgba(0,0,0,0.03) 0%, transparent 45%),
+    linear-gradient(rgba(18, 22, 19, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 22, 19, 0.03) 1px, transparent 1px);
+  background-size: auto, auto, auto, 16px 16px, 16px 16px;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+
 
 /* Translucent Frosted Scotch Tape Strip */
 .scotch-tape-strip {
