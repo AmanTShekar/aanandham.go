@@ -132,22 +132,24 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: isHeaderSolid ? '12px 24px' : '18px 32px',
+                    padding: isHeaderSolid ? '14px 24px' : '20px 24px',
                     backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
                     backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
                     boxShadow: isHeaderSolid ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
-                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease'
                 }}
             >
                 <div style={{
-                    maxWidth: '1280px',
+                    width: '100%',
+                    maxWidth: '1240px',
                     margin: '0 auto',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '16px'
+                    gap: '16px',
+                    boxSizing: 'border-box'
                 }}>
                     {/* Brand Logo & Name */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
