@@ -1188,24 +1188,54 @@ export default function HomePage() {
                             ) : (
                                 <Link
                                     href="/login"
-                                    className="btn-lime"
                                     style={{
-                                        padding: '9px 24px',
-                                        fontSize: '13.5px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        background: 'linear-gradient(135deg, #D5ED55 0%, #C8EC34 100%)',
+                                        color: '#121613',
+                                        padding: '7px 18px 7px 8px',
+                                        borderRadius: '999px',
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '14px',
                                         fontWeight: '800',
+                                        letterSpacing: '-0.01em',
                                         textDecoration: 'none',
-                                        boxShadow: '0 4px 18px rgba(213, 237, 85, 0.25)'
+                                        boxShadow: '0 4px 20px rgba(213, 237, 85, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5)',
+                                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                                        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(-1px) scale(1.03)';
+                                        e.currentTarget.style.boxShadow = '0 8px 28px rgba(213, 237, 85, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                        e.currentTarget.style.boxShadow = '0 4px 20px rgba(213, 237, 85, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.5)';
                                     }}
                                 >
-                                    Log In
+                                    <span style={{
+                                        width: '26px',
+                                        height: '26px',
+                                        borderRadius: '50%',
+                                        background: '#121613',
+                                        color: '#D5ED55',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10.5px'
+                                    }}>
+                                        <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                                    </span>
+                                    <span>Log In</span>
                                 </Link>
                             )}
                         </div>
                     </div>
 
-                    {/* Mobile Header: User Profile Badge (if logged in) + Hamburger Toggle */}
+                    {/* Mobile Header: User Profile Badge or Log In Pill + Hamburger Toggle */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        {currentUser && (
+                        {currentUser ? (
                             <Link
                                 href="/login"
                                 className="mobile-only"
@@ -1224,6 +1254,29 @@ export default function HomePage() {
                                 }}
                             >
                                 {currentUser.name ? currentUser.name[0].toUpperCase() : '👤'}
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="mobile-only"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    background: 'rgba(213, 237, 85, 0.15)',
+                                    border: '1px solid rgba(213, 237, 85, 0.38)',
+                                    color: '#D5ED55',
+                                    padding: '6px 14px',
+                                    borderRadius: '999px',
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: '13px',
+                                    fontWeight: '800',
+                                    textDecoration: 'none',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                            >
+                                <i className="fa-solid fa-arrow-right-to-bracket" style={{ fontSize: '11px' }}></i>
+                                <span>Log In</span>
                             </Link>
                         )}
 

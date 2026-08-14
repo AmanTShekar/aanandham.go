@@ -362,15 +362,34 @@ export default function AuthPage({ initialMode = 'login' }) {
                                         className="btn-lime"
                                         disabled={loading}
                                         style={{
-                                            padding: '14px',
+                                            padding: '14px 20px',
                                             fontSize: '15px',
                                             fontWeight: '800',
-                                            marginTop: '6px',
+                                            fontFamily: 'var(--font-heading)',
+                                            letterSpacing: '-0.01em',
+                                            marginTop: '8px',
                                             width: '100%',
-                                            boxShadow: '0 8px 24px rgba(213, 237, 85, 0.4)'
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '10px',
+                                            borderRadius: '999px',
+                                            boxShadow: '0 8px 24px rgba(213, 237, 85, 0.42)',
+                                            border: 'none',
+                                            cursor: 'pointer'
                                         }}
                                     >
-                                        {loading ? 'Entering Basecamp...' : 'Log In →'}
+                                        {loading ? (
+                                            <>
+                                                <i className="fa-solid fa-spinner fa-spin"></i>
+                                                <span>Entering Basecamp...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Log In to Basecamp</span>
+                                                <i className="fa-solid fa-arrow-right" style={{ fontSize: '13px' }}></i>
+                                            </>
+                                        )}
                                     </button>
 
                                     <div style={{ textAlign: 'center', marginTop: '12px', fontSize: '13px', color: '#59655D' }}>
@@ -581,15 +600,34 @@ export default function AuthPage({ initialMode = 'login' }) {
                                         className="btn-lime"
                                         disabled={loading}
                                         style={{
-                                            padding: '13px',
-                                            fontSize: '14.5px',
+                                            padding: '14px 20px',
+                                            fontSize: '15px',
                                             fontWeight: '800',
-                                            marginTop: '6px',
+                                            fontFamily: 'var(--font-heading)',
+                                            letterSpacing: '-0.01em',
+                                            marginTop: '8px',
                                             width: '100%',
-                                            boxShadow: '0 8px 24px rgba(213, 237, 85, 0.4)'
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '10px',
+                                            borderRadius: '999px',
+                                            boxShadow: '0 8px 24px rgba(213, 237, 85, 0.42)',
+                                            border: 'none',
+                                            cursor: 'pointer'
                                         }}
                                     >
-                                        {loading ? 'Creating Your Profile...' : 'Join Aanandham Tribe →'}
+                                        {loading ? (
+                                            <>
+                                                <i className="fa-solid fa-spinner fa-spin"></i>
+                                                <span>Creating Your Profile...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>Join Aanandham Tribe</span>
+                                                <i className="fa-solid fa-arrow-right" style={{ fontSize: '13px' }}></i>
+                                            </>
+                                        )}
                                     </button>
 
                                     <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '13px', color: '#59655D' }}>
