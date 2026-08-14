@@ -829,7 +829,7 @@ export default function AboutPage() {
                 href="https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20would%20like%20to%20know%20about%20upcoming%20camp%20batches"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="floating-whatsapp-btn"
+                className={`floating-whatsapp-btn ${isMobileMenuOpen ? 'is-hidden' : ''}`}
                 aria-label="Chat with Aanandham Concierge on WhatsApp"
             >
                 <i className="fa-brands fa-whatsapp"></i>

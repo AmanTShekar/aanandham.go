@@ -738,26 +738,26 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
 }
 
 // ── MOBILE DRAWER FROSTED GLASS LIQUID RIPPLE VARIANTS ──
-// Origin anchored directly to the 44px toggle button: calc(100% - 44px) 34px
+// Origin anchored directly to the 44px toggle button: calc(100% - 42px) 36px
 // Pure clip-path geometry: expands to 260% and visibly contracts all the way to 0% with 100% solid opacity
 const drawerWaveVariants = {
     hidden: { 
-        clipPath: 'circle(0% at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)',
+        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
     },
     visible: { 
-        clipPath: 'circle(260% at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(260% at calc(100% - 44px) 34px)',
+        clipPath: 'circle(260% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.62, 
-            ease: [0.19, 1, 0.22, 1] 
+            duration: 0.6, 
+            ease: [0.22, 1, 0.36, 1] 
         }
     },
     exit: { 
-        clipPath: 'circle(0% at calc(100% - 44px) 34px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 44px) 34px)',
+        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.52, 
+            duration: 0.48, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -775,25 +775,25 @@ const drawerStaggerVariants = {
     exit: {
         opacity: 0,
         transition: {
-            duration: 0.15,
+            duration: 0.12,
             ease: "easeOut"
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, y: 22, scale: 0.96 },
+    hidden: { opacity: 0, y: 20, scale: 0.96 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
     },
     exit: {
         opacity: 0,
-        y: 10,
+        y: 8,
         scale: 0.96,
-        transition: { duration: 0.15, ease: "easeOut" }
+        transition: { duration: 0.12, ease: "easeOut" }
     }
 };
 
@@ -1010,6 +1010,7 @@ export default function HomePage() {
                 DYNAMIC TRANSLUCENT / BACKDROP NAVBAR (Clear on Hero, Solid on Scroll)
             ───────────────────────────────────────────────────────────── */}
             <motion.header 
+                className="site-header"
                 initial={{ y: -30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
@@ -1321,7 +1322,7 @@ export default function HomePage() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 44px) 34px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
+                            background: 'radial-gradient(circle at calc(100% - 42px) 36px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
                             backdropFilter: 'blur(36px) saturate(190%)',
                             WebkitBackdropFilter: 'blur(36px) saturate(190%)',
                             border: '1px solid rgba(213, 237, 85, 0.12)',
@@ -1342,8 +1343,8 @@ export default function HomePage() {
                             transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
                             style={{
                                 position: 'absolute',
-                                top: scrolled ? '12px' : '22px',
-                                right: scrolled ? '24px' : '32px',
+                                top: '14px',
+                                right: '20px',
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
@@ -1359,8 +1360,8 @@ export default function HomePage() {
                             transition={{ duration: 0.95, delay: 0.08, ease: [0.19, 1, 0.22, 1] }}
                             style={{
                                 position: 'absolute',
-                                top: scrolled ? '12px' : '22px',
-                                right: scrolled ? '24px' : '32px',
+                                top: '14px',
+                                right: '20px',
                                 width: '44px',
                                 height: '44px',
                                 borderRadius: '50%',
@@ -3571,7 +3572,7 @@ export default function HomePage() {
                 href="https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20would%20like%20to%20know%20about%20upcoming%20camp%20batches"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="floating-whatsapp-btn"
+                className={`floating-whatsapp-btn ${isMobileMenuOpen ? 'is-hidden' : ''}`}
                 aria-label="Chat with Aanandham Concierge on WhatsApp"
             >
                 <i className="fa-brands fa-whatsapp"></i>
