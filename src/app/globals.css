@@ -7,24 +7,92 @@
   color-scheme: light only;
   forced-color-adjust: none;
   
-  --bg-page: #F8F9F5;
+  /* ─────────────────────────────────────────────────────────────
+     FIGMA OFFICIAL COLOR PALETTE SYSTEM (Aanandham.go Tokens)
+  ───────────────────────────────────────────────────────────── */
+  /* 1. Primary Scale (Deep Forest & Midnight Obsidian) */
+  --primary-100: #C1F2CF;
+  --primary-200: #8ECDA1;
+  --primary-300: #71A480;
+  --primary-400: #557C61;
+  --primary-500: #3A5743;
+  --primary-600: #223527;
+  --primary-700: #0B150E;
+  --primary-base: #0B150E;
+
+  /* 2. Secondary Scale (Kerala Sunrise Amber Gold) */
+  --secondary-100: #FCD5A6;
+  --secondary-200: #E5A93B;
+  --secondary-300: #B5852D;
+  --secondary-400: #88631F;
+  --secondary-500: #5D4312;
+  --secondary-600: #352507;
+  --secondary-700: #190F02;
+  --secondary-base: #E5A93B;
+
+  /* 3. Tertiary Scale (Campfire Flame Ochre) */
+  --tertiary-100: #FEE4D2;
+  --tertiary-200: #FCB162;
+  --tertiary-300: #D48A22;
+  --tertiary-400: #A26917;
+  --tertiary-500: #74490E;
+  --tertiary-600: #482C05;
+  --tertiary-700: #201101;
+  --tertiary-base: #D48A22;
+
+  /* 4. Quaternary Scale (Morning Mist / Stone Canvas) */
+  --quaternary-100: #EAEFE5;
+  --quaternary-200: #C2C7BC;
+  --quaternary-300: #9CA097;
+  --quaternary-400: #777B74;
+  --quaternary-500: #555752;
+  --quaternary-600: #343633;
+  --quaternary-700: #171816;
+  --quaternary-base: #EAEFE5;
+
+  /* 5. Quinary Scale (Eucalyptus Wilderness Sage) */
+  --quinary-100: #C5E6D1;
+  --quinary-200: #A2BDAB;
+  --quinary-300: #7F9687;
+  --quinary-400: #5F7065;
+  --quinary-500: #404D45;
+  --quinary-600: #242C27;
+  --quinary-700: #0E120F;
+  --quinary-base: #5F7065;
+
+  /* 6. Neutral Greys */
+  --grey-100: #E3E8E3;
+  --grey-200: #BAC0BA;
+  --grey-300: #959A95;
+  --grey-400: #717571;
+  --grey-500: #4F524F;
+  --grey-600: #2F312F;
+  --grey-700: #121312;
+
+  /* Semantic UI Tokens */
+  --bg-page: var(--quaternary-100);
   --bg-card: #FFFFFF;
-  --bg-card-alt: #F1F3EC;
-  --bg-dark-footer: #0E1A11;
-  --bg-dark-footer-grad: linear-gradient(180deg, #101E13 0%, #08120A 100%);
+  --bg-card-alt: var(--grey-100);
+  --bg-dark-obsidian: var(--primary-700);
+  --bg-dark-footer: #0B150E;
+  --bg-dark-footer-grad: linear-gradient(180deg, #0B150E 0%, #060B07 100%);
   
-  --accent-lime: #D5ED55;
-  --accent-lime-hover: #C5DD45;
-  --accent-lime-glow: rgba(213, 237, 85, 0.35);
+  --accent-gold: var(--secondary-200);
+  --accent-gold-hover: #D4982A;
+  --accent-gold-glow: rgba(229, 169, 59, 0.4);
+
+  --accent-lime: var(--secondary-200); /* Mapped to Sunrise Amber Gold #E5A93B */
+  --accent-lime-hover: #D4982A;
+  --accent-lime-glow: rgba(229, 169, 59, 0.4);
   
-  --text-dark: #121613;
-  --text-muted: #48544C;         /* High-contrast WCAG AA compliant */
-  --text-light-muted: #59655D;   /* WCAG AA compliant on #F8F9F5 */
+  --text-dark: var(--primary-700);
+  --text-muted: var(--quinary-400);
+  --text-light-muted: #59655D;
   --text-white: #FFFFFF;
-  --text-white-muted: #A2B6A6;
+  --text-white-muted: var(--primary-200);
   
-  --border-light: rgba(18, 22, 19, 0.08);
-  --border-card: rgba(18, 22, 19, 0.06);
+  --border-light: rgba(11, 21, 14, 0.08);
+  --border-card: rgba(11, 21, 14, 0.06);
   --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.03);
   --shadow-hover: 0 16px 40px rgba(0, 0, 0, 0.06);
 }

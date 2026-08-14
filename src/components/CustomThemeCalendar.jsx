@@ -165,18 +165,18 @@ export default function CustomThemeCalendar({
 
     const isDark = theme === 'dark';
     const isGold = theme === 'gold';
-    const accentColor = isGold ? '#E5B84A' : '#D5ED55';
+    const accentColor = '#E5A93B'; // Figma Secondary Base: Sunrise Amber Gold
 
     // Inner Calendar UI Content (reused for both inline and modal view)
     const calendarContent = (
         <div style={{
-            background: isDark ? '#101E13' : '#FFFFFF',
+            background: isDark ? '#0B150E' : '#FFFFFF',
             borderRadius: '28px',
             padding: '24px',
-            color: isDark ? '#FFFFFF' : '#121613',
+            color: isDark ? '#FFFFFF' : '#0B150E',
             width: '100%',
             maxWidth: '460px',
-            border: isDark ? '1px solid rgba(213, 237, 85, 0.25)' : '1px solid rgba(18, 22, 19, 0.12)',
+            border: isDark ? '1px solid rgba(229, 169, 59, 0.35)' : '1px solid rgba(11, 21, 14, 0.12)',
             boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7)' : '0 20px 60px rgba(0, 0, 0, 0.14)'
         }}>
             {/* Modal / Card Header */}
