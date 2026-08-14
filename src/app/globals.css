@@ -527,22 +527,78 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   FLUID RESPONSIVE FOOTER SYSTEM
+───────────────────────────────────────────────────────────── */
+.footer-columns-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  margin-bottom: clamp(40px, 6vh, 70px);
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  .footer-columns-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+  .footer-brand-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13px;
+  color: #A2B6A6;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    gap: 14px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
    SMOOTH WATERMARK LIGHT-UP WITH SINGLE INTERACTIVE LETTERS
 ───────────────────────────────────────────────────────────── */
 .watermark-brand {
   font-family: var(--font-heading);
-  font-size: clamp(60px, 15vw, 200px);
+  font-size: clamp(32px, 10.5vw, 150px);
   font-weight: 900;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   text-align: center;
-  line-height: 0.85;
+  line-height: 0.9;
   user-select: none;
-  margin: 40px 0;
+  margin: clamp(24px, 4vh, 48px) 0;
   text-transform: lowercase;
   display: flex;
   justify-content: center;
   align-items: baseline;
   cursor: default;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .watermark-char {
@@ -566,6 +622,7 @@ button:focus-visible, a:focus-visible {
   color: #E5A93B;
   text-shadow: 0 0 50px rgba(229, 169, 59, 0.9);
 }
+
 
 /* ─────────────────────────────────────────────────────────────
    RESPONSIVE NAVIGATION & BREAKPOINTS

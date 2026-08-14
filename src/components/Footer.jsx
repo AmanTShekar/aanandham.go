@@ -24,18 +24,12 @@ export default function Footer() {
                 filter: 'blur(50px)'
             }} />
 
-            <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+            <div style={{ width: '100%', maxWidth: 'min(100%, 1240px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
                 
-                <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-                    gap: 'clamp(48px, 6vw, 84px)', 
-                    marginBottom: '70px',
-                    alignItems: 'start'
-                }}>
+                <div className="footer-columns-grid">
                     
                     {/* Column 1: Brand & Coordinates */}
-                    <div style={{ paddingRight: '12px' }}>
+                    <div className="footer-brand-col" style={{ paddingRight: '12px' }}>
                         <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ marginBottom: '14px' }}>
                             <img
                                 src="/logo.png"
@@ -194,18 +188,8 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Sub-Links & Copyright */}
-                <div style={{
-                    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-                    paddingTop: '24px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
-                    gap: '16px',
-                    fontSize: '13px',
-                    color: '#A2B6A6'
-                }}>
-                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                <div className="footer-bottom-bar">
+                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         <Link href="/about" style={{ color: '#A2B6A6', textDecoration: 'none' }}>About Us</Link>
                         <Link href="/contact" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Contact & Booking</Link>
                         <Link href="/login" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Member Login</Link>
