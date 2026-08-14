@@ -7,25 +7,27 @@ export default function SmoothScroll() {
     useEffect(() => {
         // Initialize Lenis for buttery smooth momentum scrolling
         const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Silky exponential curve
+            duration: 1.15,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential dampening curve
             orientation: 'vertical',
             gestureOrientation: 'vertical',
             smoothWheel: true,
-            wheelMultiplier: 0.95,
-            touchMultiplier: 1.5,
+            wheelMultiplier: 1.0,
+            touchMultiplier: 1.0,
+            syncTouch: false,
             infinite: false,
         });
 
-        // Expose lenis globally for programmatic smooth scrolling to anchors
+        // Expose lenis globally for programmatic smooth scrolling to anchors & modal control
         window.__lenis = lenis;
 
+        let rafId;
         function raf(time) {
             lenis.raf(time);
-            requestAnimationFrame(raf);
+            rafId = requestAnimationFrame(raf);
         }
 
-        const animId = requestAnimationFrame(raf);
+        rafId = requestAnimationFrame(raf);
 
         // Smooth scroll for anchor clicks (e.g. #packages, #program, etc.)
         const handleAnchorClick = (e) => {
@@ -36,7 +38,7 @@ export default function SmoothScroll() {
                     const el = document.querySelector(id);
                     if (el) {
                         e.preventDefault();
-                        lenis.scrollTo(el, { offset: -80, duration: 1.4 });
+                        lenis.scrollTo(el, { offset: -80, duration: 1.2 });
                     }
                 }
             }
@@ -45,7 +47,7 @@ export default function SmoothScroll() {
         document.addEventListener('click', handleAnchorClick);
 
         return () => {
-            cancelAnimationFrame(animId);
+            cancelAnimationFrame(rafId);
             document.removeEventListener('click', handleAnchorClick);
             lenis.destroy();
             window.__lenis = null;

@@ -108,16 +108,14 @@ html {
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 90px;
   font-family: var(--font-body);
   background-color: var(--bg-page);
   color: var(--text-dark);
-  overflow-x: clip;
   color-scheme: light only;
   forced-color-adjust: none;
   -webkit-text-size-adjust: 100%;
-  -webkit-overflow-scrolling: touch;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -125,6 +123,10 @@ html {
 ───────────────────────────────────────────────────────────── */
 html.lenis, html.lenis body {
   height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto !important;
 }
 
 .lenis.lenis-smooth {
@@ -135,12 +137,13 @@ html.lenis, html.lenis body {
   overscroll-behavior: contain;
 }
 
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
+.lenis.lenis-smooth iframe,
 .lenis.lenis-scrolling iframe {
   pointer-events: none;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
