@@ -138,7 +138,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px'
+            padding: 'clamp(8px, 2.5vw, 20px)'
         }}>
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -150,7 +150,8 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                     background: '#FFFFFF',
                     width: '100%',
                     maxWidth: '860px',
-                    maxHeight: 'min(90vh, 840px)',
+                    maxHeight: 'min(94vh, 840px)',
+                    borderRadius: 'clamp(20px, 4vw, 32px)',
                     boxShadow: '0 25px 70px rgba(0, 0, 0, 0.35)',
                     position: 'relative',
                     color: '#121613'
@@ -158,7 +159,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             >
                 {/* Modal Header */}
                 <div style={{
-                    padding: '22px 32px',
+                    padding: 'clamp(14px, 2.5vw, 22px) clamp(16px, 3.5vw, 32px)',
                     borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -173,7 +174,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 AANANDHAM.GO INSTANT BOOKING ENGINE
                             </span>
                         </div>
-                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 2.5vw, 22px)', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
                             {step === 1 ? 'Select Campsite & Travel Dates' : 'Customize Experience & Confirm'}
                         </h3>
                     </div>
@@ -186,7 +187,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                     </button>
                 </div>
 
-                <div className="modal-rounded-body" style={{ flex: 1, padding: '32px' }}>
+                <div className="modal-rounded-body" style={{ flex: 1, padding: 'clamp(16px, 3.5vw, 32px)' }}>
                     {step === 1 ? (
                         <div>
                             {/* Step 1: Package Grid */}

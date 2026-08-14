@@ -927,7 +927,7 @@ export default function HomePage() {
             </div>
 
             {/* ─────────────────────────────────────────────────────────────
-                DYNAMIC TRANSLUCENT / BACKDROP NAVBAR (Ref Image 5 Batch 2)
+                DYNAMIC TRANSLUCENT / BACKDROP NAVBAR (Clear on Hero, Solid on Scroll)
             ───────────────────────────────────────────────────────────── */}
             <motion.header 
                 initial={{ y: -30, opacity: 0 }}
@@ -939,12 +939,12 @@ export default function HomePage() {
                     left: 0,
                     right: 0,
                     zIndex: 999,
-                    padding: scrolled ? '12px 24px' : '18px 32px',
-                    backgroundColor: scrolled ? 'rgba(14, 24, 17, 0.96)' : 'rgba(14, 24, 17, 0.4)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
-                    boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.25)' : 'none',
+                    padding: scrolled ? '12px 24px' : '22px 32px',
+                    backgroundColor: scrolled ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
+                    backdropFilter: scrolled ? 'blur(16px)' : 'none',
+                    WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
+                    boxShadow: scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
             >
@@ -1035,7 +1035,7 @@ export default function HomePage() {
                 </div>
             </motion.header>
 
-            {/* ── RESPONSIVE MOBILE SLIDE-IN DRAWER ── */}
+            {/* ── CLEAN THEMED RESPONSIVE MOBILE SLIDE-IN DRAWER ── */}
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
@@ -1046,65 +1046,141 @@ export default function HomePage() {
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            zIndex: 998,
-                            background: '#0E1A11',
+                            zIndex: 99999,
+                            background: 'rgba(11, 21, 14, 0.98)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
-                            padding: '100px 32px 40px',
+                            padding: '24px 28px 36px',
                             overflowY: 'auto'
                         }}
                     >
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
-                            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Home
-                            </Link>
-                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                About Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                            </Link>
-                            <a href="#overview" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Camp Overview
-                            </a>
-                            <a href="#why-aanandham" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Why Aanandham<span style={{ color: '#E5A93B' }}>.go</span> ★
-                            </a>
-                            <a href="#stay" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Accommodation & Pods
-                            </a>
-                            <a href="#program" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                4-Day Program
-                            </a>
-                            <a href="#packages" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Packages & Pricing
-                            </a>
-                            <a href="#kerala-wilderness" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Kerala Wilderness Gallery
-                            </a>
-                            <a href="#faq" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                FAQ
-                            </a>
-                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
-                                Contact & Inquiries ↗
-                            </Link>
+                        {/* Top Drawer Header with Logo & Close Button */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <img
+                                    src="/logo.png"
+                                    alt="Aanandham.go"
+                                    style={{ height: '34px', width: 'auto', borderRadius: '6px' }}
+                                />
+                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#FFFFFF' }}>
+                                    Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                aria-label="Close menu"
+                                className="modal-close-btn"
+                                style={{ width: '40px', height: '40px', fontSize: '15px' }}
+                            >
+                                ✕
+                            </button>
                         </div>
 
-                        <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                            <Link
-                                href="/login"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="btn-lime"
-                                style={{
-                                    width: '100%',
-                                    padding: '14px',
-                                    fontSize: '16px',
-                                    marginBottom: '14px',
-                                    textDecoration: 'none'
-                                }}
+                        {/* Essential Streamlined Navigation Links Only */}
+                        <nav style={{ display: 'flex', flexDirection: 'column', gap: '18px', padding: '28px 0', fontSize: '18px', fontWeight: '700' }}>
+                            <a 
+                                href="#overview" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
                             >
-                                Member Log In ↗
+                                <span>The Camp Overview</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </a>
+                            <a 
+                                href="#why-aanandham" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>Why Aanandham<span style={{ color: '#E5A93B' }}>.go</span> ★</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </a>
+                            <a 
+                                href="#packages" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>Packages & Pricing</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </a>
+                            <a 
+                                href="#stay" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>Accommodation & Pods</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </a>
+                            <a 
+                                href="#program" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>4-Day Program</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </a>
+                            <Link 
+                                href="/about" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>About Us</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
                             </Link>
+                            <Link 
+                                href="/contact" 
+                                onClick={() => setIsMobileMenuOpen(false)} 
+                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}
+                            >
+                                <span>Contact & Inquiries</span>
+                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                            </Link>
+                        </nav>
+
+                        {/* Bottom Actions: Log In / Sign Up & Direct Aanandham Desk */}
+                        <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {/* Dual Auth Buttons */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                <Link
+                                    href="/login"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        background: 'rgba(255, 255, 255, 0.1)',
+                                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                                        color: '#FFFFFF',
+                                        padding: '12px',
+                                        borderRadius: '999px',
+                                        fontSize: '14px',
+                                        fontWeight: '700',
+                                        textDecoration: 'none',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    Log In
+                                </Link>
+                                <Link
+                                    href="/signup"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="btn-lime"
+                                    style={{
+                                        padding: '12px',
+                                        fontSize: '14px',
+                                        textDecoration: 'none',
+                                        fontWeight: '800'
+                                    }}
+                                >
+                                    Sign Up
+                                </Link>
+                            </div>
+
+                            {/* Aanandham Direct Helpdesk */}
                             <a
-                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
+                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -1112,15 +1188,19 @@ export default function HomePage() {
                                     alignItems: 'center',
                                     justifyContent: 'center',
                                     gap: '10px',
-                                    color: '#25D366',
+                                    color: '#E5A93B',
+                                    background: 'rgba(229, 169, 59, 0.1)',
+                                    border: '1px solid rgba(229, 169, 59, 0.25)',
                                     fontSize: '14px',
                                     fontWeight: '700',
                                     textDecoration: 'none',
-                                    padding: '12px'
+                                    padding: '12px',
+                                    borderRadius: '999px',
+                                    transition: 'all 0.2s ease'
                                 }}
                             >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                <span>WhatsApp Concierge (24/7)</span>
+                                <span>🏕️ Chat with Aanandham Desk</span>
+                                <span>↗</span>
                             </a>
                         </div>
                     </motion.div>
@@ -1738,9 +1818,9 @@ export default function HomePage() {
                                 <span className="text-marker-2">Handcrafted</span> Wilderness Packages
                             </h2>
                         </div>
-                        {/* Smooth Liquid-Glide Animated Filter Pills */}
+                        {/* Smooth Liquid-Glide Animated Filter Pills (Horizontal Touch Scroll on Mobile) */}
                         <LayoutGroup id="packagesFilterTabsGroup">
-                            <div style={{ display: 'flex', gap: '6px', background: '#FFFFFF', padding: '6px', borderRadius: '999px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 4px 18px rgba(0,0,0,0.03)', position: 'relative' }}>
+                            <div className="packages-filter-scroll">
                                 {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
                                     const isSelected = activeTab === tab;
                                     const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
@@ -1762,7 +1842,9 @@ export default function HomePage() {
                                                 transition: 'color 0.22s ease',
                                                 display: 'inline-flex',
                                                 alignItems: 'center',
-                                                justifyContent: 'center'
+                                                justifyContent: 'center',
+                                                flexShrink: 0,
+                                                whiteSpace: 'nowrap'
                                             }}
                                         >
                                             {isSelected && (
@@ -1787,7 +1869,7 @@ export default function HomePage() {
                         </LayoutGroup>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px', position: 'relative' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px', position: 'relative' }}>
                         <AnimatePresence mode="popLayout">
                             {filteredPackages.map((pkg, idx) => (
                                 <motion.div 
@@ -2723,7 +2805,7 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px' }}>
                         
                         {/* Authentic Real Polaroid Film Photo Collage (Large, Clean, Realistic Film Borders, No Hover Scale) */}
                         <div 
@@ -2733,9 +2815,11 @@ export default function HomePage() {
                                 display: 'flex', 
                                 alignItems: 'center', 
                                 justifyContent: 'center', 
-                                cursor: 'pointer',
-                                padding: '24px 12px',
-                                minHeight: '460px'
+                                cursor: 'pointer', 
+                                padding: '24px 12px', 
+                                minHeight: '460px',
+                                maxWidth: '100%',
+                                overflow: 'hidden'
                             }}
                         >
                             {/* Secondary Background Polaroid Snapshot */}

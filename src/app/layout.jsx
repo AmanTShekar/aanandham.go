@@ -15,6 +15,13 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#0E1A11',
+};
+
 export const metadata = {
   metadataBase: new URL('https://aanandham.in'),
   title: {
