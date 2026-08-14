@@ -127,18 +127,12 @@ body::-webkit-scrollbar-thumb:active,
   position: relative;
   color: #121613;
   padding: 42px 34px 30px 34px;
+  border-radius: 4px 16px 6px 20px;
   box-shadow: 
-    0 16px 36px -4px rgba(0, 0, 0, 0.09),
+    0 16px 36px -4px rgba(0, 0, 0, 0.1),
     0 4px 14px rgba(0, 0, 0, 0.05),
     inset 0 0 50px rgba(0, 0, 0, 0.02);
   border: 1.5px solid rgba(18, 22, 19, 0.12);
-
-  /* Organic Roughed / Crumpled Torn Edge Effect */
-  clip-path: polygon(
-    0% 5px, 3% 0px, 97% 3px, 100% 7px,
-    99% 45%, 100% 95%, 97% 100%, 3% 98%, 0% 94%,
-    1% 50%
-  );
   display: flex;
   flex-direction: column;
   min-height: 440px;
@@ -158,6 +152,7 @@ body::-webkit-scrollbar-thumb:active,
 .crumpled-crease-overlay {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
   background-image: 
     linear-gradient(132deg, rgba(0,0,0,0.04) 0%, transparent 35%, rgba(255,255,255,0.7) 37%, rgba(0,0,0,0.045) 40%, transparent 68%),
     linear-gradient(38deg, transparent 45%, rgba(255,255,255,0.6) 47%, rgba(0,0,0,0.035) 50%, transparent 75%),
@@ -170,22 +165,21 @@ body::-webkit-scrollbar-thumb:active,
   z-index: 1;
 }
 
-
-/* Translucent Frosted Scotch Tape Strip */
+/* Highly Visible Translucent Golden Cellophane Scotch Tape */
 .scotch-tape-strip {
   position: absolute;
-  top: -14px;
+  top: -16px;
   left: 50%;
   transform: translateX(-50%) rotate(-2deg);
-  width: 96px;
-  height: 28px;
-  background: rgba(255, 255, 255, 0.45);
+  width: 120px;
+  height: 32px;
+  background: rgba(228, 192, 126, 0.75);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.65);
-  border-left: 2px dashed rgba(255, 255, 255, 0.7);
-  border-right: 2px dashed rgba(255, 255, 255, 0.7);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 0 6px rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(195, 150, 75, 0.7);
+  border-left: 2px dashed rgba(160, 115, 45, 0.8);
+  border-right: 2px dashed rgba(160, 115, 45, 0.8);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
   z-index: 10;
   pointer-events: none;
 }
@@ -193,18 +187,18 @@ body::-webkit-scrollbar-thumb:active,
 /* Bottom Marginal Tape Scrap */
 .corner-tape-scrap {
   position: absolute;
-  bottom: -10px;
-  right: 14px;
+  bottom: -12px;
+  right: 16px;
   transform: rotate(18deg);
-  width: 52px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-left: 1px dashed rgba(255, 255, 255, 0.8);
-  border-right: 1px dashed rgba(255, 255, 255, 0.8);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  width: 64px;
+  height: 24px;
+  background: rgba(228, 192, 126, 0.72);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(195, 150, 75, 0.65);
+  border-left: 1.5px dashed rgba(160, 115, 45, 0.75);
+  border-right: 1.5px dashed rgba(160, 115, 45, 0.75);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.8);
   z-index: 10;
   pointer-events: none;
 }

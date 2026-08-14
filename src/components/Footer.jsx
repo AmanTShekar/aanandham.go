@@ -6,7 +6,7 @@ export default function Footer() {
     return (
         <footer style={{
             background: 'linear-gradient(180deg, #101E13 0%, #08120A 100%)',
-            padding: '100px 24px 40px',
+            padding: '80px 24px 36px',
             color: '#FFFFFF',
             position: 'relative',
             overflow: 'hidden'
@@ -24,7 +24,7 @@ export default function Footer() {
                 filter: 'blur(50px)'
             }} />
 
-            <div style={{ width: '100%', maxWidth: 'min(100%, 1340px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
+            <div style={{ width: '100%', maxWidth: 'min(100%, 1240px)', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
                 
                 <div className="footer-columns-grid">
                     
