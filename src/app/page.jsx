@@ -2827,112 +2827,120 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '32px' }}>
                         
-                        {/* Organic Polaroid Photo Video Diaries Element (Static, No Hover Transforms, No Sticky Notes) */}
+                        {/* Authentic Real Polaroid Film Photo Collage (Large, Clean, Realistic Film Borders, No Hover Scale) */}
                         <div 
                             onClick={() => setIsVideoModalOpen(true)} 
                             style={{ 
                                 position: 'relative', 
                                 display: 'flex', 
                                 alignItems: 'center', 
-                                justifyContent: 'center',
+                                justifyContent: 'center', 
                                 cursor: 'pointer',
-                                padding: '16px 8px',
-                                minHeight: '380px'
+                                padding: '24px 12px',
+                                minHeight: '460px'
                             }}
                         >
                             {/* Secondary Background Polaroid Snapshot */}
                             <div
                                 style={{
                                     position: 'absolute',
-                                    top: '18px',
-                                    right: '12px',
-                                    width: '185px',
+                                    top: '10px',
+                                    right: '5px',
+                                    width: '240px',
                                     background: '#FFFFFF',
-                                    padding: '8px 8px 18px 8px',
-                                    borderRadius: '12px',
-                                    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.12)',
-                                    transform: 'rotate(5deg)',
-                                    zIndex: 1
+                                    padding: '12px 12px 26px 12px',
+                                    borderRadius: '6px',
+                                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.12)',
+                                    transform: 'rotate(6.5deg)',
+                                    zIndex: 1,
+                                    border: '1px solid rgba(0, 0, 0, 0.04)'
                                 }}
                             >
-                                <div style={{ height: '140px', borderRadius: '8px', overflow: 'hidden', marginBottom: '8px' }}>
+                                <div style={{ height: '175px', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px', background: '#0E1A11' }}>
                                     <img 
-                                        src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=500&q=80" 
+                                        src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80" 
                                         alt="Kolukkumalai Sunrise" 
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                     />
                                 </div>
-                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.5px' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.6px' }}>
                                     🏔️ 7,900 FT Sunrise Batch
                                 </div>
                             </div>
 
-                            {/* Primary Foreground Polaroid Photo */}
+                            {/* Primary Foreground Realistic Polaroid Photo Card */}
                             <div
                                 style={{
                                     position: 'relative',
-                                    width: '92%',
-                                    maxWidth: '310px',
+                                    width: '100%',
+                                    maxWidth: '355px',
                                     background: '#FFFFFF',
-                                    padding: '12px 12px 20px 12px',
-                                    borderRadius: '16px',
-                                    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.14)',
+                                    padding: '16px 16px 30px 16px',
+                                    borderRadius: '8px',
+                                    boxShadow: '0 25px 65px rgba(0, 0, 0, 0.16), 0 5px 15px rgba(0, 0, 0, 0.04)',
                                     transform: 'rotate(-2.5deg)',
-                                    zIndex: 2
+                                    zIndex: 2,
+                                    border: '1px solid rgba(0, 0, 0, 0.04)'
                                 }}
                             >
-                                {/* Polaroid Photo Image */}
-                                <div style={{ position: 'relative', height: '220px', borderRadius: '10px', overflow: 'hidden', marginBottom: '14px', background: '#0E1A11' }}>
+                                {/* Photo Window (Authentic square / clean 3px radius) */}
+                                <div style={{ position: 'relative', height: '275px', borderRadius: '3px', overflow: 'hidden', marginBottom: '18px', background: '#0E1A11' }}>
                                     <img 
-                                        src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80" 
+                                        src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
                                         alt="Aanandham Wilderness Campfire" 
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                     />
                                     
-                                    {/* Play Button */}
+                                    {/* Large Clean Play Button */}
                                     <div style={{
                                         position: 'absolute',
                                         top: '50%',
                                         left: '50%',
                                         transform: 'translate(-50%, -50%)',
-                                        width: '58px',
-                                        height: '58px',
+                                        width: '64px',
+                                        height: '64px',
                                         borderRadius: '50%',
                                         background: '#FFFFFF',
                                         color: '#121613',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
+                                        boxShadow: '0 10px 35px rgba(0,0,0,0.35)'
                                     }}>
-                                        <i className="fa-solid fa-play" style={{ fontSize: '16px', marginLeft: '3px' }}></i>
+                                        <i className="fa-solid fa-play" style={{ fontSize: '18px', marginLeft: '3px' }}></i>
                                     </div>
 
+                                    {/* 4K Badge */}
                                     <div style={{
                                         position: 'absolute',
-                                        bottom: '10px',
-                                        right: '10px',
-                                        background: 'rgba(0, 0, 0, 0.7)',
-                                        backdropFilter: 'blur(6px)',
+                                        bottom: '12px',
+                                        right: '12px',
+                                        background: 'rgba(0, 0, 0, 0.72)',
+                                        backdropFilter: 'blur(8px)',
                                         color: '#FFFFFF',
-                                        fontSize: '10px',
+                                        fontSize: '10.5px',
                                         fontWeight: '800',
-                                        padding: '3px 8px',
+                                        padding: '4px 10px',
                                         borderRadius: '6px'
                                     }}>
                                         4K HDR · 02:45
                                     </div>
                                 </div>
 
-                                {/* Polaroid Caption */}
+                                {/* Authentic Polaroid Wide Bottom Border / Caption */}
                                 <div style={{ padding: '0 4px' }}>
-                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613', marginBottom: '2px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                        <span>Watch our video diaries!</span>
-                                        <span style={{ fontSize: '14px', color: '#59655D' }}>↗</span>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', margin: 0, letterSpacing: '-0.2px' }}>
+                                            Watch our video diaries!
+                                        </h4>
+                                        <span style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>↗</span>
                                     </div>
-                                    <p style={{ fontSize: '12px', color: '#8E9B92', margin: 0, fontWeight: '500' }}>
+                                    <p style={{ fontSize: '13px', color: '#59655D', margin: '0 0 6px', fontWeight: '500', lineHeight: 1.4 }}>
                                         Raw camp vibes, guitars & starry skies
                                     </p>
+                                    <div style={{ fontSize: '9.5px', fontWeight: '800', letterSpacing: '1px', color: '#8E9B92', textTransform: 'uppercase' }}>
+                                        AANANDHAM.GO · KERALA EXPEDITIONS
+                                    </div>
                                 </div>
                             </div>
                         </div>
