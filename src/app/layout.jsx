@@ -18,6 +18,7 @@ export const viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#0E1A11',
+  colorScheme: 'light',
 };
 
 export const metadata = {
@@ -162,6 +163,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-IN" className={`${bricolage.variable} ${plusJakarta.variable}`}>
       <head>
+        <meta name="color-scheme" content="light" />
+        <meta name="supported-color-schemes" content="light" />
+        <meta name="theme-color" content="#0E1A11" />
         <link rel="icon" type="image/png" href="/logo.png" />
         <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />

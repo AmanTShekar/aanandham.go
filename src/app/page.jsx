@@ -740,6 +740,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
 // ── MOBILE DRAWER FROSTED GLASS LIQUID RIPPLE VARIANTS ──
 // Origin anchored directly to the 44px toggle button: calc(100% - 42px) 36px
 // Pure clip-path geometry: expands to 260% and visibly contracts all the way to 0% with 100% solid opacity
+// Contents stay visible so the shrinking circular wave naturally masks and swallows them into the button synchronously!
 const drawerWaveVariants = {
     hidden: { 
         clipPath: 'circle(0% at calc(100% - 42px) 36px)',
@@ -749,7 +750,7 @@ const drawerWaveVariants = {
         clipPath: 'circle(260% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.52, 
+            duration: 0.48, 
             ease: [0.22, 1, 0.36, 1] 
         }
     },
@@ -757,8 +758,8 @@ const drawerWaveVariants = {
         clipPath: 'circle(0% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.36, 
-            ease: [0.32, 0, 0.67, 0] 
+            duration: 0.38, 
+            ease: [0.4, 0, 0.2, 1] 
         }
     }
 };
@@ -773,23 +774,23 @@ const drawerStaggerVariants = {
         }
     },
     exit: {
-        opacity: 0,
+        opacity: 1,
         transition: {
-            duration: 0.26,
-            ease: "easeOut"
+            duration: 0.38
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, y: 12 },
     visible: {
         opacity: 1,
-        transition: { duration: 0.25, ease: "easeOut" }
+        y: 0,
+        transition: { duration: 0.28, ease: "easeOut" }
     },
     exit: {
-        opacity: 0,
-        transition: { duration: 0.1, ease: "easeOut" }
+        opacity: 1,
+        transition: { duration: 0.38 }
     }
 };
 

@@ -13,7 +13,7 @@ const drawerWaveVariants = {
         clipPath: 'circle(260% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.52, 
+            duration: 0.48, 
             ease: [0.22, 1, 0.36, 1] 
         }
     },
@@ -21,8 +21,8 @@ const drawerWaveVariants = {
         clipPath: 'circle(0% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.36, 
-            ease: [0.32, 0, 0.67, 0] 
+            duration: 0.38, 
+            ease: [0.4, 0, 0.2, 1] 
         }
     }
 };
@@ -37,10 +37,9 @@ const drawerStaggerVariants = {
         }
     },
     exit: {
-        opacity: 0,
+        opacity: 1,
         transition: {
-            duration: 0.26,
-            ease: "easeOut"
+            duration: 0.38
         }
     }
 };
