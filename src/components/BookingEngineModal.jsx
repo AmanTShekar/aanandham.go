@@ -401,6 +401,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     </label>
                                     <CustomThemeCalendar 
                                         selectedDate={travelDate} 
+                                        onDateSelect={(date) => {
+                                            setTravelDate(date);
+                                            setValidationError('');
+                                        }}
                                         onSelectDate={(date) => {
                                             setTravelDate(date);
                                             setValidationError('');

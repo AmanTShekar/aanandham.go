@@ -5,6 +5,11 @@ import Lenis from 'lenis';
 
 export default function SmoothScroll() {
     useEffect(() => {
+        // Respect accessibility prefers-reduced-motion
+        if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
         // Initialize Lenis for buttery smooth momentum scrolling
         const lenis = new Lenis({
             duration: 1.15,

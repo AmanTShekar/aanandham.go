@@ -4,14 +4,12 @@ import SmoothScroll from '@/components/SmoothScroll';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-bricolage',
   display: 'swap',
 });
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-jakarta',
   display: 'swap',
 });
@@ -19,7 +17,6 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 5,
   themeColor: '#0E1A11',
 };
 
@@ -86,14 +83,8 @@ export const metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: '/logo.png' },
-      { url: '/favicon.ico' },
-    ],
-    shortcut: ['/logo.png'],
-    apple: [
-      { url: '/logo.png' },
-    ],
+    icon: '/logo.png',
+    apple: '/logo.png',
   },
 };
 
@@ -110,7 +101,7 @@ const jsonLd = {
   priceRange: '₹₹',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Suryanelli Peak Ridge & Tea Valley',
+    streetAddress: 'Kolukkumalai Road, Suryanelli',
     addressLocality: 'Munnar',
     addressRegion: 'Kerala',
     postalCode: '685618',
@@ -177,7 +168,17 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        {/* Asynchronous Non-Blocking Font Awesome */}
+        <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" />
+        <link 
+          rel="stylesheet" 
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          media="print" 
+          onLoad="this.media='all'" 
+        />
+        <noscript>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

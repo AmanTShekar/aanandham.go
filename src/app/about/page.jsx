@@ -127,22 +127,10 @@ const TEAM_MEMBERS = [
     }
 ];
 
+import SiteHeader from '../../components/SiteHeader';
+
 export default function AboutPage() {
     const [selectedPlace, setSelectedPlace] = useState(NEARBY_PLACES[0]);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-    // Disable background page scrolling smoothly when mobile menu is open
-    React.useEffect(() => {
-        if (isMobileMenuOpen) {
-            window.__lenis?.stop();
-            const originalOverflow = document.body.style.overflow;
-            document.body.style.overflow = 'hidden';
-            return () => {
-                window.__lenis?.start();
-                document.body.style.overflow = originalOverflow || '';
-            };
-        }
-    }, [isMobileMenuOpen]);
 
     return (
         <div style={{
@@ -184,175 +172,8 @@ export default function AboutPage() {
                 }}
             />
 
-            {/* ── TOP HEADER ── */}
-            <header 
-                className="site-header"
-                style={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    zIndex: 100000,
-                    padding: '16px 28px',
-                    backgroundColor: 'rgba(14, 24, 17, 0.96)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    transition: 'all 0.3s ease'
-                }}
-            >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/" className="text-hover-marker text-hover-marker-dark">
-                        <img
-                            src="/logo.png"
-                            alt="Aanandham.go"
-                            style={{
-                                height: '36px',
-                                width: 'auto',
-                                objectFit: 'contain',
-                                borderRadius: '6px'
-                            }}
-                        />
-                        <span className="marker-text" style={{
-                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                            fontSize: '26px',
-                            fontWeight: '800',
-                            color: '#FFFFFF',
-                            letterSpacing: '-0.03em'
-                        }}>
-                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                        </span>
-                    </Link>
-                </div>
-
-                {/* Desktop Nav Links */}
-                <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                    <Link href="/" style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        color: '#FFFFFF',
-                        textDecoration: 'none',
-                        fontSize: '14px',
-                        fontWeight: '600',
-                        opacity: 0.9
-                    }}>
-                        <i className="fa-solid fa-arrow-left" style={{ fontSize: '11px' }}></i> Back to Home
-                    </Link>
-                    <Link href="/contact" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                        Contact
-                    </Link>
-                    <Link href="/login" className="btn-lime" style={{ padding: '9px 24px', fontSize: '13.5px', textDecoration: 'none' }}>
-                        Log In
-                    </Link>
-                </div>
-
-                {/* Mobile Toggle Button (Animated 3-Bar Morphing Hamburger) */}
-                <button
-                    className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
-                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-                >
-                    <span className="burger-line line-top" />
-                    <span className="burger-line line-mid" />
-                    <span className="burger-line line-bot" />
-                </button>
-            </header>
-
-            {/* ── RESPONSIVE MOBILE DRAWER (Liquid Wave Expansion) ── */}
-            <AnimatePresence>
-                {isMobileMenuOpen && (
-                    <motion.div
-                        key="about-frosted-glass-drawer"
-                        initial={{ clipPath: 'circle(0% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)' }}
-                        animate={{ clipPath: 'circle(260% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)' }}
-                        exit={{ clipPath: 'circle(0% at calc(100% - 42px) 36px)', WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)' }}
-                        transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
-                        style={{
-                            position: 'fixed',
-                            inset: 0,
-                            zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 42px) 36px, rgba(28, 48, 33, 0.96) 0%, rgba(13, 24, 16, 0.98) 45%, #070E08 100%)',
-                            backdropFilter: 'blur(36px) saturate(190%)',
-                            WebkitBackdropFilter: 'blur(36px) saturate(190%)',
-                            border: '1px solid rgba(213, 237, 85, 0.12)',
-                            color: '#FFFFFF',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            padding: '100px 32px 40px',
-                            overflowY: 'auto',
-                            transform: 'translateZ(0)',
-                            willChange: 'clip-path'
-                        }}
-                    >
-                        {/* Concentric Frosted Glass Liquid Ripple Rings */}
-                        <motion.div
-                            initial={{ scale: 0.2, opacity: 0.9 }}
-                            animate={{ scale: [0.2, 2.0, 4.2], opacity: [0.9, 0.35, 0] }}
-                            transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
-                            style={{
-                                position: 'absolute',
-                                top: '14px',
-                                right: '20px',
-                                width: '44px',
-                                height: '44px',
-                                borderRadius: '50%',
-                                border: '1.5px solid rgba(213, 237, 85, 0.65)',
-                                boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
-                                pointerEvents: 'none'
-                            }}
-                        />
-
-                        {/* Unified Exit-Synchronized Drawer Body */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1, transition: { duration: 0.25 } }}
-                            exit={{ opacity: 0, transition: { duration: 0.26 } }}
-                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
-                        >
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
-                                <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                    Home
-                                </Link>
-                                <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
-                                    About Us
-                                </Link>
-                                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                    Contact & Inquiries
-                                </Link>
-                                <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                    Member Log In
-                                </Link>
-                            </div>
-
-                            <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                                <a
-                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        gap: '10px',
-                                        color: '#25D366',
-                                        fontSize: '14px',
-                                        fontWeight: '700',
-                                        textDecoration: 'none',
-                                        padding: '12px'
-                                    }}
-                                >
-                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                    <span>WhatsApp Concierge (24/7)</span>
-                                </a>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* ── SHARED TOP HEADER & MOBILE DRAWER ── */}
+            <SiteHeader activePage="about" transparentOnTop={false} />
 
             <main id="about-content">
 
@@ -853,7 +674,7 @@ export default function AboutPage() {
                 href="https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20would%20like%20to%20know%20about%20upcoming%20camp%20batches"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`floating-whatsapp-btn ${isMobileMenuOpen ? 'is-hidden' : ''}`}
+                className="floating-whatsapp-btn"
                 aria-label="Chat with Aanandham Concierge on WhatsApp"
             >
                 <i className="fa-brands fa-whatsapp"></i>

@@ -793,18 +793,54 @@ const drawerItemVariants = {
     }
 };
 
+// Isolated high-performance Scroll Progress Indicator (0 parent re-renders)
+function ScrollProgressBar() {
+    const [progress, setProgress] = useState(0);
+
+    useEffect(() => {
+        let ticking = false;
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    if (totalHeight > 0) {
+                        setProgress((window.scrollY / totalHeight) * 100);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    return (
+        <div className="scroll-progress-container">
+            <div 
+                className="scroll-progress-bar" 
+                style={{ 
+                    transform: `scaleX(${progress / 100})`, 
+                    transformOrigin: '0% 50%',
+                    willChange: 'transform' 
+                }} 
+            />
+        </div>
+    );
+}
+
 export default function HomePage() {
     const [scrolled, setScrolled] = useState(false);
-    const [scrollProgress, setScrollProgress] = useState(0);
+    const scrolledRef = useRef(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
-    const [activeLevelIdx, setActiveLevelIdx] = useState(null);        // No card active by default until hovered/tapped
-    const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active hover by default
-    const [expandedDayIdx, setExpandedDayIdx] = useState(0);           // Day 1 expanded by default
-    const [activeWhyIdx, setActiveWhyIdx] = useState(0);               // Safety & Comfort active by default
-    const [activeStayAcc, setActiveStayAcc] = useState(3);             // Common Areas active by default (Ref media_1786655246091.png)
+    const [activeLevelIdx, setActiveLevelIdx] = useState(null);
+    const [activeDayIdx, setActiveDayIdx] = useState(0);
+    const [expandedDayIdx, setExpandedDayIdx] = useState(0);
+    const [activeWhyIdx, setActiveWhyIdx] = useState(0);
+    const [activeStayAcc, setActiveStayAcc] = useState(3);
     const [activeFaq, setActiveFaq] = useState(0);
     const [highlightIdx, setHighlightIdx] = useState(0);
     const [testimonialIdx, setTestimonialIdx] = useState(0);
@@ -813,20 +849,6 @@ export default function HomePage() {
     const [selectedPackage, setSelectedPackage] = useState(EXPEDITION_PACKAGES[0]);
     const [currentUser, setCurrentUser] = useState(null);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
-
-    // Floating cursor follower preview for Program section
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-    const [isHoveringProgram, setIsHoveringProgram] = useState(false);
-    const programContainerRef = useRef(null);
-
-    const [formData, setFormData] = useState({
-        name: '',
-        phone: '',
-        date: '',
-        guests: '2',
-        packageName: EXPEDITION_PACKAGES[0].title,
-        notes: ''
-    });
 
     // Read logged-in user profile from localStorage
     useEffect(() => {
@@ -846,24 +868,20 @@ export default function HomePage() {
         setIsAccountMenuOpen(false);
     };
 
-    // Detect Scroll for Dynamic Navbar Transition & Scroll Progress
+    // Threshold-gated scroll listener (Only fires state updates when crossing 40px boundary)
     useEffect(() => {
         const handleScroll = () => {
-            if (window.scrollY > 40) {
-                setScrolled(true);
-            } else {
-                setScrolled(false);
-            }
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            if (totalHeight > 0) {
-                setScrollProgress((window.scrollY / totalHeight) * 100);
+            const isPast = window.scrollY > 40;
+            if (isPast !== scrolledRef.current) {
+                scrolledRef.current = isPast;
+                setScrolled(isPast);
             }
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Disable background page scrolling when video modal, lightbox modal, booking engine, or mobile menu is open
+    // Disable background page scrolling when modals are open
     useEffect(() => {
         if (isVideoModalOpen || selectedLightboxImg || isBookingModalOpen || isMobileMenuOpen) {
             window.__lenis?.stop();
@@ -875,15 +893,6 @@ export default function HomePage() {
             };
         }
     }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen, isMobileMenuOpen]);
-
-    const handleProgramMouseMove = (e) => {
-        if (!programContainerRef.current) return;
-        const rect = programContainerRef.current.getBoundingClientRect();
-        setMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
-        });
-    };
 
     const filteredPackages = activeTab === 'All' 
         ? EXPEDITION_PACKAGES 
@@ -999,10 +1008,8 @@ export default function HomePage() {
                 Skip to main content
             </a>
 
-            {/* ── SCROLL PROGRESS BAR ── */}
-            <div className="scroll-progress-container">
-                <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
-            </div>
+            {/* ── SCROLL PROGRESS BAR (0 React Re-renders on Scroll) ── */}
+            <ScrollProgressBar />
 
             {/* ─────────────────────────────────────────────────────────────
                 DYNAMIC TRANSLUCENT / BACKDROP NAVBAR (Clear on Hero, Solid on Scroll)
@@ -1024,7 +1031,7 @@ export default function HomePage() {
                     WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
                     borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
                     boxShadow: scrolled ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
-                    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease'
                 }}
             >
                 <div style={{
@@ -1819,14 +1826,14 @@ export default function HomePage() {
                             color: '#FFFFFF',
                             letterSpacing: '-0.5px'
                         }}>
-                            350+
+                            15,000+
                         </span>
                         <span style={{
                             fontSize: '14px',
                             color: 'rgba(255, 255, 255, 0.8)',
                             fontWeight: '500'
                         }}>
-                            adventurers already conquered trails with us
+                            Happy Campers & Explorers hosted across Western Ghats
                         </span>
                     </motion.div>
                 </motion.div>
@@ -1861,25 +1868,6 @@ export default function HomePage() {
                     ))}
                 </div>
             </div>
-
-            {/* FAQ Structured Data for Google Rich Snippets */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "FAQPage",
-                        "mainEntity": FAQ_DATA.map(f => ({
-                            "@type": "Question",
-                            "name": f.question,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": f.answer
-                            }
-                        }))
-                    })
-                }}
-            />
 
             {/* ─────────────────────────────────────────────────────────────
                 1. OVERVIEW SECTION (Ref Screenshot 3 Batch 2 - media_1786655246018.png)
@@ -2647,12 +2635,7 @@ export default function HomePage() {
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
             >
-                <div 
-                    ref={programContainerRef}
-                    onMouseMove={handleProgramMouseMove}
-                    onMouseLeave={() => setIsHoveringProgram(false)}
-                    style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative' }}
-                >
+                <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative' }}>
                     
                     {/* Header Row */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '60px' }}>
@@ -2703,10 +2686,7 @@ export default function HomePage() {
                                 <motion.div
                                     key={idx}
                                     variants={cardReveal}
-                                    onMouseEnter={() => {
-                                        setActiveDayIdx(idx);
-                                        setIsHoveringProgram(true);
-                                    }}
+                                    onMouseEnter={() => setActiveDayIdx(idx)}
                                     onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
                                     style={{
                                         borderTop: '1px solid rgba(18, 22, 19, 0.1)',
@@ -2777,9 +2757,15 @@ export default function HomePage() {
                                                 <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
                                                     {item.desc}
                                                 </p>
-                                                {/* Mobile In-line Image fallback */}
-                                                <div className="mobile-only" style={{ height: '200px', borderRadius: '18px', overflow: 'hidden', marginTop: '12px' }}>
-                                                    <img src={item.img} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                {/* In-line Image preview */}
+                                                <div style={{ height: '220px', borderRadius: '18px', overflow: 'hidden', marginTop: '16px' }}>
+                                                    <img 
+                                                        src={item.img} 
+                                                        alt={item.title} 
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                    />
                                                 </div>
                                             </motion.div>
                                         )}
@@ -2788,43 +2774,6 @@ export default function HomePage() {
                             );
                         })}
                     </div>
-
-                    {/* Floating Mouse Cursor Follower Preview Card (Smooth Spring Physics & Seamless Image Cross-fade) */}
-                    <AnimatePresence>
-                        {isHoveringProgram && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.85 }}
-                                animate={{ 
-                                    opacity: 1, 
-                                    scale: 1, 
-                                    x: mousePos.x + 24, 
-                                    y: mousePos.y - 110 
-                                }}
-                                exit={{ opacity: 0, scale: 0.85 }}
-                                transition={{ type: 'spring', damping: 28, stiffness: 280, mass: 0.18 }}
-                                style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '185px',
-                                    height: '235px',
-                                    borderRadius: '22px',
-                                    overflow: 'hidden',
-                                    pointerEvents: 'none',
-                                    zIndex: 30,
-                                    boxShadow: '0 25px 55px rgba(0, 0, 0, 0.22)',
-                                    border: '4px solid #FFFFFF'
-                                }}
-                                className="desktop-only"
-                            >
-                                <img
-                                    src={PROGRAM_DAYS[activeDayIdx >= 0 && activeDayIdx < PROGRAM_DAYS.length ? activeDayIdx : 0]?.img || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'}
-                                    alt="Activity preview"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'all 0.3s ease' }}
-                                />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
 
                 </div>
             </motion.section>

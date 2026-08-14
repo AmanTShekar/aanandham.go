@@ -438,13 +438,23 @@ export default function AdminPortal() {
         }
     }, []);
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        if (passcode === '2026' || passcode.toLowerCase() === 'aanandham' || passcode.toLowerCase() === 'admin') {
-            setIsAuthenticated(true);
-            setPasscodeError(false);
-            localStorage.setItem('aanandham_admin_auth', 'true');
-        } else {
+        try {
+            const res = await fetch('/api/admin/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ passcode: passcode.trim() })
+            });
+            const data = await res.json();
+            if (data.success && data.token) {
+                setIsAuthenticated(true);
+                setPasscodeError(false);
+                localStorage.setItem('aanandham_admin_auth', data.token);
+            } else {
+                setPasscodeError(true);
+            }
+        } catch (err) {
             setPasscodeError(true);
         }
     };

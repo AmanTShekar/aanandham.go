@@ -71,7 +71,7 @@ export default function CustomPackageBuilder() {
             `📍 *Destinations:* ${destNames.join(' + ')}\n` +
             `⏳ *Duration:* ${nights} Nights / ${nights + 1} Days\n` +
             `👥 *Group Size:* ${pax} Explorers\n` +
-            `⛺ *Stay Preference:* ${stayObj?.name}\n` +
+            `⛺ *Stay Preference:* ${stayObj?.name} (${stayObj?.priceRange || 'Custom'})\n` +
             `✨ *Requested Activities:* ${selectedActivities.join(', ')}\n\n` +
             `👤 *Lead Name:* ${leadName || 'Adventurer'}\n` +
             `📞 *Phone:* ${leadPhone || 'Not provided'}\n` +
@@ -250,7 +250,40 @@ export default function CustomPackageBuilder() {
                             </div>
                         </div>
 
-                        {/* Step 4: Activities Selector */}
+                        {/* Step 4: Stay & Accommodation Tier */}
+                        <div style={{ marginBottom: '32px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '14px' }}>
+                                4. ACCOMMODATION & STAY STYLE
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+                                {STAYS.map((stay) => {
+                                    const isSel = selectedStay === stay.id;
+                                    return (
+                                        <div
+                                            key={stay.id}
+                                            onClick={() => setSelectedStay(stay.id)}
+                                            style={{
+                                                padding: '14px 16px',
+                                                borderRadius: '16px',
+                                                border: isSel ? '2px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.1)',
+                                                background: isSel ? 'rgba(213, 237, 85, 0.12)' : 'rgba(255, 255, 255, 0.02)',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            <div style={{ fontSize: '13.5px', fontWeight: '700', color: isSel ? '#E5A93B' : '#FFFFFF', marginBottom: '4px' }}>
+                                                {stay.name}
+                                            </div>
+                                            <div style={{ fontSize: '12px', color: '#A2B6A6', fontWeight: '600' }}>
+                                                Est: <span style={{ color: '#FFFFFF' }}>{stay.priceRange}</span> / person
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Step 5: Activities Selector */}
                         <div>
                             <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '14px' }}>
                                 5. CUSTOM EXPERIENCES INCLUDED

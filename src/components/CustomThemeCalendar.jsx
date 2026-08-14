@@ -23,11 +23,13 @@ const DAYS_OF_WEEK = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
 export default function CustomThemeCalendar({
     selectedDate,
     onDateSelect,
+    onSelectDate,
     theme = 'light', // 'light' | 'dark' | 'gold'
     inline = false,
     label = 'SELECT EXPEDITION DATE',
     defaultDuration = 2 // 2 Days / 1 Night default, or 3 Days / 2 Nights
 }) {
+    const notifyDateSelect = onDateSelect || onSelectDate || (() => {});
     const today = useMemo(() => new Date(), []);
     const initialDate = selectedDate ? new Date(selectedDate) : new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
@@ -133,7 +135,7 @@ export default function CustomThemeCalendar({
 
     const handleConfirmWindow = () => {
         if (stagedDate) {
-            onDateSelect(stagedDate);
+            notifyDateSelect(stagedDate, durationDays);
             if (!inline) {
                 setIsOpen(false);
             }

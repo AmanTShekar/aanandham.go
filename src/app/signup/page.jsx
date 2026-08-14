@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
-import AuthPage from '../login/page';
+import AuthPanel from '@/components/AuthPanel';
 
 export default function SignupPage() {
-    return <AuthPage initialMode="signup" />;
+    return <AuthPanel initialMode="signup" />;
 }
