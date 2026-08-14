@@ -146,6 +146,11 @@ html.lenis {
   overflow: hidden;
 }
 
+button, a, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--bg-page);
@@ -155,6 +160,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
   color-scheme: light only;
+}
+
+/* Mobile notch and bottom home indicator safe padding */
+.mobile-nav-drawer {
+  padding-top: max(96px, env(safe-area-inset-top) + 60px) !important;
+  padding-bottom: max(36px, env(safe-area-inset-bottom) + 20px) !important;
+}
+
+/* Hardware Compositing Layer */
+.gpu-layer {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {

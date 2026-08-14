@@ -310,7 +310,7 @@ export default function AboutPage() {
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1, transition: { duration: 0.25 } }}
-                            exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                            exit={{ opacity: 0, transition: { duration: 0.26 } }}
                             style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
                         >
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
