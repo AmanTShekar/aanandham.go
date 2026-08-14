@@ -1682,17 +1682,18 @@ export default function HomePage() {
                 style={{ position: 'relative', padding: 'clamp(70px, 8vw, 110px) 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 'clamp(36px, 5vw, 60px)', alignItems: 'center' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 'clamp(40px, 5vw, 64px)', alignItems: 'center' }}>
                         
-                        {/* Left Interactive Cinematic Showcase Card (Sleek Compact Sizing) */}
+                        {/* Left Interactive Cinematic Showcase Card (Large Premium Showcase) */}
                         <motion.div 
                             variants={fadeInLeft}
                             style={{
                                 position: 'relative',
-                                height: 'clamp(320px, 38vh, 410px)',
-                                borderRadius: '32px',
+                                height: 'clamp(460px, 56vh, 580px)',
+                                minHeight: '460px',
+                                borderRadius: '36px',
                                 overflow: 'hidden',
-                                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
+                                boxShadow: '0 25px 60px rgba(0, 0, 0, 0.16)'
                             }}
                         >
                             <AnimatePresence mode="wait">
@@ -1709,18 +1710,18 @@ export default function HomePage() {
                             </AnimatePresence>
 
                             {/* Dark Gradient Overlay */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.3) 50%, rgba(14, 24, 17, 0.7) 100%)' }} />
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.35) 50%, rgba(14, 24, 17, 0.65) 100%)' }} />
 
                             {/* Top Left Pillar Badge */}
                             <div style={{
                                 position: 'absolute',
-                                top: '20px',
-                                left: '20px',
+                                top: '24px',
+                                left: '24px',
                                 background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#D5ED55',
-                                fontSize: '11.5px',
+                                fontSize: '12px',
                                 fontWeight: '800',
-                                padding: '6px 16px',
+                                padding: '8px 18px',
                                 borderRadius: '999px',
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(213, 237, 85, 0.3)',
@@ -1735,13 +1736,13 @@ export default function HomePage() {
                             {/* Top Right Live Stat Pill */}
                             <div style={{
                                 position: 'absolute',
-                                top: '20px',
-                                right: '20px',
+                                top: '24px',
+                                right: '24px',
                                 background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#FFFFFF',
-                                fontSize: '11px',
+                                fontSize: '11.5px',
                                 fontWeight: '700',
-                                padding: '6px 14px',
+                                padding: '8px 16px',
                                 borderRadius: '999px',
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255, 255, 255, 0.15)'
@@ -1750,33 +1751,33 @@ export default function HomePage() {
                             </div>
 
                             {/* Bottom Content Card & Highlights */}
-                            <div style={{ position: 'absolute', bottom: '20px', left: '20px', right: '20px' }}>
-                                <div style={{ fontSize: '10.5px', color: '#D5ED55', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '3px' }}>
+                            <div style={{ position: 'absolute', bottom: '26px', left: '26px', right: '26px' }}>
+                                <div style={{ fontSize: '11px', color: '#D5ED55', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].tagline}
                                 </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 2.4vw, 22px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.25 }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 2.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 12px', lineHeight: 1.25 }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
                                 </h3>
 
                                 {/* Highlights Pills */}
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].highlights.map((h, idx) => (
-                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '600', padding: '3px 8px', borderRadius: '6px', backdropFilter: 'blur(6px)' }}>
+                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.14)', color: '#FFFFFF', fontSize: '11px', fontWeight: '600', padding: '5px 12px', borderRadius: '8px', backdropFilter: 'blur(6px)' }}>
                                             ✓ {h}
                                         </span>
                                     ))}
                                 </div>
 
                                 {/* Carousel Controls & Indicator */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.18)' }}>
                                     <div style={{ display: 'flex', gap: '6px' }}>
                                         {WHY_AANANDHAM_PILLARS.map((_, idx) => (
                                             <button
                                                 key={idx}
                                                 onClick={() => setActiveWhyIdx(idx)}
                                                 style={{
-                                                    width: activeWhyIdx === idx ? '22px' : '7px',
-                                                    height: '7px',
+                                                    width: activeWhyIdx === idx ? '24px' : '8px',
+                                                    height: '8px',
                                                     borderRadius: '999px',
                                                     background: activeWhyIdx === idx ? '#D5ED55' : 'rgba(255,255,255,0.3)',
                                                     border: 'none',
@@ -1787,20 +1788,20 @@ export default function HomePage() {
                                         ))}
                                     </div>
 
-                                    <div style={{ display: 'flex', gap: '6px' }}>
+                                    <div style={{ display: 'flex', gap: '8px' }}>
                                         <button 
                                             onClick={prevWhyPillar} 
                                             aria-label="Previous reason"
-                                            style={{ width: '40px', height: '40px', minWidth: '40px', minHeight: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '12px' }}></i>
+                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
                                         </button>
                                         <button 
                                             onClick={nextWhyPillar} 
                                             aria-label="Next reason"
-                                            style={{ width: '40px', height: '40px', minWidth: '40px', minHeight: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '12px' }}></i>
+                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
                                         </button>
                                     </div>
                                 </div>

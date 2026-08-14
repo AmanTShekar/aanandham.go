@@ -133,13 +133,12 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="modal-rounded-card"
                 style={{
                     background: '#FFFFFF',
                     width: '100%',
                     maxWidth: '860px',
-                    maxHeight: '90vh',
-                    borderRadius: '32px',
-                    overflowY: 'auto',
+                    maxHeight: 'min(90vh, 840px)',
                     boxShadow: '0 25px 70px rgba(0, 0, 0, 0.35)',
                     position: 'relative',
                     color: '#121613'
@@ -147,15 +146,13 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             >
                 {/* Modal Header */}
                 <div style={{
-                    padding: '24px 32px',
+                    padding: '22px 32px',
                     borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     background: '#F8F9F5',
-                    position: 'sticky',
-                    top: 0,
-                    zIndex: 10
+                    flexShrink: 0
                 }}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -191,7 +188,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                     </button>
                 </div>
 
-                <div style={{ padding: '32px' }}>
+                <div className="modal-rounded-body" style={{ flex: 1, padding: '32px' }}>
                     {step === 1 ? (
                         <div>
                             {/* Step 1: Package Grid */}

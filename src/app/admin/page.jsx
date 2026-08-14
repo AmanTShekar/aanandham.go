@@ -1806,8 +1806,8 @@ export default function AdminPortal() {
             <AnimatePresence>
                 {isPropertyModalOpen && (
                     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.3)', borderRadius: '32px', padding: '36px', maxWidth: '680px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#FFFFFF', boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '16px' }}>
+                        <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }} className="modal-rounded-card dark-modal-scroll" style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.3)', maxWidth: '680px', width: '100%', maxHeight: '90vh', color: '#FFFFFF', boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '28px 36px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', flexShrink: 0 }}>
                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
                                     {editingProperty ? 'Edit Campsite Listing' : 'Add New Campsite Listing'}
                                 </h3>
@@ -1816,107 +1816,109 @@ export default function AdminPortal() {
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                        Campsite Title *
-                                    </label>
-                                    <input
-                                        type="text"
-                                        required
-                                        placeholder="e.g. Kolukkumalai Sunrise 4x4 Expedition"
-                                        value={propertyForm.title}
-                                        onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                    />
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                            <div className="modal-rounded-body dark-modal-scroll" style={{ flex: 1, padding: '24px 36px 36px' }}>
+                                <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     <div>
                                         <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                            Region / Location Header
-                                        </label>
-                                        <select
-                                            value={propertyForm.region}
-                                            onChange={e => setPropertyForm({ ...propertyForm, region: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: '#08120A', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13.5px' }}
-                                        >
-                                            <option value="Munnar">Munnar High Peaks</option>
-                                            <option value="Suryanelli">Suryanelli Ridge</option>
-                                            <option value="Vagamon">Vagamon Pine Hills</option>
-                                            <option value="Wayanad">Wayanad Rainforest</option>
-                                            <option value="Athirappilly">Athirappilly Rapids</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                            Altitude Tag
+                                            Campsite Title *
                                         </label>
                                         <input
                                             type="text"
-                                            placeholder="e.g. 7,900 FT"
-                                            value={propertyForm.altitude}
-                                            onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                                    <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                            Base Price (INR) *
-                                        </label>
-                                        <input
-                                            type="number"
                                             required
-                                            value={propertyForm.price}
-                                            onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
+                                            placeholder="e.g. Kolukkumalai Sunrise 4x4 Expedition"
+                                            value={propertyForm.title}
+                                            onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
                                             style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
                                         />
                                     </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                        <div>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                                Region / Location Header
+                                            </label>
+                                            <select
+                                                value={propertyForm.region}
+                                                onChange={e => setPropertyForm({ ...propertyForm, region: e.target.value })}
+                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: '#08120A', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13.5px' }}
+                                            >
+                                                <option value="Munnar">Munnar High Peaks</option>
+                                                <option value="Suryanelli">Suryanelli Ridge</option>
+                                                <option value="Vagamon">Vagamon Pine Hills</option>
+                                                <option value="Wayanad">Wayanad Rainforest</option>
+                                                <option value="Athirappilly">Athirappilly Rapids</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                                Altitude Tag
+                                            </label>
+                                            <input
+                                                type="text"
+                                                placeholder="e.g. 7,900 FT"
+                                                value={propertyForm.altitude}
+                                                onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
+                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                        <div>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                                Base Price (INR) *
+                                            </label>
+                                            <input
+                                                type="number"
+                                                required
+                                                value={propertyForm.price}
+                                                onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
+                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                                Original Strikethrough Price (INR)
+                                            </label>
+                                            <input
+                                                type="number"
+                                                value={propertyForm.originalPrice}
+                                                onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
+                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div>
                                         <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                            Original Strikethrough Price (INR)
+                                            Cover Photo Image URL
                                         </label>
                                         <input
-                                            type="number"
-                                            value={propertyForm.originalPrice}
-                                            onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            type="url"
+                                            required
+                                            value={propertyForm.image}
+                                            onChange={e => setPropertyForm({ ...propertyForm, image: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
                                         />
                                     </div>
-                                </div>
 
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                        Cover Photo Image URL
-                                    </label>
-                                    <input
-                                        type="url"
-                                        required
-                                        value={propertyForm.image}
-                                        onChange={e => setPropertyForm({ ...propertyForm, image: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
-                                    />
-                                </div>
+                                    <div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            Highlights & Perks (Comma Separated)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={propertyForm.highlights}
+                                            onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                        />
+                                    </div>
 
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
-                                        Highlights & Perks (Comma Separated)
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={propertyForm.highlights}
-                                        onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
-                                    />
-                                </div>
-
-                                <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '10px' }}>
-                                    {editingProperty ? 'Save Changes ↗' : 'Publish Campsite Listing ↗'}
-                                </button>
-                            </form>
+                                    <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '10px' }}>
+                                        {editingProperty ? 'Save Changes ↗' : 'Publish Campsite Listing ↗'}
+                                    </button>
+                                </form>
+                            </div>
                         </motion.div>
                     </div>
                 )}

@@ -586,3 +586,70 @@ button, a, input, select, textarea {
   touch-action: manipulation;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   ULTRA-SLEEK LUXURY ROUNDED SCROLLBARS (Never straight / Never clipping)
+───────────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(18, 22, 19, 0.2) transparent;
+}
+
+/* WebKit (Chrome, Safari, Edge, Opera) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 18px 0; /* Ensures scrollbar never touches the top or bottom rounded corners of any modal */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(18, 22, 19, 0.22);
+  border-radius: 999px !important; /* Fully rounded pill thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(18, 22, 19, 0.45);
+}
+
+/* Dark Modal & Dark Surface Rounded Scrollbars */
+.dark-modal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent !important;
+}
+
+.dark-modal-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.dark-modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 18px 0;
+}
+
+.dark-modal-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-radius: 999px !important;
+}
+
+.dark-modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #D5ED55 !important;
+}
+
+/* Clean Modal Container Architecture */
+.modal-rounded-card {
+  border-radius: 32px !important;
+  overflow: hidden !important; /* Strictly clips to the outer 32px rounded corners */
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.modal-rounded-body {
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable;
+}
+
