@@ -439,60 +439,64 @@ const KERALA_WILDERNESS_GALLERY = [
     }
 ];
 
-// ── CUSTOM ARRANGEMENTS & EVENTS DATA (Pocket Notepad Cards) ──
+// ── CUSTOM ARRANGEMENTS & EVENTS DATA (Roughed-Up Scotch-Taped Paper Scraps) ──
 const EVENT_ARRANGEMENTS = [
     {
-        tagCode: 'TRIBE · 01',
-        stamp: 'SQUAD PASS',
+        tagCode: 'SCRAP · 01',
+        stamp: '✓ SQUAD EXPEDITION',
         stampColor: '#15803D',
         iconClass: 'fa-solid fa-graduation-cap',
         title: 'College & Youth Expeditions',
         badge: 'Squad Groups (10-80 pax)',
         desc: 'Curated high-energy student treks with budget-friendly tents, acoustic campfires, guided ridge hikes, and dedicated safety marshals.',
-        rotation: '-1.5deg',
-        paperBg: '#FCFAF5',
-        statPill: '✦ 10-80 Pax Group Capacity',
+        rotation: '-2.2deg',
+        tapeAngle: '-3deg',
+        paperBg: '#FAF8F2',
+        statPill: '✦ 10-80 Pax Capacity',
         marginalNote: 'Direct 4x4 convoy pickup from Munnar town.',
         features: ['Discounted group rates', '4x4 Convoy coordination', 'Campfire & acoustic mic setup', 'Strict safety & medical support']
     },
     {
-        tagCode: 'TRIBE · 02',
-        stamp: 'OFFSITE PRO',
-        stampColor: '#0369A1',
+        tagCode: 'SCRAP · 02',
+        stamp: '✓ OFFSITE PRO',
+        stampColor: '#0284C7',
         iconClass: 'fa-solid fa-building',
         title: 'Corporate Ridge Offsites',
         badge: 'Team Building & Strategy',
         desc: 'Step out of boardrooms into the clouds. High-altitude glamping, off-road team challenges, outdoor strategy sessions, and curated dining.',
-        rotation: '1.8deg',
-        paperBg: '#F8FBF8',
-        statPill: '✦ Custom Offsite Schedules',
+        rotation: '2.5deg',
+        tapeAngle: '2.8deg',
+        paperBg: '#F5F8F4',
+        statPill: '✦ Custom Schedules',
         marginalNote: 'Projector & presentation setups under starlight.',
         features: ['Executive glamp suites', 'Outdoor team-building games', 'Projector & sound gear', 'Custom chef-curated menus']
     },
     {
-        tagCode: 'TRIBE · 03',
-        stamp: 'SOLO TRIBE',
-        stampColor: '#C2410C',
+        tagCode: 'SCRAP · 03',
+        stamp: '✓ SOLO TRIBE',
+        stampColor: '#EA580C',
         iconClass: 'fa-solid fa-campground',
         title: 'Strangers Camp Meet',
         badge: 'Weekend Community Camp',
         desc: 'Travel alone and leave with a tribe. Safe, vibrant weekend camps where solo travelers bond over stargazing, icebreakers, and ridge sunrises.',
-        rotation: '-1.2deg',
-        paperBg: '#FEF9F5',
+        rotation: '-1.8deg',
+        tapeAngle: '-2.2deg',
+        paperBg: '#FEF8F4',
         statPill: '✦ 45%+ Solo Attendees',
         marginalNote: 'Dedicated female camp leads & safe grounds.',
         features: ['Icebreaker games & trails', 'Dedicated female marshals', 'Telescope stargazing deck', 'Instant tribe WhatsApp group']
     },
     {
-        tagCode: 'TRIBE · 04',
-        stamp: 'EXCLUSIVE',
-        stampColor: '#7E22CE',
+        tagCode: 'SCRAP · 04',
+        stamp: '✓ BESPOKE',
+        stampColor: '#9333EA',
         iconClass: 'fa-solid fa-fire',
         title: 'Private Ridge Celebrations',
         badge: 'Bespoke Arrangements',
         desc: 'Celebrate birthdays, pre-weddings, and milestones amidst mist and mountain ridges with drone cinematography and starlit barbecue dinners.',
-        rotation: '1.5deg',
-        paperBg: '#FAF8FD',
+        rotation: '2.1deg',
+        tapeAngle: '3.5deg',
+        paperBg: '#FAF6FD',
         statPill: '✦ 100% Ridge Privacy',
         marginalNote: '4K Drone cinematography options included.',
         features: ['Exclusive campsite buyout', '4K Drone aerial coverage', 'Acoustic guitarist on request', 'Fairy light & candlelit dinner']
@@ -2450,19 +2454,19 @@ export default function HomePage() {
 
                     <motion.div 
                         variants={staggerContainer}
-                        className="pocket-notepad-grid"
-                        style={{ marginBottom: '48px', paddingTop: '16px' }}
+                        className="scotch-scraps-grid"
+                        style={{ marginBottom: '48px', paddingTop: '20px' }}
                     >
                         {EVENT_ARRANGEMENTS.map((ev, idx) => (
                             <motion.div 
                                 key={idx} 
                                 variants={cardReveal}
-                                className="pocket-notepad-card"
+                                className="roughed-paper-scrap"
                                 whileHover={{
                                     y: -14,
                                     rotate: 0,
                                     scale: 1.025,
-                                    boxShadow: '0 28px 65px -10px rgba(0, 0, 0, 0.15), 0 10px 24px -4px rgba(0, 0, 0, 0.08)'
+                                    boxShadow: '0 28px 65px -8px rgba(0, 0, 0, 0.16), 0 10px 24px rgba(0, 0, 0, 0.08)'
                                 }}
                                 whileTap={{ scale: 0.98 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 22 }}
@@ -2472,15 +2476,14 @@ export default function HomePage() {
                                 }}
                                 onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
                             >
-                                {/* Side Spiral Wire Coils along Left Margin */}
-                                <div className="side-spiral-spine">
-                                    {[...Array(6)].map((_, sIdx) => (
-                                        <div key={sIdx} className="side-spiral-loop" />
-                                    ))}
-                                </div>
+                                {/* Top Translucent Frosted Scotch Tape Strip */}
+                                <div 
+                                    className="scotch-tape-strip" 
+                                    style={{ transform: `translateX(-50%) rotate(${ev.tapeAngle})` }} 
+                                />
 
-                                {/* Vertical Dotted Tear-Off Perforation Line */}
-                                <div className="side-perforation-line" />
+                                {/* Bottom Corner Scotch Tape Accent */}
+                                <div className="corner-tape-scrap" />
 
                                 {/* Top Row: Mini Logo + Tag Code + Vintage Rubber Ink Stamp */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
@@ -2576,8 +2579,15 @@ export default function HomePage() {
                                     ))}
                                 </div>
 
-                                {/* Perforated Bottom Voucher Stub with Notch Cutouts */}
-                                <div className="notepad-tear-stub">
+                                {/* Bottom Capacity Bar & Action */}
+                                <div style={{
+                                    marginTop: 'auto',
+                                    paddingTop: '12px',
+                                    borderTop: '1px dashed rgba(18, 22, 19, 0.18)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '8px'
+                                }}>
                                     <div style={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
@@ -2591,12 +2601,13 @@ export default function HomePage() {
                                             {ev.statPill}
                                         </span>
                                         <span style={{
-                                            fontSize: '11.5px',
+                                            fontSize: '11px',
                                             fontWeight: '800',
                                             color: '#121613',
                                             background: '#E5A93B',
-                                            padding: '4px 8px',
-                                            borderRadius: '6px'
+                                            padding: '4px 10px',
+                                            borderRadius: '6px',
+                                            boxShadow: '0 2px 8px rgba(229, 169, 59, 0.4)'
                                         }}>
                                             Inquire ↗
                                         </span>
@@ -2610,8 +2621,7 @@ export default function HomePage() {
                                         color: '#556358',
                                         display: 'flex',
                                         alignItems: 'flex-start',
-                                        gap: '5px',
-                                        paddingTop: '4px'
+                                        gap: '5px'
                                     }}>
                                         <span style={{ fontSize: '12px' }}>✍</span>
                                         <span>{ev.marginalNote}</span>

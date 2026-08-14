@@ -103,12 +103,12 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SIDE-PERFORATED SPIRAL FIELD JOURNAL CARDS (Reusable Tactile System)
+   ROUGHED-UP PAPER SCRAPS WITH SCOTCH TAPE (Tactile Field System)
 ───────────────────────────────────────────────────────────── */
-.pocket-notepad-grid {
+.scotch-scraps-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  gap: 26px;
   justify-content: center;
   align-items: stretch;
   max-width: 1240px;
@@ -116,94 +116,96 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 @media (max-width: 1160px) {
-  .pocket-notepad-grid {
+  .scotch-scraps-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
+    gap: 32px;
     max-width: 780px;
   }
 }
 
 @media (max-width: 640px) {
-  .pocket-notepad-grid {
+  .scotch-scraps-grid {
     grid-template-columns: 1fr;
-    gap: 36px;
+    gap: 40px;
     max-width: 440px;
   }
 }
 
-.pocket-notepad-card {
+.roughed-paper-scrap {
   position: relative;
-  background: #FCFAF6;
+  background: #FAF8F2;
   color: #121613;
-  border-radius: 4px 14px 14px 4px;
-  padding: 30px 22px 22px 34px;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.07), 0 3px 10px rgba(0,0,0,0.04);
+  padding: 34px 24px 26px 24px;
+  box-shadow: 
+    0 12px 28px -4px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.04),
+    inset 0 0 40px rgba(229, 169, 59, 0.03);
   border: 1px solid rgba(18, 22, 19, 0.12);
-  /* Millimeter Graph Grid Paper Background */
+  /* Organic Roughed Torn Edge Effect */
+  clip-path: polygon(
+    0% 4px, 2% 0px, 98% 2px, 100% 6px,
+    99.5% 45%, 100% 96%, 98% 100%, 3% 99%, 0% 95%,
+    0.5% 50%
+  );
+  /* Paper grain & subtle cross-texture */
   background-image: 
-    linear-gradient(rgba(18, 22, 19, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 22, 19, 0.05) 1px, transparent 1px);
-  background-size: 18px 18px;
+    linear-gradient(rgba(18, 22, 19, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(18, 22, 19, 0.03) 1px, transparent 1px);
+  background-size: 16px 16px;
   display: flex;
   flex-direction: column;
   min-height: 440px;
   cursor: pointer;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: visible;
 }
 
-.pocket-notepad-card:hover {
+.roughed-paper-scrap:hover {
   transform: translateY(-14px) rotate(0deg) scale(1.025) !important;
-  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.14), 0 10px 24px rgba(0,0,0,0.06) !important;
-  border-color: #E5A93B !important;
+  box-shadow: 
+    0 28px 65px -8px rgba(0, 0, 0, 0.16),
+    0 10px 24px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Side Spiral Wire Coils Container along Left Edge */
-.side-spiral-spine {
+/* Translucent Frosted Scotch Tape Strip */
+.scotch-tape-strip {
   position: absolute;
-  top: 18px;
-  bottom: 18px;
-  left: -8px;
-  width: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  z-index: 5;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 96px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-left: 2px dashed rgba(255, 255, 255, 0.7);
+  border-right: 2px dashed rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), inset 0 0 6px rgba(255, 255, 255, 0.9);
+  z-index: 10;
   pointer-events: none;
 }
 
-/* Individual 3D Metallic Wire Coil Loop */
-.side-spiral-loop {
-  width: 18px;
-  height: 9px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, #1C241E 0%, #4B574F 35%, #FFFFFF 50%, #4B574F 65%, #1C241E 100%);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.6);
-  border: 0.5px solid #0B150E;
-  position: relative;
-}
-
-/* Dotted Side Perforation Line inside Card */
-.side-perforation-line {
+/* Bottom Marginal Tape Scrap */
+.corner-tape-scrap {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 20px;
-  width: 1px;
-  border-left: 2px dashed rgba(18, 22, 19, 0.2);
+  bottom: -10px;
+  right: 14px;
+  transform: rotate(18deg);
+  width: 52px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 1px dashed rgba(255, 255, 255, 0.8);
+  border-right: 1px dashed rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  z-index: 10;
   pointer-events: none;
 }
 
-/* Perforated Bottom Tear Voucher Stub */
-.notepad-tear-stub {
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1.5px dashed rgba(18, 22, 19, 0.22);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+
 
 
 
