@@ -130,7 +130,7 @@ export default function ContactPage() {
                             color: '#FFFFFF',
                             letterSpacing: '-0.03em'
                         }}>
-                            Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                         </span>
                     </Link>
                 </div>
@@ -194,7 +194,7 @@ export default function ContactPage() {
                             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 About Us
                             </Link>
-                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
                                 Contact & Inquiries
                             </Link>
                             <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
@@ -241,8 +241,8 @@ export default function ContactPage() {
                 paddingRight: '24px'
             }}>
                 <div style={{ maxWidth: '820px', margin: '0 auto' }}>
-                    <div className="star-badge" style={{ color: '#D5ED55', marginBottom: '16px' }}>
-                        <span style={{ color: '#D5ED55' }}>★</span> CONTACT & INQUIRIES
+                    <div className="star-badge" style={{ color: '#E5A93B', marginBottom: '16px' }}>
+                        <span style={{ color: '#E5A93B' }}>★</span> CONTACT & INQUIRIES
                     </div>
                     <h1 style={{
                         fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -252,7 +252,7 @@ export default function ContactPage() {
                         lineHeight: 1.08,
                         marginBottom: '20px'
                     }}>
-                        Let's Start a <span style={{ color: '#D5ED55' }}>Conversation</span>
+                        Let's Start a <span style={{ color: '#E5A93B' }}>Conversation</span>
                     </h1>
                     <p style={{
                         fontSize: 'clamp(16px, 2vw, 19px)',
@@ -334,7 +334,7 @@ export default function ContactPage() {
                                     height: '48px',
                                     borderRadius: '50%',
                                     background: '#121613',
-                                    color: '#D5ED55',
+                                    color: '#E5A93B',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -407,7 +407,7 @@ export default function ContactPage() {
                                     height: '48px',
                                     borderRadius: '50%',
                                     background: '#121613',
-                                    color: '#D5ED55',
+                                    color: '#E5A93B',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
@@ -461,7 +461,7 @@ export default function ContactPage() {
                                         }}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.background = '#121613';
-                                            e.currentTarget.style.color = '#D5ED55';
+                                            e.currentTarget.style.color = '#E5A93B';
                                             e.currentTarget.style.transform = 'translateY(-3px)';
                                         }}
                                         onMouseLeave={(e) => {
@@ -516,7 +516,7 @@ export default function ContactPage() {
                                     width: '64px',
                                     height: '64px',
                                     borderRadius: '50%',
-                                    background: '#D5ED55',
+                                    background: '#E5A93B',
                                     color: '#121613',
                                     fontSize: '28px',
                                     display: 'flex',
@@ -575,7 +575,7 @@ export default function ContactPage() {
                                                         padding: '10px 12px',
                                                         borderRadius: '12px',
                                                         border: isSel ? '1.5px solid #121613' : '1px solid rgba(18,22,19,0.1)',
-                                                        background: isSel ? '#D5ED55' : '#F8F9F5',
+                                                        background: isSel ? '#E5A93B' : '#F8F9F5',
                                                         color: '#121613',
                                                         fontSize: '12.5px',
                                                         fontWeight: isSel ? '800' : '600',

@@ -491,7 +491,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                                                             padding: '8px 10px',
                                                             borderRadius: '10px',
                                                             border: isSel ? '1.5px solid #121613' : '1px solid rgba(18,22,19,0.1)',
-                                                            background: isSel ? '#D5ED55' : '#F8F9F5',
+                                                            background: isSel ? '#E5A93B' : '#F8F9F5',
                                                             color: '#121613',
                                                             fontSize: '12px',
                                                             fontWeight: isSel ? '800' : '600',
@@ -643,7 +643,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                     }}>
                         <span style={{
                             background: 'rgba(0, 0, 0, 0.65)',
-                            color: '#D5ED55',
+                            color: '#E5A93B',
                             fontSize: '11.5px',
                             fontWeight: '800',
                             padding: '6px 14px',
@@ -687,7 +687,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                                 <img
                                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
                                     alt="Camp Lead"
-                                    style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #D5ED55' }}
+                                    style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E5A93B' }}
                                 />
                                 <div>
                                     <div style={{ color: '#FFFFFF', fontSize: '14px', fontWeight: '800' }}>

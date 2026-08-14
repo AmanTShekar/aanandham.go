@@ -222,7 +222,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                     position: 'absolute',
                                                     top: '8px',
                                                     left: '8px',
-                                                    background: isSelected ? '#D5ED55' : 'rgba(0,0,0,0.6)',
+                                                    background: isSelected ? '#E5A93B' : 'rgba(0,0,0,0.6)',
                                                     color: isSelected ? '#121613' : '#FFFFFF',
                                                     fontSize: '10px',
                                                     fontWeight: '800',
@@ -271,7 +271,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                             style={{ width: '42px', height: '42px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.15)', background: '#F8F9F5', fontSize: '18px', fontWeight: '700', cursor: 'pointer' }}
                                         >+</button>
                                         {discountPercent > 0 && (
-                                            <span style={{ background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                                 {discountPercent}% SQUAD DISCOUNT!
                                             </span>
                                         )}
@@ -407,7 +407,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                         <div style={{ fontSize: '12px', color: '#A2B6A6' }}>{travelDate || 'Selected Dates'} · {totalGuests} Guests</div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '24px', fontWeight: '800', color: '#D5ED55' }}>
+                                        <div style={{ fontSize: '24px', fontWeight: '800', color: '#E5A93B' }}>
                                             ₹{grandTotal.toLocaleString('en-IN')}
                                         </div>
                                         <div style={{ fontSize: '11px', color: '#A2B6A6' }}>All-Inclusive Est.</div>
@@ -419,7 +419,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     <span style={{ color: '#FFFFFF' }}>₹{baseTotal.toLocaleString('en-IN')}</span>
                                 </div>
                                 {discountAmount > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#D5ED55', marginBottom: '6px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12.5px', color: '#E5A93B', marginBottom: '6px' }}>
                                         <span>Squad Discount ({discountPercent}%):</span>
                                         <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                                     </div>

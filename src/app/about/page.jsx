@@ -211,7 +211,7 @@ export default function AboutPage() {
                             color: '#FFFFFF',
                             letterSpacing: '-0.03em'
                         }}>
-                            Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                         </span>
                     </Link>
                 </div>
@@ -272,7 +272,7 @@ export default function AboutPage() {
                             <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Home
                             </Link>
-                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
                                 About Us
                             </Link>
                             <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
@@ -322,8 +322,8 @@ export default function AboutPage() {
                 paddingRight: '24px'
             }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-                    <div className="star-badge" style={{ color: '#D5ED55', marginBottom: '16px' }}>
-                        <span style={{ color: '#D5ED55' }}>★</span> ABOUT AANANDHAM.GO
+                    <div className="star-badge" style={{ color: '#E5A93B', marginBottom: '16px' }}>
+                        <span style={{ color: '#E5A93B' }}>★</span> ABOUT AANANDHAM.GO
                     </div>
                     <h1 style={{
                         fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -333,7 +333,7 @@ export default function AboutPage() {
                         lineHeight: 1.05,
                         marginBottom: '24px'
                     }}>
-                        From Textbooks to <span style={{ color: '#D5ED55' }}>Mountain Trails</span>
+                        From Textbooks to <span style={{ color: '#E5A93B' }}>Mountain Trails</span>
                     </h1>
                     <p style={{
                         fontSize: 'clamp(16px, 2vw, 20px)',
@@ -369,7 +369,7 @@ export default function AboutPage() {
                                     fontFamily: 'var(--font-heading)',
                                     fontSize: '32px',
                                     fontWeight: '800',
-                                    color: '#D5ED55',
+                                    color: '#E5A93B',
                                     marginBottom: '4px'
                                 }}>
                                     {stat.val}
@@ -417,7 +417,7 @@ export default function AboutPage() {
                             padding: '20px 24px',
                             background: '#FFFFFF',
                             borderRadius: '20px',
-                            borderLeft: '4px solid #D5ED55',
+                            borderLeft: '4px solid #E5A93B',
                             border: '1px solid rgba(18, 22, 19, 0.08)',
                             boxShadow: '0 10px 30px rgba(0,0,0,0.02)'
                         }}>
@@ -450,7 +450,7 @@ export default function AboutPage() {
                             borderRadius: '20px',
                             color: '#FFFFFF'
                         }}>
-                            <div style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                            <div style={{ fontSize: '12px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '1px' }}>
                                 ★ SURYANELLI RIDGE
                             </div>
                             <div style={{ fontSize: '14px', fontWeight: '700' }}>
@@ -521,7 +521,7 @@ export default function AboutPage() {
                                         top: '16px',
                                         right: '16px',
                                         background: 'rgba(0,0,0,0.65)',
-                                        color: '#D5ED55',
+                                        color: '#E5A93B',
                                         fontSize: '11px',
                                         fontWeight: '800',
                                         padding: '5px 12px',
@@ -637,7 +637,7 @@ export default function AboutPage() {
                                         letterSpacing: '0.8px',
                                         padding: '4px 10px',
                                         borderRadius: '999px',
-                                        background: '#D5ED55',
+                                        background: '#E5A93B',
                                         color: '#121613'
                                     }}>
                                         {item.badge}
@@ -755,8 +755,8 @@ export default function AboutPage() {
                 textAlign: 'center'
             }}>
                 <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-                    <div className="star-badge" style={{ color: '#D5ED55', marginBottom: '16px' }}>
-                        <span style={{ color: '#D5ED55' }}>★</span> JOIN THE EXPEDITION
+                    <div className="star-badge" style={{ color: '#E5A93B', marginBottom: '16px' }}>
+                        <span style={{ color: '#E5A93B' }}>★</span> JOIN THE EXPEDITION
                     </div>
                     <h2 style={{
                         fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -766,7 +766,7 @@ export default function AboutPage() {
                         lineHeight: 1.1,
                         marginBottom: '20px'
                     }}>
-                        Ready to Experience <span style={{ color: '#D5ED55' }}>Suryanelli’s Peak?</span>
+                        Ready to Experience <span style={{ color: '#E5A93B' }}>Suryanelli’s Peak?</span>
                     </h2>
                     <p style={{
                         fontSize: '17px',

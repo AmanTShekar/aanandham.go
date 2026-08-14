@@ -54,7 +54,7 @@ export default function Footer() {
                                 margin: 0,
                                 letterSpacing: '-0.8px'
                             }}>
-                                Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </h3>
                         </Link>
                         <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.65, marginBottom: '24px' }}>
@@ -62,19 +62,19 @@ export default function Footer() {
                         </p>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                            <a href="mailto:bookings@aanandhamgo.in" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#D5ED55'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a href="mailto:bookings@aanandhamgo.in" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }}></i>
                                 </div>
                                 <span>bookings@aanandhamgo.in</span>
                             </a>
-                            <a href="tel:+919400987654" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#D5ED55'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a href="tel:+919400987654" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-solid fa-phone" style={{ fontSize: '13px' }}></i>
                                 </div>
                                 <span>+91 9400 987 654</span>
                             </a>
-                            <a href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20would%20like%20to%20know%20more%20about%20camping%20dates." target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#D5ED55'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20would%20like%20to%20know%20more%20about%20camping%20dates." target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(37, 211, 102, 0.15)', color: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px' }}></i>
                                 </div>
@@ -160,7 +160,7 @@ export default function Footer() {
                     {/* Column 3: AANANDHAM.GO SUB-PAGES */}
                     <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            AANANDHAM<span style={{ color: '#D5ED55' }}>.GO</span>
+                            AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
@@ -210,7 +210,7 @@ export default function Footer() {
                         <Link href="/contact" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Contact & Booking</Link>
                         <Link href="/login" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Member Login</Link>
                         <Link href="/signup" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Join Tribe</Link>
-                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" style={{ color: '#D5ED55', textDecoration: 'none', fontWeight: '700' }}>@aanandham.go ↗</a>
+                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" style={{ color: '#E5A93B', textDecoration: 'none', fontWeight: '700' }}>@aanandham.go ↗</a>
                     </div>
                     <div>
                         Copyright © 2026 Aanandham.go Wilderness Platform – Crafted for Mountain Explorers.

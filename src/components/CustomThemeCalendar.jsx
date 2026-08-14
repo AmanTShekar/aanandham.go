@@ -300,7 +300,7 @@ export default function CustomThemeCalendar({
                             padding: '4px 10px',
                             borderRadius: '8px',
                             border: durationDays === 3 ? `1.5px solid ${accentColor}` : '1px solid transparent',
-                            background: durationDays === 3 ? (isDark ? 'rgba(213, 237, 85, 0.2)' : '#FFFFFF') : 'transparent',
+                            background: durationDays === 3 ? (isDark ? 'rgba(229, 169, 59, 0.2)' : '#FFFFFF') : 'transparent',
                             color: durationDays === 3 ? (isDark ? accentColor : '#121613') : (isDark ? '#A2B6A6' : '#8E9B92'),
                             fontSize: '11px',
                             fontWeight: '800',
@@ -355,16 +355,16 @@ export default function CustomThemeCalendar({
                                 background: isStart
                                     ? accentColor
                                     : isInRange
-                                        ? (isDark ? 'rgba(213, 237, 85, 0.25)' : 'rgba(213, 237, 85, 0.45)')
+                                        ? (isDark ? 'rgba(229, 169, 59, 0.25)' : 'rgba(229, 169, 59, 0.45)')
                                         : special
-                                            ? (isDark ? 'rgba(213, 237, 85, 0.12)' : 'rgba(213, 237, 85, 0.25)')
+                                            ? (isDark ? 'rgba(229, 169, 59, 0.12)' : 'rgba(229, 169, 59, 0.25)')
                                             : isWeekend
                                                 ? (isDark ? 'rgba(255, 255, 255, 0.04)' : '#F5F7EF')
                                                 : 'transparent',
                                 color: isStart
                                     ? '#121613'
                                     : isInRange
-                                        ? (isDark ? '#D5ED55' : '#121613')
+                                        ? (isDark ? accentColor : '#121613')
                                         : isPast
                                             ? (isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(18, 22, 19, 0.25)')
                                             : special
@@ -421,7 +421,7 @@ export default function CustomThemeCalendar({
                     style={{
                         padding: '4px 10px',
                         borderRadius: '8px',
-                        background: isDark ? 'rgba(213, 237, 85, 0.15)' : 'rgba(213, 237, 85, 0.35)',
+                        background: isDark ? 'rgba(229, 169, 59, 0.15)' : 'rgba(229, 169, 59, 0.35)',
                         border: 'none',
                         color: isDark ? accentColor : '#121613',
                         fontSize: '11px',

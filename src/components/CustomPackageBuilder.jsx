@@ -109,7 +109,7 @@ export default function CustomPackageBuilder() {
                 
                 {/* Section Header */}
                 <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 60px' }}>
-                    <div className="star-badge" style={{ color: '#D5ED55', justifyContent: 'center' }}>
+                    <div className="star-badge" style={{ color: '#E5A93B', justifyContent: 'center' }}>
                         <span className="star-icon">★</span> TAILORED EXPEDITIONS
                     </div>
                     <h2 style={{
@@ -146,7 +146,7 @@ export default function CustomPackageBuilder() {
                     }}>
                         {/* Step 1: Vibe */}
                         <div style={{ marginBottom: '32px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#D5ED55', display: 'block', marginBottom: '14px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '14px' }}>
                                 1. SELECT TRIP VIBE
                             </label>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
@@ -159,7 +159,7 @@ export default function CustomPackageBuilder() {
                                             style={{
                                                 padding: '12px',
                                                 borderRadius: '16px',
-                                                border: isSelected ? '2px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.1)',
+                                                border: isSelected ? '2px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.1)',
                                                 background: isSelected ? 'rgba(213, 237, 85, 0.12)' : 'rgba(255, 255, 255, 0.02)',
                                                 cursor: 'pointer',
                                                 transition: 'all 0.2s ease',
@@ -167,7 +167,7 @@ export default function CustomPackageBuilder() {
                                             }}
                                         >
                                             <div style={{ fontSize: '24px', marginBottom: '6px' }}>{vibe.icon}</div>
-                                            <div style={{ fontSize: '12.5px', fontWeight: '700', color: isSelected ? '#D5ED55' : '#FFFFFF' }}>{vibe.name}</div>
+                                            <div style={{ fontSize: '12.5px', fontWeight: '700', color: isSelected ? '#E5A93B' : '#FFFFFF' }}>{vibe.name}</div>
                                         </div>
                                     );
                                 })}
@@ -176,7 +176,7 @@ export default function CustomPackageBuilder() {
 
                         {/* Step 2: Destination Multi-Select */}
                         <div style={{ marginBottom: '32px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#D5ED55', display: 'block', marginBottom: '14px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '14px' }}>
                                 2. DESTINATIONS & PEAKS (CHOOSE 1 OR MORE)
                             </label>
                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -190,8 +190,8 @@ export default function CustomPackageBuilder() {
                                             style={{
                                                 padding: '9px 18px',
                                                 borderRadius: '999px',
-                                                border: isSelected ? '1px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.12)',
-                                                background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                                                border: isSelected ? '1px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.12)',
+                                                background: isSelected ? '#E5A93B' : 'rgba(255, 255, 255, 0.05)',
                                                 color: isSelected ? '#121613' : '#FFFFFF',
                                                 fontSize: '13px',
                                                 fontWeight: '700',
@@ -213,7 +213,7 @@ export default function CustomPackageBuilder() {
                         {/* Step 3: Duration & Squad Size */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
                             <div>
-                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#D5ED55', display: 'block', marginBottom: '10px' }}>
+                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '10px' }}>
                                     3. DURATION (NIGHTS)
                                 </label>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -231,7 +231,7 @@ export default function CustomPackageBuilder() {
                                 </div>
                             </div>
                             <div>
-                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#D5ED55', display: 'block', marginBottom: '10px' }}>
+                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '10px' }}>
                                     4. EXPLORERS (PAX)
                                 </label>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -252,7 +252,7 @@ export default function CustomPackageBuilder() {
 
                         {/* Step 4: Activities Selector */}
                         <div>
-                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#D5ED55', display: 'block', marginBottom: '14px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: '#E5A93B', display: 'block', marginBottom: '14px' }}>
                                 5. CUSTOM EXPERIENCES INCLUDED
                             </label>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
@@ -266,8 +266,8 @@ export default function CustomPackageBuilder() {
                                                 padding: '10px 14px',
                                                 borderRadius: '14px',
                                                 background: isChecked ? 'rgba(213, 237, 85, 0.1)' : 'rgba(255, 255, 255, 0.03)',
-                                                border: isChecked ? '1px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.08)',
-                                                color: isChecked ? '#D5ED55' : '#A2B6A6',
+                                                border: isChecked ? '1px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.08)',
+                                                color: isChecked ? '#E5A93B' : '#A2B6A6',
                                                 fontSize: '12.5px',
                                                 fontWeight: '600',
                                                 cursor: 'pointer',
@@ -299,7 +299,7 @@ export default function CustomPackageBuilder() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '16px' }}>
                             <div>
                                 <span className="live-beacon"></span>
-                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', color: '#D5ED55', marginLeft: '8px', textTransform: 'uppercase' }}>
+                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', color: '#E5A93B', marginLeft: '8px', textTransform: 'uppercase' }}>
                                     LIVE CUSTOM ITINERARY PREVIEW
                                 </span>
                             </div>
@@ -311,20 +311,20 @@ export default function CustomPackageBuilder() {
                         {/* Itinerary Timeline Preview */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
                             <div style={{ display: 'flex', gap: '12px' }}>
-                                <div style={{ color: '#D5ED55', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 1</div>
+                                <div style={{ color: '#E5A93B', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 1</div>
                                 <div style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.5 }}>
                                     Basecamp check-in at Suryanelli ridge. Sunset walk to Phantom Head ridge & Night campfire with live BBQ.
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '12px' }}>
-                                <div style={{ color: '#D5ED55', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 2</div>
+                                <div style={{ color: '#E5A93B', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 2</div>
                                 <div style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.5 }}>
                                     4:30 AM 4x4 Jeep convoy to Kolukkumalai Sunrise Peak (7,900 FT). Cloud bed photography & organic tea tasting.
                                 </div>
                             </div>
                             {nights >= 2 && (
                                 <div style={{ display: 'flex', gap: '12px' }}>
-                                    <div style={{ color: '#D5ED55', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 3</div>
+                                    <div style={{ color: '#E5A93B', fontWeight: '800', fontSize: '13px', minWidth: '46px' }}>Day 3</div>
                                     <div style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.5 }}>
                                         Anaerangal lake trail walk & scenic transfer / outdoor departure brunch.
                                     </div>

@@ -673,7 +673,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             fontSize: '12px',
                             fontWeight: '900',
                             letterSpacing: '2px',
-                            color: '#D5ED55',
+                            color: '#E5A93B',
                             textTransform: 'uppercase',
                             display: 'inline-flex',
                             alignItems: 'center',
@@ -704,7 +704,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 whileTap={{ scale: 0.96 }}
                                 onClick={() => onOpenBooking(defaultPackage)}
                                 style={{
-                                    background: '#D5ED55',
+                                    background: '#E5A93B',
                                     color: '#121613',
                                     border: 'none',
                                     padding: '16px 48px',
@@ -986,7 +986,7 @@ export default function HomePage() {
                                 color: '#FFFFFF',
                                 letterSpacing: '-0.03em'
                             }}>
-                                Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>
                     </div>
@@ -1069,13 +1069,13 @@ export default function HomePage() {
                                 Home
                             </Link>
                             <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                About Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                                About Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </Link>
                             <a href="#overview" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Camp Overview
                             </a>
                             <a href="#why-aanandham" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
-                                Why Aanandham<span style={{ color: '#D5ED55' }}>.go</span> ★
+                                Why Aanandham<span style={{ color: '#E5A93B' }}>.go</span> ★
                             </a>
                             <a href="#stay" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 Accommodation & Pods
@@ -1092,7 +1092,7 @@ export default function HomePage() {
                             <a href="#faq" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                                 FAQ
                             </a>
-                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#E5A93B', textDecoration: 'none' }}>
                                 Contact & Inquiries ↗
                             </Link>
                         </div>
@@ -1185,7 +1185,7 @@ export default function HomePage() {
                             marginBottom: 'clamp(18px, 3vh, 32px)'
                         }}
                     >
-                        Aanandham<span style={{ color: '#D5ED55' }}>.go</span><br />Wilderness Camp
+                        Aanandham<span style={{ color: '#E5A93B' }}>.go</span><br />Wilderness Camp
                     </motion.h1>
 
                     {/* Quick Action Button Cluster */}
@@ -1589,7 +1589,7 @@ export default function HomePage() {
                                             }}
                                         />
                                         <span style={{
-                                            background: isActive ? '#D5ED55' : '#FFFFFF',
+                                            background: isActive ? '#E5A93B' : '#FFFFFF',
                                             border: isActive ? 'none' : '1px solid rgba(18, 22, 19, 0.12)',
                                             color: '#121613',
                                             fontSize: '11.5px',
@@ -1723,7 +1723,7 @@ export default function HomePage() {
                                                 left: 0,
                                                 width: '180px',
                                                 height: '3px',
-                                                backgroundColor: '#D5ED55',
+                                                backgroundColor: '#E5A93B',
                                                 borderRadius: '999px',
                                                 boxShadow: '0 0 10px rgba(213, 237, 85, 0.6)'
                                             }} 
@@ -1876,7 +1876,7 @@ export default function HomePage() {
                                 top: '24px',
                                 left: '24px',
                                 background: 'rgba(0, 0, 0, 0.65)',
-                                color: '#D5ED55',
+                                color: '#E5A93B',
                                 fontSize: '12px',
                                 fontWeight: '800',
                                 padding: '8px 18px',
@@ -1887,7 +1887,7 @@ export default function HomePage() {
                                 alignItems: 'center',
                                 gap: '8px'
                             }}>
-                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D5ED55' }}></span>
+                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#E5A93B' }}></span>
                                 <span>{WHY_AANANDHAM_PILLARS[activeWhyIdx].badge}</span>
                             </div>
 
@@ -1910,7 +1910,7 @@ export default function HomePage() {
 
                             {/* Bottom Content Card & Highlights */}
                             <div style={{ position: 'absolute', bottom: '26px', left: '26px', right: '26px' }}>
-                                <div style={{ fontSize: '11px', color: '#D5ED55', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].tagline}
                                 </div>
                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 2.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 12px', lineHeight: 1.25 }}>
@@ -1937,7 +1937,7 @@ export default function HomePage() {
                                                     width: activeWhyIdx === idx ? '24px' : '8px',
                                                     height: '8px',
                                                     borderRadius: '999px',
-                                                    background: activeWhyIdx === idx ? '#D5ED55' : 'rgba(255,255,255,0.3)',
+                                                    background: activeWhyIdx === idx ? '#E5A93B' : 'rgba(255,255,255,0.3)',
                                                     border: 'none',
                                                     cursor: 'pointer',
                                                     transition: 'all 0.25s ease'
@@ -1969,7 +1969,7 @@ export default function HomePage() {
                         {/* Right Content & Interactive Feature Grid */}
                         <motion.div variants={fadeInRight}>
                             <div className="star-badge">
-                                <span className="star-icon">★</span> WHY AANANDHAM<span style={{ color: '#D5ED55' }}>.GO</span>
+                                <span className="star-icon">★</span> WHY AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -1984,7 +1984,7 @@ export default function HomePage() {
                             </h2>
 
                             <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '28px' }}>
-                                We believe nature should be experienced with absolute safety, deep local knowledge, and zero compromise on comfort. From 7,900 FT cloud ridges to private en-suite washrooms, here is why 350+ adventurers trust Aanandham<span style={{ color: '#D5ED55', fontWeight: '800' }}>.go</span>.
+                                We believe nature should be experienced with absolute safety, deep local knowledge, and zero compromise on comfort. From 7,900 FT cloud ridges to private en-suite washrooms, here is why 350+ adventurers trust Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span>.
                             </p>
 
                             {/* 4 Interactive Clickable Feature Pillar Cards */}
@@ -2186,7 +2186,7 @@ export default function HomePage() {
 
                             {/* Top Badges */}
                             <div style={{ position: 'absolute', top: '24px', left: '24px', right: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ background: '#D5ED55', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '6px 16px', borderRadius: '999px' }}>
+                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '6px 16px', borderRadius: '999px' }}>
                                     {STAY_ACCOMMODATIONS[activeStayAcc >= 0 ? activeStayAcc : 0].badge}
                                 </span>
                                 <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
@@ -2240,8 +2240,8 @@ export default function HomePage() {
                                                         width: '10px',
                                                         height: '10px',
                                                         borderRadius: '50%',
-                                                        background: isActive ? '#D5ED55' : 'rgba(18, 22, 19, 0.2)',
-                                                        boxShadow: isActive ? '0 0 8px #D5ED55' : 'none',
+                                                        background: isActive ? '#E5A93B' : 'rgba(18, 22, 19, 0.2)',
+                                                        boxShadow: isActive ? '0 0 8px #E5A93B' : 'none',
                                                         transition: 'all 0.2s ease'
                                                     }} />
                                                     <div>
@@ -2255,7 +2255,7 @@ export default function HomePage() {
                                                 </div>
 
                                                 <span style={{
-                                                    background: isActive ? '#D5ED55' : '#F1F3EC',
+                                                    background: isActive ? '#E5A93B' : '#F1F3EC',
                                                     color: '#121613',
                                                     fontSize: '11px',
                                                     fontWeight: '800',
@@ -2377,7 +2377,7 @@ export default function HomePage() {
                                         left: '16px',
                                         background: 'rgba(14, 24, 17, 0.85)',
                                         backdropFilter: 'blur(8px)',
-                                        color: '#D5ED55',
+                                        color: '#E5A93B',
                                         fontSize: '11px',
                                         fontWeight: '800',
                                         padding: '5px 12px',
@@ -2446,7 +2446,7 @@ export default function HomePage() {
                                         }}
                                         onMouseOver={(e) => {
                                             e.currentTarget.style.background = '#121613';
-                                            e.currentTarget.style.color = '#D5ED55';
+                                            e.currentTarget.style.color = '#E5A93B';
                                         }}
                                         onMouseOut={(e) => {
                                             e.currentTarget.style.background = '#F8F9F5';
@@ -2508,7 +2508,7 @@ export default function HomePage() {
                                 <div style={{ position: 'relative', height: '250px' }}>
                                     <img src={pkg.image} alt={pkg.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px' }}>
-                                        <span style={{ background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>{pkg.tag}</span>
+                                        <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>{pkg.tag}</span>
                                         <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>{pkg.altitude}</span>
                                     </div>
                                     <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>★ {pkg.rating} ({pkg.reviewsCount})</div>
@@ -2739,7 +2739,7 @@ export default function HomePage() {
                                         position: 'absolute',
                                         top: '16px',
                                         left: '16px',
-                                        background: '#D5ED55',
+                                        background: '#E5A93B',
                                         color: '#121613',
                                         fontSize: '11px',
                                         fontWeight: '800',
@@ -2959,7 +2959,7 @@ export default function HomePage() {
                                         {t.campBadge}
                                     </span>
                                 </div>
-                                <div style={{ fontSize: '36px', color: '#D5ED55', lineHeight: 1, marginBottom: '14px', fontWeight: '900' }}>
+                                <div style={{ fontSize: '36px', color: '#E5A93B', lineHeight: 1, marginBottom: '14px', fontWeight: '900' }}>
                                     ”
                                 </div>
                                 <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.7, marginBottom: '24px', flex: 1, fontWeight: '500' }}>
@@ -3264,7 +3264,7 @@ export default function HomePage() {
                             <div style={{ padding: '24px 32px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                                 <div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-                                        <span style={{ background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px' }}>
+                                        <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px' }}>
                                             {selectedLightboxImg.altitude}
                                         </span>
                                         <span style={{ color: '#A2B6A6', fontSize: '13px', fontWeight: '600' }}>

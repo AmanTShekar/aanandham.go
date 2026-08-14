@@ -752,12 +752,12 @@ export default function AdminPortal() {
         return (
             <div style={{ minHeight: '100vh', background: '#08120A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
                 <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.25)', borderRadius: '32px', padding: '44px 36px', maxWidth: '440px', width: '100%', textAlign: 'center', boxShadow: '0 25px 80px rgba(0,0,0,0.5)' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.1)', color: '#D5ED55', fontSize: '24px', marginBottom: '20px' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.1)', color: '#E5A93B', fontSize: '24px', marginBottom: '20px' }}>
                         <i className="fa-solid fa-lock"></i>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '6px' }}>
                         <span className="live-beacon"></span>
-                        <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#D5ED55', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#E5A93B', textTransform: 'uppercase' }}>
                             AANANDHAM COMMAND CENTER
                         </span>
                     </div>
@@ -822,7 +822,7 @@ export default function AdminPortal() {
                                 ← Back to All Properties
                             </button>
                             <div>
-                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                                     PROPERTY INVENTORY COMMAND
                                 </span>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
@@ -838,8 +838,8 @@ export default function AdminPortal() {
                                     padding: '8px 18px',
                                     borderRadius: '999px',
                                     background: currentDetailProperty.isAvailable ? 'rgba(213, 237, 85, 0.15)' : 'rgba(255, 90, 95, 0.15)',
-                                    border: currentDetailProperty.isAvailable ? '1px solid #D5ED55' : '1px solid #FF5A5F',
-                                    color: currentDetailProperty.isAvailable ? '#D5ED55' : '#FF5A5F',
+                                    border: currentDetailProperty.isAvailable ? '1px solid #E5A93B' : '1px solid #FF5A5F',
+                                    color: currentDetailProperty.isAvailable ? '#E5A93B' : '#FF5A5F',
                                     fontSize: '13px',
                                     fontWeight: '800',
                                     cursor: 'pointer'
@@ -866,7 +866,7 @@ export default function AdminPortal() {
                         <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', width: '100%' }}>
                             <div>
                                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                                    <span style={{ background: '#D5ED55', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
+                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
                                         {currentDetailProperty.region} Region
                                     </span>
                                     <span style={{ background: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px' }}>
@@ -886,7 +886,7 @@ export default function AdminPortal() {
 
                             <div style={{ background: 'rgba(16, 30, 19, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(213, 237, 85, 0.3)', borderRadius: '20px', padding: '18px 24px', textAlign: 'right' }}>
                                 <div style={{ fontSize: '11px', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Base Price Per Camper</div>
-                                <div style={{ fontSize: '28px', fontWeight: '800', color: '#D5ED55' }}>
+                                <div style={{ fontSize: '28px', fontWeight: '800', color: '#E5A93B' }}>
                                     ₹{currentDetailProperty.price.toLocaleString('en-IN')}
                                 </div>
                                 <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
@@ -905,7 +905,7 @@ export default function AdminPortal() {
                             <div>
                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <span>🛏️ Rooms, Dome Pods & Tent Inventory</span>
-                                    <span style={{ fontSize: '13px', background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', padding: '3px 10px', borderRadius: '999px' }}>
+                                    <span style={{ fontSize: '13px', background: 'rgba(213, 237, 85, 0.15)', color: '#E5A93B', padding: '3px 10px', borderRadius: '999px' }}>
                                         {currentDetailProperty.rooms ? currentDetailProperty.rooms.length : 0} Types
                                     </span>
                                 </h3>
@@ -939,7 +939,7 @@ export default function AdminPortal() {
                                 >
                                     <div style={{ position: 'relative', height: '170px' }}>
                                         <img src={room.image || currentDetailProperty.image} alt={room.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#D5ED55' : '#FF5A5F', color: room.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#E5A93B' : '#FF5A5F', color: room.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {room.isAvailable ? 'Available' : 'Fully Booked'}
                                         </span>
                                         <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
@@ -952,7 +952,7 @@ export default function AdminPortal() {
                                             <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
                                                 {room.name}
                                             </h4>
-                                            <span style={{ fontSize: '18px', fontWeight: '800', color: '#D5ED55' }}>
+                                            <span style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>
                                                 ₹{room.price}
                                             </span>
                                         </div>
@@ -990,7 +990,7 @@ export default function AdminPortal() {
                                                 borderRadius: '12px',
                                                 background: room.isAvailable ? 'rgba(255, 90, 95, 0.15)' : 'rgba(213, 237, 85, 0.15)',
                                                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                color: room.isAvailable ? '#FF5A5F' : '#D5ED55',
+                                                color: room.isAvailable ? '#FF5A5F' : '#E5A93B',
                                                 fontSize: '12.5px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer'
@@ -1040,7 +1040,7 @@ export default function AdminPortal() {
                                             {amenity.name}
                                         </span>
                                     </div>
-                                    <span style={{ fontSize: '16px', color: amenity.enabled ? '#D5ED55' : '#8E9B92' }}>
+                                    <span style={{ fontSize: '16px', color: amenity.enabled ? '#E5A93B' : '#8E9B92' }}>
                                         {amenity.enabled ? '✓' : '○'}
                                     </span>
                                 </div>
@@ -1082,12 +1082,12 @@ export default function AdminPortal() {
                                         <div style={{ fontSize: '14.5px', fontWeight: '800', color: addon.enabled ? '#FFFFFF' : '#8E9B92' }}>
                                             {addon.name}
                                         </div>
-                                        <div style={{ fontSize: '12px', color: addon.enabled ? '#D5ED55' : '#8E9B92', marginTop: '4px' }}>
+                                        <div style={{ fontSize: '12px', color: addon.enabled ? '#E5A93B' : '#8E9B92', marginTop: '4px' }}>
                                             {addon.enabled ? '● Active in Booking Form' : '○ Disabled'}
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '18px', fontWeight: '800', color: '#D5ED55' }}>
+                                        <div style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>
                                             +₹{addon.price}
                                         </div>
                                     </div>
@@ -1114,7 +1114,7 @@ export default function AdminPortal() {
 
                                 <form onSubmit={handleSaveRoom} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Accommodation Name *
                                         </label>
                                         <input
@@ -1129,7 +1129,7 @@ export default function AdminPortal() {
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Guest Capacity
                                             </label>
                                             <input
@@ -1141,7 +1141,7 @@ export default function AdminPortal() {
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Price Per Unit (INR) *
                                             </label>
                                             <input
@@ -1156,7 +1156,7 @@ export default function AdminPortal() {
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Total Units Inventory
                                             </label>
                                             <input
@@ -1168,7 +1168,7 @@ export default function AdminPortal() {
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Cover Image URL
                                             </label>
                                             <input
@@ -1181,7 +1181,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Features & Amenities (Comma Separated)
                                         </label>
                                         <input
@@ -1218,10 +1218,10 @@ export default function AdminPortal() {
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
                             <img src="/logo.png" alt="Aanandham Logo" style={{ height: '34px', width: 'auto', objectFit: 'contain', borderRadius: '6px' }} />
                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#FFFFFF' }}>
-                                Aanandham<span style={{ color: '#D5ED55' }}>.go</span>
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>
-                        <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.8px' }}>
+                        <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#E5A93B', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.8px' }}>
                             PROPERTIES, EVENTS & REVENUE PMS
                         </span>
                     </div>
@@ -1256,8 +1256,8 @@ export default function AdminPortal() {
                                 style={{
                                     padding: '10px 20px',
                                     borderRadius: '999px',
-                                    border: isActive ? '1px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.1)',
-                                    background: isActive ? '#D5ED55' : 'rgba(255, 255, 255, 0.04)',
+                                    border: isActive ? '1px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.1)',
+                                    background: isActive ? '#E5A93B' : 'rgba(255, 255, 255, 0.04)',
                                     color: isActive ? '#121613' : '#FFFFFF',
                                     fontSize: '14px',
                                     fontWeight: '800',
@@ -1271,7 +1271,7 @@ export default function AdminPortal() {
                             >
                                 <span>{tab.name}</span>
                                 {tab.count !== undefined && (
-                                    <span style={{ background: isActive ? '#121613' : 'rgba(255,255,255,0.15)', color: isActive ? '#D5ED55' : '#FFFFFF', fontSize: '11px', padding: '2px 8px', borderRadius: '999px' }}>
+                                    <span style={{ background: isActive ? '#121613' : 'rgba(255,255,255,0.15)', color: isActive ? '#E5A93B' : '#FFFFFF', fontSize: '11px', padding: '2px 8px', borderRadius: '999px' }}>
                                         {tab.count}
                                     </span>
                                 )}
@@ -1291,7 +1291,7 @@ export default function AdminPortal() {
                                 <div style={{ fontSize: '12px', fontWeight: '700', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
                                     Confirmed Revenue (Pipeline)
                                 </div>
-                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#D5ED55' }}>
+                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#E5A93B' }}>
                                     ₹{totalRevenue.toLocaleString('en-IN')}
                                 </div>
                                 <div style={{ fontSize: '12px', color: '#8E9B92', marginTop: '6px' }}>
@@ -1306,7 +1306,7 @@ export default function AdminPortal() {
                                 <div style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF' }}>
                                     {activeCampers} <span style={{ fontSize: '18px', color: '#A2B6A6', fontWeight: '600' }}>Explorers</span>
                                 </div>
-                                <div style={{ fontSize: '12px', color: '#D5ED55', marginTop: '6px' }}>
+                                <div style={{ fontSize: '12px', color: '#E5A93B', marginTop: '6px' }}>
                                     Across 4 Kerala Regions
                                 </div>
                             </div>
@@ -1369,7 +1369,7 @@ export default function AdminPortal() {
                                                         {regProps.length} Campsites ({availableCount} Available)
                                                     </div>
                                                 </div>
-                                                <span style={{ fontSize: '12px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px', background: availableCount > 0 ? 'rgba(213,237,85,0.15)' : 'rgba(255,90,95,0.15)', color: availableCount > 0 ? '#D5ED55' : '#FF5A5F' }}>
+                                                <span style={{ fontSize: '12px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px', background: availableCount > 0 ? 'rgba(213,237,85,0.15)' : 'rgba(255,90,95,0.15)', color: availableCount > 0 ? '#E5A93B' : '#FF5A5F' }}>
                                                     {availableCount > 0 ? 'Active & Open' : 'Sold Out'}
                                                 </span>
                                             </div>
@@ -1400,13 +1400,13 @@ export default function AdminPortal() {
                                             <img src={ev.image} alt={ev.title} style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover' }} />
                                             <div style={{ flex: 1 }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55' }}>{ev.badge}</span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B' }}>{ev.badge}</span>
                                                     <span style={{ fontSize: '11px', color: '#A2B6A6' }}>{ev.dates}</span>
                                                 </div>
                                                 <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF', lineHeight: 1.3 }}>{ev.title}</div>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', fontSize: '12px' }}>
                                                     <span style={{ color: '#A2B6A6' }}>{ev.booked} / {ev.capacity} Campers</span>
-                                                    <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#FF5A5F' : '#D5ED55' }}>
+                                                    <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }}>
                                                         {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Remaining`}
                                                     </span>
                                                 </div>
@@ -1437,8 +1437,8 @@ export default function AdminPortal() {
                                             <div style={{ fontSize: '12.5px', color: '#A2B6A6' }}>{b.package} · {b.dates}</div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: '18px', fontWeight: '800', color: '#D5ED55' }}>₹{b.total.toLocaleString('en-IN')}</div>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#D5ED55' : '#FFB800' }}>{b.status}</span>
+                                            <div style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>₹{b.total.toLocaleString('en-IN')}</div>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#E5A93B' : '#FFB800' }}>{b.status}</span>
                                         </div>
                                         <div>
                                             <a href={`https://wa.me/${b.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`)}`} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px' }}>
@@ -1480,9 +1480,9 @@ export default function AdminPortal() {
                                     style={{
                                         padding: '8px 18px',
                                         borderRadius: '999px',
-                                        border: propertyFilterRegion === reg ? '1px solid #D5ED55' : '1px solid rgba(255,255,255,0.08)',
+                                        border: propertyFilterRegion === reg ? '1px solid #E5A93B' : '1px solid rgba(255,255,255,0.08)',
                                         background: propertyFilterRegion === reg ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
-                                        color: propertyFilterRegion === reg ? '#D5ED55' : '#A2B6A6',
+                                        color: propertyFilterRegion === reg ? '#E5A93B' : '#A2B6A6',
                                         fontSize: '13px',
                                         fontWeight: '700',
                                         cursor: 'pointer'
@@ -1513,7 +1513,7 @@ export default function AdminPortal() {
                                         style={{ position: 'relative', height: '190px', cursor: 'pointer' }}
                                     >
                                         <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#D5ED55' : '#FF5A5F', color: prop.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#E5A93B' : '#FF5A5F', color: prop.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {prop.isAvailable ? 'Available' : 'SOLD OUT'}
                                         </span>
                                         <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
@@ -1522,7 +1522,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '11px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
+                                        <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
                                             📍 {prop.region || 'Munnar'} · {prop.location}
                                         </div>
                                         <h4 
@@ -1536,7 +1536,7 @@ export default function AdminPortal() {
                                         <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                                             <div>
                                                 <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Base Rate (Per Camper)</div>
-                                                <div style={{ fontSize: '20px', fontWeight: '800', color: '#D5ED55' }}>
+                                                <div style={{ fontSize: '20px', fontWeight: '800', color: '#E5A93B' }}>
                                                     ₹{prop.price.toLocaleString('en-IN')}
                                                 </div>
                                             </div>
@@ -1555,7 +1555,7 @@ export default function AdminPortal() {
                                                 borderRadius: '14px',
                                                 background: 'rgba(213, 237, 85, 0.12)',
                                                 border: '1px solid rgba(213, 237, 85, 0.35)',
-                                                color: '#D5ED55',
+                                                color: '#E5A93B',
                                                 fontSize: '13.5px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer',
@@ -1574,7 +1574,7 @@ export default function AdminPortal() {
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
                                             <button
                                                 onClick={() => handleToggleAvailability(prop.id)}
-                                                style={{ flex: 1, padding: '10px', borderRadius: '12px', background: prop.isAvailable ? 'rgba(255, 90, 95, 0.15)' : 'rgba(213, 237, 85, 0.15)', border: '1px solid rgba(255, 255, 255, 0.1)', color: prop.isAvailable ? '#FF5A5F' : '#D5ED55', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+                                                style={{ flex: 1, padding: '10px', borderRadius: '12px', background: prop.isAvailable ? 'rgba(255, 90, 95, 0.15)' : 'rgba(213, 237, 85, 0.15)', border: '1px solid rgba(255, 255, 255, 0.1)', color: prop.isAvailable ? '#FF5A5F' : '#E5A93B', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
                                             >
                                                 {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
                                             </button>
@@ -1613,7 +1613,7 @@ export default function AdminPortal() {
                                 <div key={ev.id} style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                                     <div style={{ position: 'relative', height: '180px' }}>
                                         <img src={ev.image} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {ev.badge}
                                         </span>
                                         <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
@@ -1622,7 +1622,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '11px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                        <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
                                             📍 {ev.campsite}
                                         </div>
                                         <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.3 }}>
@@ -1634,12 +1634,12 @@ export default function AdminPortal() {
                                         <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 16px', borderRadius: '16px', marginBottom: '16px' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700', marginBottom: '6px' }}>
                                                 <span style={{ color: '#FFFFFF' }}>Ticket: ₹{ev.price}</span>
-                                                <span style={{ color: ev.spotsLeft === 0 ? '#FF5A5F' : '#D5ED55' }}>
+                                                <span style={{ color: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }}>
                                                     {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Left (${ev.booked}/${ev.capacity})`}
                                                 </span>
                                             </div>
                                             <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '999px', overflow: 'hidden' }}>
-                                                <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#FF5A5F' : '#D5ED55' }} />
+                                                <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }} />
                                             </div>
                                         </div>
 
@@ -1692,7 +1692,7 @@ export default function AdminPortal() {
                                     <button
                                         key={st}
                                         onClick={() => setBookingFilterStatus(st)}
-                                        style={{ padding: '8px 16px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #D5ED55' : '1px solid rgba(255,255,255,0.08)', background: bookingFilterStatus === st ? 'rgba(213, 237, 85, 0.15)' : 'transparent', color: bookingFilterStatus === st ? '#D5ED55' : '#A2B6A6', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}
+                                        style={{ padding: '8px 16px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #E5A93B' : '1px solid rgba(255,255,255,0.08)', background: bookingFilterStatus === st ? 'rgba(213, 237, 85, 0.15)' : 'transparent', color: bookingFilterStatus === st ? '#E5A93B' : '#A2B6A6', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}
                                     >
                                         {st}
                                     </button>
@@ -1706,7 +1706,7 @@ export default function AdminPortal() {
                                 <div key={b.id} style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center' }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55' }}>{b.id}</span>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B' }}>{b.id}</span>
                                             <span style={{ fontSize: '11px', color: '#8E9B92' }}>{b.createdAt}</span>
                                         </div>
                                         <div style={{ fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>{b.name}</div>
@@ -1716,12 +1716,12 @@ export default function AdminPortal() {
                                     <div>
                                         <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#FFFFFF' }}>{b.package}</div>
                                         <div style={{ fontSize: '12px', color: '#A2B6A6' }}>{b.dates} · {b.guests} Guests</div>
-                                        {b.roomType && <div style={{ fontSize: '11.5px', color: '#D5ED55' }}>Room: {b.roomType}</div>}
+                                        {b.roomType && <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Room: {b.roomType}</div>}
                                     </div>
 
                                     <div>
                                         <div style={{ fontSize: '11px', color: '#8E9B92' }}>Est. Total</div>
-                                        <div style={{ fontSize: '20px', fontWeight: '800', color: '#D5ED55' }}>
+                                        <div style={{ fontSize: '20px', fontWeight: '800', color: '#E5A93B' }}>
                                             ₹{b.total.toLocaleString('en-IN')}
                                         </div>
                                     </div>
@@ -1731,7 +1731,7 @@ export default function AdminPortal() {
                                         <select
                                             value={b.status}
                                             onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
-                                            style={{ padding: '8px 12px', borderRadius: '12px', background: b.status === 'Confirmed' ? '#D5ED55' : b.status === 'Checked In' ? '#0070F3' : b.status === 'Cancelled' ? '#FF5A5F' : '#FFB800', color: b.status === 'Confirmed' ? '#121613' : '#FFFFFF', fontWeight: '800', fontSize: '12px', border: 'none', cursor: 'pointer' }}
+                                            style={{ padding: '8px 12px', borderRadius: '12px', background: b.status === 'Confirmed' ? '#E5A93B' : b.status === 'Checked In' ? '#0070F3' : b.status === 'Cancelled' ? '#FF5A5F' : '#FFB800', color: b.status === 'Confirmed' ? '#121613' : '#FFFFFF', fontWeight: '800', fontSize: '12px', border: 'none', cursor: 'pointer' }}
                                         >
                                             <option value="Pending" style={{ background: '#101E13', color: '#FFFFFF' }}>Pending 🟡</option>
                                             <option value="Confirmed" style={{ background: '#101E13', color: '#FFFFFF' }}>Confirmed 🟢</option>
@@ -1769,7 +1769,7 @@ export default function AdminPortal() {
                         </div>
 
                         <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px', marginBottom: '24px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#E5A93B', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
                                 OFFICIAL ADMIN WHATSAPP DISPATCH NUMBER
                             </label>
                             <input
@@ -1784,7 +1784,7 @@ export default function AdminPortal() {
                         </div>
 
                         <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#E5A93B', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
                                 TELEGRAM BOT / CLOUD WEBHOOK (OPTIONAL ₹0 PUSH ALERTS)
                             </label>
                             <input
@@ -1819,7 +1819,7 @@ export default function AdminPortal() {
                             <div className="modal-rounded-body dark-modal-scroll" style={{ flex: 1, padding: '24px 36px 36px' }}>
                                 <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Campsite Title *
                                         </label>
                                         <input
@@ -1834,7 +1834,7 @@ export default function AdminPortal() {
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Region / Location Header
                                             </label>
                                             <select
@@ -1850,7 +1850,7 @@ export default function AdminPortal() {
                                             </select>
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Altitude Tag
                                             </label>
                                             <input
@@ -1865,7 +1865,7 @@ export default function AdminPortal() {
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Base Price (INR) *
                                             </label>
                                             <input
@@ -1877,7 +1877,7 @@ export default function AdminPortal() {
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                                 Original Strikethrough Price (INR)
                                             </label>
                                             <input
@@ -1890,7 +1890,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Cover Photo Image URL
                                         </label>
                                         <input
@@ -1903,7 +1903,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Highlights & Perks (Comma Separated)
                                         </label>
                                         <input
@@ -1940,7 +1940,7 @@ export default function AdminPortal() {
 
                             <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                         Event Title *
                                     </label>
                                     <input
@@ -1955,7 +1955,7 @@ export default function AdminPortal() {
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Campsite Location
                                         </label>
                                         <input
@@ -1968,7 +1968,7 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Dates & Duration
                                         </label>
                                         <input
@@ -1983,7 +1983,7 @@ export default function AdminPortal() {
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Ticket Price (INR)
                                         </label>
                                         <input
@@ -1995,7 +1995,7 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Total Capacity
                                         </label>
                                         <input
@@ -2007,7 +2007,7 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                             Current Bookings
                                         </label>
                                         <input
@@ -2020,7 +2020,7 @@ export default function AdminPortal() {
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                         Event Cover Image URL
                                     </label>
                                     <input
@@ -2033,7 +2033,7 @@ export default function AdminPortal() {
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#D5ED55', display: 'block', marginBottom: '6px' }}>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
                                         Event Description
                                     </label>
                                     <textarea

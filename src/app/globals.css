@@ -154,7 +154,7 @@ button:focus-visible, a:focus-visible {
   top: -100px;
   left: 20px;
   background: #121613;
-  color: #D5ED55;
+  color: #E5A93B;
   padding: 12px 20px;
   z-index: 10000;
   border-radius: 999px;
@@ -197,7 +197,7 @@ button:focus-visible, a:focus-visible {
 
 .scroll-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #D5ED55, #88A316);
+  background: linear-gradient(90deg, #E5A93B, #88A316);
   width: 0%;
   transition: width 0.1s ease-out;
 }
@@ -368,19 +368,19 @@ button:focus-visible, a:focus-visible {
 }
 
 .watermark-char:hover {
-  color: #D5ED55;
+  color: #E5A93B;
   transform: translateY(-8px) scale(1.08);
-  text-shadow: 0 0 40px rgba(213, 237, 85, 0.6);
+  text-shadow: 0 0 40px rgba(229, 169, 59, 0.6);
 }
 
 .watermark-char.dot-char {
-  color: rgba(213, 237, 85, 0.3);
+  color: rgba(229, 169, 59, 0.3);
   margin: 0 2px;
 }
 
 .watermark-char.dot-char:hover {
-  color: #D5ED55;
-  text-shadow: 0 0 50px rgba(213, 237, 85, 0.9);
+  color: #E5A93B;
+  text-shadow: 0 0 50px rgba(229, 169, 59, 0.9);
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -524,28 +524,28 @@ button:focus-visible, a:focus-visible {
 }
 
 .marquee-item .highlight {
-  color: #D5ED55;
+  color: #E5A93B;
 }
 
 @keyframes beacon-pulse {
   0% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(213, 237, 85, 0.7);
+    box-shadow: 0 0 0 0 rgba(229, 169, 59, 0.7);
   }
   70% {
     transform: scale(1);
-    box-shadow: 0 0 0 10px rgba(213, 237, 85, 0);
+    box-shadow: 0 0 0 10px rgba(229, 169, 59, 0);
   }
   100% {
     transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(213, 237, 85, 0);
+    box-shadow: 0 0 0 0 rgba(229, 169, 59, 0);
   }
 }
 
 .live-beacon {
   width: 9px;
   height: 9px;
-  background-color: #D5ED55;
+  background-color: #E5A93B;
   border-radius: 50%;
   display: inline-block;
   animation: beacon-pulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
@@ -583,7 +583,7 @@ button:focus-visible, a:focus-visible {
   right: 28px;
   z-index: 998;
   background: #121613;
-  color: #D5ED55;
+  color: #E5A93B;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -600,7 +600,7 @@ button:focus-visible, a:focus-visible {
 .back-to-top-btn:hover {
   transform: translateY(-4px);
   background: #000000;
-  border-color: #D5ED55;
+  border-color: #E5A93B;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -704,7 +704,7 @@ button, a, input, select, textarea {
 }
 
 .dark-modal-scroll::-webkit-scrollbar-thumb:hover {
-  background: #D5ED55 !important;
+  background: #E5A93B !important;
 }
 
 /* Clean Modal Container Architecture */
@@ -741,10 +741,10 @@ button, a, input, select, textarea {
 
 .modal-close-btn:hover {
   transform: rotate(90deg) scale(1.1);
-  background: #D5ED55;
-  border-color: #D5ED55;
+  background: #E5A93B;
+  border-color: #E5A93B;
   color: #121613;
-  box-shadow: 0 0 25px rgba(213, 237, 85, 0.55);
+  box-shadow: 0 0 25px rgba(229, 169, 59, 0.55);
 }
 
 .modal-close-btn-gold:hover {
@@ -774,7 +774,7 @@ button, a, input, select, textarea {
   transform: rotate(90deg) scale(1.1);
   background: #121613;
   border-color: #121613;
-  color: #D5ED55;
+  color: #E5A93B;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
