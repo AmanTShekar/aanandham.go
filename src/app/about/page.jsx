@@ -250,15 +250,15 @@ export default function AboutPage() {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0, filter: 'blur(10px)' }}
-                        animate={{ clipPath: 'circle(160% at calc(100% - 44px) 44px)', opacity: 1, filter: 'blur(0px)' }}
-                        exit={{ clipPath: 'circle(0% at calc(100% - 44px) 44px)', opacity: 0, filter: 'blur(8px)' }}
-                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        initial={{ clipPath: 'circle(0% at calc(100% - 46px) 38px)', opacity: 0 }}
+                        animate={{ clipPath: 'circle(220% at calc(100% - 46px) 38px)', opacity: 1 }}
+                        exit={{ clipPath: 'circle(0% at calc(100% - 46px) 38px)', opacity: 0 }}
+                        transition={{ duration: 0.58, ease: [0.16, 1, 0.3, 1] }}
                         style={{
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 44px) 44px, rgba(229, 169, 59, 0.16) 0%, rgba(14, 26, 17, 0.98) 55%)',
+                            background: 'radial-gradient(circle at calc(100% - 46px) 38px, rgba(229, 169, 59, 0.18) 0%, rgba(213, 237, 85, 0.06) 24%, #0B150E 65%)',
                             backdropFilter: 'blur(32px)',
                             WebkitBackdropFilter: 'blur(32px)',
                             color: '#FFFFFF',

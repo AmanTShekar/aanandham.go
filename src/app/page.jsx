@@ -740,35 +740,29 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
 // ── MOBILE DRAWER LIQUID WAVE EXPANSION MOTION VARIANTS ──
 const drawerWaveVariants = {
     hidden: { 
-        clipPath: 'circle(0% at calc(100% - 44px) 44px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        clipPath: 'circle(0% at calc(100% - 46px) 38px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 46px) 38px)',
         opacity: 0,
-        scale: 0.98,
-        filter: 'blur(10px)',
         transition: { 
-            duration: 0.45, 
+            duration: 0.42, 
             ease: [0.32, 0, 0.67, 0] 
         }
     },
     visible: { 
-        clipPath: 'circle(160% at calc(100% - 44px) 44px)',
-        WebkitClipPath: 'circle(160% at calc(100% - 44px) 44px)',
+        clipPath: 'circle(220% at calc(100% - 46px) 38px)',
+        WebkitClipPath: 'circle(220% at calc(100% - 46px) 38px)',
         opacity: 1,
-        scale: 1,
-        filter: 'blur(0px)',
         transition: { 
-            duration: 0.62, 
-            ease: [0.22, 1, 0.36, 1] 
+            duration: 0.58, 
+            ease: [0.16, 1, 0.3, 1] 
         }
     },
     exit: { 
-        clipPath: 'circle(0% at calc(100% - 44px) 44px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 44px) 44px)',
+        clipPath: 'circle(0% at calc(100% - 46px) 38px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 46px) 38px)',
         opacity: 0,
-        scale: 0.98,
-        filter: 'blur(8px)',
         transition: { 
-            duration: 0.48, 
+            duration: 0.45, 
             ease: [0.32, 0, 0.67, 0] 
         }
     }
@@ -779,19 +773,19 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.06,
-            delayChildren: 0.18
+            staggerChildren: 0.05,
+            delayChildren: 0.12
         }
     }
 };
 
 const drawerItemVariants = {
-    hidden: { opacity: 0, y: 26, scale: 0.95 },
+    hidden: { opacity: 0, y: 24, scale: 0.96 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+        transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
@@ -865,16 +859,16 @@ export default function HomePage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Disable background page scrolling when video modal, lightbox modal, or booking engine is open
+    // Disable background page scrolling when video modal, lightbox modal, booking engine, or mobile menu is open
     useEffect(() => {
-        if (isVideoModalOpen || selectedLightboxImg || isBookingModalOpen) {
+        if (isVideoModalOpen || selectedLightboxImg || isBookingModalOpen || isMobileMenuOpen) {
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
                 document.body.style.overflow = originalOverflow || 'unset';
             };
         }
-    }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen]);
+    }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen, isMobileMenuOpen]);
 
     const handleProgramMouseMove = (e) => {
         if (!programContainerRef.current) return;
@@ -1318,14 +1312,16 @@ export default function HomePage() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'radial-gradient(circle at calc(100% - 44px) 44px, rgba(229, 169, 59, 0.16) 0%, rgba(213, 237, 85, 0.05) 25%, rgba(11, 21, 14, 0.96) 60%)',
-                            backdropFilter: 'blur(36px)',
-                            WebkitBackdropFilter: 'blur(36px)',
+                            background: 'radial-gradient(circle at calc(100% - 46px) 38px, rgba(229, 169, 59, 0.18) 0%, rgba(213, 237, 85, 0.06) 24%, #0B150E 65%)',
+                            backdropFilter: 'blur(32px)',
+                            WebkitBackdropFilter: 'blur(32px)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
                             padding: 'calc(80px + 16px) 28px 36px',
-                            overflowY: 'auto'
+                            overflowY: 'auto',
+                            transform: 'translateZ(0)',
+                            willChange: 'clip-path, opacity'
                         }}
                     >
                         {/* Staggered Cascading Navigation Links */}
