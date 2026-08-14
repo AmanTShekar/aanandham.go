@@ -5,7 +5,147 @@ import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 
-// ── NEARBY LANDMARKS & EXPEDITION TRAILS ──
+// ── 1. ELEVATION TIERS & TERRAIN PROFILE ──
+const ELEVATION_TIERS = [
+    {
+        altitude: '7,900 FT',
+        name: 'Kolukkumalai Sunrise Peak',
+        badge: 'SUMMIT RIDGE',
+        desc: 'World’s highest organic tea plantation, accessible only via rugged 4x4 Jeep safaris across granite boulders. Experience sunrise floating above sea-of-clouds.',
+        temp: '10°C - 16°C',
+        icon: 'fa-solid fa-mountain-sun'
+    },
+    {
+        altitude: '6,800 FT',
+        name: 'Phantom Head Cliffline',
+        badge: 'SUNSET TRAIL',
+        desc: 'A secret high-altitude ridge line resembling a skull in silhouette. Offers panoramic 360-degree views of the Suryanelli valley and elephant corridors.',
+        temp: '12°C - 18°C',
+        icon: 'fa-solid fa-compass'
+    },
+    {
+        altitude: '6,500 FT',
+        name: 'Aanandham Basecamp Pods',
+        badge: 'SANCTUARY BASE',
+        desc: 'Our private weather-sealed geodesic dome sanctuary. Insulated from high winds, featuring private hot-water en-suites and starlit campfire circles.',
+        temp: '14°C - 20°C',
+        icon: 'fa-solid fa-tent'
+    },
+    {
+        altitude: '5,500 FT',
+        name: 'Anayirangal Lake Basin',
+        badge: 'EMERALD WATERWAY',
+        desc: 'The historic watering ground for wild mountain elephants, framed by pine forests and rolling tea gardens along the lake shoreline.',
+        temp: '16°C - 22°C',
+        icon: 'fa-solid fa-water'
+    }
+];
+
+// ── 2. THE 4 PILLARS OF AANANDHAM HOSPITALITY (Luxury Expedition Dossiers) ──
+const WILDERNESS_PILLARS = [
+    {
+        id: '01',
+        title: 'Certified Native Mountain Marshals',
+        tag: 'DISPATCH · 01',
+        stamp: '100% MARSHAL GUIDED',
+        stampColor: '#2D6A4F',
+        bgGradient: 'linear-gradient(135deg, #142517 0%, #0B160E 100%)',
+        accentColor: '#D5ED55',
+        icon: 'fa-solid fa-shield-halved',
+        metric: '1:6 Guide Ratio',
+        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by local mountain marshals certified in high-altitude terrain, first-aid, and wildlife tracking.',
+        specs: [
+            '100% native Suryanelli ridge navigators',
+            'Real-time satellite & radio coordination',
+            'State Forest Department clearance'
+        ],
+        memo: '“The mountain demands respect. We ensure you feel the raw power of the ridge with total peace of mind.”'
+    },
+    {
+        id: '02',
+        title: 'Thermal Insulated Pods & En-Suites',
+        tag: 'DISPATCH · 02',
+        stamp: 'ALL-WEATHER SEALED',
+        stampColor: '#C86D14',
+        bgGradient: 'linear-gradient(135deg, #241D12 0%, #0E120D 100%)',
+        accentColor: '#E5A93B',
+        icon: 'fa-solid fa-tent',
+        metric: '12°C Weather Insulated',
+        desc: 'Engineered for true mountain comfort: double-walled waterproof canvas, premium pocket-spring mattresses, 300-threadcount duvets, and private hot-water washrooms.',
+        specs: [
+            'Double-wall insulated geodesic architecture',
+            'Sanitized en-suite washrooms with instant hot geysers',
+            '100% waterproof heavy-gauge storm canvas'
+        ],
+        memo: '“No damp sleeping bags. Step out into the clouds and return to a warm, hotel-grade bed.”'
+    },
+    {
+        id: '03',
+        title: 'Farm-to-Campfire Culinary Craft',
+        tag: 'DISPATCH · 03',
+        stamp: 'LIVE MOUNTAIN GRILL',
+        stampColor: '#A43E1B',
+        bgGradient: 'linear-gradient(135deg, #251612 0%, #0D100C 100%)',
+        accentColor: '#F28B66',
+        icon: 'fa-solid fa-fire-burner',
+        metric: 'Live Earthen Pot BBQ',
+        desc: 'Live campfire grills, authentic Kerala earthen-pot curries cooked over open woodfire, and estate-plucked organic cardamom chai brewed fresh on the ridge.',
+        specs: [
+            'Freshly grilled BBQ with veg and non-veg options',
+            'Slow-cooked traditional clay pot recipes',
+            'Estate-fresh organic cardamom & tea tastings'
+        ],
+        memo: '“Hot food tastes twice as good under a blanket of stars at 7,900 FT.”'
+    },
+    {
+        id: '04',
+        title: '100% Zero-Trace Conservation Charter',
+        tag: 'DISPATCH · 04',
+        stamp: 'LEAVE NO TRACE',
+        stampColor: '#1F6B43',
+        bgGradient: 'linear-gradient(135deg, #122419 0%, #08110A 100%)',
+        accentColor: '#72D696',
+        icon: 'fa-solid fa-leaf',
+        metric: '0g Single-Use Plastic',
+        desc: 'Strict environmental ethics: zero single-use plastics permitted, 100% solar ambient night lighting, organic composting, and direct reinvestment into local tribal youth employment.',
+        specs: [
+            'Complete ban on disposable plastic bottles',
+            'Low-voltage solar pathway illumination',
+            'Direct livelihood support for native families'
+        ],
+        memo: '“We leave the ridgelines cleaner, quieter, and wilder than when we found them.”'
+    }
+];
+
+// ── 3. OUR EVOLUTION TIMELINE (2021 — 2026) ──
+const TIMELINE_MILESTONES = [
+    {
+        year: '2021',
+        title: 'Pitching the First Ridge Dome',
+        tag: 'THE SPARK',
+        desc: 'Frustrated by mass-market hotel tourism, founder Surya pitched the first prototype geodesic dome on a quiet Suryanelli cliffside to prove real wilderness camping could be comfortable.'
+    },
+    {
+        year: '2022',
+        title: 'Solar Power & Zero-Trace Protocol',
+        tag: 'ECO MILESTONE',
+        desc: 'Transformed the campsite into a self-sustaining eco-sanctuary with solar battery arrays, rainwater harvesting, and a strict ban on single-use plastics across all trails.'
+    },
+    {
+        year: '2024',
+        title: 'The Off-Road 4x4 Fleet Expansion',
+        tag: 'EXPEDITION FLEET',
+        desc: 'Assembled our dedicated fleet of custom 4x4 safari Jeeps and recruited veteran local tribal marshals to lead sunrise expeditions up the rugged Kolukkumalai peak.'
+    },
+    {
+        year: '2026',
+        title: '15,000+ Campers & Verified Standard',
+        tag: 'WHERE WE STAND',
+        desc: 'Over 15,000 explorers hosted with a 4.98 ★ expedition score. Aanandham is now recognized as Kerala’s premier high-altitude wilderness retreat.'
+    }
+];
+
+// ── 4. NEARBY LANDMARKS & TRAILS ──
 const NEARBY_PLACES = [
     {
         id: 'kolukkumalai',
@@ -69,91 +209,7 @@ const NEARBY_PLACES = [
     }
 ];
 
-// ── 4 BESPOKE WILDERNESS PILLARS (Tactile Sticky Field Notes) ──
-const WILDERNESS_PILLARS = [
-    {
-        num: '01',
-        title: 'High-Altitude Safety & Native Marshals',
-        tag: 'DISPATCH #01',
-        stamp: '100% MARSHAL GUIDED',
-        stampColor: '#2D6A4F',
-        paperBg: '#F3FBE8',
-        inkColor: '#142818',
-        tapeColor: 'rgba(213, 237, 85, 0.75)',
-        tapeRotation: '-2.5deg',
-        rotation: '-1.4deg',
-        icon: 'fa-solid fa-shield-halved',
-        noteQuote: '“Every ridge trail has a dedicated mountain marshal with radio contact & satellite coordinates.”',
-        checkList: [
-            '1:6 Guide-to-camper safety ratio',
-            'Certified high-altitude first responders',
-            'Pre-cleared forest department permits'
-        ],
-        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain marshals trained in high-altitude topography, medical response, and wildlife navigation.'
-    },
-    {
-        num: '02',
-        title: 'Thermal Insulated Pods & Private En-Suites',
-        tag: 'DISPATCH #02',
-        stamp: 'ALL-WEATHER SEALED',
-        stampColor: '#C86D14',
-        paperBg: '#FFF9ED',
-        inkColor: '#2B1A08',
-        tapeColor: 'rgba(229, 169, 59, 0.7)',
-        tapeRotation: '2.2deg',
-        rotation: '1.2deg',
-        icon: 'fa-solid fa-tent',
-        noteQuote: '“No damp sleeping bags or rocky ground. Real spring mattresses and steaming hot showers at 7,900 FT.”',
-        checkList: [
-            'Double-wall thermal canvas insulation',
-            'Sanitized en-suite washrooms + geysers',
-            'Organic cotton 300-threadcount duvets'
-        ],
-        desc: 'Engineered for mountain conditions: double-walled waterproof canvas, premium pocket-spring mattresses, fresh organic cotton duvets, and private sanitized washrooms with hot showers.'
-    },
-    {
-        num: '03',
-        title: 'Farm-to-Campfire Culinary Craft',
-        tag: 'DISPATCH #03',
-        stamp: 'LIVE MOUNTAIN GRILL',
-        stampColor: '#A43E1B',
-        paperBg: '#FDF4EC',
-        inkColor: '#2E150A',
-        tapeColor: 'rgba(244, 143, 107, 0.7)',
-        tapeRotation: '-1.8deg',
-        rotation: '-1.1deg',
-        icon: 'fa-solid fa-fire-burner',
-        noteQuote: '“Slow-cooked earthen clay pots, freshly ground spices, and estate-plucked cardamom tea by the starlight fire.”',
-        checkList: [
-            'Live BBQ with veg & non-veg options',
-            'Kerala earthenware pot cooking',
-            'Estate-fresh organic cardamom chai'
-        ],
-        desc: 'Hot live campfire barbecues, traditional Kerala earthen pot dishes, locally sourced spiced curries, and freshly brewed cardamom chai harvested directly from our surrounding plantations.'
-    },
-    {
-        num: '04',
-        title: '100% Zero-Trace Ecological Ethics',
-        tag: 'DISPATCH #04',
-        stamp: 'LEAVE NO TRACE',
-        stampColor: '#1F6B43',
-        paperBg: '#EEF8F1',
-        inkColor: '#0A2514',
-        tapeColor: 'rgba(142, 205, 161, 0.75)',
-        tapeRotation: '2.0deg',
-        rotation: '1.5deg',
-        icon: 'fa-solid fa-leaf',
-        noteQuote: '“Leaving the mountain ridges cleaner than we found them. Zero single-use plastic bottles permitted.”',
-        checkList: [
-            'Zero single-use plastics anywhere',
-            '100% solar ambient pathway lights',
-            'Direct local tribal youth employment'
-        ],
-        desc: 'No single-use plastics permitted on our ridges. 100% solar and low-voltage lighting, organic compost cycles, and direct reinvestment into local tribal youth employment and trail conservation.'
-    }
-];
-
-// ── EXPEDITION CREATORS & MOUNTAIN MARSHALS ──
+// ── 5. EXPEDITION CREATORS & MOUNTAIN MARSHALS ──
 const TEAM_CREATORS = [
     {
         name: 'Suryanarayanan K.',
@@ -181,8 +237,61 @@ const TEAM_CREATORS = [
     }
 ];
 
+// ── 6. VERIFIED EXPLORER REVIEWS & CHRONICLES ──
+const CAMPER_REVIEWS = [
+    {
+        name: 'Dr. Arvind & Shweta',
+        type: 'Couple · Dome Stay',
+        rating: 5,
+        date: 'Hosted Dec 2025',
+        quote: 'Waking up inside the geodesic dome with the morning mist drifting right outside the panoramic window is something we will never forget. The hot showers and campfire BBQ were extraordinary.',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
+    },
+    {
+        name: 'Karthik Raja',
+        type: 'Solo Trekker · Jeep Safari',
+        rating: 5,
+        date: 'Hosted Jan 2026',
+        quote: 'Muthuvel’s 4x4 Jeep driving to Kolukkumalai peak at 4:30 AM is peak adrenaline. You literally watch the sun ignite the clouds from 7,900 FT. 10/10 safety and hospitality.',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'
+    },
+    {
+        name: 'Meera Nambiar & Family',
+        type: 'Family of 4 · Private Sanctuary',
+        rating: 5,
+        date: 'Hosted Jan 2026',
+        quote: 'We brought our two kids (8 and 11) for their first real camping trip. Clean washrooms, cozy blankets, zero plastic, and safe trails. The kids didn’t ask for an iPad once!',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80'
+    }
+];
+
+// ── 7. ABOUT & BASECAMP FAQS ──
+const ABOUT_FAQS = [
+    {
+        num: '01',
+        q: 'Where is Aanandham Basecamp located, and how do we reach it?',
+        a: 'Aanandham is located in Suryanelli, near Munnar, perched at 6,500 FT along the Western Ghats ridgeline. We provide safe parking for standard vehicles at our Suryanelli base point, from where our dedicated 4x4 Jeeps transport you up to the private sanctuary ridge.'
+    },
+    {
+        num: '02',
+        q: 'Is it safe for solo female travelers and families with young children?',
+        a: 'Absolutely. We maintain a strict 1:6 marshal-to-guest ratio, well-lit perimeter pathways, 24/7 on-site staff, private sanitized washrooms with hot water geysers, and locked thermal insulated domes. Over 40% of our guests are families and solo female explorers.'
+    },
+    {
+        num: '03',
+        q: 'What should we pack for the high-altitude weather?',
+        a: 'Night temperatures hover between 10°C and 16°C. We provide thermal insulated duvets, but recommend bringing a windproof jacket, comfortable hiking shoes, a woolen cap/beanie, and personal toiletries. We provide towels, soaps, and hot water.'
+    },
+    {
+        num: '04',
+        q: 'How does your Leave-No-Trace zero plastic policy work?',
+        a: 'We do not permit single-use plastic water bottles or polythene packaging on our ridges. We provide pure mountain spring water in sanitized copper dispensers and reusable flasks. All camp waste is organically composted or transported down for municipal recycling.'
+    }
+];
+
 export default function AboutPage() {
     const [activeCategory, setActiveCategory] = useState('All');
+    const [activeFaq, setActiveFaq] = useState(0);
     const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
@@ -546,10 +655,128 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Interactive Sticky Field Notes)
+                    3. SURYANELLI RIDGE GEOGRAPHY & ELEVATION METER (New Section)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '120px 24px 140px',
+                    padding: '100px 24px',
+                    background: '#070E08',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    position: 'relative',
+                    color: '#FFFFFF'
+                }}>
+                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
+                                <span className="star-icon">▲</span> RIDGE TOPOGRAPHY
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 14px'
+                            }}>
+                                The Suryanelli <span style={{ color: '#E5A93B' }}>Altitude Spectrum</span>
+                            </h2>
+                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                                From the emerald tea shorelines of Anayirangal Lake to the rugged 7,900 FT granite summit of Kolukkumalai.
+                            </p>
+                        </div>
+
+                        {/* Altitude Scale Grid */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                            gap: '24px'
+                        }}>
+                            {ELEVATION_TIERS.map((tier, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 24 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                    whileHover={{ y: -8 }}
+                                    style={{
+                                        background: '#0D1A10',
+                                        border: '1px solid rgba(229, 169, 59, 0.25)',
+                                        borderRadius: '24px',
+                                        padding: '30px 24px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        position: 'relative',
+                                        boxShadow: '0 16px 36px rgba(0,0,0,0.4)'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <span style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '32px',
+                                            fontWeight: '800',
+                                            color: '#E5A93B',
+                                            letterSpacing: '-0.02em'
+                                        }}>
+                                            {tier.altitude}
+                                        </span>
+                                        <div style={{
+                                            width: '42px',
+                                            height: '42px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(229, 169, 59, 0.15)',
+                                            color: '#E5A93B',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '18px'
+                                        }}>
+                                            <i className={tier.icon}></i>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                                        {tier.badge}
+                                    </div>
+
+                                    <h3 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '19px',
+                                        fontWeight: '800',
+                                        color: '#FFFFFF',
+                                        margin: '0 0 10px',
+                                        lineHeight: 1.25
+                                    }}>
+                                        {tier.name}
+                                    </h3>
+
+                                    <p style={{ fontSize: '13.5px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 20px', flex: 1 }}>
+                                        {tier.desc}
+                                    </p>
+
+                                    <div style={{
+                                        marginTop: 'auto',
+                                        paddingTop: '12px',
+                                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        fontSize: '12px',
+                                        color: '#8E9B92'
+                                    }}>
+                                        <span>Avg Temp:</span>
+                                        <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    4. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Luxury Expedition Dossiers)
+                ───────────────────────────────────────────────────────────── */}
+                <section style={{
+                    padding: '120px 24px',
                     background: '#0B150E',
                     position: 'relative',
                     overflow: 'hidden'
@@ -557,21 +784,21 @@ export default function AboutPage() {
                     {/* Atmospheric Ridge Glow & Mist Backlight */}
                     <div style={{
                         position: 'absolute',
-                        top: '15%',
+                        top: '20%',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         width: '1000px',
                         height: '450px',
-                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.1) 0%, rgba(229, 169, 59, 0.05) 45%, transparent 70%)',
+                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.08) 0%, rgba(229, 169, 59, 0.04) 45%, transparent 70%)',
                         pointerEvents: 'none',
                         filter: 'blur(80px)'
                     }} />
 
                     <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         
-                        <div style={{ textAlign: 'center', marginBottom: '74px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '70px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> EXPEDITION FIELD DISPATCHES
+                                <span className="star-icon">★</span> EXPEDITION FIELD DOSSIERS
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -584,147 +811,86 @@ export default function AboutPage() {
                                 The 4 Pillars of <span style={{ color: '#E5A93B' }}>Aanandham Hospitality</span>
                             </h2>
                             <p style={{ fontSize: '16.5px', color: '#A2B6A6', maxWidth: '680px', margin: '0 auto' }}>
-                                Interactive field notes pinned directly from our 7,900 FT ridge basecamp. Hover or tap to inspect our unyielding wilderness protocols.
+                                Engineered for raw mountain weather with the hygiene, culinary warmth, and protocol of a boutique eco-lodge.
                             </p>
                         </div>
 
-                        {/* 4 Tactile Sticky Field Notes Grid with Spring Physics */}
+                        {/* 4 Luxury Dossier Cards Grid with Buttery Framer Lift */}
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            gap: '38px',
-                            paddingTop: '24px'
+                            gap: '32px'
                         }}>
                             {WILDERNESS_PILLARS.map((pillar, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 36 }}
+                                    initial={{ opacity: 0, y: 32 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
                                     whileHover={{
-                                        y: -18,
-                                        rotate: 0,
-                                        scale: 1.035,
-                                        boxShadow: '0 32px 70px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.3)'
+                                        y: -14,
+                                        boxShadow: '0 30px 65px rgba(0, 0, 0, 0.55), 0 0 30px rgba(229, 169, 59, 0.15)'
                                     }}
-                                    whileTap={{ scale: 0.98 }}
                                     style={{
                                         position: 'relative',
-                                        background: pillar.paperBg,
-                                        color: pillar.inkColor,
-                                        borderRadius: '8px 8px 36px 8px',
-                                        padding: '42px 28px 34px',
-                                        boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.15)',
-                                        transform: `rotate(${pillar.rotation})`,
-                                        transition: 'box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        background: pillar.bgGradient,
+                                        border: '1px solid rgba(255, 255, 255, 0.14)',
+                                        borderRadius: '30px',
+                                        padding: '38px 28px 32px',
+                                        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.4)',
+                                        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        minHeight: '460px',
-                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 28px)',
-                                        cursor: 'grab'
+                                        minHeight: '480px',
+                                        color: '#FFFFFF'
                                     }}
                                 >
-                                    {/* Textured Washi Tape Strip with Brass Pin on Top */}
-                                    <motion.div
-                                        whileHover={{ y: -2, rotate: 0 }}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-14px',
-                                            left: '50%',
-                                            transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
-                                            width: '130px',
-                                            height: '28px',
-                                            background: pillar.tapeColor,
-                                            backdropFilter: 'blur(8px)',
-                                            WebkitBackdropFilter: 'blur(8px)',
-                                            boxShadow: '0 3px 8px rgba(0,0,0,0.18)',
-                                            borderLeft: '3px dashed rgba(0,0,0,0.25)',
-                                            borderRight: '3px dashed rgba(0,0,0,0.25)',
-                                            opacity: 0.95,
-                                            zIndex: 4,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center'
-                                        }}
-                                    >
+                                    {/* Top Row: Dispatch Pill + Vintage Seal */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+                                        <span style={{
+                                            fontSize: '11px',
+                                            fontWeight: '900',
+                                            letterSpacing: '1.2px',
+                                            textTransform: 'uppercase',
+                                            background: 'rgba(255, 255, 255, 0.08)',
+                                            color: pillar.accentColor,
+                                            padding: '5px 12px',
+                                            borderRadius: '999px',
+                                            border: '1px solid rgba(255, 255, 255, 0.12)'
+                                        }}>
+                                            {pillar.tag}
+                                        </span>
+
                                         <div style={{
-                                            width: '8px',
-                                            height: '8px',
-                                            borderRadius: '50%',
-                                            background: '#E5A93B',
-                                            boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.4)',
-                                            border: '1px solid rgba(0,0,0,0.2)'
-                                        }} />
-                                    </motion.div>
-
-                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        width: '36px',
-                                        height: '36px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
-                                        borderTopLeftRadius: '14px',
-                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.12)',
-                                        pointerEvents: 'none'
-                                    }} />
-
-                                    {/* Header Row: Dispatch Badge + Vintage Ink Stamp */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '22px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <span style={{
-                                                fontSize: '11px',
-                                                fontWeight: '900',
-                                                letterSpacing: '1.2px',
-                                                textTransform: 'uppercase',
-                                                background: 'rgba(0,0,0,0.08)',
-                                                padding: '4px 10px',
-                                                borderRadius: '6px',
-                                                border: '1px solid rgba(0,0,0,0.06)'
-                                            }}>
-                                                {pillar.tag}
-                                            </span>
-                                        </div>
-
-                                        {/* Vintage Double-Bordered Ink Stamp */}
-                                        <motion.div
-                                            whileHover={{ rotate: 0, scale: 1.05 }}
-                                            style={{
-                                                border: `2px solid ${pillar.stampColor}`,
-                                                outline: `1px dashed ${pillar.stampColor}`,
-                                                outlineOffset: '2px',
-                                                color: pillar.stampColor,
-                                                padding: '4px 9px',
-                                                borderRadius: '4px',
-                                                fontSize: '9.5px',
-                                                fontWeight: '900',
-                                                letterSpacing: '0.9px',
-                                                textTransform: 'uppercase',
-                                                transform: 'rotate(-5deg)',
-                                                opacity: 0.9,
-                                                userSelect: 'none'
-                                            }}
-                                        >
+                                            border: `1.5px solid ${pillar.accentColor}`,
+                                            color: pillar.accentColor,
+                                            padding: '4px 10px',
+                                            borderRadius: '6px',
+                                            fontSize: '9.5px',
+                                            fontWeight: '900',
+                                            letterSpacing: '0.8px',
+                                            textTransform: 'uppercase',
+                                            background: 'rgba(0,0,0,0.3)'
+                                        }}>
                                             {pillar.stamp}
-                                        </motion.div>
+                                        </div>
                                     </div>
 
-                                    {/* Icon & Bold Headline */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+                                    {/* Icon & Title */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
                                         <div style={{
-                                            width: '46px',
-                                            height: '46px',
-                                            borderRadius: '14px',
-                                            background: 'rgba(0, 0, 0, 0.07)',
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '16px',
+                                            background: 'rgba(255, 255, 255, 0.08)',
+                                            border: `1px solid ${pillar.accentColor}`,
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             fontSize: '20px',
-                                            color: pillar.inkColor,
-                                            flexShrink: 0,
-                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
+                                            color: pillar.accentColor,
+                                            flexShrink: 0
                                         }}>
                                             <i className={pillar.icon}></i>
                                         </div>
@@ -732,10 +898,9 @@ export default function AboutPage() {
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                                             fontSize: '21px',
                                             fontWeight: '800',
-                                            lineHeight: 1.2,
+                                            lineHeight: 1.22,
                                             margin: 0,
-                                            color: pillar.inkColor,
-                                            letterSpacing: '-0.02em'
+                                            color: '#FFFFFF'
                                         }}>
                                             {pillar.title}
                                         </h3>
@@ -744,18 +909,18 @@ export default function AboutPage() {
                                     {/* Description */}
                                     <p style={{
                                         fontSize: '13.5px',
+                                        color: '#B6C8BA',
                                         lineHeight: 1.7,
                                         margin: '0 0 20px',
-                                        opacity: 0.92,
-                                        fontWeight: '500'
+                                        fontWeight: '400'
                                     }}>
                                         {pillar.desc}
                                     </p>
 
-                                    {/* Tactical Checklist Badges */}
+                                    {/* Specific Checklist Bullet Points */}
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '22px' }}>
-                                        {pillar.checkList.map((chk, cIdx) => (
-                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', fontWeight: '700', opacity: 0.9 }}>
+                                        {pillar.specs.map((spec, sIdx) => (
+                                            <div key={sIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', color: '#E1ECE3' }}>
                                                 <span style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
@@ -763,33 +928,29 @@ export default function AboutPage() {
                                                     width: '18px',
                                                     height: '18px',
                                                     borderRadius: '50%',
-                                                    background: 'rgba(0,0,0,0.08)',
-                                                    color: pillar.stampColor,
+                                                    background: 'rgba(213, 237, 85, 0.15)',
+                                                    color: '#D5ED55',
                                                     fontSize: '11px',
                                                     fontWeight: '900'
                                                 }}>
                                                     ✓
                                                 </span>
-                                                <span>{chk}</span>
+                                                <span>{spec}</span>
                                             </div>
                                         ))}
                                     </div>
 
-                                    {/* Field Quote with Signature */}
+                                    {/* Founder / Marshal Memo Quote at Bottom */}
                                     <div style={{
                                         marginTop: 'auto',
                                         paddingTop: '16px',
-                                        borderTop: '1px dashed rgba(0, 0, 0, 0.18)',
+                                        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
                                         fontStyle: 'italic',
                                         fontSize: '12.5px',
-                                        lineHeight: 1.55,
-                                        opacity: 0.88,
-                                        display: 'flex',
-                                        alignItems: 'flex-start',
-                                        gap: '6px'
+                                        color: '#A2B6A6',
+                                        lineHeight: 1.55
                                     }}>
-                                        <span>✍</span>
-                                        <span>{pillar.noteQuote}</span>
+                                        {pillar.memo}
                                     </div>
                                 </motion.div>
                             ))}
@@ -798,12 +959,108 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    4. SURROUNDING LANDMARKS & HIGH PEAKS
+                    5. OUR MILESTONE TIMELINE (2021 — 2026) (New Section)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '110px 24px',
                     background: '#F8F9F5',
                     position: 'relative'
+                }}>
+                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
+                                <span className="star-icon">★</span> OUR JOURNEY
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#0B150E',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 14px'
+                            }}>
+                                From A Solitary Ridge Tent to <span style={{ color: '#E5A93B' }}>Kerala’s Premier Basecamp</span>
+                            </h2>
+                            <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
+                                Our 5-year evolution driven by passion for raw wilderness, local tribal empowerment, and uncompromised camper safety.
+                            </p>
+                        </div>
+
+                        {/* Milestone Cards Grid */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                            gap: '24px'
+                        }}>
+                            {TIMELINE_MILESTONES.map((mile, mIdx) => (
+                                <motion.div
+                                    key={mIdx}
+                                    initial={{ opacity: 0, y: 24 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: mIdx * 0.1 }}
+                                    className="card-hover-lift"
+                                    style={{
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(11, 21, 14, 0.08)',
+                                        borderRadius: '26px',
+                                        padding: '32px 26px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        boxShadow: '0 12px 30px rgba(0,0,0,0.04)',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <span style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '36px',
+                                            fontWeight: '800',
+                                            color: '#0B150E',
+                                            letterSpacing: '-0.02em'
+                                        }}>
+                                            {mile.year}
+                                        </span>
+                                        <span style={{
+                                            fontSize: '11px',
+                                            fontWeight: '800',
+                                            background: 'rgba(229, 169, 59, 0.15)',
+                                            color: '#C86D14',
+                                            padding: '4px 10px',
+                                            borderRadius: '999px'
+                                        }}>
+                                            {mile.tag}
+                                        </span>
+                                    </div>
+
+                                    <h3 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '19px',
+                                        fontWeight: '800',
+                                        color: '#0B150E',
+                                        margin: '0 0 10px',
+                                        lineHeight: 1.25
+                                    }}>
+                                        {mile.title}
+                                    </h3>
+
+                                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+                                        {mile.desc}
+                                    </p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    6. SURROUNDING LANDMARKS & HIGH PEAKS
+                ───────────────────────────────────────────────────────────── */}
+                <section style={{
+                    padding: '110px 24px',
+                    background: '#0B150E',
+                    position: 'relative',
+                    color: '#FFFFFF'
                 }}>
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{
@@ -822,7 +1079,7 @@ export default function AboutPage() {
                                     fontFamily: 'var(--font-heading)',
                                     fontSize: 'clamp(30px, 4.5vw, 48px)',
                                     fontWeight: '800',
-                                    color: '#0B150E',
+                                    color: '#FFFFFF',
                                     margin: 0
                                 }}>
                                     High Ridges & Landmarks Around Us
@@ -833,11 +1090,11 @@ export default function AboutPage() {
                             <div style={{
                                 display: 'flex',
                                 gap: '8px',
-                                background: '#FFFFFF',
+                                background: '#121F14',
                                 padding: '6px',
                                 borderRadius: '999px',
-                                border: '1px solid rgba(11, 21, 14, 0.1)',
-                                boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
                             }}>
                                 {['All', 'High Peaks', 'Trails', 'Lakes & Waterfalls'].map((cat) => (
                                     <button
@@ -848,7 +1105,7 @@ export default function AboutPage() {
                                             borderRadius: '999px',
                                             border: 'none',
                                             background: activeCategory === cat ? '#E5A93B' : 'transparent',
-                                            color: activeCategory === cat ? '#070E08' : '#59655D',
+                                            color: activeCategory === cat ? '#070E08' : '#A2B6A6',
                                             fontWeight: '800',
                                             fontSize: '13px',
                                             cursor: 'pointer',
@@ -876,15 +1133,15 @@ export default function AboutPage() {
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
                                         transition={{ duration: 0.3 }}
-                                        className="card-hover-lift"
+                                        whileHover={{ y: -8 }}
                                         style={{
-                                            background: '#FFFFFF',
-                                            border: '1px solid rgba(11, 21, 14, 0.08)',
+                                            background: '#0E1A11',
+                                            border: '1px solid rgba(255, 255, 255, 0.12)',
                                             borderRadius: '28px',
                                             overflow: 'hidden',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            boxShadow: '0 16px 40px rgba(0,0,0,0.06)'
+                                            boxShadow: '0 20px 45px rgba(0,0,0,0.4)'
                                         }}
                                     >
                                         <div style={{ height: '240px', position: 'relative', overflow: 'hidden' }}>
@@ -934,13 +1191,13 @@ export default function AboutPage() {
                                                 fontFamily: 'var(--font-heading)',
                                                 fontSize: '22px',
                                                 fontWeight: '800',
-                                                color: '#0B150E',
+                                                color: '#FFFFFF',
                                                 margin: '0 0 12px'
                                             }}>
                                                 {place.title}
                                             </h3>
 
-                                            <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, margin: '0 0 24px', flex: 1 }}>
+                                            <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 24px', flex: 1 }}>
                                                 {place.desc}
                                             </p>
 
@@ -969,11 +1226,11 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    5. THE CREATORS & MOUNTAIN MARSHALS (Photo-First Portrait Showcase)
+                    7. THE CREATORS & MOUNTAIN MARSHALS (Photo-First Portrait Showcase)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '120px 24px',
-                    background: '#0B150E',
+                    background: '#F8F9F5',
                     position: 'relative'
                 }}>
                     <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -985,13 +1242,13 @@ export default function AboutPage() {
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                                 fontSize: 'clamp(34px, 4.8vw, 54px)',
                                 fontWeight: '800',
-                                color: '#FFFFFF',
+                                color: '#0B150E',
                                 letterSpacing: '-0.03em',
                                 margin: '0 0 14px'
                             }}>
                                 The Creators & <span style={{ color: '#E5A93B' }}>Mountain Marshals</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                            <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
                                 The wilderness architects, expedition leads, and local ridge masters who live here and craft your Aanandham mountain journeys.
                             </p>
                         </div>
@@ -1015,8 +1272,8 @@ export default function AboutPage() {
                                         height: '520px',
                                         borderRadius: '32px',
                                         overflow: 'hidden',
-                                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                                        boxShadow: '0 24px 60px rgba(0,0,0,0.6)',
+                                        border: '1px solid rgba(11, 21, 14, 0.12)',
+                                        boxShadow: '0 24px 60px rgba(0,0,0,0.14)',
                                         background: '#070E08',
                                         cursor: 'pointer'
                                     }}
@@ -1123,7 +1380,191 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    6. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop)
+                    8. VERIFIED EXPLORER CHRONICLES & REVIEWS (New Section)
+                ───────────────────────────────────────────────────────────── */}
+                <section style={{
+                    padding: '110px 24px',
+                    background: '#0B150E',
+                    position: 'relative',
+                    color: '#FFFFFF'
+                }}>
+                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
+                                <span className="star-icon">★</span> VERIFIED CAMPER TESTIMONIALS
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 14px'
+                            }}>
+                                High-Altitude <span style={{ color: '#E5A93B' }}>Camper Chronicles</span>
+                            </h2>
+                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                                Direct stories from solo adventurers, couples, and families who slept on our Suryanelli ridge.
+                            </p>
+                        </div>
+
+                        {/* Review Cards Grid */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                            gap: '28px'
+                        }}>
+                            {CAMPER_REVIEWS.map((rev, rIdx) => (
+                                <motion.div
+                                    key={rIdx}
+                                    initial={{ opacity: 0, y: 24 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: rIdx * 0.1 }}
+                                    whileHover={{ y: -8 }}
+                                    style={{
+                                        background: '#0E1B11',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '28px',
+                                        padding: '32px 28px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        boxShadow: '0 20px 48px rgba(0,0,0,0.5)'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                        <div style={{ color: '#E5A93B', fontSize: '15px' }}>
+                                            {'★'.repeat(rev.rating)}
+                                        </div>
+                                        <span style={{ fontSize: '11.5px', color: '#8E9B92' }}>
+                                            {rev.date}
+                                        </span>
+                                    </div>
+
+                                    <p style={{ fontSize: '14.5px', color: '#DCE8DF', lineHeight: 1.7, margin: '0 0 24px', flex: 1, fontStyle: 'italic' }}>
+                                        “{rev.quote}”
+                                    </p>
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                                        <img
+                                            src={rev.avatar}
+                                            alt={rev.name}
+                                            style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #E5A93B' }}
+                                        />
+                                        <div>
+                                            <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF' }}>{rev.name}</div>
+                                            <div style={{ fontSize: '12px', color: '#D5ED55' }}>✓ {rev.type}</div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    9. ABOUT & BASECAMP FAQS (Interactive Accordions)
+                ───────────────────────────────────────────────────────────── */}
+                <section style={{
+                    padding: '110px 24px',
+                    background: '#F8F9F5',
+                    position: 'relative'
+                }}>
+                    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
+                                <span className="star-icon">★</span> EXPEDITION INTELLIGENCE
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#0B150E',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 14px'
+                            }}>
+                                Frequently Asked Questions
+                            </h2>
+                            <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '620px', margin: '0 auto' }}>
+                                Everything you need to know before joining us on the Suryanelli ridge.
+                            </p>
+                        </div>
+
+                        {/* Collapsible Accordion */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            {ABOUT_FAQS.map((faq, fIdx) => {
+                                const isOpen = activeFaq === fIdx;
+                                return (
+                                    <div
+                                        key={fIdx}
+                                        style={{
+                                            background: '#FFFFFF',
+                                            border: '1px solid rgba(11, 21, 14, 0.08)',
+                                            borderRadius: '24px',
+                                            overflow: 'hidden',
+                                            boxShadow: '0 8px 24px rgba(0,0,0,0.03)',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                    >
+                                        <button
+                                            onClick={() => setActiveFaq(isOpen ? -1 : fIdx)}
+                                            style={{
+                                                width: '100%',
+                                                background: 'transparent',
+                                                border: 'none',
+                                                padding: '24px 28px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                cursor: 'pointer',
+                                                textAlign: 'left',
+                                                gap: '16px'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                                                <span style={{ fontSize: '13px', fontWeight: '900', color: '#E5A93B' }}>{faq.num}</span>
+                                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#0B150E' }}>{faq.q}</span>
+                                            </div>
+                                            <div style={{
+                                                width: '34px',
+                                                height: '34px',
+                                                borderRadius: '50%',
+                                                background: isOpen ? '#E5A93B' : '#F1F3EC',
+                                                color: isOpen ? '#070E08' : '#0B150E',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                flexShrink: 0,
+                                                transition: 'all 0.3s ease'
+                                            }}>
+                                                <i className={`fa-solid ${isOpen ? 'fa-minus' : 'fa-plus'}`} style={{ fontSize: '12px' }}></i>
+                                            </div>
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {isOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                                    style={{ padding: '0 28px 24px 58px', overflow: 'hidden' }}
+                                                >
+                                                    <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, margin: 0 }}>
+                                                        {faq.a}
+                                                    </p>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    10. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
                     padding: '80px 24px 120px',
