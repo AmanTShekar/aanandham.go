@@ -5,6 +5,47 @@ import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 
+// ── REUSABLE FRAMER MOTION ULTRA-CLEAN REVEAL VARIANTS ──
+const sectionReveal = {
+    hidden: { opacity: 0, y: 35 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.12,
+            delayChildren: 0.06
+        }
+    }
+};
+
+const cardReveal = {
+    hidden: { opacity: 0, y: 32, scale: 0.96 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const stickyReveal = {
+    hidden: { opacity: 0, y: 40, scale: 0.94 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
 // ── 1. ELEVATION TIERS & TERRAIN PROFILE ──
 const ELEVATION_TIERS = [
     {
@@ -51,9 +92,9 @@ const WILDERNESS_PILLARS = [
         stampColor: '#1E3A1E',
         paperBg: '#FEF08A', // Sunlit Canary Yellow
         inkColor: '#1A1D0E',
-        tapeColor: 'rgba(234, 179, 8, 0.85)',
+        tapeColor: 'rgba(234, 179, 8, 0.9)',
         tapeRotation: '-2.5deg',
-        rotation: '-1.5deg',
+        rotation: '-1.6deg',
         icon: 'fa-solid fa-shield-halved',
         metric: '1:6 Guide-to-Camper Ratio',
         desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain marshals trained in high-altitude topography, medical response, and wildlife tracking.',
@@ -72,8 +113,8 @@ const WILDERNESS_PILLARS = [
         stampColor: '#1A381E',
         paperBg: '#D9F99D', // Electric Mountain Lime
         inkColor: '#0F2414',
-        tapeColor: 'rgba(132, 204, 22, 0.85)',
-        tapeRotation: '2.2deg',
+        tapeColor: 'rgba(132, 204, 22, 0.9)',
+        tapeRotation: '2.4deg',
         rotation: '1.4deg',
         icon: 'fa-solid fa-tent',
         metric: '12°C Weather Insulated',
@@ -93,7 +134,7 @@ const WILDERNESS_PILLARS = [
         stampColor: '#4A1D08',
         paperBg: '#FED7AA', // Warm Sunburst Amber / Peach
         inkColor: '#2D1406',
-        tapeColor: 'rgba(251, 146, 60, 0.85)',
+        tapeColor: 'rgba(251, 146, 60, 0.9)',
         tapeRotation: '-1.8deg',
         rotation: '-1.2deg',
         icon: 'fa-solid fa-fire-burner',
@@ -114,7 +155,7 @@ const WILDERNESS_PILLARS = [
         stampColor: '#0A331E',
         paperBg: '#A7F3D0', // Fresh Alpine Mint
         inkColor: '#062817',
-        tapeColor: 'rgba(52, 211, 153, 0.85)',
+        tapeColor: 'rgba(52, 211, 153, 0.9)',
         tapeRotation: '2.0deg',
         rotation: '1.6deg',
         icon: 'fa-solid fa-leaf',
@@ -535,11 +576,18 @@ export default function AboutPage() {
                 {/* ─────────────────────────────────────────────────────────────
                     2. OUT OF THE CLASSROOM: THE EDITORIAL STORY SECTION
                 ───────────────────────────────────────────────────────────── */}
-                <section id="ethos" style={{
-                    padding: '110px 24px',
-                    background: '#F8F9F5',
-                    position: 'relative'
-                }}>
+                <motion.section 
+                    id="ethos" 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px 24px',
+                        background: '#F8F9F5',
+                        position: 'relative'
+                    }}
+                >
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{
                             display: 'grid',
@@ -548,7 +596,7 @@ export default function AboutPage() {
                             alignItems: 'center'
                         }}>
                             {/* Left: Editorial Narrative */}
-                            <div>
+                            <motion.div variants={cardReveal}>
                                 <div className="star-badge" style={{ marginBottom: '16px' }}>
                                     <span className="star-icon">★</span> OUR FOUNDING ETHOS
                                 </div>
@@ -573,15 +621,20 @@ export default function AboutPage() {
                                     Aanandham was founded in 2021 with a simple mission: <strong style={{ color: '#0B150E' }}>reconnecting people with raw nature without compromising comfort</strong>. By engineering weather-sealed, insulated dome sanctuaries on private mountain ridges, we made the wild accessible to families, couples, and solo travelers alike.
                                 </p>
 
-                                {/* Founder Quote Card */}
-                                <div style={{
-                                    background: '#FFFFFF',
-                                    border: '1px solid rgba(11, 21, 14, 0.08)',
-                                    borderLeft: '4px solid #E5A93B',
-                                    borderRadius: '0 20px 20px 0',
-                                    padding: '24px 28px',
-                                    boxShadow: '0 12px 30px rgba(0,0,0,0.04)'
-                                }}>
+                                {/* Founder Quote Card with Spring Hover */}
+                                <motion.div 
+                                    whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                                    style={{
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(11, 21, 14, 0.08)',
+                                        borderLeft: '4px solid #E5A93B',
+                                        borderRadius: '0 20px 20px 0',
+                                        padding: '24px 28px',
+                                        boxShadow: '0 12px 30px rgba(0,0,0,0.04)',
+                                        cursor: 'default'
+                                    }}
+                                >
                                     <p style={{
                                         fontSize: '15px',
                                         fontStyle: 'italic',
@@ -600,11 +653,11 @@ export default function AboutPage() {
                                             <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Founder & Mountain Director · Aanandham.go</div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
 
                             {/* Right: Bespoke Visual Collage with Real Photography */}
-                            <div style={{ position: 'relative' }}>
+                            <motion.div variants={cardReveal} style={{ position: 'relative' }}>
                                 <div style={{
                                     borderRadius: '32px',
                                     overflow: 'hidden',
@@ -612,7 +665,9 @@ export default function AboutPage() {
                                     border: '1px solid rgba(11, 21, 14, 0.08)',
                                     position: 'relative'
                                 }}>
-                                    <img
+                                    <motion.img
+                                        whileHover={{ scale: 1.05 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                         src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=85"
                                         alt="Aanandham Geodesic Dome Camp"
                                         style={{ width: '100%', height: '420px', objectFit: 'cover' }}
@@ -623,7 +678,8 @@ export default function AboutPage() {
                                         left: 0,
                                         right: 0,
                                         padding: '24px',
-                                        background: 'linear-gradient(to top, rgba(7, 14, 8, 0.92) 0%, transparent 100%)'
+                                        background: 'linear-gradient(to top, rgba(7, 14, 8, 0.92) 0%, transparent 100%)',
+                                        pointerEvents: 'none'
                                     }}>
                                         <div style={{ display: 'inline-block', background: '#E5A93B', color: '#070E08', fontSize: '11px', fontWeight: '900', padding: '4px 12px', borderRadius: '999px', marginBottom: '6px' }}>
                                             PRIVATE RIDGE SANCTUARY
@@ -634,21 +690,26 @@ export default function AboutPage() {
                                     </div>
                                 </div>
 
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: '-28px',
-                                    left: '-24px',
-                                    background: '#0B150E',
-                                    border: '1px solid rgba(213, 237, 85, 0.35)',
-                                    borderRadius: '24px',
-                                    padding: '18px 24px',
-                                    boxShadow: '0 20px 50px rgba(0,0,0,0.25)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '16px',
-                                    maxWidth: '320px',
-                                    color: '#FFFFFF'
-                                }}>
+                                <motion.div 
+                                    whileHover={{ y: -6, scale: 1.02 }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                                    style={{
+                                        position: 'absolute',
+                                        bottom: '-28px',
+                                        left: '-24px',
+                                        background: '#0B150E',
+                                        border: '1.5px solid rgba(213, 237, 85, 0.4)',
+                                        borderRadius: '24px',
+                                        padding: '18px 24px',
+                                        boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '16px',
+                                        maxWidth: '320px',
+                                        color: '#FFFFFF',
+                                        zIndex: 3
+                                    }}
+                                >
                                     <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(229, 169, 59, 0.2)', color: '#E5A93B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>
                                         <i className="fa-solid fa-cloud-sun"></i>
                                     </div>
@@ -660,23 +721,29 @@ export default function AboutPage() {
                                             Sunrise directly above cloud lines
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </motion.div>
+                            </motion.div>
                         </div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. SURYANELLI RIDGE GEOGRAPHY & ELEVATION METER (New Section)
+                    3. SURYANELLI RIDGE GEOGRAPHY & ELEVATION METER (Staggered Cascade)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '100px 24px',
-                    background: '#070E08',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    position: 'relative',
-                    color: '#FFFFFF'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '100px 24px',
+                        background: '#070E08',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        position: 'relative',
+                        color: '#FFFFFF'
+                    }}
+                >
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -698,19 +765,24 @@ export default function AboutPage() {
                         </div>
 
                         {/* Altitude Scale Grid */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                            gap: '24px'
-                        }}>
+                        <motion.div 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                                gap: '24px'
+                            }}
+                        >
                             {ELEVATION_TIERS.map((tier, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 24 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                    whileHover={{ y: -8 }}
+                                    variants={cardReveal}
+                                    whileHover={{ 
+                                        y: -10, 
+                                        borderColor: 'rgba(229, 169, 59, 0.6)',
+                                        boxShadow: '0 25px 60px rgba(0,0,0,0.6), 0 0 30px rgba(229, 169, 59, 0.25)' 
+                                    }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         background: '#0D1A10',
                                         border: '1px solid rgba(229, 169, 59, 0.25)',
@@ -719,7 +791,8 @@ export default function AboutPage() {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         position: 'relative',
-                                        boxShadow: '0 16px 36px rgba(0,0,0,0.4)'
+                                        boxShadow: '0 16px 36px rgba(0,0,0,0.4)',
+                                        cursor: 'pointer'
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -780,19 +853,25 @@ export default function AboutPage() {
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    4. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Vibrant Colored Sticky Notes)
+                    4. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Vibrant Colored Sticky Notes with Spring Physics)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '120px 24px 140px',
-                    background: '#0B150E',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '120px 24px 140px',
+                        background: '#0B150E',
+                        position: 'relative',
+                        overflow: 'hidden'
+                    }}
+                >
                     {/* Atmospheric Ridge Glow & Mist Backlight */}
                     <div style={{
                         position: 'absolute',
@@ -843,27 +922,28 @@ export default function AboutPage() {
                             </p>
                         </div>
 
-                        {/* 4 Vibrant Colored Sticky Notes Grid */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            gap: '36px',
-                            paddingTop: '20px'
-                        }}>
+                        {/* 4 Vibrant Colored Sticky Notes Grid with Staggered Cascading Reveal */}
+                        <motion.div 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                                gap: '36px',
+                                paddingTop: '20px'
+                            }}
+                        >
                             {WILDERNESS_PILLARS.map((pillar, idx) => (
                                 <motion.div
                                     key={idx}
-                                    initial={{ opacity: 0, y: 36 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                                    variants={stickyReveal}
                                     whileHover={{
-                                        y: -18,
+                                        y: -20,
                                         rotate: 0,
-                                        scale: 1.035,
-                                        boxShadow: '0 32px 70px rgba(0, 0, 0, 0.5), 0 12px 24px rgba(0, 0, 0, 0.25)'
+                                        scale: 1.04,
+                                        boxShadow: '0 36px 80px -10px rgba(0, 0, 0, 0.55), 0 16px 30px -6px rgba(0, 0, 0, 0.3)'
                                     }}
-                                    whileTap={{ scale: 0.98 }}
+                                    whileTap={{ scale: 0.97 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                     style={{
                                         position: 'relative',
                                         background: pillar.paperBg,
@@ -872,7 +952,6 @@ export default function AboutPage() {
                                         padding: '42px 28px 34px',
                                         boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.15)',
                                         transform: `rotate(${pillar.rotation})`,
-                                        transition: 'box-shadow 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         minHeight: '480px',
@@ -882,7 +961,8 @@ export default function AboutPage() {
                                 >
                                     {/* Textured Washi Tape Strip with Brass Pin on Top */}
                                     <motion.div
-                                        whileHover={{ y: -2, rotate: 0 }}
+                                        whileHover={{ y: -3, scale: 1.04, rotate: 0 }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
                                         style={{
                                             position: 'absolute',
                                             top: '-14px',
@@ -954,9 +1034,10 @@ export default function AboutPage() {
                                             </span>
                                         </div>
 
-                                        {/* Vintage Double-Bordered Ink Stamp */}
+                                        {/* Vintage Double-Bordered Ink Stamp with Pop on Hover */}
                                         <motion.div
-                                            whileHover={{ rotate: 0, scale: 1.05 }}
+                                            whileHover={{ rotate: 0, scale: 1.1 }}
+                                            transition={{ type: 'spring', stiffness: 450, damping: 18 }}
                                             style={{
                                                 border: `2px solid ${pillar.stampColor}`,
                                                 outline: `1px dashed ${pillar.stampColor}`,
@@ -971,7 +1052,8 @@ export default function AboutPage() {
                                                 transform: 'rotate(-5deg)',
                                                 opacity: 0.95,
                                                 userSelect: 'none',
-                                                background: 'rgba(255,255,255,0.4)'
+                                                background: 'rgba(255,255,255,0.45)',
+                                                cursor: 'pointer'
                                             }}
                                         >
                                             {pillar.stamp}
@@ -1060,18 +1142,24 @@ export default function AboutPage() {
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    5. OUR MILESTONE TIMELINE (2021 — 2026) (New Section)
+                    5. OUR MILESTONE TIMELINE (2021 — 2026) (Staggered Cascade)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '110px 24px',
-                    background: '#F8F9F5',
-                    position: 'relative'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px 24px',
+                        background: '#F8F9F5',
+                        position: 'relative'
+                    }}
+                >
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -1093,19 +1181,23 @@ export default function AboutPage() {
                         </div>
 
                         {/* Milestone Cards Grid */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                            gap: '24px'
-                        }}>
+                        <motion.div 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                                gap: '24px'
+                            }}
+                        >
                             {TIMELINE_MILESTONES.map((mile, mIdx) => (
                                 <motion.div
                                     key={mIdx}
-                                    initial={{ opacity: 0, y: 24 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: mIdx * 0.1 }}
-                                    className="card-hover-lift"
+                                    variants={cardReveal}
+                                    whileHover={{ 
+                                        y: -10, 
+                                        boxShadow: '0 20px 45px rgba(0,0,0,0.09)' 
+                                    }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(11, 21, 14, 0.08)',
@@ -1114,7 +1206,8 @@ export default function AboutPage() {
                                         display: 'flex',
                                         flexDirection: 'column',
                                         boxShadow: '0 12px 30px rgba(0,0,0,0.04)',
-                                        position: 'relative'
+                                        position: 'relative',
+                                        cursor: 'default'
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -1155,19 +1248,25 @@ export default function AboutPage() {
                                     </p>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    6. SURROUNDING LANDMARKS & HIGH PEAKS
+                    6. SURROUNDING LANDMARKS & HIGH PEAKS (Category Tabs & Staggered Reveal)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '110px 24px',
-                    background: '#0B150E',
-                    position: 'relative',
-                    color: '#FFFFFF'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px 24px',
+                        background: '#0B150E',
+                        position: 'relative',
+                        color: '#FFFFFF'
+                    }}
+                >
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{
                             display: 'flex',
@@ -1225,21 +1324,29 @@ export default function AboutPage() {
                         </div>
 
                         {/* Landmark Card Grid */}
-                        <motion.div layout style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                            gap: '30px'
-                        }}>
+                        <motion.div 
+                            layout 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                                gap: '30px'
+                            }}
+                        >
                             <AnimatePresence>
                                 {filteredPlaces.map((place) => (
                                     <motion.div
                                         key={place.id}
                                         layout
+                                        variants={cardReveal}
                                         initial={{ opacity: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, scale: 1 }}
                                         exit={{ opacity: 0, scale: 0.95 }}
-                                        transition={{ duration: 0.3 }}
-                                        whileHover={{ y: -8 }}
+                                        whileHover={{ 
+                                            y: -10,
+                                            boxShadow: '0 25px 60px rgba(0,0,0,0.5)'
+                                        }}
+                                        transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                         style={{
                                             background: '#0E1A11',
                                             border: '1px solid rgba(255, 255, 255, 0.12)',
@@ -1247,11 +1354,14 @@ export default function AboutPage() {
                                             overflow: 'hidden',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            boxShadow: '0 20px 45px rgba(0,0,0,0.4)'
+                                            boxShadow: '0 20px 45px rgba(0,0,0,0.4)',
+                                            cursor: 'pointer'
                                         }}
                                     >
                                         <div style={{ height: '240px', position: 'relative', overflow: 'hidden' }}>
-                                            <img
+                                            <motion.img
+                                                whileHover={{ scale: 1.08 }}
+                                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                                 src={place.image}
                                                 alt={place.title}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -1329,16 +1439,22 @@ export default function AboutPage() {
                             </AnimatePresence>
                         </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
                     7. THE CREATORS & MOUNTAIN MARSHALS (Photo-First Portrait Showcase)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '120px 24px',
-                    background: '#F8F9F5',
-                    position: 'relative'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '120px 24px',
+                        background: '#F8F9F5',
+                        position: 'relative'
+                    }}
+                >
                     <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -1360,19 +1476,23 @@ export default function AboutPage() {
                         </div>
 
                         {/* Large Photo-First Portrait Cards */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                            gap: '32px'
-                        }}>
+                        <motion.div 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                                gap: '32px'
+                            }}
+                        >
                             {TEAM_CREATORS.map((member, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.6, delay: i * 0.12 }}
-                                    whileHover={{ y: -10 }}
+                                    variants={cardReveal}
+                                    whileHover={{ 
+                                        y: -12,
+                                        boxShadow: '0 30px 70px rgba(0,0,0,0.22)' 
+                                    }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         position: 'relative',
                                         height: '520px',
@@ -1384,19 +1504,18 @@ export default function AboutPage() {
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    {/* Full-bleed Portrait Photo */}
-                                    <img
+                                    {/* Full-bleed Portrait Photo with Zoom */}
+                                    <motion.img
+                                        whileHover={{ scale: 1.06 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                         src={member.img}
                                         alt={member.name}
                                         style={{
                                             width: '100%',
                                             height: '100%',
                                             objectFit: 'cover',
-                                            objectPosition: 'center 20%',
-                                            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)'
+                                            objectPosition: 'center 20%'
                                         }}
-                                        onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                                        onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
                                     />
 
                                     {/* Gradient Dark Scrim Overlay */}
@@ -1481,19 +1600,25 @@ export default function AboutPage() {
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    8. VERIFIED EXPLORER CHRONICLES & REVIEWS (New Section)
+                    8. VERIFIED EXPLORER CHRONICLES & REVIEWS (Staggered Review Cards)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '110px 24px',
-                    background: '#0B150E',
-                    position: 'relative',
-                    color: '#FFFFFF'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px 24px',
+                        background: '#0B150E',
+                        position: 'relative',
+                        color: '#FFFFFF'
+                    }}
+                >
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -1515,19 +1640,24 @@ export default function AboutPage() {
                         </div>
 
                         {/* Review Cards Grid */}
-                        <div style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                            gap: '28px'
-                        }}>
+                        <motion.div 
+                            variants={staggerContainer}
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                                gap: '28px'
+                            }}
+                        >
                             {CAMPER_REVIEWS.map((rev, rIdx) => (
                                 <motion.div
                                     key={rIdx}
-                                    initial={{ opacity: 0, y: 24 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.5, delay: rIdx * 0.1 }}
-                                    whileHover={{ y: -8 }}
+                                    variants={cardReveal}
+                                    whileHover={{ 
+                                        y: -10, 
+                                        borderColor: 'rgba(229, 169, 59, 0.4)',
+                                        boxShadow: '0 25px 55px rgba(0,0,0,0.6)' 
+                                    }}
+                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         background: '#0E1B11',
                                         border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -1535,7 +1665,8 @@ export default function AboutPage() {
                                         padding: '32px 28px',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        boxShadow: '0 20px 48px rgba(0,0,0,0.5)'
+                                        boxShadow: '0 20px 48px rgba(0,0,0,0.5)',
+                                        cursor: 'default'
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
@@ -1564,18 +1695,24 @@ export default function AboutPage() {
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    9. ABOUT & BASECAMP FAQS (Interactive Accordions)
+                    9. ABOUT & BASECAMP FAQS (Interactive Animated Accordions)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '110px 24px',
-                    background: '#F8F9F5',
-                    position: 'relative'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px 24px',
+                        background: '#F8F9F5',
+                        position: 'relative'
+                    }}
+                >
                     <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
@@ -1601,15 +1738,16 @@ export default function AboutPage() {
                             {ABOUT_FAQS.map((faq, fIdx) => {
                                 const isOpen = activeFaq === fIdx;
                                 return (
-                                    <div
+                                    <motion.div
                                         key={fIdx}
+                                        whileHover={{ y: -2 }}
                                         style={{
                                             background: '#FFFFFF',
                                             border: '1px solid rgba(11, 21, 14, 0.08)',
                                             borderRadius: '24px',
                                             overflow: 'hidden',
                                             boxShadow: '0 8px 24px rgba(0,0,0,0.03)',
-                                            transition: 'all 0.3s ease'
+                                            transition: 'border-color 0.3s ease'
                                         }}
                                     >
                                         <button
@@ -1631,20 +1769,23 @@ export default function AboutPage() {
                                                 <span style={{ fontSize: '13px', fontWeight: '900', color: '#E5A93B' }}>{faq.num}</span>
                                                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#0B150E' }}>{faq.q}</span>
                                             </div>
-                                            <div style={{
-                                                width: '34px',
-                                                height: '34px',
-                                                borderRadius: '50%',
-                                                background: isOpen ? '#E5A93B' : '#F1F3EC',
-                                                color: isOpen ? '#070E08' : '#0B150E',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexShrink: 0,
-                                                transition: 'all 0.3s ease'
-                                            }}>
+                                            <motion.div 
+                                                animate={{ rotate: isOpen ? 180 : 0 }}
+                                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                style={{
+                                                    width: '34px',
+                                                    height: '34px',
+                                                    borderRadius: '50%',
+                                                    background: isOpen ? '#E5A93B' : '#F1F3EC',
+                                                    color: isOpen ? '#070E08' : '#0B150E',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0
+                                                }}
+                                            >
                                                 <i className={`fa-solid ${isOpen ? 'fa-minus' : 'fa-plus'}`} style={{ fontSize: '12px' }}></i>
-                                            </div>
+                                            </motion.div>
                                         </button>
 
                                         <AnimatePresence>
@@ -1662,20 +1803,26 @@ export default function AboutPage() {
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
-                                    </div>
+                                    </motion.div>
                                 );
                             })}
                         </div>
                     </div>
-                </section>
+                </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    10. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop)
+                    10. ORGANIC CURVED NATURE CTA BANNER (With Mountain Backdrop & Spring Actions)
                 ───────────────────────────────────────────────────────────── */}
-                <section style={{
-                    padding: '80px 24px 120px',
-                    background: '#F8F9F5'
-                }}>
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-80px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '80px 24px 120px',
+                        background: '#F8F9F5'
+                    }}
+                >
                     <div style={{
                         maxWidth: '1240px',
                         margin: '0 auto',
@@ -1766,7 +1913,7 @@ export default function AboutPage() {
                             </div>
                         </div>
                     </div>
-                </section>
+                </motion.section>
             </main>
 
             {/* ── UNIFIED REUSABLE FOOTER ── */}
