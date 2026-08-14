@@ -439,35 +439,63 @@ const KERALA_WILDERNESS_GALLERY = [
     }
 ];
 
-// ── CUSTOM ARRANGEMENTS & EVENTS DATA ──
+// ── CUSTOM ARRANGEMENTS & EVENTS DATA (Pocket Notepad Cards) ──
 const EVENT_ARRANGEMENTS = [
     {
+        tagCode: 'TRIBE · 01',
+        stamp: 'SQUAD PASS',
+        stampColor: '#15803D',
         iconClass: 'fa-solid fa-graduation-cap',
-        title: 'College & Youth Trek Expeditions',
+        title: 'College & Youth Expeditions',
         badge: 'Squad Groups (10-80 pax)',
         desc: 'Curated high-energy student treks with budget-friendly tents, acoustic campfires, guided ridge hikes, and dedicated safety marshals.',
-        features: ['Discounted group rates', '4x4 Convoy coordination', 'Night campfire & acoustic setup', 'Strict safety & medical support']
+        rotation: '-1.5deg',
+        paperBg: '#FCFAF5',
+        statPill: '✦ 10-80 Pax Group Capacity',
+        marginalNote: 'Direct 4x4 convoy pickup from Munnar town.',
+        features: ['Discounted group rates', '4x4 Convoy coordination', 'Campfire & acoustic mic setup', 'Strict safety & medical support']
     },
     {
+        tagCode: 'TRIBE · 02',
+        stamp: 'OFFSITE PRO',
+        stampColor: '#0369A1',
         iconClass: 'fa-solid fa-building',
-        title: 'Corporate Wilderness Offsites',
+        title: 'Corporate Ridge Offsites',
         badge: 'Team Building & Strategy',
         desc: 'Step out of boardrooms into the clouds. High-altitude glamping, off-road team challenges, outdoor strategy sessions, and curated dining.',
-        features: ['Executive glamp suites', 'Outdoor team-building games', 'Projector & presentation setups', 'Custom chef-curated menus']
+        rotation: '1.8deg',
+        paperBg: '#F8FBF8',
+        statPill: '✦ Custom Offsite Schedules',
+        marginalNote: 'Projector & presentation setups under starlight.',
+        features: ['Executive glamp suites', 'Outdoor team-building games', 'Projector & sound gear', 'Custom chef-curated menus']
     },
     {
+        tagCode: 'TRIBE · 03',
+        stamp: 'SOLO TRIBE',
+        stampColor: '#C2410C',
         iconClass: 'fa-solid fa-campground',
-        title: 'Strangers Camp: Solo Trekkers Meet',
+        title: 'Strangers Camp Meet',
         badge: 'Weekend Community Camp',
         desc: 'Travel alone and leave with a tribe. Safe, vibrant weekend camps where solo travelers bond over stargazing, icebreakers, and ridge sunrises.',
-        features: ['45%+ solo attendees', 'Icebreaker games & trail walks', 'Dedicated female camp leads', 'Instant community WhatsApp group']
+        rotation: '-1.2deg',
+        paperBg: '#FEF9F5',
+        statPill: '✦ 45%+ Solo Attendees',
+        marginalNote: 'Dedicated female camp leads & safe grounds.',
+        features: ['Icebreaker games & trails', 'Dedicated female marshals', 'Telescope stargazing deck', 'Instant tribe WhatsApp group']
     },
     {
+        tagCode: 'TRIBE · 04',
+        stamp: 'EXCLUSIVE',
+        stampColor: '#7E22CE',
         iconClass: 'fa-solid fa-fire',
-        title: 'Private Celebrations & Cloud Shoots',
+        title: 'Private Ridge Celebrations',
         badge: 'Bespoke Arrangements',
         desc: 'Celebrate birthdays, pre-weddings, and milestones amidst mist and mountain ridges with drone cinematography and starlit barbecue dinners.',
-        features: ['Exclusive campsite buyout', '4K Drone photography options', 'Acoustic guitarist on request', 'Fairy light & candlelit setups']
+        rotation: '1.5deg',
+        paperBg: '#FAF8FD',
+        statPill: '✦ 100% Ridge Privacy',
+        marginalNote: '4K Drone cinematography options included.',
+        features: ['Exclusive campsite buyout', '4K Drone aerial coverage', 'Acoustic guitarist on request', 'Fairy light & candlelit dinner']
     }
 ];
 
@@ -2422,21 +2450,171 @@ export default function HomePage() {
 
                     <motion.div 
                         variants={staggerContainer}
-                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '28px', marginBottom: '48px' }}
+                        className="pocket-notepad-grid"
+                        style={{ marginBottom: '48px', paddingTop: '20px' }}
                     >
                         {EVENT_ARRANGEMENTS.map((ev, idx) => (
                             <motion.div 
                                 key={idx} 
                                 variants={cardReveal}
-                                className="hover-lift" 
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '24px', padding: '32px 28px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 20px rgba(0,0,0,0.02)' }}
+                                className="pocket-notepad-card"
+                                whileHover={{
+                                    y: -14,
+                                    rotate: 0,
+                                    scale: 1.03,
+                                    boxShadow: '0 28px 60px -10px rgba(0, 0, 0, 0.16), 0 10px 20px -4px rgba(0, 0, 0, 0.08)'
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+                                style={{
+                                    background: ev.paperBg,
+                                    transform: `rotate(${ev.rotation})`
+                                }}
+                                onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
                             >
-                                <div style={{ width: '52px', height: '52px', borderRadius: '16px', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', color: '#121613', fontSize: '20px' }}>
-                                    <i className={ev.iconClass}></i>
+                                {/* Top Metal Binder Clip with Brass Accent */}
+                                <div className="pocket-binder-clip" />
+
+                                {/* 3D Folded Dog-Ear Corner at Bottom Right */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    right: 0,
+                                    width: '34px',
+                                    height: '34px',
+                                    background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.16) 50%, rgba(0,0,0,0.06) 100%)',
+                                    borderTopLeftRadius: '12px',
+                                    boxShadow: '-2px -2px 5px rgba(0,0,0,0.08)',
+                                    pointerEvents: 'none'
+                                }} />
+
+                                {/* Top Row: Mini Logo + Tag Code + Vintage Rubber Ink Stamp */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <img
+                                            src="/logo.png"
+                                            alt="Aanandham Logo"
+                                            style={{
+                                                height: '20px',
+                                                width: '20px',
+                                                objectFit: 'contain',
+                                                borderRadius: '50%',
+                                                border: '1px solid rgba(0,0,0,0.12)'
+                                            }}
+                                        />
+                                        <span style={{
+                                            fontSize: '10px',
+                                            fontWeight: '900',
+                                            letterSpacing: '1px',
+                                            textTransform: 'uppercase',
+                                            color: '#657268',
+                                            background: 'rgba(0,0,0,0.05)',
+                                            padding: '3px 7px',
+                                            borderRadius: '4px',
+                                            fontFamily: 'monospace'
+                                        }}>
+                                            {ev.tagCode}
+                                        </span>
+                                    </div>
+
+                                    {/* Vintage Rubber Ink Stamp */}
+                                    <motion.div
+                                        whileHover={{ rotate: 0, scale: 1.08 }}
+                                        transition={{ type: 'spring', stiffness: 450, damping: 18 }}
+                                        style={{
+                                            border: `1.5px solid ${ev.stampColor}`,
+                                            outline: `1px dashed ${ev.stampColor}`,
+                                            outlineOffset: '2px',
+                                            color: ev.stampColor,
+                                            padding: '3px 7px',
+                                            borderRadius: '4px',
+                                            fontSize: '8.5px',
+                                            fontWeight: '900',
+                                            letterSpacing: '0.8px',
+                                            textTransform: 'uppercase',
+                                            transform: 'rotate(-3deg)',
+                                            background: 'rgba(255,255,255,0.7)',
+                                            userSelect: 'none'
+                                        }}
+                                    >
+                                        {ev.stamp}
+                                    </motion.div>
                                 </div>
-                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>{ev.badge}</span>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>{ev.title}</h3>
-                                <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.6, marginBottom: '18px' }}>{ev.desc}</p>
+
+                                {/* Icon & Title */}
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                                    <div style={{
+                                        width: '42px',
+                                        height: '42px',
+                                        borderRadius: '12px',
+                                        background: 'rgba(18, 22, 19, 0.06)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: '#121613',
+                                        fontSize: '18px',
+                                        flexShrink: 0
+                                    }}>
+                                        <i className={ev.iconClass}></i>
+                                    </div>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
+                                            {ev.badge}
+                                        </span>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17.5px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.25 }}>
+                                            {ev.title}
+                                        </h3>
+                                    </div>
+                                </div>
+
+                                {/* Description */}
+                                <p style={{ fontSize: '13px', color: '#4E5A52', lineHeight: 1.6, margin: '0 0 14px' }}>
+                                    {ev.desc}
+                                </p>
+
+                                {/* Features Checklist */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px' }}>
+                                    {ev.features.map((feat, fIdx) => (
+                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#2B372E', fontWeight: '600' }}>
+                                            <span style={{ color: '#166534', fontWeight: '800' }}>✓</span>
+                                            <span>{feat}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Stat Pill */}
+                                <div style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    background: 'rgba(0,0,0,0.05)',
+                                    padding: '4px 10px',
+                                    borderRadius: '6px',
+                                    marginBottom: '12px',
+                                    width: 'fit-content',
+                                    color: ev.stampColor
+                                }}>
+                                    <span>{ev.statPill}</span>
+                                </div>
+
+                                {/* Bottom Marginal Handwritten Note */}
+                                <div style={{
+                                    marginTop: 'auto',
+                                    paddingTop: '10px',
+                                    borderTop: '1px dashed rgba(0, 0, 0, 0.14)',
+                                    fontStyle: 'italic',
+                                    fontSize: '11.5px',
+                                    lineHeight: '1.45',
+                                    color: '#556358',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '6px'
+                                }}>
+                                    <span style={{ fontSize: '13px' }}>✍</span>
+                                    <span>{ev.marginalNote}</span>
+                                </div>
                             </motion.div>
                         ))}
                     </motion.div>
