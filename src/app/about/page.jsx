@@ -940,13 +940,13 @@ export default function AboutPage() {
                                         position: 'relative',
                                         background: pillar.paperBg,
                                         color: pillar.inkColor,
-                                        borderRadius: '8px 8px 36px 8px',
-                                        padding: '42px 28px 34px',
-                                        boxShadow: '0 18px 40px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0,0,0,0.15)',
+                                        borderRadius: '10px 10px 40px 10px',
+                                        padding: '44px 36px 36px',
+                                        boxShadow: '0 20px 48px rgba(0, 0, 0, 0.38), 0 6px 16px rgba(0,0,0,0.18)',
                                         transform: `rotate(${pillar.rotation})`,
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        minHeight: '480px',
+                                        minHeight: '440px',
                                         backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 28px)',
                                         cursor: 'grab'
                                     }}
@@ -960,7 +960,7 @@ export default function AboutPage() {
                                             top: '-14px',
                                             left: '50%',
                                             transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
-                                            width: '130px',
+                                            width: '140px',
                                             height: '28px',
                                             background: pillar.tapeColor,
                                             backdropFilter: 'blur(8px)',
@@ -990,23 +990,23 @@ export default function AboutPage() {
                                         position: 'absolute',
                                         bottom: 0,
                                         right: 0,
-                                        width: '36px',
-                                        height: '36px',
+                                        width: '40px',
+                                        height: '40px',
                                         background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
-                                        borderTopLeftRadius: '14px',
-                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.12)',
+                                        borderTopLeftRadius: '16px',
+                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.14)',
                                         pointerEvents: 'none'
                                     }} />
 
-                                    {/* Header Row: Dispatch Badge + Mini Logo + Vintage Ink Stamp */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    {/* Header Row: Dispatch Badge + Mini Logo + Metric Pill + Vintage Ink Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                                             <img
                                                 src="/logo.png"
                                                 alt="Aanandham Logo"
                                                 style={{
-                                                    height: '24px',
-                                                    width: '24px',
+                                                    height: '26px',
+                                                    width: '26px',
                                                     objectFit: 'contain',
                                                     borderRadius: '50%',
                                                     border: '1px solid rgba(0,0,0,0.15)'
@@ -1024,6 +1024,17 @@ export default function AboutPage() {
                                             }}>
                                                 {pillar.tag}
                                             </span>
+
+                                            <span style={{
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                background: 'rgba(0,0,0,0.06)',
+                                                padding: '4px 10px',
+                                                borderRadius: '999px',
+                                                color: pillar.stampColor
+                                            }}>
+                                                ★ {pillar.metric}
+                                            </span>
                                         </div>
 
                                         {/* Vintage Double-Bordered Ink Stamp with Pop on Hover */}
@@ -1035,13 +1046,13 @@ export default function AboutPage() {
                                                 outline: `1px dashed ${pillar.stampColor}`,
                                                 outlineOffset: '2px',
                                                 color: pillar.stampColor,
-                                                padding: '4px 8px',
+                                                padding: '4px 9px',
                                                 borderRadius: '4px',
-                                                fontSize: '9px',
+                                                fontSize: '9.5px',
                                                 fontWeight: '900',
                                                 letterSpacing: '0.9px',
                                                 textTransform: 'uppercase',
-                                                transform: 'rotate(-5deg)',
+                                                transform: 'rotate(-4deg)',
                                                 opacity: 0.95,
                                                 userSelect: 'none',
                                                 background: 'rgba(255,255,255,0.45)',
@@ -1055,14 +1066,14 @@ export default function AboutPage() {
                                     {/* Icon & Bold Headline */}
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
                                         <div style={{
-                                            width: '46px',
-                                            height: '46px',
-                                            borderRadius: '14px',
+                                            width: '50px',
+                                            height: '50px',
+                                            borderRadius: '16px',
                                             background: 'rgba(0, 0, 0, 0.08)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '20px',
+                                            fontSize: '22px',
                                             color: pillar.inkColor,
                                             flexShrink: 0,
                                             boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
@@ -1071,7 +1082,7 @@ export default function AboutPage() {
                                         </div>
                                         <h3 style={{
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                            fontSize: '21px',
+                                            fontSize: '23px',
                                             fontWeight: '800',
                                             lineHeight: 1.2,
                                             margin: 0,
@@ -1084,7 +1095,7 @@ export default function AboutPage() {
 
                                     {/* Description */}
                                     <p style={{
-                                        fontSize: '13.5px',
+                                        fontSize: '14.5px',
                                         lineHeight: 1.7,
                                         margin: '0 0 20px',
                                         opacity: 0.94,
@@ -1094,20 +1105,21 @@ export default function AboutPage() {
                                     </p>
 
                                     {/* Tactical Checklist Badges */}
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '22px' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '22px' }}>
                                         {pillar.specs.map((chk, cIdx) => (
-                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '9px', fontSize: '13px', fontWeight: '700', opacity: 0.92 }}>
+                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13.5px', fontWeight: '700', opacity: 0.92 }}>
                                                 <span style={{
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    width: '18px',
-                                                    height: '18px',
+                                                    width: '20px',
+                                                    height: '20px',
                                                     borderRadius: '50%',
                                                     background: 'rgba(0,0,0,0.08)',
                                                     color: pillar.stampColor,
                                                     fontSize: '11px',
-                                                    fontWeight: '900'
+                                                    fontWeight: '900',
+                                                    flexShrink: 0
                                                 }}>
                                                     ✓
                                                 </span>
@@ -1119,17 +1131,17 @@ export default function AboutPage() {
                                     {/* Field Quote with Signature */}
                                     <div style={{
                                         marginTop: 'auto',
-                                        paddingTop: '16px',
+                                        paddingTop: '18px',
                                         borderTop: '1px dashed rgba(0, 0, 0, 0.18)',
                                         fontStyle: 'italic',
-                                        fontSize: '12.5px',
-                                        lineHeight: '1.55',
+                                        fontSize: '13px',
+                                        lineHeight: '1.6',
                                         opacity: '0.9',
                                         display: 'flex',
                                         alignItems: 'flex-start',
-                                        gap: '6px'
+                                        gap: '8px'
                                     }}>
-                                        <span>✍</span>
+                                        <span style={{ fontSize: '15px' }}>✍</span>
                                         <span>{pillar.memo}</span>
                                     </div>
                                 </motion.div>
