@@ -196,7 +196,7 @@ const STAY_ACCOMMODATIONS = [
     }
 ];
 
-// ── EXPEDITION PACKAGES ──
+// ── EXPEDITION PACKAGES (Expanded 8 Signature Campsites) ──
 const EXPEDITION_PACKAGES = [
     {
         id: 'pkg-kolukkumalai',
@@ -204,7 +204,7 @@ const EXPEDITION_PACKAGES = [
         category: 'Trek & Glamp',
         tag: 'Most Popular',
         location: 'Suryanelli, Munnar',
-        altitude: '2,170m Altitude',
+        altitude: '7,900 FT Altitude',
         duration: '2 Days / 1 Night',
         difficulty: 'Moderate Ridge Trail',
         price: 2499,
@@ -216,12 +216,63 @@ const EXPEDITION_PACKAGES = [
         highlights: ['Kolukkumalai Sunrise 4x4 Jeep Safari', 'Tiger Rock High Ridge Walk', 'Acoustic Campfire & Live BBQ Dinner', 'Weatherproof Quechua Dome Tents', 'Forest Entry Permits & Guide Marshals']
     },
     {
+        id: 'pkg-meesapulimala',
+        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
+        category: 'Summit Trek',
+        tag: 'High Peak Challenge',
+        location: 'Silent Valley, Munnar',
+        altitude: '8,661 FT Summit',
+        duration: '2 Days / 1 Night',
+        difficulty: 'Strenuous High Peak',
+        price: 3199,
+        originalPrice: 4200,
+        rating: 4.99,
+        reviewsCount: 264,
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        description: 'South India’s 2nd highest peak expedition. Trek through 8 rolling high-altitude hills, endless rhododendron valleys, and experience sleeping above dense oceans of white clouds.',
+        highlights: ['8-Peak Ridge Crossing', 'High Altitude Basecamp Pods', 'Certified Wilderness Marshals', 'Campfire Acoustic Night', 'Rhododendron Valley Trail']
+    },
+    {
+        id: 'pkg-suryanelli',
+        title: 'Suryanelli Valley Ridge Geodesic Glamping',
+        category: 'Trek & Glamp',
+        tag: 'Couples & Squads',
+        location: 'Suryanelli, Idukki',
+        altitude: '6,500 FT Altitude',
+        duration: '2 Days / 1 Night',
+        difficulty: 'Easy Ridge Walk',
+        price: 1999,
+        originalPrice: 2600,
+        rating: 4.95,
+        reviewsCount: 286,
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        description: 'Private geodesic dome pods facing cascading green tea slopes and misty sunset valleys. Live acoustic sessions, star observation scopes, and authentic farm-to-table Kerala dining.',
+        highlights: ['Geodesic Dome Glamping', 'Private Valley Deck', 'Campfire Acoustic Jams', 'Sunset Ridge Walk', 'Hot Breakfast Included']
+    },
+    {
+        id: 'pkg-phantom',
+        title: 'Phantom Head Peak & Golden Hour Sunset Trek',
+        category: 'Summit Trek',
+        tag: 'Sunset Vista',
+        location: 'Munnar Ridge, Kerala',
+        altitude: '6,800 FT Peak',
+        duration: '2 Days / 1 Night',
+        difficulty: 'Moderate Trek',
+        price: 1799,
+        originalPrice: 2400,
+        rating: 4.91,
+        reviewsCount: 195,
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        description: '360-degree panoramic golden hour peak overlooking the Western Ghats mountain layers. Guided evening cliff walk, campfire dinner, and high-altitude tent stay.',
+        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Marshals', 'Campfire Dinner']
+    },
+    {
         id: 'pkg-chembra',
         title: 'Wayanad Chembra Peak & Heart Lake Expedition',
         category: 'Summit Trek',
         tag: 'Summit Challenge',
         location: 'Meppadi, Wayanad',
-        altitude: '2,100m Peak',
+        altitude: '6,900 FT Peak',
         duration: '3 Days / 2 Nights',
         difficulty: 'High Endurance Peak',
         price: 3799,
@@ -233,19 +284,36 @@ const EXPEDITION_PACKAGES = [
         highlights: ['Chembra Peak & Heart Lake Trek', 'Banasura Sagar Dam Kayaking', 'Rainforest Canopy Night Safari', 'Zero-Trace Wilderness Campout', 'Natural Rock Pool Swimming']
     },
     {
+        id: 'pkg-wayanad',
+        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
+        category: 'Water & Wild',
+        tag: 'Canopy Glamp',
+        location: 'Meppadi, Wayanad',
+        altitude: '3,200 FT Rainforest',
+        duration: '2 Days / 1 Night',
+        difficulty: 'Jungle Trail',
+        price: 2699,
+        originalPrice: 3500,
+        rating: 4.96,
+        reviewsCount: 220,
+        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+        description: 'Glass bridge canopy walks, off-road 4x4 jeep safaris into deep evergreen jungle, natural rock-pool swimming, and treehouse canopy stays.',
+        highlights: ['Glass Bridge Access', '4x4 Deep Forest Safari', 'Natural Stream Swims', 'Treehouse Glamp Villa', 'Tribal Dinner Feast']
+    },
+    {
         id: 'pkg-vagamon',
         title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
         category: 'Camp & Relax',
         tag: 'Relax & Chill',
         location: 'Pine Forest, Vagamon',
-        altitude: '1,100m Altitude',
+        altitude: '4,800 FT Valley',
         duration: '2 Days / 1 Night',
         difficulty: 'Easy / Family & Friends',
         price: 2199,
         originalPrice: 2900,
         rating: 4.92,
         reviewsCount: 184,
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
         description: 'Unwind in the misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, starlit barbecues, and refreshing morning walks through tea valleys.',
         highlights: ['Pine Forest Glamping Site', 'Off-Road Jeep Trail to Kurisumala', 'Sunset at Vagamon Rolling Meadows', 'Open-Mic Acoustic Campfire', 'Live Barbecue Station']
     },
@@ -255,14 +323,14 @@ const EXPEDITION_PACKAGES = [
         category: 'Water & Wild',
         tag: 'Rainforest River',
         location: 'Chalakudy River, Athirappilly',
-        altitude: '400m Tropical Valley',
+        altitude: '1,200 FT River Valley',
         duration: '2 Days / 1 Night',
         difficulty: 'Easy River Trails',
-        price: 2699,
+        price: 2499,
         originalPrice: 3400,
         rating: 4.89,
         reviewsCount: 156,
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
         description: 'Experience Kerala’s grandest rainforest river cascades. Natural rock-pool swims, river kayaking, birding walks in hornbill sanctuaries, and riverside luxury canvas tents.',
         highlights: ['Private River Stream Access', 'Canoeing & Kayak Equipment', 'Night Forest Insect & Hornbill Walk', 'Bamboo Raft Stream Ride', 'Forest-to-Table Kerala Feast']
     }
@@ -890,21 +958,23 @@ export default function HomePage() {
             <main id="main-content">
 
             {/* ─────────────────────────────────────────────────────────────
-                HERO SECTION (Exact match to media_1786655246250.jpg)
+                HERO SECTION (Defensive viewport units & short screen support)
             ───────────────────────────────────────────────────────────── */}
-            <section style={{
-                position: 'relative',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                textAlign: 'center',
-                padding: '120px 24px 70px',
-                backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2000&q=85")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                color: '#FFFFFF'
-            }}>
+            <section 
+                className="hero-defensive-height"
+                style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center',
+                    padding: 'clamp(90px, 12vh, 130px) 24px clamp(40px, 6vh, 70px)',
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2000&q=85")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: '#FFFFFF'
+                }}
+            >
                 <div style={{
                     position: 'absolute',
                     inset: 0,
@@ -918,19 +988,20 @@ export default function HomePage() {
                     style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 2 }}
                 >
                     
-                    {/* Main Headline in Bricolage Grotesque */}
+                    {/* Main Headline in Bricolage Grotesque (Defensive fluid clamp) */}
                     <motion.h1 
+                        className="hero-headline"
                         initial={{ opacity: 0, y: 24 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
                         style={{
                             fontFamily: 'var(--font-heading)',
-                            fontSize: 'clamp(56px, 9vw, 98px)',
+                            fontSize: 'clamp(44px, 7.5vw, 92px)',
                             fontWeight: '800',
-                            lineHeight: 1.02,
+                            lineHeight: 1.04,
                             letterSpacing: '-0.04em',
                             color: '#FFFFFF',
-                            marginBottom: '32px'
+                            marginBottom: 'clamp(18px, 3vh, 32px)'
                         }}
                     >
                         Aanandham<span style={{ color: '#D5ED55' }}>.go</span><br />Wilderness Camp
@@ -947,7 +1018,7 @@ export default function HomePage() {
                             alignItems: 'center',
                             flexWrap: 'wrap',
                             gap: '14px',
-                            marginBottom: '60px'
+                            marginBottom: 'clamp(24px, 5vh, 50px)'
                         }}
                     >
                         {/* Primary Explore Stays Button */}
@@ -1186,8 +1257,20 @@ export default function HomePage() {
                                     trip highlights
                                 </span>
                                 <div style={{ display: 'flex', gap: '8px' }}>
-                                    <button onClick={prevHighlight} style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><i className="fa-solid fa-chevron-left"></i></button>
-                                    <button onClick={nextHighlight} style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><i className="fa-solid fa-chevron-right"></i></button>
+                                    <button 
+                                        onClick={prevHighlight} 
+                                        aria-label="Previous trip highlight"
+                                        style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                    >
+                                        <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
+                                    </button>
+                                    <button 
+                                        onClick={nextHighlight} 
+                                        aria-label="Next trip highlight"
+                                        style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                    >
+                                        <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -1678,11 +1761,19 @@ export default function HomePage() {
 
                             {/* Bottom Right Carousel Controls */}
                             <div style={{ position: 'absolute', bottom: '24px', right: '24px', display: 'flex', gap: '8px' }}>
-                                <button onClick={prevInstructor} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-solid fa-chevron-left" style={{ fontSize: '12px' }}></i>
+                                <button 
+                                    onClick={prevInstructor} 
+                                    aria-label="Previous instructor profile"
+                                    style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                >
+                                    <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
                                 </button>
-                                <button onClick={nextInstructor} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.85)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-solid fa-chevron-right" style={{ fontSize: '12px' }}></i>
+                                <button 
+                                    onClick={nextInstructor} 
+                                    aria-label="Next instructor profile"
+                                    style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                >
+                                    <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
                                 </button>
                             </div>
                         </motion.div>
