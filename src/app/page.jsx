@@ -802,6 +802,17 @@ export default function HomePage() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    // Disable background page scrolling when video modal, lightbox modal, or booking engine is open
+    useEffect(() => {
+        if (isVideoModalOpen || selectedLightboxImg || isBookingModalOpen) {
+            const originalOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = originalOverflow || 'unset';
+            };
+        }
+    }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen]);
+
     const handleProgramMouseMove = (e) => {
         if (!programContainerRef.current) return;
         const rect = programContainerRef.current.getBoundingClientRect();
@@ -3054,22 +3065,12 @@ export default function HomePage() {
                             <button
                                 onClick={() => setIsVideoModalOpen(false)}
                                 aria-label="Close video player"
+                                className="modal-close-btn"
                                 style={{
                                     position: 'absolute',
                                     top: '16px',
                                     right: '16px',
-                                    zIndex: 10,
-                                    width: '42px',
-                                    height: '42px',
-                                    borderRadius: '50%',
-                                    background: 'rgba(0, 0, 0, 0.75)',
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    color: 'white',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    fontSize: '16px'
+                                    zIndex: 10
                                 }}
                             >
                                 ✕
@@ -3138,22 +3139,12 @@ export default function HomePage() {
                             <button
                                 onClick={() => setSelectedLightboxImg(null)}
                                 aria-label="Close image preview"
+                                className="modal-close-btn"
                                 style={{
                                     position: 'absolute',
                                     top: '20px',
                                     right: '20px',
-                                    zIndex: 10,
-                                    width: '42px',
-                                    height: '42px',
-                                    borderRadius: '50%',
-                                    background: 'rgba(0, 0, 0, 0.65)',
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    color: 'white',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    fontSize: '16px'
+                                    zIndex: 10
                                 }}
                             >
                                 ✕

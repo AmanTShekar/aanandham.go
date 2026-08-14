@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 
@@ -91,6 +91,15 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
     const grandTotal = baseTotal - discountAmount + addonsTotal;
 
+    // Disable background page scrolling when modal is open
+    useEffect(() => {
+        const origOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = origOverflow || 'unset';
+        };
+    }, []);
+
     const toggleAddon = (id) => {
         setSelectedAddons(prev => 
             prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
@@ -168,22 +177,8 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                     </div>
                     <button
                         onClick={onClose}
-                        style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            background: '#FFFFFF',
-                            border: '1px solid rgba(18, 22, 19, 0.1)',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '18px',
-                            color: '#121613',
-                            transition: 'all 0.2s ease'
-                        }}
-                        onMouseOver={(e) => e.currentTarget.style.background = '#F1F3EC'}
-                        onMouseOut={(e) => e.currentTarget.style.background = '#FFFFFF'}
+                        aria-label="Close reservation modal"
+                        className="modal-close-btn-light"
                     >
                         ✕
                     </button>
