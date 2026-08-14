@@ -536,21 +536,7 @@ export default function AboutPage() {
                                 href="https://instagram.com/aanandham.go"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    textDecoration: 'none',
-                                    background: 'rgba(255, 255, 255, 0.12)',
-                                    border: '1px solid rgba(255, 255, 255, 0.25)',
-                                    color: '#FFFFFF',
-                                    padding: '13px 24px',
-                                    borderRadius: '999px',
-                                    fontWeight: '700',
-                                    fontSize: '14px',
-                                    backdropFilter: 'blur(10px)',
-                                    transition: 'all 0.25s ease'
-                                }}
+                                className="hero-instagram-btn"
                             >
                                 <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }}></i>
                                 <span>@aanandham.go</span>

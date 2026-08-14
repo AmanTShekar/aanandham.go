@@ -1,6 +1,7 @@
 import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
+import CustomScrollbar from '@/components/CustomScrollbar';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -184,6 +185,7 @@ export default function RootLayout({ children }) {
       </head>
       <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif' }}>
         <SmoothScroll />
+        <CustomScrollbar />
         {children}
       </body>
     </html>
