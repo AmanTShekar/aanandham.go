@@ -696,7 +696,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             lineHeight: 1.15,
                             marginBottom: '32px'
                         }}>
-                            Reserve your spot and <span className="text-marker-dark">join the adventure</span> today
+                            Reserve your spot and <span className="text-marker-dark-2">join the adventure</span> today
                         </h2>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
                             <motion.button
@@ -810,9 +810,18 @@ export default function HomePage() {
     const filteredPackages = activeTab === 'All' 
         ? EXPEDITION_PACKAGES 
         : EXPEDITION_PACKAGES.filter(pkg => {
-            if (activeTab === 'Treks') return pkg.category.includes('Trek') || pkg.category.includes('Summit');
-            if (activeTab === 'Glamping') return pkg.category.includes('Glamp') || pkg.category.includes('Camp');
-            if (activeTab === 'Water') return pkg.category.includes('Water');
+            const cat = (pkg.category || '').toLowerCase();
+            const tag = (pkg.tag || '').toLowerCase();
+            const title = (pkg.title || '').toLowerCase();
+            if (activeTab === 'Treks') {
+                return cat.includes('trek') || cat.includes('summit') || tag.includes('challenge') || tag.includes('summit');
+            }
+            if (activeTab === 'Glamping') {
+                return cat.includes('glamp') || cat.includes('camp') || tag.includes('glamp') || tag.includes('relax') || tag.includes('popular');
+            }
+            if (activeTab === 'Water') {
+                return cat.includes('water') || cat.includes('wild') || tag.includes('river') || title.includes('lake') || title.includes('rapids') || title.includes('water');
+            }
             return true;
         });
 
@@ -1167,7 +1176,12 @@ export default function HomePage() {
                             marginBottom: 'clamp(18px, 3vh, 32px)'
                         }}
                     >
-                        Aanandham<span style={{ color: '#E5A93B' }}>.go</span><br />Wilderness Camp
+                        <span className="text-hover-marker text-hover-marker-dark" style={{ cursor: 'pointer', display: 'inline-block' }}>
+                            <span className="marker-text">
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                            </span>
+                        </span>
+                        <br />Wilderness Camp
                     </motion.h1>
 
                     {/* Quick Action Button Cluster */}
@@ -1364,7 +1378,7 @@ export default function HomePage() {
                                 lineHeight: 1.12,
                                 marginBottom: '20px'
                             }}>
-                                Spend a week living in a trekker's paradise — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
+                                Spend a week living in a <span className="text-marker-2">trekker's paradise</span> — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
                             </h2>
 
                             {/* 3 Checkmark Pills */}
@@ -1517,7 +1531,7 @@ export default function HomePage() {
                                 letterSpacing: '-0.035em',
                                 margin: 0
                             }}>
-                                Catch the wave regardless of <br />your <span style={{ color: '#8E9B92' }}>trekking skills</span>
+                                Catch the wave regardless of <br />your <span className="text-marker-3">trekking skills</span>
                             </h2>
                         </div>
 
@@ -1648,7 +1662,7 @@ export default function HomePage() {
                                 letterSpacing: '-0.035em',
                                 margin: 0
                             }}>
-                                What we’ve <span style={{ color: '#8E9B92' }}>planned</span> for you:
+                                What we’ve <span className="text-marker-4">planned for you</span>:
                             </h2>
                         </div>
 
@@ -1965,7 +1979,7 @@ export default function HomePage() {
                             </h2>
 
                             <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.75, marginBottom: '28px' }}>
-                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 350+ adventurers trust Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span>.
+                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 350+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
                             </p>
 
                             {/* 4 Interactive Clickable Feature Pillar Cards */}
@@ -2046,7 +2060,7 @@ export default function HomePage() {
                                 lineHeight: 1.15,
                                 marginBottom: '20px'
                             }}>
-                                Body, soul, mind, and connection — <span style={{ color: '#8E9B92' }}>we've got it all</span>
+                                Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
                             </h2>
                             <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.65 }}>
                                 This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
@@ -2123,7 +2137,7 @@ export default function HomePage() {
                             color: '#121613',
                             letterSpacing: '-0.035em'
                         }}>
-                            Live in a <span style={{ color: '#121613' }}>tropical ridge glamp</span> <span style={{ color: '#8E9B92' }}>with friends or on your own</span>
+                            Live in a <span className="text-marker-1">tropical ridge glamp</span> <span style={{ color: '#8E9B92' }}>with friends or on your own</span>
                         </h2>
                     </div>
 
@@ -2448,7 +2462,7 @@ export default function HomePage() {
                                 <span className="star-icon">★</span> PACKAGES PREVIEW
                             </div>
                             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
-                                Handcrafted Wilderness Packages
+                                <span className="text-marker-2">Handcrafted</span> Wilderness Packages
                             </h2>
                         </div>
                         {/* Smooth Animated Filter Pills (Sliding Spring Physics) */}
@@ -2498,76 +2512,79 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <motion.div 
-                        variants={staggerContainer}
-                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px' }}
-                    >
-                        {filteredPackages.map(pkg => (
-                            <motion.div 
-                                key={pkg.id} 
-                                variants={cardReveal}
-                                className="hover-lift card-img-zoom" 
-                                style={{ borderRadius: '28px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 30px rgba(0,0,0,0.03)' }}
-                            >
-                                <div style={{ position: 'relative', height: '250px' }}>
-                                    <img src={pkg.image} alt={pkg.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                    <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px' }}>
-                                        <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>{pkg.tag}</span>
-                                        <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>{pkg.altitude}</span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '32px', position: 'relative' }}>
+                        <AnimatePresence mode="popLayout">
+                            {filteredPackages.map(pkg => (
+                                <motion.div 
+                                    key={pkg.id} 
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.94, y: 20 }}
+                                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                    className="hover-lift card-img-zoom" 
+                                    style={{ borderRadius: '28px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 30px rgba(0,0,0,0.03)' }}
+                                >
+                                    <div style={{ position: 'relative', height: '250px' }}>
+                                        <img src={pkg.image} alt={pkg.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px' }}>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>{pkg.tag}</span>
+                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>{pkg.altitude}</span>
+                                        </div>
+                                        <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>★ {pkg.rating} ({pkg.reviewsCount})</div>
                                     </div>
-                                    <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>★ {pkg.rating} ({pkg.reviewsCount})</div>
-                                </div>
-                                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>{pkg.title}</h3>
-                                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '14px' }}>{pkg.description}</p>
-                                    
-                                    {/* Expandable Inclusions Toggle */}
-                                    <button 
-                                        type="button" 
-                                        onClick={() => setExpandedPackageId(expandedPackageId === pkg.id ? null : pkg.id)}
-                                        style={{
-                                            fontSize: '12px',
-                                            fontWeight: '700',
-                                            color: '#121613',
-                                            background: '#F1F3EC',
-                                            border: 'none',
-                                            padding: '6px 14px',
-                                            borderRadius: '999px',
-                                            cursor: 'pointer',
-                                            marginBottom: '14px',
-                                            alignSelf: 'flex-start',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '6px',
-                                            transition: 'background 0.2s'
-                                        }}
-                                    >
-                                        <span>{expandedPackageId === pkg.id ? 'Hide Inclusions ▲' : 'View Inclusions & Perks ▼'}</span>
-                                    </button>
-
-                                    {expandedPackageId === pkg.id && (
-                                        <div style={{ marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                            {pkg.highlights.map((h, i) => (
-                                                <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#48544C', padding: '4px 10px', borderRadius: '999px' }}>
-                                                    ✓ {h}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    <div style={{ marginTop: 'auto', paddingTop: '18px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>₹{pkg.price.toLocaleString()}</div>
-                                            <span style={{ fontSize: '11px', color: '#59655D' }}>per person all-inclusive</span>
-                                        </div>
-                                        <button onClick={() => handleOpenBooking(pkg)} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>
-                                            Book Spot →
+                                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>{pkg.title}</h3>
+                                        <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '14px' }}>{pkg.description}</p>
+                                        
+                                        {/* Expandable Inclusions Toggle */}
+                                        <button 
+                                            type="button" 
+                                            onClick={() => setExpandedPackageId(expandedPackageId === pkg.id ? null : pkg.id)}
+                                            style={{
+                                                fontSize: '12px',
+                                                fontWeight: '700',
+                                                color: '#121613',
+                                                background: '#F1F3EC',
+                                                border: 'none',
+                                                padding: '6px 14px',
+                                                borderRadius: '999px',
+                                                cursor: 'pointer',
+                                                marginBottom: '14px',
+                                                alignSelf: 'flex-start',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                transition: 'background 0.2s'
+                                            }}
+                                        >
+                                            <span>{expandedPackageId === pkg.id ? 'Hide Inclusions ▲' : 'View Inclusions & Perks ▼'}</span>
                                         </button>
+
+                                        {expandedPackageId === pkg.id && (
+                                            <div style={{ marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                                {pkg.highlights.map((h, i) => (
+                                                    <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#48544C', padding: '4px 10px', borderRadius: '999px' }}>
+                                                        ✓ {h}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        <div style={{ marginTop: 'auto', paddingTop: '18px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>₹{pkg.price.toLocaleString()}</div>
+                                                <span style={{ fontSize: '11px', color: '#59655D' }}>per person all-inclusive</span>
+                                            </div>
+                                            <button onClick={() => handleOpenBooking(pkg)} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>
+                                                Book Spot →
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
                 </div>
             </motion.section>
 

@@ -627,10 +627,14 @@ button:focus-visible, a:focus-visible {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Static In-Text)
+   AUTHENTIC TEXTBOOK CHISEL HIGHLIGHTER (Organic Natural Variations)
 ───────────────────────────────────────────────────────────── */
 .text-marker-chisel,
-.text-highlight-gold {
+.text-highlight-gold,
+.text-marker-1,
+.text-marker-2,
+.text-marker-3,
+.text-marker-4 {
   position: relative;
   display: inline-block;
   color: inherit;
@@ -638,17 +642,70 @@ button:focus-visible, a:focus-visible {
   padding: 0 4px;
 }
 
+/* Default / Variation 1: Natural subtle downward stroke */
 .text-marker-chisel::before,
-.text-highlight-gold::before {
+.text-highlight-gold::before,
+.text-marker-1::before {
   content: "";
   position: absolute;
   left: -8px;
   right: -8px;
   top: 14%;
   bottom: 6%;
-  background: rgba(255, 230, 50, 0.55); /* Real highlighter yellow-gold */
+  background: rgba(255, 230, 50, 0.55);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
-  transform: skewX(-14deg) rotate(-0.6deg);
+  transform: skewX(-15deg) rotate(-0.8deg);
+  border-radius: 2px;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Variation 2: Upward angled chisel swipe */
+.text-marker-2::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  right: -7px;
+  top: 12%;
+  bottom: 8%;
+  background: rgba(255, 232, 55, 0.56);
+  clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
+  transform: skewX(-12deg) rotate(0.7deg);
+  border-radius: 2px;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Variation 3: Deep steep hand angle cut */
+.text-marker-3::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  right: -7px;
+  top: 16%;
+  bottom: 5%;
+  background: rgba(255, 228, 48, 0.54);
+  clip-path: polygon(0% 6%, 98% 1%, 100% 95%, 2% 99%);
+  transform: skewX(-17deg) rotate(-1.2deg);
+  border-radius: 2px;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Variation 4: Wide steady stroke */
+.text-marker-4::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  right: -8px;
+  top: 13%;
+  bottom: 7%;
+  background: rgba(255, 235, 60, 0.55);
+  clip-path: polygon(1% 2%, 100% 0%, 99% 98%, 0% 97%);
+  transform: skewX(-10deg) rotate(0.4deg);
   border-radius: 2px;
   z-index: -1;
   pointer-events: none;
@@ -681,7 +738,8 @@ button:focus-visible, a:focus-visible {
 }
 
 /* Authentic Marker Highlight on Dark Backgrounds */
-.text-marker-dark {
+.text-marker-dark,
+.text-marker-dark-1 {
   position: relative;
   display: inline-block;
   color: #FFFFFF;
@@ -689,7 +747,8 @@ button:focus-visible, a:focus-visible {
   padding: 0 4px;
 }
 
-.text-marker-dark::before {
+.text-marker-dark::before,
+.text-marker-dark-1::before {
   content: "";
   position: absolute;
   left: -8px;
@@ -699,6 +758,30 @@ button:focus-visible, a:focus-visible {
   background: rgba(255, 238, 75, 0.55);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
   transform: skewX(-14deg) rotate(-0.6deg);
+  border-radius: 2px;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 0 14px rgba(255, 238, 75, 0.35);
+}
+
+.text-marker-dark-2 {
+  position: relative;
+  display: inline-block;
+  color: #FFFFFF;
+  z-index: 1;
+  padding: 0 4px;
+}
+
+.text-marker-dark-2::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  right: -8px;
+  top: 13%;
+  bottom: 7%;
+  background: rgba(255, 238, 75, 0.55);
+  clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
+  transform: skewX(-12deg) rotate(0.8deg);
   border-radius: 2px;
   z-index: -1;
   pointer-events: none;
