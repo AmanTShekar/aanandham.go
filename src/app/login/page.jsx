@@ -110,13 +110,13 @@ export default function AuthPage({ initialMode = 'login' }) {
                     <i className="fa-solid fa-arrow-left" style={{ fontSize: '12px' }}></i> Back to Aanandham.go
                 </Link>
 
-                <Link href="/" style={{
-                    display: 'flex',
+                <Link href="/" className="logo-brand-pill" style={{
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '10px',
-                    fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                    fontSize: '24px',
+                    fontSize: '22px',
                     fontWeight: '800',
+                    fontFamily: 'var(--font-heading)',
                     color: '#121613',
                     textDecoration: 'none',
                     letterSpacing: '-0.03em'
@@ -130,7 +130,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                             objectFit: 'contain'
                         }}
                     />
-                    <span>Aanandham<span style={{ color: '#88A316' }}>.go</span></span>
+                    <span>Aanandham<span style={{ color: '#E5A93B' }}>.go</span></span>
                 </Link>
             </header>
 

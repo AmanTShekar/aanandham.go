@@ -724,23 +724,9 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20want%20to%20reserve%20a%20spot%20for%20the%20upcoming%20wilderness%20camp."
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    background: 'rgba(255, 255, 255, 0.15)',
-                                    color: '#FFFFFF',
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    padding: '16px 36px',
-                                    borderRadius: '999px',
-                                    fontSize: '15px',
-                                    fontWeight: '700',
-                                    textDecoration: 'none',
-                                    backdropFilter: 'blur(10px)',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '10px',
-                                    transition: 'all 0.2s ease'
-                                }}
+                                className="btn-whatsapp-glass"
                             >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px', color: '#25D366' }}></i>
+                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '19px', color: '#25D366' }}></i>
                                 <span>WhatsApp Helpdesk</span>
                             </a>
                         </div>
@@ -964,12 +950,7 @@ export default function HomePage() {
                     
                     {/* Brand Logo & Name */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <Link href="/" style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '12px',
-                            textDecoration: 'none'
-                        }}>
+                        <Link href="/" className="logo-brand-pill">
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go Logo"
@@ -1842,13 +1823,13 @@ export default function HomePage() {
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 'clamp(40px, 5vw, 64px)', alignItems: 'center' }}>
                         
-                        {/* Left Interactive Cinematic Showcase Card (Large Premium Showcase) */}
+                        {/* Left Interactive Cinematic Showcase Card (Taller, Commanding Proportions) */}
                         <motion.div 
                             variants={fadeInLeft}
                             style={{
                                 position: 'relative',
-                                height: 'clamp(460px, 56vh, 580px)',
-                                minHeight: '460px',
+                                height: 'clamp(540px, 66vh, 660px)',
+                                minHeight: '520px',
                                 borderRadius: '36px',
                                 overflow: 'hidden',
                                 boxShadow: '0 25px 60px rgba(0, 0, 0, 0.16)'
@@ -1882,7 +1863,7 @@ export default function HomePage() {
                                 padding: '8px 18px',
                                 borderRadius: '999px',
                                 backdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(213, 237, 85, 0.3)',
+                                border: '1px solid rgba(229, 169, 59, 0.35)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: '8px'
@@ -1980,11 +1961,11 @@ export default function HomePage() {
                                 lineHeight: 1.15,
                                 marginBottom: '18px'
                             }}>
-                                The gold standard in <span style={{ color: '#8E9B92' }}>Kerala wilderness glamping</span>
+                                The <span className="text-highlight-gold">gold standard</span> in <span style={{ color: '#59655D' }}>Kerala wilderness glamping</span>
                             </h2>
 
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '28px' }}>
-                                We believe nature should be experienced with absolute safety, deep local knowledge, and zero compromise on comfort. From 7,900 FT cloud ridges to private en-suite washrooms, here is why 350+ adventurers trust Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span>.
+                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.75, marginBottom: '28px' }}>
+                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 350+ adventurers trust Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span>.
                             </p>
 
                             {/* 4 Interactive Clickable Feature Pillar Cards */}
@@ -2019,34 +2000,19 @@ export default function HomePage() {
                                 })}
                             </div>
 
-                            {/* 2 Trust / Guarantee Badges */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '18px', paddingTop: '20px', borderTop: '1px solid rgba(18,22,19,0.08)' }}>
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                                    <div style={{ fontSize: '20px', background: 'rgba(213,237,85,0.3)', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                        🛡️
-                                    </div>
-                                    <div>
-                                        <h5 style={{ fontFamily: 'var(--font-heading)', fontSize: '14.5px', fontWeight: '800', color: '#121613', margin: '0 0 2px' }}>
-                                            Authorized Permits
-                                        </h5>
-                                        <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
-                                            100% verified forest entry passes & wilderness first aiders.
-                                        </p>
-                                    </div>
+                            {/* Bottom Certified Trust Badges */}
+                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                                    <span style={{ color: '#E5A93B' }}>🛡️</span>
+                                    <span>Kerala Govt. Forest Eco-Permits</span>
                                 </div>
-
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                                    <div style={{ fontSize: '20px', background: 'rgba(213,237,85,0.3)', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                        ⭐
-                                    </div>
-                                    <div>
-                                        <h5 style={{ fontFamily: 'var(--font-heading)', fontSize: '14.5px', fontWeight: '800', color: '#121613', margin: '0 0 2px' }}>
-                                            4.98★ Rated Tribe
-                                        </h5>
-                                        <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
-                                            Over 350+ 5-star Google & Instagram verified camper reviews.
-                                        </p>
-                                    </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                                    <span style={{ color: '#E5A93B' }}>★</span>
+                                    <span>4.98 / 5.0 Explorer Rating</span>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                                    <span style={{ color: '#E5A93B' }}>🚙</span>
+                                    <span>Private 4x4 Jeep Convoy</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -2485,12 +2451,50 @@ export default function HomePage() {
                                 Handcrafted Wilderness Packages
                             </h2>
                         </div>
-                        <div style={{ display: 'flex', gap: '8px', background: '#FFFFFF', padding: '6px', borderRadius: '999px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                            {['All', 'Treks', 'Glamping', 'Water'].map(tab => (
-                                <button key={tab} onClick={() => setActiveTab(tab)} style={{ border: 'none', background: activeTab === tab ? '#121613' : 'transparent', color: activeTab === tab ? '#FFFFFF' : '#59655D', fontWeight: activeTab === tab ? '800' : '600', fontSize: '13px', padding: '8px 18px', borderRadius: '999px', cursor: 'pointer', transition: 'all 0.2s ease' }}>
-                                    {tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes'}
-                                </button>
-                            ))}
+                        {/* Smooth Animated Filter Pills (Sliding Spring Physics) */}
+                        <div style={{ display: 'flex', gap: '6px', background: '#FFFFFF', padding: '6px', borderRadius: '999px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 4px 18px rgba(0,0,0,0.03)', position: 'relative' }}>
+                            {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
+                                const isSelected = activeTab === tab;
+                                const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
+                                return (
+                                    <button 
+                                        key={tab} 
+                                        onClick={() => setActiveTab(tab)} 
+                                        style={{ 
+                                            position: 'relative',
+                                            border: 'none', 
+                                            background: 'transparent',
+                                            color: isSelected ? '#FFFFFF' : '#59655D', 
+                                            fontWeight: '800', 
+                                            fontSize: '13px', 
+                                            padding: '9px 20px', 
+                                            borderRadius: '999px', 
+                                            cursor: 'pointer',
+                                            zIndex: 2,
+                                            transition: 'color 0.25s ease',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        {isSelected && (
+                                            <motion.div
+                                                layoutId="activeFilterPill"
+                                                transition={{ type: 'spring', damping: 26, stiffness: 350 }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    inset: 0,
+                                                    background: '#121613',
+                                                    borderRadius: '999px',
+                                                    zIndex: -1,
+                                                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.18)'
+                                                }}
+                                            />
+                                        )}
+                                        <span>{label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
 

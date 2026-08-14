@@ -107,12 +107,7 @@ export default function ContactPage() {
                 justifyContent: 'space-between'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <Link href="/" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '12px',
-                        textDecoration: 'none'
-                    }}>
+                    <Link href="/" className="logo-brand-pill">
                         <img
                             src="/logo.png"
                             alt="Aanandham.go"

@@ -36,7 +36,7 @@ export default function Footer() {
                     
                     {/* Column 1: Brand & Coordinates */}
                     <div style={{ paddingRight: '12px' }}>
-                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', marginBottom: '14px' }}>
+                        <Link href="/" className="logo-brand-pill" style={{ marginBottom: '14px', paddingLeft: '8px' }}>
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go"
