@@ -85,31 +85,71 @@ const CONTACT_CHANNELS = [
     }
 ];
 
-// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP ──
+// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Pinned Field Notebook Notes) ──
 const TRAVEL_STEPS = [
     {
-        num: '01',
-        title: 'Arrive in Munnar or Kochi',
-        desc: 'Fly into Cochin International Airport (COK) or take the train to Aluva/Ernakulam. Regular luxury cabs and KSRTC buses run directly to Munnar town.',
-        time: 'Approx 3.5 hrs from Kochi'
+        num: 'STAGE 01',
+        title: 'Arrive in Munnar / Kochi',
+        desc: 'Fly into Cochin Int\'l Airport (COK) or take the train to Aluva / Ernakulam. Luxury private cabs and express KSRTC mountain buses run daily directly to Munnar town.',
+        time: 'Approx 3.5 hrs from Kochi (COK)',
+        tag: 'ROUTE · 01',
+        stamp: 'PAVED HIGHWAY',
+        stampColor: '#166534',
+        paperBg: '#FEF08A', // Sunlit Canary Yellow
+        inkColor: '#1A2218',
+        tapeColor: 'rgba(254, 240, 138, 0.85)',
+        rotation: '-1.8deg',
+        tapeRotation: '2deg',
+        icon: 'fa-solid fa-plane-departure',
+        memo: 'Tip: Early morning drives through Neriamangalam forest offer misty river valley views.'
     },
     {
-        num: '02',
-        title: 'Drive through Lockhart Gap',
-        desc: 'From Munnar town, take the breathtaking Lockhart Gap scenic mountain corridor heading towards Suryanelli. The road is fully paved and suitable for all cars.',
-        time: '24 km · 45 mins from Munnar'
+        num: 'STAGE 02',
+        title: 'Drive the Lockhart Gap Route',
+        desc: 'From Munnar town, ascend the breathtaking Lockhart Gap mountain corridor towards Suryanelli. The winding road is completely paved and accessible to all sedans, hatchbacks, and SUVs.',
+        time: '24 km · 45 mins from Munnar',
+        tag: 'ROUTE · 02',
+        stamp: 'SCENIC CORRIDOR',
+        stampColor: '#047857',
+        paperBg: '#A7F3D0', // Alpine Mint
+        inkColor: '#0A2518',
+        tapeColor: 'rgba(167, 243, 208, 0.85)',
+        rotation: '1.6deg',
+        tapeRotation: '-1.5deg',
+        icon: 'fa-solid fa-car-side',
+        memo: 'Keep windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
     },
     {
-        num: '03',
-        title: 'Safe Parking at Meeting Base',
-        desc: 'Park your private car or taxi safely at our secured Suryanelli base camp parking station with 24/7 staff monitoring.',
-        time: 'Complimentary Camper Parking'
+        num: 'STAGE 03',
+        title: 'Safe Parking at Base Camp',
+        desc: 'Pull into our designated Aanandham Suryanelli meeting station. Park your personal vehicle safely under 24/7 staff monitoring with clean restrooms and welcoming hot cardamom tea.',
+        time: 'Complimentary Camper Parking',
+        tag: 'ROUTE · 03',
+        stamp: 'MONITORED PARKING',
+        stampColor: '#C2410C',
+        paperBg: '#FED7AA', // Sunburst Peach
+        inkColor: '#2B1405',
+        tapeColor: 'rgba(254, 215, 170, 0.85)',
+        rotation: '-1.4deg',
+        tapeRotation: '1.8deg',
+        icon: 'fa-solid fa-square-parking',
+        memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
     },
     {
-        num: '04',
+        num: 'STAGE 04',
         title: 'Hop on the 4x4 Jeep Safari',
-        desc: 'Our dedicated 4x4 off-road safari Jeeps pick you and your luggage up to navigate the rugged private ridge trail up to the secluded dome sanctuary.',
-        time: 'Included with all packages'
+        desc: 'Board our rugged 4x4 open/closed Mahindra Jeeps for an exhilarating off-road ridge climb navigating private rocky tea estate trails up to our secluded 7,900 FT ridge sanctuary.',
+        time: 'Included with all Camp Packages',
+        tag: 'ROUTE · 04',
+        stamp: '4X4 OFF-ROAD SAFARI',
+        stampColor: '#15803D',
+        paperBg: '#D9F99D', // Electric Mountain Lime
+        inkColor: '#122B14',
+        tapeColor: 'rgba(217, 249, 157, 0.85)',
+        rotation: '1.8deg',
+        tapeRotation: '-2deg',
+        icon: 'fa-solid fa-truck-monster',
+        memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
     }
 ];
 
@@ -962,65 +1002,217 @@ export default function ContactPage() {
                             </p>
                         </div>
 
-                        {/* 4 Steps Grid */}
+                        {/* 4 Pinned Notebook Notes Grid with Notebook Page Ruled Lines (2x2 Balanced Luxury Layout) */}
                         <motion.div 
                             variants={staggerContainer}
+                            className="pillars-sticky-grid"
                             style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                                gap: '24px'
+                                paddingTop: '20px'
                             }}
                         >
                             {TRAVEL_STEPS.map((st, idx) => (
                                 <motion.div
                                     key={idx}
                                     variants={cardReveal}
-                                    whileHover={{ y: -8, borderColor: 'rgba(229, 169, 59, 0.4)' }}
+                                    whileHover={{ 
+                                        y: -16, 
+                                        rotate: 0,
+                                        scale: 1.03,
+                                        boxShadow: '0 36px 80px -10px rgba(0, 0, 0, 0.65), 0 16px 30px -6px rgba(0, 0, 0, 0.3)'
+                                    }}
+                                    whileTap={{ scale: 0.97 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                     style={{
-                                        background: '#0E1B11',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        borderRadius: '24px',
-                                        padding: '30px 24px',
+                                        position: 'relative',
+                                        background: st.paperBg,
+                                        color: st.inkColor,
+                                        borderRadius: '10px 10px 40px 10px',
+                                        padding: '44px 34px 34px 38px',
+                                        boxShadow: '0 20px 48px rgba(0, 0, 0, 0.45), 0 6px 16px rgba(0,0,0,0.2)',
+                                        transform: `rotate(${st.rotation})`,
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        position: 'relative',
-                                        boxShadow: '0 16px 36px rgba(0,0,0,0.4)'
+                                        minHeight: '430px',
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(37, 99, 235, 0.12) 28px)',
+                                        borderLeft: '4px solid rgba(239, 68, 68, 0.38)',
+                                        cursor: 'grab'
                                     }}
                                 >
+                                    {/* Textured Washi Tape Strip with Brass Pin on Top */}
+                                    <motion.div
+                                        whileHover={{ y: -3, scale: 1.04, rotate: 0 }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-14px',
+                                            left: '50%',
+                                            transform: `translateX(-50%) rotate(${st.tapeRotation})`,
+                                            width: '140px',
+                                            height: '28px',
+                                            background: st.tapeColor,
+                                            backdropFilter: 'blur(8px)',
+                                            WebkitBackdropFilter: 'blur(8px)',
+                                            boxShadow: '0 3px 8px rgba(0,0,0,0.2)',
+                                            borderLeft: '3px dashed rgba(0,0,0,0.25)',
+                                            borderRight: '3px dashed rgba(0,0,0,0.25)',
+                                            opacity: 0.95,
+                                            zIndex: 4,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '8px',
+                                            height: '8px',
+                                            borderRadius: '50%',
+                                            background: '#FFFFFF',
+                                            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.4)',
+                                            border: '1.5px solid #E5A93B'
+                                        }} />
+                                    </motion.div>
+
+                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
                                     <div style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '34px',
-                                        fontWeight: '800',
-                                        color: '#E5A93B',
-                                        marginBottom: '12px'
-                                    }}>
-                                        {st.num}
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        right: 0,
+                                        width: '40px',
+                                        height: '40px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.24) 50%, rgba(0,0,0,0.08) 100%)',
+                                        borderTopLeftRadius: '16px',
+                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.14)',
+                                        pointerEvents: 'none'
+                                    }} />
+
+                                    {/* Header Row: Stage Badge + Mini Logo + Vintage Rubber Ink Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '18px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <img
+                                                src="/logo.png"
+                                                alt="Aanandham Logo"
+                                                style={{
+                                                    height: '24px',
+                                                    width: '24px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '50%',
+                                                    border: '1px solid rgba(0,0,0,0.15)'
+                                                }}
+                                            />
+                                            <span style={{
+                                                fontSize: '11px',
+                                                fontWeight: '900',
+                                                letterSpacing: '1.2px',
+                                                textTransform: 'uppercase',
+                                                background: 'rgba(0,0,0,0.08)',
+                                                padding: '4px 10px',
+                                                borderRadius: '6px',
+                                                border: '1px solid rgba(0,0,0,0.06)'
+                                            }}>
+                                                {st.tag}
+                                            </span>
+                                        </div>
+
+                                        {/* Vintage Double-Bordered Ink Stamp with Pop on Hover */}
+                                        <motion.div
+                                            whileHover={{ rotate: 0, scale: 1.1 }}
+                                            transition={{ type: 'spring', stiffness: 450, damping: 18 }}
+                                            style={{
+                                                border: `2px solid ${st.stampColor}`,
+                                                outline: `1px dashed ${st.stampColor}`,
+                                                outlineOffset: '2px',
+                                                color: st.stampColor,
+                                                padding: '4px 9px',
+                                                borderRadius: '4px',
+                                                fontSize: '9.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.9px',
+                                                textTransform: 'uppercase',
+                                                transform: 'rotate(-4deg)',
+                                                opacity: 0.95,
+                                                userSelect: 'none',
+                                                background: 'rgba(255,255,255,0.45)',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {st.stamp}
+                                        </motion.div>
                                     </div>
 
-                                    <h3 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '19px',
-                                        fontWeight: '800',
-                                        color: '#FFFFFF',
-                                        margin: '0 0 10px',
-                                        lineHeight: 1.25
-                                    }}>
-                                        {st.title}
-                                    </h3>
+                                    {/* Icon & Bold Headline */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+                                        <div style={{
+                                            width: '48px',
+                                            height: '48px',
+                                            borderRadius: '14px',
+                                            background: 'rgba(0, 0, 0, 0.08)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '20px',
+                                            color: st.inkColor,
+                                            flexShrink: 0,
+                                            boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
+                                        }}>
+                                            <i className={st.icon}></i>
+                                        </div>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                            fontSize: '22px',
+                                            fontWeight: '800',
+                                            lineHeight: 1.2,
+                                            margin: 0,
+                                            color: st.inkColor,
+                                            letterSpacing: '-0.02em'
+                                        }}>
+                                            {st.title}
+                                        </h3>
+                                    </div>
 
-                                    <p style={{ fontSize: '13.5px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 20px', flex: 1 }}>
+                                    {/* Description */}
+                                    <p style={{
+                                        fontSize: '14px',
+                                        lineHeight: 1.75,
+                                        margin: '0 0 18px',
+                                        opacity: 0.94,
+                                        fontWeight: '500'
+                                    }}>
                                         {st.desc}
                                     </p>
 
+                                    {/* Transit Time Pill */}
+                                    <div style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        fontSize: '12.5px',
+                                        fontWeight: '800',
+                                        background: 'rgba(0,0,0,0.07)',
+                                        padding: '6px 12px',
+                                        borderRadius: '8px',
+                                        marginBottom: '16px',
+                                        width: 'fit-content',
+                                        color: st.stampColor
+                                    }}>
+                                        <span>✦</span>
+                                        <span>{st.time}</span>
+                                    </div>
+
+                                    {/* Handwritten Field Memo */}
                                     <div style={{
                                         marginTop: 'auto',
-                                        paddingTop: '12px',
-                                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                                        fontSize: '12px',
-                                        color: '#D5ED55',
-                                        fontWeight: '700'
+                                        paddingTop: '16px',
+                                        borderTop: '1px dashed rgba(0, 0, 0, 0.18)',
+                                        fontStyle: 'italic',
+                                        fontSize: '12.5px',
+                                        lineHeight: '1.55',
+                                        opacity: '0.9',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '8px'
                                     }}>
-                                        ✦ {st.time}
+                                        <span style={{ fontSize: '15px' }}>✍</span>
+                                        <span>{st.memo}</span>
                                     </div>
                                 </motion.div>
                             ))}
