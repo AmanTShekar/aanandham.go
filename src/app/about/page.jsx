@@ -69,38 +69,86 @@ const NEARBY_PLACES = [
     }
 ];
 
-// ── 4 BESPOKE WILDERNESS PILLARS ──
+// ── 4 BESPOKE WILDERNESS PILLARS (Tactile Sticky Field Notes) ──
 const WILDERNESS_PILLARS = [
     {
         num: '01',
         title: 'High-Altitude Safety & Native Marshals',
-        tag: 'PERMIT & PROTOCOL',
+        tag: 'DISPATCH #01',
+        stamp: '100% MARSHAL GUIDED',
+        stampColor: '#2D6A4F',
+        paperBg: '#F3FBE8',
+        inkColor: '#142818',
+        tapeColor: 'rgba(213, 237, 85, 0.75)',
+        tapeRotation: '-2.5deg',
+        rotation: '-1.4deg',
         icon: 'fa-solid fa-shield-halved',
-        bg: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        noteQuote: '“Every ridge trail has a dedicated mountain marshal with radio contact & satellite coordinates.”',
+        checkList: [
+            '1:6 Guide-to-camper safety ratio',
+            'Certified high-altitude first responders',
+            'Pre-cleared forest department permits'
+        ],
         desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain marshals trained in high-altitude topography, medical response, and wildlife navigation.'
     },
     {
         num: '02',
         title: 'Thermal Insulated Pods & Private En-Suites',
-        tag: 'ALL-WEATHER COMFORT',
+        tag: 'DISPATCH #02',
+        stamp: 'ALL-WEATHER SEALED',
+        stampColor: '#C86D14',
+        paperBg: '#FFF9ED',
+        inkColor: '#2B1A08',
+        tapeColor: 'rgba(229, 169, 59, 0.7)',
+        tapeRotation: '2.2deg',
+        rotation: '1.2deg',
         icon: 'fa-solid fa-tent',
-        bg: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        noteQuote: '“No damp sleeping bags or rocky ground. Real spring mattresses and steaming hot showers at 7,900 FT.”',
+        checkList: [
+            'Double-wall thermal canvas insulation',
+            'Sanitized en-suite washrooms + geysers',
+            'Organic cotton 300-threadcount duvets'
+        ],
         desc: 'Engineered for mountain conditions: double-walled waterproof canvas, premium pocket-spring mattresses, fresh organic cotton duvets, and private sanitized washrooms with hot showers.'
     },
     {
         num: '03',
         title: 'Farm-to-Campfire Culinary Craft',
-        tag: 'LIVE GRILL & TEAS',
+        tag: 'DISPATCH #03',
+        stamp: 'LIVE MOUNTAIN GRILL',
+        stampColor: '#A43E1B',
+        paperBg: '#FDF4EC',
+        inkColor: '#2E150A',
+        tapeColor: 'rgba(244, 143, 107, 0.7)',
+        tapeRotation: '-1.8deg',
+        rotation: '-1.1deg',
         icon: 'fa-solid fa-fire-burner',
-        bg: 'https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=800&q=80',
+        noteQuote: '“Slow-cooked earthen clay pots, freshly ground spices, and estate-plucked cardamom tea by the starlight fire.”',
+        checkList: [
+            'Live BBQ with veg & non-veg options',
+            'Kerala earthenware pot cooking',
+            'Estate-fresh organic cardamom chai'
+        ],
         desc: 'Hot live campfire barbecues, traditional Kerala earthen pot dishes, locally sourced spiced curries, and freshly brewed cardamom chai harvested directly from our surrounding plantations.'
     },
     {
         num: '04',
         title: '100% Zero-Trace Ecological Ethics',
-        tag: 'LEAVE NO TRACE',
+        tag: 'DISPATCH #04',
+        stamp: 'LEAVE NO TRACE',
+        stampColor: '#1F6B43',
+        paperBg: '#EEF8F1',
+        inkColor: '#0A2514',
+        tapeColor: 'rgba(142, 205, 161, 0.75)',
+        tapeRotation: '2.0deg',
+        rotation: '1.5deg',
         icon: 'fa-solid fa-leaf',
-        bg: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+        noteQuote: '“Leaving the mountain ridges cleaner than we found them. Zero single-use plastic bottles permitted.”',
+        checkList: [
+            'Zero single-use plastics anywhere',
+            '100% solar ambient pathway lights',
+            'Direct local tribal youth employment'
+        ],
         desc: 'No single-use plastics permitted on our ridges. 100% solar and low-voltage lighting, organic compost cycles, and direct reinvestment into local tribal youth employment and trail conservation.'
     }
 ];
@@ -498,22 +546,36 @@ export default function AboutPage() {
                 </section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS
+                    3. THE 4 UNCOMPROMISING WILDERNESS PILLARS (Tactile Sticky Notes)
                 ───────────────────────────────────────────────────────────── */}
                 <section style={{
-                    padding: '110px 24px',
+                    padding: '120px 24px 130px',
                     background: '#0B150E',
-                    position: 'relative'
+                    position: 'relative',
+                    overflow: 'hidden'
                 }}>
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    {/* Ambient subtle glow */}
+                    <div style={{
+                        position: 'absolute',
+                        top: '20%',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: '900px',
+                        height: '400px',
+                        background: 'radial-gradient(circle, rgba(213, 237, 85, 0.08) 0%, transparent 70%)',
+                        pointerEvents: 'none',
+                        filter: 'blur(70px)'
+                    }} />
+
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         
-                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '70px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> OUR CORE STANDARDS
+                                <span className="star-icon">★</span> EXPEDITION FIELD NOTES
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontSize: 'clamp(32px, 4.5vw, 52px)',
                                 fontWeight: '800',
                                 color: '#FFFFFF',
                                 letterSpacing: '-0.03em',
@@ -521,103 +583,172 @@ export default function AboutPage() {
                             }}>
                                 The 4 Pillars of <span style={{ color: '#E5A93B' }}>Aanandham Hospitality</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
-                                Crafted to ensure you experience authentic raw heights with the hygiene, warmth, and security of a private boutique stay.
+                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '660px', margin: '0 auto' }}>
+                                Handcrafted wilderness standards written on the ridge. Real comfort, pristine safety, and zero artificial gimmicks.
                             </p>
                         </div>
 
+                        {/* 4 Tactile Sticky Field Notes Grid */}
                         <div style={{
                             display: 'grid',
                             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                            gap: '28px'
+                            gap: '36px',
+                            paddingTop: '20px'
                         }}>
                             {WILDERNESS_PILLARS.map((pillar, idx) => (
-                                <div
+                                <motion.div
                                     key={idx}
-                                    className="card-hover-lift"
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ duration: 0.5, delay: idx * 0.1 }}
+                                    whileHover={{
+                                        y: -12,
+                                        rotate: 0,
+                                        scale: 1.025,
+                                        boxShadow: '0 28px 60px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)'
+                                    }}
                                     style={{
                                         position: 'relative',
-                                        borderRadius: '28px',
-                                        overflow: 'hidden',
-                                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                                        background: '#0E1A11',
-                                        minHeight: '380px',
+                                        background: pillar.paperBg,
+                                        color: pillar.inkColor,
+                                        borderRadius: '6px 6px 36px 6px',
+                                        padding: '40px 28px 32px',
+                                        boxShadow: '0 16px 36px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0,0,0,0.1)',
+                                        transform: `rotate(${pillar.rotation})`,
+                                        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        justifyContent: 'flex-end',
-                                        padding: '32px 28px',
-                                        boxShadow: '0 20px 40px rgba(0,0,0,0.5)'
+                                        minHeight: '440px',
+                                        backgroundImage: 'radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 0)',
+                                        backgroundSize: '16px 16px'
                                     }}
                                 >
+                                    {/* Frosted Translucent Washi Tape on Top Center */}
                                     <div style={{
                                         position: 'absolute',
-                                        inset: 0,
-                                        backgroundImage: `url(${pillar.bg})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                        opacity: 0.35
+                                        top: '-13px',
+                                        left: '50%',
+                                        transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
+                                        width: '120px',
+                                        height: '28px',
+                                        background: pillar.tapeColor,
+                                        backdropFilter: 'blur(6px)',
+                                        WebkitBackdropFilter: 'blur(6px)',
+                                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                                        borderLeft: '3px dashed rgba(0,0,0,0.2)',
+                                        borderRight: '3px dashed rgba(0,0,0,0.2)',
+                                        opacity: 0.9,
+                                        zIndex: 3
                                     }} />
 
+                                    {/* Dog-Eared Folded Bottom Right Corner Effect */}
                                     <div style={{
                                         position: 'absolute',
-                                        inset: 0,
-                                        background: 'linear-gradient(180deg, rgba(14, 26, 17, 0.4) 0%, rgba(7, 14, 8, 0.96) 65%)'
+                                        bottom: 0,
+                                        right: 0,
+                                        width: '32px',
+                                        height: '32px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.15) 50%, rgba(0,0,0,0.06) 100%)',
+                                        borderTopLeftRadius: '12px',
+                                        pointerEvents: 'none'
                                     }} />
 
-                                    <div style={{ position: 'relative', zIndex: 2 }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-                                            <div style={{
-                                                width: '52px',
-                                                height: '52px',
-                                                borderRadius: '16px',
-                                                background: 'rgba(229, 169, 59, 0.2)',
-                                                border: '1px solid rgba(229, 169, 59, 0.4)',
-                                                color: '#E5A93B',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '22px'
-                                            }}>
-                                                <i className={pillar.icon}></i>
-                                            </div>
+                                    {/* Top Metadata Header: Dispatch No + Circular Rubber Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <span style={{
-                                                fontSize: '11px',
-                                                fontWeight: '800',
-                                                background: 'rgba(255, 255, 255, 0.12)',
-                                                color: '#D5ED55',
-                                                padding: '4px 12px',
-                                                borderRadius: '999px',
-                                                letterSpacing: '0.8px'
+                                                fontSize: '11.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '1px',
+                                                textTransform: 'uppercase',
+                                                background: 'rgba(0,0,0,0.08)',
+                                                padding: '4px 10px',
+                                                borderRadius: '6px'
                                             }}>
                                                 {pillar.tag}
                                             </span>
                                         </div>
 
-                                        <div style={{ fontSize: '13px', color: '#E5A93B', fontWeight: '800', marginBottom: '6px' }}>
-                                            PILLAR {pillar.num}
+                                        {/* Vintage Rubber Stamp */}
+                                        <div style={{
+                                            border: `1.5px solid ${pillar.stampColor}`,
+                                            color: pillar.stampColor,
+                                            padding: '3px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '9.5px',
+                                            fontWeight: '900',
+                                            letterSpacing: '0.8px',
+                                            textTransform: 'uppercase',
+                                            transform: 'rotate(-4deg)',
+                                            opacity: 0.85
+                                        }}>
+                                            {pillar.stamp}
                                         </div>
+                                    </div>
 
+                                    {/* Icon & Title */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
+                                        <div style={{
+                                            width: '42px',
+                                            height: '42px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(0, 0, 0, 0.08)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '19px',
+                                            color: pillar.inkColor,
+                                            flexShrink: 0
+                                        }}>
+                                            <i className={pillar.icon}></i>
+                                        </div>
                                         <h3 style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: '21px',
+                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                            fontSize: '20px',
                                             fontWeight: '800',
-                                            color: '#FFFFFF',
                                             lineHeight: 1.25,
-                                            margin: '0 0 12px'
+                                            margin: 0,
+                                            color: pillar.inkColor
                                         }}>
                                             {pillar.title}
                                         </h3>
-
-                                        <p style={{
-                                            fontSize: '13.5px',
-                                            color: '#B2C4B5',
-                                            lineHeight: 1.65,
-                                            margin: 0
-                                        }}>
-                                            {pillar.desc}
-                                        </p>
                                     </div>
-                                </div>
+
+                                    {/* Description */}
+                                    <p style={{
+                                        fontSize: '13.5px',
+                                        lineHeight: 1.65,
+                                        margin: '0 0 18px',
+                                        opacity: 0.9,
+                                        fontWeight: '500'
+                                    }}>
+                                        {pillar.desc}
+                                    </p>
+
+                                    {/* Field Verification Checkpoints */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '20px' }}>
+                                        {pillar.checkList.map((chk, cIdx) => (
+                                            <div key={cIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', fontWeight: '700', opacity: 0.88 }}>
+                                                <span style={{ color: pillar.stampColor, fontSize: '13px' }}>✓</span>
+                                                <span>{chk}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Handwritten Field Note Quote */}
+                                    <div style={{
+                                        marginTop: 'auto',
+                                        paddingTop: '14px',
+                                        borderTop: '1px dashed rgba(0, 0, 0, 0.15)',
+                                        fontStyle: 'italic',
+                                        fontSize: '12.5px',
+                                        lineHeight: 1.5,
+                                        opacity: 0.85
+                                    }}>
+                                        {pillar.noteQuote}
+                                    </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
