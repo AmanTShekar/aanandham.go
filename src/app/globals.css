@@ -2,6 +2,48 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* ─────────────────────────────────────────────────────────────
+   CUSTOM LUXURY SCROLLBAR (Sunrise Amber Gold & Deep Obsidian)
+───────────────────────────────────────────────────────────── */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #E5A93B rgba(11, 21, 14, 0.08);
+}
+
+/* WebKit & Chromium Browsers (Chrome, Edge, Safari, Brave) */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(11, 21, 14, 0.06);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #E5A93B 0%, #D5ED55 100%);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.25s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #F5BD55 0%, #E2F87A 100%);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(229, 169, 59, 0.6);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #C86D14;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 :root {
   font-size: 16px;
   --font-heading: var(--font-bricolage), 'Bricolage Grotesque', Arial, sans-serif;
