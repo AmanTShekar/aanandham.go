@@ -457,17 +457,29 @@ button:focus-visible, a:focus-visible {
   }
 }
 
-/* Technique 2: Compact Active Sticky Pinned Columns */
-.sticky-pinned-col {
-  position: -webkit-sticky !important;
-  position: sticky !important;
-  top: 85px !important;
-  align-self: flex-start !important;
-  height: -webkit-fit-content !important;
-  height: -moz-fit-content !important;
-  height: fit-content !important;
-  max-height: calc(100vh - 90px);
-  z-index: 10;
+/* Technique 2: Compact Active Sticky Pinned Columns (Desktop only) */
+@media (min-width: 960px) {
+  .sticky-pinned-col {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 85px !important;
+    align-self: flex-start !important;
+    height: -webkit-fit-content !important;
+    height: -moz-fit-content !important;
+    height: fit-content !important;
+    max-height: calc(100vh - 90px);
+    z-index: 10;
+  }
+}
+
+@media (max-width: 959px) {
+  .sticky-pinned-col {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    align-self: auto !important;
+    z-index: auto !important;
+  }
 }
 
 /* Proportional Container for 1366px / 1080p / 1440p (Generous side margins) */

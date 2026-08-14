@@ -1113,7 +1113,21 @@ export default function HomePage() {
                                         )}
                                     </AnimatePresence>
                                 </div>
-                            ) : null}
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="btn-lime"
+                                    style={{
+                                        padding: '9px 24px',
+                                        fontSize: '13.5px',
+                                        fontWeight: '800',
+                                        textDecoration: 'none',
+                                        boxShadow: '0 4px 18px rgba(213, 237, 85, 0.25)'
+                                    }}
+                                >
+                                    Log In
+                                </Link>
+                            )}
                         </div>
                     </div>
 
