@@ -518,6 +518,10 @@ const fadeInRight = {
 
 export default function HomePage() {
     const [scrolled, setScrolled] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
+    const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
     const [activeLevelIdx, setActiveLevelIdx] = useState(1);           // Card 2 ("Still Learning") active by default (Ref media_1786655245980.png)
     const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active by default (Ref media_1786657185483.png)
@@ -544,7 +548,7 @@ export default function HomePage() {
         notes: ''
     });
 
-    // Detect Scroll for Dynamic Navbar Transition
+    // Detect Scroll for Dynamic Navbar Transition & Scroll Progress
     useEffect(() => {
         const handleScroll = () => {
             if (window.scrollY > 40) {
@@ -552,8 +556,12 @@ export default function HomePage() {
             } else {
                 setScrolled(false);
             }
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            if (totalHeight > 0) {
+                setScrollProgress((window.scrollY / totalHeight) * 100);
+            }
         };
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -585,8 +593,11 @@ export default function HomePage() {
 
     const handleOpenBooking = (pkg) => {
         setSelectedPackage(pkg);
-        setFormData(prev => ({ ...prev, packageName: pkg.title }));
         setIsBookingModalOpen(true);
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleBookingSubmit = (e) => {
@@ -598,9 +609,81 @@ export default function HomePage() {
         }, 300);
     };
 
+    const schemaData = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'Campground',
+                '@id': 'https://aanandham.in/#campground',
+                'name': 'Aanandham.go Wilderness Camps',
+                'url': 'https://aanandham.in',
+                'aggregateRating': {
+                    '@type': 'AggregateRating',
+                    'ratingValue': '4.98',
+                    'reviewCount': '342',
+                    'bestRating': '5',
+                    'worstRating': '1'
+                }
+            },
+            {
+                '@type': 'ItemList',
+                'name': 'Aanandham.go Wilderness Expeditions & Camp Packages',
+                'itemListElement': EXPEDITION_PACKAGES.map((pkg, idx) => ({
+                    '@type': 'ListItem',
+                    'position': idx + 1,
+                    'item': {
+                        '@type': 'Product',
+                        'name': pkg.title,
+                        'description': pkg.description,
+                        'image': pkg.image,
+                        'offers': {
+                            '@type': 'Offer',
+                            'price': pkg.price,
+                            'priceCurrency': 'INR',
+                            'availability': 'https://schema.org/InStock',
+                            'url': 'https://aanandham.in/#packages'
+                        },
+                        'aggregateRating': {
+                            '@type': 'AggregateRating',
+                            'ratingValue': pkg.rating.toString(),
+                            'reviewCount': pkg.reviewsCount.toString()
+                        }
+                    }
+                }))
+            },
+            {
+                '@type': 'FAQPage',
+                'mainEntity': FAQ_DATA.map(f => ({
+                    '@type': 'Question',
+                    'name': f.question,
+                    'acceptedAnswer': {
+                        '@type': 'Answer',
+                        'text': f.answer
+                    }
+                }))
+            }
+        ]
+    };
+
     return (
-        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100vh' }}>
+        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100vh', position: 'relative' }}>
             
+            {/* ── GOOGLE RICH RESULTS STRUCTURED DATA ── */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+            />
+
+            {/* ── ACCESSIBILITY: SKIP TO CONTENT LINK ── */}
+            <a href="#main-content" className="skip-to-content">
+                Skip to main content
+            </a>
+
+            {/* ── SCROLL PROGRESS BAR ── */}
+            <div className="scroll-progress-container">
+                <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
+            </div>
+
             {/* ─────────────────────────────────────────────────────────────
                 DYNAMIC TRANSLUCENT / BACKDROP NAVBAR (Ref Image 5 Batch 2)
             ───────────────────────────────────────────────────────────── */}
@@ -614,10 +697,11 @@ export default function HomePage() {
                     left: 0,
                     right: 0,
                     zIndex: 999,
-                    padding: scrolled ? '14px 24px' : '20px 32px',
-                    backgroundColor: scrolled ? 'rgba(14, 24, 17, 0.94)' : 'transparent',
-                    backdropFilter: scrolled ? 'blur(16px)' : 'none',
-                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid transparent',
+                    padding: scrolled ? '12px 24px' : '18px 32px',
+                    backgroundColor: scrolled ? 'rgba(14, 24, 17, 0.96)' : 'rgba(14, 24, 17, 0.4)',
+                    backdropFilter: 'blur(16px)',
+                    WebkitBackdropFilter: 'blur(16px)',
+                    borderBottom: scrolled ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 255, 255, 0.05)',
                     boxShadow: scrolled ? '0 10px 30px rgba(0, 0, 0, 0.25)' : 'none',
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
@@ -628,7 +712,6 @@ export default function HomePage() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    flexWrap: 'wrap',
                     gap: '16px'
                 }}>
                     
@@ -662,47 +745,149 @@ export default function HomePage() {
                         </Link>
                     </div>
 
-                    {/* Nav Links */}
-                    <nav style={{ display: 'flex', alignItems: 'center', gap: '28px', flexWrap: 'wrap' }}>
-                        <Link href="/about" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                            About Us
-                        </Link>
-                        <a href="#overview" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
-                            The Camp <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
-                        </a>
-                        <a href="#instructors" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
-                            The Team <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
-                        </a>
-                        <a href="#program" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                            Program
-                        </a>
-                        <a href="#packages" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                            Pricing
-                        </a>
-                        <a href="#faq" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                            FAQ
-                        </a>
-                    </nav>
+                    {/* Desktop Nav Links */}
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                            <Link href="/about" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                About Us
+                            </Link>
+                            <a href="#overview" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
+                                The Camp <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
+                            </a>
+                            <a href="#instructors" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px', opacity: 0.9 }}>
+                                The Team <i className="fa-solid fa-chevron-down" style={{ fontSize: '10px', opacity: 0.6 }}></i>
+                            </a>
+                            <a href="#program" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                Program
+                            </a>
+                            <a href="#packages" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                Pricing
+                            </a>
+                            <a href="#faq" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                FAQ
+                            </a>
+                        </nav>
 
-                    {/* Right Contact & Log In Button */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <Link href="/contact" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
-                            Contact
-                        </Link>
-                        <Link
-                            href="/login"
-                            className="btn-lime"
-                            style={{
-                                padding: '10px 26px',
-                                fontSize: '14px',
-                                textDecoration: 'none'
-                            }}
-                        >
-                            Log In
-                        </Link>
+                        {/* Right Contact & Log In Button */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <Link href="/contact" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                                Contact
+                            </Link>
+                            <Link
+                                href="/login"
+                                className="btn-lime"
+                                style={{
+                                    padding: '10px 24px',
+                                    fontSize: '14px',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                Log In
+                            </Link>
+                        </div>
                     </div>
+
+                    {/* Mobile Hamburger Toggle Button */}
+                    <button
+                        className="nav-mobile-toggle"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                    >
+                        <i className={isMobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
+                    </button>
                 </div>
             </motion.header>
+
+            {/* ── RESPONSIVE MOBILE SLIDE-IN DRAWER ── */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 998,
+                            background: '#0E1A11',
+                            color: '#FFFFFF',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: '100px 32px 40px',
+                            overflowY: 'auto'
+                        }}
+                    >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
+                            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Home
+                            </Link>
+                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                About Aanandham.go
+                            </Link>
+                            <a href="#overview" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Camp Overview
+                            </a>
+                            <a href="#stay" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Accommodation & Pods
+                            </a>
+                            <a href="#program" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                4-Day Program
+                            </a>
+                            <a href="#packages" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Packages & Pricing
+                            </a>
+                            <a href="#kerala-wilderness" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Kerala Wilderness Gallery
+                            </a>
+                            <a href="#faq" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                FAQ
+                            </a>
+                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                                Contact & Inquiries ↗
+                            </Link>
+                        </div>
+
+                        <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                            <Link
+                                href="/login"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="btn-lime"
+                                style={{
+                                    width: '100%',
+                                    padding: '14px',
+                                    fontSize: '16px',
+                                    marginBottom: '14px',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                Member Log In ↗
+                            </Link>
+                            <a
+                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                    color: '#25D366',
+                                    fontSize: '14px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none',
+                                    padding: '12px'
+                                }}
+                            >
+                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                                <span>WhatsApp Concierge (24/7)</span>
+                            </a>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <main id="main-content">
 
             {/* ─────────────────────────────────────────────────────────────
                 HERO SECTION (Exact match to media_1786655246250.jpg)
@@ -2014,13 +2199,48 @@ export default function HomePage() {
                                 </div>
                                 <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                     <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>{pkg.title}</h3>
-                                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '18px' }}>{pkg.description}</p>
+                                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '14px' }}>{pkg.description}</p>
+                                    
+                                    {/* Expandable Inclusions Toggle */}
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setExpandedPackageId(expandedPackageId === pkg.id ? null : pkg.id)}
+                                        style={{
+                                            fontSize: '12px',
+                                            fontWeight: '700',
+                                            color: '#121613',
+                                            background: '#F1F3EC',
+                                            border: 'none',
+                                            padding: '6px 14px',
+                                            borderRadius: '999px',
+                                            cursor: 'pointer',
+                                            marginBottom: '14px',
+                                            alignSelf: 'flex-start',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            transition: 'background 0.2s'
+                                        }}
+                                    >
+                                        <span>{expandedPackageId === pkg.id ? 'Hide Inclusions ▲' : 'View Inclusions & Perks ▼'}</span>
+                                    </button>
+
+                                    {expandedPackageId === pkg.id && (
+                                        <div style={{ marginBottom: '16px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                                            {pkg.highlights.map((h, i) => (
+                                                <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#48544C', padding: '4px 10px', borderRadius: '999px' }}>
+                                                    ✓ {h}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+
                                     <div style={{ marginTop: 'auto', paddingTop: '18px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
                                             <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>₹{pkg.price.toLocaleString()}</div>
-                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>per person all-inclusive</span>
+                                            <span style={{ fontSize: '11px', color: '#59655D' }}>per person all-inclusive</span>
                                         </div>
-                                        <button onClick={() => handleOpenBooking(pkg)} style={{ background: '#121613', color: '#FFFFFF', border: 'none', padding: '10px 22px', borderRadius: '999px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', transition: 'all 0.2s' }}>
+                                        <button onClick={() => handleOpenBooking(pkg)} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>
                                             Book Spot →
                                         </button>
                                     </div>
@@ -2150,6 +2370,100 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
+            {/* ─────────────────────────────────────────────────────────────
+                9.5 KERALA WILDERNESS & CAMPSITES GALLERY (Interactive Lightbox)
+            ───────────────────────────────────────────────────────────── */}
+            <motion.section 
+                id="kerala-wilderness" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
+                style={{ position: 'relative', padding: '100px 24px', background: '#FFFFFF' }}
+            >
+                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '44px' }}>
+                        <div>
+                            <div className="star-badge">
+                                <span className="star-icon">★</span> KERALA WILDERNESS GRID
+                            </div>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(30px, 4.5vw, 48px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: '0 0 10px' }}>
+                                Verified Peaks, Glamping & Off-Road Hubs
+                            </h2>
+                            <p style={{ color: '#59655D', fontSize: '15px', margin: 0, maxWidth: '640px' }}>
+                                Tap any spot to preview full resolution 4K imagery, mountain coordinates, altitude ratings, and safety reports.
+                            </p>
+                        </div>
+                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" className="action-arrow-btn">
+                            <span>Follow @aanandham.go</span>
+                            <div className="btn-arrow-circle">📸</div>
+                        </a>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
+                        {KERALA_WILDERNESS_GALLERY.map((spot) => (
+                            <div
+                                key={spot.id}
+                                onClick={() => setSelectedLightboxImg(spot)}
+                                className="hover-lift card-img-zoom"
+                                style={{
+                                    borderRadius: '24px',
+                                    overflow: 'hidden',
+                                    border: '1px solid rgba(18, 22, 19, 0.08)',
+                                    background: '#F8F9F5',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    position: 'relative'
+                                }}
+                            >
+                                <div style={{ position: 'relative', height: '260px' }}>
+                                    <img src={spot.img} alt={spot.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '16px',
+                                        left: '16px',
+                                        background: '#D5ED55',
+                                        color: '#121613',
+                                        fontSize: '11px',
+                                        fontWeight: '800',
+                                        padding: '4px 12px',
+                                        borderRadius: '999px',
+                                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                    }}>
+                                        {spot.altitude}
+                                    </span>
+                                    <span style={{
+                                        position: 'absolute',
+                                        top: '16px',
+                                        right: '16px',
+                                        background: 'rgba(0,0,0,0.6)',
+                                        color: '#FFFFFF',
+                                        fontSize: '11px',
+                                        fontWeight: '700',
+                                        padding: '4px 10px',
+                                        borderRadius: '999px',
+                                        backdropFilter: 'blur(6px)'
+                                    }}>
+                                        🔍 Click to Expand
+                                    </span>
+                                </div>
+                                <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' }}>
+                                        {spot.location}
+                                    </span>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '8px' }}>
+                                        {spot.name}
+                                    </h3>
+                                    <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.5, margin: 0 }}>
+                                        {spot.category} · {spot.badge}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
                 10. TESTIMONIALS & VIDEO DIARIES (Ref Screenshot 5 - media_1786656749593.png)
@@ -2412,6 +2726,8 @@ export default function HomePage() {
                 </div>
             </section>
 
+            </main>
+
             {/* ─────────────────────────────────────────────────────────────
                 13. DEEP FOREST GREEN FOOTER (Ref Screenshot 2 Batch 3 - media_1786657185483.png)
                    - Interactive lighting & directional ↗ arrows
@@ -2421,22 +2737,224 @@ export default function HomePage() {
             <Footer />
 
             {/* ─────────────────────────────────────────────────────────────
-                MODALS
+                FLOATING ACTION BUTTONS (WhatsApp Concierge + Back to Top)
             ───────────────────────────────────────────────────────────── */}
-            {isVideoModalOpen && (
-                <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.88)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-                    <div style={{ width: '100%', maxWidth: '800px', background: '#0A0D0B', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '28px', overflow: 'hidden', position: 'relative' }}>
-                        <button onClick={() => setIsVideoModalOpen(false)} style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10, width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(0, 0, 0, 0.65)', border: '1px solid rgba(255, 255, 255, 0.3)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                            <i className="fa-solid fa-xmark"></i>
-                        </button>
-                        <div style={{ height: '420px', position: 'relative' }}>
-                            <img src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80" alt="Video frame" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        </div>
-                    </div>
-                </div>
+            <a
+                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20would%20like%20to%20know%20about%20upcoming%20camp%20batches"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="floating-whatsapp-btn"
+                aria-label="Chat with Aanandham Concierge on WhatsApp"
+            >
+                <i className="fa-brands fa-whatsapp"></i>
+            </a>
+
+            {scrolled && (
+                <button
+                    onClick={scrollToTop}
+                    className="back-to-top-btn"
+                    aria-label="Scroll back to top"
+                >
+                    <i className="fa-solid fa-arrow-up"></i>
+                </button>
             )}
 
-            {/* Interactive Full Booking Engine Modal */}
+            {/* ─────────────────────────────────────────────────────────────
+                MODALS (Real Video, Gallery Lightbox & Booking Engine)
+            ───────────────────────────────────────────────────────────── */}
+            
+            {/* 1. Real 4K Mountain Expedition Video Modal */}
+            <AnimatePresence>
+                {isVideoModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Aanandham Wilderness Video Player"
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 9999,
+                            background: 'rgba(0, 0, 0, 0.92)',
+                            backdropFilter: 'blur(16px)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '24px'
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.95, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.95 }}
+                            style={{
+                                width: '100%',
+                                maxWidth: '860px',
+                                background: '#0A0D0B',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                borderRadius: '28px',
+                                overflow: 'hidden',
+                                position: 'relative',
+                                boxShadow: '0 25px 80px rgba(0,0,0,0.5)'
+                            }}
+                        >
+                            <button
+                                onClick={() => setIsVideoModalOpen(false)}
+                                aria-label="Close video player"
+                                style={{
+                                    position: 'absolute',
+                                    top: '16px',
+                                    right: '16px',
+                                    zIndex: 10,
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(0, 0, 0, 0.75)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    fontSize: '16px'
+                                }}
+                            >
+                                ✕
+                            </button>
+                            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+                                <iframe
+                                    src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
+                                    title="Aanandham Wilderness Camp Video Diaries"
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        border: 0
+                                    }}
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* 2. Fullscreen Kerala Wilderness Lightbox Modal */}
+            <AnimatePresence>
+                {selectedLightboxImg && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={selectedLightboxImg.name}
+                        onClick={() => setSelectedLightboxImg(null)}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 9999,
+                            background: 'rgba(0, 0, 0, 0.94)',
+                            backdropFilter: 'blur(16px)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '24px'
+                        }}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.92, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.92 }}
+                            onClick={(e) => e.stopPropagation()}
+                            style={{
+                                width: '100%',
+                                maxWidth: '920px',
+                                background: '#101E13',
+                                border: '1px solid rgba(255, 255, 255, 0.15)',
+                                borderRadius: '32px',
+                                overflow: 'hidden',
+                                position: 'relative',
+                                boxShadow: '0 30px 90px rgba(0, 0, 0, 0.6)',
+                                color: '#FFFFFF'
+                            }}
+                        >
+                            <button
+                                onClick={() => setSelectedLightboxImg(null)}
+                                aria-label="Close image preview"
+                                style={{
+                                    position: 'absolute',
+                                    top: '20px',
+                                    right: '20px',
+                                    zIndex: 10,
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: 'rgba(0, 0, 0, 0.65)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    color: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    fontSize: '16px'
+                                }}
+                            >
+                                ✕
+                            </button>
+
+                            <div style={{ height: '480px', position: 'relative', overflow: 'hidden' }}>
+                                <img
+                                    src={selectedLightboxImg.img}
+                                    alt={selectedLightboxImg.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
+                                    background: 'linear-gradient(0deg, #101E13 0%, rgba(16, 30, 19, 0) 100%)',
+                                    height: '140px'
+                                }} />
+                            </div>
+
+                            <div style={{ padding: '24px 32px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                                <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                                        <span style={{ background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px' }}>
+                                            {selectedLightboxImg.altitude}
+                                        </span>
+                                        <span style={{ color: '#A2B6A6', fontSize: '13px', fontWeight: '600' }}>
+                                            {selectedLightboxImg.location}
+                                        </span>
+                                    </div>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
+                                        {selectedLightboxImg.name}
+                                    </h3>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setSelectedLightboxImg(null);
+                                        setIsBookingModalOpen(true);
+                                    }}
+                                    className="btn-lime"
+                                    style={{ padding: '12px 32px', fontSize: '14px', fontWeight: '800' }}
+                                >
+                                    Book This Campsite ↗
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* 3. Interactive Full Booking Engine Modal */}
             <BookingEngineModal
                 isOpen={isBookingModalOpen}
                 onClose={() => setIsBookingModalOpen(false)}

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Footer from '../../components/Footer';
 
 export default function ContactPage() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -52,6 +53,11 @@ export default function ContactPage() {
             overflowX: 'clip'
         }}>
 
+            {/* ── ACCESSIBILITY: SKIP TO CONTENT LINK ── */}
+            <a href="#contact-content" className="skip-to-content">
+                Skip to main content
+            </a>
+
             {/* Contact & Breadcrumb Schema */}
             <script
                 type="application/ld+json"
@@ -90,9 +96,10 @@ export default function ContactPage() {
                 left: 0,
                 right: 0,
                 zIndex: 999,
-                padding: '18px 32px',
-                backgroundColor: 'rgba(14, 24, 17, 0.94)',
+                padding: '16px 28px',
+                backgroundColor: 'rgba(14, 24, 17, 0.96)',
                 backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
                 display: 'flex',
                 alignItems: 'center',
@@ -127,7 +134,8 @@ export default function ContactPage() {
                     </Link>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                {/* Desktop Nav Links */}
+                <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
                     <Link href="/" style={{
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -140,11 +148,85 @@ export default function ContactPage() {
                     }}>
                         <i className="fa-solid fa-arrow-left" style={{ fontSize: '11px' }}></i> Back to Home
                     </Link>
+                    <Link href="/about" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '14px', fontWeight: '600', opacity: 0.9 }}>
+                        About Us
+                    </Link>
                     <Link href="/login" className="btn-lime" style={{ padding: '9px 24px', fontSize: '13.5px', textDecoration: 'none' }}>
                         Log In
                     </Link>
                 </div>
+
+                {/* Mobile Toggle Button */}
+                <button
+                    className="nav-mobile-toggle"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                >
+                    <i className={isMobileMenuOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-bars'}></i>
+                </button>
             </header>
+
+            {/* ── RESPONSIVE MOBILE DRAWER ── */}
+            <AnimatePresence>
+                {isMobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, x: '100%' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: '100%' }}
+                        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            zIndex: 998,
+                            background: '#0E1A11',
+                            color: '#FFFFFF',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            padding: '100px 32px 40px',
+                            overflowY: 'auto'
+                        }}
+                    >
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '22px', fontSize: '20px', fontWeight: '800' }}>
+                            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Home
+                            </Link>
+                            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                About Us
+                            </Link>
+                            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#D5ED55', textDecoration: 'none' }}>
+                                Contact & Inquiries
+                            </Link>
+                            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
+                                Member Log In
+                            </Link>
+                        </div>
+
+                        <div style={{ marginTop: 'auto', paddingTop: '32px', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                            <a
+                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '10px',
+                                    color: '#25D366',
+                                    fontSize: '14px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none',
+                                    padding: '12px'
+                                }}
+                            >
+                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                                <span>WhatsApp Concierge (24/7)</span>
+                            </a>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <main id="contact-content">
 
             {/* ── HERO BANNER ── */}
             <section style={{
@@ -184,7 +266,7 @@ export default function ContactPage() {
             </section>
 
             {/* ── MAIN CONTENT GRID: CHANNELS + CONTACT FORM ── */}
-            <main style={{ maxWidth: '1240px', margin: '-40px auto 100px', padding: '0 24px', position: 'relative', zIndex: 10 }}>
+            <div style={{ maxWidth: '1240px', margin: '-40px auto 100px', padding: '0 24px', position: 'relative', zIndex: 10 }}>
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
@@ -733,10 +815,22 @@ export default function ContactPage() {
                         />
                     </div>
                 </div>
+            </div>
             </main>
 
             {/* ── SHARED FOOTER ── */}
             <Footer />
+
+            {/* ── FLOATING WHATSAPP CONCIERGE BUTTON ── */}
+            <a
+                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20would%20like%20to%20know%20about%20upcoming%20camp%20batches"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="floating-whatsapp-btn"
+                aria-label="Chat with Aanandham Concierge on WhatsApp"
+            >
+                <i className="fa-brands fa-whatsapp"></i>
+            </a>
 
         </div>
     );

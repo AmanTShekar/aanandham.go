@@ -13,25 +13,13 @@ export default function sitemap() {
       url: `${baseUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
-      priority: 0.8,
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/contact`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/login`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
-    },
-    {
-      url: `${baseUrl}/signup`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.5,
+      priority: 0.9,
     },
   ];
 }

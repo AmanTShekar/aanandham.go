@@ -2,7 +2,10 @@
   --font-heading: var(--font-bricolage), 'Bricolage Grotesque', Arial, sans-serif;
   --font-body: var(--font-jakarta), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   
-  /* Natural Aesthetic Color Palette */
+  /* Strictly Enforced Natural Aesthetic Color Palette (Ignored by Device Auto-Dark Modes) */
+  color-scheme: light only;
+  forced-color-adjust: none;
+  
   --bg-page: #F8F9F5;
   --bg-card: #FFFFFF;
   --bg-card-alt: #F1F3EC;
@@ -14,8 +17,8 @@
   --accent-lime-glow: rgba(213, 237, 85, 0.35);
   
   --text-dark: #121613;
-  --text-muted: #59655D;
-  --text-light-muted: #8E9B92;
+  --text-muted: #48544C;         /* High-contrast WCAG AA compliant */
+  --text-light-muted: #59655D;   /* WCAG AA compliant on #F8F9F5 */
   --text-white: #FFFFFF;
   --text-white-muted: #A2B6A6;
   
@@ -37,6 +40,9 @@ html {
   background-color: var(--bg-page);
   color: var(--text-dark);
   overflow-x: clip;
+  color-scheme: light only;
+  forced-color-adjust: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -46,6 +52,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  color-scheme: light only;
 }
 
 h1, h2, h3, h4, h5, h6, .font-heading {
@@ -56,6 +63,38 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 ::selection {
   background: var(--accent-lime);
   color: #000000;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ACCESSIBILITY & FOCUS VISIBLE
+───────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2.5px solid var(--accent-lime);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+button:focus-visible, a:focus-visible {
+  outline: 2.5px solid var(--accent-lime);
+  outline-offset: 3px;
+}
+
+.skip-to-content {
+  position: absolute;
+  top: -100px;
+  left: 20px;
+  background: #121613;
+  color: #D5ED55;
+  padding: 12px 20px;
+  z-index: 10000;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 20px;
 }
 
 /* Custom Scrollbar */
@@ -74,6 +113,26 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   SCROLL PROGRESS BAR
+───────────────────────────────────────────────────────────── */
+.scroll-progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: transparent;
+  z-index: 10001;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #D5ED55, #88A316);
+  width: 0%;
+  transition: width 0.1s ease-out;
+}
+
+/* ─────────────────────────────────────────────────────────────
    CLEAN, SUBTLE HOVER & TRANSITION PHYSICS
 ───────────────────────────────────────────────────────────── */
 .hover-lift {
@@ -85,7 +144,6 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   border-color: rgba(18, 22, 19, 0.16);
 }
 
-/* Smooth zoom for card images on parent hover */
 .card-img-zoom {
   overflow: hidden;
 }
@@ -108,14 +166,40 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   justify-content: center;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  position: relative;
+  overflow: hidden;
 }
+
+.btn-lime::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg) translateX(-100%);
+  transition: transform 0.75s ease-in-out;
+}
+
+.btn-lime:hover::after {
+  transform: rotate(30deg) translateX(100%);
+}
+
 .btn-lime:hover {
   background-color: var(--accent-lime-hover);
   box-shadow: 0 0 24px var(--accent-lime-glow);
   transform: scale(1.02);
 }
 
-/* Star category tag (e.g. ★ OVERVIEW, ★ LEVELS) */
+/* Star category tag */
 .star-badge {
   font-size: 11px;
   font-weight: 800;
@@ -148,6 +232,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 44px;
 }
 .action-arrow-btn:hover {
   border-color: rgba(18, 22, 19, 0.3);
@@ -214,8 +299,36 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PROGRAM FLOATING CURSOR FOLLOWER & RESPONSIVE PREVIEWS
+   RESPONSIVE NAVIGATION & BREAKPOINTS
 ───────────────────────────────────────────────────────────── */
+.nav-desktop-links {
+  display: none !important;
+}
+
+.nav-mobile-toggle {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 960px) {
+  .nav-desktop-links {
+    display: flex !important;
+  }
+  .nav-mobile-toggle {
+    display: none !important;
+  }
+}
+
 .mobile-only {
   display: block;
 }
@@ -233,7 +346,7 @@ h1, h2, h3, h4, h5, h6, .font-heading {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   STICKY PINNED SPLIT-COLUMN LAYOUTS (Experience, Steps, FAQ)
+   STICKY PINNED SPLIT-COLUMN LAYOUTS
 ───────────────────────────────────────────────────────────── */
 .sticky-split-grid {
   display: grid;
@@ -331,60 +444,70 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   animation: beacon-pulse 2s infinite cubic-bezier(0.45, 0, 0.55, 1);
 }
 
-@keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
+/* Floating WhatsApp Concierge Button */
+.floating-whatsapp-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  background: #25D366;
+  color: #FFFFFF;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+  text-decoration: none;
+  font-size: 28px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-whatsapp-btn:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.6);
+}
+
+/* Back to Top Button */
+.back-to-top-btn {
+  position: fixed;
+  bottom: 90px;
+  right: 28px;
+  z-index: 998;
+  background: #121613;
+  color: #D5ED55;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-size: 16px;
+}
+
+.back-to-top-btn:hover {
+  transform: translateY(-4px);
+  background: #000000;
+  border-color: #D5ED55;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION FALLBACK
+───────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
-  50% {
-    transform: translateY(-8px) rotate(1.2deg);
+  .marquee-track {
+    animation: none !important;
+    overflow-x: auto;
   }
 }
-
-.float-animation {
-  animation: float-slow 5s ease-in-out infinite;
-}
-
-/* Glassmorphism Card Hover Polish */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.04);
-}
-
-.glass-panel-dark {
-  background: rgba(14, 24, 17, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-}
-
-/* Shimmer Highlight on Buttons */
-.btn-lime {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-lime::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(
-    60deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.35) 50%,
-    transparent 70%
-  );
-  transform: rotate(30deg) translateX(-100%);
-  transition: transform 0.75s ease-in-out;
-}
-
-.btn-lime:hover::after {
-  transform: rotate(30deg) translateX(100%);
-}
-
