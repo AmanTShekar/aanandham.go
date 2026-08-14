@@ -129,29 +129,30 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     };
 
     return (
-        <div style={{
+        <div className="booking-mobile-overlay" style={{
             position: 'fixed',
             inset: 0,
             zIndex: 9999,
             background: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(12px)',
+            backdropFilter: 'blur(14px)',
+            WebkitBackdropFilter: 'blur(14px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: 'clamp(8px, 2.5vw, 20px)'
         }}>
             <motion.div
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                initial={{ opacity: 0, scale: 0.96, y: 24 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="modal-rounded-card"
+                exit={{ opacity: 0, scale: 0.96, y: 24 }}
+                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                className="modal-rounded-card booking-mobile-sheet"
                 style={{
                     background: '#FFFFFF',
                     width: '100%',
                     maxWidth: '860px',
                     maxHeight: 'min(94vh, 840px)',
-                    borderRadius: 'clamp(20px, 4vw, 32px)',
+                    borderRadius: 'clamp(22px, 4vw, 32px)',
                     boxShadow: '0 25px 70px rgba(0, 0, 0, 0.35)',
                     position: 'relative',
                     color: '#121613'
@@ -161,40 +162,47 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 <div style={{
                     padding: 'clamp(14px, 2.5vw, 22px) clamp(16px, 3.5vw, 32px)',
                     borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
                     background: '#F8F9F5',
                     flexShrink: 0
                 }}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span className="live-beacon"></span>
-                            <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#59655D', textTransform: 'uppercase' }}>
-                                AANANDHAM.GO INSTANT BOOKING ENGINE
-                            </span>
+                    {/* Mobile Bottom Sheet Pull Bar */}
+                    <div className="mobile-only" style={{ width: '38px', height: '4px', background: 'rgba(18, 22, 19, 0.2)', borderRadius: '999px', margin: '0 auto 12px' }} />
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span className="live-beacon"></span>
+                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#59655D', textTransform: 'uppercase' }}>
+                                    AANANDHAM.GO INSTANT BOOKING ENGINE
+                                </span>
+                            </div>
+                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 2.5vw, 22px)', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                {step === 1 ? 'Select Campsite & Travel Dates' : 'Customize Experience & Confirm'}
+                            </h3>
                         </div>
-                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 2.5vw, 22px)', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                            {step === 1 ? 'Select Campsite & Travel Dates' : 'Customize Experience & Confirm'}
-                        </h3>
+                        <button
+                            onClick={onClose}
+                            aria-label="Close reservation modal"
+                            className="modal-close-btn-light"
+                        >
+                            ✕
+                        </button>
                     </div>
-                    <button
-                        onClick={onClose}
-                        aria-label="Close reservation modal"
-                        className="modal-close-btn-light"
-                    >
-                        ✕
-                    </button>
                 </div>
 
                 <div className="modal-rounded-body" style={{ flex: 1, padding: 'clamp(16px, 3.5vw, 32px)' }}>
                     {step === 1 ? (
                         <div>
-                            {/* Step 1: Package Grid */}
-                            <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', marginBottom: '14px' }}>
-                                1. CHOOSE EXPEDITION / CAMP
-                            </label>
-                            <div style={{
+                            {/* Step 1: Package Grid / Mobile Swipeable Track */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                <label style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1px', textTransform: 'uppercase', color: '#59655D', display: 'block', margin: 0 }}>
+                                    1. CHOOSE EXPEDITION / CAMP
+                                </label>
+                                <span className="mobile-only" style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
+                                    Swipe →
+                                </span>
+                            </div>
+                            <div className="booking-camps-track" style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
                                 gap: '14px',

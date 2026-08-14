@@ -744,7 +744,7 @@ export default function HomePage() {
     const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
-    const [activeLevelIdx, setActiveLevelIdx] = useState(1);           // Card 2 ("Still Learning") active by default (Ref media_1786655245980.png)
+    const [activeLevelIdx, setActiveLevelIdx] = useState(null);        // No card active by default until hovered/tapped
     const [activeDayIdx, setActiveDayIdx] = useState(0);               // Day 1 active hover by default
     const [expandedDayIdx, setExpandedDayIdx] = useState(0);           // Day 1 expanded by default
     const [activeWhyIdx, setActiveWhyIdx] = useState(0);               // Safety & Comfort active by default
@@ -755,6 +755,8 @@ export default function HomePage() {
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(EXPEDITION_PACKAGES[0]);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
 
     // Floating cursor follower preview for Program section
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -769,6 +771,24 @@ export default function HomePage() {
         packageName: EXPEDITION_PACKAGES[0].title,
         notes: ''
     });
+
+    // Read logged-in user profile from localStorage
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem('aanandham_user');
+            if (saved) {
+                setCurrentUser(JSON.parse(saved));
+            }
+        } catch (e) {}
+    }, []);
+
+    const handleLogout = () => {
+        try {
+            localStorage.removeItem('aanandham_user');
+        } catch (e) {}
+        setCurrentUser(null);
+        setIsAccountMenuOpen(false);
+    };
 
     // Detect Scroll for Dynamic Navbar Transition & Scroll Progress
     useEffect(() => {
@@ -1005,42 +1025,121 @@ export default function HomePage() {
                             </Link>
                         </nav>
 
-                        {/* Right Contact & Log In Button */}
+                        {/* Right Account Dropdown / Camper Profile Indicator */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            <Link
-                                href="/login"
-                                className="btn-lime"
-                                style={{
-                                    padding: '10px 24px',
-                                    fontSize: '14px',
-                                    textDecoration: 'none'
-                                }}
-                            >
-                                Log In
-                            </Link>
+                            {currentUser ? (
+                                <div style={{ position: 'relative' }}>
+                                    <button
+                                        onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            background: 'rgba(255, 255, 255, 0.12)',
+                                            border: '1px solid rgba(229, 169, 59, 0.4)',
+                                            color: '#FFFFFF',
+                                            padding: '6px 14px',
+                                            borderRadius: '999px',
+                                            cursor: 'pointer',
+                                            fontSize: '13.5px',
+                                            fontWeight: '700',
+                                            backdropFilter: 'blur(10px)',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>
+                                            {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
+                                        </span>
+                                        <span>{currentUser.name || 'Camper'}</span>
+                                        <i className={`fa-solid fa-chevron-${isAccountMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '10px', color: '#E5A93B' }}></i>
+                                    </button>
+
+                                    {/* Frosted Dark Glass Camper Account Dropdown */}
+                                    <AnimatePresence>
+                                        {isAccountMenuOpen && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 'calc(100% + 10px)',
+                                                    right: 0,
+                                                    width: '240px',
+                                                    background: 'rgba(11, 21, 14, 0.96)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                                                    borderRadius: '20px',
+                                                    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                                                    backdropFilter: 'blur(24px)',
+                                                    WebkitBackdropFilter: 'blur(24px)',
+                                                    padding: '16px',
+                                                    zIndex: 1000,
+                                                    color: '#FFFFFF'
+                                                }}
+                                            >
+                                                <div style={{ paddingBottom: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '10px' }}>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#8E9B92', wordBreak: 'break-all' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                                                </div>
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                    <button
+                                                        onClick={() => { setIsAccountMenuOpen(false); handleOpenBooking(EXPEDITION_PACKAGES[0]); }}
+                                                        style={{ background: 'transparent', border: 'none', color: '#FFFFFF', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                        <span>⛺ My Bookings & Permits</span>
+                                                    </button>
+                                                    <a
+                                                        href="#packages"
+                                                        onClick={() => setIsAccountMenuOpen(false)}
+                                                        style={{ color: '#FFFFFF', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                        <span>★ Saved Expeditions</span>
+                                                    </a>
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        style={{ background: 'transparent', border: 'none', color: '#FF7B7B', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '700', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 123, 123, 0.1)'}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+                                                    >
+                                                        <span>🚪 Log Out</span>
+                                                    </button>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ) : null}
                         </div>
                     </div>
 
-                    {/* Mobile Quick Action Pill + Hamburger Toggle */}
+                    {/* Mobile Header: User Profile Badge (if logged in) + Hamburger Toggle */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Link
-                            href="/login"
-                            className="mobile-only"
-                            style={{
-                                background: 'rgba(255, 255, 255, 0.12)',
-                                border: '1px solid rgba(255, 255, 255, 0.25)',
-                                color: '#FFFFFF',
-                                padding: '7px 16px',
-                                borderRadius: '999px',
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                textDecoration: 'none',
-                                backdropFilter: 'blur(10px)',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            Log In
-                        </Link>
+                        {currentUser && (
+                            <Link
+                                href="/login"
+                                className="mobile-only"
+                                style={{
+                                    width: '34px',
+                                    height: '34px',
+                                    borderRadius: '50%',
+                                    background: '#E5A93B',
+                                    color: '#121613',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '13px',
+                                    fontWeight: '800',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                {currentUser.name ? currentUser.name[0].toUpperCase() : '👤'}
+                            </Link>
+                        )}
 
                         <button
                             className="nav-mobile-toggle"
@@ -1065,7 +1164,7 @@ export default function HomePage() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 99999,
-                            background: 'rgba(11, 21, 14, 0.88)',
+                            background: 'rgba(11, 21, 14, 0.92)',
                             backdropFilter: 'blur(32px)',
                             WebkitBackdropFilter: 'blur(32px)',
                             color: '#FFFFFF',
@@ -1097,102 +1196,237 @@ export default function HomePage() {
                             </button>
                         </div>
 
-                        {/* Essential Streamlined Navigation Links with Subtle Dividing Lines & Highlight Pen Effect */}
-                        <nav style={{ display: 'flex', flexDirection: 'column', padding: '16px 0', fontSize: '18px', fontWeight: '700' }}>
+                        {/* Heading-Font Typography Streamlined Navigation Links */}
+                        <nav style={{ display: 'flex', flexDirection: 'column', padding: '16px 0' }}>
                             <Link 
                                 href="/" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">Home</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </Link>
                             <Link 
                                 href="/about" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">About</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </Link>
                             <a 
                                 href="#packages" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">The Camps</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </a>
                             <a 
                                 href="#program" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">Events</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </a>
                             <a 
                                 href="#stories" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">Poetry & Tales</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </a>
                             <Link 
                                 href="/contact" 
                                 onClick={() => setIsMobileMenuOpen(false)} 
                                 className="text-hover-marker text-hover-marker-dark"
-                                style={{ color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', width: '100%' }}
+                                style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(24px, 5.5vw, 30px)',
+                                    fontWeight: '800',
+                                    letterSpacing: '-0.025em',
+                                    color: '#FFFFFF',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    padding: '16px 0',
+                                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                    width: '100%'
+                                }}
                             >
                                 <span className="marker-text">Contact</span>
-                                <span style={{ color: '#8E9B92', fontSize: '14px' }}>→</span>
+                                <span style={{ color: '#8E9B92', fontSize: '16px', fontWeight: '400' }}>→</span>
                             </Link>
                         </nav>
 
-                        {/* Bottom Actions: Log In / Sign Up & Direct Aanandham Desk */}
+                        {/* Bottom Actions: Dynamic Camper Profile / Auth State & Direct Aanandham Desk */}
                         <div style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {/* Dual Auth Buttons */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                <Link
-                                    href="/login"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        background: 'rgba(255, 255, 255, 0.1)',
-                                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                                        color: '#FFFFFF',
-                                        padding: '12px',
-                                        borderRadius: '999px',
-                                        fontSize: '14px',
-                                        fontWeight: '700',
-                                        textDecoration: 'none',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                >
-                                    Log In
-                                </Link>
-                                <Link
-                                    href="/signup"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="btn-lime"
-                                    style={{
-                                        padding: '12px',
-                                        fontSize: '14px',
-                                        textDecoration: 'none',
-                                        fontWeight: '800'
-                                    }}
-                                >
-                                    Sign Up
-                                </Link>
-                            </div>
+                            {currentUser ? (
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.06)',
+                                    border: '1px solid rgba(229, 169, 59, 0.3)',
+                                    borderRadius: '20px',
+                                    padding: '16px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '12px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '800' }}>
+                                                {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
+                                            </span>
+                                            <div>
+                                                <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
+                                                <div style={{ fontSize: '11px', color: '#8E9B92' }}>{currentUser.email || 'camper@aanandham.in'}</div>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={handleLogout}
+                                            style={{
+                                                background: 'rgba(255, 123, 123, 0.15)',
+                                                border: '1px solid rgba(255, 123, 123, 0.3)',
+                                                color: '#FF7B7B',
+                                                padding: '6px 12px',
+                                                borderRadius: '999px',
+                                                fontSize: '12px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Log Out
+                                        </button>
+                                    </div>
+                                    <button
+                                        onClick={() => { setIsMobileMenuOpen(false); handleOpenBooking(EXPEDITION_PACKAGES[0]); }}
+                                        style={{
+                                            background: '#E5A93B',
+                                            border: 'none',
+                                            color: '#121613',
+                                            padding: '10px',
+                                            borderRadius: '999px',
+                                            fontSize: '13px',
+                                            fontWeight: '800',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px'
+                                        }}
+                                    >
+                                        <span>⛺ My Bookings & Permits</span>
+                                    </button>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                    <Link
+                                        href="/login"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                                            color: '#FFFFFF',
+                                            padding: '12px',
+                                            borderRadius: '999px',
+                                            fontSize: '14px',
+                                            fontWeight: '700',
+                                            textDecoration: 'none',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        Log In
+                                    </Link>
+                                    <Link
+                                        href="/signup"
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="btn-lime"
+                                        style={{
+                                            padding: '12px',
+                                            fontSize: '14px',
+                                            textDecoration: 'none',
+                                            fontWeight: '800'
+                                        }}
+                                    >
+                                        Sign Up
+                                    </Link>
+                                </div>
+                            )}
 
                             {/* Aanandham Direct Helpdesk */}
                             <a
@@ -1610,18 +1844,19 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: 'clamp(70px, 8vw, 110px) 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: 'clamp(60px, 7vw, 110px) 24px', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 'clamp(40px, 5vw, 64px)', alignItems: 'center' }}>
+                    <div className="why-aanandham-grid">
                         
-                        {/* Left Interactive Cinematic Showcase Card (Taller, Commanding Proportions) */}
+                        {/* Interactive Cinematic Showcase Card (Desktop: Left, Mobile: Below Header/Tabs) */}
                         <motion.div 
                             variants={fadeInLeft}
+                            className="why-showcase-col"
                             style={{
                                 position: 'relative',
-                                height: 'clamp(540px, 66vh, 660px)',
-                                minHeight: '520px',
+                                height: 'clamp(520px, 64vh, 640px)',
+                                minHeight: '480px',
                                 borderRadius: '36px',
                                 overflow: 'hidden',
                                 boxShadow: '0 25px 60px rgba(0, 0, 0, 0.16)'
@@ -1646,13 +1881,13 @@ export default function HomePage() {
                             {/* Top Left Pillar Badge */}
                             <div style={{
                                 position: 'absolute',
-                                top: '24px',
-                                left: '24px',
+                                top: 'clamp(14px, 3vw, 24px)',
+                                left: 'clamp(14px, 3vw, 24px)',
                                 background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#E5A93B',
                                 fontSize: '12px',
                                 fontWeight: '800',
-                                padding: '8px 18px',
+                                padding: '6px 16px',
                                 borderRadius: '999px',
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(229, 169, 59, 0.35)',
@@ -1667,13 +1902,13 @@ export default function HomePage() {
                             {/* Top Right Live Stat Pill */}
                             <div style={{
                                 position: 'absolute',
-                                top: '24px',
-                                right: '24px',
+                                top: 'clamp(14px, 3vw, 24px)',
+                                right: 'clamp(14px, 3vw, 24px)',
                                 background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#FFFFFF',
                                 fontSize: '11.5px',
                                 fontWeight: '700',
-                                padding: '8px 16px',
+                                padding: '6px 14px',
                                 borderRadius: '999px',
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255, 255, 255, 0.15)'
@@ -1682,25 +1917,25 @@ export default function HomePage() {
                             </div>
 
                             {/* Bottom Content Card & Highlights */}
-                            <div style={{ position: 'absolute', bottom: '26px', left: '26px', right: '26px' }}>
+                            <div className="why-showcase-content" style={{ position: 'absolute', bottom: '26px', left: '26px', right: '26px' }}>
                                 <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].tagline}
                                 </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 2.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 12px', lineHeight: 1.25 }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.25 }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
                                 </h3>
 
                                 {/* Highlights Pills */}
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].highlights.map((h, idx) => (
-                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.14)', color: '#FFFFFF', fontSize: '11px', fontWeight: '600', padding: '5px 12px', borderRadius: '8px', backdropFilter: 'blur(6px)' }}>
+                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.14)', color: '#FFFFFF', fontSize: '11px', fontWeight: '600', padding: '4px 10px', borderRadius: '8px', backdropFilter: 'blur(6px)' }}>
                                             ✓ {h}
                                         </span>
                                     ))}
                                 </div>
 
                                 {/* Carousel Controls & Indicator */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(255, 255, 255, 0.18)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.18)' }}>
                                     <div style={{ display: 'flex', gap: '6px' }}>
                                         {WHY_AANANDHAM_PILLARS.map((_, idx) => (
                                             <button
@@ -1723,45 +1958,77 @@ export default function HomePage() {
                                         <button 
                                             onClick={prevWhyPillar} 
                                             aria-label="Previous reason"
-                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                            style={{ width: '38px', height: '38px', minWidth: '38px', minHeight: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
+                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '12px' }}></i>
                                         </button>
                                         <button 
                                             onClick={nextWhyPillar} 
                                             aria-label="Next reason"
-                                            style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
+                                            style={{ width: '38px', height: '38px', minWidth: '38px', minHeight: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
+                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '12px' }}></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </motion.div>
 
-                        {/* Right Content & Interactive Feature Grid */}
-                        <motion.div variants={fadeInRight}>
+                        {/* Content & Interactive Feature Pillars (Desktop: Right, Mobile: Top) */}
+                        <motion.div variants={fadeInRight} className="why-content-col">
                             <div className="star-badge">
                                 <span className="star-icon">★</span> WHY AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(32px, 4.5vw, 48px)',
+                                fontSize: 'clamp(28px, 4.2vw, 48px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
                                 lineHeight: 1.15,
-                                marginBottom: '18px'
+                                marginBottom: '16px'
                             }}>
                                 The <span className="text-highlight-gold">gold standard</span> in <span style={{ color: '#59655D' }}>Kerala wilderness glamping</span>
                             </h2>
 
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.75, marginBottom: '28px' }}>
+                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '22px' }}>
                                 We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 350+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
                             </p>
 
-                            {/* 4 Interactive Clickable Feature Pillar Cards */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px', marginBottom: '28px' }}>
+                            {/* Mobile Horizontal Scrollable Pillar Tabs */}
+                            <div className="why-mobile-tabs">
+                                {WHY_AANANDHAM_PILLARS.map((pillar, idx) => {
+                                    const isSelected = activeWhyIdx === idx;
+                                    return (
+                                        <button
+                                            key={pillar.id}
+                                            onClick={() => setActiveWhyIdx(idx)}
+                                            style={{
+                                                flexShrink: 0,
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                padding: '8px 16px',
+                                                borderRadius: '999px',
+                                                background: isSelected ? '#121613' : '#FFFFFF',
+                                                color: isSelected ? '#FFFFFF' : '#59655D',
+                                                border: isSelected ? '1px solid #121613' : '1px solid rgba(18,22,19,0.12)',
+                                                fontSize: '13px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.2s ease',
+                                                boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.15)' : 'none'
+                                            }}
+                                        >
+                                            <span>{pillar.statIcon}</span>
+                                            <span>{pillar.title.split(' ')[0]} {pillar.title.split(' ')[1]}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Desktop 4 Interactive Clickable Feature Pillar Cards */}
+                            <div className="why-desktop-pillars" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', marginBottom: '26px' }}>
                                 {WHY_AANANDHAM_PILLARS.map((pillar, idx) => {
                                     const isSelected = activeWhyIdx === idx;
                                     return (
@@ -1792,19 +2059,19 @@ export default function HomePage() {
                                 })}
                             </div>
 
-                            {/* Bottom Certified Trust Badges */}
-                            <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                            {/* Certified Trust Badges */}
+                            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
                                     <span style={{ color: '#E5A93B' }}>🛡️</span>
-                                    <span>Kerala Govt. Forest Eco-Permits</span>
+                                    <span>Kerala Forest Eco-Permits</span>
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
                                     <span style={{ color: '#E5A93B' }}>★</span>
-                                    <span>4.98 / 5.0 Explorer Rating</span>
+                                    <span>4.98 / 5.0 Rating</span>
                                 </div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
                                     <span style={{ color: '#E5A93B' }}>🚙</span>
-                                    <span>Private 4x4 Jeep Convoy</span>
+                                    <span>4x4 Jeep Convoy</span>
                                 </div>
                             </div>
                         </motion.div>
@@ -2402,6 +2669,7 @@ export default function HomePage() {
 
                     <motion.div 
                         variants={staggerContainer}
+                        onMouseLeave={() => setActiveLevelIdx(null)}
                         style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}
                     >
                         {SKILL_LEVELS.map((level, idx) => {
@@ -2411,20 +2679,20 @@ export default function HomePage() {
                                     key={level.id}
                                     variants={cardReveal}
                                     onMouseEnter={() => setActiveLevelIdx(idx)}
-                                    onClick={() => setActiveLevelIdx(idx)}
+                                    onClick={() => setActiveLevelIdx(activeLevelIdx === idx ? null : idx)}
                                     className="hover-lift"
                                     layout
                                     style={{
                                         background: '#FFFFFF',
-                                        border: isActive ? '1.5px solid rgba(18, 22, 19, 0.18)' : '1px solid rgba(18, 22, 19, 0.06)',
+                                        border: isActive ? '1.5px solid rgba(18, 22, 19, 0.25)' : '1px solid rgba(18, 22, 19, 0.07)',
                                         borderRadius: '32px',
                                         padding: '28px 26px',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'space-between',
-                                        minHeight: '390px',
+                                        minHeight: '360px',
                                         cursor: 'pointer',
-                                        boxShadow: isActive ? '0 14px 40px rgba(0, 0, 0, 0.06)' : '0 4px 16px rgba(0, 0, 0, 0.02)',
+                                        boxShadow: isActive ? '0 14px 40px rgba(0, 0, 0, 0.08)' : '0 4px 16px rgba(0, 0, 0, 0.02)',
                                         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
                                     }}
                                 >
@@ -2442,8 +2710,8 @@ export default function HomePage() {
                                             }}
                                         />
                                         <span style={{
-                                            background: isActive ? '#E5A93B' : '#FFFFFF',
-                                            border: isActive ? 'none' : '1px solid rgba(18, 22, 19, 0.12)',
+                                            background: isActive ? '#E5A93B' : '#F1F3EC',
+                                            border: 'none',
                                             color: '#121613',
                                             fontSize: '11.5px',
                                             fontWeight: '800',
@@ -2456,29 +2724,39 @@ export default function HomePage() {
                                         </span>
                                     </div>
 
-                                    {/* Bottom Row: Content */}
-                                    {isActive ? (
-                                        <motion.div 
-                                            initial={{ opacity: 0, y: 8 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            style={{ marginTop: 'auto' }}
-                                        >
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', margin: 0 }}>
+                                    {/* Bottom Row: Title & Smooth Collapsible Content */}
+                                    <div style={{ marginTop: 'auto' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', margin: 0 }}>
                                                 {level.title}
                                             </h3>
-                                            <div style={{ width: '100%', height: '1px', background: 'rgba(18, 22, 19, 0.08)', margin: '14px 0 14px' }} />
-                                            <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
-                                                {level.desc}
-                                            </p>
-                                        </motion.div>
-                                    ) : (
-                                        <div style={{ marginTop: 'auto' }}>
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '700', color: '#121613', margin: 0 }}>
-                                                {level.title}
-                                            </h3>
+                                            <span style={{
+                                                fontSize: '14px',
+                                                color: isActive ? '#E5A93B' : '#8E9B92',
+                                                transform: isActive ? 'rotate(90deg)' : 'none',
+                                                transition: 'all 0.25s ease'
+                                            }}>
+                                                →
+                                            </span>
                                         </div>
-                                    )}
+
+                                        <AnimatePresence>
+                                            {isActive && (
+                                                <motion.div 
+                                                    initial={{ opacity: 0, height: 0 }}
+                                                    animate={{ opacity: 1, height: 'auto' }}
+                                                    exit={{ opacity: 0, height: 0 }}
+                                                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                    style={{ overflow: 'hidden' }}
+                                                >
+                                                    <div style={{ width: '100%', height: '1px', background: 'rgba(18, 22, 19, 0.08)', margin: '14px 0 12px' }} />
+                                                    <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+                                                        {level.desc}
+                                                    </p>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 </motion.div>
                             );
                         })}

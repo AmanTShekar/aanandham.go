@@ -27,18 +27,44 @@ export default function AuthPage({ initialMode = 'login' }) {
     const handleLoginSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
+        const userName = loginData.email.split('@')[0] || 'Camper';
+        const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
+        try {
+            localStorage.setItem('aanandham_user', JSON.stringify({
+                name: formattedName,
+                email: loginData.email,
+                role: 'camper',
+                loggedIn: true
+            }));
+        } catch (err) {}
         setTimeout(() => {
             setLoading(false);
             setSubmitted(true);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1200);
         }, 800);
     };
 
     const handleSignupSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
+        try {
+            localStorage.setItem('aanandham_user', JSON.stringify({
+                name: signupData.name || 'Camper',
+                email: signupData.email,
+                phone: signupData.phone,
+                level: signupData.level,
+                role: 'camper',
+                loggedIn: true
+            }));
+        } catch (err) {}
         setTimeout(() => {
             setLoading(false);
             setSubmitted(true);
+            setTimeout(() => {
+                window.location.href = '/';
+            }, 1200);
         }, 800);
     };
 
@@ -86,7 +112,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                 top: 0,
                 left: 0,
                 right: 0,
-                padding: '24px 36px',
+                padding: 'clamp(14px, 3vw, 24px) clamp(16px, 4vw, 36px)',
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
@@ -95,26 +121,26 @@ export default function AuthPage({ initialMode = 'login' }) {
                 <Link href="/" style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
+                    gap: '6px',
                     color: '#121613',
                     textDecoration: 'none',
-                    fontSize: '14px',
+                    fontSize: '13.5px',
                     fontWeight: '700',
                     background: '#FFFFFF',
-                    padding: '8px 18px',
+                    padding: '8px 16px',
                     borderRadius: '999px',
                     border: '1px solid rgba(18, 22, 19, 0.1)',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
                     transition: 'all 0.2s ease'
                 }}>
-                    <i className="fa-solid fa-arrow-left" style={{ fontSize: '12px' }}></i> Back to Aanandham.go
+                    <i className="fa-solid fa-arrow-left" style={{ fontSize: '11px' }}></i> <span>Back</span>
                 </Link>
 
                 <Link href="/" className="text-hover-marker" style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '10px',
-                    fontSize: '22px',
+                    fontSize: 'clamp(18px, 3.5vw, 22px)',
                     fontWeight: '800',
                     fontFamily: 'var(--font-heading)',
                     color: '#121613',
@@ -125,7 +151,7 @@ export default function AuthPage({ initialMode = 'login' }) {
                         src="/logo.png"
                         alt="Aanandham.go"
                         style={{
-                            height: '32px',
+                            height: '28px',
                             width: 'auto',
                             objectFit: 'contain'
                         }}
@@ -141,24 +167,24 @@ export default function AuthPage({ initialMode = 'login' }) {
                 style={{
                     width: '100%',
                     maxWidth: '1080px',
-                    minHeight: '660px',
+                    minHeight: '600px',
                     background: '#FFFFFF',
-                    borderRadius: '36px',
+                    borderRadius: 'clamp(24px, 4vw, 36px)',
                     border: '1px solid rgba(18, 22, 19, 0.08)',
                     boxShadow: '0 24px 70px rgba(0, 0, 0, 0.06)',
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
                     overflow: 'hidden',
                     position: 'relative',
                     zIndex: 10,
-                    margin: '70px 0 20px'
+                    margin: '65px 0 20px'
                 }}
             >
                 {/* ─────────────────────────────────────────────────────────────
                     FORM PANEL (Slides / Swaps based on mode)
                 ───────────────────────────────────────────────────────────── */}
                 <div style={{
-                    padding: '48px 40px',
+                    padding: 'clamp(28px, 4vw, 48px) clamp(20px, 4vw, 40px)',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'center',

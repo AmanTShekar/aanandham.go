@@ -1003,6 +1003,97 @@ button, a, input, select, textarea {
   scrollbar-gutter: stable;
 }
 
+/* Mobile Dedicated Bottom Sheet for Booking Engine */
+@media (max-width: 640px) {
+  .booking-mobile-overlay {
+    padding: 0 !important;
+    align-items: flex-end !important;
+  }
+  .booking-mobile-sheet {
+    border-radius: 28px 28px 0 0 !important;
+    max-height: 94vh !important;
+    max-height: 94svh !important;
+    max-height: 94dvh !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4) !important;
+  }
+  .booking-camps-track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    scrollbar-width: none !important;
+  }
+  .booking-camps-track::-webkit-scrollbar {
+    display: none !important;
+  }
+  .booking-camps-track > div {
+    min-width: 220px !important;
+    max-width: 220px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   WHY AANANDHAM GOLD STANDARD SECTION (Mobile First Layout)
+───────────────────────────────────────────────────────────── */
+.why-aanandham-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: clamp(36px, 5vw, 64px);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .why-aanandham-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 28px !important;
+  }
+  .why-content-col {
+    order: 1 !important;
+    width: 100% !important;
+  }
+  .why-showcase-col {
+    order: 2 !important;
+    width: 100% !important;
+    height: clamp(380px, 52vh, 460px) !important;
+    min-height: unset !important;
+    border-radius: 24px !important;
+  }
+  .why-showcase-content {
+    bottom: 16px !important;
+    left: 16px !important;
+    right: 16px !important;
+  }
+  .why-desktop-pillars {
+    display: none !important;
+  }
+  .why-mobile-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 18px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .why-mobile-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+@media (min-width: 901px) {
+  .why-mobile-tabs {
+    display: none !important;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    THEMED MODAL CLOSE BUTTONS (90deg smooth rotation on hover + accent glow)
 ───────────────────────────────────────────────────────────── */
