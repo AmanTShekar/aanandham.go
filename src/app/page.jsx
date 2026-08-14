@@ -2451,7 +2451,7 @@ export default function HomePage() {
                     <motion.div 
                         variants={staggerContainer}
                         className="pocket-notepad-grid"
-                        style={{ marginBottom: '48px', paddingTop: '20px' }}
+                        style={{ marginBottom: '48px', paddingTop: '16px' }}
                     >
                         {EVENT_ARRANGEMENTS.map((ev, idx) => (
                             <motion.div 
@@ -2461,8 +2461,8 @@ export default function HomePage() {
                                 whileHover={{
                                     y: -14,
                                     rotate: 0,
-                                    scale: 1.03,
-                                    boxShadow: '0 28px 60px -10px rgba(0, 0, 0, 0.16), 0 10px 20px -4px rgba(0, 0, 0, 0.08)'
+                                    scale: 1.025,
+                                    boxShadow: '0 28px 65px -10px rgba(0, 0, 0, 0.15), 0 10px 24px -4px rgba(0, 0, 0, 0.08)'
                                 }}
                                 whileTap={{ scale: 0.98 }}
                                 transition={{ type: 'spring', stiffness: 400, damping: 22 }}
@@ -2472,24 +2472,18 @@ export default function HomePage() {
                                 }}
                                 onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
                             >
-                                {/* Top Metal Binder Clip with Brass Accent */}
-                                <div className="pocket-binder-clip" />
+                                {/* Side Spiral Wire Coils along Left Margin */}
+                                <div className="side-spiral-spine">
+                                    {[...Array(6)].map((_, sIdx) => (
+                                        <div key={sIdx} className="side-spiral-loop" />
+                                    ))}
+                                </div>
 
-                                {/* 3D Folded Dog-Ear Corner at Bottom Right */}
-                                <div style={{
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    right: 0,
-                                    width: '34px',
-                                    height: '34px',
-                                    background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.16) 50%, rgba(0,0,0,0.06) 100%)',
-                                    borderTopLeftRadius: '12px',
-                                    boxShadow: '-2px -2px 5px rgba(0,0,0,0.08)',
-                                    pointerEvents: 'none'
-                                }} />
+                                {/* Vertical Dotted Tear-Off Perforation Line */}
+                                <div className="side-perforation-line" />
 
                                 {/* Top Row: Mini Logo + Tag Code + Vintage Rubber Ink Stamp */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <img
                                             src="/logo.png"
@@ -2503,13 +2497,13 @@ export default function HomePage() {
                                             }}
                                         />
                                         <span style={{
-                                            fontSize: '10px',
+                                            fontSize: '9.5px',
                                             fontWeight: '900',
                                             letterSpacing: '1px',
                                             textTransform: 'uppercase',
                                             color: '#657268',
                                             background: 'rgba(0,0,0,0.05)',
-                                            padding: '3px 7px',
+                                            padding: '2px 6px',
                                             borderRadius: '4px',
                                             fontFamily: 'monospace'
                                         }}>
@@ -2533,7 +2527,7 @@ export default function HomePage() {
                                             letterSpacing: '0.8px',
                                             textTransform: 'uppercase',
                                             transform: 'rotate(-3deg)',
-                                            background: 'rgba(255,255,255,0.7)',
+                                            background: 'rgba(255,255,255,0.75)',
                                             userSelect: 'none'
                                         }}
                                     >
@@ -2544,76 +2538,84 @@ export default function HomePage() {
                                 {/* Icon & Title */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                                     <div style={{
-                                        width: '42px',
-                                        height: '42px',
+                                        width: '40px',
+                                        height: '40px',
                                         borderRadius: '12px',
-                                        background: 'rgba(18, 22, 19, 0.06)',
+                                        background: 'rgba(18, 22, 19, 0.07)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         color: '#121613',
-                                        fontSize: '18px',
+                                        fontSize: '17px',
                                         flexShrink: 0
                                     }}>
                                         <i className={ev.iconClass}></i>
                                     </div>
                                     <div>
-                                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
+                                        <span style={{ fontSize: '10px', fontWeight: '800', color: ev.stampColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
                                             {ev.badge}
                                         </span>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17.5px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.25 }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.25 }}>
                                             {ev.title}
                                         </h3>
                                     </div>
                                 </div>
 
                                 {/* Description */}
-                                <p style={{ fontSize: '13px', color: '#4E5A52', lineHeight: 1.6, margin: '0 0 14px' }}>
+                                <p style={{ fontSize: '12.5px', color: '#4E5A52', lineHeight: 1.6, margin: '0 0 12px' }}>
                                     {ev.desc}
                                 </p>
 
                                 {/* Features Checklist */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', marginBottom: '14px' }}>
                                     {ev.features.map((feat, fIdx) => (
-                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#2B372E', fontWeight: '600' }}>
+                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#2B372E', fontWeight: '600' }}>
                                             <span style={{ color: '#166534', fontWeight: '800' }}>✓</span>
                                             <span>{feat}</span>
                                         </div>
                                     ))}
                                 </div>
 
-                                {/* Stat Pill */}
-                                <div style={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px',
-                                    fontSize: '11px',
-                                    fontWeight: '800',
-                                    background: 'rgba(0,0,0,0.05)',
-                                    padding: '4px 10px',
-                                    borderRadius: '6px',
-                                    marginBottom: '12px',
-                                    width: 'fit-content',
-                                    color: ev.stampColor
-                                }}>
-                                    <span>{ev.statPill}</span>
-                                </div>
+                                {/* Perforated Bottom Voucher Stub with Notch Cutouts */}
+                                <div className="notepad-tear-stub">
+                                    <div style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <span style={{
+                                            fontSize: '10.5px',
+                                            fontWeight: '800',
+                                            color: ev.stampColor
+                                        }}>
+                                            {ev.statPill}
+                                        </span>
+                                        <span style={{
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            color: '#121613',
+                                            background: '#E5A93B',
+                                            padding: '4px 8px',
+                                            borderRadius: '6px'
+                                        }}>
+                                            Inquire ↗
+                                        </span>
+                                    </div>
 
-                                {/* Bottom Marginal Handwritten Note */}
-                                <div style={{
-                                    marginTop: 'auto',
-                                    paddingTop: '10px',
-                                    borderTop: '1px dashed rgba(0, 0, 0, 0.14)',
-                                    fontStyle: 'italic',
-                                    fontSize: '11.5px',
-                                    lineHeight: '1.45',
-                                    color: '#556358',
-                                    display: 'flex',
-                                    alignItems: 'flex-start',
-                                    gap: '6px'
-                                }}>
-                                    <span style={{ fontSize: '13px' }}>✍</span>
-                                    <span>{ev.marginalNote}</span>
+                                    {/* Bottom Marginal Handwritten Note */}
+                                    <div style={{
+                                        fontStyle: 'italic',
+                                        fontSize: '11px',
+                                        lineHeight: '1.4',
+                                        color: '#556358',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '5px',
+                                        paddingTop: '4px'
+                                    }}>
+                                        <span style={{ fontSize: '12px' }}>✍</span>
+                                        <span>{ev.marginalNote}</span>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
