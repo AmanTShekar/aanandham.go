@@ -1469,14 +1469,6 @@ export default function HomePage() {
                         <motion.div 
                             variants={fadeInLeft}
                             className="why-showcase-col"
-                            style={{
-                                position: 'relative',
-                                height: 'clamp(520px, 64vh, 640px)',
-                                minHeight: '480px',
-                                borderRadius: '36px',
-                                overflow: 'hidden',
-                                boxShadow: '0 25px 60px rgba(0, 0, 0, 0.16)'
-                            }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
