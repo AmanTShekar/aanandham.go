@@ -3308,13 +3308,13 @@ export default function HomePage() {
                         
                         {/* Sticky Pinned Left Floating Card */}
                         <div 
-                            className="hover-lift sticky-pinned-col" 
+                            className="hover-lift sticky-pinned-col faq-help-card" 
                             style={{ 
                                 background: '#FFFFFF', 
                                 border: '1px solid rgba(18, 22, 19, 0.08)', 
                                 borderRadius: '24px', 
-                                padding: '36px 32px', 
-                                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.03)' 
+                                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.03)',
+                                boxSizing: 'border-box'
                             }}
                         >
                             <div style={{ 
@@ -3340,6 +3340,7 @@ export default function HomePage() {
                             <Link
                                 href="/contact"
                                 className="action-arrow-btn-dark"
+                                style={{ width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}
                             >
                                 <span>Contact Us</span>
                                 <div className="btn-arrow-circle">

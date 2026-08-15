@@ -1852,12 +1852,21 @@ button:focus-visible, a:focus-visible {
   }
 }
 
+.faq-help-card {
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
 /* High-Contrast Dark Rounded Arrow Action Pill */
 .action-arrow-btn-dark {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  max-width: 100%;
   background: #121613;
   color: #FFFFFF;
   padding: 8px 10px 8px 24px;
@@ -2969,6 +2978,29 @@ input, textarea, select, button {
     position: static !important;
     top: auto !important;
     padding-right: 0 !important;
+  }
+
+  /* FAQ Help Card and Action Buttons Containment on Mobile */
+  .faq-help-card {
+    padding: 24px 18px !important;
+    border-radius: 20px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .action-arrow-btn-dark,
+  .action-arrow-btn {
+    padding: 6px 8px 6px 16px !important;
+    font-size: 13.5px !important;
+    min-height: 46px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .action-arrow-btn-dark .btn-arrow-circle,
+  .action-arrow-btn .btn-arrow-circle {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    font-size: 12px !important;
   }
 
   /* Tactile Cards Mobile Straightening (Zero Overflow & Edge Clipping) */
