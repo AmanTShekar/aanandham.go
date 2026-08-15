@@ -203,14 +203,64 @@ body::-webkit-scrollbar-thumb:active,
   pointer-events: none;
 }
 
-
-
-
-
-
 /* ─────────────────────────────────────────────────────────────
-   REUSABLE HERO INSTAGRAM PILL BUTTON
+   AUTHENTIC VINTAGE POLAROID TESTIMONIAL FRAME (Clean & Shadow-Free)
 ───────────────────────────────────────────────────────────── */
+.vintage-polaroid-frame {
+  position: relative;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid rgba(18, 22, 19, 0.1);
+  padding: 14px 14px 22px 14px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  transform: rotate(-1.5deg);
+}
+
+.vintage-polaroid-frame:hover {
+  transform: rotate(0deg) translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.polaroid-inner-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-height: 280px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #0E1A11;
+}
+
+.polaroid-tape {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 80px;
+  height: 24px;
+  background: rgba(228, 192, 126, 0.82);
+  border-left: 2px dashed rgba(180, 140, 75, 0.5);
+  border-right: 2px dashed rgba(180, 140, 75, 0.5);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.polaroid-chin-text {
+  font-family: var(--font-heading), 'Bricolage Grotesque', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #121613;
+  letter-spacing: -0.01em;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 /* ─────────────────────────────────────────────────────────────
    RESPONSIVE NAVBAR SYSTEM & MORPHING HAMBURGER
 ───────────────────────────────────────────────────────────── */

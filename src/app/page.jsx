@@ -2879,74 +2879,76 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
                         
-                        {/* Clean Modern Camp Cinema Showcase Card (Zero Heavy Shadow, Straight & Crisp) */}
+                        {/* Authentic Vintage Polaroid Photo Showcase (Shadow-Free & Crisp) */}
                         <div 
                             onClick={() => setIsVideoModalOpen(true)} 
-                            className="hover-lift"
-                            style={{ 
-                                position: 'relative', 
-                                background: '#FFFFFF',
-                                borderRadius: '24px',
-                                border: '1px solid rgba(18, 22, 19, 0.08)',
-                                padding: '16px',
-                                display: 'flex', 
-                                flexDirection: 'column',
-                                cursor: 'pointer', 
-                                minHeight: '440px',
-                                maxWidth: '100%',
-                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
-                            }}
+                            className="vintage-polaroid-frame"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Play Kolukkumalai Sunrise Camper Video"
+                            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsVideoModalOpen(true); }}
                         >
-                            {/* Photo / Video Thumbnail */}
-                            <div style={{ position: 'relative', flex: 1, minHeight: '320px', borderRadius: '16px', overflow: 'hidden', background: '#0E1A11' }}>
+                            {/* Washi Tape Scrap on Top */}
+                            <div className="polaroid-tape" />
+
+                            {/* Polaroid Inner Photo Container */}
+                            <div className="polaroid-inner-photo">
                                 <img 
                                     src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
                                     alt="Aanandham Wilderness Campfire" 
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                 />
                                 
-                                {/* Overlay Gradient */}
-                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.7) 0%, transparent 60%)' }} />
+                                {/* Subtle Vignette Gradient */}
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.65) 0%, transparent 55%)' }} />
 
-                                {/* Large Clean Play Button */}
+                                {/* Video Play Button */}
                                 <div style={{
                                     position: 'absolute',
                                     top: '50%',
                                     left: '50%',
                                     transform: 'translate(-50%, -50%)',
-                                    width: '60px',
-                                    height: '60px',
+                                    width: '58px',
+                                    height: '58px',
                                     borderRadius: '50%',
-                                    background: '#FFFFFF',
+                                    background: 'rgba(255, 255, 255, 0.95)',
                                     color: '#121613',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    boxShadow: '0 6px 20px rgba(0,0,0,0.18)'
+                                    boxShadow: '0 4px 18px rgba(0, 0, 0, 0.12)',
+                                    backdropFilter: 'blur(8px)'
                                 }}>
-                                    <i className="fa-solid fa-play" style={{ fontSize: '17px', marginLeft: '3px' }}></i>
+                                    <i className="fa-solid fa-play" style={{ fontSize: '16px', marginLeft: '3px' }}></i>
                                 </div>
 
-                                {/* Top Badge */}
-                                <div style={{ position: 'absolute', top: '14px', left: '14px' }}>
-                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px' }}>
-                                        ✦ Live Camp Video
+                                {/* Top Live Badge */}
+                                <div style={{ position: 'absolute', top: '12px', left: '12px' }}>
+                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        ✦ Live Camp Cam
+                                    </span>
+                                </div>
+
+                                {/* Polaroid Bottom Stamp */}
+                                <div style={{ position: 'absolute', bottom: '10px', left: '12px' }}>
+                                    <span style={{ background: 'rgba(18, 22, 19, 0.8)', color: '#D5ED55', fontSize: '10px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px', letterSpacing: '0.5px' }}>
+                                        REC ● CAMP CAM #04
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Caption Footer */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', paddingLeft: '6px', paddingRight: '6px' }}>
+                            {/* Classic Polaroid White Bottom Chin */}
+                            <div className="polaroid-chin-text">
                                 <div>
-                                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
-                                        Kolukkumalai Sunrise & Campfire
-                                    </span>
-                                    <span style={{ fontSize: '11.5px', color: '#8E9B92', display: 'block' }}>
-                                        7,900 FT High-Altitude Batch
-                                    </span>
+                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
+                                        Kolukkumalai Sunrise & Campfire 🌄
+                                    </div>
+                                    <div style={{ fontSize: '11.5px', color: '#8E9B92', marginTop: '2px' }}>
+                                        Batch #42 · Suryanelli Ridge (7,900 FT)
+                                    </div>
                                 </div>
-                                <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613', background: '#F1F3EC', padding: '5px 12px', borderRadius: '999px' }}>
-                                    Play ↗
+                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', background: '#F1F3EC', padding: '5px 12px', borderRadius: '999px' }}>
+                                    Play Video ↗
                                 </span>
                             </div>
                         </div>
