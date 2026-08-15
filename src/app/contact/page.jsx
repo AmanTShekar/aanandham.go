@@ -981,6 +981,9 @@ export default function ContactPage() {
                                         backgroundImage: 'repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.12) 25px)'
                                     }}
                                 >
+                                    {/* Translucent Frosted Washi Tape Strip across Top */}
+                                    <div className="washi-tape-strip" />
+
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
                                     <div className="pushpin-3d-wrap">
                                         <div className="pushpin-3d-shadow" />
@@ -997,16 +1000,7 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* 3D Folded Dog-Ear Corner at Bottom Right */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        width: '24px',
-                                        height: '24px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.14) 50%, rgba(0,0,0,0.04) 100%)',
-                                        borderTopLeftRadius: '10px',
-                                        pointerEvents: 'none'
-                                    }} />
+                                    <div className="notebook-dog-ear" />
 
                                     <div>
                                         {/* Top Row: Clean Stage Badge + Logo + Vintage Ink Stamp */}

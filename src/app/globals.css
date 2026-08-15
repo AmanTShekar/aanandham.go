@@ -3111,34 +3111,53 @@ input, textarea, select, button {
   scroll-snap-align: start !important;
   box-sizing: border-box !important;
 /* ─────────────────────────────────────────────────────────────
-   ROUTE INTELLIGENCE STICKY NOTEBOOK CARDS
+   ROUTE INTELLIGENCE TACTILE STICKY NOTEBOOK CARDS
 ───────────────────────────────────────────────────────────── */
 .route-notebook-sheet {
   position: relative;
-  border-left: 3.5px solid rgba(239, 68, 68, 0.45);
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-left: 4px double rgba(239, 68, 68, 0.48);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
   border-right: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: 1.5px solid rgba(0, 0, 0, 0.12);
-  border-radius: 6px 6px 28px 6px;
-  padding: 24px 18px 16px 20px;
+  border-radius: 4px 4px 28px 4px;
+  padding: 28px 20px 18px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 290px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  min-height: 310px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 16px 36px -4px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   cursor: default;
   box-sizing: border-box;
 }
 
 .route-notebook-sheet:hover {
-  transform: translateY(-6px) scale(1.015);
-  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 6px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px) scale(1.02) !important;
+  box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.2), 0 24px 50px -4px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Translucent Washi Tape Strip at Top */
+.washi-tape-strip {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-1deg);
+  width: 90px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border-left: 2px dashed rgba(0, 0, 0, 0.15);
+  border-right: 2px dashed rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 3D Realistic Metallic Pushpin */
 .pushpin-3d-wrap {
   position: absolute;
-  top: -11px;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -3150,91 +3169,111 @@ input, textarea, select, button {
 
 .pushpin-3d-shadow {
   position: absolute;
-  bottom: -3px;
-  right: -3px;
-  width: 12px;
-  height: 12px;
+  bottom: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.45);
   filter: blur(2px);
 }
 
 .pushpin-3d-head {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: radial-gradient(circle at 32% 32%, #FEF08A 0%, #E5A93B 55%, #78350F 100%);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.85), inset 0 -2px 3px rgba(0, 0, 0, 0.6);
+  background: radial-gradient(circle at 32% 32%, #FEF08A 0%, #E5A93B 50%, #78350F 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 3px rgba(255, 255, 255, 0.9), inset 0 -2px 3px rgba(0, 0, 0, 0.65);
   border: 1.2px solid #92400E;
   position: relative;
 }
 
 .pushpin-3d-dot {
   position: absolute;
-  top: 2px;
-  left: 3px;
-  width: 4px;
-  height: 4px;
+  top: 2.5px;
+  left: 3.5px;
+  width: 4.5px;
+  height: 4.5px;
   border-radius: 50%;
   background: #FFFFFF;
   opacity: 0.95;
 }
 
+/* Punched Binder Holes */
 .notebook-spiral-holes {
   position: absolute;
-  top: 7px;
-  left: 20px;
-  right: 20px;
+  top: 9px;
+  left: 22px;
+  right: 22px;
   display: flex;
   justify-content: space-between;
-  opacity: 0.2;
+  opacity: 0.25;
   pointer-events: none;
 }
 
 .notebook-spiral-hole {
-  width: 5px;
-  height: 5px;
+  width: 5.5px;
+  height: 5.5px;
   border-radius: 50%;
   background: #0B150E;
+  box-shadow: inset 0 1.5px 2px rgba(0, 0, 0, 0.6);
 }
 
+/* 3D Folded Dog-Ear Corner */
+.notebook-dog-ear {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.16) 50%, rgba(0, 0, 0, 0.06) 100%);
+  border-top-left-radius: 10px;
+  box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}
+
+/* Rubber Ink Stamp */
 .notebook-rubber-stamp {
-  padding: 2px 7px;
+  padding: 3px 8px;
   border-radius: 4px;
   font-size: 9.5px;
   font-weight: 900;
-  letter-spacing: 0.6px;
-  transform: rotate(-2deg);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  transform: rotate(-2.5deg);
   display: inline-block;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
+/* Memo Highlighter Box */
 .notebook-memo-box {
-  background: rgba(254, 240, 138, 0.35);
-  border-left: 2.5px solid #EAB308;
-  padding: 6px 9px;
+  background: rgba(255, 255, 255, 0.55);
+  border-left: 3px solid #EAB308;
+  padding: 7px 10px;
   border-radius: 4px;
   font-size: 11px;
-  color: #475569;
   font-style: italic;
-  line-height: 1.4;
+  line-height: 1.45;
   margin-top: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
+/* Timing Indicator Strip */
 .notebook-time-indicator {
-  padding-top: 10px;
-  border-top: 1px dashed rgba(18, 22, 19, 0.12);
+  padding-top: 11px;
+  border-top: 1px dashed rgba(18, 22, 19, 0.16);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 11.5px;
   font-weight: 800;
-  color: #121613;
 }
 
 @media (max-width: 1024px) {
   .route-notebook-sheet {
-    min-height: 280px;
-    padding: 22px 16px 14px 18px;
+    min-height: 290px;
+    padding: 24px 18px 16px 20px;
   }
 }
 
