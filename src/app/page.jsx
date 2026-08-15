@@ -901,36 +901,57 @@ export default function HomePage() {
         }
     };
 
-    // High-precision trigger-line scroll-driven auto-activation for Stay & Glamp room cards
+    // High-precision trigger-line scroll-driven auto-activation for Stay room cards & Program days
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
         let ticking = false;
-        const checkStayCardsInView = () => {
-            const cardElements = document.querySelectorAll('[data-stay-card-idx]');
-            if (!cardElements || cardElements.length === 0) return;
-
-            // Trigger line: 52% of viewport on mobile (below sticky image), 48% on desktop
+        const checkScrollInView = () => {
             const triggerY = window.innerWidth <= 900 ? window.innerHeight * 0.52 : window.innerHeight * 0.48;
-            
-            // Find which card is currently active (the last card whose top has scrolled past triggerY)
-            let activeCardIndex = 0;
-            cardElements.forEach((el) => {
-                const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
-                if (isNaN(idx)) return;
-                const rect = el.getBoundingClientRect();
-                if (rect.top <= triggerY) {
-                    activeCardIndex = idx;
-                }
-            });
 
-            setActiveStayAcc((prev) => (prev !== activeCardIndex ? activeCardIndex : prev));
+            // 1. Stay & Glamp Room Cards Auto-Activation
+            const stayCardElements = document.querySelectorAll('[data-stay-card-idx]');
+            if (stayCardElements.length > 0) {
+                let activeStayIndex = 0;
+                stayCardElements.forEach((el) => {
+                    const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
+                    if (isNaN(idx)) return;
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= triggerY) {
+                        activeStayIndex = idx;
+                    }
+                });
+                setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
+            }
+
+            // 2. Program Expedition Days Auto-Activation (Sequential on scroll)
+            const programElements = document.querySelectorAll('[data-program-day-idx]');
+            if (programElements.length > 0) {
+                const programSection = document.getElementById('program');
+                if (programSection) {
+                    const pRect = programSection.getBoundingClientRect();
+                    // Only auto-expand when user is scrolling in or near the Program section
+                    if (pRect.top <= window.innerHeight * 0.75 && pRect.bottom >= window.innerHeight * 0.2) {
+                        let activeProgramIndex = 0;
+                        programElements.forEach((el) => {
+                            const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
+                            if (isNaN(idx)) return;
+                            const rect = el.getBoundingClientRect();
+                            if (rect.top <= triggerY) {
+                                activeProgramIndex = idx;
+                            }
+                        });
+                        setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
+                    }
+                }
+            }
+
             ticking = false;
         };
 
         const onScroll = () => {
             if (!ticking) {
-                requestAnimationFrame(checkStayCardsInView);
+                requestAnimationFrame(checkScrollInView);
                 ticking = true;
             }
         };
@@ -941,9 +962,9 @@ export default function HomePage() {
         window.addEventListener('resize', onScroll, { passive: true });
 
         // Initial triggers
-        checkStayCardsInView();
-        const t1 = setTimeout(checkStayCardsInView, 200);
-        const t2 = setTimeout(checkStayCardsInView, 600);
+        checkScrollInView();
+        const t1 = setTimeout(checkScrollInView, 200);
+        const t2 = setTimeout(checkScrollInView, 600);
 
         return () => {
             window.removeEventListener('scroll', onScroll);
@@ -2369,6 +2390,7 @@ export default function HomePage() {
                             return (
                                 <motion.div
                                     key={idx}
+                                    data-program-day-idx={idx}
                                     variants={cardReveal}
                                     onMouseEnter={() => setHoveredProgramDay(idx)}
                                     onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
@@ -2377,7 +2399,7 @@ export default function HomePage() {
                                         padding: '28px 0',
                                         cursor: 'pointer',
                                         position: 'relative',
-                                        transition: 'background-color 0.2s ease'
+                                        transition: 'background-color 0.25s ease'
                                     }}
                                 >
                                     {/* Smooth Active Underline Bar (Zero stutter / Zero jumping) */}
@@ -2391,14 +2413,14 @@ export default function HomePage() {
                                             backgroundColor: '#E5A93B',
                                             borderRadius: '999px',
                                             boxShadow: isOpen ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
-                                            transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
+                                            transition: 'width 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease',
                                             opacity: isOpen ? 1 : 0
                                         }} 
                                     />
 
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isOpen ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
+                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isOpen ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.25s ease' }}>
                                                 {item.day}
                                             </span>
                                             <h3 style={{
@@ -2423,7 +2445,7 @@ export default function HomePage() {
                                             fontSize: '12px',
                                             color: isOpen ? '#E5A93B' : '#121613',
                                             transform: isOpen ? 'rotate(180deg)' : 'none',
-                                            transition: 'all 0.3s ease'
+                                            transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)'
                                         }}>
                                             <i className="fa-solid fa-chevron-down"></i>
                                         </div>
@@ -2435,7 +2457,7 @@ export default function HomePage() {
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                                                 style={{ paddingTop: '16px', maxWidth: '720px', overflow: 'hidden' }}
                                             >
                                                 <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
