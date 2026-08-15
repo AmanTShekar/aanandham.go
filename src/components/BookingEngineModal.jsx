@@ -215,19 +215,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             role="dialog"
             aria-modal="true"
             aria-labelledby="booking-modal-title"
-            className="booking-mobile-overlay" 
-            style={{
-                position: 'fixed',
-                inset: 0,
-                zIndex: 100002,
-                background: 'rgba(0, 0, 0, 0.86)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: 'clamp(8px, 2.5vw, 20px)'
-            }}
+            className="booking-modal-overlay" 
         >
             <motion.div
                 initial={{ opacity: 0, scale: 0.96, y: 24 }}
@@ -256,7 +244,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 Verified High-Altitude Basecamps
                             </span>
                         </div>
-                        <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
+                        <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
                             {step === 1 ? '1. Select Campsite & Dates' : '2. Add-Ons & Explorer Details'}
                         </h2>
                     </div>
@@ -266,18 +254,22 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                         aria-label="Close booking modal"
                         className="modal-close-btn"
                         style={{
-                            width: '38px',
-                            height: '38px',
+                            width: '42px',
+                            height: '42px',
+                            minWidth: '42px',
+                            minHeight: '42px',
                             borderRadius: '50%',
                             background: '#ECEEE6',
                             border: 'none',
                             color: '#121613',
-                            fontSize: '15px',
+                            fontSize: '17px',
+                            fontWeight: '800',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            transition: 'all 0.2s ease'
+                            transition: 'all 0.2s ease',
+                            flexShrink: 0
                         }}
                     >
                         ✕
