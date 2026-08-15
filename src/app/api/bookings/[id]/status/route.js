@@ -1,17 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getStoredBookings } from '@/lib/serverBookingStore';
 import { checkRateLimit } from '@/lib/redis';
-
-function getClientIp(request) {
-    if (request.ip) return request.ip;
-    const cfIp = request.headers.get('cf-connecting-ip');
-    if (cfIp) return cfIp.trim();
-    const xRealIp = request.headers.get('x-real-ip');
-    if (xRealIp) return xRealIp.trim();
-    const xff = request.headers.get('x-forwarded-for');
-    if (xff) return xff.split(',')[0].trim();
-    return '127.0.0.1';
-}
+import { getClientIp } from '@/lib/authConfig';
 
 export async function GET(request, { params }) {
     const ip = getClientIp(request);
@@ -51,14 +41,9 @@ export async function GET(request, { params }) {
             success: true,
             booking: {
                 id: booking.id,
-                name: booking.name,
-                package: booking.package,
-                dates: booking.dates,
-                guests: booking.guests,
-                total: booking.total,
                 status: currentStatus,
                 remainingHoldSeconds,
-                createdAt: booking.createdAt
+                total: booking.total
             }
         });
     } catch (err) {

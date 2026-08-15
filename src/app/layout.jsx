@@ -22,7 +22,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL('https://aanandham.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandhamgo.in'),
   title: {
     default: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar, Vagamon & Wayanad, Kerala',
     template: '%s | Aanandham.go Wilderness Camps'
@@ -47,12 +47,12 @@ export const metadata = {
   creator: 'Aanandham.go',
   publisher: 'Aanandham.go',
   alternates: {
-    canonical: 'https://aanandham.in/',
+    canonical: '/',
   },
   openGraph: {
     title: 'Aanandham.go — Luxury Camping & Peak Stays in Munnar, Kerala',
     description: 'Experience 4x4 sunrise treks, starlit campfire nights, and verified high-altitude tent glamping at Suryanelli ridge.',
-    url: 'https://aanandham.in',
+    url: 'https://aanandhamgo.in',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -94,9 +94,9 @@ const jsonLd = {
   '@type': 'Campground',
   name: 'Aanandham.go Wilderness Camps',
   image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-  logo: 'https://aanandham.in/logo.png',
-  '@id': 'https://aanandham.in',
-  url: 'https://aanandham.in',
+  logo: 'https://aanandhamgo.in/logo.png',
+  '@id': 'https://aanandhamgo.in',
+  url: 'https://aanandhamgo.in',
   telephone: '+919400987654',
   email: 'bookings@aanandhamgo.in',
   priceRange: '₹₹',

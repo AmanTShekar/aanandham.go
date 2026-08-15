@@ -1,10 +1,12 @@
 export default function robots() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandhamgo.in';
+
   return {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/admin',
+      disallow: ['/admin', '/api/', '/login', '/signup'],
     },
-    sitemap: 'https://aanandham.in/sitemap.xml',
+    sitemap: `${siteUrl}/sitemap.xml`,
   };
 }

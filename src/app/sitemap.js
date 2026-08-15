@@ -1,37 +1,45 @@
+import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
+
 export default function sitemap() {
-  const baseUrl = 'https://aanandham.in';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandhamgo.in';
   const currentDate = new Date().toISOString();
 
-  return [
+  // Primary Money Pages & Core Landing Routes
+  const staticRoutes = [
     {
-      url: baseUrl,
+      url: `${siteUrl}`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${siteUrl}/camps`,
       lastModified: currentDate,
-      changeFrequency: 'weekly',
-      priority: 0.9,
+      changeFrequency: 'daily',
+      priority: 0.95,
     },
     {
-      url: `${baseUrl}/contact`,
-      lastModified: currentDate,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/login`,
+      url: `${siteUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/signup`,
+      url: `${siteUrl}/contact`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
   ];
+
+  // Dynamic Campsite Detail Booking Pages (High Priority)
+  const campRoutes = INITIAL_ALL_CAMPS.map((camp) => ({
+    url: `${siteUrl}/camps/${camp.id}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  }));
+
+  // Note: /login, /signup, /admin are omitted from sitemap to prevent crawl budget dilution
+  return [...staticRoutes, ...campRoutes];
 }
