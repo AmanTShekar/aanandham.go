@@ -52,7 +52,6 @@ const ELEVATION_TIERS = [
         id: 'tier-7900',
         altitude: '7,900 FT',
         elevationMeters: '2,408 M',
-        meterPercent: 100,
         name: 'Kolukkumalai Sunrise Peak',
         badge: 'SUMMIT PINNACLE',
         badgeColor: '#E5A93B',
@@ -60,6 +59,7 @@ const ELEVATION_TIERS = [
         accentBg: 'rgba(229, 169, 59, 0.12)',
         borderTint: 'rgba(229, 169, 59, 0.35)',
         glowColor: 'rgba(229, 169, 59, 0.25)',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
         terrainType: 'Rugged Granite Crest',
         access: '4x4 Off-Road Only',
         atmosphere: 'Sea of Clouds · High Mist',
@@ -73,7 +73,6 @@ const ELEVATION_TIERS = [
         id: 'tier-6800',
         altitude: '6,800 FT',
         elevationMeters: '2,072 M',
-        meterPercent: 86,
         name: 'Phantom Head Cliffline',
         badge: 'SUNSET CREST TRAIL',
         badgeColor: '#FB923C',
@@ -81,6 +80,7 @@ const ELEVATION_TIERS = [
         accentBg: 'rgba(249, 115, 22, 0.12)',
         borderTint: 'rgba(249, 115, 22, 0.35)',
         glowColor: 'rgba(249, 115, 22, 0.25)',
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
         terrainType: 'Precipitous Escarpment',
         access: 'Marshal Ridge Trek',
         atmosphere: 'Golden Hour Silhouette',
@@ -94,7 +94,6 @@ const ELEVATION_TIERS = [
         id: 'tier-6500',
         altitude: '6,500 FT',
         elevationMeters: '1,981 M',
-        meterPercent: 78,
         name: 'Aanandham Basecamp Pods',
         badge: 'SANCTUARY DOME BASE',
         badgeColor: '#D5ED55',
@@ -102,6 +101,7 @@ const ELEVATION_TIERS = [
         accentBg: 'rgba(213, 237, 85, 0.12)',
         borderTint: 'rgba(213, 237, 85, 0.35)',
         glowColor: 'rgba(213, 237, 85, 0.22)',
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
         terrainType: 'Insulated Meadow',
         access: 'Direct Basecamp In',
         atmosphere: 'Zero Light Stargazing',
@@ -115,7 +115,6 @@ const ELEVATION_TIERS = [
         id: 'tier-5500',
         altitude: '5,500 FT',
         elevationMeters: '1,676 M',
-        meterPercent: 62,
         name: 'Anayirangal Lake Basin',
         badge: 'EMERALD WATERWAY BASIN',
         badgeColor: '#38BDF8',
@@ -123,6 +122,7 @@ const ELEVATION_TIERS = [
         accentBg: 'rgba(56, 189, 248, 0.12)',
         borderTint: 'rgba(56, 189, 248, 0.35)',
         glowColor: 'rgba(56, 189, 248, 0.22)',
+        image: 'https://images.unsplash.com/photo-1439853941329-a99ce045050a?auto=format&fit=crop&w=800&q=80',
         terrainType: 'Lakebed & Tea Groves',
         access: 'Kayak & Shore Walk',
         atmosphere: 'Rainforest Mist & Fauna',
@@ -785,7 +785,7 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '100px 24px',
+                        padding: '110px clamp(20px, 4vw, 48px)',
                         background: '#070E08',
                         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
@@ -793,7 +793,7 @@ export default function AboutPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">▲</span> RIDGE TOPOGRAPHY
@@ -833,17 +833,8 @@ export default function AboutPage() {
                                     }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
-                                    {/* Topographic Contour Background Watermark */}
-                                    <svg className="altitude-contour-overlay" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" style={{ color: tier.accentColor }} />
-                                        <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="1.5" style={{ color: tier.accentColor }} />
-                                        <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 3" style={{ color: tier.accentColor }} />
-                                        <circle cx="100" cy="100" r="30" stroke="currentColor" strokeWidth="1.5" style={{ color: tier.accentColor }} />
-                                        <path d="M 10 100 Q 50 60 100 100 T 190 100" stroke="currentColor" strokeWidth="1" style={{ color: tier.accentColor }} />
-                                    </svg>
-
-                                    {/* Altitude Header Barometer */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
+                                    {/* Altitude Header */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px', position: 'relative', zIndex: 2 }}>
                                         <div>
                                             <div style={{
                                                 fontFamily: 'var(--font-heading)',
@@ -861,31 +852,55 @@ export default function AboutPage() {
                                         </div>
 
                                         <div style={{
-                                            width: '46px',
-                                            height: '46px',
-                                            borderRadius: '14px',
+                                            width: '44px',
+                                            height: '44px',
+                                            borderRadius: '12px',
                                             background: tier.accentBg,
                                             border: `1px solid ${tier.borderTint}`,
                                             color: tier.accentColor,
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '19px',
+                                            fontSize: '18px',
                                             boxShadow: `0 4px 14px ${tier.glowColor}`
                                         }}>
                                             <i className={tier.icon}></i>
                                         </div>
                                     </div>
 
-                                    {/* Topographic Elevation Gauge Bar */}
-                                    <div className="altitude-gauge-track">
-                                        <div 
-                                            className="altitude-gauge-fill" 
-                                            style={{ 
-                                                width: `${tier.meterPercent}%`, 
-                                                background: `linear-gradient(90deg, ${tier.accentColor}88, ${tier.accentColor})` 
-                                            }} 
+                                    {/* Scenic Altitude Expedition Window */}
+                                    <div className="altitude-card-thumb">
+                                        <img 
+                                            src={tier.image} 
+                                            alt={tier.name} 
+                                            loading="lazy"
                                         />
+                                        <div style={{
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'linear-gradient(to top, rgba(13, 26, 16, 0.85) 0%, transparent 60%)'
+                                        }} />
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: '10px',
+                                            left: '10px',
+                                            right: '10px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <span style={{
+                                                background: 'rgba(0, 0, 0, 0.7)',
+                                                color: '#FFFFFF',
+                                                fontSize: '10px',
+                                                fontWeight: '700',
+                                                padding: '3px 8px',
+                                                borderRadius: '6px',
+                                                letterSpacing: '0.5px'
+                                            }}>
+                                                📍 {tier.coord}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     {/* Badge & Title */}

@@ -263,17 +263,18 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   TOPOGRAPHIC ALTITUDE SPECTRUM CARDS (Bespoke Elevation Meters)
+   TOPOGRAPHIC ALTITUDE SPECTRUM CARDS (Bespoke Elevation Cards)
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(16px, 2vw, 24px);
+  gap: clamp(16px, 2vw, 26px);
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1200px) {
   .altitude-spectrum-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 }
 
@@ -286,10 +287,10 @@ body::-webkit-scrollbar-thumb:active,
 
 .altitude-meter-card {
   position: relative;
-  background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.04) 0%, rgba(13, 26, 16, 0.95) 100%);
+  background: radial-gradient(circle at 80% 15%, rgba(255, 255, 255, 0.05) 0%, rgba(13, 26, 16, 0.96) 100%);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 28px 24px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
@@ -312,36 +313,26 @@ body::-webkit-scrollbar-thumb:active,
   transform: translateY(-8px);
 }
 
-.altitude-contour-overlay {
-  position: absolute;
-  right: -20px;
-  bottom: -20px;
-  width: 180px;
-  height: 180px;
-  opacity: 0.06;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.4s ease;
-}
-
-.altitude-meter-card:hover .altitude-contour-overlay {
-  opacity: 0.12;
-  transform: scale(1.08) rotate(5deg);
-}
-
-.altitude-gauge-track {
-  width: 100%;
-  height: 6px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+.altitude-card-thumb {
   position: relative;
+  width: 100%;
+  height: 170px;
+  border-radius: 16px;
   overflow: hidden;
-  margin: 16px 0 20px;
+  margin: 16px 0;
+  background: #0E1A11;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.altitude-gauge-fill {
+.altitude-card-thumb img {
+  width: 100%;
   height: 100%;
-  border-radius: 999px;
-  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.altitude-meter-card:hover .altitude-card-thumb img {
+  transform: scale(1.06);
 }
 
 .altitude-spec-pill {
