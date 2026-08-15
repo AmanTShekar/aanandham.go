@@ -831,44 +831,28 @@ export default function AboutPage() {
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
                                     <div className="stone-slab-inner">
-                                        {/* Altitude Header & Brass Survey Medallion */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px', position: 'relative', zIndex: 2 }}>
+                                        {/* Altitude Header & Stone Icon Pill */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
                                             <div>
-                                                <div className="stone-engraved-altitude" style={{
+                                                <div style={{
+                                                    fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
                                                     fontSize: 'clamp(28px, 3.2vw, 36px)',
-                                                    color: tier.accentColor
+                                                    fontWeight: '800',
+                                                    color: tier.accentColor,
+                                                    letterSpacing: '-0.03em',
+                                                    lineHeight: 1
                                                 }}>
                                                     {tier.altitude}
                                                 </div>
-                                                <div style={{ fontSize: '11px', color: '#B4C6BA', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
+                                                <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
                                                     {tier.elevationMeters} · AMSL
                                                 </div>
                                             </div>
 
-                                            {/* Embossed Geological Brass Survey Coin */}
-                                            <div className="stone-brass-medallion" title={`Western Ghats Survey · ${tier.altitude}`}>
+                                            {/* Clean Dark Stone Icon Pill */}
+                                            <div className="stone-icon-pill" style={{ color: tier.accentColor }}>
                                                 <i className={tier.icon}></i>
                                             </div>
-                                        </div>
-
-                                        {/* Geological Stone Rock Type Tag */}
-                                        <div style={{
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '5px',
-                                            background: 'rgba(0, 0, 0, 0.65)',
-                                            border: `1px solid ${tier.borderTint}`,
-                                            padding: '2px 8px',
-                                            fontSize: '9.5px',
-                                            fontWeight: '800',
-                                            color: tier.accentColor,
-                                            letterSpacing: '0.6px',
-                                            textTransform: 'uppercase',
-                                            clipPath: 'polygon(0% 3px, 3px 0%, calc(100% - 3px) 0%, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0% calc(100% - 3px))',
-                                            marginBottom: '10px'
-                                        }}>
-                                            <span>🪨</span>
-                                            <span>{tier.stoneType}</span>
                                         </div>
 
                                         {/* Chiseled Angular Stone Photo Window */}
