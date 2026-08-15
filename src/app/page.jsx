@@ -901,6 +901,37 @@ export default function HomePage() {
         }
     };
 
+    // Scroll-driven active room tracking for Stay & Glamp
+    const stayRoomRefs = useRef([]);
+    useEffect(() => {
+        if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+
+        const observers = [];
+        stayRoomRefs.current.forEach((el, idx) => {
+            if (!el) return;
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            setActiveStayAcc(idx);
+                        }
+                    });
+                },
+                {
+                    root: null,
+                    rootMargin: '-20% 0px -40% 0px',
+                    threshold: 0.25
+                }
+            );
+            observer.observe(el);
+            observers.push(observer);
+        });
+
+        return () => {
+            observers.forEach((obs) => obs.disconnect());
+        };
+    }, []);
+
     // Read logged-in user profile from localStorage
     useEffect(() => {
         try {
@@ -1865,8 +1896,8 @@ export default function HomePage() {
                                         transition: 'box-shadow 0.25s ease, transform 0.25s ease'
                                     }}
                                 >
-                                    {/* Image Container with Badges */}
-                                    <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                                    {/* Image Container with Badges (Compact Space-Saving on Mobile) */}
+                                    <div className="package-card-img">
                                         <img 
                                             src={pkg.image} 
                                             alt={pkg.title} 
@@ -1875,65 +1906,74 @@ export default function HomePage() {
                                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.6) 0%, transparent 45%)' }} />
                                         
                                         {/* Top Badges */}
-                                        <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', letterSpacing: '0.2px' }}>
+                                        <div style={{ position: 'absolute', top: '14px', left: '14px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.2px' }}>
                                                 {pkg.tag}
                                             </span>
-                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '11px', fontWeight: '700', padding: '5px 12px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
+                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
                                                 {pkg.altitude}
                                             </span>
                                         </div>
 
                                         {/* Rating Pill */}
-                                        <div style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '5px 10px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                                            ★ {pkg.rating} <span style={{ color: '#59655D', fontWeight: '600', fontSize: '11px' }}>({pkg.reviewsCount})</span>
+                                        <div style={{ position: 'absolute', top: '14px', right: '14px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 9px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                                            ★ {pkg.rating} <span style={{ color: '#59655D', fontWeight: '600', fontSize: '10.5px' }}>({pkg.reviewsCount})</span>
                                         </div>
 
                                         {/* Bottom Overlay Location & Duration */}
-                                        <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '12px', fontWeight: '700' }}>
+                                        <div style={{ position: 'absolute', bottom: '12px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
                                             <span>📍 {pkg.location}</span>
-                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
+                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
                                         </div>
                                     </div>
 
-                                    {/* Card Content */}
-                                    <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '8px', lineHeight: 1.25 }}>
+                                    {/* Card Content (Compact Padding on Mobile) */}
+                                    <div className="package-card-body">
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', marginBottom: '6px', lineHeight: 1.25 }}>
                                             {pkg.title}
                                         </h3>
                                         
-                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, marginBottom: '16px' }}>
+                                        <p style={{ 
+                                            fontSize: '13px', 
+                                            color: '#59655D', 
+                                            lineHeight: 1.45, 
+                                            marginBottom: '12px',
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 2,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden'
+                                        }}>
                                             {pkg.description}
                                         </p>
                                         
-                                        {/* Key Highlights Chips */}
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-                                            {pkg.highlights.slice(0, 3).map((h, i) => (
-                                                <span key={i} style={{ fontSize: '11px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '4px 10px', borderRadius: '999px', fontWeight: '600' }}>
+                                        {/* Key Highlights Chips (Compact 2 items on mobile) */}
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '12px' }}>
+                                            {pkg.highlights.slice(0, 2).map((h, i) => (
+                                                <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
                                                     ✓ {h}
                                                 </span>
                                             ))}
-                                            {pkg.highlights.length > 3 && (
-                                                <span style={{ fontSize: '11px', background: '#F1F3EC', color: '#121613', padding: '4px 8px', borderRadius: '999px', fontWeight: '700' }}>
-                                                    +{pkg.highlights.length - 3} more
+                                            {pkg.highlights.length > 2 && (
+                                                <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
+                                                    +{pkg.highlights.length - 2} more
                                                 </span>
                                             )}
                                         </div>
 
                                         {/* Bottom Price & Action Row */}
-                                        <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                             <div>
-                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>
+                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px' }}>
+                                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', color: '#121613' }}>
                                                         ₹{pkg.price.toLocaleString()}
                                                     </span>
                                                     {pkg.originalPrice && (
-                                                        <span style={{ fontSize: '13px', color: '#8E9B92', textDecoration: 'line-through' }}>
+                                                        <span style={{ fontSize: '12px', color: '#8E9B92', textDecoration: 'line-through' }}>
                                                             ₹{pkg.originalPrice.toLocaleString()}
                                                         </span>
                                                     )}
                                                 </div>
-                                                <span style={{ fontSize: '11px', color: '#59655D', display: 'block', marginTop: '1px' }}>
+                                                <span style={{ fontSize: '10.5px', color: '#59655D', display: 'block', marginTop: '1px' }}>
                                                     per person all-inclusive
                                                 </span>
                                             </div>
@@ -1941,7 +1981,7 @@ export default function HomePage() {
                                             <button 
                                                 onClick={() => handleOpenBooking(pkg)} 
                                                 className="btn-lime" 
-                                                style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                                             >
                                                 <span>Book Spot</span>
                                                 <span>→</span>
@@ -2085,6 +2125,7 @@ export default function HomePage() {
                                     return (
                                         <div
                                             key={acc.id}
+                                            ref={(el) => (stayRoomRefs.current[idx] = el)}
                                             onMouseEnter={() => setActiveStayAcc(idx)}
                                             onClick={() => setActiveStayAcc(idx)}
                                             className="hover-lift"
