@@ -311,6 +311,54 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   CONTACT CHANNELS GRID (Responsive 4 -> 2x2 -> 1)
+───────────────────────────────────────────────────────────── */
+.contact-channels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(18px, 2vw, 24px);
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .contact-channels-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-channels-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SKILL LEVELS GRID (Responsive 4 -> 2x2 -> 1)
+───────────────────────────────────────────────────────────── */
+.skill-levels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(18px, 2vw, 24px);
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .skill-levels-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .skill-levels-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
 /* Base: light warm pine — natural cross-section rings */
 .stone-slab-card {
   position: relative;
@@ -1253,21 +1301,26 @@ button:focus-visible, a:focus-visible {
   }
 }
 
-/* Star category tag */
+/* Star category tag — crisp glowing pill badge visible on dark and light backgrounds */
 .star-badge {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: #121613;
+  color: #E5A93B;
+  background: rgba(229, 169, 59, 0.14);
+  border: 1px solid rgba(229, 169, 59, 0.35);
+  padding: 5px 14px;
+  border-radius: 999px;
   text-transform: uppercase;
   margin-bottom: 12px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  box-shadow: 0 2px 10px rgba(229, 169, 59, 0.12);
 }
 .star-badge .star-icon {
-  color: #121613;
-  font-size: 13px;
+  color: #E5A93B;
+  font-size: 12px;
 }
 
 /* Modern Rounded Arrow Action Pill */

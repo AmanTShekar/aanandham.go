@@ -1556,13 +1556,13 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '110px 24px',
+                        padding: '110px clamp(20px, 4vw, 48px)',
                         background: '#0B150E',
                         position: 'relative',
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -1601,15 +1601,15 @@ export default function AboutPage() {
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
                                         style={{
-                                            padding: '9px 20px',
+                                            padding: '8px 20px',
                                             borderRadius: '999px',
                                             border: 'none',
                                             background: activeCategory === cat ? '#E5A93B' : 'transparent',
-                                            color: activeCategory === cat ? '#070E08' : '#A2B6A6',
-                                            fontWeight: '800',
+                                            color: activeCategory === cat ? '#0B150E' : 'rgba(255,255,255,0.7)',
                                             fontSize: '13px',
+                                            fontWeight: activeCategory === cat ? '800' : '600',
                                             cursor: 'pointer',
-                                            transition: 'all 0.25s ease'
+                                            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
                                         }}
                                     >
                                         {cat}
@@ -1618,84 +1618,76 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        {/* Landmark Card Grid */}
+                        {/* Landmarks Cards Grid */}
                         <motion.div 
-                            layout 
                             variants={staggerContainer}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                                gap: '30px'
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+                                gap: '28px'
                             }}
                         >
-                            <AnimatePresence>
+                            <AnimatePresence mode="popLayout">
                                 {filteredPlaces.map((place) => (
                                     <motion.div
                                         key={place.id}
                                         layout
-                                        variants={cardReveal}
-                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        initial={{ opacity: 0, scale: 0.92 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
-                                        whileHover={{ 
-                                            y: -10,
-                                            boxShadow: '0 25px 60px rgba(0,0,0,0.5)'
-                                        }}
-                                        transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                                        exit={{ opacity: 0, scale: 0.92 }}
+                                        transition={{ duration: 0.45 }}
+                                        whileHover={{ y: -8 }}
                                         style={{
-                                            background: '#0E1A11',
-                                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                                            background: '#101F13',
                                             borderRadius: '28px',
                                             overflow: 'hidden',
+                                            border: '1px solid rgba(255, 255, 255, 0.08)',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            boxShadow: '0 20px 45px rgba(0,0,0,0.4)',
-                                            cursor: 'pointer'
+                                            boxShadow: '0 18px 40px rgba(0,0,0,0.35)'
                                         }}
                                     >
-                                        <div style={{ height: '240px', position: 'relative', overflow: 'hidden' }}>
-                                            <motion.img
-                                                whileHover={{ scale: 1.08 }}
-                                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                        {/* Image Container */}
+                                        <div style={{ position: 'relative', height: '240px', width: '100%', overflow: 'hidden' }}>
+                                            <img
                                                 src={place.image}
                                                 alt={place.title}
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                             <div style={{
                                                 position: 'absolute',
-                                                top: '14px',
-                                                left: '14px',
-                                                background: 'rgba(7, 14, 8, 0.85)',
-                                                border: '1px solid rgba(229, 169, 59, 0.4)',
+                                                top: '16px',
+                                                left: '16px',
+                                                background: 'rgba(11, 21, 14, 0.75)',
+                                                backdropFilter: 'blur(8px)',
+                                                border: '1px solid rgba(255, 255, 255, 0.15)',
                                                 color: '#E5A93B',
-                                                fontSize: '11.5px',
+                                                fontSize: '11px',
                                                 fontWeight: '800',
                                                 padding: '4px 12px',
-                                                borderRadius: '999px',
-                                                backdropFilter: 'blur(8px)'
+                                                borderRadius: '999px'
                                             }}>
-                                                ▲ {place.altitude}
+                                                ✦ {place.highlight}
                                             </div>
                                             <div style={{
                                                 position: 'absolute',
-                                                top: '14px',
-                                                right: '14px',
-                                                background: 'rgba(255, 255, 255, 0.9)',
-                                                color: '#0B150E',
+                                                bottom: '16px',
+                                                right: '16px',
+                                                background: 'rgba(0, 0, 0, 0.8)',
+                                                color: '#FFFFFF',
                                                 fontSize: '11.5px',
                                                 fontWeight: '700',
-                                                padding: '4px 12px',
-                                                borderRadius: '999px',
-                                                backdropFilter: 'blur(8px)'
+                                                padding: '4px 10px',
+                                                borderRadius: '8px'
                                             }}>
-                                                {place.highlight}
+                                                {place.altitude}
                                             </div>
                                         </div>
 
-                                        <div style={{ padding: '26px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                            <div style={{ fontSize: '12.5px', color: '#E5A93B', fontWeight: '800', marginBottom: '8px' }}>
-                                                <i className="fa-solid fa-compass" style={{ marginRight: '6px' }}></i>
-                                                {place.distance}
+                                        {/* Place Content */}
+                                        <div style={{ padding: '26px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                            <div style={{ fontSize: '12px', color: '#E5A93B', fontWeight: '700', marginBottom: '8px' }}>
+                                                📍 {place.distance}
                                             </div>
                                             
                                             <h3 style={{
@@ -1745,12 +1737,12 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '120px 24px',
+                        padding: '120px clamp(20px, 4vw, 48px)',
                         background: '#F8F9F5',
                         position: 'relative'
                     }}
                 >
-                    <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION CREATORS
@@ -1799,18 +1791,10 @@ export default function AboutPage() {
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    {/* Full-bleed Portrait Photo with Zoom */}
-                                    <motion.img
-                                        whileHover={{ scale: 1.06 }}
-                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                    <img
                                         src={member.img}
                                         alt={member.name}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                            objectPosition: 'center 20%'
-                                        }}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
 
                                     {/* Gradient Dark Scrim Overlay */}

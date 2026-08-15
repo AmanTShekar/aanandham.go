@@ -444,12 +444,12 @@ export default function ContactPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '100px 24px 70px',
+                        padding: '100px clamp(20px, 4vw, 48px) 70px',
                         background: '#F8F9F5',
                         position: 'relative'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION CHANNELS
@@ -472,11 +472,7 @@ export default function ContactPage() {
                         {/* 4 Dispatch Cards Grid */}
                         <motion.div 
                             variants={staggerContainer}
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                                gap: '24px'
-                            }}
+                            className="contact-channels-grid"
                         >
                             {CONTACT_CHANNELS.map((ch, idx) => (
                                 <motion.div

@@ -2248,9 +2248,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
                         <div>
@@ -2280,7 +2280,7 @@ export default function HomePage() {
                     <motion.div 
                         variants={staggerContainer}
                         onMouseLeave={() => setActiveLevelIdx(null)}
-                        style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px' }}
+                        className="skill-levels-grid"
                     >
                         {SKILL_LEVELS.map((level, idx) => {
                             const isActive = activeLevelIdx === idx;
