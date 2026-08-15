@@ -665,9 +665,9 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
             viewport={{ once: true, margin: "-60px" }}
             variants={sectionReveal}
             id="cta"
-            style={{ position: 'relative', padding: '40px 24px 80px', background: '#F8F9F5' }}
+            style={{ position: 'relative', padding: '80px clamp(20px, 4vw, 48px) 110px', background: '#F8F9F5' }}
         >
-            <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+            <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                 <div 
                     style={{
                         position: 'relative',
@@ -708,7 +708,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, transparent 60%)' }} />
 
                     {/* Animated Content Layer */}
-                    <motion.div style={{ position: 'relative', zIndex: 2, maxWidth: '720px', margin: '0 auto', y: contentY }}>
+                    <motion.div style={{ position: 'relative', zIndex: 2, maxWidth: '760px', margin: '0 auto', y: contentY }}>
                         <div style={{
                             fontSize: '12px',
                             fontWeight: '900',
@@ -761,7 +761,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 <span>Instant Reserve Spot ↗</span>
                             </motion.button>
                             <a
-                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20want%20to%20reserve%20a%20spot%20for%20the%20upcoming%20wilderness%20camp."
+                                href={waLink('Hi Aanandham Team! I want to reserve a spot for the upcoming wilderness camp.')}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn-whatsapp-glass"
