@@ -830,8 +830,48 @@ export default function AboutPage() {
                                     whileHover={{ y: -8 }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
+                                    {/* Dark outer bark ring edge — like the outer ring of a tree cross section */}
+                                    <div style={{
+                                        position: 'absolute', inset: 0,
+                                        background: 'transparent',
+                                        boxShadow: 'inset 0 0 0 10px rgba(60, 28, 8, 0.55), inset 0 0 0 14px rgba(40, 18, 5, 0.25)',
+                                        pointerEvents: 'none',
+                                        zIndex: 3
+                                    }} />
+
                                     {/* Pure Natural Tree Bark & Timber Grain Overlay */}
                                     <div className="stone-cleavage-overlay" />
+
+                                    {/* Metal nail pins — top-left and top-right corners */}
+                                    <div style={{
+                                        position: 'absolute', top: '14px', left: '14px', zIndex: 10,
+                                        width: '12px', height: '12px', borderRadius: '50%',
+                                        background: 'radial-gradient(circle at 35% 35%, #D4C8A8, #8A7A5A 55%, #4A3C28 100%)',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,240,200,0.4)',
+                                        border: '1px solid rgba(60,40,15,0.8)'
+                                    }} />
+                                    <div style={{
+                                        position: 'absolute', top: '14px', right: '14px', zIndex: 10,
+                                        width: '12px', height: '12px', borderRadius: '50%',
+                                        background: 'radial-gradient(circle at 35% 35%, #D4C8A8, #8A7A5A 55%, #4A3C28 100%)',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,240,200,0.4)',
+                                        border: '1px solid rgba(60,40,15,0.8)'
+                                    }} />
+                                    {/* Bottom nails */}
+                                    <div style={{
+                                        position: 'absolute', bottom: '14px', left: '14px', zIndex: 10,
+                                        width: '10px', height: '10px', borderRadius: '50%',
+                                        background: 'radial-gradient(circle at 35% 35%, #C8BC9A, #807058 55%, #402E18 100%)',
+                                        boxShadow: '0 1px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,240,200,0.3)',
+                                        border: '1px solid rgba(60,40,15,0.7)'
+                                    }} />
+                                    <div style={{
+                                        position: 'absolute', bottom: '14px', right: '14px', zIndex: 10,
+                                        width: '10px', height: '10px', borderRadius: '50%',
+                                        background: 'radial-gradient(circle at 35% 35%, #C8BC9A, #807058 55%, #402E18 100%)',
+                                        boxShadow: '0 1px 4px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,240,200,0.3)',
+                                        border: '1px solid rgba(60,40,15,0.7)'
+                                    }} />
 
                                     {/* Altitude Header & Stone Icon Pill */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
@@ -1334,21 +1374,21 @@ export default function AboutPage() {
                             }}
                         >
                             {TIMELINE_MILESTONES.map((mile, mIdx) => {
-                                // Each tablet has a unique chipped polygon shape
+                                // Each tablet has a unique chipped polygon shape — cracked stone chips
                                 const clipPaths = [
                                     'polygon(0% 14px, 10px 4px, 30px 0%, calc(100% - 24px) 2px, calc(100% - 8px) 0%, 100% 12px, calc(100% - 2px) 45%, 100% calc(100% - 18px), calc(100% - 14px) 100%, 40px calc(100% - 3px), 12px 100%, 0% calc(100% - 14px), 6px 55%)',
                                     'polygon(0% 20px, 14px 6px, 28px 0%, calc(100% - 30px) 0px, calc(100% - 10px) 8px, 100% 22px, calc(100% - 4px) 60%, 100% calc(100% - 20px), calc(100% - 20px) calc(100% - 4px), calc(100% - 40px) 100%, 20px calc(100% - 6px), 4px calc(100% - 22px), 0% calc(100% - 38px), 8px 48%)',
                                     'polygon(0% 10px, 8px 0%, 28px 4px, calc(100% - 20px) 0px, calc(100% - 6px) 10px, 100% 28px, calc(100% - 6px) 58%, 100% calc(100% - 14px), calc(100% - 12px) 100%, 48px calc(100% - 2px), 14px calc(100% - 10px), 0% calc(100% - 26px), 4px 40%)',
                                     'polygon(0% 24px, 16px 8px, 36px 0%, calc(100% - 26px) 4px, calc(100% - 4px) 0%, 100% 18px, calc(100% - 8px) 50%, 100% calc(100% - 22px), calc(100% - 16px) calc(100% - 8px), calc(100% - 38px) 100%, 18px calc(100% - 4px), 6px calc(100% - 18px), 0% calc(100% - 32px), 10px 62%)'
                                 ];
-                                // Slightly different stone tones per card
-                                const stoneBgs = [
-                                    { bg: '#3A3530', rings: 'rgba(80,65,45,0.9)', light: 'rgba(255,230,170,0.06)' },
-                                    { bg: '#2E2C28', rings: 'rgba(65,58,42,0.9)', light: 'rgba(255,220,150,0.05)' },
-                                    { bg: '#35312C', rings: 'rgba(72,62,46,0.9)', light: 'rgba(255,235,175,0.07)' },
-                                    { bg: '#312E2A', rings: 'rgba(68,58,44,0.9)', light: 'rgba(255,225,160,0.06)' }
+                                // Real stone color palettes — limestone, sandstone, slate, river stone
+                                const stonePalettes = [
+                                    { bg: '#B8B0A0', hi: 'rgba(255,255,245,0.22)', shadow: 'rgba(60,50,35,0.55)', crack: 'rgba(70,55,40,0.45)', tag: '#5A4830', year: '#3A2E1E', title: '#2A201A', body: '#5C4E3C', rule: 'rgba(80,60,40,0.4)', footer: 'rgba(80,60,40,0.5)' },
+                                    { bg: '#A8A090', hi: 'rgba(255,252,240,0.18)', shadow: 'rgba(50,42,30,0.5)', crack: 'rgba(60,48,32,0.42)', tag: '#4E4028', year: '#32281A', title: '#251C16', body: '#524434', rule: 'rgba(70,55,38,0.38)', footer: 'rgba(70,55,38,0.48)' },
+                                    { bg: '#C4B8A4', hi: 'rgba(255,255,248,0.2)', shadow: 'rgba(65,52,38,0.5)', crack: 'rgba(75,58,40,0.44)', tag: '#5E4C32', year: '#3E3020', title: '#2E2218', body: '#604E3C', rule: 'rgba(85,65,42,0.4)', footer: 'rgba(85,65,42,0.5)' },
+                                    { bg: '#9E9888', hi: 'rgba(255,250,238,0.16)', shadow: 'rgba(45,38,28,0.5)', crack: 'rgba(55,44,30,0.42)', tag: '#48402A', year: '#2E2618', title: '#221A12', body: '#4E4030', rule: 'rgba(65,52,35,0.36)', footer: 'rgba(65,52,35,0.46)' }
                                 ];
-                                const s = stoneBgs[mIdx % 4];
+                                const s = stonePalettes[mIdx % 4];
                                 const rotations = ['-1.2deg', '1.0deg', '-0.8deg', '1.4deg'];
 
                                 return (
@@ -1360,120 +1400,112 @@ export default function AboutPage() {
                                         style={{
                                             position: 'relative',
                                             transform: `rotate(${rotations[mIdx % 4]})`,
-                                            filter: 'drop-shadow(0 22px 48px rgba(0,0,0,0.85)) drop-shadow(0 6px 14px rgba(0,0,0,0.6))',
+                                            filter: `drop-shadow(0 22px 48px rgba(0,0,0,0.7)) drop-shadow(0 4px 12px ${s.shadow})`,
                                             cursor: 'default'
                                         }}
                                     >
-                                        {/* Stone Slab */}
+                                        {/* Stone Slab — real limestone/sandstone color */}
                                         <div style={{
                                             background: s.bg,
                                             backgroundImage: `
-                                                radial-gradient(ellipse at ${30 + mIdx * 12}% ${40 + mIdx * 8}%, rgba(90, 75, 50, 0.35) 0%, transparent 55%),
-                                                linear-gradient(${155 + mIdx * 10}deg, rgba(255,235,180,0.08) 0%, transparent 40%, rgba(0,0,0,0.45) 100%),
-                                                repeating-linear-gradient(${88 + mIdx * 5}deg,
-                                                    transparent 0px, transparent 4px,
-                                                    rgba(255,255,255,0.018) 4px, rgba(255,255,255,0.018) 5px,
-                                                    transparent 5px, transparent 14px,
-                                                    rgba(0,0,0,0.08) 14px, rgba(0,0,0,0.08) 15px
+                                                radial-gradient(ellipse at ${28 + mIdx * 14}% ${38 + mIdx * 9}%, ${s.hi} 0%, transparent 52%),
+                                                linear-gradient(${148 + mIdx * 12}deg, rgba(255,252,240,0.12) 0%, transparent 35%, rgba(0,0,0,0.18) 100%),
+                                                repeating-linear-gradient(${72 + mIdx * 8}deg,
+                                                    transparent 0px, transparent 5px,
+                                                    rgba(0,0,0,0.04) 5px, rgba(0,0,0,0.04) 6px,
+                                                    transparent 6px, transparent 18px,
+                                                    rgba(255,255,255,0.06) 18px, rgba(255,255,255,0.06) 19px
                                                 )
                                             `,
                                             clipPath: clipPaths[mIdx % 4],
-                                            padding: '38px 28px 34px',
+                                            padding: '36px 26px 32px',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            minHeight: '320px'
+                                            minHeight: '330px',
+                                            position: 'relative',
+                                            overflow: 'hidden'
                                         }}>
+
+                                            {/* Stone crack lines overlay */}
+                                            <div style={{
+                                                position: 'absolute', inset: 0, pointerEvents: 'none',
+                                                backgroundImage: `
+                                                    linear-gradient(${22 + mIdx * 18}deg, transparent 48%, ${s.crack} 48.5%, transparent 49%),
+                                                    linear-gradient(${110 + mIdx * 22}deg, transparent 62%, ${s.crack} 62.4%, transparent 63%),
+                                                    linear-gradient(${165 + mIdx * 14}deg, transparent 35%, rgba(0,0,0,0.1) 35.4%, transparent 36%)
+                                                `
+                                            }} />
+
                                             {/* Engraved top rule */}
                                             <div style={{
                                                 height: '2px',
-                                                background: 'linear-gradient(90deg, transparent, rgba(180,145,80,0.35), rgba(180,145,80,0.5), rgba(180,145,80,0.35), transparent)',
-                                                marginBottom: '22px',
+                                                background: `linear-gradient(90deg, transparent, ${s.rule}, ${s.rule}, transparent)`,
+                                                marginBottom: '20px',
                                                 borderRadius: '1px'
                                             }} />
 
-                                            {/* Tag — chiseled label */}
+                                            {/* Tag — chiseled into stone */}
                                             <div style={{
-                                                fontSize: '10px',
-                                                fontWeight: '800',
-                                                letterSpacing: '2px',
-                                                color: '#A08840',
-                                                textTransform: 'uppercase',
-                                                marginBottom: '10px',
-                                                fontFamily: 'var(--font-heading)',
-                                                opacity: 0.85
+                                                fontSize: '10px', fontWeight: '800', letterSpacing: '2px',
+                                                color: s.tag, textTransform: 'uppercase',
+                                                marginBottom: '10px', fontFamily: 'var(--font-heading)',
+                                                position: 'relative', zIndex: 1
                                             }}>
                                                 ◈ {mile.tag}
                                             </div>
 
-                                            {/* Carved Year — deeply engraved */}
+                                            {/* Carved Year — deep engraving into stone */}
                                             <div style={{
                                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                                fontSize: '58px',
-                                                fontWeight: '900',
-                                                letterSpacing: '-0.04em',
-                                                lineHeight: 1,
-                                                color: '#C4A660',
-                                                textShadow: `
-                                                    0 1px 0 rgba(255,230,160,0.3),
-                                                    0 -1px 2px rgba(0,0,0,0.95),
-                                                    0 3px 10px rgba(0,0,0,0.9),
-                                                    inset 0 1px 2px rgba(0,0,0,0.8)
-                                                `,
-                                                marginBottom: '16px'
+                                                fontSize: '58px', fontWeight: '900',
+                                                letterSpacing: '-0.04em', lineHeight: 1,
+                                                color: s.year,
+                                                textShadow: `0 1px 0 rgba(255,255,240,0.4), 0 -1px 1px rgba(0,0,0,0.3), 0 2px 6px rgba(0,0,0,0.2)`,
+                                                marginBottom: '14px', position: 'relative', zIndex: 1
                                             }}>
                                                 {mile.year}
                                             </div>
 
                                             {/* Carved divider groove */}
-                                            <div style={{
-                                                display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px'
-                                            }}>
-                                                <div style={{ flex: 1, height: '1px', background: 'rgba(160,130,60,0.3)' }} />
-                                                <div style={{ fontSize: '8px', color: 'rgba(160,130,60,0.5)', letterSpacing: '3px' }}>✦✦✦</div>
-                                                <div style={{ flex: 1, height: '1px', background: 'rgba(160,130,60,0.3)' }} />
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', position: 'relative', zIndex: 1 }}>
+                                                <div style={{ flex: 1, height: '1px', background: s.rule }} />
+                                                <div style={{ fontSize: '8px', color: s.rule, letterSpacing: '3px' }}>✦✦✦</div>
+                                                <div style={{ flex: 1, height: '1px', background: s.rule }} />
                                             </div>
 
-                                            {/* Title — inscribed */}
+                                            {/* Title — inscribed into stone face */}
                                             <h3 style={{
                                                 fontFamily: 'var(--font-heading)',
-                                                fontSize: '17px',
-                                                fontWeight: '800',
-                                                color: '#E8D8B0',
-                                                margin: '0 0 12px',
-                                                lineHeight: 1.28,
-                                                letterSpacing: '-0.01em',
-                                                textShadow: '0 1px 4px rgba(0,0,0,0.8)'
+                                                fontSize: '16.5px', fontWeight: '800',
+                                                color: s.title, margin: '0 0 11px',
+                                                lineHeight: 1.28, letterSpacing: '-0.01em',
+                                                position: 'relative', zIndex: 1
                                             }}>
                                                 {mile.title}
                                             </h3>
 
-                                            {/* Description — etched text */}
+                                            {/* Description — etched smaller */}
                                             <p style={{
-                                                fontSize: '13px',
-                                                color: '#8A7A5C',
-                                                lineHeight: 1.7,
-                                                margin: '0 0 auto',
-                                                flexGrow: 1
+                                                fontSize: '12.5px', color: s.body,
+                                                lineHeight: 1.68, margin: '0 0 auto',
+                                                flexGrow: 1, position: 'relative', zIndex: 1
                                             }}>
                                                 {mile.desc}
                                             </p>
 
-                                            {/* Engraved bottom rule */}
+                                            {/* Bottom engraved rule */}
                                             <div style={{
                                                 height: '1px',
-                                                background: 'linear-gradient(90deg, transparent, rgba(180,145,80,0.28), transparent)',
-                                                marginTop: '22px'
+                                                background: `linear-gradient(90deg, transparent, ${s.rule}, transparent)`,
+                                                marginTop: '20px'
                                             }} />
 
-                                            {/* Stone era marker */}
+                                            {/* Stone era stamp */}
                                             <div style={{
-                                                marginTop: '12px',
-                                                fontSize: '9.5px',
-                                                color: 'rgba(160,130,60,0.45)',
-                                                letterSpacing: '1.5px',
-                                                fontWeight: '700',
-                                                textTransform: 'uppercase',
-                                                textAlign: 'right'
+                                                marginTop: '10px', fontSize: '9px',
+                                                color: s.footer, letterSpacing: '1.5px',
+                                                fontWeight: '700', textTransform: 'uppercase',
+                                                textAlign: 'right', position: 'relative', zIndex: 1
                                             }}>
                                                 AANANDHAM · ANNO {mile.year}
                                             </div>
@@ -1481,6 +1513,7 @@ export default function AboutPage() {
                                     </motion.div>
                                 );
                             })}
+
                         </motion.div>
                     </div>
                 </motion.section>
