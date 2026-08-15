@@ -985,31 +985,6 @@ export default function HomePage() {
                 }
             }
 
-            // 3. Skill Levels Sticky Deck Scroll Progress (Scoped to when Levels track is near/in viewport)
-            const levelsTrack = document.getElementById('levels-scroll-track');
-            if (levelsTrack) {
-                const rect = levelsTrack.getBoundingClientRect();
-                if (rect.top <= windowH && rect.bottom >= 0) {
-                    const totalDist = rect.height - windowH;
-                    if (totalDist > 0) {
-                        const scrolledDist = -rect.top;
-                        const progress = Math.max(0, Math.min(1, scrolledDist / totalDist));
-                        
-                        let levelIdx = 0;
-                        if (progress < 0.22) {
-                            levelIdx = 0; // Total Newbie
-                        } else if (progress < 0.45) {
-                            levelIdx = 1; // Still Learning
-                        } else if (progress < 0.68) {
-                            levelIdx = 2; // Pretty Confident
-                        } else {
-                            levelIdx = 3; // Already a Pro (Huge 32% scroll dwell time)
-                        }
-                        setActiveLevelIdx((prev) => (prev !== levelIdx ? levelIdx : prev));
-                    }
-                }
-            }
-
             ticking = false;
         };
 
@@ -2568,306 +2543,284 @@ export default function HomePage() {
             ───────────────────────────────────────────────────────────── */}
             <section 
                 id="levels" 
-                style={{ position: 'relative', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '80px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
             >
-                {/* Generous 300vh Scroll Track for Silky Smooth Scroll Dealing */}
-                <div 
-                    id="levels-scroll-track"
-                    style={{
-                        position: 'relative',
-                        height: '300vh',
-                        width: '100%'
-                    }}
-                >
-                    {/* Pinned 100vh Sticky Stage */}
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
+                        <div>
+                            <div className="star-badge">
+                                <span className="star-icon">★</span> LEVELS
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(24px, 3.4vw, 40px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.035em',
+                                margin: 0
+                            }}>
+                                Catch the wave regardless of <br />your <span className="text-marker-3">trekking skills</span>
+                            </h2>
+                        </div>
+
+                        <a href="#packages" className="action-arrow-btn">
+                            <span>See Full Program</span>
+                            <div className="btn-arrow-circle">
+                                ↗
+                            </div>
+                        </a>
+                    </div>
+
+                    {/* Level Quick Select Tabs */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '24px' }}>
+                        {SKILL_LEVELS.map((level, idx) => {
+                            const isSelected = activeLevelIdx === idx;
+                            return (
+                                <button
+                                    key={level.id}
+                                    onClick={() => setActiveLevelIdx(idx)}
+                                    style={{
+                                        background: isSelected ? '#121613' : '#FFFFFF',
+                                        color: isSelected ? '#FFFFFF' : '#59655D',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        borderRadius: '999px',
+                                        padding: '6px 16px',
+                                        fontSize: '12px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.15)' : 'none',
+                                        transition: 'all 0.25s ease'
+                                    }}
+                                >
+                                    <span style={{ color: isSelected ? '#E5A93B' : '#8E9B92', fontSize: '11px', fontWeight: '800' }}>
+                                        {level.step}
+                                    </span>
+                                    <span>{level.title}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Stacked Interactive Card Deck Showcase */}
                     <div 
+                        id="levels-scroll-track"
                         style={{
-                            position: 'sticky',
-                            top: 0,
-                            height: '100vh',
+                            position: 'relative',
+                            height: '380px',
+                            maxWidth: '520px',
+                            margin: '0 auto',
+                            perspective: '1200px',
                             display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            padding: '24px clamp(16px, 3.5vw, 40px)',
-                            boxSizing: 'border-box'
+                            alignItems: 'center',
+                            justifyContent: 'center'
                         }}
                     >
-                        <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-                            
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
-                                <div>
-                                    <div className="star-badge">
-                                        <span className="star-icon">★</span> LEVELS
-                                    </div>
-                                    <h2 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(24px, 3.4vw, 40px)',
-                                        fontWeight: '800',
-                                        color: '#121613',
-                                        letterSpacing: '-0.035em',
-                                        margin: 0
-                                    }}>
-                                        Catch the wave regardless of <br />your <span className="text-marker-3">trekking skills</span>
-                                    </h2>
-                                </div>
+                        {SKILL_LEVELS.map((level, idx) => {
+                            const diff = idx - (activeLevelIdx !== null ? activeLevelIdx : 0);
+                            const isFront = diff === 0;
+                            const isBehind = diff > 0;
+                            const isPast = diff < 0;
 
-                                <a href="#packages" className="action-arrow-btn">
-                                    <span>See Full Program</span>
-                                    <div className="btn-arrow-circle">
-                                        ↗
-                                    </div>
-                                </a>
-                            </div>
+                            return (
+                                <motion.div
+                                    key={level.id}
+                                    initial={false}
+                                    animate={{
+                                        scale: isFront ? 1 : isBehind ? Math.max(1 - diff * 0.05, 0.8) : 0.88,
+                                        y: isFront ? 0 : isBehind ? diff * 14 : -20,
+                                        x: isPast ? -320 : isBehind ? diff * 4 : 0,
+                                        rotate: isPast ? -14 : isBehind ? diff * 2.2 : 0,
+                                        opacity: isPast ? 0 : Math.max(1 - diff * 0.25, 0),
+                                        zIndex: 10 - Math.abs(diff)
+                                    }}
+                                    transition={{ 
+                                        type: "spring",
+                                        stiffness: 280,
+                                        damping: 28,
+                                        mass: 0.8
+                                    }}
+                                    drag={isFront ? "x" : false}
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    onDragEnd={(e, info) => {
+                                        if (info.offset.x < -50 && activeLevelIdx < SKILL_LEVELS.length - 1) {
+                                            setActiveLevelIdx(prev => prev + 1);
+                                        } else if (info.offset.x > 50 && activeLevelIdx > 0) {
+                                            setActiveLevelIdx(prev => prev - 1);
+                                        }
+                                    }}
+                                    onClick={() => {
+                                        if (isBehind && diff === 1) {
+                                            setActiveLevelIdx(idx);
+                                        }
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        background: '#FFFFFF',
+                                        border: isFront ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                        borderRadius: '26px',
+                                        padding: '22px 24px',
+                                        boxShadow: isFront 
+                                            ? '0 24px 60px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.04)' 
+                                            : '0 12px 30px rgba(0,0,0,0.06)',
+                                        cursor: isFront ? 'grab' : isBehind ? 'pointer' : 'default',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        minHeight: '340px',
+                                        willChange: 'transform, opacity',
+                                        transformStyle: 'preserve-3d',
+                                        backfaceVisibility: 'hidden'
+                                    }}
+                                >
+                                    {/* Card Top: Avatar + Badge + Step Number */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <img
+                                                src={level.avatar}
+                                                alt={level.title}
+                                                style={{
+                                                    width: '42px',
+                                                    height: '42px',
+                                                    borderRadius: '50%',
+                                                    objectFit: 'cover',
+                                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                                }}
+                                            />
+                                            <div>
+                                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
+                                                    LEVEL {level.step} / 04
+                                                </span>
+                                                <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
+                                                    {level.badge}
+                                                </span>
+                                            </div>
+                                        </div>
 
-                            {/* Level Quick Select Tabs */}
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px' }}>
-                                {SKILL_LEVELS.map((level, idx) => {
-                                    const isSelected = activeLevelIdx === idx;
-                                    return (
-                                        <button
-                                            key={level.id}
-                                            onClick={() => setActiveLevelIdx(idx)}
+                                        <span style={{ background: '#F1F3EC', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
+                                            {level.pace}
+                                        </span>
+                                    </div>
+
+                                    {/* Card Center: Title & Description */}
+                                    <div style={{ margin: '14px 0 10px' }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
+                                            {level.title}
+                                        </h3>
+                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, margin: 0 }}>
+                                            {level.desc}
+                                        </p>
+                                    </div>
+
+                                    {/* Card Stats Pills */}
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                                        <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                            🥾 {level.distance}
+                                        </span>
+                                        <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                            ▲ {level.elevation}
+                                        </span>
+                                    </div>
+
+                                    {/* Bottom Action Row */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(18,22,19,0.06)' }}>
+                                        <a
+                                            href="#packages"
                                             style={{
-                                                background: isSelected ? '#121613' : '#FFFFFF',
-                                                color: isSelected ? '#FFFFFF' : '#59655D',
-                                                border: '1px solid rgba(18, 22, 19, 0.1)',
-                                                borderRadius: '999px',
-                                                padding: '6px 16px',
                                                 fontSize: '12px',
-                                                fontWeight: '700',
-                                                cursor: 'pointer',
+                                                fontWeight: '800',
+                                                color: '#121613',
+                                                textDecoration: 'none',
                                                 display: 'inline-flex',
                                                 alignItems: 'center',
-                                                gap: '6px',
-                                                boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.15)' : 'none',
-                                                transition: 'all 0.25s ease'
+                                                gap: '5px'
                                             }}
                                         >
-                                            <span style={{ color: isSelected ? '#E5A93B' : '#8E9B92', fontSize: '11px', fontWeight: '800' }}>
-                                                {level.step}
-                                            </span>
-                                            <span>{level.title}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
+                                            <span>View Matching Treks</span>
+                                            <span>→</span>
+                                        </a>
 
-                            {/* Stacked Interactive Card Deck Showcase */}
-                            <div 
-                                style={{
-                                    position: 'relative',
-                                    height: '370px',
-                                    maxWidth: '520px',
-                                    margin: '0 auto',
-                                    perspective: '1200px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}
-                            >
-                                {SKILL_LEVELS.map((level, idx) => {
-                                    const diff = idx - (activeLevelIdx !== null ? activeLevelIdx : 0);
-                                    const isFront = diff === 0;
-                                    const isBehind = diff > 0;
-                                    const isPast = diff < 0;
-
-                                    return (
-                                        <motion.div
-                                            key={level.id}
-                                            initial={false}
-                                            animate={{
-                                                scale: isFront ? 1 : isBehind ? Math.max(1 - diff * 0.05, 0.8) : 0.88,
-                                                y: isFront ? 0 : isBehind ? diff * 14 : -20,
-                                                x: isPast ? -320 : isBehind ? diff * 4 : 0,
-                                                rotate: isPast ? -14 : isBehind ? diff * 2.2 : 0,
-                                                opacity: isPast ? 0 : Math.max(1 - diff * 0.25, 0),
-                                                zIndex: 10 - Math.abs(diff)
-                                            }}
-                                            transition={{ 
-                                                type: "spring",
-                                                stiffness: 280,
-                                                damping: 28,
-                                                mass: 0.8
-                                            }}
-                                            drag={isFront ? "x" : false}
-                                            dragConstraints={{ left: 0, right: 0 }}
-                                            onDragEnd={(e, info) => {
-                                                if (info.offset.x < -50 && activeLevelIdx < SKILL_LEVELS.length - 1) {
-                                                    setActiveLevelIdx(prev => prev + 1);
-                                                } else if (info.offset.x > 50 && activeLevelIdx > 0) {
-                                                    setActiveLevelIdx(prev => prev - 1);
-                                                }
-                                            }}
-                                            onClick={() => {
-                                                if (isBehind && diff === 1) {
-                                                    setActiveLevelIdx(idx);
-                                                }
-                                            }}
-                                            style={{
-                                                position: 'absolute',
-                                                top: 0,
-                                                left: 0,
-                                                right: 0,
-                                                background: '#FFFFFF',
-                                                border: isFront ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
-                                                borderRadius: '26px',
-                                                padding: '22px 24px',
-                                                boxShadow: isFront 
-                                                    ? '0 24px 60px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.04)' 
-                                                    : '0 12px 30px rgba(0,0,0,0.06)',
-                                                cursor: isFront ? 'grab' : isBehind ? 'pointer' : 'default',
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                justifyContent: 'space-between',
-                                                minHeight: '340px',
-                                                willChange: 'transform, opacity',
-                                                transformStyle: 'preserve-3d',
-                                                backfaceVisibility: 'hidden'
-                                            }}
-                                        >
-                                            {/* Card Top: Avatar + Badge + Step Number */}
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                                    <img
-                                                        src={level.avatar}
-                                                        alt={level.title}
-                                                        style={{
-                                                            width: '42px',
-                                                            height: '42px',
-                                                            borderRadius: '50%',
-                                                            objectFit: 'cover',
-                                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-                                                        }}
-                                                    />
-                                                    <div>
-                                                        <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
-                                                            LEVEL {level.step} / 04
-                                                        </span>
-                                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
-                                                            {level.badge}
-                                                        </span>
-                                                    </div>
-                                                </div>
-
-                                                <span style={{ background: '#F1F3EC', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
-                                                    {level.pace}
-                                                </span>
-                                            </div>
-
-                                            {/* Card Center: Title & Description */}
-                                            <div style={{ margin: '14px 0 10px' }}>
-                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                                                    {level.title}
-                                                </h3>
-                                                <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, margin: 0 }}>
-                                                    {level.desc}
-                                                </p>
-                                            </div>
-
-                                            {/* Card Stats Pills */}
-                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                                                <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
-                                                    🥾 {level.distance}
-                                                </span>
-                                                <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
-                                                    ▲ {level.elevation}
-                                                </span>
-                                            </div>
-
-                                            {/* Bottom Action Row */}
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(18,22,19,0.06)' }}>
-                                                <a
-                                                    href="#packages"
-                                                    style={{
-                                                        fontSize: '12px',
-                                                        fontWeight: '800',
-                                                        color: '#121613',
-                                                        textDecoration: 'none',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '5px'
-                                                    }}
-                                                >
-                                                    <span>View Matching Treks</span>
-                                                    <span>→</span>
-                                                </a>
-
-                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', fontWeight: '600' }}>
-                                                    Scroll down to deal next ↓
-                                                </span>
-                                            </div>
-                                        </motion.div>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Deck Navigation Controls */}
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '16px' }}>
-                                <button
-                                    onClick={() => setActiveLevelIdx(prev => Math.max(0, (prev || 0) - 1))}
-                                    disabled={activeLevelIdx === 0}
-                                    style={{
-                                        background: '#FFFFFF',
-                                        border: '1px solid rgba(18,22,19,0.12)',
-                                        borderRadius: '999px',
-                                        padding: '6px 16px',
-                                        fontSize: '12px',
-                                        fontWeight: '800',
-                                        cursor: activeLevelIdx === 0 ? 'not-allowed' : 'pointer',
-                                        opacity: activeLevelIdx === 0 ? 0.35 : 1,
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '5px',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                >
-                                    <span>←</span>
-                                    <span>Previous</span>
-                                </button>
-
-                                <div style={{ display: 'flex', gap: '6px' }}>
-                                    {SKILL_LEVELS.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setActiveLevelIdx(idx)}
-                                            style={{
-                                                width: activeLevelIdx === idx ? '22px' : '7px',
-                                                height: '7px',
-                                                borderRadius: '999px',
-                                                background: activeLevelIdx === idx ? '#121613' : 'rgba(18,22,19,0.2)',
-                                                border: 'none',
-                                                padding: 0,
-                                                cursor: 'pointer',
-                                                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-                                            }}
-                                        />
-                                    ))}
-                                </div>
-
-                                <button
-                                    onClick={() => setActiveLevelIdx(prev => Math.min(SKILL_LEVELS.length - 1, (prev || 0) + 1))}
-                                    disabled={activeLevelIdx === SKILL_LEVELS.length - 1}
-                                    style={{
-                                        background: '#FFFFFF',
-                                        border: '1px solid rgba(18,22,19,0.12)',
-                                        borderRadius: '999px',
-                                        padding: '6px 16px',
-                                        fontSize: '12px',
-                                        fontWeight: '800',
-                                        cursor: activeLevelIdx === SKILL_LEVELS.length - 1 ? 'not-allowed' : 'pointer',
-                                        opacity: activeLevelIdx === SKILL_LEVELS.length - 1 ? 0.35 : 1,
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '5px',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                >
-                                    <span>Next</span>
-                                    <span>→</span>
-                                </button>
-                            </div>
-                        </div>
+                                        <span style={{ fontSize: '10.5px', color: '#8E9B92', fontWeight: '600' }}>
+                                            Swipe or click Next →
+                                        </span>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
+
+                    {/* Deck Navigation Controls */}
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '20px' }}>
+                        <button
+                            onClick={() => setActiveLevelIdx(prev => Math.max(0, (prev || 0) - 1))}
+                            disabled={activeLevelIdx === 0}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18,22,19,0.12)',
+                                borderRadius: '999px',
+                                padding: '6px 16px',
+                                fontSize: '12px',
+                                fontWeight: '800',
+                                cursor: activeLevelIdx === 0 ? 'not-allowed' : 'pointer',
+                                opacity: activeLevelIdx === 0 ? 0.35 : 1,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <span>←</span>
+                            <span>Previous</span>
+                        </button>
+
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                            {SKILL_LEVELS.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setActiveLevelIdx(idx)}
+                                    style={{
+                                        width: activeLevelIdx === idx ? '22px' : '7px',
+                                        height: '7px',
+                                        borderRadius: '999px',
+                                        background: activeLevelIdx === idx ? '#121613' : 'rgba(18,22,19,0.2)',
+                                        border: 'none',
+                                        padding: 0,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setActiveLevelIdx(prev => Math.min(SKILL_LEVELS.length - 1, (prev || 0) + 1))}
+                            disabled={activeLevelIdx === SKILL_LEVELS.length - 1}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18,22,19,0.12)',
+                                borderRadius: '999px',
+                                padding: '6px 16px',
+                                fontSize: '12px',
+                                fontWeight: '800',
+                                cursor: activeLevelIdx === SKILL_LEVELS.length - 1 ? 'not-allowed' : 'pointer',
+                                opacity: activeLevelIdx === SKILL_LEVELS.length - 1 ? 0.35 : 1,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <span>Next</span>
+                            <span>→</span>
+                        </button>
+                    </div>
+
                 </div>
             </section>
 
@@ -2962,49 +2915,52 @@ export default function HomePage() {
             {/* ─────────────────────────────────────────────────────────────
                 8. CUSTOM ARRANGEMENTS & EVENTS (Interactive Cork Notice Board)
             ───────────────────────────────────────────────────────────── */}
+            {/* ─────────────────────────────────────────────────────────────
+                8. CUSTOM ARRANGEMENTS & EVENTS (Space-Saving Roughed Paper Scraps Slider)
+            ───────────────────────────────────────────────────────────── */}
             <motion.section 
                 id="arrangements" 
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '80px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '70px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
                     
                     {/* Header Row with Title & Slider Controls */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                         <div>
-                            <div className="star-badge" style={{ marginBottom: '10px' }}>
-                                <span className="star-icon">📌</span> CAMP NOTICE BOARD
+                            <div className="star-badge" style={{ marginBottom: '8px' }}>
+                                <span className="star-icon">★</span> ARRANGEMENTS & EVENTS
                             </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(26px, 3.8vw, 42px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
-                                Custom Wilderness Arrangements & Events
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3.5vw, 38px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.03em', margin: 0 }}>
+                                Tailored Wilderness Arrangements For Every Tribe
                             </h2>
                         </div>
 
-                        {/* Navigation Arrows for Horizontal Canvas */}
+                        {/* Navigation Arrows */}
                         <div style={{ display: 'flex', gap: '8px' }}>
                             <button
                                 onClick={() => {
-                                    const el = document.getElementById('noticeboard-track');
-                                    el?.scrollBy({ left: -360, behavior: 'smooth' });
+                                    const el = document.getElementById('events-slider-track');
+                                    el?.scrollBy({ left: -340, behavior: 'smooth' });
                                 }}
-                                aria-label="Previous Notice"
+                                aria-label="Previous Event"
                                 style={{
-                                    width: '42px',
-                                    height: '42px',
+                                    width: '38px',
+                                    height: '38px',
                                     borderRadius: '50%',
                                     background: '#FFFFFF',
                                     border: '1px solid rgba(18, 22, 19, 0.12)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '15px',
+                                    fontSize: '14px',
                                     fontWeight: '800',
                                     color: '#121613',
                                     cursor: 'pointer',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                                     transition: 'all 0.2s ease'
                                 }}
                             >
@@ -3012,24 +2968,24 @@ export default function HomePage() {
                             </button>
                             <button
                                 onClick={() => {
-                                    const el = document.getElementById('noticeboard-track');
-                                    el?.scrollBy({ left: 360, behavior: 'smooth' });
+                                    const el = document.getElementById('events-slider-track');
+                                    el?.scrollBy({ left: 340, behavior: 'smooth' });
                                 }}
-                                aria-label="Next Notice"
+                                aria-label="Next Event"
                                 style={{
-                                    width: '42px',
-                                    height: '42px',
+                                    width: '38px',
+                                    height: '38px',
                                     borderRadius: '50%',
                                     background: '#FFFFFF',
                                     border: '1px solid rgba(18, 22, 19, 0.12)',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '15px',
+                                    fontSize: '14px',
                                     fontWeight: '800',
                                     color: '#121613',
                                     cursor: 'pointer',
-                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                                     transition: 'all 0.2s ease'
                                 }}
                             >
@@ -3038,68 +2994,62 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    {/* Corkboard Canvas Container */}
-                    <div className="noticeboard-canvas-container">
-                        {/* Notice Board Metal Hanging Tabs */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 40px 14px 40px', opacity: 0.6 }}>
-                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#78350F', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.6)' }} />
-                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#78350F', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.6)' }} />
-                        </div>
+                    {/* Roughed Paper Scraps Horizontal Track */}
+                    <div id="events-slider-track" className="events-horizontal-track" style={{ paddingTop: '16px', paddingBottom: '16px' }}>
+                        {EVENT_ARRANGEMENTS.map((ev, idx) => (
+                            <motion.div 
+                                key={idx} 
+                                className="events-horizontal-card roughed-paper-scrap"
+                                whileHover={{
+                                    y: -10,
+                                    rotate: 0,
+                                    scale: 1.02,
+                                    boxShadow: '0 24px 50px rgba(0, 0, 0, 0.14)'
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+                                style={{
+                                    background: ev.paperBg,
+                                    borderColor: ev.borderTint,
+                                    transform: `rotate(${ev.rotation})`,
+                                    cursor: 'pointer',
+                                    padding: '24px 22px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    minHeight: '340px'
+                                }}
+                                onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
+                            >
+                                {/* Realistic Crumpled Paper Crease Overlay */}
+                                <div className="crumpled-crease-overlay" />
 
-                        {/* Horizontal Scroll Track */}
-                        <div id="noticeboard-track" className="noticeboard-scroll-track">
-                            {EVENT_ARRANGEMENTS.map((ev, idx) => (
-                                <motion.div 
-                                    key={idx} 
-                                    className="noticeboard-item-scrap roughed-paper-scrap"
-                                    whileHover={{
-                                        y: -10,
-                                        rotate: 0,
-                                        scale: 1.02,
-                                        boxShadow: '0 24px 50px rgba(0, 0, 0, 0.18)'
-                                    }}
-                                    whileTap={{ scale: 0.98 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 24 }}
-                                    style={{
-                                        background: ev.paperBg,
-                                        borderColor: ev.borderTint,
-                                        transform: `rotate(${ev.rotation})`,
-                                        cursor: 'pointer',
-                                        padding: '24px 22px'
-                                    }}
-                                    onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
-                                >
-                                    {/* Metallic Notice Push Pin */}
-                                    <div 
-                                        style={{ 
-                                            position: 'absolute', 
-                                            top: '-9px', 
-                                            left: '50%', 
-                                            transform: 'translateX(-50%)', 
-                                            zIndex: 10, 
-                                            width: '18px', 
-                                            height: '18px', 
-                                            borderRadius: '50%', 
-                                            background: 'radial-gradient(circle at 35% 35%, #F5BD55 0%, #D97706 60%, #78350F 100%)', 
-                                            boxShadow: '0 3px 6px rgba(0,0,0,0.4)',
-                                            border: '1.5px solid #FEF3C7'
-                                        }} 
-                                    />
+                                {/* Top Translucent Frosted Scotch Tape Strip */}
+                                <div 
+                                    className="scotch-tape-strip" 
+                                    style={{ transform: `translateX(-50%) rotate(${ev.tapeAngle})` }} 
+                                />
 
-                                    {/* Realistic Crumpled Paper Crease & Fold Overlay */}
-                                    <div className="crumpled-crease-overlay" />
+                                {/* Bottom Corner Scotch Tape Accent */}
+                                <div className="corner-tape-scrap" />
 
-                                    {/* Top Translucent Frosted Scotch Tape Strip */}
-                                    <div 
-                                        className="scotch-tape-strip" 
-                                        style={{ transform: `translateX(-50%) rotate(${ev.tapeAngle})` }} 
-                                    />
-
-                                    {/* Top Row: Mini Logo + Tag Code + Vintage Stamp */}
+                                <div>
+                                    {/* Top Row: Tag Code + Vintage Rubber Ink Stamp */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', position: 'relative', zIndex: 2 }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <img
+                                                src="/logo.png"
+                                                alt="Aanandham Logo"
+                                                style={{
+                                                    height: '18px',
+                                                    width: '18px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '50%',
+                                                    border: '1px solid rgba(0,0,0,0.12)'
+                                                }}
+                                            />
                                             <span style={{
-                                                fontSize: '9.5px',
+                                                fontSize: '9px',
                                                 fontWeight: '900',
                                                 letterSpacing: '1px',
                                                 textTransform: 'uppercase',
@@ -3127,7 +3077,7 @@ export default function HomePage() {
                                                 letterSpacing: '0.8px',
                                                 textTransform: 'uppercase',
                                                 transform: 'rotate(-2deg)',
-                                                background: 'rgba(255,255,255,0.9)',
+                                                background: 'rgba(255,255,255,0.85)',
                                                 userSelect: 'none'
                                             }}
                                         >
@@ -3141,7 +3091,7 @@ export default function HomePage() {
                                             width: '38px',
                                             height: '38px',
                                             borderRadius: '12px',
-                                            background: 'rgba(18, 22, 19, 0.08)',
+                                            background: 'rgba(18, 22, 19, 0.07)',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -3171,22 +3121,24 @@ export default function HomePage() {
                                         {ev.features.slice(0, 3).map((feat, fIdx) => (
                                             <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#2B372E', fontWeight: '600' }}>
                                                 <span style={{ color: '#166534', fontWeight: '800', fontSize: '12px' }}>✓</span>
-                                                <span>{feat}</span>
+                                                <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{feat}</span>
                                             </div>
                                         ))}
                                     </div>
+                                </div>
 
-                                    {/* Bottom Capacity Bar & Inquire Action */}
-                                    <div style={{
-                                        marginTop: 'auto',
-                                        paddingTop: '10px',
-                                        borderTop: '1px dashed rgba(18, 22, 19, 0.16)',
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        position: 'relative',
-                                        zIndex: 2
-                                    }}>
+                                {/* Bottom Capacity Bar & Action */}
+                                <div style={{
+                                    marginTop: 'auto',
+                                    paddingTop: '10px',
+                                    borderTop: '1px dashed rgba(18, 22, 19, 0.16)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '8px',
+                                    position: 'relative',
+                                    zIndex: 2
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <span style={{
                                             fontSize: '11px',
                                             fontWeight: '800',
@@ -3209,9 +3161,23 @@ export default function HomePage() {
                                             Inquire ↗
                                         </span>
                                     </div>
-                                </motion.div>
-                            ))}
-                        </div>
+
+                                    {/* Bottom Marginal Handwritten Note */}
+                                    <div style={{
+                                        fontStyle: 'italic',
+                                        fontSize: '11.5px',
+                                        lineHeight: '1.4',
+                                        color: '#556358',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '5px'
+                                    }}>
+                                        <span style={{ fontSize: '12px' }}>✍</span>
+                                        <span>{ev.marginalNote}</span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </motion.section>
