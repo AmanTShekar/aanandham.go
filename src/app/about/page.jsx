@@ -647,8 +647,8 @@ export default function AboutPage() {
                     <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
                         <div style={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-                            gap: '56px',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+                            gap: 'clamp(32px, 4vw, 56px)',
                             alignItems: 'center'
                         }}>
                             {/* Left: Editorial Narrative */}
@@ -1626,7 +1626,7 @@ export default function AboutPage() {
                             variants={staggerContainer}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
                                 gap: '28px'
                             }}
                         >
@@ -1772,8 +1772,8 @@ export default function AboutPage() {
                             variants={staggerContainer}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                                gap: '32px'
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
+                                gap: '28px'
                             }}
                         >
                             {TEAM_CREATORS.map((member, i) => (
@@ -1787,7 +1787,7 @@ export default function AboutPage() {
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         position: 'relative',
-                                        height: '520px',
+                                        height: 'clamp(420px, 58vh, 520px)',
                                         borderRadius: '32px',
                                         overflow: 'hidden',
                                         border: '1px solid rgba(11, 21, 14, 0.12)',
@@ -1930,7 +1930,7 @@ export default function AboutPage() {
                             variants={staggerContainer}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
                                 gap: '28px'
                             }}
                         >

@@ -2166,82 +2166,81 @@ export default function HomePage() {
                             })}
                         </div>
 
-                        {/* Big Picture (Positioned on Left on Desktop, Centered Full-Width on Mobile) */}
-                        <motion.div 
-                            variants={fadeInLeft}
-                            className="stay-glamp-image-container"
-                        >
-                            {/* Stacked Cross-Fade Images (Silky Smooth Cubic-Bezier Transition) */}
-                            {STAY_ACCOMMODATIONS.map((acc, idx) => (
-                                <img
-                                    key={acc.id}
-                                    src={acc.mainImg}
-                                    alt={acc.title}
-                                    loading="lazy"
-                                    decoding="async"
-                                    style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        width: '100%',
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        opacity: activeStayAcc === idx ? 1 : 0,
-                                        transform: activeStayAcc === idx ? 'scale(1)' : 'scale(1.04)',
-                                        transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
-                                        pointerEvents: 'none'
-                                    }}
-                                />
-                            ))}
-                            
-                            {/* Overlay Gradient */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, rgba(14, 24, 17, 0.2) 40%, transparent 60%)' }} />
-
-                            {/* Stacked Synchronized Caption & Badges (Smooth Cross-Fade) */}
-                            {STAY_ACCOMMODATIONS.map((acc, idx) => {
-                                const isCurrent = activeStayAcc === idx;
-                                return (
-                                    <div
-                                        key={`caption-${acc.id}`}
+                        {/* Big Picture (Pinned Sticky on Left on Desktop, Clean Relative on Mobile) */}
+                        <div className="stay-glamp-image-col">
+                            <div className="stay-glamp-image-container">
+                                {/* Stacked Cross-Fade Images (Silky Smooth Cubic-Bezier Transition) */}
+                                {STAY_ACCOMMODATIONS.map((acc, idx) => (
+                                    <img
+                                        key={acc.id}
+                                        src={acc.mainImg}
+                                        alt={acc.title}
+                                        loading="lazy"
+                                        decoding="async"
                                         style={{
                                             position: 'absolute',
                                             inset: 0,
-                                            opacity: isCurrent ? 1 : 0,
-                                            transform: isCurrent ? 'translateY(0)' : 'translateY(8px)',
-                                            transition: 'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
-                                            pointerEvents: 'none',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            padding: '22px'
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            opacity: activeStayAcc === idx ? 1 : 0,
+                                            transform: activeStayAcc === idx ? 'scale(1)' : 'scale(1.04)',
+                                            transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
+                                            pointerEvents: 'none'
                                         }}
-                                    >
-                                        {/* Top Badges */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '6px 14px', borderRadius: '999px', boxShadow: '0 4px 14px rgba(0,0,0,0.18)' }}>
-                                                {acc.badge}
-                                            </span>
-                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
-                                                {acc.capacity}
-                                            </span>
-                                        </div>
+                                    />
+                                ))}
+                                
+                                {/* Overlay Gradient */}
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, rgba(14, 24, 17, 0.2) 40%, transparent 60%)' }} />
 
-                                        {/* Bottom Caption on Image */}
-                                        <div>
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#FFFFFF', marginBottom: '6px' }}>
-                                                {acc.title}
-                                            </h3>
-                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                                {acc.amenities.map((amenity, i) => (
-                                                    <span key={i} style={{ background: 'rgba(255, 255, 255, 0.2)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(4px)' }}>
-                                                        ✓ {amenity}
-                                                    </span>
-                                                ))}
+                                {/* Stacked Synchronized Caption & Badges (Smooth Cross-Fade) */}
+                                {STAY_ACCOMMODATIONS.map((acc, idx) => {
+                                    const isCurrent = activeStayAcc === idx;
+                                    return (
+                                        <div
+                                            key={`caption-${acc.id}`}
+                                            style={{
+                                                position: 'absolute',
+                                                inset: 0,
+                                                opacity: isCurrent ? 1 : 0,
+                                                transform: isCurrent ? 'translateY(0)' : 'translateY(8px)',
+                                                transition: 'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
+                                                pointerEvents: 'none',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'space-between',
+                                                padding: '22px'
+                                            }}
+                                        >
+                                            {/* Top Badges */}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '6px 14px', borderRadius: '999px', boxShadow: '0 4px 14px rgba(0,0,0,0.18)' }}>
+                                                    {acc.badge}
+                                                </span>
+                                                <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+                                                    {acc.capacity}
+                                                </span>
+                                            </div>
+
+                                            {/* Bottom Caption on Image */}
+                                            <div>
+                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#FFFFFF', marginBottom: '6px' }}>
+                                                    {acc.title}
+                                                </h3>
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    {acc.amenities.map((amenity, i) => (
+                                                        <span key={i} style={{ background: 'rgba(255, 255, 255, 0.2)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(4px)' }}>
+                                                            ✓ {amenity}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
-                        </motion.div>
+                                    );
+                                })}
+                            </div>
+                        </div>
 
                         {/* Right Column with Hover-Active Interactive Accommodation Cards */}
                         <motion.div variants={fadeInRight} className="stay-glamp-cards-container">
