@@ -3,6 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 
+import { Calendar as CalendarIcon, ChevronDown, Sparkles, Clock, Check, Plus } from 'lucide-react';
+import LucideAmenityIcon from './common/LucideAmenityIcon';
+
 // ── PRESET EXPEDITION WEEKEND BATCHES (Interactive 1-Tap Pills) ──
 const UPCOMING_WEEKEND_BATCHES = [
     {
@@ -61,6 +64,7 @@ export default function CustomDateBatchPicker({
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
     const containerRef = useRef(null);
+    const selectedBatchRef = useRef(null);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -72,6 +76,15 @@ export default function CustomDateBatchPicker({
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
+
+    // Smooth scroll selected batch into view
+    useEffect(() => {
+        if (isDropdownOpen && selectedBatchRef.current) {
+            setTimeout(() => {
+                selectedBatchRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }, 50);
+        }
+    }, [isDropdownOpen]);
 
     // Current display label
     const matchedBatch = UPCOMING_WEEKEND_BATCHES.find(b => b.title === selectedDate || b.rawDate === selectedDate);
@@ -124,7 +137,7 @@ export default function CustomDateBatchPicker({
                     borderRadius: '14px',
                     background: isDark ? 'rgba(255, 255, 255, 0.07)' : '#F8F9F5',
                     border: isDropdownOpen 
-                        ? (isDark ? '1px solid #D5ED55' : '1.5px solid #121613') 
+                        ? (isDark ? '1.5px solid #D5ED55' : '1.5px solid #121613') 
                         : (isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid rgba(18, 22, 19, 0.12)'),
                     color: isDark ? '#FFFFFF' : '#121613',
                     fontSize: '14px',
@@ -135,12 +148,12 @@ export default function CustomDateBatchPicker({
                     cursor: 'pointer',
                     outline: 'none',
                     boxSizing: 'border-box',
-                    transition: 'all 0.2s ease',
-                    boxShadow: isDropdownOpen ? '0 4px 18px rgba(0,0,0,0.06)' : 'none'
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    boxShadow: isDropdownOpen ? '0 6px 22px rgba(0,0,0,0.08)' : 'none'
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
-                    <span style={{ fontSize: '16px' }}>📅</span>
+                    <CalendarIcon size={17} color={isDark ? '#D5ED55' : '#166534'} strokeWidth={2.2} />
                     <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {displayLabel}
                     </span>
@@ -153,12 +166,12 @@ export default function CustomDateBatchPicker({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '10px',
                     color: isDark ? '#D5ED55' : '#121613',
                     transform: isDropdownOpen ? 'rotate(180deg)' : 'none',
-                    transition: 'transform 0.25s ease'
+                    transition: 'transform 0.25s ease',
+                    flexShrink: 0
                 }}>
-                    ▼
+                    <ChevronDown size={14} strokeWidth={2.5} />
                 </div>
             </button>
 
@@ -170,23 +183,30 @@ export default function CustomDateBatchPicker({
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 8, scale: 0.98 }}
                         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+                        data-lenis-prevent="true"
+                        data-lenis-prevent-wheel="true"
+                        data-lenis-prevent-touch="true"
+                        onWheel={(e) => e.stopPropagation()}
                         style={{
                             position: 'absolute',
                             top: 'calc(100% + 8px)',
                             left: 0,
                             right: 0,
-                            zIndex: 1000,
-                            background: isDark ? '#111D15' : '#FFFFFF',
-                            border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(18, 22, 19, 0.12)',
+                            zIndex: 10000,
+                            background: isDark ? '#0F1A13' : '#FFFFFF',
+                            border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(18, 22, 19, 0.14)',
                             borderRadius: '18px',
-                            boxShadow: '0 18px 45px rgba(0, 0, 0, 0.18)',
+                            boxShadow: '0 18px 45px rgba(0, 0, 0, 0.2)',
                             padding: '10px',
                             maxHeight: '340px',
-                            overflowY: 'auto'
+                            overflowY: 'auto',
+                            overscrollBehavior: 'contain',
+                            WebkitOverflowScrolling: 'touch'
                         }}
                     >
-                        <div style={{ fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', padding: '6px 10px 8px' }}>
-                            ⚡ Upcoming Weekend Scheduled Batches
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', padding: '6px 10px 8px' }}>
+                            <Sparkles size={13} color={isDark ? '#D5ED55' : '#166534'} />
+                            <span>Upcoming Weekend Scheduled Batches</span>
                         </div>
 
                         {/* List of Weekend Batches */}
@@ -196,21 +216,22 @@ export default function CustomDateBatchPicker({
                                 return (
                                     <div
                                         key={batch.id}
+                                        ref={isSelected ? selectedBatchRef : null}
                                         onClick={() => handleSelectBatch(batch)}
                                         style={{
                                             padding: '10px 14px',
                                             borderRadius: '12px',
                                             background: isSelected 
-                                                ? (isDark ? 'rgba(213, 237, 85, 0.15)' : '#F1F3EC') 
+                                                ? (isDark ? 'rgba(213, 237, 85, 0.16)' : '#F1F3EC') 
                                                 : 'transparent',
                                             border: isSelected 
-                                                ? (isDark ? '1px solid #D5ED55' : '1px solid #121613') 
+                                                ? (isDark ? '1px solid #D5ED55' : '1.5px solid #121613') 
                                                 : '1px solid transparent',
                                             display: 'flex',
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
                                             cursor: 'pointer',
-                                            transition: 'background 0.15s ease'
+                                            transition: 'all 0.15s ease'
                                         }}
                                         onMouseOver={e => {
                                             if (!isSelected) e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.06)' : '#F8F9F5';
@@ -223,20 +244,25 @@ export default function CustomDateBatchPicker({
                                             <div style={{ fontSize: '13.5px', fontWeight: '800', color: isDark ? '#FFFFFF' : '#121613' }}>
                                                 {batch.title}
                                             </div>
-                                            <div style={{ fontSize: '11.5px', color: isDark ? '#A2B6A6' : '#59655D' }}>
+                                            <div style={{ fontSize: '11.5px', color: isDark ? '#A2B6A6' : '#59655D', fontWeight: '600' }}>
                                                 {batch.subtitle} · <span style={{ color: isDark ? '#D5ED55' : '#166534', fontWeight: '700' }}>{batch.spotsLeft}</span>
                                             </div>
                                         </div>
-                                        <span style={{
-                                            fontSize: '10.5px',
-                                            fontWeight: '800',
-                                            padding: '3px 8px',
-                                            borderRadius: '999px',
-                                            background: isDark ? 'rgba(255,255,255,0.1)' : '#F1F3EC',
-                                            color: batch.statusColor
-                                        }}>
-                                            {batch.status}
-                                        </span>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{
+                                                fontSize: '10.5px',
+                                                fontWeight: '800',
+                                                padding: '3px 8px',
+                                                borderRadius: '999px',
+                                                background: isDark ? 'rgba(255,255,255,0.1)' : '#F1F3EC',
+                                                color: batch.statusColor
+                                            }}>
+                                                {batch.status}
+                                            </span>
+                                            {isSelected && (
+                                                <Check size={16} strokeWidth={3} color={isDark ? '#D5ED55' : '#166534'} />
+                                            )}
+                                        </div>
                                     </div>
                                 );
                             })}

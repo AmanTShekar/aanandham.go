@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../components/CustomSelectDropdown';
+import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
@@ -1066,8 +1067,9 @@ export default function AdminPortal() {
 
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
                                             {room.features && room.features.map((feat, idx) => (
-                                                <span key={idx} style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', color: '#59655D', fontSize: '11px', fontWeight: '600', padding: '3px 8px', borderRadius: '6px' }}>
-                                                    ✓ {feat}
+                                                <span key={idx} style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', color: '#3A443E', fontSize: '11px', fontWeight: '700', padding: '3px 9px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                                    <LucideAmenityIcon name={feat} size={11} color="#166534" />
+                                                    <span>{feat}</span>
                                                 </span>
                                             ))}
                                         </div>

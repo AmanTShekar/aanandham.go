@@ -3,6 +3,8 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 import CustomDateBatchPicker from './CustomDateBatchPicker';
+import LucideAmenityIcon from './common/LucideAmenityIcon';
+import { Check, Users, Tent, Sparkles, Plus, Minus } from 'lucide-react';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
@@ -498,13 +500,15 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                 </div>
 
                                                 {/* Allocation & Feature highlights */}
-                                                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                                    <span style={{ fontSize: '10.5px', background: isRoomSelected ? '#D5ED55' : '#ECEEE6', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '800' }}>
-                                                        ⛺ {neededUnits} Unit(s) for {totalGuests} Campers
+                                                <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                                    <span style={{ fontSize: '10.5px', background: isRoomSelected ? '#D5ED55' : '#ECEEE6', color: '#121613', padding: '3px 8px', borderRadius: '999px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        <Tent size={12} strokeWidth={2.5} />
+                                                        <span>{neededUnits} Unit(s) for {totalGuests} Campers</span>
                                                     </span>
-                                                    {room.features && room.features.slice(0, 1).map((ft, fIdx) => (
-                                                        <span key={fIdx} style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '600' }}>
-                                                            ✓ {ft}
+                                                    {room.features && room.features.slice(0, 2).map((ft, fIdx) => (
+                                                        <span key={fIdx} style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 8px', borderRadius: '999px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                            <LucideAmenityIcon name={ft} size={11} color="#166534" />
+                                                            <span>{ft}</span>
                                                         </span>
                                                     ))}
                                                 </div>
@@ -755,18 +759,21 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                     transition: 'all 0.2s ease'
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                                     <input
                                                         type="checkbox"
                                                         checked={isChecked}
                                                         onChange={() => toggleAddon(addon.id)}
                                                         style={{ width: '17px', height: '17px', accentColor: '#121613', cursor: 'pointer' }}
                                                     />
+                                                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: isChecked ? '#121613' : '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                                        <LucideAmenityIcon name={addon.name} icon={addon.icon} size={16} color={isChecked ? '#D5ED55' : '#166534'} />
+                                                    </div>
                                                     <div>
-                                                        <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>
-                                                            {addon.icon} {addon.name}
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
+                                                            {addon.name}
                                                         </div>
-                                                        <div style={{ fontSize: '11px', color: '#59655D' }}>
+                                                        <div style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>
                                                             +₹{addon.price} {addon.perPerson ? '/ person' : 'flat fee'}
                                                         </div>
                                                     </div>

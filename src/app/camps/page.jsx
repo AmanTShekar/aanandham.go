@@ -5,6 +5,8 @@ import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 import BookingEngineModal from '../../components/BookingEngineModal';
+import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
+import { MapPin, Clock, Sparkles, Share2, Heart, Camera, Star, Search, SlidersHorizontal, Check, X } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
@@ -288,15 +290,15 @@ export default function CampsDirectoryPage() {
                                         boxSizing: 'border-box'
                                     }}
                                 />
-                                <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', fontSize: '16px', opacity: 0.6 }}>
-                                    🔍
+                                <span style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center', opacity: 0.6 }}>
+                                    <Search size={16} color="#121613" />
                                 </span>
                                 {searchQuery && (
                                     <button
                                         onClick={() => setSearchQuery('')}
-                                        style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: '800', color: '#59655D' }}
+                                        style={{ position: 'absolute', right: '14px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', color: '#59655D' }}
                                     >
-                                        ✕
+                                        <X size={14} strokeWidth={2.5} />
                                     </button>
                                 )}
                             </div>
@@ -500,7 +502,7 @@ export default function CampsDirectoryPage() {
                                                 )}
                                             </div>
 
-                                            {/* Action Buttons Top Right: Like ❤️ & Share 🔗 */}
+                                            {/* Action Buttons Top Right: Like & Share */}
                                             <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '8px' }}>
                                                 <button
                                                     onClick={(e) => handleToggleWishlist(camp.id, camp.title, e)}
@@ -512,7 +514,6 @@ export default function CampsDirectoryPage() {
                                                         background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
                                                         border: 'none',
                                                         color: '#FFFFFF',
-                                                        fontSize: '16px',
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
@@ -522,7 +523,7 @@ export default function CampsDirectoryPage() {
                                                         transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                                                     }}
                                                 >
-                                                    {isLiked ? '❤️' : '🤍'}
+                                                    <Heart size={16} fill={isLiked ? '#FFFFFF' : 'none'} color="#FFFFFF" strokeWidth={2.5} />
                                                 </button>
 
                                                 <button
@@ -535,7 +536,6 @@ export default function CampsDirectoryPage() {
                                                         background: 'rgba(0, 0, 0, 0.55)',
                                                         border: 'none',
                                                         color: '#FFFFFF',
-                                                        fontSize: '14px',
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
@@ -544,7 +544,7 @@ export default function CampsDirectoryPage() {
                                                         boxShadow: '0 4px 14px rgba(0,0,0,0.25)'
                                                     }}
                                                 >
-                                                    🔗
+                                                    <Share2 size={15} color="#FFFFFF" strokeWidth={2.5} />
                                                 </button>
                                             </div>
 
@@ -556,19 +556,25 @@ export default function CampsDirectoryPage() {
                                                         background: 'rgba(0, 0, 0, 0.55)',
                                                         border: '1px solid rgba(255, 255, 255, 0.2)',
                                                         color: '#FFFFFF',
-                                                        padding: '4px 10px',
+                                                        padding: '5px 12px',
                                                         borderRadius: '999px',
                                                         fontSize: '11px',
                                                         fontWeight: '700',
                                                         cursor: 'pointer',
-                                                        backdropFilter: 'blur(6px)'
+                                                        backdropFilter: 'blur(6px)',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '5px'
                                                     }}
                                                 >
-                                                    📸 {galleryList.length} Photos
+                                                    <Camera size={13} color="#FFFFFF" />
+                                                    <span>{galleryList.length} Photos</span>
                                                 </button>
 
-                                                <span style={{ fontSize: '12px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
-                                                    ★ {camp.rating || 4.98} <span style={{ opacity: 0.75, fontWeight: '600' }}>({camp.reviewsCount || 342})</span>
+                                                <span style={{ fontSize: '12px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '5px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                    <Star size={13} fill="#E5A93B" color="#E5A93B" />
+                                                    <span>{camp.rating || 4.98}</span>
+                                                    <span style={{ opacity: 0.75, fontWeight: '600', fontSize: '11px' }}>({camp.reviewsCount || 342})</span>
                                                 </span>
                                             </div>
                                         </div>
@@ -578,11 +584,13 @@ export default function CampsDirectoryPage() {
                                             
                                             {/* Region & Duration */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                                    📍 {camp.location || camp.region}
+                                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                    <MapPin size={13} color="#166534" strokeWidth={2.5} />
+                                                    <span>{camp.location || camp.region}</span>
                                                 </span>
-                                                <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#166534', background: 'rgba(22, 101, 52, 0.1)', padding: '3px 9px', borderRadius: '6px' }}>
-                                                    ⏱️ {camp.duration || '2D / 1N'}
+                                                <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#166534', background: 'rgba(22, 101, 52, 0.1)', padding: '3px 9px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                    <Clock size={12} strokeWidth={2.5} />
+                                                    <span>{camp.duration || '2D / 1N'}</span>
                                                 </span>
                                             </div>
 
@@ -602,8 +610,9 @@ export default function CampsDirectoryPage() {
                                             {camp.highlights && (
                                                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
                                                     {camp.highlights.slice(0, 3).map((h, hidx) => (
-                                                        <span key={hidx} style={{ fontSize: '11px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '3px 8px', borderRadius: '6px' }}>
-                                                            ✓ {h}
+                                                        <span key={hidx} style={{ fontSize: '11px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '4px 9px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                                            <LucideAmenityIcon name={h} size={12} color="#166534" />
+                                                            <span>{h}</span>
                                                         </span>
                                                     ))}
                                                 </div>

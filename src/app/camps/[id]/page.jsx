@@ -8,6 +8,8 @@ import Footer from '../../../components/Footer';
 import BookingEngineModal from '../../../components/BookingEngineModal';
 import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
+import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
 import { inr } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
@@ -337,9 +339,11 @@ export default function CampPropertyDetailPage() {
                             </h3>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px' }}>
                                 {camp.highlights && camp.highlights.map((hl, idx) => (
-                                    <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', background: '#F8F9F5', padding: '12px 14px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.04)' }}>
-                                        <span style={{ color: '#166534', fontWeight: '800', fontSize: '15px' }}>✓</span>
-                                        <span style={{ fontSize: '13.5px', fontWeight: '600', color: '#121613' }}>{hl}</span>
+                                    <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#F8F9F5', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.06)' }}>
+                                        <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                            <LucideAmenityIcon name={hl} size={16} color="#D5ED55" />
+                                        </div>
+                                        <span style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>{hl}</span>
                                     </div>
                                 ))}
                             </div>
@@ -384,25 +388,29 @@ export default function CampPropertyDetailPage() {
 
                                             <div>
                                                 <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
-                                                    <span style={{ fontSize: '11px', fontWeight: '800', background: '#121613', color: '#E5A93B', padding: '2px 8px', borderRadius: '999px' }}>
-                                                        Capacity: {room.capacity}
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', background: '#121613', color: '#E5A93B', padding: '3px 9px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        <Users size={12} strokeWidth={2.5} />
+                                                        <span>Capacity: {room.capacity}</span>
                                                     </span>
-                                                    <span style={{ fontSize: '11px', fontWeight: '800', background: isSelected ? '#166534' : '#E8EFEA', color: isSelected ? '#FFFFFF' : '#166534', padding: '2px 8px', borderRadius: '999px' }}>
-                                                        ⛺ {Math.max(1, Math.ceil(guestsCount / parseRoomCapacity(room.capacity)))} Unit(s) needed for {guestsCount} Campers
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', background: isSelected ? '#166534' : '#E8EFEA', color: isSelected ? '#FFFFFF' : '#166534', padding: '3px 9px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        <Tent size={12} strokeWidth={2.5} />
+                                                        <span>{Math.max(1, Math.ceil(guestsCount / parseRoomCapacity(room.capacity)))} Unit(s) needed for {guestsCount} Campers</span>
                                                     </span>
                                                     {room.isAvailable && (
-                                                        <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534' }}>
-                                                            ✓ Available
+                                                        <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                                            <Check size={13} strokeWidth={3} />
+                                                            <span>Available</span>
                                                         </span>
                                                     )}
                                                 </div>
-                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '0 0 8px', color: '#121613' }}>
                                                     {room.name}
                                                 </h3>
                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                                     {room.features && room.features.map((feat, fidx) => (
-                                                        <span key={fidx} style={{ fontSize: '11.5px', color: '#59655D', background: '#FFFFFF', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(18,22,19,0.06)' }}>
-                                                            ✓ {feat}
+                                                        <span key={fidx} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#3A443E', background: '#FFFFFF', padding: '4px 10px', borderRadius: '8px', border: '1px solid rgba(18,22,19,0.08)', fontWeight: '600' }}>
+                                                            <LucideAmenityIcon name={feat} size={13} color="#166534" />
+                                                            <span>{feat}</span>
                                                         </span>
                                                     ))}
                                                 </div>
@@ -435,7 +443,59 @@ export default function CampPropertyDetailPage() {
                             </div>
                         </div>
 
-                        {/* SECTION 3: 2-DAY DETAILED ITINERARY */}
+                        {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (CRISP LUCIDE ICONS) */}
+                        <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div className="star-badge" style={{ marginBottom: '8px' }}>
+                                <span className="star-icon">★</span> BASECAMP PERKS
+                            </div>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 8px', color: '#121613' }}>
+                                Included Amenities & Basecamp Facilities
+                            </h2>
+                            <p style={{ fontSize: '14px', color: '#59655D', margin: '0 0 22px' }}>
+                                Every Aanandham basecamp is verified for wilderness safety, hygienic washrooms, and curated culinary experiences.
+                            </p>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                                {(camp.amenities && camp.amenities.length > 0 ? camp.amenities : [
+                                    { name: 'Campfire Circle & Acoustic Jams', icon: '🔥' },
+                                    { name: '4x4 Offroad Trail Access', icon: '🚙' },
+                                    { name: 'Western Washrooms & Hot Water', icon: '🚿' },
+                                    { name: 'Power Backup & Charging Points', icon: '⚡' },
+                                    { name: 'Wilderness Guides & First Aid', icon: '🩺' },
+                                    { name: 'Kerala Spiced Buffet Dining', icon: '🍽️' }
+                                ]).map((amenity, aIdx) => (
+                                    <div
+                                        key={aIdx}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '12px',
+                                            background: '#F8F9F5',
+                                            padding: '14px 16px',
+                                            borderRadius: '16px',
+                                            border: '1px solid rgba(18, 22, 19, 0.06)'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '38px',
+                                            height: '38px',
+                                            borderRadius: '10px',
+                                            background: '#121613',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0
+                                        }}>
+                                            <LucideAmenityIcon name={amenity.name} icon={amenity.icon || ''} size={18} color="#D5ED55" />
+                                        </div>
+                                        <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                            {amenity.name}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* SECTION 4: 2-DAY DETAILED ITINERARY */}
                         <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
                             <div className="star-badge" style={{ marginBottom: '8px' }}>
                                 <span className="star-icon">★</span> EXPEDITION TIMELINE
@@ -467,7 +527,7 @@ export default function CampPropertyDetailPage() {
                             </div>
                         </div>
 
-                        {/* SECTION 4: INCLUSIONS & EXCLUSIONS */}
+                        {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
                         <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
                             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 20px', color: '#121613' }}>
                                 What’s Included in Your Package
@@ -475,24 +535,36 @@ export default function CampPropertyDetailPage() {
 
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
                                 <div>
-                                    <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '12px' }}>
-                                        ✓ What’s Included
+                                    <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <Check size={16} strokeWidth={3} />
+                                        <span>What’s Included</span>
                                     </h3>
-                                    <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13.5px', color: '#3A443E' }}>
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13.5px', color: '#3A443E' }}>
                                         {camp.inclusions ? camp.inclusions.map((inc, i) => (
-                                            <li key={i}>{inc}</li>
-                                        )) : <li>All campsite amenities and guided activities.</li>}
+                                            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                                                <span style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(22, 101, 52, 0.12)', color: '#166534', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                                                    <Check size={12} strokeWidth={3} />
+                                                </span>
+                                                <span style={{ lineHeight: 1.5 }}>{inc}</span>
+                                            </li>
+                                        )) : <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Check size={14} color="#166534" /> All campsite amenities and guided activities.</li>}
                                     </ul>
                                 </div>
 
                                 <div>
-                                    <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#DC2626', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '12px' }}>
-                                        ✕ Exclusions
+                                    <h3 style={{ fontSize: '14px', fontWeight: '800', color: '#DC2626', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <X size={16} strokeWidth={3} />
+                                        <span>Exclusions</span>
                                     </h3>
-                                    <ul style={{ margin: 0, paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13.5px', color: '#3A443E' }}>
+                                    <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13.5px', color: '#3A443E' }}>
                                         {camp.exclusions ? camp.exclusions.map((exc, i) => (
-                                            <li key={i}>{exc}</li>
-                                        )) : <li>Personal transport and personal expenses.</li>}
+                                            <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                                                <span style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(220, 38, 38, 0.12)', color: '#DC2626', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                                                    <X size={12} strokeWidth={3} />
+                                                </span>
+                                                <span style={{ lineHeight: 1.5 }}>{exc}</span>
+                                            </li>
+                                        )) : <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><X size={14} color="#DC2626" /> Personal transport and personal expenses.</li>}
                                     </ul>
                                 </div>
                             </div>
