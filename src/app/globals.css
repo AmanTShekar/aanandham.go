@@ -3360,6 +3360,14 @@ input, textarea, select, button {
     min-height: 290px;
     padding: 24px 18px 16px 20px;
   }
+
+  .admin-desktop-sidebar {
+    display: none !important;
+  }
+
+  .admin-mobile-topbar {
+    display: flex !important;
+  }
 }
 
 
