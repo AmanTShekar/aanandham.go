@@ -3581,22 +3581,40 @@ export default function HomePage() {
                                         {selectedLightboxImg.name}
                                     </h3>
                                 </div>
-                                <button
-                                    onClick={() => {
-                                        const matchingPkg = EXPEDITION_PACKAGES.find(p => 
-                                            p.id === `pkg-${selectedLightboxImg.id}` ||
-                                            p.id.includes(selectedLightboxImg.id) || 
-                                            selectedLightboxImg.id.includes(p.id.replace('pkg-', '')) ||
-                                            p.title.toLowerCase().includes(selectedLightboxImg.name.toLowerCase().split(' ')[0])
-                                        ) || EXPEDITION_PACKAGES[0];
-                                        setSelectedLightboxImg(null);
-                                        handleOpenBooking(matchingPkg);
-                                    }}
-                                    className="btn-lime"
-                                    style={{ padding: '12px 32px', fontSize: '14px', fontWeight: '800' }}
-                                >
-                                    Book This Campsite ↗
-                                </button>
+                                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                    <Link
+                                        href={`/camps/${(EXPEDITION_PACKAGES.find(p => p.id === `pkg-${selectedLightboxImg.id}` || p.id.includes(selectedLightboxImg.id) || selectedLightboxImg.id.includes(p.id.replace('pkg-', ''))) || EXPEDITION_PACKAGES[0]).id}`}
+                                        onClick={() => setSelectedLightboxImg(null)}
+                                        style={{
+                                            padding: '12px 24px',
+                                            borderRadius: '999px',
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                                            color: '#FFFFFF',
+                                            fontSize: '13.5px',
+                                            fontWeight: '700',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        Explore Full Details ↗
+                                    </Link>
+                                    <button
+                                        onClick={() => {
+                                            const matchingPkg = EXPEDITION_PACKAGES.find(p => 
+                                                p.id === `pkg-${selectedLightboxImg.id}` ||
+                                                p.id.includes(selectedLightboxImg.id) || 
+                                                selectedLightboxImg.id.includes(p.id.replace('pkg-', '')) ||
+                                                p.title.toLowerCase().includes(selectedLightboxImg.name.toLowerCase().split(' ')[0])
+                                            ) || EXPEDITION_PACKAGES[0];
+                                            setSelectedLightboxImg(null);
+                                            handleOpenBooking(matchingPkg);
+                                        }}
+                                        className="btn-lime"
+                                        style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '800' }}
+                                    >
+                                        Book This Campsite ↗
+                                    </button>
+                                </div>
                             </div>
                         </motion.div>
                     </motion.div>

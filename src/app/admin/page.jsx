@@ -2,131 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
-
-// ── REGIONAL PROPERTIES INVENTORY ──
-const INITIAL_PROPERTIES = [
-    {
-        id: 'pkg-kolukkumalai',
-        title: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
-        region: 'Munnar',
-        category: 'Summit Trek',
-        tag: 'Bestseller',
-        location: 'Suryanelli / Kolukkumalai, Munnar',
-        altitude: '7,900 FT',
-        price: 2499,
-        originalPrice: 3200,
-        rating: 4.98,
-        reviewsCount: 342,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Offroad',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-        description: 'World’s highest organic tea estate sunrise ridge expedition with 4x4 rugged jeep convoys, starlit campfire barbecues, and misty mountain pod stays.',
-        highlights: ['4x4 Rugged Jeep Safari', 'Tiger Rock Ridge Walk', 'Campfire Live BBQ', 'Dome Pod Stays', 'Tea Factory Tasting'],
-        rooms: [
-            { id: 'r1', name: 'Geodesic Luxury Dome Pod', capacity: '2 Adults', price: 2499, totalUnits: 8, bookedUnits: 4, isAvailable: true, image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80', features: ['Valley Facing Deck', 'King Size Bed', 'En-suite Restroom', 'Thermal Blankets'] },
-            { id: 'r2', name: 'Weatherproof Alpine 4-Person Tent', capacity: '4 Campers', price: 1799, totalUnits: 14, bookedUnits: 6, isAvailable: true, image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80', features: ['Waterproof Flysheet', 'Foam Mattress & Sleeping Bag', 'Camping Lantern', 'Shared Modern Washrooms'] },
-            { id: 'r3', name: 'Private Cliffside Wooden Cottage', capacity: '3 Campers', price: 3499, totalUnits: 3, bookedUnits: 1, isAvailable: true, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80', features: ['Panoramic Glass Window', 'Hot Shower Geyser', 'Private Fire Pit', 'Attendant on Call'] }
-        ],
-        amenities: [
-            { id: 'am-1', name: 'Campfire Circle & Acoustic Jams', icon: '🔥', enabled: true },
-            { id: 'am-2', name: '4x4 Offroad Trail Access', icon: '🚙', enabled: true },
-            { id: 'am-3', name: 'Western Washrooms & Running Water', icon: '🚿', enabled: true },
-            { id: 'am-4', name: 'Power Backup & Charging Stations', icon: '⚡', enabled: true }
-        ],
-        addons: [
-            { id: 'ad-1', name: 'Live Campfire BBQ Platter (Chicken / Paneer)', price: 450, enabled: true },
-            { id: 'ad-2', name: 'Private 4x4 Jeep Safari Upgrade', price: 1200, enabled: true }
-        ]
-    },
-    {
-        id: 'pkg-meesapulimala',
-        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
-        region: 'Munnar',
-        category: 'Summit Trek',
-        tag: 'High Peak',
-        location: 'Silent Valley, Munnar',
-        altitude: '8,661 FT',
-        price: 3199,
-        originalPrice: 4200,
-        rating: 4.99,
-        reviewsCount: 264,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Strenuous High Peak',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-        description: 'South India’s 2nd highest peak expedition. Trek through 8 rolling high-altitude hills and endless rhododendron valleys.',
-        highlights: ['8-Peak Ridge Crossing', 'High Altitude Basecamp Pods', 'Certified Wilderness Marshals', 'Campfire Acoustic Night'],
-        rooms: [
-            { id: 'r4', name: 'Summit Expedition Weatherproof Tent', capacity: '2 Campers', price: 3199, totalUnits: 12, bookedUnits: 5, isAvailable: true, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80', features: ['Double Layer Windproof Fly', 'Thermal Sleeping Bags', 'Ridge Edge Pitch'] }
-        ],
-        amenities: [
-            { id: 'am-10', name: 'Forest Permit & Entry Passes', icon: '🎫', enabled: true },
-            { id: 'am-11', name: 'Wilderness Guide Marshals', icon: '🧭', enabled: true }
-        ],
-        addons: [
-            { id: 'ad-5', name: 'Trekking Pole & Thermal Kit', price: 350, enabled: true }
-        ]
-    },
-    {
-        id: 'pkg-suryanelli',
-        title: 'Suryanelli Valley Ridge Geodesic Glamping',
-        region: 'Suryanelli',
-        category: 'Ridge Glamp',
-        tag: 'Couples Favorite',
-        location: 'Suryanelli, Idukki',
-        altitude: '6,500 FT',
-        price: 1999,
-        originalPrice: 2600,
-        rating: 4.95,
-        reviewsCount: 286,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy Ridge Walk',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-        description: 'Private geodesic dome pods facing cascading green tea slopes and misty sunset valleys.',
-        highlights: ['Geodesic Dome Glamping', 'Private Valley Deck', 'Campfire Acoustic Jams'],
-        rooms: [
-            { id: 'r6', name: 'Valley View Geodesic Dome', capacity: '2 Adults', price: 2199, totalUnits: 10, bookedUnits: 4, isAvailable: true, image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80', features: ['Private Valley Deck', 'Plush Bedding'] }
-        ],
-        amenities: [
-            { id: 'am-20', name: 'Private Valley Deck', icon: '🌄', enabled: true }
-        ],
-        addons: [
-            { id: 'ad-7', name: 'Acoustic Guitarist for Evening', price: 2000, enabled: true }
-        ]
-    },
-    {
-        id: 'pkg-wayanad',
-        title: 'Chembra Peak & Heart Lake Cloud Trail',
-        region: 'Wayanad',
-        category: 'Summit Trek',
-        tag: 'Iconic Lake',
-        location: 'Meppadi, Wayanad',
-        altitude: '6,890 FT',
-        price: 2199,
-        originalPrice: 2800,
-        rating: 4.97,
-        reviewsCount: 312,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Summit',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        description: 'Trek past the legendary natural heart-shaped mountain lake nestled at 5,000 FT with lush tea garden glamping.',
-        highlights: ['Heart-Shaped Lake Trek', 'Bamboo Forest Walk', 'Plantation Glamping'],
-        rooms: [
-            { id: 'r9', name: 'Tea Plantation Alpine Cottage', capacity: '2 Adults', price: 2499, totalUnits: 6, bookedUnits: 2, isAvailable: true, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80', features: ['Balcony Tea View'] }
-        ],
-        amenities: [
-            { id: 'am-40', name: 'Forest Trek Permits', icon: '🎫', enabled: true }
-        ],
-        addons: [
-            { id: 'ad-10', name: 'Zip-line & Bamboo Rafting Pass', price: 650, enabled: true }
-        ]
-    }
-];
 
 // ── SCHEDULED EXPEDITION BATCHES ──
 const INITIAL_EVENTS = [
@@ -167,13 +45,12 @@ export default function AdminPortal() {
 
     // Active Navigation Tab ('overview' | 'bookings' | 'properties' | 'events' | 'financials' | 'settings')
     const [activeTab, setActiveTab] = useState('overview');
-    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     // Dedicated Full-Page Property Details View State
     const [activePropertyDetailId, setActivePropertyDetailId] = useState(null);
 
     // Dynamic Data States (Persisted in LocalStorage)
-    const [properties, setProperties] = useState(INITIAL_PROPERTIES);
+    const [properties, setProperties] = useState(INITIAL_ALL_CAMPS);
     const [events, setEvents] = useState(INITIAL_EVENTS);
     const [bookings, setBookings] = useState([]);
 
@@ -183,20 +60,27 @@ export default function AdminPortal() {
     // Create / Edit Property Modal State
     const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
     const [editingProperty, setEditingProperty] = useState(null);
+    const [imageUrlInput, setImageUrlInput] = useState('');
     const [propertyForm, setPropertyForm] = useState({
         title: '',
         region: 'Munnar',
-        category: 'Summit Trek',
-        tag: 'New Camp',
-        location: 'Munnar, Kerala',
-        altitude: '6,500 FT',
-        price: 1999,
-        originalPrice: 2800,
+        category: 'Summit Trek & Glamp',
+        tag: 'Bestseller ⭐',
+        location: 'Suryanelli / Kolukkumalai, Munnar, Kerala',
+        altitude: '7,900 FT',
+        price: 2499,
+        originalPrice: 3200,
         duration: '2 Days / 1 Night',
-        difficulty: 'Moderate',
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        difficulty: 'Moderate Offroad',
+        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+        gallery: [
+            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80'
+        ],
         description: '',
-        highlights: '4x4 Safari, Campfire BBQ, Dome Pods, Mountain View'
+        highlights: '4x4 Jeep Safari, Campfire BBQ, Dome Pods, Sunrise Ridge',
+        inclusions: 'Dome Pod Stay, 4x4 Jeep Safari, Live BBQ, Dinner & Breakfast, Forest Permits',
+        exclusions: 'Personal transport, personal trekking gear'
     });
 
     // Create Room Modal State
@@ -265,10 +149,9 @@ export default function AdminPortal() {
         const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
         if (savedTelegram) setAdminTelegram(savedTelegram);
 
-        const savedProps = localStorage.getItem('aanandham_admin_properties_v2');
-        if (savedProps) {
-            try { setProperties(JSON.parse(savedProps)); } catch(e){}
-        }
+        const loadedProps = getAllCamps();
+        setProperties(loadedProps);
+
         const savedEvents = localStorage.getItem('aanandham_admin_events');
         if (savedEvents) {
             try { setEvents(JSON.parse(savedEvents)); } catch(e){}
@@ -446,53 +329,133 @@ export default function AdminPortal() {
             setPropertyForm({
                 title: prop.title,
                 region: prop.region || 'Munnar',
-                category: prop.category,
-                tag: prop.tag,
-                location: prop.location,
-                altitude: prop.altitude,
-                price: prop.price,
-                originalPrice: prop.originalPrice,
-                duration: prop.duration,
-                difficulty: prop.difficulty,
-                image: prop.image,
-                description: prop.description,
-                highlights: prop.highlights ? prop.highlights.join(', ') : ''
+                category: prop.category || 'Summit Trek & Glamp',
+                tag: prop.tag || 'Bestseller ⭐',
+                location: prop.location || 'Munnar, Kerala',
+                altitude: prop.altitude || '7,900 FT',
+                price: prop.price || 2499,
+                originalPrice: prop.originalPrice || 3200,
+                duration: prop.duration || '2 Days / 1 Night',
+                difficulty: prop.difficulty || 'Moderate',
+                image: prop.image || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+                gallery: prop.gallery && prop.gallery.length > 0 ? prop.gallery : [prop.image],
+                description: prop.description || '',
+                highlights: prop.highlights ? prop.highlights.join(', ') : '',
+                inclusions: prop.inclusions ? prop.inclusions.join(', ') : '',
+                exclusions: prop.exclusions ? prop.exclusions.join(', ') : ''
             });
         } else {
             setEditingProperty(null);
             setPropertyForm({
                 title: '',
                 region: 'Munnar',
-                category: 'Summit Trek',
-                tag: 'New Camp',
+                category: 'Summit Trek & Glamp',
+                tag: 'New Campsite 🌿',
                 location: 'Munnar, Kerala',
                 altitude: '6,500 FT',
                 price: 1999,
                 originalPrice: 2800,
                 duration: '2 Days / 1 Night',
                 difficulty: 'Moderate',
-                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+                gallery: [
+                    'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+                    'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80'
+                ],
                 description: '',
-                highlights: '4x4 Safari, Campfire BBQ, Dome Pods, Mountain View'
+                highlights: '4x4 Jeep Safari, Campfire BBQ, Dome Pods, Sunrise Ridge Walk',
+                inclusions: '1 Night Tent Stay, Campfire Dinner, Breakfast, Guided Trek',
+                exclusions: 'Personal transport to basecamp'
             });
         }
+        setImageUrlInput('');
         setIsPropertyModalOpen(true);
+    };
+
+    // Handle File Upload for Gallery
+    const handleFileUpload = (e) => {
+        const files = Array.from(e.target.files);
+        if (!files || files.length === 0) return;
+
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (uploadEvent) => {
+                const base64Url = uploadEvent.target.result;
+                setPropertyForm(prev => {
+                    const currentGallery = prev.gallery || [];
+                    const newGallery = [...currentGallery, base64Url];
+                    return {
+                        ...prev,
+                        gallery: newGallery,
+                        image: prev.image || base64Url
+                    };
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+        showToast(`✓ Uploaded ${files.length} photos`);
+    };
+
+    // Add Image URL to Gallery
+    const handleAddImageUrl = () => {
+        if (!imageUrlInput.trim()) return;
+        const url = imageUrlInput.trim();
+        setPropertyForm(prev => {
+            const currentGallery = prev.gallery || [];
+            const newGallery = [...currentGallery, url];
+            return {
+                ...prev,
+                gallery: newGallery,
+                image: prev.image || url
+            };
+        });
+        setImageUrlInput('');
+        showToast('✓ Image URL added to gallery');
+    };
+
+    // Remove Image from Gallery
+    const handleRemoveImage = (idx) => {
+        const newGallery = propertyForm.gallery.filter((_, i) => i !== idx);
+        const newPrimary = newGallery.length > 0 ? (propertyForm.image === propertyForm.gallery[idx] ? newGallery[0] : propertyForm.image) : '';
+        setPropertyForm({
+            ...propertyForm,
+            gallery: newGallery,
+            image: newPrimary
+        });
+        showToast('✓ Image removed');
+    };
+
+    // Set Primary Cover Image
+    const handleSetPrimaryImage = (url) => {
+        setPropertyForm({
+            ...propertyForm,
+            image: url
+        });
+        showToast('★ Set as main cover image');
     };
 
     // Save Property Form
     const handleSavePropertyForm = (e) => {
         e.preventDefault();
         const highlightsArr = propertyForm.highlights.split(',').map(s => s.trim()).filter(Boolean);
-        
+        const inclusionsArr = propertyForm.inclusions.split(',').map(s => s.trim()).filter(Boolean);
+        const exclusionsArr = propertyForm.exclusions.split(',').map(s => s.trim()).filter(Boolean);
+        const galleryArr = propertyForm.gallery && propertyForm.gallery.length > 0 ? propertyForm.gallery : [propertyForm.image];
+        const primaryImage = propertyForm.image || galleryArr[0];
+
         if (editingProperty) {
             const updated = properties.map(p => {
                 if (p.id === editingProperty.id) {
                     return {
                         ...p,
                         ...propertyForm,
+                        image: primaryImage,
+                        gallery: galleryArr,
                         price: Number(propertyForm.price),
                         originalPrice: Number(propertyForm.originalPrice),
-                        highlights: highlightsArr
+                        highlights: highlightsArr,
+                        inclusions: inclusionsArr,
+                        exclusions: exclusionsArr
                     };
                 }
                 return p;
@@ -503,14 +466,18 @@ export default function AdminPortal() {
             const newProp = {
                 id: `pkg-${Date.now()}`,
                 ...propertyForm,
+                image: primaryImage,
+                gallery: galleryArr,
                 price: Number(propertyForm.price),
                 originalPrice: Number(propertyForm.originalPrice),
                 rating: 5.0,
                 reviewsCount: 1,
                 isAvailable: true,
                 highlights: highlightsArr,
+                inclusions: inclusionsArr,
+                exclusions: exclusionsArr,
                 rooms: [
-                    { id: `r-${Date.now()}-1`, name: 'Standard Mountain Dome Pod', capacity: '2 Adults', price: Number(propertyForm.price), totalUnits: 8, bookedUnits: 0, isAvailable: true, image: propertyForm.image, features: ['Mountain View', 'Thermal Blankets', 'Charging Point'] }
+                    { id: `r-${Date.now()}-1`, name: 'Standard Mountain Dome Pod', capacity: '2 Adults', price: Number(propertyForm.price), totalUnits: 8, bookedUnits: 0, isAvailable: true, image: primaryImage, features: ['Mountain View', 'Thermal Blankets', 'Charging Point'] }
                 ],
                 amenities: [
                     { id: `am-${Date.now()}-1`, name: 'Campfire Circle & BBQ', icon: '🔥', enabled: true },
@@ -520,6 +487,9 @@ export default function AdminPortal() {
                 addons: [
                     { id: `ad-${Date.now()}-1`, name: 'Live Campfire BBQ Platter', price: 450, enabled: true },
                     { id: `ad-${Date.now()}-2`, name: '4K Drone Reel Video', price: 1500, enabled: true }
+                ],
+                reviews: [
+                    { id: `rv-${Date.now()}`, name: 'Verified Explorer', location: 'Kerala', rating: 5, date: 'Recent', comment: 'Spectacular wilderness camp and top-notch hospitality.' }
                 ]
             };
             saveProperties([...properties, newProp]);
@@ -646,7 +616,7 @@ export default function AdminPortal() {
         showToast(`✓ Booking ${id} marked as ${newStatus}`);
     };
 
-    // Export CSV with UTF-8 BOM & RFC 4180 escaping
+    // Export CSV
     const handleExportCSV = () => {
         const headers = 'Booking ID,Customer Name,Phone,Email,Region,Package,Dates,Guests,Room Type,Total (INR),Status,Source,Created At';
         const escapeCsv = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
@@ -698,18 +668,17 @@ export default function AdminPortal() {
     // Dynamic KPI & Financial Calculations strictly derived from real data
     const paidBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In');
     const totalRevenue = paidBookings.reduce((acc, b) => acc + (b.total || 0), 0);
-    const estimatedDirectCosts = Math.round(totalRevenue * 0.45); // Direct campsite operations ~45%
+    const estimatedDirectCosts = Math.round(totalRevenue * 0.45);
     const estimatedNetProfit = totalRevenue - estimatedDirectCosts;
     const profitMarginPercent = totalRevenue > 0 ? Math.round((estimatedNetProfit / totalRevenue) * 100) : 55;
     const activeCampers = paidBookings.reduce((acc, b) => acc + (b.guests || 0), 0);
-    const avgOrderValue = paidBookings.length > 0 ? Math.round(totalRevenue / paidBookings.length) : 0;
     const activeEventsCount = events.filter(e => e.status === 'Active').length;
 
     // Active Inspected Property Object
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId);
 
     // ─────────────────────────────────────────────────────────────
-    // PIN AUTHENTICATION GATE (Minimalist Squared Card)
+    // PIN AUTHENTICATION GATE
     // ─────────────────────────────────────────────────────────────
     if (!isAuthenticated) {
         return (
@@ -741,7 +710,7 @@ export default function AdminPortal() {
                         Coordinator Portal
                     </h2>
                     <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '28px' }}>
-                        Enter coordinator passcode to manage inventory, rooms, event batches, and live bookings.
+                        Enter coordinator passcode to manage inventory, photo galleries, event batches, and live bookings.
                     </p>
 
                     <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -833,7 +802,7 @@ export default function AdminPortal() {
                             </button>
                             <div>
                                 <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
-                                    PROPERTY ROOMS & INVENTORY
+                                    CAMPSITE INVENTORY & GALLERY
                                 </span>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
                                     {currentDetailProperty.title}
@@ -842,6 +811,22 @@ export default function AdminPortal() {
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <Link
+                                href={`/camps/${currentDetailProperty.id}`}
+                                target="_blank"
+                                style={{
+                                    padding: '8px 16px',
+                                    borderRadius: '999px',
+                                    background: 'rgba(255, 255, 255, 0.08)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                    color: '#FFFFFF',
+                                    fontSize: '12.5px',
+                                    fontWeight: '700',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                🌐 View Public Page ↗
+                            </Link>
                             <button
                                 onClick={() => handleToggleAvailability(currentDetailProperty.id)}
                                 style={{
@@ -862,7 +847,7 @@ export default function AdminPortal() {
                                 className="btn-lime"
                                 style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}
                             >
-                                Edit Details ✏️
+                                Edit Property & Gallery ✏️
                             </button>
                         </div>
                     </div>
@@ -871,7 +856,7 @@ export default function AdminPortal() {
                 <main style={{ maxWidth: '1440px', margin: '36px auto 0', padding: '0 clamp(24px, 4vw, 56px)', boxSizing: 'border-box' }}>
                     
                     {/* Top Property Overview Hero Box */}
-                    <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', minHeight: '240px', display: 'flex', alignItems: 'flex-end', padding: '36px', backgroundImage: `url(${currentDetailProperty.image})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: '40px', border: '1px solid rgba(18, 22, 19, 0.1)', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
+                    <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', minHeight: '260px', display: 'flex', alignItems: 'flex-end', padding: '36px', backgroundImage: `url(${currentDetailProperty.image})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: '40px', border: '1px solid rgba(18, 22, 19, 0.1)', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.4) 100%)' }} />
                         <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', width: '100%' }}>
                             <div>
@@ -904,7 +889,35 @@ export default function AdminPortal() {
                         </div>
                     </div>
 
-                    {/* SECTION 1: ROOMS & PODS INVENTORY */}
+                    {/* SECTION 1: PHOTO GALLERY THUMBNAILS */}
+                    <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '40px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                            <div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    📸 Campsite Photo Gallery ({currentDetailProperty.gallery ? currentDetailProperty.gallery.length : 1})
+                                </h3>
+                                <div style={{ fontSize: '12.5px', color: '#59655D' }}>High-res wilderness, pod, and sunset photos displayed on public page</div>
+                            </div>
+                            <button onClick={() => handleOpenPropertyModal(currentDetailProperty)} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}>
+                                Manage Gallery Photos 🖼️
+                            </button>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '14px', overflowX: 'auto', paddingBottom: '8px' }}>
+                            {(currentDetailProperty.gallery || [currentDetailProperty.image]).map((img, idx) => (
+                                <div key={idx} style={{ position: 'relative', width: '160px', height: '110px', borderRadius: '14px', overflow: 'hidden', flexShrink: 0, border: img === currentDetailProperty.image ? '2px solid #E5A93B' : '1px solid rgba(18,22,19,0.1)' }}>
+                                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    {img === currentDetailProperty.image && (
+                                        <span style={{ position: 'absolute', top: '6px', left: '6px', background: '#121613', color: '#E5A93B', fontSize: '9.5px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px' }}>
+                                            ★ Cover
+                                        </span>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* SECTION 2: ROOMS & PODS INVENTORY */}
                     <div style={{ marginBottom: '48px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '24px' }}>
                             <div>
@@ -972,7 +985,7 @@ export default function AdminPortal() {
                                             <div>
                                                 <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>Inventory</div>
                                                 <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
-                                                    {room.bookedUnits} / {room.totalUnits} Units Booked
+                                                    {room.bookedUnits || 0} / {room.totalUnits} Units Booked
                                                 </div>
                                             </div>
                                             <div style={{ display: 'flex', gap: '6px' }}>
@@ -1114,7 +1127,7 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // MAIN ADMIN DASHBOARD (Clean Flex Layout with Full-Height Sidebar)
+    // MAIN ADMIN DASHBOARD
     // ─────────────────────────────────────────────────────────────
     return (
         <div style={{ minHeight: '100vh', width: '100%', background: '#F8F9F5', color: '#121613', display: 'flex' }}>
@@ -1238,7 +1251,7 @@ export default function AdminPortal() {
                 </div>
             </aside>
 
-            {/* ── MAIN CONTENT WORKSPACE (Wide & Spacious) ── */}
+            {/* ── MAIN CONTENT WORKSPACE ── */}
             <main style={{ flex: 1, minHeight: '100vh', padding: '36px clamp(28px, 4vw, 64px)', boxSizing: 'border-box', overflowY: 'auto' }}>
                 
                 {/* ─────────────────────────────────────────────────────────────
@@ -1456,7 +1469,7 @@ export default function AdminPortal() {
                             </div>
                         </div>
 
-                        {/* Bookings Squared Cards */}
+                        {/* Bookings Cards */}
                         {filteredBookings.length === 0 ? (
                             <div style={{ padding: '60px 20px', textAlign: 'center', background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18,22,19,0.08)' }}>
                                 <div style={{ fontSize: '36px', marginBottom: '12px' }}>📋</div>
@@ -1545,7 +1558,7 @@ export default function AdminPortal() {
 
                         {/* Region Filter Selector */}
                         <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '24px' }}>
-                            {['All', 'Munnar', 'Suryanelli', 'Wayanad'].map(reg => (
+                            {['All', 'Munnar', 'Suryanelli', 'Wayanad', 'Vagamon', 'Athirappilly'].map(reg => (
                                 <button
                                     key={reg}
                                     onClick={() => setPropertyFilterRegion(reg)}
@@ -1638,11 +1651,18 @@ export default function AdminPortal() {
                                                 border: 'none'
                                             }}
                                         >
-                                            <span>Manage Rooms ({prop.rooms ? prop.rooms.length : 1})</span>
+                                            <span>Manage Rooms & Gallery ({prop.gallery ? prop.gallery.length : 1} photos)</span>
                                             <span>→</span>
                                         </button>
 
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
+                                            <Link
+                                                href={`/camps/${prop.id}`}
+                                                target="_blank"
+                                                style={{ padding: '10px 12px', borderRadius: '10px', background: 'rgba(18,22,19,0.06)', color: '#121613', fontSize: '12px', fontWeight: '700', textDecoration: 'none', display: 'flex', alignItems: 'center' }}
+                                            >
+                                                👁️ Public Page
+                                            </Link>
                                             <button
                                                 onClick={() => handleToggleAvailability(prop.id)}
                                                 style={{ flex: 1, padding: '10px', borderRadius: '10px', background: prop.isAvailable ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 101, 52, 0.08)', border: prop.isAvailable ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(22, 101, 52, 0.3)', color: prop.isAvailable ? '#DC2626' : '#166534', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
@@ -1961,21 +1981,83 @@ export default function AdminPortal() {
                 )}
             </AnimatePresence>
 
-            {/* MODAL: CREATE / EDIT PROPERTY */}
+            {/* ── MODAL: CREATE / EDIT CAMPSITE & MULTI-IMAGE GALLERY ── */}
             <AnimatePresence>
                 {isPropertyModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '720px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                    {editingProperty ? 'Edit Campsite Details' : 'Add New Campsite Listing'}
-                                </h3>
+                                <div>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        {editingProperty ? 'Edit Campsite & Photo Gallery' : 'Add New Kerala Campsite'}
+                                    </h3>
+                                    <div style={{ fontSize: '12.5px', color: '#59655D' }}>Configure pricing, high-res photos, itinerary, and inclusions</div>
+                                </div>
                                 <button onClick={() => setIsPropertyModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
                                     ✕
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                                
+                                {/* SECTION: PHOTO GALLERY MANAGER */}
+                                <div style={{ background: '#F8F9F5', borderRadius: '18px', padding: '20px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                        <div>
+                                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block' }}>
+                                                📸 Photo Gallery ({propertyForm.gallery ? propertyForm.gallery.length : 0} Images)
+                                            </label>
+                                            <span style={{ fontSize: '11.5px', color: '#59655D' }}>Upload from your computer or paste image URLs</span>
+                                        </div>
+                                        <label style={{ cursor: 'pointer', background: '#121613', color: '#FFFFFF', padding: '7px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                            <span>📤 Upload Photos</span>
+                                            <input type="file" multiple accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
+                                        </label>
+                                    </div>
+
+                                    {/* URL Input Bar */}
+                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+                                        <input
+                                            type="url"
+                                            placeholder="Paste Image URL (https://...)"
+                                            value={imageUrlInput}
+                                            onChange={e => setImageUrlInput(e.target.value)}
+                                            style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', fontSize: '13px', color: '#121613', outline: 'none' }}
+                                        />
+                                        <button type="button" onClick={handleAddImageUrl} className="btn-lime" style={{ padding: '10px 16px', fontSize: '12px', fontWeight: '800', flexShrink: 0 }}>
+                                            + Add URL
+                                        </button>
+                                    </div>
+
+                                    {/* Gallery Preview Grid */}
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px' }}>
+                                        {propertyForm.gallery && propertyForm.gallery.map((imgUrl, gIdx) => {
+                                            const isCover = propertyForm.image === imgUrl;
+                                            return (
+                                                <div key={gIdx} style={{ position: 'relative', height: '90px', borderRadius: '10px', overflow: 'hidden', border: isCover ? '2px solid #E5A93B' : '1px solid rgba(18, 22, 19, 0.1)' }}>
+                                                    <img src={imgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    {isCover && (
+                                                        <span style={{ position: 'absolute', top: '4px', left: '4px', background: '#121613', color: '#E5A93B', fontSize: '9px', fontWeight: '800', padding: '2px 5px', borderRadius: '4px' }}>
+                                                            ★ Cover
+                                                        </span>
+                                                    )}
+                                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', opacity: 0, transition: 'opacity 0.2s ease', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px' }} onMouseOver={e => e.currentTarget.style.opacity = 1} onMouseOut={e => e.currentTarget.style.opacity = 0}>
+                                                        {!isCover && (
+                                                            <button type="button" onClick={() => handleSetPrimaryImage(imgUrl)} style={{ padding: '3px 8px', borderRadius: '4px', background: '#E5A93B', border: 'none', color: '#121613', fontSize: '10px', fontWeight: '800', cursor: 'pointer' }}>
+                                                                Set Cover
+                                                            </button>
+                                                        )}
+                                                        <button type="button" onClick={() => handleRemoveImage(gIdx)} style={{ padding: '3px 8px', borderRadius: '4px', background: '#EF4444', border: 'none', color: '#FFFFFF', fontSize: '10px', fontWeight: '800', cursor: 'pointer' }}>
+                                                            Delete 🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Title & Region */}
                                 <div>
                                     <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                         Campsite Title *
@@ -2002,6 +2084,8 @@ export default function AdminPortal() {
                                             <option value="Munnar">Munnar</option>
                                             <option value="Suryanelli">Suryanelli</option>
                                             <option value="Wayanad">Wayanad</option>
+                                            <option value="Vagamon">Vagamon</option>
+                                            <option value="Athirappilly">Athirappilly</option>
                                         </select>
                                     </div>
                                     <div>
@@ -2021,13 +2105,38 @@ export default function AdminPortal() {
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                     <div>
                                         <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                            Base Price (INR) *
+                                            Base Price (INR / Camper) *
                                         </label>
                                         <input
                                             type="number"
                                             required
                                             value={propertyForm.price}
                                             onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Original Strikethrough Price (INR)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            value={propertyForm.originalPrice}
+                                            onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                    <div>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Duration
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={propertyForm.duration}
+                                            onChange={e => setPropertyForm({ ...propertyForm, duration: e.target.value })}
                                             style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
                                         />
                                     </div>
@@ -2046,19 +2155,7 @@ export default function AdminPortal() {
 
                                 <div>
                                     <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                        Image URL
-                                    </label>
-                                    <input
-                                        type="url"
-                                        value={propertyForm.image}
-                                        onChange={e => setPropertyForm({ ...propertyForm, image: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                        Description
+                                        Description & Story
                                     </label>
                                     <textarea
                                         rows={3}
@@ -2068,8 +2165,32 @@ export default function AdminPortal() {
                                     />
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14.5px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
-                                    {editingProperty ? 'Save Changes' : '+ Create Campsite Listing'}
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        Key Highlights (Comma Separated)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={propertyForm.highlights}
+                                        onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        Inclusions (Comma Separated)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={propertyForm.inclusions}
+                                        onChange={e => setPropertyForm({ ...propertyForm, inclusions: e.target.value })}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+
+                                <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                    {editingProperty ? 'Save Campsite & Gallery Changes' : '+ Publish New Campsite'}
                                 </button>
                             </form>
                         </motion.div>
