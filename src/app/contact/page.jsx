@@ -1,28 +1,64 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
+import Footer from '../../components/Footer';
 import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 
+// ── REUSABLE FRAMER MOTION REVEAL VARIANTS ──
+const sectionReveal = {
+    hidden: { opacity: 0, y: 35 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.12,
+            delayChildren: 0.06
+        }
+    }
+};
+
+const cardReveal = {
+    hidden: { opacity: 0, y: 30, scale: 0.96 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+// ── CONTACT DISPATCH CHANNELS ──
 const CONTACT_CHANNELS = [
     {
         id: 'phone',
-        badge: '24/7 HOTLINE',
-        title: 'Voice Concierge',
+        badge: '24/7 EXPEDITION HOTLINE',
+        title: 'Direct Voice Concierge',
         val: '+91 9400 987 654',
-        sub: 'Live basecamp coordinators',
+        sub: 'Live basecamp coordinators on ridge',
         icon: 'fa-solid fa-phone',
         href: 'tel:+919400987654',
+        actionLabel: 'Call Concierge',
         accent: '#E5A93B'
     },
     {
         id: 'whatsapp',
-        badge: 'PRIORITY DESK',
-        title: 'WhatsApp Dispatch',
+        badge: 'PRIORITY DISPATCH',
+        title: 'WhatsApp Travel Desk',
         val: '+91 9400 987 654',
-        sub: 'Instant booking & guidance',
+        sub: 'Instant booking & route guidance',
         icon: 'fa-brands fa-whatsapp',
         href: 'https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20have%20an%20inquiry%20regarding%20campsites%20and%20treks.',
+        actionLabel: 'WhatsApp Chat ↗',
         accent: '#25D366'
     },
     {
@@ -30,20 +66,102 @@ const CONTACT_CHANNELS = [
         badge: 'EXPEDITION DESK',
         title: 'Reservations & Media',
         val: 'bookings@aanandhamgo.in',
-        sub: 'Replies in 2 to 4 hours',
+        sub: 'Replies within 2 to 4 hours',
         icon: 'fa-regular fa-envelope',
         href: 'mailto:bookings@aanandhamgo.in',
+        actionLabel: 'Send Email ↗',
         accent: '#D5ED55'
     },
     {
         id: 'location',
-        badge: 'BASE STATION',
-        title: 'Suryanelli Base',
-        val: 'Suryanelli, Munnar, Kerala',
-        sub: '6,500 FT · Western Ghats',
+        badge: 'SANCTUARY LOCATION',
+        title: 'Suryanelli Base Station',
+        val: 'Suryanelli, Munnar, Kerala 685618',
+        sub: '6,500 FT Elevation · Western Ghats',
         icon: 'fa-solid fa-mountain-sun',
         href: 'https://maps.google.com/?q=Suryanelli+Munnar+Kerala',
+        actionLabel: 'Google Maps ↗',
         accent: '#F28B66'
+    }
+];
+
+// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP ──
+const TRAVEL_STEPS = [
+    {
+        num: 'STAGE 01',
+        title: 'Arrive in Munnar / Kochi',
+        desc: 'Fly into Cochin Int\'l Airport (COK) or take the train to Aluva / Ernakulam. Luxury cabs & express mountain buses run directly to Munnar town.',
+        time: 'Approx 3.5 hrs from Kochi (COK)',
+        tag: 'STAGE · 01',
+        stamp: 'PAVED HIGHWAY',
+        stampColor: '#166534',
+        paperBg: '#FCFCF8',
+        inkColor: '#142016',
+        icon: 'fa-solid fa-plane-departure',
+        memo: 'Early morning drives through Neriamangalam forest offer misty river valley views.'
+    },
+    {
+        num: 'STAGE 02',
+        title: 'Drive Lockhart Gap Route',
+        desc: 'From Munnar town, ascend the breathtaking Lockhart Gap scenic mountain corridor towards Suryanelli. Completely paved and accessible to all cars.',
+        time: '24 km · 45 mins from Munnar',
+        tag: 'STAGE · 02',
+        stamp: 'SCENIC CORRIDOR',
+        stampColor: '#047857',
+        paperBg: '#FCFCF8',
+        inkColor: '#0C2417',
+        icon: 'fa-solid fa-car-side',
+        memo: 'Roll windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
+    },
+    {
+        num: 'STAGE 03',
+        title: 'Safe Parking at Base Camp',
+        desc: 'Pull into our Aanandham Suryanelli meeting station. Safe monitored parking for personal cars with restrooms and welcoming hot cardamom tea.',
+        time: 'Complimentary Camper Parking',
+        tag: 'STAGE · 03',
+        stamp: 'MONITORED PARKING',
+        stampColor: '#C2410C',
+        paperBg: '#FCFCF8',
+        inkColor: '#2A1708',
+        icon: 'fa-solid fa-square-parking',
+        memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
+    },
+    {
+        num: 'STAGE 04',
+        title: 'Hop on 4x4 Jeep Safari',
+        desc: 'Board our rugged 4x4 Mahindra Jeeps for an off-road ridge climb navigating private rocky tea estate trails to our secluded 7,900 FT ridge sanctuary.',
+        time: 'Included with all Camp Packages',
+        tag: 'STAGE · 04',
+        stamp: '4X4 OFF-ROAD SAFARI',
+        stampColor: '#15803D',
+        paperBg: '#FCFCF8',
+        inkColor: '#112513',
+        icon: 'fa-solid fa-truck-monster',
+        memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
+    }
+];
+
+// ── FREQUENTLY ASKED TRAVEL & CONTACT QUESTIONS ──
+const CONTACT_FAQS = [
+    {
+        num: '01',
+        q: 'How far in advance should we reserve our dome stay or sunrise safari?',
+        a: 'We recommend booking 2 to 3 weeks in advance for weekends and peak season (September through February) as our private geodesic domes and 4x4 safari slots are limited to maintain low crowd density on the ridge.'
+    },
+    {
+        num: '02',
+        q: 'Can low-ground-clearance sedans reach the Suryanelli meeting base?',
+        a: 'Yes, absolutely! The road from Kochi/Munnar to our Suryanelli meeting station is completely paved and accessible to all hatchbacks, sedans, and SUVs. From our meeting base, our 4x4 Jeeps take care of the off-road ridge climb.'
+    },
+    {
+        num: '03',
+        q: 'Do you arrange airport transfers from Kochi or Madurai?',
+        a: 'Yes. We have trusted cab partners offering direct airport/station pick-ups and drops from Cochin International Airport (COK), Coimbatore (CJB), and Madurai (IXM) at standardized rates.'
+    },
+    {
+        num: '04',
+        q: 'What is the check-in and check-out schedule?',
+        a: 'Standard check-in is at 3:00 PM (welcoming you with hot cardamom tea and sunset ridge hikes) and check-out is at 11:00 AM the following morning following the sunrise Kolukkumalai expedition and breakfast.'
     }
 ];
 
@@ -61,7 +179,15 @@ export default function ContactPage() {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [waUrl, setWaUrl] = useState('');
+    const [activeFaq, setActiveFaq] = useState(0);
     const [currentUser, setCurrentUser] = useState(null);
+
+    const ctaRef = useRef(null);
+    const { scrollYProgress: ctaScrollProgress } = useScroll({
+        target: ctaRef,
+        offset: ["start end", "end start"]
+    });
+    const ctaBgScale = useTransform(ctaScrollProgress, [0, 0.5, 1], [1.0, 1.16, 1.28]);
 
     useEffect(() => {
         try {
@@ -89,7 +215,7 @@ export default function ContactPage() {
             `Phone: ${formData.phone || 'N/A'}\n` +
             `Guests: ${formData.guests}\n` +
             `Dates: ${formData.travelDates || 'Flexible'}\n` +
-            `Notes: ${formData.message || 'None'}`;
+            `Message: ${formData.message}`;
 
         const encoded = encodeURIComponent(waText);
         const link = `https://wa.me/919400987654?text=${encoded}`;
@@ -110,448 +236,998 @@ export default function ContactPage() {
             color: '#121613',
             fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif',
             position: 'relative',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
+            overflowX: 'clip'
         }}>
-            {/* ── UNIFIED SITE HEADER ── */}
+            {/* ── UNIFIED REUSABLE SITE HEADER ── */}
             <SiteHeader 
                 activePage="contact" 
                 currentUser={currentUser} 
                 onLogout={handleLogout}
             />
 
-            {/* ── COMPACT SINGLE-SCREEN CONTACT HUB ── */}
-            <main style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                padding: 'clamp(85px, 11vh, 105px) clamp(16px, 4vw, 48px) clamp(24px, 3vh, 36px)',
-                width: '100%',
-                boxSizing: 'border-box'
-            }}>
-                <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
-                    
-                    <div className="contact-hub-grid">
-                        
-                        {/* ── LEFT: DIRECT BASECAMP DISPATCH & HOTLINES ── */}
-                        <div>
-                            <div className="star-badge" style={{ marginBottom: '12px' }}>
+            <main id="contact-content">
+                {/* ─────────────────────────────────────────────────────────────
+                    1. HERO SECTION: CINEMATIC ATMOSPHERIC MOUNTAIN HERO
+                ───────────────────────────────────────────────────────────── */}
+                <section 
+                    className="hero-defensive-height"
+                    style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        padding: 'clamp(120px, 16vh, 160px) clamp(20px, 4vw, 48px) clamp(50px, 8vh, 80px)',
+                        backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=95")',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center 40%',
+                        color: '#FFFFFF'
+                    }}
+                >
+                    {/* Radial Obsidian Overlay */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.4) 0%, rgba(11, 21, 14, 0.88) 100%)'
+                    }} />
+
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        style={{ maxWidth: '960px', margin: '0 auto', position: 'relative', zIndex: 2 }}
+                    >
+                        {/* Centered Brand Logo */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.88 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.7 }}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginBottom: '24px'
+                            }}
+                        >
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham Logo"
+                                className="hero-brand-logo"
+                                style={{
+                                    height: '92px',
+                                    width: 'auto',
+                                    objectFit: 'contain',
+                                    filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6))'
+                                }}
+                            />
+                        </motion.div>
+
+                        {/* Main Headline */}
+                        <motion.h1 
+                            className="hero-headline"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.85, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(38px, 6vw, 74px)',
+                                fontWeight: '800',
+                                lineHeight: 1.08,
+                                letterSpacing: '-0.04em',
+                                color: '#FFFFFF',
+                                marginBottom: '20px'
+                            }}
+                        >
+                            <span className="text-hover-marker text-hover-marker-dark" style={{ cursor: 'pointer', display: 'inline-block' }}>
+                                <span className="marker-text">
+                                    Basecamp Concierge<span style={{ color: '#E5A93B' }}> & Inquiries</span>
+                                </span>
+                            </span>
+                            <br />
+                            <span style={{ fontSize: '0.62em', fontWeight: '700', color: '#E1E9E2', letterSpacing: '-0.02em' }}>
+                                24/7 Reservations & High-Altitude Trek Dispatch
+                            </span>
+                        </motion.h1>
+
+                        {/* Subtitle Description */}
+                        <motion.p
+                            className="hero-subtitle"
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.75, delay: 0.2 }}
+                            style={{
+                                fontSize: 'clamp(15px, 2vw, 18px)',
+                                color: 'rgba(255, 255, 255, 0.88)',
+                                lineHeight: 1.65,
+                                maxWidth: '760px',
+                                margin: '0 auto clamp(24px, 4vh, 36px)'
+                            }}
+                        >
+                            Have questions about geodesic dome glamping, 4x4 Kolukkumalai sunrise safaris, corporate offsites, or custom itineraries? Our mountain team is here 24/7.
+                        </motion.p>
+
+                        {/* Quick Action Button Cluster */}
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                                gap: '14px'
+                            }}
+                        >
+                            <a
+                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!%20I%20have%20an%20inquiry%20regarding%20campsites%20and%20treks."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-lime"
+                                style={{
+                                    padding: '14px 32px',
+                                    fontSize: '15px',
+                                    textDecoration: 'none',
+                                    boxShadow: '0 10px 30px rgba(213, 237, 85, 0.35)',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                                <span>Instant WhatsApp Concierge ↗</span>
+                            </a>
+
+                            <a
+                                href="#inquiry-form"
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    textDecoration: 'none',
+                                    background: 'rgba(0, 0, 0, 0.45)',
+                                    border: '1px solid rgba(255, 255, 255, 0.4)',
+                                    color: '#FFFFFF',
+                                    padding: '13px 28px',
+                                    borderRadius: '999px',
+                                    fontWeight: '600',
+                                    fontSize: '15px',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                            >
+                                Send Expedition Form ↓
+                            </a>
+                        </motion.div>
+                    </motion.div>
+                </section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    2. SECTION: DIRECT BASECAMP DISPATCH CHANNELS (4 High-Contrast Cards)
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    id="dispatch-channels"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '90px clamp(20px, 4vw, 48px)',
+                        background: '#FFFFFF',
+                        borderBottom: '1px solid rgba(18, 22, 19, 0.06)'
+                    }}
+                >
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 14px' }}>
                                 <span className="star-icon">★</span> DIRECT BASECAMP DISPATCH
                             </div>
-                            
-                            <h1 style={{
+                            <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(30px, 4vw, 46px)',
+                                fontSize: 'clamp(30px, 4.5vw, 48px)',
                                 fontWeight: '800',
                                 color: '#121613',
-                                letterSpacing: '-0.035em',
-                                lineHeight: 1.12,
+                                letterSpacing: '-0.03em',
                                 margin: '0 0 12px'
                             }}>
-                                Let’s Plan Your <br />
-                                <span style={{ color: '#E5A93B' }}>Mountain Expedition</span>
-                            </h1>
-
-                            <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.6, margin: '0 0 22px', maxWidth: '500px' }}>
-                                Have questions about geodesic dome stays, 4x4 sunrise safaris, or private group offsites? Our Suryanelli ridge team is available 24/7.
+                                Instant Mountain Contact Channels
+                            </h2>
+                            <p style={{ fontSize: '15.5px', color: '#59655D', maxWidth: '600px', margin: '0 auto' }}>
+                                Direct connection to our ridge marshals, reservation desks, and emergency mountain logistics team.
                             </p>
+                        </div>
 
-                            {/* 4 Compact Dispatch Channels Grid */}
-                            <div className="contact-dispatch-grid">
-                                {CONTACT_CHANNELS.map((ch, idx) => (
-                                    <a
-                                        key={idx}
-                                        href={ch.href}
-                                        target={ch.href.startsWith('http') ? '_blank' : '_self'}
-                                        rel="noopener noreferrer"
-                                        className="hover-lift"
-                                        style={{
-                                            background: '#FFFFFF',
-                                            border: '1px solid rgba(18, 22, 19, 0.08)',
-                                            borderRadius: '16px',
-                                            padding: '14px 14px',
-                                            textDecoration: 'none',
-                                            color: '#121613',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'space-between',
-                                            boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        {/* 4 Dispatch Channel Cards Grid */}
+                        <motion.div 
+                            variants={staggerContainer}
+                            className="contact-channels-grid"
+                        >
+                            {CONTACT_CHANNELS.map((ch, idx) => (
+                                <motion.div
+                                    key={idx}
+                                    variants={cardReveal}
+                                    whileHover={{ y: -8, boxShadow: '0 20px 40px rgba(0,0,0,0.06)' }}
+                                    style={{
+                                        background: '#F8F9F5',
+                                        borderRadius: '24px',
+                                        padding: '30px 24px',
+                                        border: '1px solid rgba(18, 22, 19, 0.08)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        minHeight: '260px'
+                                    }}
+                                >
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                                             <div style={{
-                                                width: '32px',
-                                                height: '32px',
-                                                borderRadius: '10px',
+                                                width: '46px',
+                                                height: '46px',
+                                                borderRadius: '14px',
                                                 background: '#121613',
                                                 color: ch.accent,
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                fontSize: '14px'
+                                                fontSize: '19px'
                                             }}>
                                                 <i className={ch.icon}></i>
                                             </div>
 
                                             <span style={{
-                                                fontSize: '9.5px',
+                                                fontSize: '10.5px',
                                                 fontWeight: '800',
-                                                background: 'rgba(229, 169, 59, 0.12)',
+                                                background: 'rgba(229, 169, 59, 0.14)',
                                                 color: '#C86D14',
-                                                padding: '2px 7px',
+                                                padding: '4px 10px',
                                                 borderRadius: '999px',
-                                                letterSpacing: '0.4px'
+                                                letterSpacing: '0.5px'
                                             }}>
                                                 {ch.badge}
                                             </span>
                                         </div>
 
-                                        <div>
-                                            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '13.5px', fontWeight: '800', color: '#121613', margin: '0 0 1px' }}>
-                                                {ch.title}
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '18px',
+                                            fontWeight: '800',
+                                            color: '#121613',
+                                            margin: '0 0 4px'
+                                        }}>
+                                            {ch.title}
+                                        </h3>
+
+                                        <div style={{
+                                            fontSize: '15px',
+                                            fontWeight: '700',
+                                            color: '#121613',
+                                            marginBottom: '4px',
+                                            wordBreak: 'break-word'
+                                        }}>
+                                            {ch.val}
+                                        </div>
+
+                                        <p style={{ fontSize: '13px', color: '#7E8B82', margin: '0 0 20px' }}>
+                                            {ch.sub}
+                                        </p>
+                                    </div>
+
+                                    <a
+                                        href={ch.href}
+                                        target={ch.href.startsWith('http') ? '_blank' : '_self'}
+                                        rel="noopener noreferrer"
+                                        className="action-arrow-btn-dark"
+                                        style={{ textDecoration: 'none' }}
+                                    >
+                                        <span>{ch.actionLabel}</span>
+                                        <div className="btn-arrow-circle">↗</div>
+                                    </a>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </div>
+                </motion.section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    3. SECTION: INTERACTIVE EXPEDITION INQUIRY & RESERVATIONS FORM
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    id="inquiry-form"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '100px clamp(20px, 4vw, 48px)',
+                        background: '#F8F9F5',
+                        position: 'relative'
+                    }}
+                >
+                    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
+                        <div className="contact-hub-grid">
+                            
+                            {/* Left Column Narrative */}
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '14px' }}>
+                                    <span className="star-icon">★</span> CUSTOM EXPEDITION INQUIRY
+                                </div>
+                                <h2 style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(30px, 4vw, 46px)',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    letterSpacing: '-0.035em',
+                                    lineHeight: 1.15,
+                                    margin: '0 0 16px'
+                                }}>
+                                    Plan Your Mountain Escape with Our Ridge Marshals
+                                </h2>
+                                <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, margin: '0 0 24px' }}>
+                                    Fill in your preferred dates, party size, and expedition type. Our local team in Suryanelli will personally review availability and respond with a customized route & tariff plan.
+                                </p>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '28px' }}>
+                                    {[
+                                        { title: 'Personalized Ridge Itinerary', desc: 'Custom tailored for couples, family treks, or off-road adventure squads.' },
+                                        { title: 'Zero Hidden Costs', desc: 'Trek guides, jeep pickups, safe basecamp parking, and camp meals included.' },
+                                        { title: 'Weather & Ridge Safety Intel', desc: 'Real-time updates on high-altitude mist, rain forecasts, and sunrise visibility.' }
+                                    ].map((feat, idx) => (
+                                        <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                            <div style={{
+                                                width: '24px',
+                                                height: '24px',
+                                                borderRadius: '50%',
+                                                background: '#E5A93B',
+                                                color: '#121613',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '12px',
+                                                fontWeight: '800',
+                                                flexShrink: 0,
+                                                marginTop: '2px'
+                                            }}>
+                                                ✓
                                             </div>
-                                            <div style={{ fontSize: '12.5px', fontWeight: '700', color: '#121613', margin: '0 0 1px', wordBreak: 'break-word' }}>
-                                                {ch.val}
-                                            </div>
-                                            <div style={{ fontSize: '11px', color: '#7E8B82' }}>
-                                                {ch.sub}
+                                            <div>
+                                                <div style={{ fontWeight: '800', fontSize: '14.5px', color: '#121613' }}>{feat.title}</div>
+                                                <div style={{ fontSize: '13px', color: '#7E8B82' }}>{feat.desc}</div>
                                             </div>
                                         </div>
-                                    </a>
-                                ))}
-                            </div>
+                                    ))}
+                                </div>
 
-                            {/* Live Basecamp Status Strip */}
-                            <div style={{
-                                background: '#121613',
-                                color: '#FFFFFF',
-                                borderRadius: '14px',
-                                padding: '12px 16px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px',
-                                border: '1px solid rgba(229, 169, 59, 0.3)',
-                                boxShadow: '0 6px 20px rgba(0,0,0,0.1)'
-                            }}>
+                                {/* Live Basecamp Status Strip */}
                                 <div style={{
-                                    width: '8px',
-                                    height: '8px',
-                                    borderRadius: '50%',
-                                    background: '#10B981',
-                                    boxShadow: '0 0 8px #10B981',
-                                    flexShrink: 0
-                                }} />
-                                <div style={{ fontSize: '12px', fontWeight: '700' }}>
-                                    <span style={{ color: '#D5ED55' }}>Live Basecamp Status:</span> Marshals active on Suryanelli ridge · 14°C mist
+                                    background: '#121613',
+                                    color: '#FFFFFF',
+                                    borderRadius: '16px',
+                                    padding: '16px 20px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '14px',
+                                    border: '1px solid rgba(229, 169, 59, 0.3)'
+                                }}>
+                                    <div style={{
+                                        width: '10px',
+                                        height: '10px',
+                                        borderRadius: '50%',
+                                        background: '#10B981',
+                                        boxShadow: '0 0 10px #10B981',
+                                        flexShrink: 0
+                                    }} />
+                                    <div style={{ fontSize: '13px', fontWeight: '700' }}>
+                                        <span style={{ color: '#D5ED55' }}>Live Ridge Status:</span> Marshals active on Suryanelli ridge · 14°C mist
+                                    </div>
                                 </div>
                             </div>
 
-                        </div>
-
-                        {/* ── RIGHT: SINGLE-SCREEN EXPEDITION INQUIRY FORM ── */}
-                        <div style={{
-                            background: '#FFFFFF',
-                            borderRadius: '24px',
-                            padding: 'clamp(20px, 3.5vw, 32px)',
-                            border: '1px solid rgba(18, 22, 19, 0.08)',
-                            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.04)'
-                        }}>
-                            <div className="star-badge" style={{ marginBottom: '6px' }}>
-                                <span className="star-icon">★</span> INSTANT RESERVATION
-                            </div>
-                            
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading)',
-                                fontSize: '22px',
-                                fontWeight: '800',
-                                color: '#121613',
-                                letterSpacing: '-0.02em',
-                                margin: '0 0 16px'
+                            {/* Right Column Form Card */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                borderRadius: '28px',
+                                padding: 'clamp(24px, 4vw, 36px)',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                boxShadow: '0 16px 45px rgba(0, 0, 0, 0.04)'
                             }}>
-                                Send Expedition Request
-                            </h2>
+                                <div className="star-badge" style={{ marginBottom: '8px' }}>
+                                    <span className="star-icon">★</span> EXPEDITION DESK
+                                </div>
+                                <h3 style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: '22px',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    margin: '0 0 18px'
+                                }}>
+                                    Send Expedition Request
+                                </h3>
 
-                            {submitted ? (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    style={{
-                                        textAlign: 'center',
-                                        padding: '32px 16px',
-                                        background: '#F8F9F5',
-                                        borderRadius: '18px',
-                                        border: '1px solid rgba(18, 22, 19, 0.08)'
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '48px',
-                                        height: '48px',
-                                        borderRadius: '50%',
-                                        background: '#E5A93B',
-                                        color: '#121613',
-                                        fontSize: '20px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        margin: '0 auto 12px',
-                                        boxShadow: '0 6px 20px rgba(229, 169, 59, 0.35)'
-                                    }}>
-                                        ✓
-                                    </div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                                        Inquiry Received!
-                                    </h3>
-                                    <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.5, maxWidth: '340px', margin: '0 auto 16px' }}>
-                                        Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our mountain marshals.
-                                    </p>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
-                                        {waUrl && (
-                                            <a
-                                                href={waUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="btn-lime"
-                                                style={{
-                                                    padding: '10px 20px',
-                                                    fontSize: '13px',
-                                                    textDecoration: 'none',
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: '6px'
-                                                }}
-                                            >
-                                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px' }}></i>
-                                                <span>Open WhatsApp Chat ↗</span>
-                                            </a>
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={() => setSubmitted(false)}
-                                            style={{
-                                                background: '#121613',
-                                                color: '#FFFFFF',
-                                                border: 'none',
-                                                padding: '10px 16px',
-                                                borderRadius: '999px',
-                                                fontSize: '12.5px',
-                                                fontWeight: '700',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            New Request
-                                        </button>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                    
-                                    {/* Expedition Type Selection */}
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                                            Expedition Type
-                                        </label>
-                                        <div className="contact-form-types">
-                                            {[
-                                                { id: 'booking', label: '⛺ Dome Glamp' },
-                                                { id: 'kolukkumalai', label: '🌅 4x4 Safari' },
-                                                { id: 'custom', label: '👥 Squad Offsite' },
-                                                { id: 'general', label: '💬 General Query' }
-                                            ].map((t) => {
-                                                const isSel = formData.inquiryType === t.id;
-                                                return (
-                                                    <button
-                                                        type="button"
-                                                        key={t.id}
-                                                        onClick={() => setFormData({ ...formData, inquiryType: t.id })}
-                                                        style={{
-                                                            padding: '8px 6px',
-                                                            borderRadius: '10px',
-                                                            border: isSel ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
-                                                            background: isSel ? '#121613' : '#F8F9F5',
-                                                            color: isSel ? '#D5ED55' : '#121613',
-                                                            fontSize: '11.5px',
-                                                            fontWeight: isSel ? '800' : '600',
-                                                            cursor: 'pointer',
-                                                            textAlign: 'center',
-                                                            transition: 'all 0.15s ease'
-                                                        }}
-                                                    >
-                                                        {t.label}
-                                                    </button>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                    {/* Name & Phone */}
-                                    <div className="contact-form-row">
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                                Your Name *
-                                            </label>
-                                            <input
-                                                type="text"
-                                                required
-                                                placeholder="e.g. Rahul Nair"
-                                                value={formData.name}
-                                                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: '9px 12px',
-                                                    borderRadius: '10px',
-                                                    border: '1.5px solid rgba(18, 22, 19, 0.1)',
-                                                    background: '#F8F9F5',
-                                                    fontSize: '13.5px',
-                                                    color: '#121613',
-                                                    outline: 'none',
-                                                    boxSizing: 'border-box'
-                                                }}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                                Phone / WhatsApp *
-                                            </label>
-                                            <input
-                                                type="tel"
-                                                required
-                                                placeholder="e.g. +91 98765 43210"
-                                                value={formData.phone}
-                                                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: '9px 12px',
-                                                    borderRadius: '10px',
-                                                    border: '1.5px solid rgba(18, 22, 19, 0.1)',
-                                                    background: '#F8F9F5',
-                                                    fontSize: '13.5px',
-                                                    color: '#121613',
-                                                    outline: 'none',
-                                                    boxSizing: 'border-box'
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Email & Guests */}
-                                    <div className="contact-form-row">
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                                Email Address *
-                                            </label>
-                                            <input
-                                                type="email"
-                                                required
-                                                placeholder="e.g. rahul@gmail.com"
-                                                value={formData.email}
-                                                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: '9px 12px',
-                                                    borderRadius: '10px',
-                                                    border: '1.5px solid rgba(18, 22, 19, 0.1)',
-                                                    background: '#F8F9F5',
-                                                    fontSize: '13.5px',
-                                                    color: '#121613',
-                                                    outline: 'none',
-                                                    boxSizing: 'border-box'
-                                                }}
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                                Campers
-                                            </label>
-                                            <select
-                                                value={formData.guests}
-                                                onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: '9px 12px',
-                                                    borderRadius: '10px',
-                                                    border: '1.5px solid rgba(18, 22, 19, 0.1)',
-                                                    background: '#F8F9F5',
-                                                    fontSize: '13.5px',
-                                                    color: '#121613',
-                                                    outline: 'none',
-                                                    boxSizing: 'border-box'
-                                                }}
-                                            >
-                                                <option value="1">1 Camper (Solo)</option>
-                                                <option value="2">2 Campers (Couple)</option>
-                                                <option value="3-5">3 to 5 (Squad)</option>
-                                                <option value="6-10">6 to 10 (Group)</option>
-                                                <option value="10+">10+ (Offsite)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    {/* Travel Date */}
-                                    <div>
-                                        <CustomThemeCalendar 
-                                            onDateSelect={(date) => setFormData({ ...formData, travelDates: date })}
-                                            theme="light"
-                                            label="Expedition Date"
-                                        />
-                                    </div>
-
-                                    {/* Submit Button */}
-                                    <button
-                                        type="submit"
-                                        disabled={loading}
-                                        className="btn-lime hover-lift"
+                                {submitted ? (
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
                                         style={{
-                                            padding: '13px',
-                                            fontSize: '14px',
-                                            fontWeight: '800',
-                                            width: '100%',
+                                            textAlign: 'center',
+                                            padding: '40px 20px',
+                                            background: '#F8F9F5',
+                                            borderRadius: '20px',
+                                            border: '1px solid rgba(18, 22, 19, 0.08)'
+                                        }}
+                                    >
+                                        <div style={{
+                                            width: '56px',
+                                            height: '56px',
+                                            borderRadius: '50%',
+                                            background: '#E5A93B',
+                                            color: '#121613',
+                                            fontSize: '24px',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            gap: '8px',
-                                            boxShadow: '0 6px 20px rgba(213, 237, 85, 0.35)',
-                                            marginTop: '4px'
-                                        }}
-                                    >
-                                        <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px' }}></i>
-                                        <span>{loading ? 'Sending...' : 'Send Request via WhatsApp & Email →'}</span>
-                                    </button>
-                                </form>
-                            )}
+                                            margin: '0 auto 16px'
+                                        }}>
+                                            ✓
+                                        </div>
+                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '8px' }}>
+                                            Inquiry Received!
+                                        </h4>
+                                        <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.6, maxWidth: '360px', margin: '0 auto 20px' }}>
+                                            Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our mountain marshals.
+                                        </p>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                                            {waUrl && (
+                                                <a
+                                                    href={waUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="btn-lime"
+                                                    style={{
+                                                        padding: '12px 24px',
+                                                        fontSize: '13.5px',
+                                                        textDecoration: 'none',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px'
+                                                    }}
+                                                >
+                                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px' }}></i>
+                                                    <span>Open WhatsApp Chat ↗</span>
+                                                </a>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={() => setSubmitted(false)}
+                                                style={{
+                                                    background: '#121613',
+                                                    color: '#FFFFFF',
+                                                    border: 'none',
+                                                    padding: '12px 20px',
+                                                    borderRadius: '999px',
+                                                    fontSize: '13px',
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                New Request
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ) : (
+                                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                        
+                                        {/* Expedition Type Selection */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                                                Expedition Type
+                                            </label>
+                                            <div className="contact-form-types">
+                                                {[
+                                                    { id: 'booking', label: '⛺ Dome Glamp' },
+                                                    { id: 'kolukkumalai', label: '🌅 4x4 Safari' },
+                                                    { id: 'custom', label: '👥 Squad Offsite' },
+                                                    { id: 'general', label: '💬 General Query' }
+                                                ].map((t) => {
+                                                    const isSel = formData.inquiryType === t.id;
+                                                    return (
+                                                        <button
+                                                            type="button"
+                                                            key={t.id}
+                                                            onClick={() => setFormData({ ...formData, inquiryType: t.id })}
+                                                            style={{
+                                                                padding: '9px 6px',
+                                                                borderRadius: '10px',
+                                                                border: isSel ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                                                background: isSel ? '#121613' : '#F8F9F5',
+                                                                color: isSel ? '#D5ED55' : '#121613',
+                                                                fontSize: '11.5px',
+                                                                fontWeight: isSel ? '800' : '600',
+                                                                cursor: 'pointer',
+                                                                textAlign: 'center',
+                                                                transition: 'all 0.15s ease'
+                                                            }}
+                                                        >
+                                                            {t.label}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* Name & Phone */}
+                                        <div className="contact-form-row">
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                    Your Name *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    placeholder="e.g. Rahul Nair"
+                                                    value={formData.name}
+                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 14px',
+                                                        borderRadius: '12px',
+                                                        border: '1.5px solid rgba(18, 22, 19, 0.1)',
+                                                        background: '#F8F9F5',
+                                                        fontSize: '13.5px',
+                                                        color: '#121613',
+                                                        outline: 'none',
+                                                        boxSizing: 'border-box'
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                    Phone / WhatsApp *
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    required
+                                                    placeholder="e.g. +91 98765 43210"
+                                                    value={formData.phone}
+                                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 14px',
+                                                        borderRadius: '12px',
+                                                        border: '1.5px solid rgba(18, 22, 19, 0.1)',
+                                                        background: '#F8F9F5',
+                                                        fontSize: '13.5px',
+                                                        color: '#121613',
+                                                        outline: 'none',
+                                                        boxSizing: 'border-box'
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Email & Guests */}
+                                        <div className="contact-form-row">
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                    Email Address *
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    placeholder="e.g. rahul@gmail.com"
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 14px',
+                                                        borderRadius: '12px',
+                                                        border: '1.5px solid rgba(18, 22, 19, 0.1)',
+                                                        background: '#F8F9F5',
+                                                        fontSize: '13.5px',
+                                                        color: '#121613',
+                                                        outline: 'none',
+                                                        boxSizing: 'border-box'
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                    Campers
+                                                </label>
+                                                <select
+                                                    value={formData.guests}
+                                                    onChange={(e) => setFormData({ ...formData, guests: e.target.value })}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '10px 14px',
+                                                        borderRadius: '12px',
+                                                        border: '1.5px solid rgba(18, 22, 19, 0.1)',
+                                                        background: '#F8F9F5',
+                                                        fontSize: '13.5px',
+                                                        color: '#121613',
+                                                        outline: 'none',
+                                                        boxSizing: 'border-box'
+                                                    }}
+                                                >
+                                                    <option value="1">1 Camper (Solo)</option>
+                                                    <option value="2">2 Campers (Couple)</option>
+                                                    <option value="3-5">3 to 5 (Squad)</option>
+                                                    <option value="6-10">6 to 10 (Group)</option>
+                                                    <option value="10+">10+ (Offsite)</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        {/* Travel Date */}
+                                        <div>
+                                            <CustomThemeCalendar 
+                                                onDateSelect={(date) => setFormData({ ...formData, travelDates: date })}
+                                                theme="light"
+                                                label="Expedition Date"
+                                            />
+                                        </div>
+
+                                        {/* Special Notes / Requests */}
+                                        <div>
+                                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                Special Requests / Notes (Optional)
+                                            </label>
+                                            <textarea
+                                                rows="2"
+                                                placeholder="e.g. Campfire BBQ, sunrise jeep safari, beginner trek preferences..."
+                                                value={formData.message}
+                                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '10px 14px',
+                                                    borderRadius: '12px',
+                                                    border: '1.5px solid rgba(18, 22, 19, 0.1)',
+                                                    background: '#F8F9F5',
+                                                    fontSize: '13.5px',
+                                                    color: '#121613',
+                                                    outline: 'none',
+                                                    boxSizing: 'border-box',
+                                                    fontFamily: 'inherit',
+                                                    resize: 'none'
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Submit Button */}
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className="btn-lime hover-lift"
+                                            style={{
+                                                padding: '14px',
+                                                fontSize: '14.5px',
+                                                fontWeight: '800',
+                                                width: '100%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '8px',
+                                                boxShadow: '0 8px 24px rgba(213, 237, 85, 0.4)',
+                                                marginTop: '4px'
+                                            }}
+                                        >
+                                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '17px' }}></i>
+                                            <span>{loading ? 'Sending Request...' : 'Send Request via WhatsApp & Email →'}</span>
+                                        </button>
+                                    </form>
+                                )}
+                            </div>
 
                         </div>
+                    </div>
+                </motion.section>
 
+                {/* ─────────────────────────────────────────────────────────────
+                    4. SECTION: 4-STEP ROUTE INTELLIGENCE (How to Reach Basecamp)
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '90px 0',
+                        background: '#121613',
+                        color: '#FFFFFF',
+                        position: 'relative',
+                        overflowX: 'clip'
+                    }}
+                >
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px)', marginBottom: '16px' }}>
+                        <div className="star-badge" style={{ background: 'rgba(229, 169, 59, 0.2)', border: '1px solid rgba(229, 169, 59, 0.4)' }}>
+                            <span className="star-icon">★</span> ROUTE INTELLIGENCE
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
+                            <div>
+                                <h2 style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: 'clamp(28px, 4vw, 44px)',
+                                    fontWeight: '800',
+                                    color: '#FFFFFF',
+                                    letterSpacing: '-0.03em',
+                                    margin: '0 0 8px'
+                                }}>
+                                    How to Reach <span style={{ color: '#E5A93B' }}>Suryanelli Basecamp</span>
+                                </h2>
+                                <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '600px' }}>
+                                    Swipe through step-by-step navigation from airport/train arrivals up to the private 4x4 ridge safari.
+                                </p>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#D5ED55', fontWeight: '700' }}>
+                                <span>Swipe Stages</span> <span>→</span>
+                            </div>
+                        </div>
                     </div>
 
-                </div>
+                    {/* Full-Bleed Edge-to-Edge Carousel Track */}
+                    <div className="route-carousel-track">
+                        {TRAVEL_STEPS.map((st, idx) => (
+                            <div
+                                key={idx}
+                                className="route-carousel-card hover-lift"
+                                style={{
+                                    position: 'relative',
+                                    background: st.paperBg,
+                                    color: st.inkColor,
+                                    borderRadius: '24px',
+                                    padding: '28px 24px 24px',
+                                    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'space-between',
+                                    minHeight: '320px',
+                                    border: '1px solid rgba(255, 255, 255, 0.12)'
+                                }}
+                            >
+                                <div>
+                                    {/* Header Row */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                        <div style={{
+                                            width: '42px',
+                                            height: '42px',
+                                            borderRadius: '12px',
+                                            background: '#121613',
+                                            color: '#E5A93B',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '18px'
+                                        }}>
+                                            <i className={st.icon}></i>
+                                        </div>
+                                        <span style={{
+                                            fontSize: '11px',
+                                            fontWeight: '800',
+                                            background: 'rgba(18, 22, 19, 0.08)',
+                                            color: st.stampColor,
+                                            padding: '4px 10px',
+                                            borderRadius: '999px',
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            {st.tag}
+                                        </span>
+                                    </div>
+
+                                    <h3 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '19px',
+                                        fontWeight: '800',
+                                        color: '#121613',
+                                        margin: '0 0 10px'
+                                    }}>
+                                        {st.title}
+                                    </h3>
+
+                                    <p style={{
+                                        fontSize: '13.5px',
+                                        color: '#59655D',
+                                        lineHeight: 1.6,
+                                        margin: '0 0 16px'
+                                    }}>
+                                        {st.desc}
+                                    </p>
+                                </div>
+
+                                <div style={{ paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: '800', color: '#121613' }}>
+                                        <span style={{ color: '#E5A93B' }}>⏱</span>
+                                        <span>{st.time}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </motion.section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    5. SECTION: BASECAMP TRAVEL FAQ & MOUNTAIN LOGISTICS
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '100px clamp(20px, 4vw, 48px)',
+                        background: '#FFFFFF',
+                        borderTop: '1px solid rgba(18, 22, 19, 0.06)'
+                    }}
+                >
+                    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '52px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 14px' }}>
+                                <span className="star-icon">★</span> LOGISTICS & FAQS
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(30px, 4.5vw, 48px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 12px'
+                            }}>
+                                Frequently Asked Travel Questions
+                            </h2>
+                            <p style={{ fontSize: '15.5px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
+                                Everything you need to know about reaching basecamp, weather preparation, dome glamping, and 4x4 safaris.
+                            </p>
+                        </div>
+
+                        {/* FAQ Accordion List */}
+                        <div style={{ maxWidth: '840px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            {CONTACT_FAQS.map((faq, idx) => {
+                                const isOpen = activeFaq === idx;
+                                return (
+                                    <div
+                                        key={idx}
+                                        style={{
+                                            border: '1px solid rgba(18, 22, 19, 0.08)',
+                                            borderRadius: '20px',
+                                            background: isOpen ? '#F8F9F5' : '#FFFFFF',
+                                            overflow: 'hidden',
+                                            transition: 'all 0.25s ease'
+                                        }}
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={() => setActiveFaq(isOpen ? -1 : idx)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '22px 24px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                background: 'none',
+                                                border: 'none',
+                                                cursor: 'pointer',
+                                                textAlign: 'left',
+                                                gap: '16px'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                                <span style={{ fontSize: '13px', fontWeight: '800', color: '#E5A93B' }}>
+                                                    {faq.num}
+                                                </span>
+                                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16.5px', fontWeight: '800', color: '#121613' }}>
+                                                    {faq.q}
+                                                </span>
+                                            </div>
+                                            <div style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '50%',
+                                                background: isOpen ? '#121613' : '#F8F9F5',
+                                                color: isOpen ? '#D5ED55' : '#121613',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                fontSize: '16px',
+                                                fontWeight: '800',
+                                                flexShrink: 0,
+                                                transform: isOpen ? 'rotate(45deg)' : 'none',
+                                                transition: 'transform 0.25s ease, background 0.2s ease, color 0.2s ease'
+                                            }}>
+                                                +
+                                            </div>
+                                        </button>
+
+                                        <AnimatePresence>
+                                            {isOpen && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                                >
+                                                    <div style={{ padding: '0 24px 22px 52px', fontSize: '14.5px', color: '#59655D', lineHeight: 1.65 }}>
+                                                        {faq.a}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </motion.section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    6. SECTION: OFFSITE & CORPORATE EXPEDITIONS BANNER
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    ref={ctaRef}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '110px clamp(20px, 4vw, 48px)',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        color: '#FFFFFF',
+                        background: '#0B150E'
+                    }}
+                >
+                    <motion.div 
+                        style={{
+                            position: 'absolute',
+                            inset: 0,
+                            backgroundImage: 'url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2560&q=95")',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            scale: ctaBgScale,
+                            opacity: 0.32,
+                            pointerEvents: 'none'
+                        }}
+                    />
+
+                    <div style={{ maxWidth: '840px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+                        <div className="star-badge" style={{ margin: '0 auto 16px', background: 'rgba(213, 237, 85, 0.15)', border: '1px solid rgba(213, 237, 85, 0.4)', color: '#D5ED55' }}>
+                            <span className="star-icon">★</span> SQUAD & OFFSITE ESCAPES
+                        </div>
+                        <h2 style={{
+                            fontFamily: 'var(--font-heading)',
+                            fontSize: 'clamp(32px, 4.5vw, 54px)',
+                            fontWeight: '800',
+                            color: '#FFFFFF',
+                            letterSpacing: '-0.035em',
+                            margin: '0 0 16px'
+                        }}>
+                            Planning a Team Offsite or Squad Expedition?
+                        </h2>
+                        <p style={{ fontSize: '16px', color: '#C8D8CB', lineHeight: 1.65, maxWidth: '640px', margin: '0 auto 36px' }}>
+                            We host private 15 to 30 person mountain buyouts with high-altitude bonfire barbecues, private 4x4 safaris, and outdoor leadership treks.
+                        </p>
+                        <a
+                            href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!%20We%20are%20planning%20a%20corporate%20offsite%20or%20group%20expedition."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-lime"
+                            style={{
+                                padding: '16px 36px',
+                                fontSize: '15.5px',
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                boxShadow: '0 12px 35px rgba(213, 237, 85, 0.45)'
+                            }}
+                        >
+                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                            <span>Chat with Mountain Offsite Lead ↗</span>
+                        </a>
+                    </div>
+                </motion.section>
             </main>
 
-            {/* ── SLIM FOOTER BAR ── */}
-            <footer style={{
-                borderTop: '1px solid rgba(18, 22, 19, 0.08)',
-                background: '#FFFFFF',
-                padding: '16px clamp(20px, 4vw, 48px)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                gap: '12px',
-                fontSize: '12.5px',
-                color: '#7E8B82'
-            }}>
-                <div>
-                    © {new Date().getFullYear()} Aanandham.go · Suryanelli, Munnar, Kerala. All rights reserved.
-                </div>
-                <div style={{ display: 'flex', gap: '16px', fontWeight: '700', color: '#121613' }}>
-                    <a href="tel:+919400987654" style={{ color: 'inherit', textDecoration: 'none' }}>+91 9400 987 654</a>
-                    <span>·</span>
-                    <a href="mailto:bookings@aanandhamgo.in" style={{ color: 'inherit', textDecoration: 'none' }}>bookings@aanandhamgo.in</a>
-                </div>
-            </footer>
+            {/* ── COMPLETE SITE FOOTER ── */}
+            <Footer />
         </div>
     );
 }
