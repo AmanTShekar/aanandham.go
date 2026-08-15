@@ -1056,9 +1056,12 @@ export default function AdminPortal() {
                                             <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                                 {room.name}
                                             </h4>
-                                            <span style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
-                                                ₹{room.price}
-                                            </span>
+                                            <div style={{ textAlign: 'right' }}>
+                                                <span style={{ fontSize: '18px', fontWeight: '800', color: '#121613', display: 'block' }}>
+                                                    ₹{room.price.toLocaleString('en-IN')}
+                                                </span>
+                                                <span style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                            </div>
                                         </div>
 
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
@@ -1161,6 +1164,98 @@ export default function AdminPortal() {
 
                                 <form onSubmit={handleSaveRoom} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     
+                                    {/* FAST CAPACITY PRESETS */}
+                                    <div style={{ background: '#F4F7EB', borderRadius: '16px', padding: '14px 16px', border: '1px solid rgba(22, 101, 52, 0.15)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                                ⚡ Fast Capacity & Tent Presets
+                                            </label>
+                                            <span style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '700' }}>1-Click Setup</span>
+                                        </div>
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '6px' }}>
+                                            {[
+                                                {
+                                                    label: '👤 Single Tent (1P)',
+                                                    name: 'Single Solo Ridge Tent',
+                                                    capacity: '1 Person',
+                                                    price: 1699,
+                                                    totalUnits: 10,
+                                                    features: 'Solo Foam Bed, Waterproof Flysheet, Thermal Sleeping Bag, Clean Washrooms',
+                                                    image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80'
+                                                },
+                                                {
+                                                    label: '👥 2-Person Dome',
+                                                    name: 'Geodesic Luxury Dome Pod',
+                                                    capacity: '2 Persons',
+                                                    price: 2499,
+                                                    totalUnits: 8,
+                                                    features: 'Double King Bed, Valley Deck, Thermal Blankets, En-suite Restroom',
+                                                    image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80'
+                                                },
+                                                {
+                                                    label: '🏕️ 3-Person Tent',
+                                                    name: '3-Person Alpine Weatherproof Tent',
+                                                    capacity: '3 Persons',
+                                                    price: 1999,
+                                                    totalUnits: 12,
+                                                    features: '3 Foam Mattresses, Warm Fleece Blankets, Shared Modern Washrooms, Lantern',
+                                                    image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80'
+                                                },
+                                                {
+                                                    label: '⛺ 4-Person Quad',
+                                                    name: 'Weatherproof 4-Person Alpine Quad Tent',
+                                                    capacity: '4 Persons',
+                                                    price: 1799,
+                                                    totalUnits: 14,
+                                                    features: '4 Sleeping Bags, Waterproof Flysheet, Modern Hot Washrooms, Power Backup',
+                                                    image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=600&q=80'
+                                                },
+                                                {
+                                                    label: '🏡 Family Cottage',
+                                                    name: 'Private Cliffside Wooden Cottage',
+                                                    capacity: '4-6 Persons',
+                                                    price: 3499,
+                                                    totalUnits: 4,
+                                                    features: 'Panoramic Glass Window, Hot Shower Geyser, Private Fire Pit, Balcony Deck',
+                                                    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'
+                                                }
+                                            ].map((preset, pIdx) => (
+                                                <button
+                                                    key={pIdx}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setRoomForm({
+                                                            ...roomForm,
+                                                            name: preset.name,
+                                                            capacity: preset.capacity,
+                                                            price: preset.price,
+                                                            totalUnits: preset.totalUnits,
+                                                            features: preset.features,
+                                                            image: roomForm.image || preset.image
+                                                        });
+                                                        showToast(`✓ Applied ${preset.label} preset`);
+                                                    }}
+                                                    style={{
+                                                        padding: '7px 6px',
+                                                        borderRadius: '8px',
+                                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                                        background: '#FFFFFF',
+                                                        color: '#121613',
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        cursor: 'pointer',
+                                                        textAlign: 'center',
+                                                        transition: 'all 0.15s ease'
+                                                    }}
+                                                    onMouseOver={(e) => { e.currentTarget.style.background = '#121613'; e.currentTarget.style.color = '#D5ED55'; }}
+                                                    onMouseOut={(e) => { e.currentTarget.style.background = '#FFFFFF'; e.currentTarget.style.color = '#121613'; }}
+                                                >
+                                                    {preset.label}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
                                     {/* PHOTO UPLOAD & URL SECTION */}
                                     <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '18px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
@@ -1218,7 +1313,7 @@ export default function AdminPortal() {
                                         <input
                                             type="text"
                                             required
-                                            placeholder="e.g. Geodesic Luxury Dome Pod"
+                                            placeholder="e.g. Single Solo Ridge Tent / Geodesic Dome"
                                             value={roomForm.name}
                                             onChange={e => setRoomForm({ ...roomForm, name: e.target.value })}
                                             style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
@@ -1228,11 +1323,12 @@ export default function AdminPortal() {
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                         <div>
                                             <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                                Guest Capacity
+                                                Guest Capacity *
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder="e.g. 2 Adults · King Bed"
+                                                required
+                                                placeholder="e.g. 1 Person, 2 Persons, 4 Persons"
                                                 value={roomForm.capacity}
                                                 onChange={e => setRoomForm({ ...roomForm, capacity: e.target.value })}
                                                 style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
@@ -1240,7 +1336,7 @@ export default function AdminPortal() {
                                         </div>
                                         <div>
                                             <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                                Price Per Unit / Camper (INR) *
+                                                Price Per Camper / Person (INR) *
                                             </label>
                                             <input
                                                 type="number"
