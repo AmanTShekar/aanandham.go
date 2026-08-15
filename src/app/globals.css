@@ -263,12 +263,12 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   PRIMITIVE CARVED GREY STONE TABLETS (Distorted Megaliths with Real Cracks)
+   RUSTIC MOUNTAIN TIMBER & TREE BARK SLABS (Wood Plank Cards)
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: clamp(22px, 2.5vw, 32px);
+  gap: clamp(20px, 2.4vw, 30px);
 }
 
 @media (max-width: 1200px) {
@@ -281,116 +281,97 @@ body::-webkit-scrollbar-thumb:active,
 @media (max-width: 640px) {
   .altitude-spectrum-grid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 22px;
   }
 }
 
-/* Base Distorted Primitive Grey Stone Slab */
+/* Base Wooden Bark Slab */
 .stone-slab-card {
   position: relative;
-  background: 
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.12) 0%, transparent 60%),
-    radial-gradient(circle at 80% 85%, rgba(0, 0, 0, 0.45) 0%, transparent 55%),
-    linear-gradient(155deg, #4A514B 0%, #343B36 45%, #242925 100%);
+  background: #1C1510;
   padding: 30px 24px;
   display: flex;
   flex-direction: column;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.85)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+  border-radius: 8px 20px 10px 22px;
+  border: 1.5px solid rgba(195, 140, 85, 0.25);
   box-shadow: 
-    inset 2px 2px 3px rgba(255, 255, 255, 0.35),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.85);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
-  transform: translateZ(0);
+    0 18px 40px -4px rgba(0, 0, 0, 0.8),
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset 0 0 50px rgba(0, 0, 0, 0.5);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  overflow: hidden;
+  cursor: default;
 }
 
 .stone-slab-card:hover {
-  transform: translateY(-10px) rotate(0.4deg);
-  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.95)) drop-shadow(0 8px 18px rgba(0, 0, 0, 0.8));
+  transform: translateY(-10px) scale(1.02) !important;
+  box-shadow: 
+    0 30px 65px -6px rgba(0, 0, 0, 0.95),
+    0 12px 28px rgba(0, 0, 0, 0.7) !important;
 }
 
-/* 4 UNIQUE DISTORTED PRIMITIVE SHAPES (Hand-Carved Imperfect Squares) */
+/* 4 Unique Mountain Timber Tones */
 .stone-slab-tier-1 {
-  clip-path: polygon(
-    0% 22px, 16px 6px, 42px 0%, 
-    calc(100% - 36px) 0%, calc(100% - 10px) 14px, 100% 28px, 
-    100% calc(100% - 26px), calc(100% - 22px) 100%, 30px 100%, 0% calc(100% - 20px)
-  );
-  border-top: 3px solid #FBBF24;
+  background: linear-gradient(170deg, #2A1F16 0%, #1E150F 50%, #140E0A 100%);
+  border-top: 3.5px solid #F59E0B;
+  border-left: 2px solid rgba(245, 158, 11, 0.35);
+  border-radius: 6px 24px 8px 26px;
 }
 
 .stone-slab-tier-2 {
-  clip-path: polygon(
-    0% 32px, 22px 0%, calc(100% - 20px) 0%, 100% 24px, 
-    calc(100% - 8px) 55%, 100% 82%, calc(100% - 34px) 100%, 18px 100%, 0% calc(100% - 30px)
-  );
-  border-top: 3px solid #FB923C;
+  background: linear-gradient(170deg, #2E1B14 0%, #20130D 50%, #150C08 100%);
+  border-top: 3.5px solid #F97316;
+  border-right: 2px solid rgba(249, 115, 22, 0.35);
+  border-radius: 24px 8px 26px 6px;
 }
 
 .stone-slab-tier-3 {
-  clip-path: polygon(
-    0% 16px, 34px 0%, calc(100% - 42px) 0%, calc(100% - 12px) 16px, 100% 32px, 
-    100% calc(100% - 32px), calc(100% - 26px) 100%, 38px 100%, 0% calc(100% - 36px), 8px 50%
-  );
-  border-top: 3px solid #A3E635;
+  background: linear-gradient(170deg, #222216 0%, #18190F 50%, #10110A 100%);
+  border-top: 3.5px solid #D5ED55;
+  border-left: 2px solid rgba(213, 237, 85, 0.35);
+  border-radius: 8px 26px 6px 22px;
 }
 
 .stone-slab-tier-4 {
-  clip-path: polygon(
-    0% 38px, 26px 0%, calc(100% - 30px) 0%, 100% 28px, 
-    calc(100% - 12px) 52%, 100% 74%, calc(100% - 28px) 100%, 16px 100%, 0% calc(100% - 18px), 6px 65%
-  );
-  border-top: 3px solid #38BDF8;
+  background: linear-gradient(170deg, #182226 0%, #11181C 50%, #0B1013 100%);
+  border-top: 3.5px solid #38BDF8;
+  border-right: 2px solid rgba(56, 189, 248, 0.35);
+  border-radius: 22px 6px 24px 10px;
 }
 
-/* REAL VISIBLE ROCK CRACKS, FISSURES & MINERAL MOTTLE OVERLAY */
+/* Natural Tree Bark & Timber Grain Overlay */
 .stone-cleavage-overlay {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background-image: 
-    /* Primary diagonal jagged rock crack line */
-    linear-gradient(136deg, transparent 41%, rgba(0,0,0,0.85) 41.5%, rgba(255,255,255,0.4) 42%, transparent 43%),
-    /* Secondary intersecting fault fissure */
-    linear-gradient(48deg, transparent 62%, rgba(0,0,0,0.8) 62.5%, rgba(255,255,255,0.35) 63%, transparent 64%),
-    /* Top corner rock chip fracture */
-    linear-gradient(-65deg, transparent 22%, rgba(0,0,0,0.7) 22.5%, rgba(255,255,255,0.3) 23%, transparent 24%),
-    /* Rock surface tactile mottling & mineral speckles */
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.15) 0%, transparent 45%),
-    radial-gradient(circle at 75% 75%, rgba(0,0,0,0.4) 0%, transparent 45%),
-    radial-gradient(rgba(255, 255, 255, 0.14) 1px, transparent 1px),
-    radial-gradient(rgba(0, 0, 0, 0.6) 1.5px, transparent 1.5px);
-  background-size: auto, auto, auto, auto, auto, 14px 14px, 10px 10px;
-  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 5px 5px;
+    repeating-linear-gradient(0deg, transparent, transparent 12px, rgba(0, 0, 0, 0.15) 12px, rgba(0, 0, 0, 0.15) 13px),
+    repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(255, 255, 255, 0.015) 3px, rgba(255, 255, 255, 0.015) 4px),
+    radial-gradient(ellipse at 75% 30%, rgba(0, 0, 0, 0.35) 0%, transparent 45%),
+    radial-gradient(ellipse at 25% 75%, rgba(0, 0, 0, 0.3) 0%, transparent 40%);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Inscribed Carved Stone Header Typography */
+/* Burnt Wood Branded Altitude Number */
 .stone-engraved-num {
   font-family: var(--font-heading), 'Bricolage Grotesque', sans-serif;
-  font-weight: 900;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1;
-  text-shadow: 
-    1px 1px 0px rgba(255, 255, 255, 0.35),
-    -1px -1px 2px rgba(0, 0, 0, 0.9),
-    0 2px 4px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 1px 0 rgba(255, 200, 120, 0.2), 0 -1px 2px rgba(0, 0, 0, 0.9);
 }
 
-/* Distorted Stone Photo Window */
+/* Recessed Timber Photo Window */
 .stone-photo-thumb {
   position: relative;
   width: 100%;
   height: 165px;
-  clip-path: polygon(
-    0% 10px, 10px 0%, calc(100% - 10px) 0%, 100% 10px, 
-    100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0% calc(100% - 10px)
-  );
+  border-radius: 6px;
   overflow: hidden;
   margin: 14px 0 16px;
-  background: #111412;
-  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: #000000;
+  border: 1.5px solid rgba(195, 140, 85, 0.2);
   box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.9);
   position: relative;
   z-index: 2;
@@ -407,35 +388,35 @@ body::-webkit-scrollbar-thumb:active,
   transform: scale(1.06);
 }
 
-/* Chiseled Primitive Stone Icon Pill */
+/* Rustic Timber Icon Pill */
 .stone-icon-pill {
   width: 42px;
   height: 42px;
-  clip-path: polygon(0% 6px, 6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px));
-  background: rgba(18, 22, 19, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(195, 140, 85, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 17px;
   flex-shrink: 0;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0,0,0,0.5);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 2;
 }
 
-/* Carved Stone Spec Chip */
+/* Carved Timber Spec Chip */
 .stone-spec-chip {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(18, 22, 19, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  clip-path: polygon(0% 4px, 4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px));
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(195, 140, 85, 0.18);
+  border-radius: 5px;
   padding: 6px 12px;
   font-size: 11.5px;
-  color: #E2ECE5;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7);
+  color: #E2D9D0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 /* ─────────────────────────────────────────────────────────────
