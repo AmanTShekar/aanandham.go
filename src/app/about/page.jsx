@@ -49,36 +49,88 @@ const stickyReveal = {
 // ── 1. ELEVATION TIERS & TERRAIN PROFILE ──
 const ELEVATION_TIERS = [
     {
+        id: 'tier-7900',
         altitude: '7,900 FT',
+        elevationMeters: '2,408 M',
+        meterPercent: 100,
         name: 'Kolukkumalai Sunrise Peak',
-        badge: 'SUMMIT RIDGE',
-        desc: 'World’s highest organic tea plantation, accessible only via rugged 4x4 Jeep safaris across granite boulders. Experience sunrise floating above sea-of-clouds.',
+        badge: 'SUMMIT PINNACLE',
+        badgeColor: '#E5A93B',
+        accentColor: '#E5A93B',
+        accentBg: 'rgba(229, 169, 59, 0.12)',
+        borderTint: 'rgba(229, 169, 59, 0.35)',
+        glowColor: 'rgba(229, 169, 59, 0.25)',
+        terrainType: 'Rugged Granite Crest',
+        access: '4x4 Off-Road Only',
+        atmosphere: 'Sea of Clouds · High Mist',
+        desc: 'World’s highest organic tea estate. Accessible exclusively via rugged 4x4 Jeep expeditions across granite boulder trails. Witness dawn floating above sea of clouds.',
         temp: '10°C - 16°C',
-        icon: 'fa-solid fa-mountain-sun'
+        wind: '32 km/h Peak Gales',
+        icon: 'fa-solid fa-mountain-sun',
+        coord: '10.0834° N, 77.2144° E'
     },
     {
+        id: 'tier-6800',
         altitude: '6,800 FT',
+        elevationMeters: '2,072 M',
+        meterPercent: 86,
         name: 'Phantom Head Cliffline',
-        badge: 'SUNSET TRAIL',
-        desc: 'A secret high-altitude ridge line resembling a skull in silhouette. Offers panoramic 360-degree views of the Suryanelli valley and elephant corridors.',
+        badge: 'SUNSET CREST TRAIL',
+        badgeColor: '#FB923C',
+        accentColor: '#F97316',
+        accentBg: 'rgba(249, 115, 22, 0.12)',
+        borderTint: 'rgba(249, 115, 22, 0.35)',
+        glowColor: 'rgba(249, 115, 22, 0.25)',
+        terrainType: 'Precipitous Escarpment',
+        access: 'Marshal Ridge Trek',
+        atmosphere: 'Golden Hour Silhouette',
+        desc: 'A secret high-altitude ridge formation resembling a skull in profile. Unobstructed 360° panoramic amphitheater overlooking wild elephant trails and valley mists.',
         temp: '12°C - 18°C',
-        icon: 'fa-solid fa-compass'
+        wind: '22 km/h Sunset Breeze',
+        icon: 'fa-solid fa-compass',
+        coord: '10.0612° N, 77.1895° E'
     },
     {
+        id: 'tier-6500',
         altitude: '6,500 FT',
+        elevationMeters: '1,981 M',
+        meterPercent: 78,
         name: 'Aanandham Basecamp Pods',
-        badge: 'SANCTUARY BASE',
-        desc: 'Our private weather-sealed geodesic dome sanctuary. Insulated from high winds, featuring private hot-water en-suites and starlit campfire circles.',
+        badge: 'SANCTUARY DOME BASE',
+        badgeColor: '#D5ED55',
+        accentColor: '#D5ED55',
+        accentBg: 'rgba(213, 237, 85, 0.12)',
+        borderTint: 'rgba(213, 237, 85, 0.35)',
+        glowColor: 'rgba(213, 237, 85, 0.22)',
+        terrainType: 'Insulated Meadow',
+        access: 'Direct Basecamp In',
+        atmosphere: 'Zero Light Stargazing',
+        desc: 'Our private weather-sealed geodesic dome sanctuary. Structurally insulated against mountain gusts, featuring private hot-water showers, campfire pit, and acoustic dining.',
         temp: '14°C - 20°C',
-        icon: 'fa-solid fa-tent'
+        wind: '16 km/h Valley Draft',
+        icon: 'fa-solid fa-tent',
+        coord: '10.0521° N, 77.1789° E'
     },
     {
+        id: 'tier-5500',
         altitude: '5,500 FT',
+        elevationMeters: '1,676 M',
+        meterPercent: 62,
         name: 'Anayirangal Lake Basin',
-        badge: 'EMERALD WATERWAY',
-        desc: 'The historic watering ground for wild mountain elephants, framed by pine forests and rolling tea gardens along the lake shoreline.',
+        badge: 'EMERALD WATERWAY BASIN',
+        badgeColor: '#38BDF8',
+        accentColor: '#38BDF8',
+        accentBg: 'rgba(56, 189, 248, 0.12)',
+        borderTint: 'rgba(56, 189, 248, 0.35)',
+        glowColor: 'rgba(56, 189, 248, 0.22)',
+        terrainType: 'Lakebed & Tea Groves',
+        access: 'Kayak & Shore Walk',
+        atmosphere: 'Rainforest Mist & Fauna',
+        desc: 'The historic watering oasis for wild mountain elephants, surrounded by rolling green tea slopes, pine groves, and tranquil waters reflecting the Western Ghats mountain wall.',
         temp: '16°C - 22°C',
-        icon: 'fa-solid fa-water'
+        wind: '10 km/h Shoreline Calm',
+        icon: 'fa-solid fa-water',
+        coord: '10.0125° N, 77.1560° E'
     }
 ];
 
@@ -764,89 +816,148 @@ export default function AboutPage() {
                         {/* Altitude Scale Grid */}
                         <motion.div 
                             variants={staggerContainer}
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                                gap: '24px'
-                            }}
+                            className="altitude-spectrum-grid"
                         >
                             {ELEVATION_TIERS.map((tier, idx) => (
                                 <motion.div
-                                    key={idx}
+                                    key={tier.id || idx}
                                     variants={cardReveal}
+                                    className="altitude-meter-card"
+                                    style={{
+                                        borderColor: tier.borderTint
+                                    }}
                                     whileHover={{ 
                                         y: -10, 
-                                        borderColor: 'rgba(229, 169, 59, 0.6)',
-                                        boxShadow: '0 25px 60px rgba(0,0,0,0.6), 0 0 30px rgba(229, 169, 59, 0.25)' 
+                                        borderColor: tier.accentColor,
+                                        boxShadow: `0 25px 60px rgba(0,0,0,0.6), 0 0 30px ${tier.glowColor}` 
                                     }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                                    style={{
-                                        background: '#0D1A10',
-                                        border: '1px solid rgba(229, 169, 59, 0.25)',
-                                        borderRadius: '24px',
-                                        padding: '30px 24px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        position: 'relative',
-                                        boxShadow: '0 16px 36px rgba(0,0,0,0.4)',
-                                        cursor: 'pointer'
-                                    }}
                                 >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                        <span style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: '32px',
-                                            fontWeight: '800',
-                                            color: '#E5A93B',
-                                            letterSpacing: '-0.02em'
-                                        }}>
-                                            {tier.altitude}
-                                        </span>
+                                    {/* Topographic Contour Background Watermark */}
+                                    <svg className="altitude-contour-overlay" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="100" cy="100" r="90" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" style={{ color: tier.accentColor }} />
+                                        <circle cx="100" cy="100" r="70" stroke="currentColor" strokeWidth="1.5" style={{ color: tier.accentColor }} />
+                                        <circle cx="100" cy="100" r="50" stroke="currentColor" strokeWidth="1.5" strokeDasharray="6 3" style={{ color: tier.accentColor }} />
+                                        <circle cx="100" cy="100" r="30" stroke="currentColor" strokeWidth="1.5" style={{ color: tier.accentColor }} />
+                                        <path d="M 10 100 Q 50 60 100 100 T 190 100" stroke="currentColor" strokeWidth="1" style={{ color: tier.accentColor }} />
+                                    </svg>
+
+                                    {/* Altitude Header Barometer */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
+                                        <div>
+                                            <div style={{
+                                                fontFamily: 'var(--font-heading)',
+                                                fontSize: 'clamp(28px, 3.2vw, 36px)',
+                                                fontWeight: '800',
+                                                color: tier.accentColor,
+                                                letterSpacing: '-0.03em',
+                                                lineHeight: 1
+                                            }}>
+                                                {tier.altitude}
+                                            </div>
+                                            <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
+                                                {tier.elevationMeters} · AMSL
+                                            </div>
+                                        </div>
+
                                         <div style={{
-                                            width: '42px',
-                                            height: '42px',
-                                            borderRadius: '12px',
-                                            background: 'rgba(229, 169, 59, 0.15)',
-                                            color: '#E5A93B',
+                                            width: '46px',
+                                            height: '46px',
+                                            borderRadius: '14px',
+                                            background: tier.accentBg,
+                                            border: `1px solid ${tier.borderTint}`,
+                                            color: tier.accentColor,
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '18px'
+                                            fontSize: '19px',
+                                            boxShadow: `0 4px 14px ${tier.glowColor}`
                                         }}>
                                             <i className={tier.icon}></i>
                                         </div>
                                     </div>
 
-                                    <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                                        {tier.badge}
+                                    {/* Topographic Elevation Gauge Bar */}
+                                    <div className="altitude-gauge-track">
+                                        <div 
+                                            className="altitude-gauge-fill" 
+                                            style={{ 
+                                                width: `${tier.meterPercent}%`, 
+                                                background: `linear-gradient(90deg, ${tier.accentColor}88, ${tier.accentColor})` 
+                                            }} 
+                                        />
                                     </div>
 
-                                    <h3 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '19px',
-                                        fontWeight: '800',
-                                        color: '#FFFFFF',
-                                        margin: '0 0 10px',
-                                        lineHeight: 1.25
-                                    }}>
-                                        {tier.name}
-                                    </h3>
+                                    {/* Badge & Title */}
+                                    <div style={{ position: 'relative', zIndex: 2 }}>
+                                        <div style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            background: tier.accentBg,
+                                            border: `1px solid ${tier.borderTint}`,
+                                            borderRadius: '999px',
+                                            padding: '3px 10px',
+                                            fontSize: '10.5px',
+                                            fontWeight: '800',
+                                            color: tier.badgeColor,
+                                            letterSpacing: '0.8px',
+                                            textTransform: 'uppercase',
+                                            marginBottom: '10px'
+                                        }}>
+                                            <span>▲</span>
+                                            <span>{tier.badge}</span>
+                                        </div>
 
-                                    <p style={{ fontSize: '13.5px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 20px', flex: 1 }}>
-                                        {tier.desc}
-                                    </p>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '18.5px',
+                                            fontWeight: '800',
+                                            color: '#FFFFFF',
+                                            margin: '0 0 10px',
+                                            lineHeight: 1.3
+                                        }}>
+                                            {tier.name}
+                                        </h3>
 
+                                        <p style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 16px' }}>
+                                            {tier.desc}
+                                        </p>
+
+                                        {/* Dispatch Micro Specs */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '18px' }}>
+                                            <div className="altitude-spec-pill">
+                                                <span style={{ color: tier.accentColor }}>🧭</span>
+                                                <span>{tier.terrainType}</span>
+                                            </div>
+                                            <div className="altitude-spec-pill">
+                                                <span style={{ color: tier.accentColor }}>🚙</span>
+                                                <span>{tier.access}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Weather & Barometer Footer */}
                                     <div style={{
                                         marginTop: 'auto',
-                                        paddingTop: '12px',
+                                        paddingTop: '14px',
                                         borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                                         display: 'flex',
+                                        alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        fontSize: '12px',
-                                        color: '#8E9B92'
+                                        fontSize: '11.5px',
+                                        color: '#8E9B92',
+                                        position: 'relative',
+                                        zIndex: 2
                                     }}>
-                                        <span>Avg Temp:</span>
-                                        <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span>🌡️</span>
+                                            <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span>💨</span>
+                                            <span style={{ color: tier.badgeColor, fontWeight: '700' }}>{tier.wind}</span>
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
