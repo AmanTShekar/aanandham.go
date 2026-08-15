@@ -132,13 +132,13 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: isHeaderSolid ? '12px clamp(20px, 3vw, 36px)' : '18px clamp(20px, 3vw, 36px)',
-                    backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
-                    backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
-                    WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
-                    borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
-                    boxShadow: isHeaderSolid ? '0 12px 36px rgba(0, 0, 0, 0.4)' : 'none',
-                    transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease'
+                    padding: '12px clamp(20px, 3.5vw, 40px)',
+                    backgroundColor: 'rgba(11, 21, 14, 0.94)',
+                    backdropFilter: 'blur(20px)',
+                    WebkitBackdropFilter: 'blur(20px)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
+                    transition: 'all 0.3s ease'
                 }}
             >
                 <div style={{
