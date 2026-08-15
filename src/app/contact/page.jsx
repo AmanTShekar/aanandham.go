@@ -85,7 +85,7 @@ const CONTACT_CHANNELS = [
     }
 ];
 
-// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Clean Field Notebook Sheets) ──
+// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Vibrant Sticky Paper Notes) ──
 const TRAVEL_STEPS = [
     {
         num: 'STAGE 01',
@@ -95,8 +95,9 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 01',
         stamp: 'PAVED HIGHWAY',
         stampColor: '#166534',
-        paperBg: '#FCFCF8',
-        inkColor: '#121613',
+        paperBg: '#FEF08A', // Sunlit Canary Yellow
+        inkColor: '#1A2218',
+        rotation: '-1.5deg',
         icon: 'fa-solid fa-plane-departure',
         memo: 'Early morning drives through Neriamangalam forest offer misty river valley views.'
     },
@@ -108,8 +109,9 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 02',
         stamp: 'SCENIC CORRIDOR',
         stampColor: '#047857',
-        paperBg: '#FCFCF8',
-        inkColor: '#121613',
+        paperBg: '#A7F3D0', // Alpine Mint
+        inkColor: '#0A2518',
+        rotation: '1.5deg',
         icon: 'fa-solid fa-car-side',
         memo: 'Roll windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
     },
@@ -121,8 +123,9 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 03',
         stamp: 'MONITORED PARKING',
         stampColor: '#C2410C',
-        paperBg: '#FCFCF8',
-        inkColor: '#121613',
+        paperBg: '#FED7AA', // Sunburst Peach
+        inkColor: '#2B1405',
+        rotation: '-1.2deg',
         icon: 'fa-solid fa-square-parking',
         memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
     },
@@ -134,8 +137,9 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 04',
         stamp: '4X4 OFF-ROAD SAFARI',
         stampColor: '#15803D',
-        paperBg: '#FCFCF8',
-        inkColor: '#121613',
+        paperBg: '#BAE6FD', // Glacial Sky Blue
+        inkColor: '#0C2333',
+        rotation: '1.6deg',
         icon: 'fa-solid fa-truck-monster',
         memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
     }
@@ -964,7 +968,19 @@ export default function ContactPage() {
                         {/* 4 Pinned Notebook Sheets: 4-in-a-Row on Desktop, Compact Swipe on Mobile */}
                         <div className="route-notebook-grid">
                             {TRAVEL_STEPS.map((st, idx) => (
-                                <div key={idx} className="route-notebook-sheet hover-lift">
+                                <motion.div 
+                                    key={idx} 
+                                    className="route-notebook-sheet hover-lift"
+                                    whileHover={{ y: -8, rotate: 0, scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                    style={{
+                                        backgroundColor: st.paperBg,
+                                        color: st.inkColor,
+                                        transform: `rotate(${st.rotation})`,
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.12) 25px)'
+                                    }}
+                                >
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
                                     <div className="pushpin-3d-wrap">
                                         <div className="pushpin-3d-shadow" />
@@ -987,7 +1003,7 @@ export default function ContactPage() {
                                         right: 0,
                                         width: '24px',
                                         height: '24px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0,0,0,0.04) 100%)',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.14) 50%, rgba(0,0,0,0.04) 100%)',
                                         borderTopLeftRadius: '10px',
                                         pointerEvents: 'none'
                                     }} />
@@ -1013,7 +1029,7 @@ export default function ContactPage() {
                                                     letterSpacing: '0.8px',
                                                     textTransform: 'uppercase',
                                                     background: 'rgba(0,0,0,0.06)',
-                                                    color: '#121613',
+                                                    color: st.inkColor,
                                                     padding: '2px 6px',
                                                     borderRadius: '4px'
                                                 }}>
@@ -1053,7 +1069,7 @@ export default function ContactPage() {
                                                 fontFamily: 'var(--font-heading)',
                                                 fontSize: '15.5px',
                                                 fontWeight: '800',
-                                                color: '#121613',
+                                                color: st.inkColor,
                                                 margin: 0,
                                                 lineHeight: 1.25
                                             }}>
@@ -1064,7 +1080,8 @@ export default function ContactPage() {
                                         {/* Description */}
                                         <p style={{
                                             fontSize: '12px',
-                                            color: '#475569',
+                                            color: st.inkColor,
+                                            opacity: 0.88,
                                             lineHeight: 1.5,
                                             margin: '0 0 10px'
                                         }}>
@@ -1078,11 +1095,11 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* Bottom Timing Indicator */}
-                                    <div className="notebook-time-indicator">
+                                    <div className="notebook-time-indicator" style={{ color: st.inkColor }}>
                                         <span style={{ color: '#E5A93B' }}>⏱</span>
                                         <span>{st.time}</span>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>

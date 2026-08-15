@@ -3115,8 +3115,6 @@ input, textarea, select, button {
 ───────────────────────────────────────────────────────────── */
 .route-notebook-sheet {
   position: relative;
-  background-color: #FAF8F2;
-  background-image: repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.1) 25px);
   border-left: 3.5px solid rgba(239, 68, 68, 0.45);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   border-right: 1px solid rgba(0, 0, 0, 0.08);
