@@ -510,20 +510,23 @@ body::-webkit-scrollbar-thumb:active,
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     gap: 16px;
-    padding: 12px 6px 20px;
+    padding-top: 12px;
+    padding-bottom: 22px;
     scrollbar-width: none;
-    margin: 0 -16px;
-    padding-left: 20px;
-    padding-right: 20px;
+    margin-left: calc(-1 * clamp(20px, 4vw, 48px));
+    margin-right: calc(-1 * clamp(20px, 4vw, 48px));
+    padding-left: clamp(20px, 4vw, 48px);
+    padding-right: clamp(20px, 4vw, 48px);
   }
   .packages-cards-grid::-webkit-scrollbar {
     display: none;
   }
   .packages-cards-grid > * {
-    flex: 0 0 86vw;
-    max-width: 340px;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+    flex: 0 0 78vw;
+    max-width: 320px;
+    min-width: 260px;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }
 
@@ -569,21 +572,24 @@ body::-webkit-scrollbar-thumb:active,
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    padding: 12px 6px 20px;
+    padding-top: 12px;
+    padding-bottom: 22px;
     gap: 16px;
     scrollbar-width: none;
-    margin: 0 -12px;
-    padding-left: 16px;
-    padding-right: 16px;
+    margin-left: calc(-1 * clamp(20px, 4vw, 48px));
+    margin-right: calc(-1 * clamp(20px, 4vw, 48px));
+    padding-left: clamp(20px, 4vw, 48px);
+    padding-right: clamp(20px, 4vw, 48px);
   }
   .skill-levels-grid::-webkit-scrollbar {
     display: none;
   }
   .skill-levels-grid > div {
-    flex: 0 0 84%;
-    max-width: 330px;
-    scroll-snap-align: center;
-    scroll-snap-stop: always;
+    flex: 0 0 78vw;
+    max-width: 320px;
+    min-width: 260px;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }
 
