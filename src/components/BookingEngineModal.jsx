@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
+import CustomDateBatchPicker from './CustomDateBatchPicker';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
 
@@ -402,19 +403,13 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             {/* Date & Guests Layout */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginBottom: '24px' }}>
                                 <div>
-                                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        Check-In Date
-                                    </label>
-                                    <CustomThemeCalendar 
-                                        selectedDate={travelDate} 
-                                        onDateSelect={(date) => {
+                                    <CustomDateBatchPicker
+                                        label="Check-In Weekend Batch or Date"
+                                        selectedDate={travelDate || 'Aug 22 – 23, 2026'}
+                                        onDateChange={(date) => {
                                             setTravelDate(date);
                                             setValidationError('');
                                         }}
-                                        onSelectDate={(date) => {
-                                            setTravelDate(date);
-                                            setValidationError('');
-                                        }} 
                                     />
                                 </div>
 

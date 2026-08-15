@@ -6,6 +6,8 @@ import Link from 'next/link';
 import SiteHeader from '../../../components/SiteHeader';
 import Footer from '../../../components/Footer';
 import BookingEngineModal from '../../../components/BookingEngineModal';
+import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
+import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
 import { inr } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
@@ -22,7 +24,7 @@ export default function CampPropertyDetailPage() {
     
     // Booking Selector State
     const [selectedRoomId, setSelectedRoomId] = useState(null);
-    const [selectedDate, setSelectedDate] = useState('Upcoming Weekend');
+    const [selectedDate, setSelectedDate] = useState('Aug 22 – 23, 2026');
     const [guestsCount, setGuestsCount] = useState(2);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
@@ -503,46 +505,35 @@ export default function CampPropertyDetailPage() {
                                 </div>
                             </div>
 
-                            {/* Booking Inputs */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '5px', textTransform: 'uppercase' }}>
-                                        Selected Pod / Room
-                                    </label>
-                                    <select
-                                        value={selectedRoomId || ''}
-                                        onChange={e => setSelectedRoomId(e.target.value)}
-                                        style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', boxSizing: 'border-box' }}
-                                    >
-                                        {camp.rooms && camp.rooms.map(r => (
-                                            <option key={r.id} value={r.id}>
-                                                {r.name} (₹{r.price}/pax)
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                            {/* Custom Interactive Dropdowns (Zero Typing!) */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                                <CustomSelectDropdown
+                                    label="Select Room or Pod Type"
+                                    value={selectedRoomId || (camp.rooms?.[0]?.id || '')}
+                                    onChange={val => setSelectedRoomId(val)}
+                                    options={(camp.rooms || []).map(r => ({
+                                        value: r.id,
+                                        label: r.name,
+                                        sublabel: `Capacity: ${r.capacity}`,
+                                        price: r.price,
+                                        badge: r.isAvailable ? 'Available' : 'Sold Out'
+                                    }))}
+                                />
+
+                                <CustomDateBatchPicker
+                                    label="Select Expedition Weekend or Date"
+                                    selectedDate={selectedDate}
+                                    onDateChange={newDate => setSelectedDate(newDate)}
+                                />
 
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '5px', textTransform: 'uppercase' }}>
-                                        Preferred Dates
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={selectedDate}
-                                        onChange={e => setSelectedDate(e.target.value)}
-                                        placeholder="e.g. Next Weekend (Sat-Sun)"
-                                        style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '600', boxSizing: 'border-box' }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '5px', textTransform: 'uppercase' }}>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                                         Number of Campers
                                     </label>
-                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.12)', borderRadius: '12px', padding: '6px 14px' }}>
-                                        <button onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>-</button>
-                                        <span style={{ fontSize: '15px', fontWeight: '800', color: '#121613' }}>{guestsCount} Campers</span>
-                                        <button onClick={() => setGuestsCount(guestsCount + 1)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>+</button>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.12)', borderRadius: '14px', padding: '8px 14px' }}>
+                                        <button type="button" onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>-</button>
+                                        <span style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>{guestsCount} Campers (₹{unitPrice}/pax)</span>
+                                        <button type="button" onClick={() => setGuestsCount(guestsCount + 1)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>+</button>
                                     </div>
                                 </div>
                             </div>

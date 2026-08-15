@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
+import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
@@ -1893,33 +1895,34 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                            Travel Date
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g. Aug 22, 2026"
-                                            value={newBookingForm.dates}
-                                            onChange={e => setNewBookingForm({ ...newBookingForm, dates: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        <CustomDateBatchPicker
+                                            label="Travel / Weekend Batch"
+                                            selectedDate={newBookingForm.dates}
+                                            onDateChange={d => setNewBookingForm({ ...newBookingForm, dates: d })}
                                         />
                                     </div>
                                 </div>
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                            Campsite Package *
-                                        </label>
-                                        <select
+                                        <CustomSelectDropdown
+                                            label="Campsite Package *"
                                             value={newBookingForm.package}
-                                            onChange={e => setNewBookingForm({ ...newBookingForm, package: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
-                                        >
-                                            {properties.map(p => (
-                                                <option key={p.id} value={p.title}>{p.title}</option>
-                                            ))}
-                                        </select>
+                                            onChange={val => {
+                                                const matched = properties.find(p => p.title === val);
+                                                setNewBookingForm({
+                                                    ...newBookingForm,
+                                                    package: val,
+                                                    region: matched?.region || newBookingForm.region,
+                                                    pricePerGuest: matched?.price || newBookingForm.pricePerGuest
+                                                });
+                                            }}
+                                            options={properties.map(p => ({
+                                                value: p.title,
+                                                label: p.title,
+                                                sublabel: `${p.region || 'Munnar'} · ₹${p.price}`
+                                            }))}
+                                        />
                                     </div>
                                     <div>
                                         <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
@@ -1950,18 +1953,16 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                            Initial Status
-                                        </label>
-                                        <select
+                                        <CustomSelectDropdown
+                                            label="Initial Status"
                                             value={newBookingForm.status}
-                                            onChange={e => setNewBookingForm({ ...newBookingForm, status: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
-                                        >
-                                            <option value="Confirmed">Confirmed 🟢</option>
-                                            <option value="Pending">Pending 🟡</option>
-                                            <option value="Checked In">Checked In 🔵</option>
-                                        </select>
+                                            onChange={val => setNewBookingForm({ ...newBookingForm, status: val })}
+                                            options={[
+                                                { value: 'Confirmed', label: 'Confirmed 🟢' },
+                                                { value: 'Pending', label: 'Pending 🟡' },
+                                                { value: 'Checked In', label: 'Checked In 🔵' }
+                                            ]}
+                                        />
                                     </div>
                                 </div>
 
