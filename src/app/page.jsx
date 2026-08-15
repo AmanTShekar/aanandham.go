@@ -1460,9 +1460,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: 'clamp(60px, 7vw, 110px) 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div className="why-aanandham-grid">
                         
                         {/* Interactive Cinematic Showcase Card (Desktop: Left, Mobile: Below Header/Tabs) */}
@@ -2880,9 +2880,9 @@ export default function HomePage() {
             ───────────────────────────────────────────────────────────── */}
             <section 
                 id="steps" 
-                style={{ position: 'relative', padding: '120px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div className="sticky-split-grid">
                         
                         {/* Sticky Pinned Left Header */}
@@ -3292,9 +3292,9 @@ export default function HomePage() {
             ───────────────────────────────────────────────────────────── */}
             <section 
                 id="faq" 
-                style={{ position: 'relative', padding: '120px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     <div style={{ marginBottom: '60px' }}>
                         <div className="star-badge">

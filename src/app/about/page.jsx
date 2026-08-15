@@ -1989,12 +1989,12 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '110px 24px',
+                        padding: '110px clamp(20px, 4vw, 48px)',
                         background: '#F8F9F5',
                         position: 'relative'
                     }}
                 >
-                    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION INTELLIGENCE
