@@ -990,14 +990,14 @@ export default function HomePage() {
                     const progress = Math.max(0, Math.min(1, scrolledDist / totalDist));
                     
                     let levelIdx = 0;
-                    if (progress < 0.25) {
-                        levelIdx = 0;
-                    } else if (progress < 0.50) {
-                        levelIdx = 1;
-                    } else if (progress < 0.75) {
-                        levelIdx = 2;
+                    if (progress < 0.22) {
+                        levelIdx = 0; // Total Newbie
+                    } else if (progress < 0.45) {
+                        levelIdx = 1; // Still Learning
+                    } else if (progress < 0.68) {
+                        levelIdx = 2; // Pretty Confident
                     } else {
-                        levelIdx = 3;
+                        levelIdx = 3; // Already a Pro (Huge 32% scroll dwell time)
                     }
                     setActiveLevelIdx((prev) => (prev !== levelIdx ? levelIdx : prev));
                 }
@@ -1014,7 +1014,6 @@ export default function HomePage() {
         };
 
         window.addEventListener('scroll', onScroll, { passive: true });
-        document.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('touchmove', onScroll, { passive: true });
         window.addEventListener('resize', onScroll, { passive: true });
 
@@ -1025,7 +1024,6 @@ export default function HomePage() {
 
         return () => {
             window.removeEventListener('scroll', onScroll);
-            document.removeEventListener('scroll', onScroll);
             window.removeEventListener('touchmove', onScroll);
             window.removeEventListener('resize', onScroll);
             clearTimeout(t1);
@@ -2565,12 +2563,12 @@ export default function HomePage() {
                 id="levels" 
                 style={{ position: 'relative', background: '#F8F9F5' }}
             >
-                {/* Generous 240vh Scroll Track for Silky Smooth Scroll Dealing */}
+                {/* Generous 300vh Scroll Track for Silky Smooth Scroll Dealing */}
                 <div 
                     id="levels-scroll-track"
                     style={{
                         position: 'relative',
-                        height: '240vh',
+                        height: '300vh',
                         width: '100%'
                     }}
                 >
@@ -2583,21 +2581,20 @@ export default function HomePage() {
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'center',
-                            padding: '30px clamp(20px, 4vw, 48px)',
-                            overflow: 'hidden',
+                            padding: '24px clamp(16px, 3.5vw, 40px)',
                             boxSizing: 'border-box'
                         }}
                     >
                         <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                             
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '22px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
                                 <div>
                                     <div className="star-badge">
                                         <span className="star-icon">★</span> LEVELS
                                     </div>
                                     <h2 style={{
                                         fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(26px, 3.6vw, 42px)',
+                                        fontSize: 'clamp(24px, 3.4vw, 40px)',
                                         fontWeight: '800',
                                         color: '#121613',
                                         letterSpacing: '-0.035em',
@@ -2616,7 +2613,7 @@ export default function HomePage() {
                             </div>
 
                             {/* Level Quick Select Tabs */}
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '24px' }}>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '20px' }}>
                                 {SKILL_LEVELS.map((level, idx) => {
                                     const isSelected = activeLevelIdx === idx;
                                     return (
@@ -2652,7 +2649,7 @@ export default function HomePage() {
                             <div 
                                 style={{
                                     position: 'relative',
-                                    height: '380px',
+                                    height: '370px',
                                     maxWidth: '520px',
                                     margin: '0 auto',
                                     perspective: '1200px',
@@ -2679,7 +2676,12 @@ export default function HomePage() {
                                                 opacity: isPast ? 0 : Math.max(1 - diff * 0.25, 0),
                                                 zIndex: 10 - Math.abs(diff)
                                             }}
-                                            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                            transition={{ 
+                                                type: "spring",
+                                                stiffness: 280,
+                                                damping: 28,
+                                                mass: 0.8
+                                            }}
                                             drag={isFront ? "x" : false}
                                             dragConstraints={{ left: 0, right: 0 }}
                                             onDragEnd={(e, info) => {
@@ -2702,16 +2704,18 @@ export default function HomePage() {
                                                 background: '#FFFFFF',
                                                 border: isFront ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
                                                 borderRadius: '26px',
-                                                padding: '24px 26px',
+                                                padding: '22px 24px',
                                                 boxShadow: isFront 
                                                     ? '0 24px 60px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.04)' 
                                                     : '0 12px 30px rgba(0,0,0,0.06)',
                                                 cursor: isFront ? 'grab' : isBehind ? 'pointer' : 'default',
-                                                overflow: 'hidden',
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 justifyContent: 'space-between',
-                                                minHeight: '360px'
+                                                minHeight: '340px',
+                                                willChange: 'transform, opacity',
+                                                transformStyle: 'preserve-3d',
+                                                backfaceVisibility: 'hidden'
                                             }}
                                         >
                                             {/* Card Top: Avatar + Badge + Step Number */}
@@ -2744,7 +2748,7 @@ export default function HomePage() {
                                             </div>
 
                                             {/* Card Center: Title & Description */}
-                                            <div style={{ margin: '14px 0 12px' }}>
+                                            <div style={{ margin: '14px 0 10px' }}>
                                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
                                                     {level.title}
                                                 </h3>
@@ -2754,7 +2758,7 @@ export default function HomePage() {
                                             </div>
 
                                             {/* Card Stats Pills */}
-                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '14px' }}>
+                                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '12px' }}>
                                                 <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
                                                     🥾 {level.distance}
                                                 </span>
@@ -2791,7 +2795,7 @@ export default function HomePage() {
                             </div>
 
                             {/* Deck Navigation Controls */}
-                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '18px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '16px' }}>
                                 <button
                                     onClick={() => setActiveLevelIdx(prev => Math.max(0, (prev || 0) - 1))}
                                     disabled={activeLevelIdx === 0}
