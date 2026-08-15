@@ -85,7 +85,7 @@ const CONTACT_CHANNELS = [
     }
 ];
 
-// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Vibrant Sticky Paper Notes) ──
+// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Clean Field Notebook Sheets) ──
 const TRAVEL_STEPS = [
     {
         num: 'STAGE 01',
@@ -95,10 +95,8 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 01',
         stamp: 'PAVED HIGHWAY',
         stampColor: '#166534',
-        paperBg: '#FEF08A', // Sunlit Canary Yellow
-        inkColor: '#1A2218',
-        tapeColor: 'rgba(254, 240, 138, 0.85)',
-        rotation: '-1.5deg',
+        paperBg: '#FCFCF8',
+        inkColor: '#121613',
         icon: 'fa-solid fa-plane-departure',
         memo: 'Early morning drives through Neriamangalam forest offer misty river valley views.'
     },
@@ -110,10 +108,8 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 02',
         stamp: 'SCENIC CORRIDOR',
         stampColor: '#047857',
-        paperBg: '#A7F3D0', // Alpine Mint
-        inkColor: '#0A2518',
-        tapeColor: 'rgba(167, 243, 208, 0.85)',
-        rotation: '1.5deg',
+        paperBg: '#FCFCF8',
+        inkColor: '#121613',
         icon: 'fa-solid fa-car-side',
         memo: 'Roll windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
     },
@@ -125,10 +121,8 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 03',
         stamp: 'MONITORED PARKING',
         stampColor: '#C2410C',
-        paperBg: '#FED7AA', // Sunburst Peach
-        inkColor: '#2B1405',
-        tapeColor: 'rgba(254, 215, 170, 0.85)',
-        rotation: '-1.2deg',
+        paperBg: '#FCFCF8',
+        inkColor: '#121613',
         icon: 'fa-solid fa-square-parking',
         memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
     },
@@ -140,10 +134,8 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 04',
         stamp: '4X4 OFF-ROAD SAFARI',
         stampColor: '#15803D',
-        paperBg: '#BAE6FD', // Glacial Sky Blue
-        inkColor: '#0C2333',
-        tapeColor: 'rgba(186, 230, 253, 0.85)',
-        rotation: '1.6deg',
+        paperBg: '#FCFCF8',
+        inkColor: '#121613',
         icon: 'fa-solid fa-truck-monster',
         memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
     }
@@ -972,7 +964,7 @@ export default function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Full-Bleed Edge-to-Edge Swipable Sticky Notebook Sheets (Generous vertical padding so 3D Pushpins and Shadows are NEVER cut off!) */}
+                    {/* Full-Bleed Edge-to-Edge Swipable Field Notebook Sheets (Zero Clipping with 40px Headroom) */}
                     <div className="route-carousel-track">
                         {TRAVEL_STEPS.map((st, idx) => (
                             <div key={idx} className="route-carousel-card">
@@ -980,27 +972,24 @@ export default function ContactPage() {
                                     className="route-notebook-sheet hover-lift"
                                     style={{
                                         backgroundColor: st.paperBg,
-                                        color: st.inkColor
+                                        color: st.inkColor,
+                                        borderRadius: '6px 6px 36px 6px',
+                                        padding: '36px 22px 26px 24px',
+                                        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0,0,0,0.2)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        minHeight: '400px',
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 25px, rgba(59, 130, 246, 0.12) 26px)',
+                                        borderLeft: '3.5px solid rgba(239, 68, 68, 0.42)',
+                                        cursor: 'grab',
+                                        position: 'relative'
                                     }}
                                 >
-                                    {/* Translucent Scotch Tape Strip at Top */}
-                                    <div 
-                                        className="scotch-tape-strip" 
-                                        style={{
-                                            width: '100px',
-                                            height: '28px',
-                                            top: '-14px',
-                                            background: 'rgba(228, 192, 126, 0.82)'
-                                        }} 
-                                    />
-
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
                                     <div className="pushpin-3d-wrap">
-                                        {/* Pin Cast Shadow */}
                                         <div className="pushpin-3d-shadow" />
-                                        {/* 3D Brass Metallic Pin Head */}
                                         <div className="pushpin-3d-head">
-                                            {/* Specular Highlight Point */}
                                             <div className="pushpin-3d-dot" />
                                         </div>
                                     </div>
@@ -1012,20 +1001,48 @@ export default function ContactPage() {
                                         <div className="notebook-spiral-hole" />
                                     </div>
 
-                                    <div>
-                                        {/* Top Row: Stage Tag & Rubber Stamp */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
-                                            <span style={{
-                                                fontFamily: 'monospace',
-                                                fontSize: '11px',
-                                                fontWeight: '800',
-                                                color: '#475569',
-                                                letterSpacing: '1px'
-                                            }}>
-                                                {st.tag}
-                                            </span>
+                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        right: 0,
+                                        width: '32px',
+                                        height: '32px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.14) 50%, rgba(0,0,0,0.05) 100%)',
+                                        borderTopLeftRadius: '12px',
+                                        pointerEvents: 'none'
+                                    }} />
 
-                                            {/* Rubber Stamp */}
+                                    <div>
+                                        {/* Top Row: Clean Stage Badge + Logo + Vintage Ink Stamp */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <img
+                                                    src="/logo.png"
+                                                    alt="Aanandham Logo"
+                                                    style={{
+                                                        height: '20px',
+                                                        width: '20px',
+                                                        objectFit: 'contain',
+                                                        borderRadius: '50%',
+                                                        border: '1px solid rgba(0,0,0,0.12)'
+                                                    }}
+                                                />
+                                                <span style={{
+                                                    fontSize: '10px',
+                                                    fontWeight: '900',
+                                                    letterSpacing: '1px',
+                                                    textTransform: 'uppercase',
+                                                    background: 'rgba(0,0,0,0.07)',
+                                                    color: '#121613',
+                                                    padding: '3px 8px',
+                                                    borderRadius: '5px'
+                                                }}>
+                                                    {st.tag}
+                                                </span>
+                                            </div>
+
+                                            {/* Vintage Double-Dashed Rubber Stamp */}
                                             <div 
                                                 className="notebook-rubber-stamp"
                                                 style={{
@@ -1040,9 +1057,9 @@ export default function ContactPage() {
                                         {/* Title with Icon */}
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                                             <div style={{
-                                                width: '32px',
-                                                height: '32px',
-                                                borderRadius: '8px',
+                                                width: '34px',
+                                                height: '34px',
+                                                borderRadius: '10px',
                                                 background: '#121613',
                                                 color: '#E5A93B',
                                                 display: 'flex',
@@ -1057,7 +1074,7 @@ export default function ContactPage() {
                                                 fontFamily: 'var(--font-heading)',
                                                 fontSize: '18px',
                                                 fontWeight: '800',
-                                                color: st.inkColor,
+                                                color: '#121613',
                                                 margin: 0,
                                                 lineHeight: 1.2
                                             }}>
@@ -1068,7 +1085,7 @@ export default function ContactPage() {
                                         {/* Description */}
                                         <p style={{
                                             fontSize: '13px',
-                                            color: '#334155',
+                                            color: '#475569',
                                             lineHeight: 1.6,
                                             margin: '0 0 16px'
                                         }}>
@@ -1076,20 +1093,14 @@ export default function ContactPage() {
                                         </p>
 
                                         {/* Field Memo Box */}
-                                        <div 
-                                            className="notebook-memo-box"
-                                            style={{
-                                                background: 'rgba(255, 255, 255, 0.65)',
-                                                borderLeft: `3px solid ${st.stampColor}`
-                                            }}
-                                        >
+                                        <div className="notebook-memo-box">
                                             📌 <strong>Field Note:</strong> {st.memo}
                                         </div>
                                     </div>
 
                                     {/* Bottom Timing Indicator */}
-                                    <div className="notebook-time-indicator" style={{ color: st.inkColor }}>
-                                        <span style={{ color: '#C86D14' }}>⏱</span>
+                                    <div className="notebook-time-indicator">
+                                        <span style={{ color: '#E5A93B' }}>⏱</span>
                                         <span>{st.time}</span>
                                     </div>
                                 </div>
