@@ -830,11 +830,7 @@ export default function AboutPage() {
                                     whileHover={{ y: -8 }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
-                                    {/* Rustic Steel Wood Screws/Nails */}
-                                    <div className="wood-bolt-tl" />
-                                    <div className="wood-bolt-tr" />
-
-                                    {/* Natural Tree Bark & Timber Grain Overlay */}
+                                    {/* Pure Natural Tree Bark & Timber Grain Overlay */}
                                     <div className="stone-cleavage-overlay" />
 
                                     {/* Altitude Header & Stone Icon Pill */}
