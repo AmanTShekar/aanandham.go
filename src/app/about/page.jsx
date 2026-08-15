@@ -549,7 +549,7 @@ export default function AboutPage() {
                             }}
                         >
                             <Link
-                                href="/#packages"
+                                href="/camps"
                                 className="btn-lime"
                                 style={{
                                     padding: '14px 34px',
@@ -2171,7 +2171,7 @@ export default function AboutPage() {
 
                             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
                                 <Link
-                                    href="/#packages"
+                                    href="/camps"
                                     className="btn-lime"
                                     style={{
                                         padding: '16px 42px',

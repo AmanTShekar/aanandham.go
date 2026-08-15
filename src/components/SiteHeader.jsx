@@ -200,8 +200,8 @@ export default function SiteHeader({
                                 <span className="marker-text">About</span>
                             </Link>
                             <Link 
-                                href="/#packages" 
-                                className="text-hover-marker text-hover-marker-dark" 
+                                href="/camps" 
+                                className={`text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`}
                                 style={{ 
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
@@ -387,9 +387,9 @@ export default function SiteHeader({
 
                                 <motion.div variants={drawerItemVariants}>
                                     <Link 
-                                        href="/#packages" 
+                                        href="/camps" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
-                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`} 
                                         style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
                                     >
                                         <span className="marker-text">The Camps</span>

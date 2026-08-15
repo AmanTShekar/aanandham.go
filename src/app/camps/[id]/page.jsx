@@ -28,7 +28,8 @@ export default function CampPropertyDetailPage() {
     const [guestsCount, setGuestsCount] = useState(2);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
-    // Share Toast
+    // Wishlist & Share Toast
+    const [wishlist, setWishlist] = useState([]);
     const [shareToast, setShareToast] = useState('');
 
     useEffect(() => {
@@ -39,7 +40,29 @@ export default function CampPropertyDetailPage() {
         if (currentCamp?.rooms && currentCamp.rooms.length > 0) {
             setSelectedRoomId(currentCamp.rooms[0].id);
         }
+        try {
+            const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
+            setWishlist(savedWishlist);
+        } catch (e) {}
     }, [campId]);
+
+    const handleToggleWishlist = () => {
+        if (!camp) return;
+        let updated;
+        const isLiked = wishlist.includes(camp.id);
+        if (isLiked) {
+            updated = wishlist.filter(id => id !== camp.id);
+            setShareToast(`Removed "${camp.title}" from your wishlist`);
+        } else {
+            updated = [...wishlist, camp.id];
+            setShareToast(`❤️ Added "${camp.title}" to your saved wishlist!`);
+        }
+        setWishlist(updated);
+        try {
+            localStorage.setItem('aanandham_user_wishlist', JSON.stringify(updated));
+        } catch (e) {}
+        setTimeout(() => setShareToast(''), 3000);
+    };
 
     if (!camp) {
         return (
@@ -94,12 +117,33 @@ export default function CampPropertyDetailPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#59655D', fontWeight: '600' }}>
                         <Link href="/" style={{ color: '#59655D', textDecoration: 'none' }}>Home</Link>
                         <span>/</span>
-                        <Link href="/#packages" style={{ color: '#59655D', textDecoration: 'none' }}>Campsites</Link>
+                        <Link href="/camps" style={{ color: '#59655D', textDecoration: 'none' }}>Campsites</Link>
                         <span>/</span>
                         <span style={{ color: '#121613', fontWeight: '800' }}>{camp.region}</span>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                            onClick={handleToggleWishlist}
+                            aria-label={wishlist.includes(camp.id) ? 'Remove from wishlist' : 'Save to wishlist'}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                background: wishlist.includes(camp.id) ? 'rgba(239, 68, 68, 0.12)' : '#FFFFFF',
+                                border: wishlist.includes(camp.id) ? '1px solid #EF4444' : '1px solid rgba(18, 22, 19, 0.12)',
+                                padding: '8px 16px',
+                                borderRadius: '999px',
+                                fontSize: '13px',
+                                fontWeight: '800',
+                                color: wishlist.includes(camp.id) ? '#DC2626' : '#121613',
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <span>{wishlist.includes(camp.id) ? '❤️ Saved' : '🤍 Save'}</span>
+                        </button>
                         <button
                             onClick={handleShare}
                             style={{
@@ -615,7 +659,7 @@ export default function CampPropertyDetailPage() {
                                 Other Wilderness Basecamps You May Like
                             </h2>
                         </div>
-                        <Link href="/#packages" className="btn-lime" style={{ padding: '8px 18px', fontSize: '12.5px', fontWeight: '800', textDecoration: 'none' }}>
+                        <Link href="/camps" className="btn-lime" style={{ padding: '8px 18px', fontSize: '12.5px', fontWeight: '800', textDecoration: 'none' }}>
                             View All Kerala Camps →
                         </Link>
                     </div>

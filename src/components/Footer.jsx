@@ -146,7 +146,7 @@ export default function Footer() {
                                 { name: 'About Aanandham', href: '/about' },
                                 { name: 'Accommodation & Pods', href: '/#stay' },
                                 { name: 'Camp Program & Trails', href: '/#program' },
-                                { name: 'Pricing Packages', href: '/#packages' },
+                                { name: 'All Kerala Campsites', href: '/camps' },
                                 { name: 'Kerala Stays Gallery', href: '/#kerala-wilderness' },
                                 { name: 'Contact & Inquiries', href: '/contact' }
                             ].map((item, idx) => (
