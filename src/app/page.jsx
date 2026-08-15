@@ -907,31 +907,30 @@ export default function HomePage() {
 
         let ticking = false;
         const checkStayCardsInView = () => {
-            const cardElements = document.querySelectorAll('[data-stay-card-idx]');
-            if (!cardElements || cardElements.length === 0) return;
+            const section = document.getElementById('stay');
+            if (!section) return;
 
-            // Focal trigger point: around middle of viewport
-            const focalY = window.innerWidth <= 900 ? window.innerHeight * 0.52 : window.innerHeight * 0.48;
-            let activeIdx = -1;
-            let minDistance = Infinity;
+            const rect = section.getBoundingClientRect();
+            const sectionHeight = rect.height;
+            const windowH = window.innerHeight;
 
-            cardElements.forEach((el) => {
-                const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
-                if (isNaN(idx)) return;
-                const rect = el.getBoundingClientRect();
-                const cardCenter = rect.top + rect.height / 2;
-                const dist = Math.abs(cardCenter - focalY);
+            // If the Stay section is in the active viewport zone
+            if (rect.top <= windowH * 0.75 && rect.bottom >= windowH * 0.15) {
+                // Calculate smooth continuous scroll progress through the section (0.0 to 1.0)
+                const scrollDistance = sectionHeight - windowH * 0.35;
+                const currentProgress = (windowH * 0.5 - rect.top) / Math.max(scrollDistance, 1);
 
-                // Card is in the active reading band
-                if (rect.top <= focalY + 70 && rect.bottom >= focalY - 70) {
-                    activeIdx = idx;
-                } else if (dist < minDistance && rect.top < window.innerHeight && rect.bottom > 0) {
-                    minDistance = dist;
-                    if (activeIdx === -1) activeIdx = idx;
+                let activeIdx;
+                if (currentProgress < 0.24) {
+                    activeIdx = 0; // Twin Room
+                } else if (currentProgress < 0.49) {
+                    activeIdx = 1; // Private Double Pods (Smoothly hit, never skipped!)
+                } else if (currentProgress < 0.74) {
+                    activeIdx = 2; // Group Suite
+                } else {
+                    activeIdx = 3; // Common Areas
                 }
-            });
 
-            if (activeIdx !== -1) {
                 setActiveStayAcc((prev) => (prev !== activeIdx ? activeIdx : prev));
             }
             ticking = false;
@@ -3427,18 +3426,7 @@ export default function HomePage() {
                 className="floating-whatsapp-btn"
                 aria-label="Chat with Aanandham Concierge on WhatsApp"
             >
-                <i className="fa-brands fa-whatsapp"></i>
             </a>
-
-            {scrolled && (
-                <button
-                    onClick={scrollToTop}
-                    className="back-to-top-btn"
-                    aria-label="Scroll back to top"
-                >
-                    <i className="fa-solid fa-arrow-up"></i>
-                </button>
-            )}
 
             {/* ─────────────────────────────────────────────────────────────
                 MODALS (Real Video, Gallery Lightbox & Booking Engine)
