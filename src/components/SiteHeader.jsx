@@ -152,25 +152,14 @@ export default function SiteHeader({
                     boxSizing: 'border-box'
                 }}>
                     {/* Brand Logo & Name */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <Link href="/" className="text-hover-marker text-hover-marker-dark">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go"
-                                style={{
-                                    height: '38px',
-                                    width: 'auto',
-                                    objectFit: 'contain',
-                                    borderRadius: '6px'
-                                }}
+                                className="site-brand-logo"
                             />
-                            <span className="marker-text" style={{
-                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: '26px',
-                                fontWeight: '800',
-                                color: '#FFFFFF',
-                                letterSpacing: '-0.03em'
-                            }}>
+                            <span className="marker-text site-brand-text">
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>

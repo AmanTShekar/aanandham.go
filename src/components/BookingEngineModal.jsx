@@ -216,6 +216,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             aria-modal="true"
             aria-labelledby="booking-modal-title"
             className="booking-modal-overlay" 
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            onWheel={(e) => e.stopPropagation()}
         >
             <motion.div
                 initial={{ opacity: 0, scale: 0.96, y: 24 }}
@@ -223,6 +227,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 exit={{ opacity: 0, scale: 0.96, y: 24 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="booking-modal-card"
+                data-lenis-prevent="true"
+                data-lenis-prevent-wheel="true"
+                data-lenis-prevent-touch="true"
+                onWheel={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div className="booking-modal-header">
@@ -277,7 +285,13 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 </div>
 
                 {/* Body Content */}
-                <div className="booking-modal-body">
+                <div 
+                    className="booking-modal-body"
+                    data-lenis-prevent="true"
+                    data-lenis-prevent-wheel="true"
+                    data-lenis-prevent-touch="true"
+                    onWheel={(e) => e.stopPropagation()}
+                >
                     {validationError && (
                         <div style={{
                             background: 'rgba(255, 90, 95, 0.12)',
