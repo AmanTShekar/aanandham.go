@@ -263,7 +263,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   CHISELED GRANITE & SLATE STONE SLABS (Random Chipped Edges)
+   AUTHENTIC CHIPPED MOUNTAIN STONE & GRANITE SLABS
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
@@ -288,86 +288,156 @@ body::-webkit-scrollbar-thumb:active,
 /* Base Stone Slab Card with Chiseled Depth */
 .stone-slab-card {
   position: relative;
-  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.65));
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.85)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.6));
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
   transform: translateZ(0);
 }
 
 .stone-slab-card:hover {
-  transform: translateY(-8px);
-  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.85));
+  transform: translateY(-10px) rotate(0.5deg);
+  filter: drop-shadow(0 28px 55px rgba(0, 0, 0, 0.95)) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.8));
 }
 
 .stone-slab-inner {
   position: relative;
-  padding: 26px 22px;
+  padding: 30px 24px;
   display: flex;
   flex-direction: column;
-  background: 
-    radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.07) 0%, transparent 60%),
-    radial-gradient(circle at 90% 85%, rgba(0, 0, 0, 0.4) 0%, transparent 50%),
-    linear-gradient(145deg, #142218 0%, #0B160F 55%, #08100B 100%);
-  border-radius: 0 !important; /* Strictly no rounded corners */
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.2), inset -2px -2px 5px rgba(0, 0, 0, 0.9);
 }
 
-/* Subtle Stone Granular Relief */
+/* Authentic Stone Grain, Granite Flecks & Mineral Strata */
 .stone-slab-inner::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    radial-gradient(rgba(0, 0, 0, 0.3) 1px, transparent 1px);
-  background-size: 12px 12px, 8px 8px;
-  background-position: 0 0, 4px 4px;
-  opacity: 0.35;
+    radial-gradient(ellipse at 20% 30%, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    radial-gradient(ellipse at 70% 60%, rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px),
+    radial-gradient(ellipse at 40% 80%, rgba(0, 0, 0, 0.5) 1.5px, transparent 1.5px),
+    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.015) 10px, rgba(255, 255, 255, 0.015) 20px);
+  background-size: 14px 14px, 20px 20px, 12px 12px, auto;
+  opacity: 0.75;
   pointer-events: none;
 }
 
-/* 4 UNIQUE RANDOMLY CHIPPED EDGES (Each Card Has Different Fractured Facets) */
+/* 4 UNIQUE RANDOMLY CHIPPED ROCK SLABS WITH REAL TEXTURE */
+
+/* Tier 1: 7,900 FT Summit - Volcanic Obsidian & Gold Vein Granite */
 .stone-slab-tier-1 .stone-slab-inner {
-  clip-path: polygon(0% 18px, 16px 0%, calc(100% - 24px) 0%, 100% 20px, 100% calc(100% - 28px), calc(100% - 18px) 100%, 22px 100%, 0% calc(100% - 16px));
-  border-top: 1px solid rgba(229, 169, 59, 0.5);
-  border-left: 1px solid rgba(229, 169, 59, 0.25);
-  border-bottom: 1px solid rgba(229, 169, 59, 0.2);
+  background-image: 
+    linear-gradient(155deg, rgba(28, 35, 30, 0.84) 0%, rgba(17, 24, 19, 0.9) 40%, rgba(11, 16, 12, 0.96) 100%),
+    url('https://images.unsplash.com/photo-1590402494682-cd3fb53b1f70?auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(
+    0% 28px, 14px 12px, 32px 0%, 
+    calc(100% - 45px) 0%, calc(100% - 20px) 14px, 100% 38px, 
+    100% 65%, calc(100% - 8px) 72%, 100% 80%, calc(100% - 35px) 100%, 
+    60% calc(100% - 6px), 45% 100%, 18px 100%, 0% calc(100% - 25px), 
+    6px 50%
+  );
+  border-top: 2px solid rgba(229, 169, 59, 0.7);
+  border-left: 1.5px solid rgba(229, 169, 59, 0.4);
+  box-shadow: inset 2px 2px 5px rgba(229, 169, 59, 0.25), inset -3px -3px 8px rgba(0, 0, 0, 0.95);
 }
 
+/* Tier 2: 6,800 FT Phantom Head - Ironstone Escarpment & Rust Basalt */
 .stone-slab-tier-2 .stone-slab-inner {
-  clip-path: polygon(0% 26px, 22px 0%, calc(100% - 14px) 0%, 100% 30px, calc(100% - 6px) 68%, 100% 88%, calc(100% - 32px) 100%, 16px 100%, 0% calc(100% - 24px));
-  border-top: 1px solid rgba(249, 115, 22, 0.5);
-  border-right: 1px solid rgba(249, 115, 22, 0.25);
-  border-bottom: 1px solid rgba(249, 115, 22, 0.2);
+  background-image: 
+    linear-gradient(140deg, rgba(36, 29, 23, 0.84) 0%, rgba(22, 18, 14, 0.9) 45%, rgba(13, 10, 8, 0.96) 100%),
+    url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(
+    0% 36px, 24px 8px, 48px 0%, 
+    calc(100% - 18px) 0%, 100% 24px, 
+    calc(100% - 14px) 45%, 100% 55%, calc(100% - 6px) 85%, calc(100% - 48px) 100%, 
+    70% 100%, 55% calc(100% - 8px), 25% 100%, 0% calc(100% - 32px), 
+    8px 60%
+  );
+  border-top: 2px solid rgba(249, 115, 22, 0.7);
+  border-right: 1.5px solid rgba(249, 115, 22, 0.4);
+  box-shadow: inset 2px 2px 5px rgba(249, 115, 22, 0.25), inset -3px -3px 8px rgba(0, 0, 0, 0.95);
 }
 
+/* Tier 3: 6,500 FT Basecamp - Highland Green Slate & Gneiss Bedrock */
 .stone-slab-tier-3 .stone-slab-inner {
-  clip-path: polygon(0% 14px, 28px 0%, calc(100% - 30px) 0%, 100% 16px, 100% calc(100% - 18px), calc(100% - 22px) 100%, 34px 100%, 0% calc(100% - 30px));
-  border-top: 1px solid rgba(213, 237, 85, 0.5);
-  border-left: 1px solid rgba(213, 237, 85, 0.25);
-  border-bottom: 1px solid rgba(213, 237, 85, 0.2);
+  background-image: 
+    linear-gradient(160deg, rgba(24, 38, 28, 0.84) 0%, rgba(16, 27, 19, 0.9) 50%, rgba(9, 18, 11, 0.96) 100%),
+    url('https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(
+    0% 20px, 35px 0%, 
+    calc(100% - 50px) 0%, calc(100% - 25px) 10px, 100% 28px, 
+    100% calc(100% - 35px), calc(100% - 16px) 100%, 
+    65% 100%, 50% calc(100% - 6px), 38% 100%, 0% calc(100% - 40px), 
+    10px 48%, 0% 35%
+  );
+  border-top: 2px solid rgba(213, 237, 85, 0.7);
+  border-left: 1.5px solid rgba(213, 237, 85, 0.4);
+  box-shadow: inset 2px 2px 5px rgba(213, 237, 85, 0.25), inset -3px -3px 8px rgba(0, 0, 0, 0.95);
 }
 
+/* Tier 4: 5,500 FT Anayirangal Basin - Fluvial Blue Shale & Shoreline Sandstone */
 .stone-slab-tier-4 .stone-slab-inner {
-  clip-path: polygon(0% 30px, 20px 0%, calc(100% - 18px) 0%, 100% 22px, calc(100% - 10px) 46%, 100% calc(100% - 20px), calc(100% - 26px) 100%, 14px 100%, 0% calc(100% - 14px));
-  border-top: 1px solid rgba(56, 189, 248, 0.5);
-  border-right: 1px solid rgba(56, 189, 248, 0.25);
-  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  background-image: 
+    linear-gradient(135deg, rgba(19, 34, 43, 0.84) 0%, rgba(13, 23, 30, 0.9) 50%, rgba(7, 15, 20, 0.96) 100%),
+    url('https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80');
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(
+    0% 42px, 28px 0%, 
+    calc(100% - 28px) 0%, 100% 32px, 
+    calc(100% - 12px) 52%, 100% 70%, calc(100% - 30px) 100%, 
+    75% calc(100% - 8px), 40% 100%, 14px 100%, 0% calc(100% - 18px), 
+    6px 70%, 0% 55%
+  );
+  border-top: 2px solid rgba(56, 189, 248, 0.7);
+  border-right: 1.5px solid rgba(56, 189, 248, 0.4);
+  box-shadow: inset 2px 2px 5px rgba(56, 189, 248, 0.25), inset -3px -3px 8px rgba(0, 0, 0, 0.95);
 }
 
-/* Angular Stone Photo Window */
+/* Brass Geological Survey Marker Coin */
+.stone-brass-medallion {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #D4AF37 0%, #AA7C11 70%, #5B4307 100%);
+  border: 1.5px solid rgba(255, 235, 160, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.8), inset 0 -1px 2px rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1A1400;
+  font-size: 17px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+}
+
+/* Rough Chiseled Photo Window (Embedded in the Rock) */
 .stone-photo-thumb {
   position: relative;
   width: 100%;
   height: 165px;
   overflow: hidden;
   margin: 14px 0 16px;
-  background: #0E1A11;
-  clip-path: polygon(0% 8px, 8px 0%, calc(100% - 10px) 0%, 100% 8px, 100% calc(100% - 8px), calc(100% - 10px) 100%, 8px 100%, 0% calc(100% - 8px));
+  background: #000000;
+  clip-path: polygon(
+    0% 12px, 10px 0%, calc(100% - 14px) 0%, 100% 12px, 
+    100% calc(100% - 12px), calc(100% - 14px) 100%, 10px 100%, 0% calc(100% - 12px)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 
 .stone-photo-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: contrast(1.08) saturate(1.1);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -375,17 +445,27 @@ body::-webkit-scrollbar-thumb:active,
   transform: scale(1.08);
 }
 
+/* Inset Engraved Stone Altitude Typography */
+.stone-engraved-altitude {
+  font-family: var(--font-heading), 'Bricolage Grotesque', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.25), 0 -2px 4px rgba(0, 0, 0, 0.9);
+}
+
 /* Chiseled Micro-Spec Chips */
 .stone-spec-chip {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  clip-path: polygon(0% 4px, 4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px));
-  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  clip-path: polygon(0% 6px, 6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px));
+  padding: 7px 12px;
   font-size: 11.5px;
   color: #D1DED5;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 /* ─────────────────────────────────────────────────────────────

@@ -60,6 +60,7 @@ const ELEVATION_TIERS = [
         borderTint: 'rgba(229, 169, 59, 0.35)',
         glowColor: 'rgba(229, 169, 59, 0.25)',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+        stoneType: 'Black Granite & Gold Vein',
         terrainType: 'Rugged Granite Crest',
         access: '4x4 Off-Road Only',
         atmosphere: 'Sea of Clouds · High Mist',
@@ -81,6 +82,7 @@ const ELEVATION_TIERS = [
         borderTint: 'rgba(249, 115, 22, 0.35)',
         glowColor: 'rgba(249, 115, 22, 0.25)',
         image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+        stoneType: 'Ironstone & Red Basalt',
         terrainType: 'Precipitous Escarpment',
         access: 'Marshal Ridge Trek',
         atmosphere: 'Golden Hour Silhouette',
@@ -102,6 +104,7 @@ const ELEVATION_TIERS = [
         borderTint: 'rgba(213, 237, 85, 0.35)',
         glowColor: 'rgba(213, 237, 85, 0.22)',
         image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        stoneType: 'Highland Moss Slate',
         terrainType: 'Insulated Meadow',
         access: 'Direct Basecamp In',
         atmosphere: 'Zero Light Stargazing',
@@ -123,6 +126,7 @@ const ELEVATION_TIERS = [
         borderTint: 'rgba(56, 189, 248, 0.35)',
         glowColor: 'rgba(56, 189, 248, 0.22)',
         image: 'https://images.unsplash.com/photo-1439853941329-a99ce045050a?auto=format&fit=crop&w=800&q=80',
+        stoneType: 'Fluvial Blue Shale',
         terrainType: 'Lakebed & Tea Groves',
         access: 'Kayak & Shore Walk',
         atmosphere: 'Rainforest Mist & Fauna',
@@ -827,40 +831,44 @@ export default function AboutPage() {
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
                                     <div className="stone-slab-inner">
-                                        {/* Altitude Header */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '4px', position: 'relative', zIndex: 2 }}>
+                                        {/* Altitude Header & Brass Survey Medallion */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px', position: 'relative', zIndex: 2 }}>
                                             <div>
-                                                <div style={{
-                                                    fontFamily: 'var(--font-heading)',
+                                                <div className="stone-engraved-altitude" style={{
                                                     fontSize: 'clamp(28px, 3.2vw, 36px)',
-                                                    fontWeight: '800',
-                                                    color: tier.accentColor,
-                                                    letterSpacing: '-0.03em',
-                                                    lineHeight: 1
+                                                    color: tier.accentColor
                                                 }}>
                                                     {tier.altitude}
                                                 </div>
-                                                <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
+                                                <div style={{ fontSize: '11px', color: '#B4C6BA', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
                                                     {tier.elevationMeters} · AMSL
                                                 </div>
                                             </div>
 
-                                            <div style={{
-                                                width: '42px',
-                                                height: '42px',
-                                                borderRadius: '0px',
-                                                clipPath: 'polygon(0% 6px, 6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px))',
-                                                background: tier.accentBg,
-                                                border: `1px solid ${tier.borderTint}`,
-                                                color: tier.accentColor,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '17px',
-                                                boxShadow: `0 4px 14px ${tier.glowColor}`
-                                            }}>
+                                            {/* Embossed Geological Brass Survey Coin */}
+                                            <div className="stone-brass-medallion" title={`Western Ghats Survey · ${tier.altitude}`}>
                                                 <i className={tier.icon}></i>
                                             </div>
+                                        </div>
+
+                                        {/* Geological Stone Rock Type Tag */}
+                                        <div style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '5px',
+                                            background: 'rgba(0, 0, 0, 0.65)',
+                                            border: `1px solid ${tier.borderTint}`,
+                                            padding: '2px 8px',
+                                            fontSize: '9.5px',
+                                            fontWeight: '800',
+                                            color: tier.accentColor,
+                                            letterSpacing: '0.6px',
+                                            textTransform: 'uppercase',
+                                            clipPath: 'polygon(0% 3px, 3px 0%, calc(100% - 3px) 0%, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0% calc(100% - 3px))',
+                                            marginBottom: '10px'
+                                        }}>
+                                            <span>🪨</span>
+                                            <span>{tier.stoneType}</span>
                                         </div>
 
                                         {/* Chiseled Angular Stone Photo Window */}
@@ -885,7 +893,7 @@ export default function AboutPage() {
                                                 alignItems: 'center'
                                             }}>
                                                 <span style={{
-                                                    background: 'rgba(0, 0, 0, 0.75)',
+                                                    background: 'rgba(0, 0, 0, 0.85)',
                                                     color: '#FFFFFF',
                                                     fontSize: '9.5px',
                                                     fontWeight: '700',
@@ -930,7 +938,7 @@ export default function AboutPage() {
                                                 {tier.name}
                                             </h3>
 
-                                            <p style={{ fontSize: '12.8px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 16px' }}>
+                                            <p style={{ fontSize: '12.8px', color: '#C8D6CD', lineHeight: 1.65, margin: '0 0 16px' }}>
                                                 {tier.desc}
                                             </p>
 
