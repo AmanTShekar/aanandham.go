@@ -1,85 +1,11 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 import CustomDateBatchPicker from './CustomDateBatchPicker';
+import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
-
-const PACKAGES_LIST = [
-    {
-        id: 'pkg-kolukkumalai',
-        title: 'Kolukkumalai Sunrise & Cloud Bed Ridge Glamp',
-        location: 'Suryanelli / Kolukkumalai · 7,900 FT',
-        price: 2499,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
-        badge: 'Bestseller'
-    },
-    {
-        id: 'pkg-meesapulimala',
-        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
-        location: 'Silent Valley, Munnar · 8,661 FT',
-        price: 3199,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-        badge: 'Summit Challenge'
-    },
-    {
-        id: 'pkg-suryanelli',
-        title: 'Suryanelli Valley Ridge Geodesic Glamping',
-        location: 'Suryanelli, Idukki · 6,500 FT',
-        price: 1999,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
-        badge: 'Geodesic Pods'
-    },
-    {
-        id: 'pkg-phantom',
-        title: 'Phantom Head Peak & Golden Hour Sunset Trek',
-        location: 'Munnar Ridge · 6,800 FT',
-        price: 1799,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-        badge: 'Golden Sunset'
-    },
-    {
-        id: 'pkg-chembra',
-        title: 'Wayanad Chembra Peak & Heart Lake Expedition',
-        location: 'Meppadi, Wayanad · 6,900 FT',
-        price: 3799,
-        duration: '3D / 2N',
-        image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=800&q=80',
-        badge: 'Heart Lake Trek'
-    },
-    {
-        id: 'pkg-wayanad',
-        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
-        location: 'Meppadi, Wayanad · 3,200 FT',
-        price: 2699,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
-        badge: 'Glass Bridge'
-    },
-    {
-        id: 'pkg-vagamon',
-        title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
-        location: 'Pine Forest, Vagamon · 4,800 FT',
-        price: 2199,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=800&q=80',
-        badge: 'Pine Forest'
-    },
-    {
-        id: 'pkg-athirappilly',
-        title: 'Athirappilly Jungle Rapids & Riverbank Glamping',
-        location: 'Chalakudy River, Athirappilly · 1,200 FT',
-        price: 2499,
-        duration: '2D / 1N',
-        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=800&q=80',
-        badge: 'River Rapids'
-    }
-];
 
 const ADDONS_LIST = [
     { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true, icon: '🔥' },
@@ -90,7 +16,9 @@ const ADDONS_LIST = [
 ];
 
 export default function BookingEngineModal({ isOpen, onClose, initialPackage }) {
+    const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
     const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
+    const [selectedRoomId, setSelectedRoomId] = useState('');
     const [travelDate, setTravelDate] = useState('');
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
@@ -98,31 +26,96 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     const [specialNotes, setSpecialNotes] = useState('');
-    const [step, setStep] = useState(1); // 1: Package & Details, 2: Addons & Review
+    const [step, setStep] = useState(1); // 1: Campsite, Room & Details, 2: Addons & Review
     const [validationError, setValidationError] = useState('');
+
+    // Load active camps list from localStorage / default data
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const loaded = getAllCamps();
+            if (loaded && loaded.length > 0) {
+                setCampsList(loaded);
+            }
+        }
+    }, [isOpen]);
 
     // Synchronize selected package and reset step whenever modal opens or initialPackage updates
     useEffect(() => {
         if (isOpen) {
             setStep(1);
             setValidationError('');
-            if (initialPackage) {
-                const targetId = initialPackage.id || '';
-                const targetTitle = (initialPackage.title || '').toLowerCase();
-                const matched = PACKAGES_LIST.find(p => 
-                    p.id === targetId || 
-                    p.id === `pkg-${targetId}` ||
-                    p.id.replace('pkg-', '') === targetId.replace('pkg-', '') ||
-                    p.title.toLowerCase() === targetTitle ||
-                    p.title.toLowerCase().includes(targetTitle.slice(0, 12)) ||
-                    targetTitle.includes(p.title.toLowerCase().slice(0, 12))
-                );
-                if (matched) {
-                    setSelectedPkgId(matched.id);
-                }
+            const targetId = initialPackage?.id || '';
+            const targetTitle = (initialPackage?.title || '').toLowerCase();
+            
+            const matched = campsList.find(p => 
+                p.id === targetId || 
+                p.id === `pkg-${targetId}` ||
+                p.id.replace('pkg-', '') === targetId.replace('pkg-', '') ||
+                p.title.toLowerCase() === targetTitle ||
+                p.title.toLowerCase().includes(targetTitle.slice(0, 12)) ||
+                targetTitle.includes(p.title.toLowerCase().slice(0, 12))
+            );
+
+            const activeId = matched ? matched.id : (campsList[0]?.id || 'pkg-kolukkumalai');
+            setSelectedPkgId(activeId);
+
+            // Default room selection
+            const campObj = matched || campsList[0];
+            if (campObj && campObj.rooms && campObj.rooms.length > 0) {
+                setSelectedRoomId(campObj.rooms[0].id);
+            } else {
+                setSelectedRoomId('default-room');
             }
         }
-    }, [isOpen, initialPackage]);
+    }, [isOpen, initialPackage, campsList]);
+
+    // When user changes campsite, ensure a valid room for that campsite is selected
+    const currentPkg = useMemo(() => {
+        return campsList.find(p => p.id === selectedPkgId) || campsList[0] || INITIAL_ALL_CAMPS[0];
+    }, [campsList, selectedPkgId]);
+
+    const availableRooms = useMemo(() => {
+        if (currentPkg?.rooms && currentPkg.rooms.length > 0) {
+            return currentPkg.rooms;
+        }
+        // Fallback default rooms if campsite doesn't have custom rooms configured
+        return [
+            {
+                id: 'default-dome',
+                name: 'Geodesic Panoramic Sky Dome',
+                capacity: '2 Adults',
+                price: currentPkg?.price || 2499,
+                totalUnits: 6,
+                isAvailable: true,
+                image: currentPkg?.image || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
+                features: ['360° Cloud Bed Vista', 'King Size Bed', 'En-suite Restroom', 'Thermal Blankets']
+            },
+            {
+                id: 'default-tent',
+                name: 'Weatherproof Alpine Ridge Tent',
+                capacity: '2-4 Campers',
+                price: Math.max(1299, Math.round((currentPkg?.price || 2499) * 0.75)),
+                totalUnits: 12,
+                isAvailable: true,
+                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
+                features: ['Waterproof Flysheet', 'Foam Bedding & Sleeping Bags', 'Modern Hot Washrooms']
+            }
+        ];
+    }, [currentPkg]);
+
+    // Ensure selectedRoomId is valid whenever availableRooms change
+    useEffect(() => {
+        if (availableRooms.length > 0) {
+            const exists = availableRooms.some(r => r.id === selectedRoomId);
+            if (!exists) {
+                setSelectedRoomId(availableRooms[0].id);
+            }
+        }
+    }, [availableRooms, selectedRoomId]);
+
+    const currentRoom = useMemo(() => {
+        return availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0];
+    }, [availableRooms, selectedRoomId]);
 
     // Handle ESC key to dismiss modal
     useEffect(() => {
@@ -150,11 +143,11 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
     if (!isOpen) return null;
 
-    const currentPkg = PACKAGES_LIST.find(p => p.id === selectedPkgId) || PACKAGES_LIST[0];
     const totalGuests = adults + children;
+    const roomPricePerPerson = currentRoom?.price || currentPkg?.price || 2499;
 
     // Price Calculations
-    const baseTotal = (currentPkg.price * adults) + (Math.round(currentPkg.price * 0.5) * children);
+    const baseTotal = (roomPricePerPerson * adults) + (Math.round(roomPricePerPerson * 0.5) * children);
     
     // Group discount
     const discountPercent = totalGuests >= 8 ? 15 : totalGuests >= 4 ? 10 : 0;
@@ -198,6 +191,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
         const summaryText = `🏕️ *NEW AANANDHAM.GO RESERVATION REQUEST*\n\n` +
             `📍 *Expedition:* ${currentPkg.title}\n` +
+            `🛏️ *Room Type:* ${currentRoom ? currentRoom.name : 'Standard Glamp'} (₹${roomPricePerPerson.toLocaleString('en-IN')}/camper)\n` +
             `📅 *Date:* ${travelDate || 'Flexible / Upcoming Weekend'}\n` +
             `👥 *Guests:* ${adults} Adults${children > 0 ? `, ${children} Children` : ''} (Total: ${totalGuests})\n` +
             `✨ *Add-ons:* ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None'}\n` +
@@ -213,11 +207,11 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
                 name: customerName.trim(),
                 phone: customerPhone.trim(),
-                package: targetPackage.title,
-                region: targetPackage.region || (targetPackage.location ? targetPackage.location.split(',')[0].trim() : 'Munnar'),
+                package: currentPkg.title,
+                region: currentPkg.region || (currentPkg.location ? currentPkg.location.split(',')[0].trim() : 'Munnar'),
                 dates: travelDate || 'Flexible / Upcoming Weekend',
                 guests: totalGuests,
-                roomType: selectedRoom ? selectedRoom.name : 'Standard Mountain Glamp',
+                roomType: currentRoom ? currentRoom.name : 'Standard Mountain Glamp',
                 addons: selectedAddonNames,
                 total: grandTotal,
                 status: 'Pending',
@@ -228,8 +222,8 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             const updatedBookings = [newBookingRecord, ...currentBookings];
             localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updatedBookings));
             window.dispatchEvent(new Event('storage'));
-        } catch (e) {
-            console.error('Error persisting booking:', e);
+        } catch (err) {
+            console.error('Error persisting booking:', err);
         }
 
         window.open(waLink(summaryText), '_blank');
@@ -257,6 +251,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 data-lenis-prevent-wheel="true"
                 data-lenis-prevent-touch="true"
                 onWheel={(e) => e.stopPropagation()}
+                style={{ maxWidth: '840px', width: '95%' }}
             >
                 {/* Header */}
                 <div className="booking-modal-header">
@@ -279,7 +274,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             </span>
                         </div>
                         <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
-                            {step === 1 ? '1. Select Campsite & Dates' : '2. Add-Ons & Explorer Details'}
+                            {step === 1 ? '1. Select Campsite, Room & Dates' : '2. Add-Ons & Explorer Details'}
                         </h2>
                     </div>
 
@@ -339,18 +334,28 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
                     {step === 1 ? (
                         <div>
-                            {/* Package Selector (Horizontal Cards) */}
+                            {/* Section 1: Campsite Selector (Horizontal Cards) */}
                             <div style={{ marginBottom: '22px' }}>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                    Select Signature Campsite (8 Destinations)
-                                </label>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                        1. Select Destination Campsite
+                                    </label>
+                                    <span style={{ fontSize: '11.5px', color: '#166534', fontWeight: '700' }}>
+                                        {campsList.length} Verified Kerala Sanctuaries
+                                    </span>
+                                </div>
                                 <div className="booking-pkgs-grid">
-                                    {PACKAGES_LIST.map((pkg) => {
+                                    {campsList.map((pkg) => {
                                         const isSelected = pkg.id === selectedPkgId;
                                         return (
                                             <div
                                                 key={pkg.id}
-                                                onClick={() => setSelectedPkgId(pkg.id)}
+                                                onClick={() => {
+                                                    setSelectedPkgId(pkg.id);
+                                                    if (pkg.rooms && pkg.rooms.length > 0) {
+                                                        setSelectedRoomId(pkg.rooms[0].id);
+                                                    }
+                                                }}
                                                 style={{
                                                     borderRadius: '16px',
                                                     border: isSelected ? '2px solid #121613' : '1px solid rgba(0, 0, 0, 0.08)',
@@ -382,17 +387,17 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                         padding: '2px 7px',
                                                         borderRadius: '999px'
                                                     }}>
-                                                        {pkg.badge}
+                                                        {pkg.badge || pkg.tag || 'Verified'}
                                                     </span>
                                                 </div>
                                                 <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '4px' }}>
-                                                    {pkg.title}
+                                                    {pkg.shortTitle || pkg.title}
                                                 </div>
                                                 <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
                                                     {pkg.location}
                                                 </div>
-                                                <div style={{ fontSize: '14px', fontWeight: '900', color: '#121613' }}>
-                                                    ₹{pkg.price.toLocaleString('en-IN')} <span style={{ fontSize: '11px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
+                                                <div style={{ fontSize: '13.5px', fontWeight: '900', color: '#121613' }}>
+                                                    Starts ₹{pkg.price.toLocaleString('en-IN')} <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
                                                 </div>
                                             </div>
                                         );
@@ -400,9 +405,99 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 </div>
                             </div>
 
-                            {/* Date & Guests Layout */}
+                            {/* Section 2: Room Types & Accommodation Selector (NEW USER REQUIREMENT) */}
+                            <div style={{ marginBottom: '24px', padding: '18px 20px', background: '#F8F9F5', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                    <div>
+                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                            2. Choose Accommodation / Room Type
+                                        </label>
+                                        <span style={{ fontSize: '12px', color: '#59655D' }}>
+                                            Available at {currentPkg.shortTitle || currentPkg.title}
+                                        </span>
+                                    </div>
+                                    <span style={{ background: '#121613', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        {availableRooms.length} Stay Options
+                                    </span>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '12px' }}>
+                                    {availableRooms.map((room) => {
+                                        const isRoomSelected = room.id === selectedRoomId;
+                                        return (
+                                            <div
+                                                key={room.id}
+                                                onClick={() => setSelectedRoomId(room.id)}
+                                                style={{
+                                                    borderRadius: '16px',
+                                                    border: isRoomSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
+                                                    background: isRoomSelected ? '#FFFFFF' : '#FFFFFF',
+                                                    padding: '14px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                                                    boxShadow: isRoomSelected ? '0 8px 24px rgba(22, 101, 52, 0.12)' : '0 2px 6px rgba(0,0,0,0.02)',
+                                                    position: 'relative'
+                                                }}
+                                            >
+                                                {/* Selected Pill Indicator */}
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <div style={{
+                                                            width: '18px',
+                                                            height: '18px',
+                                                            borderRadius: '50%',
+                                                            border: isRoomSelected ? '5px solid #166534' : '2px solid rgba(18, 22, 19, 0.25)',
+                                                            background: '#FFFFFF',
+                                                            boxSizing: 'border-box',
+                                                            flexShrink: 0
+                                                        }} />
+                                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                                            {room.name}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Image Thumbnail & Details */}
+                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '6px' }}>
+                                                    {room.image && (
+                                                        <img
+                                                            src={room.image}
+                                                            alt={room.name}
+                                                            style={{ width: '56px', height: '56px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
+                                                        />
+                                                    )}
+                                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                                        <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px' }}>
+                                                            👥 {room.capacity || '2-4 Guests'}
+                                                        </div>
+                                                        <div style={{ fontSize: '14.5px', fontWeight: '900', color: '#166534' }}>
+                                                            ₹{room.price?.toLocaleString('en-IN')} <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                {/* Feature highlights */}
+                                                {room.features && room.features.length > 0 && (
+                                                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                                        {room.features.slice(0, 2).map((ft, fIdx) => (
+                                                            <span key={fIdx} style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '600' }}>
+                                                                ✓ {ft}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Section 3: Date & Guests Layout */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginBottom: '24px' }}>
                                 <div>
+                                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                        3. Check-In Date or Batch
+                                    </label>
                                     <CustomDateBatchPicker
                                         label="Check-In Weekend Batch or Date"
                                         selectedDate={travelDate || 'Aug 22 – 23, 2026'}
@@ -415,8 +510,8 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                            Number of Campers
+                                        <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                            4. Number of Campers
                                         </label>
                                         <div style={{ display: 'flex', gap: '12px' }}>
                                             <div style={{ flex: 1, padding: '12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
@@ -465,6 +560,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
                                     {/* Price Preview Card */}
                                     <div style={{ marginTop: 'auto', padding: '16px', background: '#121613', borderRadius: '20px', color: '#FFFFFF' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px', color: '#A2B6A6' }}>
+                                            <span>{currentRoom?.name || 'Selected Room'}:</span>
+                                            <span>₹{roomPricePerPerson.toLocaleString('en-IN')}/pax</span>
+                                        </div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#A2B6A6' }}>
                                             <span>Base Rate ({totalGuests} Campers):</span>
                                             <span>₹{baseTotal.toLocaleString('en-IN')}</span>
@@ -596,17 +695,21 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 />
                             </div>
 
-                            {/* Summary Box */}
+                            {/* Summary Box with Room Type Details */}
                             <div style={{
-                                padding: '16px 20px',
+                                padding: '18px 20px',
                                 background: '#121613',
                                 borderRadius: '20px',
                                 color: '#FFFFFF',
                                 marginBottom: '22px'
                             }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px' }}>
-                                    <span style={{ color: '#A2B6A6' }}>{currentPkg.title} ({totalGuests} Campers):</span>
+                                    <span style={{ color: '#A2B6A6' }}>{currentPkg.title}:</span>
                                     <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12.5px', color: '#D5ED55' }}>
+                                    <span>🛏️ {currentRoom?.name || 'Selected Room'} ({totalGuests} Campers):</span>
+                                    <span>₹{roomPricePerPerson.toLocaleString('en-IN')}/pax</span>
                                 </div>
                                 {addonsTotal > 0 && (
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px', color: '#D5ED55' }}>
