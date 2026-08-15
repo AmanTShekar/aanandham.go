@@ -3667,37 +3667,10 @@ export default function HomePage() {
                             </p>
                             <Link
                                 href="/contact"
-                                className="hover-lift"
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    width: '100%',
-                                    background: '#121613',
-                                    color: '#FFFFFF',
-                                    padding: '10px 10px 10px 24px',
-                                    borderRadius: '999px',
-                                    textDecoration: 'none',
-                                    fontWeight: '800',
-                                    fontSize: '14.5px',
-                                    boxShadow: '0 8px 24px rgba(18, 22, 19, 0.16)',
-                                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                                    boxSizing: 'border-box'
-                                }}
+                                className="action-arrow-btn-dark"
                             >
-                                <span style={{ fontWeight: '800' }}>Contact Us</span>
-                                <div style={{
-                                    width: '38px',
-                                    height: '38px',
-                                    borderRadius: '50%',
-                                    background: '#D5ED55',
-                                    color: '#121613',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontSize: '15px',
-                                    fontWeight: '900'
-                                }}>
+                                <span>Contact Us</span>
+                                <div className="btn-arrow-circle">
                                     ↗
                                 </div>
                             </Link>

@@ -1758,6 +1758,7 @@ button:focus-visible, a:focus-visible {
   justify-content: center;
   font-size: 15px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -1765,6 +1766,46 @@ button:focus-visible, a:focus-visible {
     background: #121613;
     color: var(--accent-lime);
     transform: translate(3px, -3px) rotate(8deg);
+  }
+}
+
+/* High-Contrast Dark Rounded Arrow Action Pill */
+.action-arrow-btn-dark {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: #121613;
+  color: #FFFFFF;
+  padding: 8px 10px 8px 24px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  box-shadow: 0 8px 24px rgba(18, 22, 19, 0.16);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 52px;
+}
+
+.action-arrow-btn-dark .btn-arrow-circle {
+  width: 36px;
+  height: 36px;
+  background: #D5ED55;
+  color: #121613;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .action-arrow-btn-dark:hover {
+    box-shadow: 0 12px 32px rgba(18, 22, 19, 0.25);
+    transform: translateY(-2px);
+    background: #1c241e;
+  }
+  .action-arrow-btn-dark:hover .btn-arrow-circle {
+    transform: translate(2px, -2px) rotate(8deg);
   }
 }
 
