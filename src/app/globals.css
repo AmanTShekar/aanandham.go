@@ -1633,22 +1633,46 @@ button, a, input, select, textarea {
   -webkit-backface-visibility: hidden;
 }
 
-/* Explicit Device & Browser Dark Mode Prevention (Locks intended brand styling on iOS & Android without breaking dark hero sections) */
+/* Explicit Device, OS & Browser Theme Locking (Blocks all automatic color alterations, dark reader, forced dark mode, high-contrast inversions) */
 :root {
-  color-scheme: light;
-  supported-color-schemes: light;
+  color-scheme: only light !important;
+  supported-color-schemes: light !important;
 }
 
 html, body {
-  color-scheme: light;
-  forced-color-adjust: none;
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  color-scheme: only light !important;
+  forced-color-adjust: none !important;
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+*, *::before, *::after {
+  forced-color-adjust: none !important;
 }
 
 input, textarea, select, button {
-  color-scheme: light !important;
+  color-scheme: only light !important;
   forced-color-adjust: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root, html, body {
+    color-scheme: only light !important;
+    forced-color-adjust: none !important;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root, html, body {
+    color-scheme: only light !important;
+    forced-color-adjust: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  * {
+    forced-color-adjust: none !important;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
