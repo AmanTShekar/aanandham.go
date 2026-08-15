@@ -215,6 +215,7 @@ body::-webkit-scrollbar-thumb:active,
    RESPONSIVE NAVBAR SYSTEM & MORPHING HAMBURGER
 ───────────────────────────────────────────────────────────── */
 .site-header {
+  padding: 12px clamp(20px, 4vw, 44px) !important;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
 }
 

@@ -132,7 +132,7 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: isHeaderSolid ? '14px 24px' : '20px 24px',
+                    padding: isHeaderSolid ? '12px clamp(20px, 4vw, 44px)' : '18px clamp(20px, 4vw, 44px)',
                     backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
                     backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
@@ -166,8 +166,8 @@ export default function SiteHeader({
                     </div>
 
                     {/* Desktop Navigation Links */}
-                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: '28px' }}>
-                        <nav style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(16px, 2vw, 28px)' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 1.4vw, 22px)' }}>
                             <Link 
                                 href="/" 
                                 className={`text-hover-marker text-hover-marker-dark ${activePage === 'home' ? 'is-active-link' : ''}`}
