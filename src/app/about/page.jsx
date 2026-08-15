@@ -830,6 +830,9 @@ export default function AboutPage() {
                                     whileHover={{ y: -8 }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
+                                    {/* Realistic Chiseled Stone Cleavage & Fractures Shading */}
+                                    <div className="stone-cleavage-overlay" />
+
                                     {/* Altitude Header & Stone Icon Pill */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
                                         <div>
