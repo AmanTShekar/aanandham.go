@@ -908,27 +908,40 @@ export default function HomePage() {
 
         let ticking = false;
         const updateActiveStayCardOnScroll = () => {
-            const triggerPoint = window.innerHeight * 0.48; // Focal point line around center of viewport
-            let bestIdx = -1;
-            let minDistance = Infinity;
+            // On mobile, the focal trigger is around 58% of screen (below sticky image); on desktop ~50%
+            const focalY = window.innerWidth <= 900 ? window.innerHeight * 0.58 : window.innerHeight * 0.50;
+            let activeIndex = -1;
 
-            stayRoomRefs.current.forEach((el, idx) => {
-                if (!el) return;
+            // Direct check: which card is currently spanning across the focal line
+            for (let i = 0; i < stayRoomRefs.current.length; i++) {
+                const el = stayRoomRefs.current[i];
+                if (!el) continue;
                 const rect = el.getBoundingClientRect();
-                const cardCenter = rect.top + rect.height / 2;
-                const dist = Math.abs(cardCenter - triggerPoint);
-
-                // If card intersects the active vertical reading zone
-                if (rect.top <= triggerPoint + 120 && rect.bottom >= triggerPoint - 120) {
-                    if (dist < minDistance) {
-                        minDistance = dist;
-                        bestIdx = idx;
-                    }
+                if (rect.top <= focalY + 80 && rect.bottom >= focalY - 100) {
+                    activeIndex = i;
+                    break;
                 }
-            });
+            }
 
-            if (bestIdx !== -1) {
-                setActiveStayAcc(bestIdx);
+            // Fallback check: find closest visible card
+            if (activeIndex === -1 && stayRoomRefs.current.length > 0) {
+                let closestIdx = -1;
+                let minDistance = Infinity;
+                stayRoomRefs.current.forEach((el, idx) => {
+                    if (!el) return;
+                    const rect = el.getBoundingClientRect();
+                    const cardCenter = rect.top + rect.height / 2;
+                    const dist = Math.abs(cardCenter - focalY);
+                    if (dist < minDistance && rect.top < window.innerHeight && rect.bottom > 0) {
+                        minDistance = dist;
+                        closestIdx = idx;
+                    }
+                });
+                if (closestIdx !== -1) activeIndex = closestIdx;
+            }
+
+            if (activeIndex !== -1) {
+                setActiveStayAcc((prev) => (prev !== activeIndex ? activeIndex : prev));
             }
             ticking = false;
         };
@@ -941,11 +954,20 @@ export default function HomePage() {
         };
 
         window.addEventListener('scroll', handleScroll, { passive: true });
-        // Trigger initial check on load
-        setTimeout(updateActiveStayCardOnScroll, 300);
+        window.addEventListener('touchmove', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
+        
+        // Initial checks
+        updateActiveStayCardOnScroll();
+        const t1 = setTimeout(updateActiveStayCardOnScroll, 300);
+        const t2 = setTimeout(updateActiveStayCardOnScroll, 800);
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('touchmove', handleScroll);
+            window.removeEventListener('resize', handleScroll);
+            clearTimeout(t1);
+            clearTimeout(t2);
         };
     }, []);
 
@@ -1825,10 +1847,10 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                className="packages-section-container"
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
+                    <div className="packages-section-header">
                         <div>
                             <div className="star-badge">
                                 <span className="star-icon">★</span> PACKAGES PREVIEW
