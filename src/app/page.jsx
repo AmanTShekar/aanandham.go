@@ -3659,7 +3659,7 @@ export default function HomePage() {
                             }}>
                                 💬
                             </div>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '12px' }}>
+                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
                                 Still have questions?
                             </h3>
                             <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, marginBottom: '28px' }}>
@@ -3667,17 +3667,37 @@ export default function HomePage() {
                             </p>
                             <Link
                                 href="/contact"
-                                className="action-arrow-btn"
+                                className="hover-lift"
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     width: '100%',
+                                    background: '#121613',
+                                    color: '#FFFFFF',
+                                    padding: '10px 10px 10px 24px',
+                                    borderRadius: '999px',
+                                    textDecoration: 'none',
+                                    fontWeight: '800',
+                                    fontSize: '14.5px',
+                                    boxShadow: '0 8px 24px rgba(18, 22, 19, 0.16)',
+                                    transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                                     boxSizing: 'border-box'
                                 }}
                             >
-                                <span style={{ fontWeight: '800' }}>Contact Expedition Desk</span>
-                                <div className="btn-arrow-circle">
+                                <span style={{ fontWeight: '800' }}>Contact Us</span>
+                                <div style={{
+                                    width: '38px',
+                                    height: '38px',
+                                    borderRadius: '50%',
+                                    background: '#D5ED55',
+                                    color: '#121613',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '15px',
+                                    fontWeight: '900'
+                                }}>
                                     ↗
                                 </div>
                             </Link>
