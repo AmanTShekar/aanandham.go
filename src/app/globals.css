@@ -5,7 +5,6 @@ html, body {
   position: relative;
   margin: 0 !important;
   padding: 0 !important;
-  scrollbar-gutter: stable;
 }
 
 main, section, header, footer {
@@ -2877,8 +2876,8 @@ input, textarea, select, button {
   scroll-snap-type: x mandatory !important;
   scroll-behavior: smooth !important;
   -webkit-overflow-scrolling: touch !important;
-  gap: 20px !important;
-  padding: 8px 4px 16px 4px !important;
+  gap: 24px !important;
+  padding: 12px 4px 20px 4px !important;
   scrollbar-width: none !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -2889,17 +2888,17 @@ input, textarea, select, button {
 }
 
 .events-horizontal-card {
-  flex: 0 0 310px !important;
-  max-width: 320px !important;
-  min-width: 280px !important;
+  flex: 0 0 calc(33.333% - 16px) !important;
+  max-width: 380px !important;
+  min-width: 300px !important;
   scroll-snap-align: start !important;
   box-sizing: border-box !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .events-horizontal-card {
     flex: 0 0 84vw !important;
-    max-width: 320px !important;
+    max-width: 340px !important;
     min-width: 270px !important;
   }
   .events-horizontal-track::after {
