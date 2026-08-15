@@ -214,6 +214,9 @@ export default function AdminPortal() {
         showToast('✓ Notification coordinates saved');
     };
 
+    const [auditLogs, setAuditLogs] = useState([]);
+    const [isLoadingAudit, setIsLoadingAudit] = useState(false);
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -235,9 +238,97 @@ export default function AdminPortal() {
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        try {
+            const savedAuth = localStorage.getItem('aanandham_admin_auth');
+            await fetch('/api/admin/auth', {
+                method: 'DELETE',
+                headers: savedAuth ? { 'Authorization': `Bearer ${savedAuth}` } : {}
+            });
+        } catch {}
         setIsAuthenticated(false);
         localStorage.removeItem('aanandham_admin_auth');
+        showToast('✓ Logged out securely');
+    };
+
+    // Load Audit Logs from Secure Server
+    const fetchAuditLogs = async () => {
+        setIsLoadingAudit(true);
+        try {
+            const savedAuth = localStorage.getItem('aanandham_admin_auth');
+            const res = await fetch('/api/admin/auth?audit=true', {
+                method: 'GET',
+                headers: savedAuth ? { 'Authorization': `Bearer ${savedAuth}` } : {}
+            });
+            const data = await res.json();
+            if (data.auditLogs) {
+                setAuditLogs(data.auditLogs);
+            }
+        } catch {}
+        setIsLoadingAudit(false);
+    };
+
+    // Export Complete JSON Backup
+    const handleExportBackup = () => {
+        const backupData = {
+            exportVersion: '2.0',
+            exportedAt: new Date().toISOString(),
+            properties,
+            events,
+            bookings,
+            settings: {
+                adminPhone,
+                adminTelegram
+            }
+        };
+
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const dateStr = new Date().toISOString().split('T')[0];
+        a.href = url;
+        a.download = `aanandham-full-backup-${dateStr}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('✓ Full JSON system backup exported');
+    };
+
+    // Restore Complete JSON Backup
+    const handleImportBackup = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (uploadEvent) => {
+            try {
+                const parsed = JSON.parse(uploadEvent.target.result);
+                if (parsed.properties && Array.isArray(parsed.properties)) {
+                    saveProperties(parsed.properties);
+                }
+                if (parsed.events && Array.isArray(parsed.events)) {
+                    saveEvents(parsed.events);
+                }
+                if (parsed.bookings && Array.isArray(parsed.bookings)) {
+                    saveBookings(parsed.bookings);
+                }
+                if (parsed.settings) {
+                    if (parsed.settings.adminPhone) {
+                        setAdminPhone(parsed.settings.adminPhone);
+                        localStorage.setItem('aanandham_admin_phone', parsed.settings.adminPhone);
+                    }
+                    if (parsed.settings.adminTelegram) {
+                        setAdminTelegram(parsed.settings.adminTelegram);
+                        localStorage.setItem('aanandham_admin_telegram', parsed.settings.adminTelegram);
+                    }
+                }
+                showToast('✓ System backup restored successfully');
+            } catch {
+                alert('Invalid JSON backup file format.');
+            }
+        };
+        reader.readAsText(file);
     };
 
     // Save Helpers
@@ -904,6 +995,7 @@ export default function AdminPortal() {
                             <Link
                                 href={`/camps/${currentDetailProperty.id}`}
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 style={{
                                     padding: '8px 16px',
                                     borderRadius: '999px',
@@ -1586,6 +1678,7 @@ export default function AdminPortal() {
                     <Link
                         href="/"
                         target="_blank"
+                        rel="noopener noreferrer"
                         style={{
                             flex: 1,
                             padding: '8px',
@@ -2148,6 +2241,7 @@ export default function AdminPortal() {
                                             <Link
                                                 href={`/camps/${prop.id}`}
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                                 style={{ padding: '10px 12px', borderRadius: '10px', background: 'rgba(18,22,19,0.06)', color: '#121613', fontSize: '12px', fontWeight: '700', textDecoration: 'none', display: 'flex', alignItems: 'center' }}
                                             >
                                                 👁️ Public Page
@@ -2330,6 +2424,109 @@ export default function AdminPortal() {
                                 )}
                             </div>
                         </form>
+
+                        {/* SECTION: SYSTEM DATA BACKUP & RESTORE */}
+                        <div style={{ marginTop: '36px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
+                                        📦 SYSTEM BACKUP & DISASTER RECOVERY
+                                    </label>
+                                    <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '4px' }}>
+                                        Export an encrypted JSON snapshot of all campsite inventory, scheduled batches, and bookings.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                                <button
+                                    type="button"
+                                    onClick={handleExportBackup}
+                                    style={{
+                                        padding: '11px 20px',
+                                        borderRadius: '12px',
+                                        background: '#121613',
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
+                                        fontWeight: '700',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}
+                                >
+                                    <span>💾 Export JSON Backup</span>
+                                </button>
+
+                                <label
+                                    style={{
+                                        padding: '11px 20px',
+                                        borderRadius: '12px',
+                                        background: 'rgba(18, 22, 19, 0.06)',
+                                        color: '#121613',
+                                        fontSize: '13px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}
+                                >
+                                    <span>📥 Restore JSON Backup</span>
+                                    <input type="file" accept=".json" onChange={handleImportBackup} style={{ display: 'none' }} />
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* SECTION: ACCESS AUDIT LOGS */}
+                        <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
+                                        🛡️ COORDINATOR ACCESS AUDIT TRAIL
+                                    </label>
+                                    <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '4px' }}>
+                                        Live chronological audit trail of login and authentication events.
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={fetchAuditLogs}
+                                    style={{
+                                        padding: '6px 14px',
+                                        borderRadius: '8px',
+                                        background: '#F1F3EC',
+                                        border: '1px solid rgba(18,22,19,0.08)',
+                                        color: '#121613',
+                                        fontSize: '12px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    {isLoadingAudit ? 'Refreshing...' : '🔄 Fetch Logs'}
+                                </button>
+                            </div>
+
+                            {auditLogs.length > 0 ? (
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '220px', overflowY: 'auto' }}>
+                                    {auditLogs.map((log, lIdx) => (
+                                        <div key={lIdx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8F9F5', padding: '8px 12px', borderRadius: '8px', fontSize: '12px' }}>
+                                            <span style={{ fontWeight: '700', color: log.success ? '#166534' : '#DC2626' }}>
+                                                {log.action}
+                                            </span>
+                                            <span style={{ color: '#7D8880' }}>
+                                                IP: {log.ip} · {new Date(log.timestamp).toLocaleTimeString()}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div style={{ fontSize: '12.5px', color: '#7D8880', fontStyle: 'italic' }}>
+                                    Click "Fetch Logs" to view the recent server-side authentication audit trail.
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 

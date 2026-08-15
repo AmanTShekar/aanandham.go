@@ -180,13 +180,15 @@ export default function ContactPage() {
         inquiryType: 'booking',
         guests: '2',
         travelDates: '',
-        message: ''
+        message: '',
+        honeypot: ''
     });
 
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [waUrl, setWaUrl] = useState('');
     const [activeFaq, setActiveFaq] = useState(0);
+    const [lastSubmitTime, setLastSubmitTime] = useState(0);
     const { user: currentUser, logout: handleLogout } = useAuth();
 
     const ctaRef = useRef(null);
@@ -198,6 +200,20 @@ export default function ContactPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // 🛡️ BOT & HONEYPOT TRAP (B5)
+        if (formData.honeypot && formData.honeypot.trim().length > 0) {
+            // Silently drop bot submission
+            setSubmitted(true);
+            return;
+        }
+
+        // Rapid submission cooldown
+        const now = Date.now();
+        if (now - lastSubmitTime < 4000) {
+            return;
+        }
+        setLastSubmitTime(now);
         setLoading(true);
 
         const waText = `*New Expedition Inquiry via Aanandham.go*\n` +
@@ -730,7 +746,19 @@ export default function ContactPage() {
                                 ) : (
                                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                         
-                                        {/* Expedition Type Selection */}
+                                        {/* Honeypot Bot Trap (Invisible to humans) */}
+                                        <div style={{ display: 'none', position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                                            <label htmlFor="company_website_check">Leave this empty</label>
+                                            <input
+                                                id="company_website_check"
+                                                type="text"
+                                                name="company_website_check"
+                                                tabIndex="-1"
+                                                autoComplete="off"
+                                                value={formData.honeypot}
+                                                onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
+                                            />
+                                        </div>
                                         <div>
                                             <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>
                                                 Expedition Type

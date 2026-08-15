@@ -35,8 +35,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
     const [specialNotes, setSpecialNotes] = useState('');
+    const [honeypot, setHoneypot] = useState('');
     const [step, setStep] = useState(1); // 1: Campsite, Room & Details, 2: Addons & Review
     const [validationError, setValidationError] = useState('');
+    const [lastSubmitTime, setLastSubmitTime] = useState(0);
 
     // Load active camps list from localStorage / default data
     useEffect(() => {
@@ -197,6 +199,19 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
 
     const handleConfirmBookingWhatsApp = (e) => {
         e?.preventDefault();
+
+        // 🛡️ BOT & HONEYPOT TRAP (B5)
+        if (honeypot && honeypot.trim().length > 0) {
+            onClose();
+            return;
+        }
+
+        const now = Date.now();
+        if (now - lastSubmitTime < 3000) {
+            return;
+        }
+        setLastSubmitTime(now);
+
         if (!customerName.trim()) {
             setValidationError('Please enter your full name to generate permit request.');
             return;
@@ -790,6 +805,17 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     Lead Explorer Contact Information
                                 </label>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '14px', marginBottom: '12px' }}>
+                                    <div style={{ display: 'none', position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                                        <label htmlFor="company_client_trap">Leave this blank</label>
+                                        <input
+                                            id="company_client_trap"
+                                            type="text"
+                                            tabIndex="-1"
+                                            autoComplete="off"
+                                            value={honeypot}
+                                            onChange={(e) => setHoneypot(e.target.value)}
+                                        />
+                                    </div>
                                     <div>
                                         <input
                                             type="text"
