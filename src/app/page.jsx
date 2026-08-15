@@ -2960,7 +2960,7 @@ export default function HomePage() {
             </section>
 
             {/* ─────────────────────────────────────────────────────────────
-                8. CUSTOM ARRANGEMENTS & EVENTS
+                8. CUSTOM ARRANGEMENTS & EVENTS (Interactive Cork Notice Board)
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
                 id="arrangements" 
@@ -2968,206 +2968,251 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '100px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '80px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ textAlign: 'center', maxWidth: '760px', margin: '0 auto 56px' }}>
-                        <div className="star-badge">
-                            <span className="star-icon">★</span> ARRANGEMENTS & EVENTS
+                <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
+                    
+                    {/* Header Row with Title & Slider Controls */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
+                        <div>
+                            <div className="star-badge" style={{ marginBottom: '10px' }}>
+                                <span className="star-icon">📌</span> CAMP NOTICE BOARD
+                            </div>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(26px, 3.8vw, 42px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
+                                Custom Wilderness Arrangements & Events
+                            </h2>
                         </div>
-                        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', marginBottom: '16px' }}>
-                            Tailored Wilderness Arrangements For Every Tribe
-                        </h2>
+
+                        {/* Navigation Arrows for Horizontal Canvas */}
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                                onClick={() => {
+                                    const el = document.getElementById('noticeboard-track');
+                                    el?.scrollBy({ left: -360, behavior: 'smooth' });
+                                }}
+                                aria-label="Previous Notice"
+                                style={{
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '15px',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                ←
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const el = document.getElementById('noticeboard-track');
+                                    el?.scrollBy({ left: 360, behavior: 'smooth' });
+                                }}
+                                aria-label="Next Notice"
+                                style={{
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '50%',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '15px',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.2s ease'
+                                }}
+                            >
+                                →
+                            </button>
+                        </div>
                     </div>
 
-                    <motion.div 
-                        variants={staggerContainer}
-                        className="scotch-scraps-grid"
-                        style={{ marginBottom: '48px', paddingTop: '20px' }}
-                    >
-                        {EVENT_ARRANGEMENTS.map((ev, idx) => (
-                            <motion.div 
-                                key={idx} 
-                                variants={cardReveal}
-                                className="roughed-paper-scrap"
-                                whileHover={{
-                                    y: -14,
-                                    rotate: 0,
-                                    scale: 1.025,
-                                    boxShadow: '0 28px 65px -8px rgba(0, 0, 0, 0.16), 0 10px 24px rgba(0, 0, 0, 0.08)'
-                                }}
-                                whileTap={{ scale: 0.98 }}
-                                transition={{ type: 'spring', stiffness: 400, damping: 22 }}
-                                style={{
-                                    background: ev.paperBg,
-                                    borderColor: ev.borderTint,
-                                    transform: `rotate(${ev.rotation})`
-                                }}
-                                onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
-                            >
-                                {/* Realistic Crumpled Paper Crease & Fold Overlay */}
-                                <div className="crumpled-crease-overlay" />
+                    {/* Corkboard Canvas Container */}
+                    <div className="noticeboard-canvas-container">
+                        {/* Notice Board Metal Hanging Tabs */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0 40px 14px 40px', opacity: 0.6 }}>
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#78350F', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.6)' }} />
+                            <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#78350F', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.6)' }} />
+                        </div>
 
-                                {/* Top Translucent Frosted Scotch Tape Strip */}
-                                <div 
-                                    className="scotch-tape-strip" 
-                                    style={{ transform: `translateX(-50%) rotate(${ev.tapeAngle})` }} 
-                                />
+                        {/* Horizontal Scroll Track */}
+                        <div id="noticeboard-track" className="noticeboard-scroll-track">
+                            {EVENT_ARRANGEMENTS.map((ev, idx) => (
+                                <motion.div 
+                                    key={idx} 
+                                    className="noticeboard-item-scrap roughed-paper-scrap"
+                                    whileHover={{
+                                        y: -10,
+                                        rotate: 0,
+                                        scale: 1.02,
+                                        boxShadow: '0 24px 50px rgba(0, 0, 0, 0.18)'
+                                    }}
+                                    whileTap={{ scale: 0.98 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 24 }}
+                                    style={{
+                                        background: ev.paperBg,
+                                        borderColor: ev.borderTint,
+                                        transform: `rotate(${ev.rotation})`,
+                                        cursor: 'pointer',
+                                        padding: '24px 22px'
+                                    }}
+                                    onClick={() => openBookingModal(null, { title: ev.title, date: 'Custom Dates' })}
+                                >
+                                    {/* Metallic Notice Push Pin */}
+                                    <div 
+                                        style={{ 
+                                            position: 'absolute', 
+                                            top: '-9px', 
+                                            left: '50%', 
+                                            transform: 'translateX(-50%)', 
+                                            zIndex: 10, 
+                                            width: '18px', 
+                                            height: '18px', 
+                                            borderRadius: '50%', 
+                                            background: 'radial-gradient(circle at 35% 35%, #F5BD55 0%, #D97706 60%, #78350F 100%)', 
+                                            boxShadow: '0 3px 6px rgba(0,0,0,0.4)',
+                                            border: '1.5px solid #FEF3C7'
+                                        }} 
+                                    />
 
-                                {/* Bottom Corner Scotch Tape Accent */}
-                                <div className="corner-tape-scrap" />
+                                    {/* Realistic Crumpled Paper Crease & Fold Overlay */}
+                                    <div className="crumpled-crease-overlay" />
 
-                                {/* Top Row: Mini Logo + Tag Code + Vintage Rubber Ink Stamp */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', position: 'relative', zIndex: 2 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <img
-                                            src="/logo.png"
-                                            alt="Aanandham Logo"
-                                            style={{
-                                                height: '20px',
-                                                width: '20px',
-                                                objectFit: 'contain',
-                                                borderRadius: '50%',
-                                                border: '1px solid rgba(0,0,0,0.12)'
-                                            }}
-                                        />
-                                        <span style={{
-                                            fontSize: '9.5px',
-                                            fontWeight: '900',
-                                            letterSpacing: '1px',
-                                            textTransform: 'uppercase',
-                                            color: '#657268',
-                                            background: 'rgba(0,0,0,0.06)',
-                                            padding: '2px 6px',
-                                            borderRadius: '4px',
-                                            fontFamily: 'monospace'
-                                        }}>
-                                            {ev.tagCode}
-                                        </span>
-                                    </div>
+                                    {/* Top Translucent Frosted Scotch Tape Strip */}
+                                    <div 
+                                        className="scotch-tape-strip" 
+                                        style={{ transform: `translateX(-50%) rotate(${ev.tapeAngle})` }} 
+                                    />
 
-                                    {/* Vintage Rubber Ink Stamp */}
-                                    <motion.div
-                                        whileHover={{ rotate: 0, scale: 1.08 }}
-                                        transition={{ type: 'spring', stiffness: 450, damping: 18 }}
-                                        style={{
-                                            border: `1.5px solid ${ev.stampColor}`,
-                                            outline: `1px dashed ${ev.stampColor}`,
-                                            outlineOffset: '2px',
-                                            color: ev.stampColor,
-                                            padding: '3px 7px',
-                                            borderRadius: '4px',
-                                            fontSize: '8.5px',
-                                            fontWeight: '900',
-                                            letterSpacing: '0.8px',
-                                            textTransform: 'uppercase',
-                                            transform: 'rotate(-3deg)',
-                                            background: 'rgba(255,255,255,0.85)',
-                                            userSelect: 'none'
-                                        }}
-                                    >
-                                        {ev.stamp}
-                                    </motion.div>
-                                </div>
-
-                                {/* Icon & Title */}
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px', position: 'relative', zIndex: 2 }}>
-                                    <div style={{
-                                        width: '46px',
-                                        height: '46px',
-                                        borderRadius: '14px',
-                                        background: 'rgba(18, 22, 19, 0.07)',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        color: '#121613',
-                                        fontSize: '19px',
-                                        flexShrink: 0
-                                    }}>
-                                        <i className={ev.iconClass}></i>
-                                    </div>
-                                    <div>
-                                        <span style={{ fontSize: '11px', fontWeight: '800', color: ev.accentColor, letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '2px' }}>
-                                            {ev.badge}
-                                        </span>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.2 }}>
-                                            {ev.title}
-                                        </h3>
-                                    </div>
-                                </div>
-
-                                {/* Description */}
-                                <p style={{ fontSize: '14px', color: '#4E5A52', lineHeight: 1.65, margin: '0 0 16px', position: 'relative', zIndex: 2 }}>
-                                    {ev.desc}
-                                </p>
-
-                                {/* Features Checklist */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '18px', position: 'relative', zIndex: 2 }}>
-                                    {ev.features.map((feat, fIdx) => (
-                                        <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#2B372E', fontWeight: '600' }}>
-                                            <span style={{ color: '#166534', fontWeight: '800', fontSize: '13px' }}>✓</span>
-                                            <span>{feat}</span>
+                                    {/* Top Row: Mini Logo + Tag Code + Vintage Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', position: 'relative', zIndex: 2 }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <span style={{
+                                                fontSize: '9.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '1px',
+                                                textTransform: 'uppercase',
+                                                color: '#657268',
+                                                background: 'rgba(0,0,0,0.06)',
+                                                padding: '2px 6px',
+                                                borderRadius: '4px',
+                                                fontFamily: 'monospace'
+                                            }}>
+                                                {ev.tagCode}
+                                            </span>
                                         </div>
-                                    ))}
-                                </div>
 
-                                {/* Bottom Capacity Bar & Action */}
-                                <div style={{
-                                    marginTop: 'auto',
-                                    paddingTop: '14px',
-                                    borderTop: '1px dashed rgba(18, 22, 19, 0.18)',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '10px',
-                                    position: 'relative',
-                                    zIndex: 2
-                                }}>
+                                        {/* Vintage Rubber Ink Stamp */}
+                                        <div
+                                            style={{
+                                                border: `1.5px solid ${ev.stampColor}`,
+                                                outline: `1px dashed ${ev.stampColor}`,
+                                                outlineOffset: '2px',
+                                                color: ev.stampColor,
+                                                padding: '2px 6px',
+                                                borderRadius: '4px',
+                                                fontSize: '8px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.8px',
+                                                textTransform: 'uppercase',
+                                                transform: 'rotate(-2deg)',
+                                                background: 'rgba(255,255,255,0.9)',
+                                                userSelect: 'none'
+                                            }}
+                                        >
+                                            {ev.stamp}
+                                        </div>
+                                    </div>
+
+                                    {/* Icon & Title */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px', position: 'relative', zIndex: 2 }}>
+                                        <div style={{
+                                            width: '38px',
+                                            height: '38px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(18, 22, 19, 0.08)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#121613',
+                                            fontSize: '16px',
+                                            flexShrink: 0
+                                        }}>
+                                            <i className={ev.iconClass}></i>
+                                        </div>
+                                        <div>
+                                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: ev.accentColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
+                                                {ev.badge}
+                                            </span>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', margin: 0, lineHeight: 1.2 }}>
+                                                {ev.title}
+                                            </h3>
+                                        </div>
+                                    </div>
+
+                                    {/* Description */}
+                                    <p style={{ fontSize: '13px', color: '#4E5A52', lineHeight: 1.55, margin: '0 0 12px', position: 'relative', zIndex: 2 }}>
+                                        {ev.desc}
+                                    </p>
+
+                                    {/* Features Checklist */}
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px', position: 'relative', zIndex: 2 }}>
+                                        {ev.features.slice(0, 3).map((feat, fIdx) => (
+                                            <div key={fIdx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#2B372E', fontWeight: '600' }}>
+                                                <span style={{ color: '#166534', fontWeight: '800', fontSize: '12px' }}>✓</span>
+                                                <span>{feat}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Bottom Capacity Bar & Inquire Action */}
                                     <div style={{
+                                        marginTop: 'auto',
+                                        paddingTop: '10px',
+                                        borderTop: '1px dashed rgba(18, 22, 19, 0.16)',
                                         display: 'flex',
                                         justifyContent: 'space-between',
-                                        alignItems: 'center'
+                                        alignItems: 'center',
+                                        position: 'relative',
+                                        zIndex: 2
                                     }}>
                                         <span style={{
-                                            fontSize: '11.5px',
+                                            fontSize: '11px',
                                             fontWeight: '800',
                                             color: ev.accentColor,
                                             background: 'rgba(0,0,0,0.04)',
-                                            padding: '4px 10px',
+                                            padding: '3px 8px',
                                             borderRadius: '6px'
                                         }}>
                                             {ev.statPill}
                                         </span>
                                         <span style={{
-                                            fontSize: '12px',
+                                            fontSize: '11.5px',
                                             fontWeight: '800',
                                             color: '#121613',
                                             background: ev.btnBg,
-                                            padding: '5px 14px',
+                                            padding: '4px 12px',
                                             borderRadius: '6px',
-                                            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)'
+                                            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)'
                                         }}>
                                             Inquire ↗
                                         </span>
                                     </div>
-
-                                    {/* Bottom Marginal Handwritten Note */}
-                                    <div style={{
-                                        fontStyle: 'italic',
-                                        fontSize: '12px',
-                                        lineHeight: '1.45',
-                                        color: '#556358',
-                                        display: 'flex',
-                                        alignItems: 'flex-start',
-                                        gap: '6px',
-                                        paddingTop: '2px'
-                                    }}>
-                                        <span style={{ fontSize: '13px' }}>✍</span>
-                                        <span>{ev.marginalNote}</span>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </motion.section>
 
