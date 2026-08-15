@@ -477,13 +477,39 @@ body::-webkit-scrollbar-thumb:active,
     width: 100%;
   }
   .overview-3col-grid > * {
-    width: 100% !important;
-    max-width: 100% !important;
+/* ─────────────────────────────────────────────────────────────
+   PACKAGES CARDS GRID & MOBILE SLIDER
+───────────────────────────────────────────────────────────── */
+.packages-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 32px;
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .packages-cards-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding: 12px 6px 20px;
+    scrollbar-width: none;
+    margin: 0 -16px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
-  .overview-3col-grid > :nth-child(3) {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 20px !important;
+  .packages-cards-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .packages-cards-grid > * {
+    flex: 0 0 86vw;
+    max-width: 340px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
   }
 }
 .skill-levels-grid {

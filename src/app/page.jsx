@@ -888,6 +888,19 @@ export default function HomePage() {
         }
     };
 
+    // Mobile Horizontal Slider Scroll Tracker for Packages Preview
+    const packagesSliderRef = useRef(null);
+    const [activePackageSlideIdx, setActivePackageSlideIdx] = useState(0);
+    const handlePackageSliderScroll = () => {
+        if (!packagesSliderRef.current) return;
+        const scrollLeft = packagesSliderRef.current.scrollLeft;
+        const width = packagesSliderRef.current.offsetWidth;
+        const newIdx = Math.round(scrollLeft / (width * 0.86));
+        if (newIdx >= 0 && newIdx < filteredPackages.length && newIdx !== activePackageSlideIdx) {
+            setActivePackageSlideIdx(newIdx);
+        }
+    };
+
     // Read logged-in user profile from localStorage
     useEffect(() => {
         try {
@@ -1827,7 +1840,11 @@ export default function HomePage() {
                         </LayoutGroup>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px', position: 'relative' }}>
+                    <div 
+                        ref={packagesSliderRef}
+                        onScroll={handlePackageSliderScroll}
+                        className="packages-cards-grid"
+                    >
                         <AnimatePresence mode="popLayout">
                             {filteredPackages.map((pkg, idx) => (
                                 <motion.div 
@@ -1935,6 +1952,42 @@ export default function HomePage() {
                             ))}
                         </AnimatePresence>
                     </div>
+
+                    {/* Mobile Swipe Pagination Dots */}
+                    {filteredPackages.length > 1 && (
+                        <div className="mobile-slider-dots" style={{ marginTop: '8px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                                {filteredPackages.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => {
+                                            if (packagesSliderRef.current) {
+                                                const cardEl = packagesSliderRef.current.children[idx];
+                                                if (cardEl) {
+                                                    cardEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                                                }
+                                            }
+                                            setActivePackageSlideIdx(idx);
+                                        }}
+                                        aria-label={`Go to package ${idx + 1}`}
+                                        style={{
+                                            width: activePackageSlideIdx === idx ? '22px' : '7px',
+                                            height: '7px',
+                                            borderRadius: '999px',
+                                            backgroundColor: activePackageSlideIdx === idx ? '#121613' : 'rgba(18, 22, 19, 0.2)',
+                                            border: 'none',
+                                            padding: 0,
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                            <span style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', textAlign: 'center', marginTop: '6px' }}>
+                                {activePackageSlideIdx + 1} of {filteredPackages.length} packages (Swipe left/right)
+                            </span>
+                        </div>
+                    )}
                 </div>
             </motion.section>
 
