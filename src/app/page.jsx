@@ -2925,7 +2925,7 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '70px 0', background: '#F8F9F5', width: '100%', overflow: 'hidden' }}
+                style={{ position: 'relative', padding: '70px 0', background: '#F8F9F5', width: '100%' }}
             >
                 {/* Header Row with Centered Max-Width */}
                 <div style={{ maxWidth: '1240px', margin: '0 auto 24px', padding: '0 clamp(16px, 3.5vw, 40px)', width: '100%', boxSizing: 'border-box' }}>
@@ -3000,8 +3000,8 @@ export default function HomePage() {
                     id="events-slider-track" 
                     className="events-horizontal-track" 
                     style={{ 
-                        paddingLeft: 'max(clamp(16px, 3.5vw, 40px), calc((100vw - 1240px) / 2 + clamp(16px, 3.5vw, 40px)))', 
-                        paddingRight: 'max(clamp(16px, 3.5vw, 40px), calc((100vw - 1240px) / 2 + clamp(16px, 3.5vw, 40px)))',
+                        paddingLeft: 'max(16px, calc((100vw - 1240px) / 2 + clamp(16px, 3.5vw, 40px)))', 
+                        paddingRight: '16px',
                         paddingTop: '16px', 
                         paddingBottom: '20px',
                         width: '100%',
@@ -3515,8 +3515,11 @@ export default function HomePage() {
                         {/* Real Notebook Paper Review Sheets (Sharp Non-Rounded Edges, Ruled Lines, Red Margin) */}
                         {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
                             <motion.div 
-                                key={`${t.id}-${testimonialIdx}-${idx}`} 
-                                variants={cardReveal}
+                                key={`testimonial-card-${t.id}-${testimonialIdx}-${idx}`} 
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -16 }}
+                                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                                 className="notebook-review-card"
                                 style={{
                                     transform: idx === 0 ? 'rotate(-0.8deg)' : 'rotate(0.8deg)'
@@ -3629,15 +3632,32 @@ export default function HomePage() {
                         {/* Sticky Pinned Left Floating Card */}
                         <div 
                             className="hover-lift sticky-pinned-col" 
-                            style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '36px', boxShadow: '0 8px 30px rgba(0, 0, 0, 0.03)' }}
+                            style={{ 
+                                background: '#FFFFFF', 
+                                border: '1px solid rgba(18, 22, 19, 0.08)', 
+                                borderRadius: '24px', 
+                                padding: '36px 32px', 
+                                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.03)' 
+                            }}
                         >
-                            <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', marginBottom: '20px' }}>
-                                👋
+                            <div style={{ 
+                                width: '48px', 
+                                height: '48px', 
+                                borderRadius: '14px', 
+                                background: 'rgba(213, 237, 85, 0.25)', 
+                                border: '1px solid rgba(18, 22, 19, 0.06)',
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                fontSize: '22px', 
+                                marginBottom: '20px' 
+                            }}>
+                                💬
                             </div>
                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '12px' }}>
                                 Still have questions?
                             </h3>
-                            <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, marginBottom: '32px' }}>
+                            <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, marginBottom: '28px' }}>
                                 Whether it’s about the program, accommodation, or anything in between – we’re happy to help.
                             </p>
                             <Link
@@ -3646,16 +3666,12 @@ export default function HomePage() {
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
+                                    alignItems: 'center',
                                     width: '100%',
-                                    background: '#FFFFFF',
-                                    border: '1px solid rgba(18, 22, 19, 0.12)',
-                                    padding: '14px 20px',
-                                    borderRadius: '16px',
-                                    boxSizing: 'border-box',
-                                    textDecoration: 'none'
+                                    boxSizing: 'border-box'
                                 }}
                             >
-                                <span>Contact Us</span>
+                                <span style={{ fontWeight: '800' }}>Contact Expedition Desk</span>
                                 <div className="btn-arrow-circle">
                                     ↗
                                 </div>
