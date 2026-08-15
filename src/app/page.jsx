@@ -901,71 +901,64 @@ export default function HomePage() {
         }
     };
 
-    // High-precision scroll-driven focal point auto-activation for Stay & Glamp room cards
-    const stayRoomRefs = useRef([]);
+    // High-precision scroll-driven auto-activation for Stay & Glamp room cards
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
         let ticking = false;
-        const updateActiveStayCardOnScroll = () => {
-            // On mobile, the focal trigger is around 58% of screen (below sticky image); on desktop ~50%
-            const focalY = window.innerWidth <= 900 ? window.innerHeight * 0.58 : window.innerHeight * 0.50;
-            let activeIndex = -1;
+        const checkStayCardsInView = () => {
+            const cardElements = document.querySelectorAll('[data-stay-card-idx]');
+            if (!cardElements || cardElements.length === 0) return;
 
-            // Direct check: which card is currently spanning across the focal line
-            for (let i = 0; i < stayRoomRefs.current.length; i++) {
-                const el = stayRoomRefs.current[i];
-                if (!el) continue;
+            // Focal trigger point: around middle of viewport
+            const focalY = window.innerWidth <= 900 ? window.innerHeight * 0.52 : window.innerHeight * 0.48;
+            let activeIdx = -1;
+            let minDistance = Infinity;
+
+            cardElements.forEach((el) => {
+                const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
+                if (isNaN(idx)) return;
                 const rect = el.getBoundingClientRect();
-                if (rect.top <= focalY + 80 && rect.bottom >= focalY - 100) {
-                    activeIndex = i;
-                    break;
+                const cardCenter = rect.top + rect.height / 2;
+                const dist = Math.abs(cardCenter - focalY);
+
+                // Card is in the active reading band
+                if (rect.top <= focalY + 70 && rect.bottom >= focalY - 70) {
+                    activeIdx = idx;
+                } else if (dist < minDistance && rect.top < window.innerHeight && rect.bottom > 0) {
+                    minDistance = dist;
+                    if (activeIdx === -1) activeIdx = idx;
                 }
-            }
+            });
 
-            // Fallback check: find closest visible card
-            if (activeIndex === -1 && stayRoomRefs.current.length > 0) {
-                let closestIdx = -1;
-                let minDistance = Infinity;
-                stayRoomRefs.current.forEach((el, idx) => {
-                    if (!el) return;
-                    const rect = el.getBoundingClientRect();
-                    const cardCenter = rect.top + rect.height / 2;
-                    const dist = Math.abs(cardCenter - focalY);
-                    if (dist < minDistance && rect.top < window.innerHeight && rect.bottom > 0) {
-                        minDistance = dist;
-                        closestIdx = idx;
-                    }
-                });
-                if (closestIdx !== -1) activeIndex = closestIdx;
-            }
-
-            if (activeIndex !== -1) {
-                setActiveStayAcc((prev) => (prev !== activeIndex ? activeIndex : prev));
+            if (activeIdx !== -1) {
+                setActiveStayAcc((prev) => (prev !== activeIdx ? activeIdx : prev));
             }
             ticking = false;
         };
 
-        const handleScroll = () => {
+        const onScroll = () => {
             if (!ticking) {
-                requestAnimationFrame(updateActiveStayCardOnScroll);
+                requestAnimationFrame(checkStayCardsInView);
                 ticking = true;
             }
         };
 
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        window.addEventListener('touchmove', handleScroll, { passive: true });
-        window.addEventListener('resize', handleScroll, { passive: true });
-        
-        // Initial checks
-        updateActiveStayCardOnScroll();
-        const t1 = setTimeout(updateActiveStayCardOnScroll, 300);
-        const t2 = setTimeout(updateActiveStayCardOnScroll, 800);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        document.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('touchmove', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+
+        // Initial triggers
+        checkStayCardsInView();
+        const t1 = setTimeout(checkStayCardsInView, 200);
+        const t2 = setTimeout(checkStayCardsInView, 600);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('touchmove', handleScroll);
-            window.removeEventListener('resize', handleScroll);
+            window.removeEventListener('scroll', onScroll);
+            document.removeEventListener('scroll', onScroll);
+            window.removeEventListener('touchmove', onScroll);
+            window.removeEventListener('resize', onScroll);
             clearTimeout(t1);
             clearTimeout(t2);
         };
@@ -2111,18 +2104,25 @@ export default function HomePage() {
                             variants={fadeInLeft}
                             className="stay-glamp-image-container"
                         >
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={activeStayAcc}
-                                    src={STAY_ACCOMMODATIONS[activeStayAcc >= 0 ? activeStayAcc : 0].mainImg}
-                                    alt="Luxury Glamp"
-                                    initial={{ opacity: 0, scale: 1.04 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            {/* Stacked Cross-Fade Images (Zero flicker / Never vanishes) */}
+                            {STAY_ACCOMMODATIONS.map((acc, idx) => (
+                                <img
+                                    key={acc.id}
+                                    src={acc.mainImg}
+                                    alt={acc.title}
+                                    style={{
+                                        position: 'absolute',
+                                        inset: 0,
+                                        width: '100%',
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        opacity: activeStayAcc === idx ? 1 : 0,
+                                        transform: activeStayAcc === idx ? 'scale(1)' : 'scale(1.04)',
+                                        transition: 'opacity 0.4s ease, transform 0.5s ease',
+                                        pointerEvents: 'none'
+                                    }}
                                 />
-                            </AnimatePresence>
+                            ))}
                             
                             {/* Overlay Gradient */}
                             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.8) 0%, transparent 60%)' }} />
@@ -2164,10 +2164,10 @@ export default function HomePage() {
                                     return (
                                         <div
                                             key={acc.id}
-                                            ref={(el) => (stayRoomRefs.current[idx] = el)}
+                                            data-stay-card-idx={idx}
                                             onMouseEnter={() => setActiveStayAcc(idx)}
                                             onClick={() => setActiveStayAcc(idx)}
-                                            className="hover-lift"
+                                            className="hover-lift stay-room-card"
                                             style={{
                                                 background: '#FFFFFF',
                                                 border: isActive ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
