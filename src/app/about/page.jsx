@@ -1374,21 +1374,72 @@ export default function AboutPage() {
                             }}
                         >
                             {TIMELINE_MILESTONES.map((mile, mIdx) => {
-                                // Each tablet has a unique chipped polygon shape — cracked stone chips
+                                // Each tablet — unique chipped/cracked stone polygon edge
                                 const clipPaths = [
                                     'polygon(0% 14px, 10px 4px, 30px 0%, calc(100% - 24px) 2px, calc(100% - 8px) 0%, 100% 12px, calc(100% - 2px) 45%, 100% calc(100% - 18px), calc(100% - 14px) 100%, 40px calc(100% - 3px), 12px 100%, 0% calc(100% - 14px), 6px 55%)',
                                     'polygon(0% 20px, 14px 6px, 28px 0%, calc(100% - 30px) 0px, calc(100% - 10px) 8px, 100% 22px, calc(100% - 4px) 60%, 100% calc(100% - 20px), calc(100% - 20px) calc(100% - 4px), calc(100% - 40px) 100%, 20px calc(100% - 6px), 4px calc(100% - 22px), 0% calc(100% - 38px), 8px 48%)',
                                     'polygon(0% 10px, 8px 0%, 28px 4px, calc(100% - 20px) 0px, calc(100% - 6px) 10px, 100% 28px, calc(100% - 6px) 58%, 100% calc(100% - 14px), calc(100% - 12px) 100%, 48px calc(100% - 2px), 14px calc(100% - 10px), 0% calc(100% - 26px), 4px 40%)',
                                     'polygon(0% 24px, 16px 8px, 36px 0%, calc(100% - 26px) 4px, calc(100% - 4px) 0%, 100% 18px, calc(100% - 8px) 50%, 100% calc(100% - 22px), calc(100% - 16px) calc(100% - 8px), calc(100% - 38px) 100%, 18px calc(100% - 4px), 6px calc(100% - 18px), 0% calc(100% - 32px), 10px 62%)'
                                 ];
-                                // Real stone color palettes — limestone, sandstone, slate, river stone
-                                const stonePalettes = [
-                                    { bg: '#B8B0A0', hi: 'rgba(255,255,245,0.22)', shadow: 'rgba(60,50,35,0.55)', crack: 'rgba(70,55,40,0.45)', tag: '#5A4830', year: '#3A2E1E', title: '#2A201A', body: '#5C4E3C', rule: 'rgba(80,60,40,0.4)', footer: 'rgba(80,60,40,0.5)' },
-                                    { bg: '#A8A090', hi: 'rgba(255,252,240,0.18)', shadow: 'rgba(50,42,30,0.5)', crack: 'rgba(60,48,32,0.42)', tag: '#4E4028', year: '#32281A', title: '#251C16', body: '#524434', rule: 'rgba(70,55,38,0.38)', footer: 'rgba(70,55,38,0.48)' },
-                                    { bg: '#C4B8A4', hi: 'rgba(255,255,248,0.2)', shadow: 'rgba(65,52,38,0.5)', crack: 'rgba(75,58,40,0.44)', tag: '#5E4C32', year: '#3E3020', title: '#2E2218', body: '#604E3C', rule: 'rgba(85,65,42,0.4)', footer: 'rgba(85,65,42,0.5)' },
-                                    { bg: '#9E9888', hi: 'rgba(255,250,238,0.16)', shadow: 'rgba(45,38,28,0.5)', crack: 'rgba(55,44,30,0.42)', tag: '#48402A', year: '#2E2618', title: '#221A12', body: '#4E4030', rule: 'rgba(65,52,35,0.36)', footer: 'rgba(65,52,35,0.46)' }
+
+                                // Natural stone mottling — layered radial patches, NO stripes
+                                // Each card: unique base, darker veins, lighter mineral spots
+                                const stoneConfigs = [
+                                    {
+                                        // Limestone — warm beige-grey
+                                        base: '#AEA898',
+                                        mottle: `
+                                            radial-gradient(ellipse 75% 55% at 25% 35%, rgba(135,128,115,0.7) 0%, transparent 70%),
+                                            radial-gradient(ellipse 50% 70% at 75% 65%, rgba(170,162,148,0.55) 0%, transparent 65%),
+                                            radial-gradient(ellipse 40% 35% at 55% 15%, rgba(195,188,172,0.45) 0%, transparent 55%),
+                                            radial-gradient(ellipse 35% 40% at 85% 30%, rgba(120,114,100,0.4) 0%, transparent 50%),
+                                            radial-gradient(ellipse 60% 30% at 15% 80%, rgba(188,180,165,0.5) 0%, transparent 60%)
+                                        `,
+                                        tag: '#4E3E28', year: '#302418', title: '#221A10', body: '#504030',
+                                        rule: 'rgba(60,48,30,0.35)', footer: 'rgba(60,48,30,0.45)'
+                                    },
+                                    {
+                                        // Dark slate grey
+                                        base: '#8E8878',
+                                        mottle: `
+                                            radial-gradient(ellipse 65% 60% at 60% 40%, rgba(108,102,90,0.65) 0%, transparent 68%),
+                                            radial-gradient(ellipse 45% 55% at 20% 70%, rgba(145,138,124,0.5) 0%, transparent 62%),
+                                            radial-gradient(ellipse 55% 35% at 80% 20%, rgba(165,158,144,0.4) 0%, transparent 55%),
+                                            radial-gradient(ellipse 30% 45% at 40% 85%, rgba(95,90,78,0.45) 0%, transparent 50%),
+                                            radial-gradient(ellipse 70% 25% at 50% 10%, rgba(175,168,155,0.35) 0%, transparent 55%)
+                                        `,
+                                        tag: '#3A2E1C', year: '#241A0E', title: '#180E08', body: '#443828',
+                                        rule: 'rgba(45,35,20,0.35)', footer: 'rgba(45,35,20,0.45)'
+                                    },
+                                    {
+                                        // Sandstone — warmer tan-grey
+                                        base: '#B8AC98',
+                                        mottle: `
+                                            radial-gradient(ellipse 80% 45% at 40% 55%, rgba(148,140,124,0.6) 0%, transparent 65%),
+                                            radial-gradient(ellipse 40% 60% at 80% 30%, rgba(185,178,162,0.5) 0%, transparent 60%),
+                                            radial-gradient(ellipse 55% 40% at 15% 25%, rgba(200,192,176,0.45) 0%, transparent 55%),
+                                            radial-gradient(ellipse 45% 35% at 65% 80%, rgba(128,120,106,0.4) 0%, transparent 52%),
+                                            radial-gradient(ellipse 35% 50% at 90% 70%, rgba(172,164,150,0.45) 0%, transparent 55%)
+                                        `,
+                                        tag: '#524030', year: '#382A1A', title: '#281E10', body: '#564434',
+                                        rule: 'rgba(68,52,35,0.38)', footer: 'rgba(68,52,35,0.48)'
+                                    },
+                                    {
+                                        // River stone — cool grey
+                                        base: '#98948A',
+                                        mottle: `
+                                            radial-gradient(ellipse 70% 50% at 35% 60%, rgba(118,114,106,0.62) 0%, transparent 66%),
+                                            radial-gradient(ellipse 50% 65% at 72% 25%, rgba(155,150,140,0.5) 0%, transparent 63%),
+                                            radial-gradient(ellipse 60% 38% at 20% 15%, rgba(178,172,162,0.42) 0%, transparent 55%),
+                                            radial-gradient(ellipse 38% 42% at 88% 75%, rgba(105,100,92,0.45) 0%, transparent 52%),
+                                            radial-gradient(ellipse 65% 28% at 55% 90%, rgba(165,160,150,0.4) 0%, transparent 58%)
+                                        `,
+                                        tag: '#3C3022', year: '#281E12', title: '#1C120A', body: '#483C2C',
+                                        rule: 'rgba(50,40,25,0.32)', footer: 'rgba(50,40,25,0.42)'
+                                    }
                                 ];
-                                const s = stonePalettes[mIdx % 4];
+
+                                const s = stoneConfigs[mIdx % 4];
                                 const rotations = ['-1.2deg', '1.0deg', '-0.8deg', '1.4deg'];
 
                                 return (
@@ -1400,23 +1451,14 @@ export default function AboutPage() {
                                         style={{
                                             position: 'relative',
                                             transform: `rotate(${rotations[mIdx % 4]})`,
-                                            filter: `drop-shadow(0 22px 48px rgba(0,0,0,0.7)) drop-shadow(0 4px 12px ${s.shadow})`,
+                                            filter: 'drop-shadow(0 18px 40px rgba(0,0,0,0.65)) drop-shadow(0 4px 10px rgba(0,0,0,0.4))',
                                             cursor: 'default'
                                         }}
                                     >
-                                        {/* Stone Slab — real limestone/sandstone color */}
+                                        {/* Stone Slab — mottled mineral patches, no stripes */}
                                         <div style={{
-                                            background: s.bg,
-                                            backgroundImage: `
-                                                radial-gradient(ellipse at ${28 + mIdx * 14}% ${38 + mIdx * 9}%, ${s.hi} 0%, transparent 52%),
-                                                linear-gradient(${148 + mIdx * 12}deg, rgba(255,252,240,0.12) 0%, transparent 35%, rgba(0,0,0,0.18) 100%),
-                                                repeating-linear-gradient(${72 + mIdx * 8}deg,
-                                                    transparent 0px, transparent 5px,
-                                                    rgba(0,0,0,0.04) 5px, rgba(0,0,0,0.04) 6px,
-                                                    transparent 6px, transparent 18px,
-                                                    rgba(255,255,255,0.06) 18px, rgba(255,255,255,0.06) 19px
-                                                )
-                                            `,
+                                            backgroundColor: s.base,
+                                            backgroundImage: s.mottle,
                                             clipPath: clipPaths[mIdx % 4],
                                             padding: '36px 26px 32px',
                                             display: 'flex',
@@ -1426,15 +1468,6 @@ export default function AboutPage() {
                                             overflow: 'hidden'
                                         }}>
 
-                                            {/* Stone crack lines overlay */}
-                                            <div style={{
-                                                position: 'absolute', inset: 0, pointerEvents: 'none',
-                                                backgroundImage: `
-                                                    linear-gradient(${22 + mIdx * 18}deg, transparent 48%, ${s.crack} 48.5%, transparent 49%),
-                                                    linear-gradient(${110 + mIdx * 22}deg, transparent 62%, ${s.crack} 62.4%, transparent 63%),
-                                                    linear-gradient(${165 + mIdx * 14}deg, transparent 35%, rgba(0,0,0,0.1) 35.4%, transparent 36%)
-                                                `
-                                            }} />
 
                                             {/* Engraved top rule */}
                                             <div style={{
