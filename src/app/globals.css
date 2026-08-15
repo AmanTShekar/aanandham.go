@@ -446,8 +446,46 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SKILL LEVELS GRID & MOBILE SLIDER
+   OVERVIEW 3-COLUMN SECTION GRID
 ───────────────────────────────────────────────────────────── */
+.overview-3col-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr 0.95fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .overview-3col-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .overview-3col-grid > :nth-child(3) {
+    grid-column: 1 / -1;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-3col-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 100%;
+  }
+  .overview-3col-grid > * {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .overview-3col-grid > :nth-child(3) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+}
 .skill-levels-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
