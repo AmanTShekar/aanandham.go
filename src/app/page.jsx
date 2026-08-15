@@ -840,8 +840,8 @@ export default function HomePage() {
     const [hoveredProgramDay, setHoveredProgramDay] = useState(null);
     const programMouseX = useMotionValue(0);
     const programMouseY = useMotionValue(0);
-    const smoothProgramX = useSpring(programMouseX, { stiffness: 350, damping: 28 });
-    const smoothProgramY = useSpring(programMouseY, { stiffness: 350, damping: 28 });
+    const smoothProgramX = useSpring(programMouseX, { stiffness: 420, damping: 30 });
+    const smoothProgramY = useSpring(programMouseY, { stiffness: 420, damping: 30 });
 
     const handleProgramMouseMove = (e) => {
         if (!programContainerRef.current) return;
