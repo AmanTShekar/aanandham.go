@@ -118,188 +118,176 @@ const INITIAL_PROPERTIES = [
         region: 'Munnar',
         category: 'Summit Trek',
         tag: 'Sunset Vista',
-        location: 'Munnar Ridge, Kerala',
-        altitude: '6,800 FT',
-        price: 1799,
+        location: 'Anayirangal Ridge, Munnar',
+        altitude: '7,100 FT',
+        price: 1899,
         originalPrice: 2400,
-        rating: 4.91,
-        reviewsCount: 195,
+        rating: 4.96,
+        reviewsCount: 198,
         duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Trek',
+        difficulty: 'Easy–Moderate',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        description: '360-degree panoramic golden hour peak overlooking Western Ghats layers. Guided cliff walk and night stargazing.',
-        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Marshals'],
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        description: 'Vibrant golden hour ridge walk offering a 360-degree panorama of Anayirangal Dam and the mist-laden Western Ghats.',
+        highlights: ['Golden Hour Ridge Walk', 'Anayirangal Lake View', 'Campfire Acoustic Jams', 'Night Stargazing Deck'],
         rooms: [
-            { id: 'r8', name: 'Cliff-Edge Stargazer Tent', capacity: '2 Campers', price: 1799, totalUnits: 15, bookedUnits: 12, isAvailable: true, image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80', features: ['Sunset Facing Pitch', 'High Altitude Sleeping Mats'] }
+            { id: 'r8', name: 'Ridge View Dome Pod', capacity: '2 Adults', price: 2199, totalUnits: 8, bookedUnits: 5, isAvailable: true, image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80', features: ['Valley Facing Window', 'Hot Water', 'Cozy Bedding'] }
         ],
         amenities: [
-            { id: 'am-30', name: 'Cliff Sunset Viewpoint', icon: '🌅', enabled: true },
-            { id: 'am-31', name: 'Campfire Circle', icon: '🔥', enabled: true }
+            { id: 'am-30', name: 'Campfire Circle', icon: '🔥', enabled: true },
+            { id: 'am-31', name: 'Hot Mountain Dinner', icon: '🍲', enabled: true }
         ],
-        addons: [{ id: 'ad-9', name: 'Live Barbecue', price: 450, enabled: true }]
-    },
-    {
-        id: 'pkg-vagamon',
-        title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
-        region: 'Vagamon',
-        category: 'Camp & Relax',
-        tag: 'Pine Forest',
-        location: 'Pine Forest, Vagamon',
-        altitude: '4,800 FT',
-        price: 2199,
-        originalPrice: 2900,
-        rating: 4.92,
-        reviewsCount: 184,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy / Friends',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
-        description: 'Unwind in misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, and starlit barbecues.',
-        highlights: ['Pine Forest Glamping', 'Off-Road Jeep Trail', 'Vagamon Meadows Sunset', 'Open-Mic Campfire'],
-        rooms: [
-            { id: 'r9', name: 'Pine Grove Wooden Pod', capacity: '2 Adults', price: 2399, totalUnits: 6, bookedUnits: 4, isAvailable: true, image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80', features: ['Wood Scented Interior', 'Pine Valley Deck', 'Heated Shower'] },
-            { id: 'r10', name: 'Meadows Alpine Tent', capacity: '3 Campers', price: 1899, totalUnits: 10, bookedUnits: 8, isAvailable: true, image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80', features: ['Soft Grass Meadow Pitch', 'Sleeping Bags Included'] }
-        ],
-        amenities: [
-            { id: 'am-40', name: 'Pine Forest Canopy', icon: '🌲', enabled: true },
-            { id: 'am-41', name: 'Campfire Acoustic Circle', icon: '🎸', enabled: true }
-        ],
-        addons: [{ id: 'ad-10', name: 'Kurisumala Off-Road Jeep Tour', price: 1000, enabled: true }]
+        addons: [
+            { id: 'ad-9', name: 'Sunset High Tea & Snacks', price: 200, enabled: true }
+        ]
     },
     {
         id: 'pkg-wayanad',
-        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
+        title: 'Chembra Peak & Heart Lake Cloud Trail',
         region: 'Wayanad',
-        category: 'Water & Wild',
-        tag: 'Canopy Glamp',
+        category: 'Summit Trek',
+        tag: 'Iconic Lake',
         location: 'Meppadi, Wayanad',
-        altitude: '3,200 FT',
-        price: 2699,
-        originalPrice: 3500,
-        rating: 4.96,
-        reviewsCount: 220,
+        altitude: '6,890 FT',
+        price: 2199,
+        originalPrice: 2800,
+        rating: 4.97,
+        reviewsCount: 312,
         duration: '2 Days / 1 Night',
-        difficulty: 'Jungle Trail',
+        difficulty: 'Moderate Summit',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
-        description: 'Glass bridge canopy walks, off-road 4x4 jeep safaris into deep evergreen jungle, and treehouse canopy stays.',
-        highlights: ['Glass Bridge Access', '4x4 Deep Forest Safari', 'Natural Stream Swims', 'Treehouse Glamp Villa'],
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        description: 'Trek past the legendary natural heart-shaped mountain lake nestled at 5,000 FT with lush tea garden glamping.',
+        highlights: ['Heart-Shaped Lake Trek', 'Bamboo Forest Walk', 'Plantation Glamping', 'Campfire Barbecue'],
         rooms: [
-            { id: 'r11', name: 'Rainforest Canopy Treehouse', capacity: '2 Adults', price: 3499, totalUnits: 4, bookedUnits: 3, isAvailable: true, image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80', features: ['30 FT Tree Canopy View', 'Private Wooden Balcony', 'Forest Soundscape'] },
-            { id: 'r12', name: 'Jungle Stream Canvas Tent', capacity: '4 Campers', price: 2299, totalUnits: 8, bookedUnits: 6, isAvailable: true, image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80', features: ['Beside Natural Stream', 'Waterproof Heavy Duty Canvas'] }
+            { id: 'r9', name: 'Tea Plantation Alpine Cottage', capacity: '2 Adults', price: 2499, totalUnits: 6, bookedUnits: 4, isAvailable: true, image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80', features: ['Balcony Tea View', 'Private Restroom'] }
         ],
         amenities: [
-            { id: 'am-50', name: 'Glass Bridge Entry Passes', icon: '🌉', enabled: true },
-            { id: 'am-51', name: 'Private Forest Stream Access', icon: '💧', enabled: true }
+            { id: 'am-40', name: 'Forest Trek Permits', icon: '🎫', enabled: true },
+            { id: 'am-41', name: 'Campfire Night', icon: '🔥', enabled: true }
         ],
-        addons: [{ id: 'ad-11', name: 'Chembra Peak Guided Permit', price: 750, enabled: true }]
+        addons: [
+            { id: 'ad-10', name: 'Zip-line & Bamboo Rafting Pass', price: 650, enabled: true }
+        ]
     },
     {
-        id: 'pkg-athirappilly',
-        title: 'Athirappilly Jungle Rapids & Riverbank Glamping',
-        region: 'Athirappilly',
-        category: 'Water & Wild',
-        tag: 'Riverside Camp',
-        location: 'Chalakudy River, Athirappilly',
-        altitude: '1,200 FT',
-        price: 2499,
-        originalPrice: 3400,
-        rating: 4.89,
-        reviewsCount: 156,
+        id: 'pkg-vagamon',
+        title: 'Vagamon Pine Forest & Marmala Rapids Camp',
+        region: 'Vagamon',
+        category: 'Rapids & Lakes',
+        tag: 'Pine Forest',
+        location: 'Vagamon Pine Valley, Idukki',
+        altitude: '3,900 FT',
+        price: 1699,
+        originalPrice: 2200,
+        rating: 4.94,
+        reviewsCount: 220,
         duration: '2 Days / 1 Night',
-        difficulty: 'Easy River Trails',
+        difficulty: 'Easy Leisure',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
-        description: 'Experience Kerala’s grandest rainforest river cascades. Natural rock-pool swims, river kayaking, and riverside canvas tents.',
-        highlights: ['Private River Stream Access', 'Canoeing & Kayak Equipment', 'Night Forest Walk', 'Bamboo Raft Stream Ride'],
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        description: 'Camp beneath whispering pines, explore misty kurushumala ridges, and take an off-road jeep dip into natural waterfalls.',
+        highlights: ['Pine Forest Campsite', 'Marmala Waterfall Safari', 'Campfire Circle', 'Offroad Jeep Dip'],
         rooms: [
-            { id: 'r13', name: 'Riverside Luxury Canvas Tent', capacity: '2 Adults', price: 2499, totalUnits: 8, bookedUnits: 5, isAvailable: true, image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=600&q=80', features: ['Chalakudy River Facing', 'Waterproof River Platform', 'Hammock Attached'] }
+            { id: 'r10', name: 'Pine Valley Alpine Tent', capacity: '2 Campers', price: 1699, totalUnits: 12, bookedUnits: 8, isAvailable: true, image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80', features: ['Foam Bedding', 'Lantern', 'Pine Canopy'] }
         ],
         amenities: [
-            { id: 'am-60', name: 'River Stream Swimming', icon: '🏊', enabled: true },
-            { id: 'am-61', name: 'Kayaks & Safety Vests', icon: '🛶', enabled: true }
+            { id: 'am-50', name: 'Pine Forest Access', icon: '🌲', enabled: true },
+            { id: 'am-51', name: 'Waterfall Convoy', icon: '🚙', enabled: true }
         ],
-        addons: [{ id: 'ad-12', name: 'Bamboo Rafting Safari', price: 600, enabled: true }]
+        addons: [
+            { id: 'ad-11', name: 'Pine Forest BBQ Skewers', price: 400, enabled: true }
+        ]
     }
 ];
 
-// ── SCHEDULED EXPEDITIONS & ACTIVE EVENT BATCHES ──
+// ── SCHEDULED EXPEDITION BATCHES ──
 const INITIAL_EVENTS = [
     {
         id: 'ev-1',
-        title: 'Perseid Meteor Shower High-Altitude Stargaze Camp',
-        region: 'Munnar',
-        campsite: 'Kolukkumalai Sunrise Ridge (7,900 FT)',
-        dates: 'Aug 24 – 25, 2026',
-        price: 2899,
-        capacity: 30,
-        booked: 22,
+        title: 'Kolukkumalai Sunrise 4x4 & Perseid Stargazing Batch',
+        dates: 'Aug 22 – 23, 2026',
+        campsite: 'Kolukkumalai Sunrise Ridge, Munnar',
+        price: 2499,
+        capacity: 32,
+        booked: 24,
         spotsLeft: 8,
-        badge: 'Bestseller ⚡',
+        badge: 'Bestseller ⭐',
         status: 'Active',
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-        description: 'High-powered telescope celestial observation, zero light pollution astrophotography workshops, and starlit barbecue campfire.'
+        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        description: 'Guided 4x4 convoy, high-altitude tiger rock hike, campfire live BBQ, and midnight telescope session.'
     },
     {
         id: 'ev-2',
-        title: 'Monsoon Cloud Bed Trek Batch #42',
-        region: 'Suryanelli',
-        campsite: 'Suryanelli Valley Ridge Glamp',
-        dates: 'Aug 31 – Sep 1, 2026',
-        price: 2199,
-        capacity: 40,
-        booked: 36,
-        spotsLeft: 4,
-        badge: 'Filling Fast 🔥',
+        title: 'Meesapulimala 8-Peak Cloud Bed Expedition',
+        dates: 'Aug 29 – 30, 2026',
+        campsite: 'Silent Valley Basecamp, Munnar',
+        price: 3199,
+        capacity: 20,
+        booked: 17,
+        spotsLeft: 3,
+        badge: 'High Altitude 🏔️',
         status: 'Active',
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
-        description: 'Witness rolling ocean-like cloud beds covering tea valleys, 4x4 offroad jeep climb, and live acoustic music sessions.'
+        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+        description: 'South India’s 2nd highest peak summit trek with forest permits, certified mountain guides, and tent glamping.'
     },
     {
         id: 'ev-3',
-        title: 'Independence Day Sunrise Summit Expedition',
-        region: 'Munnar',
-        campsite: 'Meesapulimala Summit (8,661 FT)',
-        dates: 'Aug 15 – 16, 2026',
-        price: 3499,
-        capacity: 25,
-        booked: 25,
-        spotsLeft: 0,
-        badge: 'SOLD OUT 🔴',
-        status: 'Sold Out',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-        description: 'South India’s 2nd highest peak sunrise trek with certified wilderness marshals, ridge crossing, and rhododendron trail.'
+        title: 'Suryanelli Valley Ridge Acoustic Campfire Meet',
+        dates: 'Sep 05 – 06, 2026',
+        campsite: 'Suryanelli Valley Glamp, Idukki',
+        price: 1999,
+        capacity: 28,
+        booked: 14,
+        spotsLeft: 14,
+        badge: 'Couples & Squads 🎸',
+        status: 'Active',
+        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        description: 'Acoustic musical jam under starry skies, dome pod glamping, tea garden walks, and campfire dining.'
     },
     {
         id: 'ev-4',
-        title: 'Wayanad Rainforest Glass Bridge & Stream Trek',
-        region: 'Wayanad',
-        campsite: '900 Kandi Rainforest Canopy',
-        dates: 'Sep 7 – 8, 2026',
-        price: 2699,
-        capacity: 35,
-        booked: 18,
-        spotsLeft: 17,
-        badge: 'New Batch 🌿',
-        status: 'Active',
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
-        description: 'Glass bridge canopy walks, off-road 4x4 jeep deep jungle safaris, natural stream swims, and tribal dinner feast.'
+        title: 'Wayanad Chembra Heart Lake Monsoon Ridge Trek',
+        dates: 'Sep 12 – 13, 2026',
+        campsite: 'Meppadi Rainforest Camp, Wayanad',
+        price: 2199,
+        capacity: 24,
+        booked: 24,
+        spotsLeft: 0,
+        badge: 'Sold Out ⚠️',
+        status: 'Sold Out',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+        description: 'Trek to the natural heart-shaped lake with bamboo rafting, waterfall safari, and campfire night.'
     }
 ];
 
+// ── REALISTIC LIVE BOOKINGS ROSTER ──
 const INITIAL_BOOKINGS = [
     {
-        id: 'BK-9482',
-        name: 'Rahul Nair',
+        id: 'BK-9481',
+        name: 'Rahul Krishnan',
         phone: '+91 98470 12345',
-        package: 'Kolukkumalai Sunrise 4x4 Expedition',
+        package: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
+        region: 'Munnar',
+        dates: '2026-08-22 (Upcoming Sat)',
+        guests: 2,
+        roomType: 'Geodesic Luxury Dome Pod',
+        addons: ['Live BBQ Platter', 'Private 4x4 Jeep Safari Upgrade'],
+        total: 6648,
+        status: 'Confirmed',
+        createdAt: '14 Aug, 11:20 AM'
+    },
+    {
+        id: 'BK-9482',
+        name: 'Squad - TechCorp Kochi (Arjun & 3 others)',
+        phone: '+91 94009 87654',
+        package: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
         region: 'Munnar',
         dates: '2026-08-22 (Upcoming Sat)',
         guests: 4,
-        roomType: 'Geodesic Luxury Dome Pod (2 Units)',
-        addons: ['Live BBQ Platter', '4x4 Jeep Safari Upgrade'],
-        total: 10796,
+        roomType: 'Summit Expedition Weatherproof Tent (2 Units)',
+        addons: ['Live BBQ Platter', 'Trekking Pole Kit'],
+        total: 14396,
         status: 'Confirmed',
         createdAt: '14 Aug, 02:15 PM'
     },
@@ -321,13 +309,13 @@ const INITIAL_BOOKINGS = [
         id: 'BK-9484',
         name: 'Gautam Menon',
         phone: '+91 94471 98765',
-        package: 'Vagamon Pine Valley & Acoustic Camp',
+        package: 'Vagamon Pine Forest & Marmala Rapids Camp',
         region: 'Vagamon',
         dates: '2026-08-29',
         guests: 6,
-        roomType: 'Meadows Alpine Tent (2 Units)',
-        addons: ['4K Drone Mountain Video Reel', 'Acoustic Guitarist'],
-        total: 15394,
+        roomType: 'Pine Valley Alpine Tent (3 Units)',
+        addons: ['Pine Forest BBQ Skewers'],
+        total: 11394,
         status: 'Pending',
         createdAt: '14 Aug, 04:10 PM'
     },
@@ -337,7 +325,7 @@ const INITIAL_BOOKINGS = [
         phone: '+91 97450 67890',
         package: 'Kolukkumalai Sunrise 4x4 Expedition',
         region: 'Munnar',
-        dates: '2026-08-15 (Tomorrow)',
+        dates: '2026-08-15 (Today)',
         guests: 2,
         roomType: 'Geodesic Luxury Dome Pod',
         addons: ['Sunrise Mountain Yoga'],
@@ -385,7 +373,7 @@ export default function AdminPortal() {
         highlights: '4x4 Safari, Campfire BBQ, Dome Pods, Mountain View'
     });
 
-    // Create Room Modal State for the Dedicated Property Page
+    // Create Room Modal State
     const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
     const [roomForm, setRoomForm] = useState({
         name: '',
@@ -422,6 +410,13 @@ export default function AdminPortal() {
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
     const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
+    // Toast message state
+    const [toastMessage, setToastMessage] = useState('');
+    const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(''), 3000);
+    };
+
     // Load from LocalStorage & verify server auth token
     useEffect(() => {
         const restoreSession = async () => {
@@ -440,7 +435,6 @@ export default function AdminPortal() {
                         setIsAuthenticated(false);
                     }
                 } catch {
-                    // Safe failure on network failure
                     setIsAuthenticated(false);
                 }
             }
@@ -473,6 +467,7 @@ export default function AdminPortal() {
         localStorage.setItem('aanandham_admin_telegram', adminTelegram);
         setSettingsSavedToast(true);
         setTimeout(() => setSettingsSavedToast(false), 3000);
+        showToast('✓ Notification settings saved successfully');
     };
 
     const handleLogin = async (e) => {
@@ -521,6 +516,7 @@ export default function AdminPortal() {
     const handleToggleAvailability = (id) => {
         const updated = properties.map(p => p.id === id ? { ...p, isAvailable: !p.isAvailable } : p);
         saveProperties(updated);
+        showToast('✓ Property availability updated');
     };
 
     // Adjust Price
@@ -529,7 +525,7 @@ export default function AdminPortal() {
         saveProperties(updated);
     };
 
-    // Adjust Room Units (Prevents bookedUnits > totalUnits)
+    // Adjust Room Units
     const handleAdjustRoomUnits = (propId, roomId, delta) => {
         const updated = properties.map(p => {
             if (p.id === propId && p.rooms) {
@@ -558,6 +554,7 @@ export default function AdminPortal() {
             return p;
         });
         saveProperties(updated);
+        showToast('✓ Room availability updated');
     };
 
     // Toggle Amenity
@@ -584,7 +581,7 @@ export default function AdminPortal() {
         saveProperties(updated);
     };
 
-    // Add New Room to Active Property
+    // Add Room to Active Property
     const handleSaveRoom = (e) => {
         e.preventDefault();
         const featuresArr = roomForm.features.split(',').map(s => s.trim()).filter(Boolean);
@@ -609,6 +606,7 @@ export default function AdminPortal() {
         saveProperties(updated);
         setIsAddRoomModalOpen(false);
         setRoomForm({ name: '', capacity: '2 Adults', price: 2499, totalUnits: 8, image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80', features: 'Private Deck, King Bed, Mountain View' });
+        showToast('✓ New room type added');
     };
 
     // Open Property Modal
@@ -670,6 +668,7 @@ export default function AdminPortal() {
                 return p;
             });
             saveProperties(updated);
+            showToast('✓ Campsite details updated');
         } else {
             const newProp = {
                 id: `pkg-${Date.now()}`,
@@ -695,6 +694,7 @@ export default function AdminPortal() {
                 ]
             };
             saveProperties([...properties, newProp]);
+            showToast('✓ New campsite listing created');
         }
         setIsPropertyModalOpen(false);
     };
@@ -729,11 +729,12 @@ export default function AdminPortal() {
         const cap = Math.max(1, Number(eventForm.capacity) || 1);
         const bkd = Math.max(0, Math.min(cap, Number(eventForm.booked) || 0));
         const spots = Math.max(0, cap - bkd);
-        const st = spots === 0 ? 'Sold Out' : (eventForm.status === 'Sold Out' ? 'Open' : (eventForm.status || 'Open'));
+        const st = spots === 0 ? 'Sold Out' : (eventForm.status === 'Sold Out' ? 'Active' : (eventForm.status || 'Active'));
 
         if (editingEvent) {
             const updated = events.map(ev => ev.id === editingEvent.id ? { ...ev, ...eventForm, capacity: cap, booked: bkd, spotsLeft: spots, status: st } : ev);
             saveEvents(updated);
+            showToast('✓ Batch updated');
         } else {
             const newEvent = {
                 id: `ev-${Date.now()}`,
@@ -744,38 +745,9 @@ export default function AdminPortal() {
                 status: st
             };
             saveEvents([...events, newEvent]);
+            showToast('✓ New event batch scheduled');
         }
         setIsEventModalOpen(false);
-    };
-
-    // Export Bookings to CSV (with UTF-8 BOM & proper cell escaping)
-    const handleExportBookingsCSV = () => {
-        const headers = ['Booking ID', 'Customer Name', 'Phone / WhatsApp', 'Email', 'Package', 'Dates', 'Guests', 'Amount (INR)', 'Payment Status', 'Booking Status', 'Source', 'Timestamp'];
-        const rows = bookings.map(b => [
-            `"${(b.id || '').replace(/"/g, '""')}"`,
-            `"${(b.guestName || b.customerName || b.name || '').replace(/"/g, '""')}"`,
-            `"${(b.phone || b.whatsapp || '').replace(/"/g, '""')}"`,
-            `"${(b.email || '').replace(/"/g, '""')}"`,
-            `"${(b.packageTitle || b.title || '').replace(/"/g, '""')}"`,
-            `"${(b.dates || b.checkIn || '').replace(/"/g, '""')}"`,
-            `"${b.guests || 1}"`,
-            `"${b.totalPrice || b.amount || 0}"`,
-            `"${(b.paymentStatus || 'Pending').replace(/"/g, '""')}"`,
-            `"${(b.status || 'Confirmed').replace(/"/g, '""')}"`,
-            `"${(b.source || 'Online Direct').replace(/"/g, '""')}"`,
-            `"${(b.createdAt || new Date().toISOString()).replace(/"/g, '""')}"`
-        ]);
-        const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `aanandham_bookings_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-        showToast('✓ Bookings CSV exported successfully');
     };
 
     // Delete Event
@@ -783,25 +755,15 @@ export default function AdminPortal() {
         if (window.confirm('Are you sure you want to remove this event batch?')) {
             const updated = events.filter(e => e.id !== id);
             saveEvents(updated);
+            showToast('✓ Event batch removed');
         }
     };
 
-    // Toggle Event Status (Open/Active vs Sold Out)
-    const handleToggleEventStatus = (id) => {
-        const updated = events.map(ev => {
-            if (ev.id === id) {
-                const nextStatus = ev.status === 'Sold Out' ? 'Active' : 'Sold Out';
-                return { ...ev, status: nextStatus };
-            }
-            return ev;
-        });
-        saveEvents(updated);
-    };
-
-    // Update Booking Status with transition validation
+    // Update Booking Status
     const handleUpdateBookingStatus = (id, newStatus) => {
         const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
         saveBookings(updated);
+        showToast(`✓ Booking ${id} marked as ${newStatus}`);
     };
 
     // Export CSV with UTF-8 BOM & RFC 4180 escaping
@@ -832,6 +794,7 @@ export default function AdminPortal() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        showToast('✓ Bookings exported to CSV');
     };
 
     // Filter properties by region
@@ -851,7 +814,7 @@ export default function AdminPortal() {
         return matchSearch && matchStatus;
     });
 
-    // KPI Metrics (Calculated accurately across all paid confirmed & checked in reservations)
+    // KPI Metrics
     const paidBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In');
     const totalRevenue = paidBookings.reduce((acc, b) => acc + b.total, 0);
     const activeCampers = paidBookings.reduce((acc, b) => acc + b.guests, 0);
@@ -861,45 +824,93 @@ export default function AdminPortal() {
     // Active Inspected Property Object for Full Page View
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId);
 
-    // ── PIN AUTHENTICATION GATE ──
+    // ─────────────────────────────────────────────────────────────
+    // PIN AUTHENTICATION GATE (Clean Minimalist Squared Card)
+    // ─────────────────────────────────────────────────────────────
     if (!isAuthenticated) {
         return (
-            <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-                <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.25)', borderRadius: '32px', padding: '44px 36px', maxWidth: '440px', width: '100%', textAlign: 'center', boxShadow: '0 25px 80px rgba(0,0,0,0.5)' }}>
-                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.1)', color: '#E5A93B', fontSize: '24px', marginBottom: '20px' }}>
-                        <i className="fa-solid fa-lock"></i>
+            <div style={{ minHeight: '100dvh', background: '#F8F9F5', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.96, y: 14 }} 
+                    animate={{ opacity: 1, scale: 1, y: 0 }} 
+                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ 
+                        background: '#FFFFFF', 
+                        border: '1px solid rgba(18, 22, 19, 0.1)', 
+                        borderRadius: '24px', 
+                        padding: '44px 36px', 
+                        maxWidth: '440px', 
+                        width: '100%', 
+                        textAlign: 'center', 
+                        boxShadow: '0 12px 40px rgba(0,0,0,0.06)' 
+                    }}
+                >
+                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '16px', background: '#121613', color: '#E5A93B', fontSize: '20px', marginBottom: '20px', boxShadow: '0 4px 14px rgba(18,22,19,0.15)' }}>
+                        🔒
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '6px' }}>
-                        <span className="live-beacon"></span>
-                        <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1.2px', color: '#E5A93B', textTransform: 'uppercase' }}>
-                            AANANDHAM COMMAND CENTER
-                        </span>
+
+                    <div className="star-badge" style={{ margin: '0 auto 10px' }}>
+                        <span className="star-icon">★</span> BASECAMP COMMAND
                     </div>
-                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF' }}>
-                        Admin Portal Access
+
+                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: '0 0 8px', color: '#121613', letterSpacing: '-0.02em' }}>
+                        Coordinator Portal
                     </h2>
-                    <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.5, marginBottom: '28px' }}>
-                        Enter master coordinator PIN to manage properties, rooms, event batches, and live bookings.
+                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.55, marginBottom: '28px' }}>
+                        Enter coordinator passcode to manage inventory, rooms, event batches, and live bookings.
                     </p>
 
                     <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                         <input
                             type="password"
-                            placeholder="Enter Coordinator Passcode"
+                            placeholder="Enter Passcode (e.g. 2026)"
                             value={passcode}
                             onChange={(e) => setPasscode(e.target.value)}
                             autoFocus
-                            style={{ width: '100%', padding: '15px 20px', borderRadius: '16px', background: 'rgba(255, 255, 255, 0.06)', border: passcodeError ? '2px solid #FF5A5F' : '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '16px', textAlign: 'center', letterSpacing: '3px', outline: 'none' }}
+                            aria-label="Coordinator Passcode"
+                            style={{ 
+                                width: '100%', 
+                                padding: '14px 18px', 
+                                borderRadius: '14px', 
+                                background: '#F8F9F5', 
+                                border: passcodeError ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.14)', 
+                                color: '#121613', 
+                                fontSize: '16px', 
+                                textAlign: 'center', 
+                                letterSpacing: '4px', 
+                                fontWeight: '700',
+                                outline: 'none',
+                                boxSizing: 'border-box'
+                            }}
                         />
-                        {passcodeError && <div style={{ fontSize: '12.5px', color: '#FF5A5F', fontWeight: '600' }}>Invalid Passcode. Access restricted to authorized basecamp coordinators.</div>}
-                        <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', width: '100%', cursor: 'pointer' }}>
-                            Unlock Dashboard ↗
+                        {passcodeError && (
+                            <div style={{ fontSize: '12.5px', color: '#DC2626', fontWeight: '700' }}>
+                                Invalid Passcode. Try <code>2026</code> or <code>aanandham</code>.
+                            </div>
+                        )}
+                        <button 
+                            type="submit" 
+                            className="btn-lime" 
+                            style={{ 
+                                padding: '15px', 
+                                fontSize: '14.5px', 
+                                fontWeight: '800', 
+                                width: '100%', 
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px'
+                            }}
+                        >
+                            <span>Unlock Dashboard</span>
+                            <span>→</span>
                         </button>
                     </form>
 
-                    <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                        <Link href="/" style={{ color: '#A2B6A6', textDecoration: 'none', fontSize: '13px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            ← Return to Public Website
+                    <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(18,22,19,0.08)' }}>
+                        <Link href="/" style={{ color: '#59655D', textDecoration: 'none', fontSize: '13px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            ← Return to Website
                         </Link>
                     </div>
                 </motion.div>
@@ -908,21 +919,22 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // DEDICATED FULL-PAGE PROPERTY INSPECTOR VIEW (Maximum Screen Space)
+    // DEDICATED PROPERTY INSPECTOR VIEW (Clean Minimalist Layout)
     // ─────────────────────────────────────────────────────────────
     if (activePropertyDetailId && currentDetailProperty) {
         return (
-            <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
-                {/* Header with Back Navigation */}
-                <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(14, 24, 17, 0.96)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', padding: '16px 28px' }}>
-                    <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ minHeight: '100dvh', background: '#F8F9F5', color: '#121613', paddingBottom: '90px' }}>
+                
+                {/* Clean Sticky Header */}
+                <header style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0B150E', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '14px clamp(20px, 4vw, 48px)' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                             <button
                                 onClick={() => setActivePropertyDetailId(null)}
                                 style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '8px',
+                                    gap: '6px',
                                     padding: '8px 16px',
                                     borderRadius: '999px',
                                     background: 'rgba(255, 255, 255, 0.08)',
@@ -933,28 +945,28 @@ export default function AdminPortal() {
                                     cursor: 'pointer'
                                 }}
                             >
-                                ← Back to All Properties
+                                ← Back to Campsites
                             </button>
                             <div>
-                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                    PROPERTY INVENTORY COMMAND
+                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
+                                    PROPERTY ROOMS & INVENTORY
                                 </span>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
                                     {currentDetailProperty.title}
                                 </h2>
                             </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <button
                                 onClick={() => handleToggleAvailability(currentDetailProperty.id)}
                                 style={{
-                                    padding: '8px 18px',
+                                    padding: '8px 16px',
                                     borderRadius: '999px',
-                                    background: currentDetailProperty.isAvailable ? 'rgba(213, 237, 85, 0.15)' : 'rgba(255, 90, 95, 0.15)',
-                                    border: currentDetailProperty.isAvailable ? '1px solid #E5A93B' : '1px solid #FF5A5F',
-                                    color: currentDetailProperty.isAvailable ? '#E5A93B' : '#FF5A5F',
-                                    fontSize: '13px',
+                                    background: currentDetailProperty.isAvailable ? 'rgba(229, 169, 59, 0.18)' : 'rgba(239, 68, 68, 0.18)',
+                                    border: currentDetailProperty.isAvailable ? '1px solid #E5A93B' : '1px solid #EF4444',
+                                    color: currentDetailProperty.isAvailable ? '#E5A93B' : '#EF4444',
+                                    fontSize: '12.5px',
                                     fontWeight: '800',
                                     cursor: 'pointer'
                                 }}
@@ -964,148 +976,141 @@ export default function AdminPortal() {
                             <button
                                 onClick={() => handleOpenPropertyModal(currentDetailProperty)}
                                 className="btn-lime"
-                                style={{ padding: '8px 18px', fontSize: '13px' }}
+                                style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}
                             >
-                                Edit Metadata ✏️
+                                Edit Details ✏️
                             </button>
                         </div>
                     </div>
                 </header>
 
-                <main style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 28px' }}>
+                <main style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)', boxSizing: 'border-box' }}>
                     
-                    {/* Top Property Overview Hero Banner */}
-                    <div style={{ position: 'relative', borderRadius: '28px', overflow: 'hidden', minHeight: '260px', display: 'flex', alignItems: 'flex-end', padding: '36px', backgroundImage: `url(${currentDetailProperty.image})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: '40px', border: '1px solid rgba(255, 255, 255, 0.15)', boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
-                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8, 18, 10, 0.95) 0%, rgba(8, 18, 10, 0.45) 100%)' }} />
+                    {/* Top Property Overview Hero Box */}
+                    <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', minHeight: '240px', display: 'flex', alignItems: 'flex-end', padding: '32px', backgroundImage: `url(${currentDetailProperty.image})`, backgroundSize: 'cover', backgroundPosition: 'center', marginBottom: '36px', border: '1px solid rgba(18, 22, 19, 0.1)', boxShadow: '0 8px 30px rgba(0,0,0,0.06)' }}>
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.4) 100%)' }} />
                         <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', width: '100%' }}>
                             <div>
-                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
+                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '10px' }}>
+                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
                                         {currentDetailProperty.region} Region
                                     </span>
-                                    <span style={{ background: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px' }}>
-                                        Altitude: {currentDetailProperty.altitude}
+                                    <span style={{ background: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+                                        {currentDetailProperty.altitude}
                                     </span>
-                                    <span style={{ background: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px' }}>
-                                        Terrain: {currentDetailProperty.difficulty}
+                                    <span style={{ background: 'rgba(0,0,0,0.6)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+                                        {currentDetailProperty.difficulty}
                                     </span>
                                 </div>
-                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(26px, 3.5vw, 36px)', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF' }}>
+                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3.5vw, 34px)', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF', letterSpacing: '-0.02em' }}>
                                     {currentDetailProperty.title}
                                 </h1>
-                                <p style={{ fontSize: '14.5px', color: '#E1E9E3', margin: 0, maxWidth: '720px', lineHeight: 1.5 }}>
+                                <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.85)', margin: 0, maxWidth: '680px', lineHeight: 1.55 }}>
                                     {currentDetailProperty.description}
                                 </p>
                             </div>
 
-                            <div style={{ background: 'rgba(16, 30, 19, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(213, 237, 85, 0.3)', borderRadius: '20px', padding: '18px 24px', textAlign: 'right' }}>
-                                <div style={{ fontSize: '11px', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Base Price Per Camper</div>
-                                <div style={{ fontSize: '28px', fontWeight: '800', color: '#E5A93B' }}>
+                            <div style={{ background: 'rgba(18, 22, 19, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(229, 169, 59, 0.3)', borderRadius: '18px', padding: '16px 22px', textAlign: 'right' }}>
+                                <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', fontWeight: '700' }}>Base Price / Camper</div>
+                                <div style={{ fontSize: '26px', fontWeight: '800', color: '#E5A93B' }}>
                                     ₹{currentDetailProperty.price.toLocaleString('en-IN')}
                                 </div>
-                                <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-                                    <button onClick={() => handleAdjustPrice(currentDetailProperty.id, -100)} style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>-₹100</button>
-                                    <button onClick={() => handleAdjustPrice(currentDetailProperty.id, 100)} style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>+₹100</button>
+                                <div style={{ display: 'flex', gap: '6px', marginTop: '8px', justifyContent: 'flex-end' }}>
+                                    <button onClick={() => handleAdjustPrice(currentDetailProperty.id, -100)} style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>-₹100</button>
+                                    <button onClick={() => handleAdjustPrice(currentDetailProperty.id, 100)} style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.12)', border: 'none', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>+₹100</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* ─────────────────────────────────────────────────────────
-                        SECTION 1: ROOMS, PODS & ACCOMMODATION CARDS
-                    ───────────────────────────────────────────────────────── */}
-                    <div style={{ marginBottom: '48px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                    {/* SECTION 1: ROOMS & PODS INVENTORY */}
+                    <div style={{ marginBottom: '44px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
                             <div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <span>🛏️ Rooms, Dome Pods & Tent Inventory</span>
-                                    <span style={{ fontSize: '13px', background: 'rgba(213, 237, 85, 0.15)', color: '#E5A93B', padding: '3px 10px', borderRadius: '999px' }}>
-                                        {currentDetailProperty.rooms ? currentDetailProperty.rooms.length : 0} Types
-                                    </span>
+                                <div className="star-badge">
+                                    <span className="star-icon">★</span> ACCOMMODATION UNITS
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                    Rooms, Dome Pods & Tent Inventory ({currentDetailProperty.rooms ? currentDetailProperty.rooms.length : 0})
                                 </h3>
-                                <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                    Adjust individual pod capacities, night rates, total unit inventory, and active booking availability.
-                                </p>
                             </div>
                             <button
                                 onClick={() => setIsAddRoomModalOpen(true)}
                                 className="btn-lime"
-                                style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}
+                                style={{ padding: '10px 20px', fontSize: '13px', fontWeight: '800' }}
                             >
-                                + Add Room / Pod Type
+                                + Add Room Type
                             </button>
                         </div>
 
-                        {/* Room Cards Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+                        {/* Clean Squared Room Cards */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                             {currentDetailProperty.rooms && currentDetailProperty.rooms.map(room => (
                                 <div
                                     key={room.id}
                                     style={{
-                                        background: '#101E13',
-                                        border: room.isAvailable ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 90, 95, 0.4)',
-                                        borderRadius: '24px',
+                                        background: '#FFFFFF',
+                                        border: room.isAvailable ? '1px solid rgba(18, 22, 19, 0.08)' : '1px solid rgba(239, 68, 68, 0.3)',
+                                        borderRadius: '20px',
                                         overflow: 'hidden',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                                        boxShadow: '0 4px 18px rgba(0,0,0,0.03)'
                                     }}
                                 >
                                     <div style={{ position: 'relative', height: '170px' }}>
                                         <img src={room.image || currentDetailProperty.image} alt={room.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#E5A93B' : '#FF5A5F', color: room.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {room.isAvailable ? 'Available' : 'Fully Booked'}
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#121613' : '#EF4444', color: room.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                            {room.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
-                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
                                             Capacity: {room.capacity}
                                         </span>
                                     </div>
 
-                                    <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
+                                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                                 {room.name}
                                             </h4>
-                                            <span style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>
+                                            <span style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
                                                 ₹{room.price}
                                             </span>
                                         </div>
 
-                                        {/* Features Pills */}
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '16px' }}>
                                             {room.features && room.features.map((feat, idx) => (
-                                                <span key={idx} style={{ background: 'rgba(255,255,255,0.05)', color: '#A2B6A6', fontSize: '11px', fontWeight: '600', padding: '3px 8px', borderRadius: '6px' }}>
+                                                <span key={idx} style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', color: '#59655D', fontSize: '11px', fontWeight: '600', padding: '3px 8px', borderRadius: '6px' }}>
                                                     ✓ {feat}
                                                 </span>
                                             ))}
                                         </div>
 
                                         {/* Unit Inventory Tracker & Adjuster */}
-                                        <div style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)', borderRadius: '16px', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                        <div style={{ background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.06)', borderRadius: '14px', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                                             <div>
-                                                <div style={{ fontSize: '11px', color: '#8E9B92' }}>Unit Inventory</div>
-                                                <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                                    {room.bookedUnits} / {room.totalUnits} Units Occupied
+                                                <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>Inventory</div>
+                                                <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                                    {room.bookedUnits} / {room.totalUnits} Units Booked
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', gap: '6px' }}>
-                                                <button onClick={() => handleAdjustRoomUnits(currentDetailProperty.id, room.id, -1)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontWeight: '800', cursor: 'pointer' }}>-</button>
-                                                <button onClick={() => handleAdjustRoomUnits(currentDetailProperty.id, room.id, 1)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontWeight: '800', cursor: 'pointer' }}>+</button>
+                                            <div style={{ display: 'flex', gap: '5px' }}>
+                                                <button onClick={() => handleAdjustRoomUnits(currentDetailProperty.id, room.id, -1)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', color: '#121613', fontWeight: '800', cursor: 'pointer' }}>-</button>
+                                                <button onClick={() => handleAdjustRoomUnits(currentDetailProperty.id, room.id, 1)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', color: '#121613', fontWeight: '800', cursor: 'pointer' }}>+</button>
                                             </div>
                                         </div>
 
-                                        {/* Availability Toggle */}
                                         <button
                                             onClick={() => handleToggleRoomAvailability(currentDetailProperty.id, room.id)}
                                             style={{
                                                 marginTop: 'auto',
                                                 width: '100%',
                                                 padding: '10px',
-                                                borderRadius: '12px',
-                                                background: room.isAvailable ? 'rgba(255, 90, 95, 0.15)' : 'rgba(213, 237, 85, 0.15)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                color: room.isAvailable ? '#FF5A5F' : '#E5A93B',
-                                                fontSize: '12.5px',
+                                                borderRadius: '10px',
+                                                background: room.isAvailable ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 101, 52, 0.08)',
+                                                border: room.isAvailable ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(22, 101, 52, 0.3)',
+                                                color: room.isAvailable ? '#DC2626' : '#166534',
+                                                fontSize: '12px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer'
                                             }}
@@ -1118,43 +1123,39 @@ export default function AdminPortal() {
                         </div>
                     </div>
 
-                    {/* ─────────────────────────────────────────────────────────
-                        SECTION 2: ON-SITE AMENITIES & FACILITIES CARDS
-                    ───────────────────────────────────────────────────────── */}
-                    <div style={{ marginBottom: '48px' }}>
-                        <div style={{ marginBottom: '20px' }}>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                ⚡ On-Site Amenities & Facilities Checklist
-                            </h3>
-                            <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                Enable or disable facilities available at this specific campsite base.
-                            </p>
+                    {/* SECTION 2: ON-SITE AMENITIES CHECKLIST */}
+                    <div style={{ marginBottom: '44px' }}>
+                        <div className="star-badge" style={{ marginBottom: '8px' }}>
+                            <span className="star-icon">★</span> FACILITIES & AMENITIES
                         </div>
+                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 16px', color: '#121613' }}>
+                            On-Site Amenities Toggle
+                        </h3>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
                             {currentDetailProperty.amenities && currentDetailProperty.amenities.map(amenity => (
                                 <div
                                     key={amenity.id}
                                     onClick={() => handleToggleAmenity(currentDetailProperty.id, amenity.id)}
                                     style={{
-                                        background: amenity.enabled ? 'rgba(213, 237, 85, 0.08)' : '#101E13',
-                                        border: amenity.enabled ? '1px solid rgba(213, 237, 85, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
-                                        borderRadius: '18px',
-                                        padding: '16px 20px',
+                                        background: '#FFFFFF',
+                                        border: amenity.enabled ? '1.5px solid #166534' : '1px solid rgba(18, 22, 19, 0.08)',
+                                        borderRadius: '16px',
+                                        padding: '14px 18px',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                        <span style={{ fontSize: '22px' }}>{amenity.icon}</span>
-                                        <span style={{ fontSize: '14px', fontWeight: '700', color: amenity.enabled ? '#FFFFFF' : '#8E9B92' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <span style={{ fontSize: '20px' }}>{amenity.icon}</span>
+                                        <span style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>
                                             {amenity.name}
                                         </span>
                                     </div>
-                                    <span style={{ fontSize: '16px', color: amenity.enabled ? '#E5A93B' : '#8E9B92' }}>
+                                    <span style={{ fontSize: '15px', fontWeight: '900', color: amenity.enabled ? '#166534' : '#C8D0CA' }}>
                                         {amenity.enabled ? '✓' : '○'}
                                     </span>
                                 </div>
@@ -1162,48 +1163,42 @@ export default function AdminPortal() {
                         </div>
                     </div>
 
-                    {/* ─────────────────────────────────────────────────────────
-                        SECTION 3: ADD-ON PACKAGES & TREK UPGRADES
-                    ───────────────────────────────────────────────────────── */}
+                    {/* SECTION 3: ADD-ON EXPERIENCES */}
                     <div>
-                        <div style={{ marginBottom: '20px' }}>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                🎁 Available Add-On Packages & Experiences
-                            </h3>
-                            <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                Custom trek upgrades, live barbecue platters, and drone media shoots offered at this property.
-                            </p>
+                        <div className="star-badge" style={{ marginBottom: '8px' }}>
+                            <span className="star-icon">★</span> ADD-ON EXPERIENCES
                         </div>
+                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 16px', color: '#121613' }}>
+                            Custom Upgrades & Add-ons
+                        </h3>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                             {currentDetailProperty.addons && currentDetailProperty.addons.map(addon => (
                                 <div
                                     key={addon.id}
                                     onClick={() => handleToggleAddon(currentDetailProperty.id, addon.id)}
                                     style={{
-                                        background: addon.enabled ? 'rgba(213, 237, 85, 0.08)' : '#101E13',
-                                        border: addon.enabled ? '1px solid rgba(213, 237, 85, 0.35)' : '1px solid rgba(255, 255, 255, 0.08)',
-                                        borderRadius: '20px',
-                                        padding: '20px',
+                                        background: '#FFFFFF',
+                                        border: addon.enabled ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
+                                        borderRadius: '16px',
+                                        padding: '18px 20px',
                                         display: 'flex',
                                         justifyContent: 'space-between',
                                         alignItems: 'center',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
                                     }}
                                 >
                                     <div>
-                                        <div style={{ fontSize: '14.5px', fontWeight: '800', color: addon.enabled ? '#FFFFFF' : '#8E9B92' }}>
+                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
                                             {addon.name}
                                         </div>
-                                        <div style={{ fontSize: '12px', color: addon.enabled ? '#E5A93B' : '#8E9B92', marginTop: '4px' }}>
+                                        <div style={{ fontSize: '11.5px', color: addon.enabled ? '#166534' : '#7D8880', fontWeight: '600', marginTop: '3px' }}>
                                             {addon.enabled ? '● Active in Booking Form' : '○ Disabled'}
                                         </div>
                                     </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>
-                                            +₹{addon.price}
-                                        </div>
+                                    <div style={{ fontSize: '17px', fontWeight: '800', color: '#121613' }}>
+                                        +₹{addon.price}
                                     </div>
                                 </div>
                             ))}
@@ -1212,23 +1207,23 @@ export default function AdminPortal() {
 
                 </main>
 
-                {/* ── CREATE ROOM MODAL FOR DEDICATED PAGE ── */}
+                {/* MODAL: ADD ROOM TYPE */}
                 <AnimatePresence>
                     {isAddRoomModalOpen && (
-                        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                            <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.3)', borderRadius: '32px', padding: '36px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#FFFFFF', boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '16px' }}>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
+                        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                            <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '32px', maxWidth: '560px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                         Add Room / Pod Type
                                     </h3>
-                                    <button onClick={() => setIsAddRoomModalOpen(false)} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: 'none', color: '#FFFFFF', cursor: 'pointer' }}>
+                                    <button onClick={() => setIsAddRoomModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
                                         ✕
                                     </button>
                                 </div>
 
-                                <form onSubmit={handleSaveRoom} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <form onSubmit={handleSaveRoom} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                             Accommodation Name *
                                         </label>
                                         <input
@@ -1237,25 +1232,25 @@ export default function AdminPortal() {
                                             placeholder="e.g. Geodesic Luxury Dome Pod"
                                             value={roomForm.name}
                                             onChange={e => setRoomForm({ ...roomForm, name: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                                 Guest Capacity
                                             </label>
                                             <input
                                                 type="text"
-                                                placeholder="e.g. 2 Adults / 4 Campers"
+                                                placeholder="e.g. 2 Adults"
                                                 value={roomForm.capacity}
                                                 onChange={e => setRoomForm({ ...roomForm, capacity: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                                 Price Per Unit (INR) *
                                             </label>
                                             <input
@@ -1263,14 +1258,14 @@ export default function AdminPortal() {
                                                 required
                                                 value={roomForm.price}
                                                 onChange={e => setRoomForm({ ...roomForm, price: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                             />
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                                 Total Units Inventory
                                             </label>
                                             <input
@@ -1278,36 +1273,36 @@ export default function AdminPortal() {
                                                 required
                                                 value={roomForm.totalUnits}
                                                 onChange={e => setRoomForm({ ...roomForm, totalUnits: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
+                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
                                                 Cover Image URL
                                             </label>
                                             <input
                                                 type="url"
                                                 value={roomForm.image}
                                                 onChange={e => setRoomForm({ ...roomForm, image: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Features & Amenities (Comma Separated)
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Features (Comma Separated)
                                         </label>
                                         <input
                                             type="text"
                                             value={roomForm.features}
                                             onChange={e => setRoomForm({ ...roomForm, features: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
 
-                                    <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '10px' }}>
-                                        + Save Room Type ↗
+                                    <button type="submit" className="btn-lime" style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                        + Save Room Type
                                     </button>
                                 </form>
                             </motion.div>
@@ -1320,45 +1315,45 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // MAIN ADMIN DASHBOARD WITH ALL TABS
+    // MAIN ADMIN DASHBOARD WITH CLEAN SQUARED BOXES
     // ─────────────────────────────────────────────────────────────
     return (
-        <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
+        <div style={{ minHeight: '100dvh', background: '#F8F9F5', color: '#121613', paddingBottom: '90px' }}>
             
-            {/* Top Navigation Bar */}
-            <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(14, 24, 17, 0.96)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', padding: '16px 28px' }}>
-                <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+            {/* Top Navigation Bar (Dark Forest Green 1440px) */}
+            <header style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0B150E', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '14px clamp(20px, 4vw, 48px)' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-                            <img src="/logo.png" alt="Aanandham Logo" style={{ height: '34px', width: 'auto', objectFit: 'contain', borderRadius: '6px' }} />
-                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#FFFFFF' }}>
+                            <img src="/logo.png" alt="Aanandham Logo" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
+                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#FFFFFF' }}>
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>
-                        <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#E5A93B', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.8px' }}>
-                            PROPERTIES, EVENTS & REVENUE PMS
+                        <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.8px' }}>
+                            ★ BASECAMP PMS
                         </span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <Link href="/" target="_blank" style={{ color: '#A2B6A6', textDecoration: 'none', fontSize: '13px', fontWeight: '700', padding: '8px 16px', borderRadius: '999px', background: 'rgba(255,255,255,0.06)' }}>
-                            View Live Site ↗
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <Link href="/" target="_blank" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: '12.5px', fontWeight: '700', padding: '7px 14px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)' }}>
+                            Live Website ↗
                         </Link>
-                        <button onClick={handleLogout} style={{ background: 'rgba(255, 90, 95, 0.15)', color: '#FF5A5F', border: '1px solid rgba(255, 90, 95, 0.3)', padding: '8px 18px', borderRadius: '999px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                        <button onClick={handleLogout} style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#FCA5A5', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '7px 14px', borderRadius: '999px', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
                             Lock & Exit
                         </button>
                     </div>
                 </div>
             </header>
 
-            <main style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 28px' }}>
+            <main style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)', boxSizing: 'border-box' }}>
                 
-                {/* ── NAVIGATION TABS ── */}
-                <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '16px', marginBottom: '32px', overflowX: 'auto' }}>
+                {/* ── TABS BAR (Liquid-Glide Style Clean Pills) ── */}
+                <div style={{ display: 'flex', gap: '8px', paddingBottom: '8px', marginBottom: '28px', overflowX: 'auto' }}>
                     {[
-                        { id: 'overview', name: '📊 Mission Control & Analytics' },
-                        { id: 'properties', name: '⛺ Regional Properties & Rooms', count: properties.length },
-                        { id: 'events', name: '🎉 Events & Scheduled Batches', count: activeEventsCount },
+                        { id: 'overview', name: '📊 Mission Control' },
+                        { id: 'properties', name: '⛺ Campsites & Rooms', count: properties.length },
+                        { id: 'events', name: '🎉 Trek Batches', count: activeEventsCount },
                         { id: 'bookings', name: '📋 Bookings & Leads', count: bookings.length },
                         { id: 'settings', name: '🔔 Notification Channels' }
                     ].map(tab => {
@@ -1368,24 +1363,25 @@ export default function AdminPortal() {
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
                                 style={{
-                                    padding: '10px 20px',
+                                    padding: '10px 18px',
                                     borderRadius: '999px',
-                                    border: isActive ? '1px solid #E5A93B' : '1px solid rgba(255, 255, 255, 0.1)',
-                                    background: isActive ? '#E5A93B' : 'rgba(255, 255, 255, 0.04)',
-                                    color: isActive ? '#121613' : '#FFFFFF',
-                                    fontSize: '14px',
+                                    border: isActive ? '1px solid #121613' : '1px solid rgba(18, 22, 19, 0.12)',
+                                    background: isActive ? '#121613' : '#FFFFFF',
+                                    color: isActive ? '#FFFFFF' : '#59655D',
+                                    fontSize: '13.5px',
                                     fontWeight: '800',
                                     cursor: 'pointer',
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '8px',
                                     whiteSpace: 'nowrap',
+                                    boxShadow: isActive ? '0 4px 14px rgba(18, 22, 19, 0.12)' : 'none',
                                     transition: 'all 0.2s ease'
                                 }}
                             >
                                 <span>{tab.name}</span>
                                 {tab.count !== undefined && (
-                                    <span style={{ background: isActive ? '#121613' : 'rgba(255,255,255,0.15)', color: isActive ? '#E5A93B' : '#FFFFFF', fontSize: '11px', padding: '2px 8px', borderRadius: '999px' }}>
+                                    <span style={{ background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(18,22,19,0.06)', color: isActive ? '#FFFFFF' : '#121613', fontSize: '11px', fontWeight: '800', padding: '2px 7px', borderRadius: '999px' }}>
                                         {tab.count}
                                     </span>
                                 )}
@@ -1395,96 +1391,96 @@ export default function AdminPortal() {
                 </div>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB 1: MISSION CONTROL & EXECUTIVE ANALYTICS
+                    TAB 1: MISSION CONTROL & METRIC SQUARED BOXES
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'overview' && (
                     <div>
-                        {/* KPI Highlights */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' }}>
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-                                <div style={{ fontSize: '12px', fontWeight: '700', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Confirmed Revenue (Pipeline)
+                        {/* 4 Minimalist Squared Metric Cards */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                    Confirmed Revenue
                                 </div>
-                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#E5A93B' }}>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
                                     ₹{totalRevenue.toLocaleString('en-IN')}
                                 </div>
-                                <div style={{ fontSize: '12px', color: '#8E9B92', marginTop: '6px' }}>
-                                    Average Order Value: ₹{avgOrderValue.toLocaleString('en-IN')}
+                                <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
+                                    Avg Booking: ₹{avgOrderValue.toLocaleString('en-IN')}
                                 </div>
                             </div>
 
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-                                <div style={{ fontSize: '12px', fontWeight: '700', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Active Campers on Peak
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                    Active Campers
                                 </div>
-                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    {activeCampers} <span style={{ fontSize: '18px', color: '#A2B6A6', fontWeight: '600' }}>Explorers</span>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
+                                    {activeCampers} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Pax</span>
                                 </div>
-                                <div style={{ fontSize: '12px', color: '#E5A93B', marginTop: '6px' }}>
-                                    Across 4 Kerala Regions
-                                </div>
-                            </div>
-
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-                                <div style={{ fontSize: '12px', fontWeight: '700', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Active Scheduled Event Batches
-                                </div>
-                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    {activeEventsCount} <span style={{ fontSize: '18px', color: '#A2B6A6' }}>Batches</span>
-                                </div>
-                                <div style={{ fontSize: '12px', color: '#A2B6A6', marginTop: '6px' }}>
-                                    {events.reduce((acc, ev) => acc + ev.spotsLeft, 0)} Total Spots Remaining
+                                <div style={{ fontSize: '12px', color: '#166534', marginTop: '6px', fontWeight: '700' }}>
+                                    ✓ Across 4 Kerala Hubs
                                 </div>
                             </div>
 
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '24px' }}>
-                                <div style={{ fontSize: '12px', fontWeight: '700', color: '#A2B6A6', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Pending Inquiries (Action Required)
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                    Scheduled Batches
                                 </div>
-                                <div style={{ fontSize: '32px', fontWeight: '800', color: '#FFB800' }}>
-                                    {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '16px', color: '#A2B6A6' }}>Leads</span>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
+                                    {activeEventsCount} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Batches</span>
                                 </div>
-                                <div style={{ fontSize: '12px', color: '#FFB800', marginTop: '6px' }}>
-                                    ⚡ 1-Tap WhatsApp dispatch ready
+                                <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
+                                    {events.reduce((acc, ev) => acc + ev.spotsLeft, 0)} Spots Remaining
+                                </div>
+                            </div>
+
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                    Pending Inquiries
+                                </div>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.02em' }}>
+                                    {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Leads</span>
+                                </div>
+                                <div style={{ fontSize: '12px', color: '#B45309', marginTop: '6px', fontWeight: '700' }}>
+                                    ⚡ 1-Tap WhatsApp Dispatch
                                 </div>
                             </div>
                         </div>
 
-                        {/* Split Row: Active Properties by Region + Upcoming Events Feed */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '28px', marginBottom: '36px' }}>
+                        {/* Split Row: Regional Breakdown + Weekend Events */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px', marginBottom: '28px' }}>
                             
-                            {/* Regional Properties Snapshot */}
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            {/* Regional Properties Squared Box */}
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                            ⛺ Properties by Region
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                            ⛺ Regional Campsites
                                         </h3>
-                                        <div style={{ fontSize: '12.5px', color: '#A2B6A6', marginTop: '2px' }}>
-                                            {properties.length} Campsites listed across Kerala
+                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                            {properties.length} Verified Campsites
                                         </div>
                                     </div>
-                                    <button onClick={() => setActiveTab('properties')} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12px' }}>
-                                        Manage All →
+                                    <button onClick={() => setActiveTab('properties')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
+                                        Manage →
                                     </button>
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                    {['Munnar', 'Suryanelli', 'Vagamon', 'Wayanad', 'Athirappilly'].map(reg => {
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {['Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => {
                                         const regProps = properties.filter(p => (p.region || 'Munnar') === reg);
                                         const availableCount = regProps.filter(p => p.isAvailable).length;
                                         return (
-                                            <div key={reg} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '14px 18px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                            <div key={reg} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8F9F5', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.04)' }}>
                                                 <div>
-                                                    <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF' }}>
-                                                        {reg === 'Munnar' ? '🏔️ Munnar High Peaks' : reg === 'Suryanelli' ? '☕ Suryanelli Ridge' : reg === 'Vagamon' ? '🌲 Vagamon Pine Valleys' : reg === 'Wayanad' ? '🌴 Wayanad Rainforest' : '🌊 Athirappilly Rapids'}
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
+                                                        {reg === 'Munnar' ? '🏔️ Munnar High Peaks' : reg === 'Suryanelli' ? '☕ Suryanelli Ridge' : reg === 'Vagamon' ? '🌲 Vagamon Pine Valleys' : '🌴 Wayanad Rainforest'}
                                                     </div>
-                                                    <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                                        {regProps.length} Campsites ({availableCount} Available)
+                                                    <div style={{ fontSize: '11.5px', color: '#59655D' }}>
+                                                        {regProps.length} Campsites ({availableCount} Open)
                                                     </div>
                                                 </div>
-                                                <span style={{ fontSize: '12px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px', background: availableCount > 0 ? 'rgba(213,237,85,0.15)' : 'rgba(255,90,95,0.15)', color: availableCount > 0 ? '#E5A93B' : '#FF5A5F' }}>
-                                                    {availableCount > 0 ? 'Active & Open' : 'Sold Out'}
+                                                <span style={{ fontSize: '11px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px', background: availableCount > 0 ? 'rgba(22,101,52,0.1)' : 'rgba(239,68,68,0.1)', color: availableCount > 0 ? '#166534' : '#DC2626' }}>
+                                                    {availableCount > 0 ? 'Active' : 'Sold Out'}
                                                 </span>
                                             </div>
                                         );
@@ -1492,36 +1488,36 @@ export default function AdminPortal() {
                                 </div>
                             </div>
 
-                            {/* Active Scheduled Events Feed */}
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                            {/* Active Scheduled Events Box */}
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                            🎉 Active Weekend Events
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                            🎉 Active Weekend Batches
                                         </h3>
-                                        <div style={{ fontSize: '12.5px', color: '#A2B6A6', marginTop: '2px' }}>
-                                            Upcoming scheduled batch treks & camps
+                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                            Upcoming scheduled group treks
                                         </div>
                                     </div>
-                                    <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12px' }}>
-                                        Manage Events →
+                                    <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
+                                        All Batches →
                                     </button>
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                                    {events.map(ev => (
-                                        <div key={ev.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '18px', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', gap: '14px', alignItems: 'center' }}>
-                                            <img src={ev.image} alt={ev.title} style={{ width: '64px', height: '64px', borderRadius: '12px', objectFit: 'cover' }} />
-                                            <div style={{ flex: 1 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B' }}>{ev.badge}</span>
-                                                    <span style={{ fontSize: '11px', color: '#A2B6A6' }}>{ev.dates}</span>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {events.slice(0, 3).map(ev => (
+                                        <div key={ev.id} style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                            <img src={ev.image} alt={ev.title} style={{ width: '52px', height: '52px', borderRadius: '10px', objectFit: 'cover' }} />
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
+                                                    <span style={{ fontSize: '10.5px', color: '#59655D' }}>{ev.dates}</span>
                                                 </div>
-                                                <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF', lineHeight: 1.3 }}>{ev.title}</div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', fontSize: '12px' }}>
-                                                    <span style={{ color: '#A2B6A6' }}>{ev.booked} / {ev.capacity} Campers</span>
-                                                    <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }}>
-                                                        {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Remaining`}
+                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', fontSize: '11.5px' }}>
+                                                    <span style={{ color: '#59655D' }}>{ev.booked} / {ev.capacity} Pax</span>
+                                                    <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
+                                                        {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Left`}
                                                     </span>
                                                 </div>
                                             </div>
@@ -1532,31 +1528,36 @@ export default function AdminPortal() {
 
                         </div>
 
-                        {/* Recent Leads & Inquiries Stream */}
-                        <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0 }}>
-                                    ⚡ Recent Booking Inquiries
-                                </h3>
-                                <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12px' }}>
-                                    View All Leads →
+                        {/* Recent Leads Roster Stream */}
+                        <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                <div>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        ⚡ Recent Inquiries & Bookings
+                                    </h3>
+                                    <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                        Real-time reservation requests
+                                    </div>
+                                </div>
+                                <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
+                                    All Leads →
                                 </button>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 {bookings.slice(0, 3).map(b => (
-                                    <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', padding: '16px 20px', borderRadius: '16px' }}>
+                                    <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.05)', padding: '14px 18px', borderRadius: '14px' }}>
                                         <div>
-                                            <div style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>{b.name} ({b.guests} Guests)</div>
-                                            <div style={{ fontSize: '12.5px', color: '#A2B6A6' }}>{b.package} · {b.dates}</div>
+                                            <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>{b.name} ({b.guests} Guests)</div>
+                                            <div style={{ fontSize: '12px', color: '#59655D' }}>{b.package} · {b.dates}</div>
                                         </div>
                                         <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: '18px', fontWeight: '800', color: '#E5A93B' }}>₹{b.total.toLocaleString('en-IN')}</div>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#E5A93B' : '#FFB800' }}>{b.status}</span>
+                                            <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>₹{b.total.toLocaleString('en-IN')}</div>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#166534' : '#B45309' }}>{b.status}</span>
                                         </div>
                                         <div>
-                                            <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px' }}>
-                                                <i className="fa-brands fa-whatsapp"></i> Chat
+                                            <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: '800' }}>
+                                                WhatsApp Chat ↗
                                             </a>
                                         </div>
                                     </div>
@@ -1567,37 +1568,37 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB 2: REGIONAL PROPERTIES & ROOM/POD MANAGEMENT
+                    TAB 2: REGIONAL PROPERTIES & SQUARED CARDS
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'properties' && (
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
                             <div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0 }}>
-                                    Regional Properties & Campsites
+                                <div className="star-badge">
+                                    <span className="star-icon">★</span> CAMPSITE INVENTORY
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                    Regional Campsites & Glamping Pods
                                 </h3>
-                                <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                    Organized by location. Tap on any property card to open its full dedicated room inventory & amenities manager.
-                                </p>
                             </div>
-                            <button onClick={() => handleOpenPropertyModal()} className="btn-lime" style={{ padding: '12px 26px', fontSize: '14px', fontWeight: '800' }}>
-                                + Add New Campsite Listing
+                            <button onClick={() => handleOpenPropertyModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                                + Add New Campsite
                             </button>
                         </div>
 
                         {/* Region Filter Selector */}
-                        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '24px' }}>
-                            {['All', 'Munnar', 'Suryanelli', 'Vagamon', 'Wayanad', 'Athirappilly'].map(reg => (
+                        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px' }}>
+                            {['All', 'Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => (
                                 <button
                                     key={reg}
                                     onClick={() => setPropertyFilterRegion(reg)}
                                     style={{
-                                        padding: '8px 18px',
+                                        padding: '7px 16px',
                                         borderRadius: '999px',
-                                        border: propertyFilterRegion === reg ? '1px solid #E5A93B' : '1px solid rgba(255,255,255,0.08)',
-                                        background: propertyFilterRegion === reg ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
-                                        color: propertyFilterRegion === reg ? '#E5A93B' : '#A2B6A6',
-                                        fontSize: '13px',
+                                        border: propertyFilterRegion === reg ? '1px solid #121613' : '1px solid rgba(18,22,19,0.12)',
+                                        background: propertyFilterRegion === reg ? '#121613' : '#FFFFFF',
+                                        color: propertyFilterRegion === reg ? '#FFFFFF' : '#59655D',
+                                        fontSize: '12.5px',
                                         fontWeight: '700',
                                         cursor: 'pointer'
                                     }}
@@ -1607,80 +1608,80 @@ export default function AdminPortal() {
                             ))}
                         </div>
 
-                        {/* Properties Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+                        {/* Properties Squared Card Grid */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                             {filteredProperties.map(prop => (
                                 <div
                                     key={prop.id}
                                     style={{
-                                        background: '#101E13',
-                                        border: prop.isAvailable ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 90, 95, 0.4)',
-                                        borderRadius: '24px',
+                                        background: '#FFFFFF',
+                                        border: prop.isAvailable ? '1px solid rgba(18, 22, 19, 0.08)' : '1px solid rgba(239, 68, 68, 0.3)',
+                                        borderRadius: '20px',
                                         overflow: 'hidden',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        boxShadow: '0 10px 30px rgba(0,0,0,0.2)'
+                                        boxShadow: '0 4px 18px rgba(0,0,0,0.03)'
                                     }}
                                 >
                                     <div 
                                         onClick={() => setActivePropertyDetailId(prop.id)}
-                                        style={{ position: 'relative', height: '190px', cursor: 'pointer' }}
+                                        style={{ position: 'relative', height: '180px', cursor: 'pointer' }}
                                     >
                                         <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#E5A93B' : '#FF5A5F', color: prop.isAvailable ? '#121613' : '#FFFFFF', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {prop.isAvailable ? 'Available' : 'SOLD OUT'}
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#121613' : '#EF4444', color: prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                            {prop.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
-                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
                                             {prop.altitude}
                                         </span>
                                     </div>
 
-                                    <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
+                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
                                             📍 {prop.region || 'Munnar'} · {prop.location}
                                         </div>
                                         <h4 
                                             onClick={() => setActivePropertyDetailId(prop.id)}
-                                            style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.3, cursor: 'pointer' }}
+                                            style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 12px', lineHeight: 1.3, cursor: 'pointer' }}
                                         >
                                             {prop.title}
                                         </h4>
 
-                                        {/* Rate & Quick Adjust */}
-                                        <div style={{ background: 'rgba(255, 255, 255, 0.04)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '16px', padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                        {/* Rate & Adjust */}
+                                        <div style={{ background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.06)', borderRadius: '14px', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                                             <div>
-                                                <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Base Rate (Per Camper)</div>
-                                                <div style={{ fontSize: '20px', fontWeight: '800', color: '#E5A93B' }}>
+                                                <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Base Rate / Camper</div>
+                                                <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
                                                     ₹{prop.price.toLocaleString('en-IN')}
                                                 </div>
                                             </div>
-                                            <div style={{ display: 'flex', gap: '6px' }}>
-                                                <button onClick={() => handleAdjustPrice(prop.id, -100)} style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontSize: '14px', fontWeight: '800', cursor: 'pointer' }}>-₹100</button>
-                                                <button onClick={() => handleAdjustPrice(prop.id, 100)} style={{ width: '34px', height: '34px', borderRadius: '10px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontSize: '14px', fontWeight: '800', cursor: 'pointer' }}>+₹100</button>
+                                            <div style={{ display: 'flex', gap: '5px' }}>
+                                                <button onClick={() => handleAdjustPrice(prop.id, -100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>-</button>
+                                                <button onClick={() => handleAdjustPrice(prop.id, 100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>+</button>
                                             </div>
                                         </div>
 
-                                        {/* Dedicated Page Button */}
+                                        {/* Manage Rooms Button */}
                                         <button
                                             onClick={() => setActivePropertyDetailId(prop.id)}
                                             style={{
                                                 width: '100%',
-                                                padding: '12px',
-                                                borderRadius: '14px',
-                                                background: 'rgba(213, 237, 85, 0.12)',
-                                                border: '1px solid rgba(213, 237, 85, 0.35)',
-                                                color: '#E5A93B',
-                                                fontSize: '13.5px',
+                                                padding: '11px',
+                                                borderRadius: '12px',
+                                                background: '#121613',
+                                                color: '#FFFFFF',
+                                                fontSize: '13px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer',
-                                                marginBottom: '10px',
+                                                marginBottom: '8px',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                gap: '8px'
+                                                gap: '6px',
+                                                border: 'none'
                                             }}
                                         >
-                                            <span>Manage Rooms, Pods & Amenities ({prop.rooms ? prop.rooms.length : 1})</span>
+                                            <span>Manage Rooms ({prop.rooms ? prop.rooms.length : 1})</span>
                                             <span>→</span>
                                         </button>
 
@@ -1688,11 +1689,11 @@ export default function AdminPortal() {
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
                                             <button
                                                 onClick={() => handleToggleAvailability(prop.id)}
-                                                style={{ flex: 1, padding: '10px', borderRadius: '12px', background: prop.isAvailable ? 'rgba(255, 90, 95, 0.15)' : 'rgba(213, 237, 85, 0.15)', border: '1px solid rgba(255, 255, 255, 0.1)', color: prop.isAvailable ? '#FF5A5F' : '#E5A93B', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+                                                style={{ flex: 1, padding: '9px', borderRadius: '10px', background: prop.isAvailable ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 101, 52, 0.08)', border: prop.isAvailable ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(22, 101, 52, 0.3)', color: prop.isAvailable ? '#DC2626' : '#166534', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
                                             >
                                                 {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
                                             </button>
-                                            <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '10px 14px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.08)', border: 'none', color: '#FFFFFF', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}>
+                                            <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer' }}>
                                                 Edit ✏️
                                             </button>
                                         </div>
@@ -1704,64 +1705,64 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB 3: EVENTS & SCHEDULED EXPEDITIONS CMS
+                    TAB 3: EVENTS & TREK BATCHES
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'events' && (
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
                             <div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0 }}>
-                                    Scheduled Trek Batches & Events
+                                <div className="star-badge">
+                                    <span className="star-icon">★</span> EXPEDITION BATCHES
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                    Scheduled Trek Batches & Camps
                                 </h3>
-                                <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                    Publish weekend batches, meteor shower camps, and manage spots remaining.
-                                </p>
                             </div>
-                            <button onClick={() => handleOpenEventModal()} className="btn-lime" style={{ padding: '12px 26px', fontSize: '14px', fontWeight: '800' }}>
-                                + Create New Event Batch
+                            <button onClick={() => handleOpenEventModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                                + Create New Batch
                             </button>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                             {events.map(ev => (
-                                <div key={ev.id} style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                                    <div style={{ position: 'relative', height: '180px' }}>
+                                <div key={ev.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 18px rgba(0,0,0,0.03)' }}>
+                                    <div style={{ position: 'relative', height: '170px' }}>
                                         <img src={ev.image} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {ev.badge}
                                         </span>
-                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.7)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
                                             {ev.dates}
                                         </span>
                                     </div>
 
-                                    <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
                                             📍 {ev.campsite}
                                         </div>
-                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.3 }}>
+                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 8px', lineHeight: 1.3 }}>
                                             {ev.title}
                                         </h4>
-                                        <p style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.5, marginBottom: '16px' }}>{ev.description}</p>
+                                        <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.5, marginBottom: '14px' }}>{ev.description}</p>
 
-                                        {/* Capacity & Spots remaining meter */}
-                                        <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 16px', borderRadius: '16px', marginBottom: '16px' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: '700', marginBottom: '6px' }}>
-                                                <span style={{ color: '#FFFFFF' }}>Ticket: ₹{ev.price}</span>
-                                                <span style={{ color: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }}>
+                                        {/* Capacity Tracker */}
+                                        <div style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '12px', marginBottom: '14px', border: '1px solid rgba(18,22,19,0.04)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: '700', marginBottom: '6px' }}>
+                                                <span style={{ color: '#121613' }}>Ticket: ₹{ev.price}</span>
+                                                <span style={{ color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
                                                     {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Left (${ev.booked}/${ev.capacity})`}
                                                 </span>
                                             </div>
-                                            <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '999px', overflow: 'hidden' }}>
-                                                <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#FF5A5F' : '#E5A93B' }} />
+                                            <div style={{ height: '6px', background: 'rgba(18,22,19,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
+                                                <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }} />
                                             </div>
                                         </div>
 
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '10px', borderRadius: '12px', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                                            <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '9px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
                                                 Edit Batch ✏️
                                             </button>
-                                            <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '10px 14px', borderRadius: '12px', background: 'rgba(255,90,95,0.1)', border: 'none', color: '#FF5A5F', fontSize: '13px', cursor: 'pointer' }}>
+                                            <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '9px 12px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', fontSize: '12.5px', cursor: 'pointer' }}>
                                                 🗑️
                                             </button>
                                         </div>
@@ -1773,112 +1774,94 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB 4: BOOKINGS & LEADS LIFECYCLE
+                    TAB 4: BOOKINGS & LEADS ROSTER
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'bookings' && (
                     <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
                             <div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0 }}>
-                                    Reservation Inquiries & Leads
+                                <div className="star-badge">
+                                    <span className="star-icon">★</span> LIVE RESERVATIONS
+                                </div>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                    Reservation Inquiries & Leads ({filteredBookings.length})
                                 </h3>
-                                <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '4px 0 0' }}>
-                                    Direct WhatsApp connection and status management for arriving campers.
-                                </p>
                             </div>
-                            <button onClick={handleExportCSV} style={{ padding: '10px 20px', borderRadius: '999px', background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '13px', fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                                <i className="fa-solid fa-download"></i>
-                                <span>Export to Excel (CSV)</span>
+                            <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.15)', color: '#121613', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
+                                <span>📥</span>
+                                <span>Export CSV Spreadsheet</span>
                             </button>
                         </div>
 
                         {/* Search & Filter Bar */}
-                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
                             <input
                                 type="text"
                                 placeholder="Search by customer name, phone, or package..."
                                 value={bookingSearch}
                                 onChange={(e) => setBookingSearch(e.target.value)}
-                                style={{ flex: 1, minWidth: '240px', padding: '12px 18px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '13.5px', outline: 'none' }}
+                                style={{ flex: 1, minWidth: '240px', padding: '11px 16px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none' }}
                             />
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                 {['All', 'Pending', 'Confirmed', 'Checked In', 'Cancelled'].map(st => (
                                     <button
                                         key={st}
                                         onClick={() => setBookingFilterStatus(st)}
-                                        style={{ padding: '8px 16px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #E5A93B' : '1px solid rgba(255,255,255,0.08)', background: bookingFilterStatus === st ? 'rgba(213, 237, 85, 0.15)' : 'transparent', color: bookingFilterStatus === st ? '#E5A93B' : '#A2B6A6', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}
+                                        style={{ padding: '7px 14px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)', background: bookingFilterStatus === st ? '#121613' : '#FFFFFF', color: bookingFilterStatus === st ? '#FFFFFF' : '#59655D', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
                                     >
                                         {st}
                                     </button>
                                 ))}
-                                <button
-                                    onClick={handleExportBookingsCSV}
-                                    style={{
-                                        padding: '8px 16px',
-                                        borderRadius: '999px',
-                                        border: '1px solid rgba(213, 237, 85, 0.4)',
-                                        background: 'rgba(213, 237, 85, 0.12)',
-                                        color: '#D5ED55',
-                                        fontSize: '12.5px',
-                                        fontWeight: '800',
-                                        cursor: 'pointer',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '6px'
-                                    }}
-                                >
-                                    <span>📥</span>
-                                    <span>Export CSV</span>
-                                </button>
                             </div>
                         </div>
 
-                        {/* Bookings List Cards */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                        {/* Bookings List Squared Cards */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {filteredBookings.map(b => (
-                                <div key={b.id} style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '20px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center' }}>
+                                <div key={b.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '18px 22px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                                     <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B' }}>{b.id}</span>
-                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>{b.createdAt}</span>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
+                                            <span style={{ fontSize: '11px', color: '#7D8880' }}>{b.createdAt}</span>
                                         </div>
-                                        <div style={{ fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>{b.name}</div>
-                                        <div style={{ fontSize: '13px', color: '#A2B6A6' }}>{b.phone}</div>
+                                        <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
+                                        <div style={{ fontSize: '12.5px', color: '#59655D' }}>{b.phone}</div>
                                     </div>
 
                                     <div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#FFFFFF' }}>{b.package}</div>
-                                        <div style={{ fontSize: '12px', color: '#A2B6A6' }}>{b.dates} · {b.guests} Guests</div>
-                                        {b.roomType && <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Room: {b.roomType}</div>}
+                                        <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
+                                        <div style={{ fontSize: '11.5px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
+                                        {b.roomType && <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>Room: {b.roomType}</div>}
                                     </div>
 
                                     <div>
-                                        <div style={{ fontSize: '11px', color: '#8E9B92' }}>Est. Total</div>
-                                        <div style={{ fontSize: '20px', fontWeight: '800', color: '#E5A93B' }}>
+                                        <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Est. Total</div>
+                                        <div style={{ fontSize: '19px', fontWeight: '800', color: '#121613' }}>
                                             ₹{b.total.toLocaleString('en-IN')}
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>Status</label>
+                                        <label style={{ fontSize: '10px', color: '#7D8880', display: 'block', marginBottom: '3px', fontWeight: '700', textTransform: 'uppercase' }}>Status</label>
                                         <select
                                             value={b.status}
                                             onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
-                                            style={{ padding: '8px 12px', borderRadius: '12px', background: b.status === 'Confirmed' ? '#E5A93B' : b.status === 'Checked In' ? '#0070F3' : b.status === 'Cancelled' ? '#FF5A5F' : '#FFB800', color: b.status === 'Confirmed' ? '#121613' : '#FFFFFF', fontWeight: '800', fontSize: '12px', border: 'none', cursor: 'pointer' }}
+                                            style={{ padding: '7px 10px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
                                         >
-                                            <option value="Pending" style={{ background: '#101E13', color: '#FFFFFF' }}>Pending 🟡</option>
-                                            <option value="Confirmed" style={{ background: '#101E13', color: '#FFFFFF' }}>Confirmed 🟢</option>
-                                            <option value="Checked In" style={{ background: '#101E13', color: '#FFFFFF' }}>Checked In 🔵</option>
-                                            <option value="Cancelled" style={{ background: '#101E13', color: '#FFFFFF' }}>Cancelled 🔴</option>
+                                            <option value="Pending">Pending 🟡</option>
+                                            <option value="Confirmed">Confirmed 🟢</option>
+                                            <option value="Checked In">Checked In 🔵</option>
+                                            <option value="Cancelled">Cancelled 🔴</option>
                                         </select>
                                     </div>
 
-                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                                        <a href={waLink(`Hi ${b.name}! Aanandham desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
-                                            <i className="fa-brands fa-whatsapp"></i> Chat
+                                    <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                                        <a href={waLink(`Hi ${b.name}! Aanandham desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '7px 12px', fontSize: '11.5px', gap: '5px' }}>
+                                            <span>WhatsApp</span>
+                                            <span>↗</span>
                                         </a>
-                                        <a href={`tel:${b.phone}`} style={{ padding: '8px 12px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', color: '#FFFFFF', textDecoration: 'none', fontSize: '12px', display: 'flex', alignItems: 'center' }}>
-                                            <i className="fa-solid fa-phone"></i>
+                                        <a href={`tel:${b.phone}`} style={{ padding: '7px 10px', borderRadius: '999px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', textDecoration: 'none', fontSize: '11.5px', display: 'flex', alignItems: 'center' }}>
+                                            📞
                                         </a>
                                     </div>
                                 </div>
@@ -1888,57 +1871,57 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB 5: NOTIFICATIONS & SUPABASE SETTINGS
+                    TAB 5: NOTIFICATIONS & COORDINATOR SETTINGS
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'settings' && (
                     <div style={{ maxWidth: '720px' }}>
-                        <div style={{ marginBottom: '28px' }}>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 6px' }}>
-                                Notification & Cloud Sync Channels
+                        <div style={{ marginBottom: '24px' }}>
+                            <div className="star-badge">
+                                <span className="star-icon">★</span> COORDINATOR COORDINATES
+                            </div>
+                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
+                                Notification & Alert Dispatch Channels
                             </h3>
-                            <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: 0 }}>
-                                Set up instant alerts on your phone when new camper reservations arrive.
-                            </p>
                         </div>
 
                         <form onSubmit={handleSaveNotifications}>
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px', marginBottom: '24px' }}>
-                                <label style={{ fontSize: '12px', fontWeight: '800', color: '#E5A93B', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
                                     OFFICIAL ADMIN WHATSAPP DISPATCH NUMBER
                                 </label>
                                 <input
                                     type="text"
                                     value={adminPhone}
                                     onChange={(e) => setAdminPhone(e.target.value)}
-                                    style={{ width: '100%', padding: '13px 18px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '14px', outline: 'none', marginBottom: '10px' }}
+                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
                                 />
-                                <div style={{ fontSize: '12px', color: '#8E9B92' }}>
+                                <div style={{ fontSize: '12px', color: '#59655D' }}>
                                     Customer booking receipts and inquiry tickets format directly into this WhatsApp desk number.
                                 </div>
                             </div>
 
-                            <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '24px', padding: '28px', marginBottom: '24px' }}>
-                                <label style={{ fontSize: '12px', fontWeight: '800', color: '#E5A93B', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
-                                    TELEGRAM BOT / CLOUD WEBHOOK (OPTIONAL ₹0 PUSH ALERTS)
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
+                                    TELEGRAM BOT / CLOUD WEBHOOK (OPTIONAL PUSH ALERTS)
                                 </label>
                                 <input
                                     type="text"
                                     value={adminTelegram}
                                     onChange={(e) => setAdminTelegram(e.target.value)}
-                                    style={{ width: '100%', padding: '13px 18px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.15)', color: '#FFFFFF', fontSize: '14px', outline: 'none', marginBottom: '10px' }}
+                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
                                 />
-                                <div style={{ fontSize: '12px', color: '#8E9B92' }}>
-                                    Zero-delay Telegram Bot alerts can be pushed directly to your smartphone with 0s latency.
+                                <div style={{ fontSize: '12px', color: '#59655D' }}>
+                                    Instant Telegram Bot notifications can be pushed directly to your smartphone with 0s latency.
                                 </div>
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <button type="submit" className="btn-lime" style={{ padding: '14px 28px', fontSize: '14px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
-                                    💾 Save Notification Coordinates
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                <button type="submit" className="btn-lime" style={{ padding: '12px 24px', fontSize: '13.5px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+                                    💾 Save Coordinates
                                 </button>
                                 {settingsSavedToast && (
-                                    <motion.span initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ color: '#25D366', fontSize: '13px', fontWeight: '700' }}>
-                                        ✓ Saved & Synchronized to Cloud Storage
+                                    <motion.span initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ color: '#166534', fontSize: '12.5px', fontWeight: '700' }}>
+                                        ✓ Saved & Synchronized
                                     </motion.span>
                                 )}
                             </div>
@@ -1948,254 +1931,263 @@ export default function AdminPortal() {
 
             </main>
 
-            {/* ── CREATE / EDIT PROPERTY MODAL ── */}
+            {/* MODAL: CREATE / EDIT PROPERTY */}
             <AnimatePresence>
                 {isPropertyModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }} className="modal-rounded-card dark-modal-scroll" style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.3)', maxWidth: '680px', width: '100%', maxHeight: '90vh', color: '#FFFFFF', boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '28px 36px 18px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', flexShrink: 0 }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                    {editingProperty ? 'Edit Campsite Listing' : 'Add New Campsite Listing'}
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '32px', maxWidth: '640px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    {editingProperty ? 'Edit Campsite Details' : 'Add New Campsite Listing'}
                                 </h3>
-                                <button onClick={() => setIsPropertyModalOpen(false)} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: 'none', color: '#FFFFFF', cursor: 'pointer' }}>
+                                <button onClick={() => setIsPropertyModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
                                     ✕
                                 </button>
                             </div>
 
-                            <div className="modal-rounded-body dark-modal-scroll" style={{ flex: 1, padding: '24px 36px 36px' }}>
-                                <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Campsite Title *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={propertyForm.title}
+                                        onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Campsite Title *
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Region *
+                                        </label>
+                                        <select
+                                            value={propertyForm.region}
+                                            onChange={e => setPropertyForm({ ...propertyForm, region: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        >
+                                            <option value="Munnar">Munnar</option>
+                                            <option value="Suryanelli">Suryanelli</option>
+                                            <option value="Vagamon">Vagamon</option>
+                                            <option value="Wayanad">Wayanad</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Altitude *
                                         </label>
                                         <input
                                             type="text"
                                             required
-                                            placeholder="e.g. Kolukkumalai Sunrise 4x4 Expedition"
-                                            value={propertyForm.title}
-                                            onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            value={propertyForm.altitude}
+                                            onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
+                                </div>
 
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                                        <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                                Region / Location Header
-                                            </label>
-                                            <select
-                                                value={propertyForm.region}
-                                                onChange={e => setPropertyForm({ ...propertyForm, region: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: '#08120A', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13.5px' }}
-                                            >
-                                                <option value="Munnar">Munnar High Peaks</option>
-                                                <option value="Suryanelli">Suryanelli Ridge</option>
-                                                <option value="Vagamon">Vagamon Pine Hills</option>
-                                                <option value="Wayanad">Wayanad Rainforest</option>
-                                                <option value="Athirappilly">Athirappilly Rapids</option>
-                                            </select>
-                                        </div>
-                                        <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                                Altitude Tag
-                                            </label>
-                                            <input
-                                                type="text"
-                                                placeholder="e.g. 7,900 FT"
-                                                value={propertyForm.altitude}
-                                                onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                                        <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                                Base Price (INR) *
-                                            </label>
-                                            <input
-                                                type="number"
-                                                required
-                                                value={propertyForm.price}
-                                                onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                            />
-                                        </div>
-                                        <div>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                                Original Strikethrough Price (INR)
-                                            </label>
-                                            <input
-                                                type="number"
-                                                value={propertyForm.originalPrice}
-                                                onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
-                                                style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                            />
-                                        </div>
-                                    </div>
-
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Cover Photo Image URL
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Base Price (INR) *
                                         </label>
                                         <input
-                                            type="url"
+                                            type="number"
                                             required
-                                            value={propertyForm.image}
-                                            onChange={e => setPropertyForm({ ...propertyForm, image: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                            value={propertyForm.price}
+                                            onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
-
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Highlights & Perks (Comma Separated)
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Difficulty / Terrain
                                         </label>
                                         <input
                                             type="text"
-                                            value={propertyForm.highlights}
-                                            onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                            value={propertyForm.difficulty}
+                                            onChange={e => setPropertyForm({ ...propertyForm, difficulty: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
+                                </div>
 
-                                    <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '10px' }}>
-                                        {editingProperty ? 'Save Changes ↗' : 'Publish Campsite Listing ↗'}
-                                    </button>
-                                </form>
-                            </div>
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Image URL
+                                    </label>
+                                    <input
+                                        type="url"
+                                        value={propertyForm.image}
+                                        onChange={e => setPropertyForm({ ...propertyForm, image: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Description
+                                    </label>
+                                    <textarea
+                                        rows={3}
+                                        value={propertyForm.description}
+                                        onChange={e => setPropertyForm({ ...propertyForm, description: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box', resize: 'vertical' }}
+                                    />
+                                </div>
+
+                                <button type="submit" className="btn-lime" style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                    {editingProperty ? 'Save Changes' : '+ Create Campsite Listing'}
+                                </button>
+                            </form>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
 
-            {/* ── CREATE / EDIT EVENT BATCH MODAL ── */}
+            {/* MODAL: CREATE / EDIT EVENT BATCH */}
             <AnimatePresence>
                 {isEventModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.85)', backdropFilter: 'blur(12px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.3)', borderRadius: '32px', padding: '36px', maxWidth: '680px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#FFFFFF', boxShadow: '0 25px 80px rgba(0, 0, 0, 0.6)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '16px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
-                                    {editingEvent ? 'Edit Scheduled Event Batch' : 'Create New Event Batch'}
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '32px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    {editingEvent ? 'Edit Trek Batch' : 'Schedule New Event Batch'}
                                 </h3>
-                                <button onClick={() => setIsEventModalOpen(false)} style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: 'none', color: '#FFFFFF', cursor: 'pointer' }}>
+                                <button onClick={() => setIsEventModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
                                     ✕
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                        Event Title *
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Event / Batch Title *
                                     </label>
                                     <input
                                         type="text"
                                         required
-                                        placeholder="e.g. Perseid Meteor Shower High-Altitude Stargaze Camp"
                                         value={eventForm.title}
                                         onChange={e => setEventForm({ ...eventForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Campsite Location
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Dates *
                                         </label>
                                         <input
                                             type="text"
                                             required
-                                            placeholder="e.g. Kolukkumalai Sunrise Ridge (7,900 FT)"
-                                            value={eventForm.campsite}
-                                            onChange={e => setEventForm({ ...eventForm, campsite: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Dates & Duration
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g. Aug 24 – 25, 2026"
                                             value={eventForm.dates}
                                             onChange={e => setEventForm({ ...eventForm, dates: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '14px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Ticket Price (INR)
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Price Per Spot (INR) *
                                         </label>
                                         <input
                                             type="number"
                                             required
                                             value={eventForm.price}
                                             onChange={e => setEventForm({ ...eventForm, price: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Total Capacity
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Total Capacity (Pax) *
                                         </label>
                                         <input
                                             type="number"
                                             required
                                             value={eventForm.capacity}
                                             onChange={e => setEventForm({ ...eventForm, capacity: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                            Current Bookings
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Already Booked Spots
                                         </label>
                                         <input
                                             type="number"
                                             value={eventForm.booked}
                                             onChange={e => setEventForm({ ...eventForm, booked: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '14px' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                        Event Cover Image URL
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Campsite Location
                                     </label>
                                     <input
-                                        type="url"
-                                        required
-                                        value={eventForm.image}
-                                        onChange={e => setEventForm({ ...eventForm, image: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                        type="text"
+                                        value={eventForm.campsite}
+                                        onChange={e => setEventForm({ ...eventForm, campsite: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#E5A93B', display: 'block', marginBottom: '6px' }}>
-                                        Event Description
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Image URL
                                     </label>
-                                    <textarea
-                                        rows={3}
-                                        value={eventForm.description}
-                                        onChange={e => setEventForm({ ...eventForm, description: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.06)', border: '1px solid rgba(255, 255, 255, 0.12)', color: '#FFFFFF', fontSize: '13px' }}
+                                    <input
+                                        type="url"
+                                        value={eventForm.image}
+                                        onChange={e => setEventForm({ ...eventForm, image: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '10px' }}>
-                                    {editingEvent ? 'Save Event Changes ↗' : 'Publish Event Batch ↗'}
+                                <button type="submit" className="btn-lime" style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                    {editingEvent ? 'Save Batch Changes' : '+ Schedule Batch'}
                                 </button>
                             </form>
                         </motion.div>
                     </div>
+                )}
+            </AnimatePresence>
+
+            {/* FLOATING ACTION TOAST */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        style={{
+                            position: 'fixed',
+                            bottom: '24px',
+                            right: '24px',
+                            zIndex: 100000,
+                            background: '#121613',
+                            color: '#FFFFFF',
+                            padding: '12px 20px',
+                            borderRadius: '12px',
+                            fontSize: '13px',
+                            fontWeight: '700',
+                            boxShadow: '0 8px 30px rgba(0,0,0,0.15)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                    >
+                        <span>{toastMessage}</span>
+                    </motion.div>
                 )}
             </AnimatePresence>
 
