@@ -2877,68 +2877,79 @@ export default function HomePage() {
             ───────────────────────────────────────────────────────────── */}
             <section 
                 id="experience" 
-                style={{ position: 'relative', padding: '120px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '80px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div className="sticky-split-grid">
+                    <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(24px, 4vw, 48px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
-                        <div className="sticky-pinned-col">
-                            <div className="star-badge">
+                        <div className="sticky-pinned-col" style={{ position: 'sticky', top: '100px' }}>
+                            <div className="star-badge" style={{ marginBottom: '14px' }}>
                                 <span className="star-icon">★</span> EXPERIENCE
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(34px, 4.5vw, 50px)',
+                                fontSize: 'clamp(28px, 3.8vw, 44px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
-                                lineHeight: 1.15,
-                                marginBottom: '20px'
+                                lineHeight: 1.18,
+                                marginBottom: '16px'
                             }}>
                                 Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.65 }}>
+                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
                                 This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
                             </p>
                         </div>
 
-                        {/* Scrolling Right Cards */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                        {/* Compact Scrolling Right Cards (Icon Above, Straight in Sight) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                             {EXPERIENCE_ITEMS.map((exp, idx) => (
                                 <motion.div
                                     key={idx}
                                     variants={cardReveal}
                                     initial="hidden"
                                     whileInView="visible"
-                                    viewport={{ once: true, margin: "-40px" }}
+                                    viewport={{ once: true, margin: "-30px" }}
                                     className="hover-lift"
                                     style={{
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(18, 22, 19, 0.08)',
-                                        borderRadius: '28px',
-                                        padding: '36px 36px',
+                                        borderRadius: '22px',
+                                        padding: '24px 24px',
                                         display: 'flex',
+                                        flexDirection: 'column',
                                         justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        gap: '24px',
-                                        boxShadow: '0 6px 20px rgba(0,0,0,0.02)',
-                                        minHeight: '160px'
+                                        boxShadow: '0 4px 16px rgba(0,0,0,0.02)',
+                                        minHeight: '210px'
                                     }}
                                 >
+                                    {/* Icon & Category Header Row */}
                                     <div>
-                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '1px', display: 'block', marginBottom: '6px' }}>
-                                            {exp.category}
-                                        </span>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>
+                                                    {exp.icon}
+                                                </div>
+                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                                    {exp.category}
+                                                </span>
+                                            </div>
+                                            <span style={{ fontSize: '11px', color: '#B5C0B8', fontWeight: '800' }}>
+                                                0{idx + 1}
+                                            </span>
+                                        </div>
+
+                                        {/* Title in Sight */}
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', color: '#121613', marginBottom: '8px', lineHeight: 1.3 }}>
                                             {exp.title}
                                         </h3>
-                                        <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+
+                                        {/* Compact Paragraph */}
+                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.55, margin: 0 }}>
                                             {exp.desc}
                                         </p>
-                                    </div>
-                                    <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', flexShrink: 0 }}>
-                                        {exp.icon}
                                     </div>
                                 </motion.div>
                             ))}
