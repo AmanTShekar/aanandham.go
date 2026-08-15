@@ -901,38 +901,30 @@ export default function HomePage() {
         }
     };
 
-    // High-precision scroll-driven auto-activation for Stay & Glamp room cards
+    // High-precision trigger-line scroll-driven auto-activation for Stay & Glamp room cards
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
         let ticking = false;
         const checkStayCardsInView = () => {
-            const section = document.getElementById('stay');
-            if (!section) return;
+            const cardElements = document.querySelectorAll('[data-stay-card-idx]');
+            if (!cardElements || cardElements.length === 0) return;
 
-            const rect = section.getBoundingClientRect();
-            const sectionHeight = rect.height;
-            const windowH = window.innerHeight;
-
-            // If the Stay section is in the active viewport zone
-            if (rect.top <= windowH * 0.75 && rect.bottom >= windowH * 0.15) {
-                // Calculate smooth continuous scroll progress through the section (0.0 to 1.0)
-                const scrollDistance = sectionHeight - windowH * 0.35;
-                const currentProgress = (windowH * 0.5 - rect.top) / Math.max(scrollDistance, 1);
-
-                let activeIdx;
-                if (currentProgress < 0.24) {
-                    activeIdx = 0; // Twin Room
-                } else if (currentProgress < 0.49) {
-                    activeIdx = 1; // Private Double Pods (Smoothly hit, never skipped!)
-                } else if (currentProgress < 0.74) {
-                    activeIdx = 2; // Group Suite
-                } else {
-                    activeIdx = 3; // Common Areas
+            // Trigger line: 52% of viewport on mobile (below sticky image), 48% on desktop
+            const triggerY = window.innerWidth <= 900 ? window.innerHeight * 0.52 : window.innerHeight * 0.48;
+            
+            // Find which card is currently active (the last card whose top has scrolled past triggerY)
+            let activeCardIndex = 0;
+            cardElements.forEach((el) => {
+                const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
+                if (isNaN(idx)) return;
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= triggerY) {
+                    activeCardIndex = idx;
                 }
+            });
 
-                setActiveStayAcc((prev) => (prev !== activeIdx ? activeIdx : prev));
-            }
+            setActiveStayAcc((prev) => (prev !== activeCardIndex ? activeCardIndex : prev));
             ticking = false;
         };
 
@@ -2117,7 +2109,7 @@ export default function HomePage() {
                                         objectFit: 'cover',
                                         opacity: activeStayAcc === idx ? 1 : 0,
                                         transform: activeStayAcc === idx ? 'scale(1)' : 'scale(1.04)',
-                                        transition: 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        transition: 'opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)',
                                         pointerEvents: 'none'
                                     }}
                                 />
@@ -2137,7 +2129,7 @@ export default function HomePage() {
                                             inset: 0,
                                             opacity: isCurrent ? 1 : 0,
                                             transform: isCurrent ? 'translateY(0)' : 'translateY(8px)',
-                                            transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+                                            transition: 'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
                                             pointerEvents: 'none',
                                             display: 'flex',
                                             flexDirection: 'column',
@@ -2179,7 +2171,7 @@ export default function HomePage() {
                                 Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
                             </p>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
                                 {STAY_ACCOMMODATIONS.map((acc, idx) => {
                                     const isActive = activeStayAcc === idx;
                                     return (
@@ -2192,8 +2184,8 @@ export default function HomePage() {
                                             style={{
                                                 background: '#FFFFFF',
                                                 border: isActive ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
-                                                borderRadius: '22px',
-                                                padding: '20px 24px',
+                                                borderRadius: '24px',
+                                                padding: '22px 26px',
                                                 cursor: 'pointer',
                                                 boxShadow: isActive ? '0 12px 35px rgba(0, 0, 0, 0.06)' : '0 4px 12px rgba(0,0,0,0.01)',
                                                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
