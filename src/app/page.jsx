@@ -2500,12 +2500,16 @@ export default function HomePage() {
                 7. EXPERIENCE (Ref Screenshot 2 Batch 2 - media_1786655245998.png)
                    - Pinned sticky left headline while right cards scroll until section end
             ───────────────────────────────────────────────────────────── */}
-            <section 
+            <motion.section 
                 id="experience" 
-                style={{ position: 'relative', padding: '80px clamp(16px, 3.5vw, 40px)', background: '#F8F9F5' }}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(24px, 4vw, 48px)' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
                         <div className="sticky-pinned-col" style={{ position: 'sticky', top: '100px' }}>
@@ -2514,7 +2518,7 @@ export default function HomePage() {
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(28px, 3.8vw, 44px)',
+                                fontSize: 'clamp(32px, 4.5vw, 48px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
@@ -2523,13 +2527,13 @@ export default function HomePage() {
                             }}>
                                 Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
                             </h2>
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
+                            <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.65, margin: 0, maxWidth: '420px' }}>
                                 This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
                             </p>
                         </div>
 
-                        {/* Compact Scrolling Right Cards (Icon Above, Straight in Sight) */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+                        {/* Scrolling Right Cards (Icon Above, Straight in Sight) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                             {EXPERIENCE_ITEMS.map((exp, idx) => (
                                 <motion.div
                                     key={idx}
@@ -2582,7 +2586,7 @@ export default function HomePage() {
 
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
                 8. CUSTOM ARRANGEMENTS & EVENTS (Interactive Cork Notice Board)
@@ -2599,7 +2603,7 @@ export default function HomePage() {
                 style={{ position: 'relative', padding: '70px 0', background: '#F8F9F5', width: '100%' }}
             >
                 {/* Header Row with Centered Max-Width */}
-                <div style={{ maxWidth: '1240px', margin: '0 auto 24px', padding: '0 clamp(16px, 3.5vw, 40px)', width: '100%', boxSizing: 'border-box' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto 28px', padding: '0 clamp(20px, 4vw, 48px)', width: '100%', boxSizing: 'border-box' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
                         <div>
                             <div className="star-badge" style={{ marginBottom: '8px' }}>
