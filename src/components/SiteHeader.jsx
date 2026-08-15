@@ -132,7 +132,7 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: isHeaderSolid ? '12px clamp(20px, 4vw, 44px)' : '18px clamp(20px, 4vw, 44px)',
+                    padding: isHeaderSolid ? '12px clamp(20px, 3vw, 36px)' : '18px clamp(20px, 3vw, 36px)',
                     backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.98)' : 'transparent',
                     backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',

@@ -215,7 +215,7 @@ body::-webkit-scrollbar-thumb:active,
    RESPONSIVE NAVBAR SYSTEM & MORPHING HAMBURGER
 ───────────────────────────────────────────────────────────── */
 .site-header {
-  padding: 12px clamp(20px, 4vw, 44px) !important;
+  padding: 12px clamp(20px, 3vw, 36px) !important;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
 }
 
@@ -320,6 +320,10 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 @media (max-width: 1140px) {
+  .site-header {
+    padding: 12px 24px !important;
+  }
+
   .nav-desktop-links {
     display: none !important;
   }
@@ -331,9 +335,8 @@ body::-webkit-scrollbar-thumb:active,
 
 @media (max-width: 640px) {
   .site-header {
-    padding: 12px 20px !important;
+    padding: 12px 18px !important;
   }
-
 
   .site-brand-logo {
     height: 32px !important;
@@ -346,7 +349,7 @@ body::-webkit-scrollbar-thumb:active,
 
 @media (max-width: 380px) {
   .site-header {
-    padding: 11px 16px !important;
+    padding: 11px 14px !important;
   }
 
   .site-brand-logo {
@@ -562,13 +565,21 @@ body::-webkit-scrollbar-thumb:active,
   position: relative;
   z-index: 10;
   white-space: nowrap;
+  contain: layout paint;
+  pointer-events: auto;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 .marquee-track {
   display: inline-flex;
   gap: 32px;
-  animation: marqueeScroll 35s linear infinite;
+  animation: marqueeScroll 38s linear infinite;
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .marquee-container:hover .marquee-track {
@@ -593,10 +604,12 @@ body::-webkit-scrollbar-thumb:active,
 
 @keyframes marqueeScroll {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0%, 0, 0);
+    -webkit-transform: translate3d(0%, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
+    -webkit-transform: translate3d(-50%, 0, 0);
   }
 }
 
