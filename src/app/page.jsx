@@ -1933,32 +1933,40 @@ export default function HomePage() {
                         </h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '48px', alignItems: 'flex-start' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: 'clamp(32px, 4vw, 48px)', alignItems: 'stretch' }}>
                         
                         {/* Left Big Picture (Dynamic to active stay option) */}
                         <motion.div 
                             variants={fadeInLeft}
-                            style={{ position: 'relative', height: '520px', borderRadius: '36px', overflow: 'hidden', boxShadow: '0 20px 50px rgba(0, 0, 0, 0.1)' }}
+                            style={{ 
+                                position: 'relative', 
+                                minHeight: '460px', 
+                                height: '100%',
+                                borderRadius: '28px', 
+                                overflow: 'hidden', 
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.06)' 
+                            }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
                                     key={activeStayAcc}
                                     src={STAY_ACCOMMODATIONS[activeStayAcc >= 0 ? activeStayAcc : 0].mainImg}
                                     alt="Luxury Glamp"
-                                    initial={{ opacity: 0, scale: 1.06 }}
+                                    initial={{ opacity: 0, scale: 1.04 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                 />
                             </AnimatePresence>
                             
                             {/* Overlay Gradient */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.75) 0%, transparent 55%)' }} />
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.8) 0%, transparent 60%)' }} />
 
                             {/* Top Badges */}
-                            <div style={{ position: 'absolute', top: '24px', left: '24px', right: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '12px', fontWeight: '800', padding: '6px 16px', borderRadius: '999px' }}>
+                            <div style={{ position: 'absolute', top: '20px', left: '20px', right: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '6px 14px', borderRadius: '999px' }}>
                                     {STAY_ACCOMMODATIONS[activeStayAcc >= 0 ? activeStayAcc : 0].badge}
                                 </span>
                                 <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
@@ -1967,8 +1975,8 @@ export default function HomePage() {
                             </div>
 
                             {/* Bottom Caption on Image */}
-                            <div style={{ position: 'absolute', bottom: '28px', left: '28px', right: '28px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', color: '#FFFFFF', marginBottom: '6px' }}>
+                            <div style={{ position: 'absolute', bottom: '24px', left: '24px', right: '24px' }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#FFFFFF', marginBottom: '6px' }}>
                                     {STAY_ACCOMMODATIONS[activeStayAcc >= 0 ? activeStayAcc : 0].title}
                                 </h3>
                                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -2869,125 +2877,77 @@ export default function HomePage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
                         
-                        {/* Authentic Real Polaroid Film Photo Collage (Large, Clean, Realistic Film Borders, No Hover Scale) */}
+                        {/* Clean Modern Camp Cinema Showcase Card (Zero Heavy Shadow, Straight & Crisp) */}
                         <div 
                             onClick={() => setIsVideoModalOpen(true)} 
+                            className="hover-lift"
                             style={{ 
                                 position: 'relative', 
+                                background: '#FFFFFF',
+                                borderRadius: '24px',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                padding: '16px',
                                 display: 'flex', 
-                                alignItems: 'center', 
-                                justifyContent: 'center', 
+                                flexDirection: 'column',
                                 cursor: 'pointer', 
-                                padding: '24px 12px', 
-                                minHeight: '460px',
+                                minHeight: '440px',
                                 maxWidth: '100%',
-                                overflow: 'hidden'
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.04)'
                             }}
                         >
-                            {/* Secondary Background Polaroid Snapshot */}
-                            <div
-                                style={{
+                            {/* Photo / Video Thumbnail */}
+                            <div style={{ position: 'relative', flex: 1, minHeight: '320px', borderRadius: '16px', overflow: 'hidden', background: '#0E1A11' }}>
+                                <img 
+                                    src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
+                                    alt="Aanandham Wilderness Campfire" 
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                />
+                                
+                                {/* Overlay Gradient */}
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.7) 0%, transparent 60%)' }} />
+
+                                {/* Large Clean Play Button */}
+                                <div style={{
                                     position: 'absolute',
-                                    top: '10px',
-                                    right: '5px',
-                                    width: '240px',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '60px',
+                                    height: '60px',
+                                    borderRadius: '50%',
                                     background: '#FFFFFF',
-                                    padding: '12px 12px 26px 12px',
-                                    borderRadius: '6px',
-                                    boxShadow: '0 20px 45px rgba(0, 0, 0, 0.12)',
-                                    transform: 'rotate(6.5deg)',
-                                    zIndex: 1,
-                                    border: '1px solid rgba(0, 0, 0, 0.04)'
-                                }}
-                            >
-                                <div style={{ height: '175px', borderRadius: '3px', overflow: 'hidden', marginBottom: '10px', background: '#0E1A11' }}>
-                                    <img 
-                                        src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80" 
-                                        alt="Kolukkumalai Sunrise" 
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                    />
+                                    color: '#121613',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    boxShadow: '0 6px 20px rgba(0,0,0,0.18)'
+                                }}>
+                                    <i className="fa-solid fa-play" style={{ fontSize: '17px', marginLeft: '3px' }}></i>
                                 </div>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textAlign: 'center', letterSpacing: '0.6px' }}>
-                                    🏔️ 7,900 FT Sunrise Batch
+
+                                {/* Top Badge */}
+                                <div style={{ position: 'absolute', top: '14px', left: '14px' }}>
+                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px' }}>
+                                        ✦ Live Camp Video
+                                    </span>
                                 </div>
                             </div>
 
-                            {/* Primary Foreground Realistic Polaroid Photo Card */}
-                            <div
-                                style={{
-                                    position: 'relative',
-                                    width: '100%',
-                                    maxWidth: '355px',
-                                    background: '#FFFFFF',
-                                    padding: '16px 16px 30px 16px',
-                                    borderRadius: '8px',
-                                    boxShadow: '0 25px 65px rgba(0, 0, 0, 0.16), 0 5px 15px rgba(0, 0, 0, 0.04)',
-                                    transform: 'rotate(-2.5deg)',
-                                    zIndex: 2,
-                                    border: '1px solid rgba(0, 0, 0, 0.04)'
-                                }}
-                            >
-                                {/* Photo Window (Authentic square / clean 3px radius) */}
-                                <div style={{ position: 'relative', height: '275px', borderRadius: '3px', overflow: 'hidden', marginBottom: '18px', background: '#0E1A11' }}>
-                                    <img 
-                                        src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
-                                        alt="Aanandham Wilderness Campfire" 
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                    />
-                                    
-                                    {/* Large Clean Play Button */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translate(-50%, -50%)',
-                                        width: '64px',
-                                        height: '64px',
-                                        borderRadius: '50%',
-                                        background: '#FFFFFF',
-                                        color: '#121613',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        boxShadow: '0 10px 35px rgba(0,0,0,0.35)'
-                                    }}>
-                                        <i className="fa-solid fa-play" style={{ fontSize: '18px', marginLeft: '3px' }}></i>
-                                    </div>
-
-                                    {/* 4K Badge */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: '12px',
-                                        right: '12px',
-                                        background: 'rgba(0, 0, 0, 0.72)',
-                                        backdropFilter: 'blur(8px)',
-                                        color: '#FFFFFF',
-                                        fontSize: '10.5px',
-                                        fontWeight: '800',
-                                        padding: '4px 10px',
-                                        borderRadius: '6px'
-                                    }}>
-                                        4K HDR · 02:45
-                                    </div>
+                            {/* Caption Footer */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', paddingLeft: '6px', paddingRight: '6px' }}>
+                                <div>
+                                    <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
+                                        Kolukkumalai Sunrise & Campfire
+                                    </span>
+                                    <span style={{ fontSize: '11.5px', color: '#8E9B92', display: 'block' }}>
+                                        7,900 FT High-Altitude Batch
+                                    </span>
                                 </div>
-
-                                {/* Authentic Polaroid Wide Bottom Border / Caption */}
-                                <div style={{ padding: '0 4px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', margin: 0, letterSpacing: '-0.2px' }}>
-                                            Watch our video diaries!
-                                        </h4>
-                                        <span style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>↗</span>
-                                    </div>
-                                    <p style={{ fontSize: '13px', color: '#59655D', margin: '0 0 6px', fontWeight: '500', lineHeight: 1.4 }}>
-                                        Raw camp vibes, guitars & starry skies
-                                    </p>
-                                    <div style={{ fontSize: '9.5px', fontWeight: '800', letterSpacing: '1px', color: '#8E9B92', textTransform: 'uppercase' }}>
-                                        AANANDHAM.GO · KERALA EXPEDITIONS
-                                    </div>
-                                </div>
+                                <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613', background: '#F1F3EC', padding: '5px 12px', borderRadius: '999px' }}>
+                                    Play ↗
+                                </span>
                             </div>
                         </div>
 
