@@ -3006,10 +3006,8 @@ export default function HomePage() {
                     id="events-slider-track" 
                     className="events-horizontal-track" 
                     style={{ 
-                        paddingLeft: 'clamp(16px, 3vw, 32px)', 
-                        paddingRight: 'clamp(16px, 3vw, 32px)',
                         paddingTop: '16px', 
-                        paddingBottom: '24px',
+                        paddingBottom: '28px',
                         width: '100%',
                         boxSizing: 'border-box'
                     }}
