@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
@@ -8,6 +8,51 @@ import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
+
+// Helper to safely validate, downscale and compress images before storing as Base64 (UP1)
+function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+        if (!file) return reject(new Error('No file provided'));
+        if (!file.type || !file.type.startsWith('image/')) {
+            return reject(new Error('Invalid file format. Please upload JPG, PNG, or WebP images only.'));
+        }
+        if (file.size > 15 * 1024 * 1024) {
+            return reject(new Error('Image file is too large (max 15MB).'));
+        }
+
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('Failed to read image file.'));
+        reader.onload = (readerEvent) => {
+            const img = new Image();
+            img.onerror = () => reject(new Error('Failed to decode image.'));
+            img.onload = () => {
+                try {
+                    let { width, height } = img;
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = Math.round(width * ratio);
+                        height = Math.round(height * ratio);
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        return resolve(readerEvent.target.result);
+                    }
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressedBase64);
+                } catch {
+                    resolve(readerEvent.target.result);
+                }
+            };
+            img.src = readerEvent.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
 // ── SCHEDULED EXPEDITION BATCHES ──
 const INITIAL_EVENTS = [
@@ -142,11 +187,13 @@ export default function AdminPortal() {
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
     const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
-    // Toast message state
+    // Toast message state with cleanup ref (UP5)
     const [toastMessage, setToastMessage] = useState('');
+    const toastTimerRef = useRef(null);
     const showToast = (msg) => {
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
         setToastMessage(msg);
-        setTimeout(() => setToastMessage(''), 3000);
+        toastTimerRef.current = setTimeout(() => setToastMessage(''), 3200);
     };
 
     // Load from Server APIs + LocalStorage Fallback (N1)
@@ -197,6 +244,7 @@ export default function AdminPortal() {
     };
 
     useEffect(() => {
+        // Authenticate Session
         const restoreSession = async () => {
             const savedAuth = localStorage.getItem('aanandham_admin_auth');
             if (savedAuth) {
@@ -227,7 +275,10 @@ export default function AdminPortal() {
         };
 
         window.addEventListener('storage', handleStorageUpdate);
-        return () => window.removeEventListener('storage', handleStorageUpdate);
+        return () => {
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+            window.removeEventListener('storage', handleStorageUpdate);
+        };
     }, []);
 
     const handleSaveNotifications = (e) => {
@@ -356,10 +407,15 @@ export default function AdminPortal() {
         reader.readAsText(file);
     };
 
-    // Save Helpers with Server API Synchronization & LocalStorage Fallback (N1, N2)
+    // Save Helpers with Server API Synchronization & LocalStorage Fallback (N1, N2, UP1)
     const saveProperties = (updated) => {
         setProperties(updated);
-        saveAllCamps(updated);
+        try {
+            saveAllCamps(updated);
+        } catch (err) {
+            console.error('Error saving camps to storage:', err);
+            showToast('⚠️ Storage quota reached. Consider exporting backup.');
+        }
         fetch('/api/admin/camps', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -373,12 +429,22 @@ export default function AdminPortal() {
 
     const saveEvents = (updated) => {
         setEvents(updated);
-        localStorage.setItem('aanandham_admin_events', JSON.stringify(updated));
+        try {
+            localStorage.setItem('aanandham_admin_events', JSON.stringify(updated));
+        } catch (err) {
+            console.error('Error saving events to storage:', err);
+            showToast('⚠️ Storage quota reached.');
+        }
     };
 
     const saveBookings = (updated) => {
         setBookings(updated);
-        localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updated));
+        try {
+            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updated));
+        } catch (err) {
+            console.error('Error saving bookings to storage:', err);
+            showToast('⚠️ Storage quota reached.');
+        }
         fetch('/api/admin/bookings', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -435,17 +501,18 @@ export default function AdminPortal() {
         showToast('✓ Room availability updated');
     };
 
-    // Room Image File Upload from Computer / Mobile
-    const handleRoomImageUpload = (e) => {
+    // Room Image File Upload from Computer / Mobile with Validation & Compression (UP1)
+    const handleRoomImageUpload = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (uploadEvent) => {
-            const base64Url = uploadEvent.target.result;
-            setRoomForm(prev => ({ ...prev, image: base64Url }));
-            showToast('✓ Room photo uploaded successfully');
-        };
-        reader.readAsDataURL(file);
+        try {
+            const compressedBase64 = await compressImageFile(file, 1200, 800, 0.82);
+            setRoomForm(prev => ({ ...prev, image: compressedBase64 }));
+            showToast('✓ Room photo optimized & uploaded');
+        } catch (err) {
+            showToast(`⚠️ ${err.message || 'Error uploading room image'}`);
+        }
+        e.target.value = '';
     };
 
     // Open Add / Edit Room Modal
@@ -593,28 +660,39 @@ export default function AdminPortal() {
         setIsPropertyModalOpen(true);
     };
 
-    // Handle File Upload for Gallery
-    const handleFileUpload = (e) => {
-        const files = Array.from(e.target.files);
-        if (!files || files.length === 0) return;
+    // Handle File Upload for Gallery with Compression & Validation (UP1)
+    const handleFileUpload = async (e) => {
+        const files = Array.from(e.target.files || []);
+        if (files.length === 0) return;
 
-        files.forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (uploadEvent) => {
-                const base64Url = uploadEvent.target.result;
-                setPropertyForm(prev => {
-                    const currentGallery = prev.gallery || [];
-                    const newGallery = [...currentGallery, base64Url];
-                    return {
-                        ...prev,
-                        gallery: newGallery,
-                        image: prev.image || base64Url
-                    };
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-        showToast(`✓ Uploaded ${files.length} photos`);
+        let processedCount = 0;
+        const compressedResults = [];
+
+        for (const file of files) {
+            try {
+                const compressed = await compressImageFile(file, 1600, 1060, 0.82);
+                compressedResults.push(compressed);
+                processedCount++;
+            } catch (err) {
+                console.warn('Skipping file due to compression error:', file.name, err);
+            }
+        }
+
+        if (compressedResults.length > 0) {
+            setPropertyForm(prev => {
+                const currentGallery = prev.gallery || [];
+                const newGallery = [...currentGallery, ...compressedResults];
+                return {
+                    ...prev,
+                    gallery: newGallery,
+                    image: prev.image || compressedResults[0]
+                };
+            });
+            showToast(`✓ Uploaded & compressed ${processedCount} photo(s)`);
+        } else {
+            showToast('⚠️ No valid images were uploaded');
+        }
+        e.target.value = '';
     };
 
     // Add Image URL to Gallery

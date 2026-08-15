@@ -17,8 +17,17 @@ const ENV_PASSCODES = process.env.ADMIN_PASSCODES
 const DEV_FALLBACK_PASSCODES = ['aanandham2026', 'wildadmin2026'];
 const VALID_PASSCODES = ENV_PASSCODES.length > 0 ? ENV_PASSCODES : (IS_PROD ? [] : DEV_FALLBACK_PASSCODES);
 
-// In-memory revocation blacklist for logged-out tokens
-const revokedTokens = new Set();
+// In-memory revocation blacklist for logged-out tokens with expiration tracking (D3)
+const revokedTokens = new Map();
+
+function cleanExpiredRevocations() {
+    const now = Date.now();
+    for (const [token, exp] of revokedTokens.entries()) {
+        if (now > exp) {
+            revokedTokens.delete(token);
+        }
+    }
+}
 
 // In-memory audit trail of recent login events (capped at 50 entries)
 const authAuditLog = [];
@@ -38,6 +47,27 @@ const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const MAX_FAILED_ATTEMPTS = 5;
 const loginAttempts = new Map();
 
+// Trusted Proxy Gate (D1, D2)
+// On Vercel, Cloudflare, Netlify, AWS, or when TRUST_PROXY is set, proxy headers are trusted.
+// Otherwise, headers are not blindly trusted from direct client connections to prevent IP spoofing.
+const IS_TRUSTED_PROXY_ENV = Boolean(
+    process.env.VERCEL ||
+    process.env.CF_PAGES ||
+    process.env.NETLIFY ||
+    process.env.AWS_REGION ||
+    process.env.TRUST_PROXY === 'true' ||
+    process.env.TRUST_PROXY === '1'
+);
+
+const IPV4_REGEX = /^(?:(?:25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(?:25[0-5]|2[0-4]\d|[01]?\d\d?)$/;
+const IPV6_REGEX = /^[0-9a-fA-F:]+$/;
+
+function isValidIp(ip) {
+    if (!ip || typeof ip !== 'string') return false;
+    const clean = ip.trim();
+    return IPV4_REGEX.test(clean) || (clean.length <= 45 && IPV6_REGEX.test(clean));
+}
+
 // Periodic sweep to evict stale rate-limit records and prevent memory growth
 function sweepStaleRateLimits() {
     const now = Date.now();
@@ -49,15 +79,32 @@ function sweepStaleRateLimits() {
 }
 
 function getClientIp(request) {
-    // Check direct headers
-    const xRealIp = request.headers.get('x-real-ip');
-    if (xRealIp) return xRealIp.trim();
+    // 1. If Next.js / Edge provides request.ip directly (trusted edge platform)
+    if (request.ip && isValidIp(request.ip)) {
+        return request.ip.trim();
+    }
 
-    const xForwardedFor = request.headers.get('x-forwarded-for');
-    if (xForwardedFor) {
-        // Take the first client IP in the chain (safely sanitized)
-        const ips = xForwardedFor.split(',').map(ip => ip.trim()).filter(Boolean);
-        if (ips.length > 0) return ips[0];
+    // 2. Cloudflare Connecting IP header (if on Cloudflare)
+    const cfIp = request.headers.get('cf-connecting-ip');
+    if (cfIp && isValidIp(cfIp)) {
+        return cfIp.trim();
+    }
+
+    // 3. If in a trusted reverse-proxy environment, inspect proxy headers
+    if (IS_TRUSTED_PROXY_ENV) {
+        const xRealIp = request.headers.get('x-real-ip');
+        if (xRealIp && isValidIp(xRealIp)) {
+            return xRealIp.trim();
+        }
+
+        const xForwardedFor = request.headers.get('x-forwarded-for');
+        if (xForwardedFor) {
+            const ips = xForwardedFor.split(',').map(ip => ip.trim()).filter(isValidIp);
+            if (ips.length > 0) {
+                // Return first client IP in chain
+                return ips[0];
+            }
+        }
     }
 
     return '127.0.0.1';
@@ -278,11 +325,23 @@ export async function DELETE(request) {
         }
 
         if (token) {
-            revokedTokens.add(token);
-            // Cap revocation set size to avoid memory unbounded growth
-            if (revokedTokens.size > 2000) {
-                const firstVal = revokedTokens.values().next().value;
-                revokedTokens.delete(firstVal);
+            cleanExpiredRevocations();
+            // Parse token expiration so we keep revoked status until token naturally expires
+            let exp = Date.now() + 24 * 60 * 60 * 1000;
+            try {
+                const parts = token.split('.');
+                if (parts.length === 2) {
+                    const payload = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf-8'));
+                    if (payload.exp) exp = payload.exp;
+                }
+            } catch {}
+
+            revokedTokens.set(token, exp);
+
+            // Bounded cap fallback: if more than 5000 revocations, evict oldest
+            if (revokedTokens.size > 5000) {
+                const oldestKey = revokedTokens.keys().next().value;
+                revokedTokens.delete(oldestKey);
             }
         }
 
