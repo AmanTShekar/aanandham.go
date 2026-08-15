@@ -212,6 +212,30 @@ export default function ContactPage() {
         const link = waLink(waText);
         setWaUrl(link);
 
+        // Automatically persist inquiry into real admin database (localStorage)
+        try {
+            const newInquiryRecord = {
+                id: `INQ-${Math.floor(1000 + Math.random() * 9000)}`,
+                name: formData.name.trim(),
+                phone: formData.phone ? formData.phone.trim() : 'N/A',
+                package: `[${formData.inquiryType.toUpperCase()}] ${formData.message.slice(0, 40)}...`,
+                region: 'Kerala Inquiry',
+                dates: formData.travelDates || 'Flexible',
+                guests: Number(formData.guests) || 2,
+                roomType: formData.inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
+                addons: [],
+                total: (Number(formData.guests) || 2) * 2499,
+                status: 'Pending',
+                source: 'Contact Form',
+                createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+            };
+            const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
+            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([newInquiryRecord, ...currentBookings]));
+            window.dispatchEvent(new Event('storage'));
+        } catch (e) {
+            console.error('Error persisting inquiry:', e);
+        }
+
         try {
             window.open(link, '_blank');
         } catch (err) {}

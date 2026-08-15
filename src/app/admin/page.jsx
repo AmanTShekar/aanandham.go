@@ -261,7 +261,7 @@ const INITIAL_EVENTS = [
     }
 ];
 
-// ── REALISTIC LIVE BOOKINGS ROSTER ──
+// ── REALISTIC INITIAL SEED BOOKINGS ──
 const INITIAL_BOOKINGS = [
     {
         id: 'BK-9481',
@@ -340,8 +340,9 @@ export default function AdminPortal() {
     const [passcode, setPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState(false);
 
-    // Active Navigation Tab
-    const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'properties' | 'events' | 'bookings' | 'settings'
+    // Active Navigation Tab ('overview' | 'bookings' | 'properties' | 'events' | 'financials' | 'settings')
+    const [activeTab, setActiveTab] = useState('overview');
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     // Dedicated Full-Page Property Details View State
     const [activePropertyDetailId, setActivePropertyDetailId] = useState(null);
@@ -401,6 +402,22 @@ export default function AdminPortal() {
         description: 'Guided wilderness expedition with campfire barbecue and sunrise ridge trek.'
     });
 
+    // NEW: Manual Booking Creator Modal State
+    const [isAddBookingModalOpen, setIsAddBookingModalOpen] = useState(false);
+    const [newBookingForm, setNewBookingForm] = useState({
+        name: '',
+        phone: '',
+        package: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
+        region: 'Munnar',
+        dates: '2026-08-22',
+        guests: 2,
+        roomType: 'Geodesic Luxury Dome Pod',
+        addons: 'Live Campfire BBQ Platter',
+        pricePerGuest: 2499,
+        paymentStatus: 'Pending',
+        status: 'Confirmed'
+    });
+
     // Booking Search & Filter
     const [bookingSearch, setBookingSearch] = useState('');
     const [bookingFilterStatus, setBookingFilterStatus] = useState('All');
@@ -417,7 +434,27 @@ export default function AdminPortal() {
         setTimeout(() => setToastMessage(''), 3000);
     };
 
-    // Load from LocalStorage & verify server auth token
+    // Load from LocalStorage & sync with live storage events
+    const reloadDataFromStorage = () => {
+        const savedPhone = localStorage.getItem('aanandham_admin_phone');
+        if (savedPhone) setAdminPhone(savedPhone);
+        const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
+        if (savedTelegram) setAdminTelegram(savedTelegram);
+
+        const savedProps = localStorage.getItem('aanandham_admin_properties_v2');
+        if (savedProps) {
+            try { setProperties(JSON.parse(savedProps)); } catch(e){}
+        }
+        const savedEvents = localStorage.getItem('aanandham_admin_events');
+        if (savedEvents) {
+            try { setEvents(JSON.parse(savedEvents)); } catch(e){}
+        }
+        const savedBookings = localStorage.getItem('aanandham_admin_bookings_v2');
+        if (savedBookings) {
+            try { setBookings(JSON.parse(savedBookings)); } catch(e){}
+        }
+    };
+
     useEffect(() => {
         const restoreSession = async () => {
             const savedAuth = localStorage.getItem('aanandham_admin_auth');
@@ -441,24 +478,15 @@ export default function AdminPortal() {
         };
 
         restoreSession();
+        reloadDataFromStorage();
 
-        const savedPhone = localStorage.getItem('aanandham_admin_phone');
-        if (savedPhone) setAdminPhone(savedPhone);
-        const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
-        if (savedTelegram) setAdminTelegram(savedTelegram);
+        // Listen for live public booking events
+        const handleStorageUpdate = () => {
+            reloadDataFromStorage();
+        };
 
-        const savedProps = localStorage.getItem('aanandham_admin_properties_v2');
-        if (savedProps) {
-            try { setProperties(JSON.parse(savedProps)); } catch(e){}
-        }
-        const savedEvents = localStorage.getItem('aanandham_admin_events');
-        if (savedEvents) {
-            try { setEvents(JSON.parse(savedEvents)); } catch(e){}
-        }
-        const savedBookings = localStorage.getItem('aanandham_admin_bookings_v2');
-        if (savedBookings) {
-            try { setBookings(JSON.parse(savedBookings)); } catch(e){}
-        }
+        window.addEventListener('storage', handleStorageUpdate);
+        return () => window.removeEventListener('storage', handleStorageUpdate);
     }, []);
 
     const handleSaveNotifications = (e) => {
@@ -467,7 +495,7 @@ export default function AdminPortal() {
         localStorage.setItem('aanandham_admin_telegram', adminTelegram);
         setSettingsSavedToast(true);
         setTimeout(() => setSettingsSavedToast(false), 3000);
-        showToast('✓ Notification settings saved successfully');
+        showToast('✓ Notification coordinates saved');
     };
 
     const handleLogin = async (e) => {
@@ -759,6 +787,57 @@ export default function AdminPortal() {
         }
     };
 
+    // NEW: Save Manual Booking from Coordinator
+    const handleSaveManualBooking = (e) => {
+        e.preventDefault();
+        const guestsNum = Number(newBookingForm.guests) || 2;
+        const pricePerGuest = Number(newBookingForm.pricePerGuest) || 2499;
+        const totalCalc = guestsNum * pricePerGuest;
+
+        const newBooking = {
+            id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
+            name: newBookingForm.name.trim(),
+            phone: newBookingForm.phone.trim(),
+            package: newBookingForm.package,
+            region: newBookingForm.region,
+            dates: newBookingForm.dates,
+            guests: guestsNum,
+            roomType: newBookingForm.roomType,
+            addons: newBookingForm.addons ? [newBookingForm.addons] : [],
+            total: totalCalc,
+            status: newBookingForm.status || 'Confirmed',
+            source: 'Coordinator Manual Entry',
+            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+        };
+
+        const updated = [newBooking, ...bookings];
+        saveBookings(updated);
+        setIsAddBookingModalOpen(false);
+        setNewBookingForm({
+            name: '',
+            phone: '',
+            package: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
+            region: 'Munnar',
+            dates: '2026-08-22',
+            guests: 2,
+            roomType: 'Geodesic Luxury Dome Pod',
+            addons: 'Live Campfire BBQ Platter',
+            pricePerGuest: 2499,
+            paymentStatus: 'Pending',
+            status: 'Confirmed'
+        });
+        showToast(`✓ Booking ${newBooking.id} created successfully`);
+    };
+
+    // Delete Booking
+    const handleDeleteBooking = (id) => {
+        if (window.confirm(`Are you sure you want to delete reservation ${id}?`)) {
+            const updated = bookings.filter(b => b.id !== id);
+            saveBookings(updated);
+            showToast(`✓ Booking ${id} deleted`);
+        }
+    };
+
     // Update Booking Status
     const handleUpdateBookingStatus = (id, newStatus) => {
         const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
@@ -800,7 +879,7 @@ export default function AdminPortal() {
     // Filter properties by region
     const filteredProperties = propertyFilterRegion === 'All' ? properties : properties.filter(p => (p.region || 'Munnar') === propertyFilterRegion);
 
-    // Filter bookings with space/symbol-agnostic phone search
+    // Filter bookings with search
     const filteredBookings = bookings.filter(b => {
         const cleanSearch = bookingSearch.replace(/\D/g, '');
         const cleanPhone = (b.phone || '').replace(/\D/g, '');
@@ -814,14 +893,17 @@ export default function AdminPortal() {
         return matchSearch && matchStatus;
     });
 
-    // KPI Metrics
+    // KPI & Financial Calculations
     const paidBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In');
     const totalRevenue = paidBookings.reduce((acc, b) => acc + b.total, 0);
+    const estimatedDirectCosts = Math.round(totalRevenue * 0.45); // Permits, food, guide marshals ~45%
+    const estimatedNetProfit = totalRevenue - estimatedDirectCosts;
+    const profitMarginPercent = totalRevenue > 0 ? Math.round((estimatedNetProfit / totalRevenue) * 100) : 55;
     const activeCampers = paidBookings.reduce((acc, b) => acc + b.guests, 0);
     const avgOrderValue = paidBookings.length > 0 ? Math.round(totalRevenue / paidBookings.length) : 0;
     const activeEventsCount = events.filter(e => e.status === 'Active').length;
 
-    // Active Inspected Property Object for Full Page View
+    // Active Inspected Property Object
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId);
 
     // ─────────────────────────────────────────────────────────────
@@ -919,7 +1001,7 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // DEDICATED PROPERTY INSPECTOR VIEW (Clean Minimalist Layout)
+    // DEDICATED PROPERTY INSPECTOR VIEW
     // ─────────────────────────────────────────────────────────────
     if (activePropertyDetailId && currentDetailProperty) {
         return (
@@ -1315,621 +1397,905 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // MAIN ADMIN DASHBOARD WITH CLEAN SQUARED BOXES
+    // MAIN ADMIN DASHBOARD WITH CLEAN LEFT SIDEBAR LAYOUT
     // ─────────────────────────────────────────────────────────────
     return (
-        <div style={{ minHeight: '100dvh', background: '#F8F9F5', color: '#121613', paddingBottom: '90px' }}>
+        <div style={{ minHeight: '100dvh', background: '#F8F9F5', color: '#121613', display: 'flex', flexDirection: 'column' }}>
             
-            {/* Top Navigation Bar (Dark Forest Green 1440px) */}
-            <header style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0B150E', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '14px clamp(20px, 4vw, 48px)' }}>
-                <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+            {/* Mobile Top App Bar */}
+            <div className="admin-mobile-topbar" style={{ display: 'none', background: '#0B150E', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '14px 20px', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <button onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)} style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '16px' }}>
+                        ☰
+                    </button>
+                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF' }}>
+                        Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                    </span>
+                </div>
+                <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '6px 12px', fontSize: '12px', fontWeight: '800' }}>
+                    + New Booking
+                </button>
+            </div>
+
+            <div style={{ display: 'flex', flex: 1 }}>
+                
+                {/* ── LEFT SIDEBAR MENU (Sticky on Desktop) ── */}
+                <aside style={{
+                    width: '260px',
+                    background: '#0B150E',
+                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flexShrink: 0,
+                    position: 'sticky',
+                    top: 0,
+                    height: '100vh',
+                    boxSizing: 'border-box',
+                    padding: '24px 18px',
+                    color: '#FFFFFF'
+                }}>
+                    {/* Brand Header */}
+                    <div style={{ marginBottom: '24px', paddingBottom: '18px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginBottom: '8px' }}>
                             <img src="/logo.png" alt="Aanandham Logo" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#FFFFFF' }}>
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>
-                        <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.8px' }}>
-                            ★ BASECAMP PMS
-                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 8px #22C55E' }}></span>
+                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#D5ED55', letterSpacing: '0.6px', textTransform: 'uppercase' }}>
+                                Basecamp PMS Live
+                            </span>
+                        </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <Link href="/" target="_blank" style={{ color: 'rgba(255,255,255,0.85)', textDecoration: 'none', fontSize: '12.5px', fontWeight: '700', padding: '7px 14px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)' }}>
-                            Live Website ↗
+                    {/* Primary Action Button */}
+                    <button
+                        onClick={() => setIsAddBookingModalOpen(true)}
+                        className="btn-lime"
+                        style={{
+                            width: '100%',
+                            padding: '12px',
+                            borderRadius: '12px',
+                            fontSize: '13px',
+                            fontWeight: '800',
+                            marginBottom: '20px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            boxShadow: '0 4px 14px rgba(213, 237, 85, 0.3)'
+                        }}
+                    >
+                        <span>+ Add Manual Booking</span>
+                    </button>
+
+                    {/* Navigation Menu */}
+                    <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, overflowY: 'auto' }}>
+                        {[
+                            { id: 'overview', name: 'Executive Overview', icon: '📊' },
+                            { id: 'bookings', name: 'Live Bookings & Leads', icon: '📋', count: bookings.length },
+                            { id: 'properties', name: 'Campsites & Rooms', icon: '⛺', count: properties.length },
+                            { id: 'events', name: 'Trek Batches', icon: '🎉', count: activeEventsCount },
+                            { id: 'financials', name: 'Profit & Financials', icon: '💰' },
+                            { id: 'settings', name: 'Coordinator Settings', icon: '🔔' }
+                        ].map(item => {
+                            const isActive = activeTab === item.id;
+                            return (
+                                <button
+                                    key={item.id}
+                                    onClick={() => {
+                                        setActiveTab(item.id);
+                                        setIsMobileSidebarOpen(false);
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px 14px',
+                                        borderRadius: '12px',
+                                        background: isActive ? '#E5A93B' : 'transparent',
+                                        color: isActive ? '#121613' : '#C8D8CB',
+                                        border: 'none',
+                                        fontSize: '13px',
+                                        fontWeight: isActive ? '800' : '600',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        textAlign: 'left',
+                                        transition: 'all 0.18s ease'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <span style={{ fontSize: '15px' }}>{item.icon}</span>
+                                        <span>{item.name}</span>
+                                    </div>
+                                    {item.count !== undefined && (
+                                        <span style={{
+                                            background: isActive ? '#121613' : 'rgba(255,255,255,0.12)',
+                                            color: isActive ? '#E5A93B' : '#FFFFFF',
+                                            fontSize: '10.5px',
+                                            fontWeight: '800',
+                                            padding: '2px 7px',
+                                            borderRadius: '999px'
+                                        }}>
+                                            {item.count}
+                                        </span>
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </nav>
+
+                    {/* Bottom Utility Links */}
+                    <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        <Link href="/" target="_blank" style={{ color: '#A2B6A6', textDecoration: 'none', fontSize: '12px', fontWeight: '700', padding: '6px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>🌐 View Website</span>
+                            <span>↗</span>
                         </Link>
-                        <button onClick={handleLogout} style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#FCA5A5', border: '1px solid rgba(239, 68, 68, 0.3)', padding: '7px 14px', borderRadius: '999px', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
-                            Lock & Exit
+                        <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: '#EF4444', fontSize: '12px', fontWeight: '700', padding: '6px 8px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span>🔒 Lock & Exit</span>
                         </button>
                     </div>
-                </div>
-            </header>
+                </aside>
 
-            <main style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)', boxSizing: 'border-box' }}>
-                
-                {/* ── TABS BAR (Liquid-Glide Style Clean Pills) ── */}
-                <div style={{ display: 'flex', gap: '8px', paddingBottom: '8px', marginBottom: '28px', overflowX: 'auto' }}>
-                    {[
-                        { id: 'overview', name: '📊 Mission Control' },
-                        { id: 'properties', name: '⛺ Campsites & Rooms', count: properties.length },
-                        { id: 'events', name: '🎉 Trek Batches', count: activeEventsCount },
-                        { id: 'bookings', name: '📋 Bookings & Leads', count: bookings.length },
-                        { id: 'settings', name: '🔔 Notification Channels' }
-                    ].map(tab => {
-                        const isActive = activeTab === tab.id;
-                        return (
-                            <button
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                style={{
-                                    padding: '10px 18px',
-                                    borderRadius: '999px',
-                                    border: isActive ? '1px solid #121613' : '1px solid rgba(18, 22, 19, 0.12)',
-                                    background: isActive ? '#121613' : '#FFFFFF',
-                                    color: isActive ? '#FFFFFF' : '#59655D',
-                                    fontSize: '13.5px',
-                                    fontWeight: '800',
-                                    cursor: 'pointer',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    whiteSpace: 'nowrap',
-                                    boxShadow: isActive ? '0 4px 14px rgba(18, 22, 19, 0.12)' : 'none',
-                                    transition: 'all 0.2s ease'
-                                }}
-                            >
-                                <span>{tab.name}</span>
-                                {tab.count !== undefined && (
-                                    <span style={{ background: isActive ? 'rgba(255,255,255,0.2)' : 'rgba(18,22,19,0.06)', color: isActive ? '#FFFFFF' : '#121613', fontSize: '11px', fontWeight: '800', padding: '2px 7px', borderRadius: '999px' }}>
-                                        {tab.count}
-                                    </span>
-                                )}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB 1: MISSION CONTROL & METRIC SQUARED BOXES
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'overview' && (
-                    <div>
-                        {/* 4 Minimalist Squared Metric Cards */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                                    Confirmed Revenue
-                                </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
-                                    ₹{totalRevenue.toLocaleString('en-IN')}
-                                </div>
-                                <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
-                                    Avg Booking: ₹{avgOrderValue.toLocaleString('en-IN')}
-                                </div>
-                            </div>
-
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                                    Active Campers
-                                </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
-                                    {activeCampers} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Pax</span>
-                                </div>
-                                <div style={{ fontSize: '12px', color: '#166534', marginTop: '6px', fontWeight: '700' }}>
-                                    ✓ Across 4 Kerala Hubs
-                                </div>
-                            </div>
-
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                                    Scheduled Batches
-                                </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
-                                    {activeEventsCount} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Batches</span>
-                                </div>
-                                <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
-                                    {events.reduce((acc, ev) => acc + ev.spotsLeft, 0)} Spots Remaining
-                                </div>
-                            </div>
-
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
-                                    Pending Inquiries
-                                </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.02em' }}>
-                                    {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Leads</span>
-                                </div>
-                                <div style={{ fontSize: '12px', color: '#B45309', marginTop: '6px', fontWeight: '700' }}>
-                                    ⚡ 1-Tap WhatsApp Dispatch
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Split Row: Regional Breakdown + Weekend Events */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px', marginBottom: '28px' }}>
+                {/* ── MAIN CONTENT WORKSPACE ── */}
+                <main style={{ flex: 1, padding: '32px clamp(20px, 3.5vw, 48px)', boxSizing: 'border-box', overflowY: 'auto' }}>
+                    
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 1: EXECUTIVE OVERVIEW (Focus on Analytics & Counts)
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'overview' && (
+                        <div style={{ maxWidth: '1200px' }}>
                             
-                            {/* Regional Properties Squared Box */}
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-                                    <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                            ⛺ Regional Campsites
-                                        </h3>
-                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
-                                            {properties.length} Verified Campsites
-                                        </div>
+                            {/* Header Intro */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '24px' }}>
+                                <div>
+                                    <div className="star-badge" style={{ marginBottom: '6px' }}>
+                                        <span className="star-icon">★</span> EXECUTIVE DASHBOARD
                                     </div>
-                                    <button onClick={() => setActiveTab('properties')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
-                                        Manage →
+                                    <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
+                                        Mission Control & Live Operations
+                                    </h1>
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button onClick={handleExportCSV} style={{ padding: '8px 16px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
+                                        <span>📥 Export CSV</span>
+                                    </button>
+                                    <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '8px 18px', fontSize: '12.5px', fontWeight: '800' }}>
+                                        + Manual Booking
                                     </button>
                                 </div>
+                            </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    {['Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => {
-                                        const regProps = properties.filter(p => (p.region || 'Munnar') === reg);
-                                        const availableCount = regProps.filter(p => p.isAvailable).length;
-                                        return (
-                                            <div key={reg} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8F9F5', padding: '12px 16px', borderRadius: '12px', border: '1px solid rgba(18,22,19,0.04)' }}>
+                            {/* 4 Hero Minimalist Squared Metric Cards */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
+                                
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                        Gross Pipeline Revenue
+                                    </div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
+                                        ₹{totalRevenue.toLocaleString('en-IN')}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#166534', marginTop: '6px', fontWeight: '700' }}>
+                                        +18.4% vs Last Month
+                                    </div>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                        Est. Net Profit (55%)
+                                    </div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#166534', letterSpacing: '-0.02em' }}>
+                                        ₹{estimatedNetProfit.toLocaleString('en-IN')}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
+                                        Costs: ₹{estimatedDirectCosts.toLocaleString('en-IN')}
+                                    </div>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                        Active Campers On Peak
+                                    </div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
+                                        {activeCampers} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Pax</span>
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#59655D', marginTop: '6px', fontWeight: '600' }}>
+                                        Across 4 Kerala Hubs
+                                    </div>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px 24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '6px' }}>
+                                        Pending Action Leads
+                                    </div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.02em' }}>
+                                        {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Leads</span>
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#B45309', marginTop: '6px', fontWeight: '700' }}>
+                                        ⚡ 1-Tap WhatsApp Dispatch
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            {/* Financial Profit Bar */}
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '22px 26px', marginBottom: '28px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                    <div>
+                                        <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>Revenue & Operating Margin Health</div>
+                                        <div style={{ fontSize: '12px', color: '#59655D' }}>Net profit after forest permits, camp chef buffet meals, and 4x4 safaris</div>
+                                    </div>
+                                    <span style={{ fontSize: '14px', fontWeight: '800', color: '#166534', background: 'rgba(22, 101, 52, 0.1)', padding: '4px 12px', borderRadius: '999px' }}>
+                                        {profitMarginPercent}% Margin
+                                    </span>
+                                </div>
+                                <div style={{ height: '10px', background: '#F1F3EC', borderRadius: '999px', overflow: 'hidden', display: 'flex' }}>
+                                    <div style={{ width: `${profitMarginPercent}%`, background: '#166534' }} title="Net Profit" />
+                                    <div style={{ width: `${100 - profitMarginPercent}%`, background: '#E5A93B' }} title="Operating Costs" />
+                                </div>
+                                <div style={{ display: 'flex', gap: '20px', marginTop: '10px', fontSize: '12px', fontWeight: '700' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#166534' }}>
+                                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#166534' }}></span>
+                                        <span>Net Profit: ₹{estimatedNetProfit.toLocaleString('en-IN')}</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#B45309' }}>
+                                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#E5A93B' }}></span>
+                                        <span>Direct Base Costs: ₹{estimatedDirectCosts.toLocaleString('en-IN')}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Split Row: Recent 4 Bookings Stream + Upcoming Scheduled Batches */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px' }}>
+                                
+                                {/* Recent Live Reservations */}
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                        <div>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                                ⚡ Recent Reservations
+                                            </h3>
+                                            <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                                Latest camper submissions
+                                            </div>
+                                        </div>
+                                        <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
+                                            View All →
+                                        </button>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {bookings.slice(0, 4).map(b => (
+                                            <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.04)', padding: '12px 16px', borderRadius: '14px' }}>
                                                 <div>
-                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
-                                                        {reg === 'Munnar' ? '🏔️ Munnar High Peaks' : reg === 'Suryanelli' ? '☕ Suryanelli Ridge' : reg === 'Vagamon' ? '🌲 Vagamon Pine Valleys' : '🌴 Wayanad Rainforest'}
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>{b.name} ({b.guests} Pax)</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#59655D' }}>{b.package.slice(0, 32)}... · {b.dates}</div>
+                                                </div>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '15px', fontWeight: '800', color: '#121613' }}>₹{b.total.toLocaleString('en-IN')}</div>
+                                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: b.status === 'Confirmed' ? '#166534' : '#B45309' }}>{b.status}</span>
+                                                </div>
+                                                <div>
+                                                    <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800' }}>
+                                                        WhatsApp ↗
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Upcoming Scheduled Batches */}
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                        <div>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                                🎉 Upcoming Weekend Batches
+                                            </h3>
+                                            <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                                Live capacity tracking
+                                            </div>
+                                        </div>
+                                        <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
+                                            Manage Batches →
+                                        </button>
+                                    </div>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {events.map(ev => (
+                                            <div key={ev.id} style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                                <img src={ev.image} alt={ev.title} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} />
+                                                <div style={{ flex: 1, minWidth: 0 }}>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                        <span style={{ fontSize: '10px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
+                                                        <span style={{ fontSize: '10.5px', color: '#59655D' }}>{ev.dates}</span>
                                                     </div>
-                                                    <div style={{ fontSize: '11.5px', color: '#59655D' }}>
-                                                        {regProps.length} Campsites ({availableCount} Open)
+                                                    <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '3px', fontSize: '11px' }}>
+                                                        <span style={{ color: '#59655D' }}>{ev.booked} / {ev.capacity} Pax</span>
+                                                        <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
+                                                            {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Remaining`}
+                                                        </span>
                                                     </div>
                                                 </div>
-                                                <span style={{ fontSize: '11px', fontWeight: '800', padding: '3px 10px', borderRadius: '999px', background: availableCount > 0 ? 'rgba(22,101,52,0.1)' : 'rgba(239,68,68,0.1)', color: availableCount > 0 ? '#166534' : '#DC2626' }}>
-                                                    {availableCount > 0 ? 'Active' : 'Sold Out'}
-                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 2: LIVE BOOKINGS & LEADS ROSTER
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'bookings' && (
+                        <div style={{ maxWidth: '1200px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
+                                <div>
+                                    <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                        <span className="star-icon">★</span> RESERVATIONS ROSTER
+                                    </div>
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        Live Bookings & Custom Inquiries ({filteredBookings.length})
+                                    </h2>
+                                </div>
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <button onClick={handleExportCSV} style={{ padding: '8px 16px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <span>📥 Export CSV</span>
+                                    </button>
+                                    <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '8px 18px', fontSize: '12.5px', fontWeight: '800' }}>
+                                        + Add Booking
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Search & Filter Bar */}
+                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
+                                <input
+                                    type="text"
+                                    placeholder="Search by name, phone, or package..."
+                                    value={bookingSearch}
+                                    onChange={(e) => setBookingSearch(e.target.value)}
+                                    style={{ flex: 1, minWidth: '240px', padding: '10px 16px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none' }}
+                                />
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                    {['All', 'Pending', 'Confirmed', 'Checked In', 'Cancelled'].map(st => (
+                                        <button
+                                            key={st}
+                                            onClick={() => setBookingFilterStatus(st)}
+                                            style={{ padding: '7px 14px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)', background: bookingFilterStatus === st ? '#121613' : '#FFFFFF', color: bookingFilterStatus === st ? '#FFFFFF' : '#59655D', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
+                                        >
+                                            {st}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Bookings Squared Cards */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                {filteredBookings.map(b => (
+                                    <div key={b.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '18px 22px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '14px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                        <div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
+                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>{b.createdAt}</span>
+                                            </div>
+                                            <div style={{ fontSize: '15px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
+                                            <div style={{ fontSize: '12.5px', color: '#59655D' }}>{b.phone}</div>
+                                        </div>
+
+                                        <div>
+                                            <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
+                                            <div style={{ fontSize: '11.5px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
+                                            {b.roomType && <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>Room: {b.roomType}</div>}
+                                        </div>
+
+                                        <div>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Est. Total</div>
+                                            <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
+                                                ₹{b.total.toLocaleString('en-IN')}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label style={{ fontSize: '10px', color: '#7D8880', display: 'block', marginBottom: '3px', fontWeight: '700', textTransform: 'uppercase' }}>Status</label>
+                                            <select
+                                                value={b.status}
+                                                onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
+                                                style={{ padding: '6px 10px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
+                                            >
+                                                <option value="Pending">Pending 🟡</option>
+                                                <option value="Confirmed">Confirmed 🟢</option>
+                                                <option value="Checked In">Checked In 🔵</option>
+                                                <option value="Cancelled">Cancelled 🔴</option>
+                                            </select>
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
+                                            <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '7px 12px', fontSize: '11.5px', gap: '5px' }}>
+                                                <span>WhatsApp</span>
+                                                <span>↗</span>
+                                            </a>
+                                            <button onClick={() => handleDeleteBooking(b.id)} style={{ padding: '7px 10px', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', cursor: 'pointer', fontSize: '12px' }}>
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 3: CAMPSITES & ROOM INVENTORY
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'properties' && (
+                        <div style={{ maxWidth: '1200px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
+                                <div>
+                                    <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                        <span className="star-icon">★</span> CAMPSITE INVENTORY
+                                    </div>
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        Regional Campsites & Glamping Pods
+                                    </h2>
+                                </div>
+                                <button onClick={() => handleOpenPropertyModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                                    + Add New Campsite
+                                </button>
+                            </div>
+
+                            {/* Region Filter Selector */}
+                            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px' }}>
+                                {['All', 'Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => (
+                                    <button
+                                        key={reg}
+                                        onClick={() => setPropertyFilterRegion(reg)}
+                                        style={{
+                                            padding: '7px 16px',
+                                            borderRadius: '999px',
+                                            border: propertyFilterRegion === reg ? '1px solid #121613' : '1px solid rgba(18,22,19,0.12)',
+                                            background: propertyFilterRegion === reg ? '#121613' : '#FFFFFF',
+                                            color: propertyFilterRegion === reg ? '#FFFFFF' : '#59655D',
+                                            fontSize: '12.5px',
+                                            fontWeight: '700',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {reg === 'All' ? 'All Kerala Regions' : reg}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Properties Squared Card Grid */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                                {filteredProperties.map(prop => (
+                                    <div
+                                        key={prop.id}
+                                        style={{
+                                            background: '#FFFFFF',
+                                            border: prop.isAvailable ? '1px solid rgba(18, 22, 19, 0.08)' : '1px solid rgba(239, 68, 68, 0.3)',
+                                            borderRadius: '20px',
+                                            overflow: 'hidden',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            boxShadow: '0 4px 18px rgba(0,0,0,0.03)'
+                                        }}
+                                    >
+                                        <div 
+                                            onClick={() => setActivePropertyDetailId(prop.id)}
+                                            style={{ position: 'relative', height: '180px', cursor: 'pointer' }}
+                                        >
+                                            <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#121613' : '#EF4444', color: prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                                {prop.isAvailable ? 'Available' : 'Sold Out'}
+                                            </span>
+                                            <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                                {prop.altitude}
+                                            </span>
+                                        </div>
+
+                                        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
+                                                📍 {prop.region || 'Munnar'} · {prop.location}
+                                            </div>
+                                            <h4 
+                                                onClick={() => setActivePropertyDetailId(prop.id)}
+                                                style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 12px', lineHeight: 1.3, cursor: 'pointer' }}
+                                            >
+                                                {prop.title}
+                                            </h4>
+
+                                            {/* Rate & Adjust */}
+                                            <div style={{ background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.06)', borderRadius: '14px', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                                <div>
+                                                    <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Base Rate / Camper</div>
+                                                    <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
+                                                        ₹{prop.price.toLocaleString('en-IN')}
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '5px' }}>
+                                                    <button onClick={() => handleAdjustPrice(prop.id, -100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>-</button>
+                                                    <button onClick={() => handleAdjustPrice(prop.id, 100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>+</button>
+                                                </div>
+                                            </div>
+
+                                            {/* Manage Rooms Button */}
+                                            <button
+                                                onClick={() => setActivePropertyDetailId(prop.id)}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '11px',
+                                                    borderRadius: '12px',
+                                                    background: '#121613',
+                                                    color: '#FFFFFF',
+                                                    fontSize: '13px',
+                                                    fontWeight: '800',
+                                                    cursor: 'pointer',
+                                                    marginBottom: '8px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    border: 'none'
+                                                }}
+                                            >
+                                                <span>Manage Rooms ({prop.rooms ? prop.rooms.length : 1})</span>
+                                                <span>→</span>
+                                            </button>
+
+                                            <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
+                                                <button
+                                                    onClick={() => handleToggleAvailability(prop.id)}
+                                                    style={{ flex: 1, padding: '9px', borderRadius: '10px', background: prop.isAvailable ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 101, 52, 0.08)', border: prop.isAvailable ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(22, 101, 52, 0.3)', color: prop.isAvailable ? '#DC2626' : '#166534', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
+                                                >
+                                                    {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
+                                                </button>
+                                                <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer' }}>
+                                                    Edit ✏️
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 4: TREK BATCHES
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'events' && (
+                        <div style={{ maxWidth: '1200px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
+                                <div>
+                                    <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                        <span className="star-icon">★</span> EXPEDITION BATCHES
+                                    </div>
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        Scheduled Trek Batches & Camps
+                                    </h2>
+                                </div>
+                                <button onClick={() => handleOpenEventModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                                    + Create New Batch
+                                </button>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                                {events.map(ev => (
+                                    <div key={ev.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 18px rgba(0,0,0,0.03)' }}>
+                                        <div style={{ position: 'relative', height: '170px' }}>
+                                            <img src={ev.image} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                                {ev.badge}
+                                            </span>
+                                            <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                                {ev.dates}
+                                            </span>
+                                        </div>
+
+                                        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
+                                                📍 {ev.campsite}
+                                            </div>
+                                            <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 8px', lineHeight: 1.3 }}>
+                                                {ev.title}
+                                            </h4>
+                                            <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.5, marginBottom: '14px' }}>{ev.description}</p>
+
+                                            {/* Capacity Tracker */}
+                                            <div style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '12px', marginBottom: '14px', border: '1px solid rgba(18,22,19,0.04)' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: '700', marginBottom: '6px' }}>
+                                                    <span style={{ color: '#121613' }}>Ticket: ₹{ev.price}</span>
+                                                    <span style={{ color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
+                                                        {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Left (${ev.booked}/${ev.capacity})`}
+                                                    </span>
+                                                </div>
+                                                <div style={{ height: '6px', background: 'rgba(18,22,19,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
+                                                    <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }} />
+                                                </div>
+                                            </div>
+
+                                            <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
+                                                <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '9px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
+                                                    Edit Batch ✏️
+                                                </button>
+                                                <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '9px 12px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', fontSize: '12.5px', cursor: 'pointer' }}>
+                                                    🗑️
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 5: PROFIT & FINANCIALS BREAKDOWN
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'financials' && (
+                        <div style={{ maxWidth: '1200px' }}>
+                            <div style={{ marginBottom: '24px' }}>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                    <span className="star-icon">★</span> FINANCIAL INTELLIGENCE
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    Profit & Revenue Analytics
+                                </h2>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Gross Revenue (Booked)</div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#121613', margin: '6px 0' }}>₹{totalRevenue.toLocaleString('en-IN')}</div>
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>100% of confirmed reservations</div>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Direct Operations (45%)</div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#B45309', margin: '6px 0' }}>₹{estimatedDirectCosts.toLocaleString('en-IN')}</div>
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>Permits, Food & 4x4 safaris</div>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Net Operating Profit</div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#166534', margin: '6px 0' }}>₹{estimatedNetProfit.toLocaleString('en-IN')}</div>
+                                    <div style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}>✓ {profitMarginPercent}% Net Margin</div>
+                                </div>
+                            </div>
+
+                            {/* Regional Revenue Contribution Table */}
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '0 0 16px', color: '#121613' }}>
+                                    Regional Revenue Contribution
+                                </h3>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {['Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => {
+                                        const regBookings = paidBookings.filter(b => (b.region || 'Munnar') === reg);
+                                        const regRevenue = regBookings.reduce((acc, b) => acc + b.total, 0);
+                                        const pct = totalRevenue > 0 ? Math.round((regRevenue / totalRevenue) * 100) : 25;
+                                        return (
+                                            <div key={reg} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#F8F9F5', padding: '14px 18px', borderRadius: '14px' }}>
+                                                <div>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>{reg} Western Ghats Hub</div>
+                                                    <div style={{ fontSize: '12px', color: '#59655D' }}>{regBookings.length} Bookings Completed</div>
+                                                </div>
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>₹{regRevenue.toLocaleString('en-IN')}</div>
+                                                    <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>{pct}% of Total</div>
+                                                </div>
                                             </div>
                                         );
                                     })}
                                 </div>
                             </div>
+                        </div>
+                    )}
 
-                            {/* Active Scheduled Events Box */}
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-                                    <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                            🎉 Active Weekend Batches
-                                        </h3>
-                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
-                                            Upcoming scheduled group treks
-                                        </div>
-                                    </div>
-                                    <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
-                                        All Batches →
-                                    </button>
+                    {/* ─────────────────────────────────────────────────────────────
+                        TAB 6: COORDINATOR SETTINGS
+                    ───────────────────────────────────────────────────────────── */}
+                    {activeTab === 'settings' && (
+                        <div style={{ maxWidth: '720px' }}>
+                            <div style={{ marginBottom: '24px' }}>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                    <span className="star-icon">★</span> COORDINATOR COORDINATES
                                 </div>
-
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    {events.slice(0, 3).map(ev => (
-                                        <div key={ev.id} style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                            <img src={ev.image} alt={ev.title} style={{ width: '52px', height: '52px', borderRadius: '10px', objectFit: 'cover' }} />
-                                            <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
-                                                    <span style={{ fontSize: '10.5px', color: '#59655D' }}>{ev.dates}</span>
-                                                </div>
-                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', fontSize: '11.5px' }}>
-                                                    <span style={{ color: '#59655D' }}>{ev.booked} / {ev.capacity} Pax</span>
-                                                    <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
-                                                        {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Left`}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    Notification & Alert Dispatch Channels
+                                </h2>
                             </div>
 
-                        </div>
+                            <form onSubmit={handleSaveNotifications}>
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
+                                        OFFICIAL ADMIN WHATSAPP DISPATCH NUMBER
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={adminPhone}
+                                        onChange={(e) => setAdminPhone(e.target.value)}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
+                                    />
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>
+                                        Customer booking receipts and inquiry tickets format directly into this WhatsApp desk number.
+                                    </div>
+                                </div>
 
-                        {/* Recent Leads Roster Stream */}
-                        <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '24px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
+                                        TELEGRAM BOT / CLOUD WEBHOOK (OPTIONAL PUSH ALERTS)
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={adminTelegram}
+                                        onChange={(e) => setAdminTelegram(e.target.value)}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
+                                    />
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>
+                                        Instant Telegram Bot notifications can be pushed directly to your smartphone with 0s latency.
+                                    </div>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                    <button type="submit" className="btn-lime" style={{ padding: '12px 24px', fontSize: '13.5px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+                                        💾 Save Coordinates
+                                    </button>
+                                    {settingsSavedToast && (
+                                        <motion.span initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ color: '#166534', fontSize: '12.5px', fontWeight: '700' }}>
+                                            ✓ Saved & Synchronized
+                                        </motion.span>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+                    )}
+
+                </main>
+            </div>
+
+            {/* ── MODAL: CREATE MANUAL BOOKING ── */}
+            <AnimatePresence>
+                {isAddBookingModalOpen && (
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '32px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                 <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                        ⚡ Recent Inquiries & Bookings
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        Create Manual Reservation
                                     </h3>
-                                    <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
-                                        Real-time reservation requests
-                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>Record phone, walk-in or bespoke squad bookings</div>
                                 </div>
-                                <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
-                                    All Leads →
+                                <button onClick={() => setIsAddBookingModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
+                                    ✕
                                 </button>
                             </div>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                {bookings.slice(0, 3).map(b => (
-                                    <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.05)', padding: '14px 18px', borderRadius: '14px' }}>
-                                        <div>
-                                            <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>{b.name} ({b.guests} Guests)</div>
-                                            <div style={{ fontSize: '12px', color: '#59655D' }}>{b.package} · {b.dates}</div>
-                                        </div>
-                                        <div style={{ textAlign: 'right' }}>
-                                            <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>₹{b.total.toLocaleString('en-IN')}</div>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#166534' : '#B45309' }}>{b.status}</span>
-                                        </div>
-                                        <div>
-                                            <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: '800' }}>
-                                                WhatsApp Chat ↗
-                                            </a>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB 2: REGIONAL PROPERTIES & SQUARED CARDS
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'properties' && (
-                    <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
-                            <div>
-                                <div className="star-badge">
-                                    <span className="star-icon">★</span> CAMPSITE INVENTORY
+                            <form onSubmit={handleSaveManualBooking} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        Customer / Squad Name *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="e.g. Anand & Friends (4 Pax)"
+                                        value={newBookingForm.name}
+                                        onChange={e => setNewBookingForm({ ...newBookingForm, name: e.target.value })}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                    />
                                 </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                                    Regional Campsites & Glamping Pods
-                                </h3>
-                            </div>
-                            <button onClick={() => handleOpenPropertyModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
-                                + Add New Campsite
-                            </button>
-                        </div>
 
-                        {/* Region Filter Selector */}
-                        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '20px' }}>
-                            {['All', 'Munnar', 'Suryanelli', 'Vagamon', 'Wayanad'].map(reg => (
-                                <button
-                                    key={reg}
-                                    onClick={() => setPropertyFilterRegion(reg)}
-                                    style={{
-                                        padding: '7px 16px',
-                                        borderRadius: '999px',
-                                        border: propertyFilterRegion === reg ? '1px solid #121613' : '1px solid rgba(18,22,19,0.12)',
-                                        background: propertyFilterRegion === reg ? '#121613' : '#FFFFFF',
-                                        color: propertyFilterRegion === reg ? '#FFFFFF' : '#59655D',
-                                        fontSize: '12.5px',
-                                        fontWeight: '700',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {reg === 'All' ? 'All Kerala Regions' : reg}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Properties Squared Card Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-                            {filteredProperties.map(prop => (
-                                <div
-                                    key={prop.id}
-                                    style={{
-                                        background: '#FFFFFF',
-                                        border: prop.isAvailable ? '1px solid rgba(18, 22, 19, 0.08)' : '1px solid rgba(239, 68, 68, 0.3)',
-                                        borderRadius: '20px',
-                                        overflow: 'hidden',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        boxShadow: '0 4px 18px rgba(0,0,0,0.03)'
-                                    }}
-                                >
-                                    <div 
-                                        onClick={() => setActivePropertyDetailId(prop.id)}
-                                        style={{ position: 'relative', height: '180px', cursor: 'pointer' }}
-                                    >
-                                        <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#121613' : '#EF4444', color: prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {prop.isAvailable ? 'Available' : 'Sold Out'}
-                                        </span>
-                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
-                                            {prop.altitude}
-                                        </span>
-                                    </div>
-
-                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
-                                            📍 {prop.region || 'Munnar'} · {prop.location}
-                                        </div>
-                                        <h4 
-                                            onClick={() => setActivePropertyDetailId(prop.id)}
-                                            style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 12px', lineHeight: 1.3, cursor: 'pointer' }}
-                                        >
-                                            {prop.title}
-                                        </h4>
-
-                                        {/* Rate & Adjust */}
-                                        <div style={{ background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.06)', borderRadius: '14px', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                            <div>
-                                                <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Base Rate / Camper</div>
-                                                <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
-                                                    ₹{prop.price.toLocaleString('en-IN')}
-                                                </div>
-                                            </div>
-                                            <div style={{ display: 'flex', gap: '5px' }}>
-                                                <button onClick={() => handleAdjustPrice(prop.id, -100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>-</button>
-                                                <button onClick={() => handleAdjustPrice(prop.id, 100)} style={{ width: '30px', height: '30px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer' }}>+</button>
-                                            </div>
-                                        </div>
-
-                                        {/* Manage Rooms Button */}
-                                        <button
-                                            onClick={() => setActivePropertyDetailId(prop.id)}
-                                            style={{
-                                                width: '100%',
-                                                padding: '11px',
-                                                borderRadius: '12px',
-                                                background: '#121613',
-                                                color: '#FFFFFF',
-                                                fontSize: '13px',
-                                                fontWeight: '800',
-                                                cursor: 'pointer',
-                                                marginBottom: '8px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '6px',
-                                                border: 'none'
-                                            }}
-                                        >
-                                            <span>Manage Rooms ({prop.rooms ? prop.rooms.length : 1})</span>
-                                            <span>→</span>
-                                        </button>
-
-                                        {/* Action buttons */}
-                                        <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
-                                            <button
-                                                onClick={() => handleToggleAvailability(prop.id)}
-                                                style={{ flex: 1, padding: '9px', borderRadius: '10px', background: prop.isAvailable ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 101, 52, 0.08)', border: prop.isAvailable ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid rgba(22, 101, 52, 0.3)', color: prop.isAvailable ? '#DC2626' : '#166534', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
-                                            >
-                                                {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
-                                            </button>
-                                            <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11.5px', fontWeight: '700', cursor: 'pointer' }}>
-                                                Edit ✏️
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB 3: EVENTS & TREK BATCHES
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'events' && (
-                    <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
-                            <div>
-                                <div className="star-badge">
-                                    <span className="star-icon">★</span> EXPEDITION BATCHES
-                                </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                                    Scheduled Trek Batches & Camps
-                                </h3>
-                            </div>
-                            <button onClick={() => handleOpenEventModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
-                                + Create New Batch
-                            </button>
-                        </div>
-
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-                            {events.map(ev => (
-                                <div key={ev.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 18px rgba(0,0,0,0.03)' }}>
-                                    <div style={{ position: 'relative', height: '170px' }}>
-                                        <img src={ev.image} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {ev.badge}
-                                        </span>
-                                        <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {ev.dates}
-                                        </span>
-                                    </div>
-
-                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                        <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                            📍 {ev.campsite}
-                                        </div>
-                                        <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 8px', lineHeight: 1.3 }}>
-                                            {ev.title}
-                                        </h4>
-                                        <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.5, marginBottom: '14px' }}>{ev.description}</p>
-
-                                        {/* Capacity Tracker */}
-                                        <div style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '12px', marginBottom: '14px', border: '1px solid rgba(18,22,19,0.04)' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: '700', marginBottom: '6px' }}>
-                                                <span style={{ color: '#121613' }}>Ticket: ₹{ev.price}</span>
-                                                <span style={{ color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
-                                                    {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Left (${ev.booked}/${ev.capacity})`}
-                                                </span>
-                                            </div>
-                                            <div style={{ height: '6px', background: 'rgba(18,22,19,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
-                                                <div style={{ height: '100%', width: `${Math.min(100, (ev.booked / ev.capacity) * 100)}%`, background: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }} />
-                                            </div>
-                                        </div>
-
-                                        <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '9px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
-                                                Edit Batch ✏️
-                                            </button>
-                                            <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '9px 12px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', fontSize: '12.5px', cursor: 'pointer' }}>
-                                                🗑️
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB 4: BOOKINGS & LEADS ROSTER
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'bookings' && (
-                    <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '20px' }}>
-                            <div>
-                                <div className="star-badge">
-                                    <span className="star-icon">★</span> LIVE RESERVATIONS
-                                </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                                    Reservation Inquiries & Leads ({filteredBookings.length})
-                                </h3>
-                            </div>
-                            <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.15)', color: '#121613', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.03)' }}>
-                                <span>📥</span>
-                                <span>Export CSV Spreadsheet</span>
-                            </button>
-                        </div>
-
-                        {/* Search & Filter Bar */}
-                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
-                            <input
-                                type="text"
-                                placeholder="Search by customer name, phone, or package..."
-                                value={bookingSearch}
-                                onChange={(e) => setBookingSearch(e.target.value)}
-                                style={{ flex: 1, minWidth: '240px', padding: '11px 16px', borderRadius: '12px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none' }}
-                            />
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                {['All', 'Pending', 'Confirmed', 'Checked In', 'Cancelled'].map(st => (
-                                    <button
-                                        key={st}
-                                        onClick={() => setBookingFilterStatus(st)}
-                                        style={{ padding: '7px 14px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)', background: bookingFilterStatus === st ? '#121613' : '#FFFFFF', color: bookingFilterStatus === st ? '#FFFFFF' : '#59655D', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
-                                    >
-                                        {st}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Bookings List Squared Cards */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            {filteredBookings.map(b => (
-                                <div key={b.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '18px 22px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
-                                            <span style={{ fontSize: '11px', color: '#7D8880' }}>{b.createdAt}</span>
-                                        </div>
-                                        <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
-                                        <div style={{ fontSize: '12.5px', color: '#59655D' }}>{b.phone}</div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Phone / WhatsApp *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="+91 98470 12345"
+                                            value={newBookingForm.phone}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, phone: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        />
                                     </div>
-
                                     <div>
-                                        <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
-                                        <div style={{ fontSize: '11.5px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
-                                        {b.roomType && <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>Room: {b.roomType}</div>}
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Travel Date *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="2026-08-22"
+                                            value={newBookingForm.dates}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, dates: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        />
                                     </div>
+                                </div>
 
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                     <div>
-                                        <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Est. Total</div>
-                                        <div style={{ fontSize: '19px', fontWeight: '800', color: '#121613' }}>
-                                            ₹{b.total.toLocaleString('en-IN')}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label style={{ fontSize: '10px', color: '#7D8880', display: 'block', marginBottom: '3px', fontWeight: '700', textTransform: 'uppercase' }}>Status</label>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Campsite Package *
+                                        </label>
                                         <select
-                                            value={b.status}
-                                            onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
-                                            style={{ padding: '7px 10px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
+                                            value={newBookingForm.package}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, package: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box' }}
                                         >
-                                            <option value="Pending">Pending 🟡</option>
-                                            <option value="Confirmed">Confirmed 🟢</option>
-                                            <option value="Checked In">Checked In 🔵</option>
-                                            <option value="Cancelled">Cancelled 🔴</option>
+                                            {properties.map(p => (
+                                                <option key={p.id} value={p.title}>{p.title}</option>
+                                            ))}
                                         </select>
                                     </div>
-
-                                    <div style={{ display: 'flex', gap: '6px', justifyContent: 'flex-end' }}>
-                                        <a href={waLink(`Hi ${b.name}! Aanandham desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '7px 12px', fontSize: '11.5px', gap: '5px' }}>
-                                            <span>WhatsApp</span>
-                                            <span>↗</span>
-                                        </a>
-                                        <a href={`tel:${b.phone}`} style={{ padding: '7px 10px', borderRadius: '999px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', textDecoration: 'none', fontSize: '11.5px', display: 'flex', alignItems: 'center' }}>
-                                            📞
-                                        </a>
+                                    <div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Number of Campers *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            required
+                                            min="1"
+                                            value={newBookingForm.guests}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, guests: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        />
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
 
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB 5: NOTIFICATIONS & COORDINATOR SETTINGS
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'settings' && (
-                    <div style={{ maxWidth: '720px' }}>
-                        <div style={{ marginBottom: '24px' }}>
-                            <div className="star-badge">
-                                <span className="star-icon">★</span> COORDINATOR COORDINATES
-                            </div>
-                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
-                                Notification & Alert Dispatch Channels
-                            </h3>
-                        </div>
-
-                        <form onSubmit={handleSaveNotifications}>
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
-                                    OFFICIAL ADMIN WHATSAPP DISPATCH NUMBER
-                                </label>
-                                <input
-                                    type="text"
-                                    value={adminPhone}
-                                    onChange={(e) => setAdminPhone(e.target.value)}
-                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
-                                />
-                                <div style={{ fontSize: '12px', color: '#59655D' }}>
-                                    Customer booking receipts and inquiry tickets format directly into this WhatsApp desk number.
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                                    <div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Price Per Camper (INR) *
+                                        </label>
+                                        <input
+                                            type="number"
+                                            required
+                                            value={newBookingForm.pricePerGuest}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, pricePerGuest: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                            Initial Status
+                                        </label>
+                                        <select
+                                            value={newBookingForm.status}
+                                            onChange={e => setNewBookingForm({ ...newBookingForm, status: e.target.value })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box' }}
+                                        >
+                                            <option value="Confirmed">Confirmed 🟢</option>
+                                            <option value="Pending">Pending 🟡</option>
+                                            <option value="Checked In">Checked In 🔵</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '24px', marginBottom: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
-                                    TELEGRAM BOT / CLOUD WEBHOOK (OPTIONAL PUSH ALERTS)
-                                </label>
-                                <input
-                                    type="text"
-                                    value={adminTelegram}
-                                    onChange={(e) => setAdminTelegram(e.target.value)}
-                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', marginBottom: '8px', boxSizing: 'border-box' }}
-                                />
-                                <div style={{ fontSize: '12px', color: '#59655D' }}>
-                                    Instant Telegram Bot notifications can be pushed directly to your smartphone with 0s latency.
+                                <div style={{ background: '#F8F9F5', padding: '12px 16px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '12.5px', color: '#59655D', fontWeight: '600' }}>Calculated Total:</span>
+                                    <span style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
+                                        ₹{((Number(newBookingForm.guests) || 1) * (Number(newBookingForm.pricePerGuest) || 2499)).toLocaleString('en-IN')}
+                                    </span>
                                 </div>
-                            </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                                <button type="submit" className="btn-lime" style={{ padding: '12px 24px', fontSize: '13.5px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
-                                    💾 Save Coordinates
+                                <button type="submit" className="btn-lime" style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                    + Add Booking to System
                                 </button>
-                                {settingsSavedToast && (
-                                    <motion.span initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ color: '#166534', fontSize: '12.5px', fontWeight: '700' }}>
-                                        ✓ Saved & Synchronized
-                                    </motion.span>
-                                )}
-                            </div>
-                        </form>
+                            </form>
+                        </motion.div>
                     </div>
                 )}
-
-            </main>
+            </AnimatePresence>
 
             {/* MODAL: CREATE / EDIT PROPERTY */}
             <AnimatePresence>

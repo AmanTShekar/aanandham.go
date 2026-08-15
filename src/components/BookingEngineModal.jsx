@@ -206,6 +206,31 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             `📝 *Notes:* ${specialNotes.trim() || 'None'}\n\n` +
             `Please confirm campsite availability & payment link! 🏔️`;
 
+        // Automatically persist booking into real admin database (localStorage)
+        try {
+            const newBookingRecord = {
+                id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
+                name: customerName.trim(),
+                phone: customerPhone.trim(),
+                package: targetPackage.title,
+                region: targetPackage.region || (targetPackage.location ? targetPackage.location.split(',')[0].trim() : 'Munnar'),
+                dates: travelDate || 'Flexible / Upcoming Weekend',
+                guests: totalGuests,
+                roomType: selectedRoom ? selectedRoom.name : 'Standard Mountain Glamp',
+                addons: selectedAddonNames,
+                total: grandTotal,
+                status: 'Pending',
+                source: 'Website Booking Engine',
+                createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+            };
+            const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
+            const updatedBookings = [newBookingRecord, ...currentBookings];
+            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updatedBookings));
+            window.dispatchEvent(new Event('storage'));
+        } catch (e) {
+            console.error('Error persisting booking:', e);
+        }
+
         window.open(waLink(summaryText), '_blank');
         onClose();
     };
