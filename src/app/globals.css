@@ -263,7 +263,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ANCIENT MOUNTAIN STONE PONEGLYPHS & ELEVATION MONOLITHS
+   CHISELED MOUNTAIN SLATE FIELD TABLETS (Tactile Stone Slabs)
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
@@ -285,62 +285,66 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Ancient Monolith Stone Slab */
+/* Quarried Mountain Slate Tablet */
 .stone-slab-card {
   position: relative;
   background: 
-    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
-    linear-gradient(180deg, #202722 0%, #151A16 45%, #0C100D 100%);
-  border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.14);
-  padding: 26px 22px;
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.06) 0%, transparent 55%),
+    linear-gradient(160deg, #1C221D 0%, #121713 50%, #090D0A 100%);
+  clip-path: polygon(
+    0% 14px, 14px 0%, calc(100% - 14px) 0%, 100% 14px, 
+    100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0% calc(100% - 14px)
+  );
+  padding: 28px 22px;
   display: flex;
   flex-direction: column;
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.75));
   box-shadow: 
-    0 20px 45px rgba(0, 0, 0, 0.75),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.15),
-    inset -2px -2px 6px rgba(0, 0, 0, 0.9);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    inset 1.5px 1.5px 0px rgba(255, 255, 255, 0.18),
+    inset -2px -2px 0px rgba(0, 0, 0, 0.85);
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
   transform: translateZ(0);
 }
 
-/* Subtle Ancient Rock Stratum */
+/* Tactile Rock Grain & Slate Mineral Flecks */
 .stone-slab-card::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 10px;
   background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0, 0, 0, 0.2) 18px, rgba(0, 0, 0, 0.2) 19px);
-  background-size: 16px 16px, 100% 19px;
-  opacity: 0.5;
+    radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    radial-gradient(rgba(0, 0, 0, 0.4) 1px, transparent 1px);
+  background-size: 12px 12px, 8px 8px;
+  background-position: 0 0, 4px 4px;
+  opacity: 0.45;
   pointer-events: none;
 }
 
 .stone-slab-card:hover {
   transform: translateY(-8px);
-  box-shadow: 
-    0 30px 60px rgba(0, 0, 0, 0.88),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.25),
-    inset -2px -2px 6px rgba(0, 0, 0, 0.9);
+  filter: drop-shadow(0 26px 50px rgba(0, 0, 0, 0.9));
 }
 
-/* 4 Unique Ancient Stele Borders */
+/* 4 Tier Chiseled Accent Lines */
 .stone-slab-tier-1 {
-  border-top: 3px solid #E5A93B;
+  border-top-color: #E5A93B;
+  box-shadow: inset 1.5px 1.5px 0px rgba(229, 169, 59, 0.3), inset -2px -2px 0px rgba(0, 0, 0, 0.85);
 }
 
 .stone-slab-tier-2 {
-  border-top: 3px solid #F97316;
+  border-top-color: #F97316;
+  box-shadow: inset 1.5px 1.5px 0px rgba(249, 115, 22, 0.3), inset -2px -2px 0px rgba(0, 0, 0, 0.85);
 }
 
 .stone-slab-tier-3 {
-  border-top: 3px solid #D5ED55;
+  border-top-color: #D5ED55;
+  box-shadow: inset 1.5px 1.5px 0px rgba(213, 237, 85, 0.3), inset -2px -2px 0px rgba(0, 0, 0, 0.85);
 }
 
 .stone-slab-tier-4 {
-  border-top: 3px solid #38BDF8;
+  border-top-color: #38BDF8;
+  box-shadow: inset 1.5px 1.5px 0px rgba(56, 189, 248, 0.3), inset -2px -2px 0px rgba(0, 0, 0, 0.85);
 }
 
 /* Recessed Inscribed Stone Photo Window */
@@ -348,12 +352,15 @@ body::-webkit-scrollbar-thumb:active,
   position: relative;
   width: 100%;
   height: 165px;
-  border-radius: 8px;
+  clip-path: polygon(
+    0% 8px, 8px 0%, calc(100% - 8px) 0%, 100% 8px, 
+    100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0% calc(100% - 8px)
+  );
   overflow: hidden;
   margin: 14px 0 16px;
   background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.85);
+  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.9);
 }
 
 .stone-photo-thumb img {
@@ -367,13 +374,13 @@ body::-webkit-scrollbar-thumb:active,
   transform: scale(1.06);
 }
 
-/* Ancient Inscribed Stele Marker Pill */
+/* Chiseled Stone Icon Pill */
 .stone-icon-pill {
   width: 40px;
   height: 40px;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  clip-path: polygon(0% 5px, 5px 0%, calc(100% - 5px) 0%, 100% 5px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 5px 100%, 0% calc(100% - 5px));
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,14 +389,14 @@ body::-webkit-scrollbar-thumb:active,
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* Ancient Engraved Chip */
+/* Chiseled Stone Spec Chip */
 .stone-spec-chip {
   display: flex;
   align-items: center;
   gap: 8px;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 6px;
+  clip-path: polygon(0% 4px, 4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px));
   padding: 6px 12px;
   font-size: 11.5px;
   color: #D1DED5;
