@@ -25,9 +25,9 @@ export default function StarBadge({
     color = '#FFFFFF';
     border = '1px solid rgba(255, 255, 255, 0.12)';
   } else if (gold) {
-    bg = 'rgba(229, 169, 59, 0.15)';
-    color = '#E5A93B';
-    border = '1px solid rgba(229, 169, 59, 0.3)';
+    bg = 'rgba(229, 169, 59, 0.14)';
+    color = '#8C5E05'; // WCAG AA compliant on light backgrounds
+    border = '1px solid rgba(140, 94, 5, 0.25)';
   }
 
   return (
@@ -40,7 +40,7 @@ export default function StarBadge({
         ...style
       }}
     >
-      <span className="star-icon" style={{ color: '#E5A93B', marginRight: '6px' }}>
+      <span className="star-icon" style={{ color: dark ? '#E5A93B' : '#8C5E05', marginRight: '6px' }}>
         ★
       </span>
       <span>{content}</span>

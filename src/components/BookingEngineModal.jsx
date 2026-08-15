@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 import CustomDateBatchPicker from './CustomDateBatchPicker';
@@ -8,6 +8,7 @@ import { Check, Users, Tent, Sparkles, Plus, Minus } from 'lucide-react';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
+import { useFocusTrap } from '../hooks/useFocusTrap';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -24,6 +25,9 @@ const ADDONS_LIST = [
 ];
 
 export default function BookingEngineModal({ isOpen, onClose, initialPackage }) {
+    const modalRef = useRef(null);
+    useFocusTrap(isOpen, modalRef);
+
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
     const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
     const [selectedRoomId, setSelectedRoomId] = useState('');
@@ -41,6 +45,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [popupBlockedLink, setPopupBlockedLink] = useState('');
+
 
     // Load active camps list from localStorage / default data
     useEffect(() => {
@@ -316,6 +321,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             onWheel={(e) => e.stopPropagation()}
         >
             <motion.div
+                ref={modalRef}
                 initial={{ opacity: 0, scale: 0.96, y: 24 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 24 }}

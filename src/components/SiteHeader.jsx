@@ -157,8 +157,12 @@ export default function SiteHeader({
                         <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
                             <img
                                 src="/logo.png"
-                                alt="Aanandham.go"
+                                alt="Aanandham.go Wilderness Basecamps"
+                                width="34"
+                                height="34"
+                                decoding="async"
                                 className="site-brand-logo"
+                                style={{ width: '34px', height: '34px', objectFit: 'contain' }}
                             />
                             <span className="marker-text site-brand-text">
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
@@ -286,10 +290,13 @@ export default function SiteHeader({
                     {/* Mobile 3-Bar Morphing Hamburger Toggle */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <button
+                            id="nav-mobile-toggle-btn"
                             className={`nav-mobile-toggle ${isMobileMenuOpen ? 'is-open' : ''}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
                             aria-expanded={isMobileMenuOpen}
+                            aria-controls="mobile-navigation-drawer"
+                            aria-haspopup="dialog"
                         >
                             <span className="burger-line line-top" />
                             <span className="burger-line line-mid" />
@@ -303,6 +310,10 @@ export default function SiteHeader({
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
+                        id="mobile-navigation-drawer"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Navigation Menu"
                         key="shared-mobile-drawer"
                         variants={drawerWaveVariants}
                         initial="hidden"

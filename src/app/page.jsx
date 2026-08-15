@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring } from 'framer-motion';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
-import BookingEngineModal from '../components/BookingEngineModal';
+const BookingEngineModal = dynamic(() => import('../components/BookingEngineModal'), { ssr: false });
 import { useAuth } from '../hooks/useAuth';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';

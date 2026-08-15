@@ -112,17 +112,17 @@ export function SectionHeader({
             background: dark
               ? 'rgba(255, 255, 255, 0.08)'
               : badgeGold
-              ? 'rgba(229, 169, 59, 0.15)'
+              ? 'rgba(229, 169, 59, 0.14)'
               : 'rgba(18, 22, 19, 0.05)',
-            color: dark ? '#FFFFFF' : badgeGold ? '#E5A93B' : '#121613',
+            color: dark ? '#FFFFFF' : badgeGold ? '#8C5E05' : '#121613',
             border: dark
               ? '1px solid rgba(255, 255, 255, 0.12)'
               : badgeGold
-              ? '1px solid rgba(229, 169, 59, 0.3)'
+              ? '1px solid rgba(140, 94, 5, 0.25)'
               : '1px solid rgba(18, 22, 19, 0.08)'
           }}
         >
-          <span className="star-icon" style={{ color: '#E5A93B', marginRight: '6px' }}>
+          <span className="star-icon" style={{ color: dark ? '#E5A93B' : '#8C5E05', marginRight: '6px' }}>
             ★
           </span>
           <span>{badge}</span>
