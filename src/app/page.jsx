@@ -860,6 +860,62 @@ export default function HomePage() {
     const [selectedPackage, setSelectedPackage] = useState(EXPEDITION_PACKAGES[0]);
     const { user: currentUser, logout } = useAuth();
 
+    // User Wishlist & Share Toasts
+    const [wishlist, setWishlist] = useState([]);
+    const [toastMessage, setToastMessage] = useState('');
+
+    useEffect(() => {
+        try {
+            const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
+            setWishlist(savedWishlist);
+        } catch (e) {}
+    }, []);
+
+    const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(''), 3000);
+    };
+
+    const handleToggleWishlist = (campId, campTitle, e) => {
+        e?.stopPropagation();
+        e?.preventDefault();
+        let updated;
+        const isLiked = wishlist.includes(campId);
+        if (isLiked) {
+            updated = wishlist.filter(id => id !== campId);
+            showToast(`Removed "${campTitle}" from your wishlist`);
+        } else {
+            updated = [...wishlist, campId];
+            showToast(`❤️ Added "${campTitle}" to saved wishlist!`);
+        }
+        setWishlist(updated);
+        try {
+            localStorage.setItem('aanandham_user_wishlist', JSON.stringify(updated));
+        } catch (e) {}
+    };
+
+    const handleShareCamp = async (pkg, e) => {
+        e?.stopPropagation();
+        e?.preventDefault();
+        const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/camps/${pkg.id}` : '';
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `${pkg.title} | Aanandham.go`,
+                    text: `Check out ${pkg.title} at ${pkg.altitude} in ${pkg.location}!`,
+                    url: shareUrl
+                });
+                return;
+            } catch (e) {}
+        }
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            showToast('✓ Link copied to clipboard!');
+        } catch (e) {
+            window.open(waLink(`Check out this camp: ${pkg.title} - ${shareUrl}`), '_blank');
+        }
+    };
+
     // Floating Mouse-Follow Preview Card State for Program Section
     const programContainerRef = useRef(null);
     const [hoveredProgramDay, setHoveredProgramDay] = useState(null);
@@ -1840,59 +1896,82 @@ export default function HomePage() {
                             <div className="star-badge">
                                 <span className="star-icon">★</span> PACKAGES PREVIEW
                             </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: 0 }}>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: '0 0 6px' }}>
                                 <span className="text-marker-2">Handcrafted</span> Wilderness Packages
                             </h2>
+                            <p style={{ fontSize: '13.5px', color: '#59655D', margin: 0 }}>
+                                Explore full campsite itineraries, photos & verified reviews or instant book your weekend spot.
+                            </p>
                         </div>
-                        {/* Smooth Liquid-Glide Animated Filter Pills (Horizontal Touch Scroll on Mobile) */}
-                        <LayoutGroup id="packagesFilterTabsGroup">
-                            <div className="packages-filter-scroll">
-                                {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
-                                    const isSelected = activeTab === tab;
-                                    const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
-                                    return (
-                                        <button 
-                                            key={tab} 
-                                            onClick={() => setActiveTab(tab)} 
-                                            style={{ 
-                                                position: 'relative',
-                                                border: 'none', 
-                                                background: 'transparent',
-                                                color: isSelected ? '#FFFFFF' : '#59655D', 
-                                                fontWeight: '800', 
-                                                fontSize: '13px', 
-                                                padding: '9px 20px', 
-                                                borderRadius: '999px', 
-                                                cursor: 'pointer',
-                                                zIndex: 2,
-                                                transition: 'color 0.22s ease',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexShrink: 0,
-                                                whiteSpace: 'nowrap'
-                                            }}
-                                        >
-                                            {isSelected && (
-                                                <motion.div
-                                                    layoutId="activeFilterPill"
-                                                    transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.6 }}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        inset: 0,
-                                                        background: '#121613',
-                                                        borderRadius: '999px',
-                                                        zIndex: -1,
-                                                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.18)'
-                                                    }}
-                                                />
-                                            )}
-                                            <span>{label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </LayoutGroup>
+
+                        {/* Smooth Liquid-Glide Animated Filter Pills + View All Link */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                            <LayoutGroup id="packagesFilterTabsGroup">
+                                <div className="packages-filter-scroll">
+                                    {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
+                                        const isSelected = activeTab === tab;
+                                        const label = tab === 'All' ? 'All Expeditions' : tab === 'Treks' ? 'Summit Treks' : tab === 'Glamping' ? 'Ridge Glamp' : 'Rapids & Lakes';
+                                        return (
+                                            <button 
+                                                key={tab} 
+                                                onClick={() => setActiveTab(tab)} 
+                                                style={{ 
+                                                    position: 'relative',
+                                                    border: 'none', 
+                                                    background: 'transparent',
+                                                    color: isSelected ? '#FFFFFF' : '#59655D', 
+                                                    fontWeight: '800', 
+                                                    fontSize: '13px', 
+                                                    padding: '9px 20px', 
+                                                    borderRadius: '999px', 
+                                                    cursor: 'pointer',
+                                                    zIndex: 2,
+                                                    transition: 'color 0.22s ease',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0,
+                                                    whiteSpace: 'nowrap'
+                                                }}
+                                            >
+                                                {isSelected && (
+                                                    <motion.div
+                                                        layoutId="activeFilterPill"
+                                                        transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.6 }}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            inset: 0,
+                                                            background: '#121613',
+                                                            borderRadius: '999px',
+                                                            zIndex: -1,
+                                                            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.18)'
+                                                        }}
+                                                    />
+                                                )}
+                                                <span>{label}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </LayoutGroup>
+
+                            <Link
+                                href="/camps"
+                                style={{
+                                    padding: '9px 18px',
+                                    borderRadius: '999px',
+                                    background: '#F1F3EC',
+                                    border: '1px solid rgba(18,22,19,0.1)',
+                                    color: '#121613',
+                                    fontSize: '12.5px',
+                                    fontWeight: '800',
+                                    textDecoration: 'none',
+                                    whiteSpace: 'nowrap'
+                                }}
+                            >
+                                All Camps ↗
+                            </Link>
+                        </div>
                     </div>
 
                     <div 
@@ -1901,121 +1980,190 @@ export default function HomePage() {
                         className="packages-cards-grid"
                     >
                         <AnimatePresence mode="popLayout">
-                            {filteredPackages.map((pkg, idx) => (
-                                <motion.div 
-                                    key={pkg.id} 
-                                    initial={{ opacity: 0, y: 14, scale: 0.98 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: -10, scale: 0.98 }}
-                                    transition={{ duration: 0.26, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                                    className="hover-lift card-img-zoom" 
-                                    style={{
-                                        borderRadius: '26px',
-                                        background: '#FFFFFF',
-                                        border: '1px solid rgba(18, 22, 19, 0.08)',
-                                        overflow: 'hidden',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        boxShadow: '0 6px 24px rgba(0,0,0,0.03)',
-                                        transition: 'box-shadow 0.25s ease, transform 0.25s ease'
-                                    }}
-                                >
-                                    {/* Image Container with Badges (Compact Space-Saving on Mobile) */}
-                                    <div className="package-card-img">
-                                        <img 
-                                            src={pkg.image} 
-                                            alt={pkg.title} 
-                                            loading="lazy"
-                                            decoding="async"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                        />
-                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.6) 0%, transparent 45%)' }} />
-                                        
-                                        {/* Top Badges */}
-                                        <div style={{ position: 'absolute', top: '14px', left: '14px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.2px' }}>
-                                                {pkg.tag}
-                                            </span>
-                                            <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
-                                                {pkg.altitude}
-                                            </span>
-                                        </div>
-
-                                        {/* Rating Pill */}
-                                        <div style={{ position: 'absolute', top: '14px', right: '14px', background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 9px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                                            ★ {pkg.rating} <span style={{ color: '#59655D', fontWeight: '600', fontSize: '10.5px' }}>({pkg.reviewsCount})</span>
-                                        </div>
-
-                                        {/* Bottom Overlay Location & Duration */}
-                                        <div style={{ position: 'absolute', bottom: '12px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
-                                            <span>📍 {pkg.location}</span>
-                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Card Content (Compact Padding on Mobile) */}
-                                    <div className="package-card-body">
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', marginBottom: '6px', lineHeight: 1.25 }}>
-                                            {pkg.title}
-                                        </h3>
-                                        
-                                        <p style={{ 
-                                            fontSize: '13px', 
-                                            color: '#59655D', 
-                                            lineHeight: 1.45, 
-                                            marginBottom: '12px',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 2,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden'
-                                        }}>
-                                            {pkg.description}
-                                        </p>
-                                        
-                                        {/* Key Highlights Chips (Compact 2 items on mobile) */}
-                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '12px' }}>
-                                            {pkg.highlights.slice(0, 2).map((h, i) => (
-                                                <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
-                                                    ✓ {h}
+                            {filteredPackages.map((pkg, idx) => {
+                                const isLiked = wishlist.includes(pkg.id);
+                                return (
+                                    <motion.div 
+                                        key={pkg.id} 
+                                        initial={{ opacity: 0, y: 14, scale: 0.98 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                                        transition={{ duration: 0.26, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                                        className="hover-lift card-img-zoom" 
+                                        style={{
+                                            borderRadius: '26px',
+                                            background: '#FFFFFF',
+                                            border: '1px solid rgba(18, 22, 19, 0.08)',
+                                            overflow: 'hidden',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            boxShadow: '0 6px 24px rgba(0,0,0,0.03)',
+                                            transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                                            position: 'relative'
+                                        }}
+                                    >
+                                        {/* Image Container with Badges & Action Buttons */}
+                                        <div className="package-card-img" style={{ position: 'relative' }}>
+                                            <Link href={`/camps/${pkg.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
+                                                <img 
+                                                    src={pkg.image} 
+                                                    alt={pkg.title} 
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                />
+                                            </Link>
+                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.65) 0%, transparent 45%)', pointerEvents: 'none' }} />
+                                            
+                                            {/* Top Badges */}
+                                            <div style={{ position: 'absolute', top: '14px', left: '14px', display: 'flex', gap: '6px', flexWrap: 'wrap', pointerEvents: 'none' }}>
+                                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.2px' }}>
+                                                    {pkg.tag}
                                                 </span>
-                                            ))}
-                                            {pkg.highlights.length > 2 && (
-                                                <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
-                                                    +{pkg.highlights.length - 2} more
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Bottom Price & Action Row */}
-                                        <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '5px' }}>
-                                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', color: '#121613' }}>
-                                                        ₹{pkg.price.toLocaleString()}
-                                                    </span>
-                                                    {pkg.originalPrice && (
-                                                        <span style={{ fontSize: '12px', color: '#8E9B92', textDecoration: 'line-through' }}>
-                                                            ₹{pkg.originalPrice.toLocaleString()}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                                <span style={{ fontSize: '10.5px', color: '#59655D', display: 'block', marginTop: '1px' }}>
-                                                    per person all-inclusive
+                                                <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
+                                                    {pkg.altitude}
                                                 </span>
                                             </div>
-                                            
-                                            <button 
-                                                onClick={() => handleOpenBooking(pkg)} 
-                                                className="btn-lime" 
-                                                style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
-                                            >
-                                                <span>Book Spot</span>
-                                                <span>→</span>
-                                            </button>
+
+                                            {/* Top Right Actions: Wishlist ❤️ + Share 🔗 + Rating */}
+                                            <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <button
+                                                    onClick={(e) => handleToggleWishlist(pkg.id, pkg.title, e)}
+                                                    aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
+                                                    style={{
+                                                        width: '32px',
+                                                        height: '32px',
+                                                        borderRadius: '50%',
+                                                        background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
+                                                        border: 'none',
+                                                        color: '#FFFFFF',
+                                                        fontSize: '13px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        cursor: 'pointer',
+                                                        backdropFilter: 'blur(6px)',
+                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                                                    }}
+                                                >
+                                                    {isLiked ? '❤️' : '🤍'}
+                                                </button>
+
+                                                <button
+                                                    onClick={(e) => handleShareCamp(pkg, e)}
+                                                    aria-label="Share camp"
+                                                    style={{
+                                                        width: '32px',
+                                                        height: '32px',
+                                                        borderRadius: '50%',
+                                                        background: 'rgba(0, 0, 0, 0.55)',
+                                                        border: 'none',
+                                                        color: '#FFFFFF',
+                                                        fontSize: '12px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        cursor: 'pointer',
+                                                        backdropFilter: 'blur(6px)',
+                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+                                                    }}
+                                                >
+                                                    🔗
+                                                </button>
+
+                                                <div style={{ background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 8px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                                                    ★ {pkg.rating}
+                                                </div>
+                                            </div>
+
+                                            {/* Bottom Overlay Location & Duration */}
+                                            <div style={{ position: 'absolute', bottom: '12px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', pointerEvents: 'none' }}>
+                                                <span>📍 {pkg.location}</span>
+                                                <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </motion.div>
-                            ))}
+
+                                        {/* Card Content */}
+                                        <div className="package-card-body">
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', marginBottom: '6px', lineHeight: 1.25 }}>
+                                                <Link href={`/camps/${pkg.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                                                    {pkg.title}
+                                                </Link>
+                                            </h3>
+                                            
+                                            <p style={{ 
+                                                fontSize: '13px', 
+                                                color: '#59655D', 
+                                                lineHeight: 1.45, 
+                                                marginBottom: '12px',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: 'vertical',
+                                                overflow: 'hidden'
+                                            }}>
+                                                {pkg.description}
+                                            </p>
+                                            
+                                            {/* Key Highlights Chips */}
+                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
+                                                {pkg.highlights.slice(0, 2).map((h, i) => (
+                                                    <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
+                                                        ✓ {h}
+                                                    </span>
+                                                ))}
+                                                {pkg.highlights.length > 2 && (
+                                                    <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
+                                                        +{pkg.highlights.length - 2} more
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            {/* Bottom Price & 2-in-1 ⚡ Action Row (See Site ↗ + Book Spot ⚡) */}
+                                            <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613' }}>
+                                                            ₹{pkg.price.toLocaleString('en-IN')}
+                                                        </span>
+                                                        <span style={{ fontSize: '11px', color: '#59655D' }}>/ camper</span>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    {/* 1. See The Site ↗ */}
+                                                    <Link
+                                                        href={`/camps/${pkg.id}`}
+                                                        style={{
+                                                            padding: '7px 12px',
+                                                            borderRadius: '10px',
+                                                            background: '#F1F3EC',
+                                                            border: '1px solid rgba(18, 22, 19, 0.08)',
+                                                            color: '#121613',
+                                                            fontSize: '12px',
+                                                            fontWeight: '800',
+                                                            textDecoration: 'none',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '3px'
+                                                        }}
+                                                    >
+                                                        <span>Explore ↗</span>
+                                                    </Link>
+
+                                                    {/* 2. Instant Book ⚡ */}
+                                                    <button 
+                                                        onClick={() => handleOpenBooking(pkg)} 
+                                                        className="btn-lime" 
+                                                        style={{ padding: '7px 13px', borderRadius: '10px', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                    >
+                                                        <span>Book ⚡</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
                         </AnimatePresence>
                     </div>
 
@@ -3727,6 +3875,38 @@ export default function HomePage() {
                 onClose={() => setIsBookingModalOpen(false)}
                 initialPackage={selectedPackage}
             />
+
+            {/* Floating Toast Notification */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                        transition={{ duration: 0.22 }}
+                        style={{
+                            position: 'fixed',
+                            bottom: '32px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 10000,
+                            background: '#121613',
+                            color: '#FFFFFF',
+                            padding: '12px 24px',
+                            borderRadius: '999px',
+                            boxShadow: '0 12px 36px rgba(0,0,0,0.3)',
+                            fontSize: '13.5px',
+                            fontWeight: '700',
+                            border: '1px solid rgba(213, 237, 85, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}
+                    >
+                        <span>{toastMessage}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
         </div>
     );
