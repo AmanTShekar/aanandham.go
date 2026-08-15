@@ -1,0 +1,90 @@
+/**
+ * Lightweight & robust validation layer for production API routes.
+ * Provides schema validation, honeypot bot trap detection, and string sanitization.
+ */
+
+// Phone number sanitization: strip non-digit characters except leading +
+export function sanitizePhone(raw) {
+    if (!raw || typeof raw !== 'string') return '';
+    return raw.replace(/[^\d+]/g, '').trim();
+}
+
+// Basic email regex validator
+export function isValidEmail(email) {
+    if (!email || typeof email !== 'string') return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
+// Validate Booking Intent Payload
+export function validateBookingPayload(body) {
+    const errors = [];
+
+    // 1. Honeypot check (Bot Trap)
+    if (body.honeypot && String(body.honeypot).trim().length > 0) {
+        return { isBot: true, errors: ['Bot honeypot triggered'] };
+    }
+
+    // 2. Guest Name validation
+    const name = (body.name || '').trim();
+    if (!name || name.length < 2 || name.length > 80) {
+        errors.push('Guest name must be between 2 and 80 characters.');
+    }
+
+    // 3. Phone validation
+    const rawPhone = (body.phone || '').trim();
+    const phone = sanitizePhone(rawPhone);
+    if (!phone || phone.replace(/\D/g, '').length < 10) {
+        errors.push('Valid 10-digit mobile or WhatsApp number is required.');
+    }
+
+    // 4. Guests count validation
+    const guests = Number(body.guests);
+    if (isNaN(guests) || guests < 1 || guests > 50) {
+        errors.push('Number of guests must be between 1 and 50.');
+    }
+
+    // 5. Total amount validation
+    const total = Number(body.total);
+    if (isNaN(total) || total < 100) {
+        errors.push('Total booking amount must be at least ₹100.');
+    }
+
+    // 6. Dates check
+    const dates = (body.dates || '').trim();
+    if (!dates || dates.length < 3) {
+        errors.push('Valid stay dates or batch must be selected.');
+    }
+
+    return {
+        isBot: false,
+        isValid: errors.length === 0,
+        errors,
+        sanitized: {
+            name,
+            phone,
+            rawPhone,
+            campsiteId: (body.campsiteId || body.packageId || '').trim(),
+            package: (body.package || 'Wilderness Glamping').trim(),
+            region: (body.region || 'Munnar').trim(),
+            dates,
+            guests,
+            roomType: (body.roomType || 'Standard Glamping').trim(),
+            addons: Array.isArray(body.addons) ? body.addons.filter(a => typeof a === 'string') : [],
+            total,
+            notes: (body.notes || '').slice(0, 500).trim(),
+            source: (body.source || 'Website Engine').trim()
+        }
+    };
+}
+
+// Validate Admin Auth Payload
+export function validateAuthPayload(body) {
+    if (!body || typeof body !== 'object') {
+        return { isValid: false, message: 'Invalid request body.' };
+    }
+    const passcode = (body.passcode || '').trim();
+    if (!passcode || passcode.length < 4) {
+        return { isValid: false, message: 'Passcode must be at least 4 characters.' };
+    }
+    return { isValid: true, passcode };
+}

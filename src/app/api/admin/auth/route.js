@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
+import { checkRateLimit, isIpBlocked, blockIp, pushAuditLog, getRecentAuditLogs, revokeToken, isTokenRevoked } from '@/lib/redis';
 
 // ── CRYPTOGRAPHIC CONFIGURATION & SECRETS ──
 // In production, ADMIN_AUTH_SECRET and ADMIN_PASSCODES should be defined in environment variables.
@@ -17,29 +18,6 @@ const ENV_PASSCODES = process.env.ADMIN_PASSCODES
 const DEV_FALLBACK_PASSCODES = ['aanandham2026', 'wildadmin2026'];
 const VALID_PASSCODES = ENV_PASSCODES.length > 0 ? ENV_PASSCODES : (IS_PROD ? [] : DEV_FALLBACK_PASSCODES);
 
-// In-memory revocation blacklist for logged-out tokens with expiration tracking (D3)
-const revokedTokens = new Map();
-
-function cleanExpiredRevocations() {
-    const now = Date.now();
-    for (const [token, exp] of revokedTokens.entries()) {
-        if (now > exp) {
-            revokedTokens.delete(token);
-        }
-    }
-}
-
-// In-memory audit trail of recent login events (capped at 50 entries)
-const authAuditLog = [];
-function logAuthEvent(event) {
-    authAuditLog.unshift({
-        timestamp: new Date().toISOString(),
-        ...event
-    });
-    if (authAuditLog.length > 50) {
-        authAuditLog.pop();
-    }
-}
 
 // ── BOUNDED RATE LIMITING (Memory Leak Prevention & TTL Sweeper) ──
 const MAX_RATE_LIMIT_ENTRIES = 5000;
@@ -160,10 +138,10 @@ function createSignedToken(payload) {
 }
 
 // Verify signed cryptographic token, revocation status, and expiry
-function verifySignedToken(token) {
+async function verifySignedToken(token) {
     try {
         if (!token || typeof token !== 'string') return null;
-        if (revokedTokens.has(token)) return null; // Token was explicitly revoked on logout
+        if (await isTokenRevoked(token)) return null; // Token was revoked on logout across instances
         if (!AUTH_SECRET) return null;
 
         const parts = token.split('.');
@@ -197,8 +175,17 @@ function verifySignedToken(token) {
 export async function POST(request) {
     const ip = getClientIp(request);
 
-    if (isRateLimited(ip)) {
-        logAuthEvent({ ip, action: 'LOGIN_BLOCKED_RATE_LIMIT', success: false });
+    if (await isIpBlocked(ip)) {
+        return NextResponse.json(
+            { success: false, message: 'Access blocked due to excessive failures. Contact admin.' },
+            { status: 403 }
+        );
+    }
+
+    // Shared Redis Sliding Window Rate Limiter (5 attempts per 15 minutes per IP)
+    const rateLimit = await checkRateLimit(`ratelimit:auth:${ip}`, 5, 15 * 60);
+    if (!rateLimit.allowed) {
+        await pushAuditLog({ ip, action: 'LOGIN_BLOCKED_RATE_LIMIT', success: false });
         return NextResponse.json(
             { success: false, message: 'Too many failed login attempts. Rate limit active. Please wait 15 minutes.' },
             { status: 429 }
@@ -243,7 +230,7 @@ export async function POST(request) {
                 exp: Date.now() + 24 * 60 * 60 * 1000
             });
 
-            logAuthEvent({ ip, action: 'LOGIN_SUCCESS', success: true });
+            await pushAuditLog({ ip, action: 'LOGIN_SUCCESS', success: true });
 
             // Return response and attach secure HttpOnly cookie
             const response = NextResponse.json({ success: true, token, message: 'Authentication successful.' });
@@ -260,7 +247,7 @@ export async function POST(request) {
             return response;
         } else {
             recordFailedAttempt(ip);
-            logAuthEvent({ ip, action: 'LOGIN_FAILED', success: false });
+            await pushAuditLog({ ip, action: 'LOGIN_FAILED', success: false });
             return NextResponse.json({ success: false, message: 'Invalid coordinator access key.' }, { status: 401 });
         }
     } catch {
@@ -286,16 +273,17 @@ export async function GET(request) {
             return NextResponse.json({ authenticated: false, message: 'No authorization token provided.' }, { status: 401 });
         }
 
-        const payload = verifySignedToken(token);
+        const payload = await verifySignedToken(token);
 
         if (payload && payload.role === 'admin_coordinator') {
             const url = new URL(request.url);
             // If requested audit logs
             if (url.searchParams.get('audit') === 'true') {
+                const logs = await getRecentAuditLogs();
                 return NextResponse.json({
                     authenticated: true,
                     user: { role: 'admin_coordinator', exp: payload.exp },
-                    auditLogs: authAuditLog
+                    auditLogs: logs
                 });
             }
 
@@ -325,28 +313,11 @@ export async function DELETE(request) {
         }
 
         if (token) {
-            cleanExpiredRevocations();
-            // Parse token expiration so we keep revoked status until token naturally expires
-            let exp = Date.now() + 24 * 60 * 60 * 1000;
-            try {
-                const parts = token.split('.');
-                if (parts.length === 2) {
-                    const payload = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf-8'));
-                    if (payload.exp) exp = payload.exp;
-                }
-            } catch {}
-
-            revokedTokens.set(token, exp);
-
-            // Bounded cap fallback: if more than 5000 revocations, evict oldest
-            if (revokedTokens.size > 5000) {
-                const oldestKey = revokedTokens.keys().next().value;
-                revokedTokens.delete(oldestKey);
-            }
+            await revokeToken(token, 24 * 60 * 60);
         }
 
         const ip = getClientIp(request);
-        logAuthEvent({ ip, action: 'LOGOUT', success: true });
+        await pushAuditLog({ ip, action: 'LOGOUT', success: true });
 
         const response = NextResponse.json({ success: true, message: 'Logged out successfully.' });
         response.cookies.set({
@@ -364,3 +335,4 @@ export async function DELETE(request) {
         return NextResponse.json({ success: false, message: 'Error processing logout.' }, { status: 500 });
     }
 }
+
