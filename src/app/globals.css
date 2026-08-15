@@ -550,7 +550,7 @@ body::-webkit-scrollbar-thumb:active,
   width: 100%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .packages-section-container {
     padding: 70px 0 50px !important;
   }
@@ -603,12 +603,63 @@ body::-webkit-scrollbar-thumb:active,
   flex: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .package-card-img {
     height: 170px !important;
   }
   .package-card-body {
     padding: 16px 18px !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SINGLE-SCREEN CONTACT HUB RESPONSIVE LAYOUT
+───────────────────────────────────────────────────────────── */
+.contact-hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 3.5vw, 48px);
+  align-items: start;
+  width: 100%;
+}
+
+.contact-dispatch-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.contact-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.contact-form-types {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .contact-hub-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 540px) {
+  .contact-dispatch-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .contact-form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 }
 .skill-levels-grid {

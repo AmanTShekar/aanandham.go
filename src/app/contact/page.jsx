@@ -126,18 +126,13 @@ export default function ContactPage() {
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
-                padding: 'clamp(85px, 11vh, 105px) clamp(20px, 4vw, 48px) clamp(24px, 3vh, 36px)',
+                padding: 'clamp(85px, 11vh, 105px) clamp(16px, 4vw, 48px) clamp(24px, 3vh, 36px)',
                 width: '100%',
                 boxSizing: 'border-box'
             }}>
-                <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+                <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
                     
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
-                        gap: 'clamp(28px, 3.5vw, 48px)',
-                        alignItems: 'center'
-                    }}>
+                    <div className="contact-hub-grid">
                         
                         {/* ── LEFT: DIRECT BASECAMP DISPATCH & HOTLINES ── */}
                         <div>
@@ -163,12 +158,7 @@ export default function ContactPage() {
                             </p>
 
                             {/* 4 Compact Dispatch Channels Grid */}
-                            <div style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
-                                gap: '12px',
-                                marginBottom: '20px'
-                            }}>
+                            <div className="contact-dispatch-grid">
                                 {CONTACT_CHANNELS.map((ch, idx) => (
                                     <a
                                         key={idx}
@@ -264,7 +254,7 @@ export default function ContactPage() {
                         <div style={{
                             background: '#FFFFFF',
                             borderRadius: '24px',
-                            padding: 'clamp(20px, 3vw, 32px)',
+                            padding: 'clamp(20px, 3.5vw, 32px)',
                             border: '1px solid rgba(18, 22, 19, 0.08)',
                             boxShadow: '0 12px 36px rgba(0, 0, 0, 0.04)'
                         }}>
@@ -362,7 +352,7 @@ export default function ContactPage() {
                                         <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '6px' }}>
                                             Expedition Type
                                         </label>
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '6px' }}>
+                                        <div className="contact-form-types">
                                             {[
                                                 { id: 'booking', label: '⛺ Dome Glamp' },
                                                 { id: 'kolukkumalai', label: '🌅 4x4 Safari' },
@@ -396,7 +386,7 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* Name & Phone */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px' }}>
+                                    <div className="contact-form-row">
                                         <div>
                                             <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                                 Your Name *
@@ -447,7 +437,7 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* Email & Guests */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px' }}>
+                                    <div className="contact-form-row">
                                         <div>
                                             <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                                 Email Address *
