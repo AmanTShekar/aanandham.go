@@ -2878,16 +2878,20 @@ export default function HomePage() {
                 9. MAKE IT HAPPEN IN JUST FOUR STEPS (Ref Screenshot 3 - media_1786656749498.png)
                    - Pinned sticky left heading while right steps scroll until section end
             ───────────────────────────────────────────────────────────── */}
-            <section 
+            <motion.section 
                 id="steps" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-60px" }}
+                variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-                    <div className="sticky-split-grid">
+                    <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
-                        <div className="sticky-pinned-col">
-                            <div className="star-badge">
+                        <div className="sticky-pinned-col" style={{ position: 'sticky', top: '100px' }}>
+                            <div className="star-badge" style={{ marginBottom: '14px' }}>
                                 <span className="star-icon">★</span> STEPS
                             </div>
                             <h2 style={{
@@ -2899,15 +2903,15 @@ export default function HomePage() {
                                 lineHeight: 1.1,
                                 marginBottom: '24px'
                             }}>
-                                Make it happen in <br />just <span style={{ color: '#8E9B92' }}>four steps</span>
+                                Make it happen in <br />just <span className="text-marker-2">four steps</span>
                             </h2>
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '32px', maxWidth: '420px' }}>
+                            <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.7, marginBottom: '32px', maxWidth: '420px' }}>
                                 We’ve made the entire process smooth and hassle-free. Our team guides you through every step from booking to arrival — just show up ready for waves & peaks.
                             </p>
                         </div>
 
                         {/* Scrolling Right Steps List */}
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                             {FOUR_STEPS.map((step, idx) => (
                                 <motion.div 
                                     key={idx} 
@@ -2915,30 +2919,39 @@ export default function HomePage() {
                                     initial="hidden"
                                     whileInView="visible"
                                     viewport={{ once: true, margin: "-40px" }}
-                                    style={{ display: 'flex', gap: '28px', alignItems: 'flex-start' }}
+                                    className="hover-lift"
+                                    style={{ 
+                                        display: 'flex', 
+                                        gap: '24px', 
+                                        alignItems: 'flex-start',
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(18, 22, 19, 0.08)',
+                                        borderRadius: '24px',
+                                        padding: '28px 28px',
+                                        boxShadow: '0 4px 18px rgba(0, 0, 0, 0.02)'
+                                    }}
                                 >
                                     <div style={{
-                                        width: '56px',
-                                        height: '56px',
-                                        borderRadius: '50%',
-                                        background: '#FFFFFF',
-                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '14px',
+                                        background: '#121613',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         fontSize: '15px',
-                                        fontWeight: '800',
-                                        color: '#121613',
+                                        fontWeight: '900',
+                                        color: '#E5A93B',
                                         flexShrink: 0,
-                                        boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
+                                        boxShadow: '0 4px 14px rgba(18, 22, 19, 0.15)'
                                     }}>
                                         {step.num}
                                     </div>
-                                    <div style={{ flex: 1, paddingTop: '12px' }}>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
+                                    <div style={{ flex: 1, paddingTop: '2px' }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', marginBottom: '8px', lineHeight: 1.3 }}>
                                             {step.title}
                                         </h3>
-                                        <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
+                                        <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
                                             {step.desc}
                                         </p>
                                     </div>
@@ -2948,7 +2961,7 @@ export default function HomePage() {
 
                     </div>
                 </div>
-            </section>
+            </motion.section>
             {/* ─────────────────────────────────────────────────────────────
                 9.5 KERALA WILDERNESS & CAMPSITES GALLERY (Interactive Lightbox)
             ───────────────────────────────────────────────────────────── */}
