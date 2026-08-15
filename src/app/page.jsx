@@ -168,47 +168,72 @@ const EXPERIENCE_ITEMS = [
     }
 ];
 
-// ── STAY ACCOMMODATIONS DATA (Ref Screenshot 4 Batch 2 - media_1786655246091.png) ──
+// ── STAY ACCOMMODATIONS & SANCTUARIES DATA (Multi-Property Kerala Portfolio) ──
 const STAY_ACCOMMODATIONS = [
     {
-        id: 'stay-twin',
-        badge: 'Solo / Friends',
-        capacity: '2 Beds · 2 Guests',
-        title: 'Twin Room',
-        desc: 'Spacious double-canvas dome with two plush single beds, thick fleece blankets rated for 8°C, individual charging ports, and private mountain valley patio.',
-        mainImg: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-        thumb: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=400&q=80',
-        amenities: ['2 Single Beds', 'Fleece Blankets (8°C)', 'Valley Patio', 'Charging Hub']
-    },
-    {
-        id: 'stay-double',
+        id: 'stay-dome',
         badge: 'Couples & Privacy',
-        capacity: '1 King Bed · 2 Guests',
-        title: 'Double Room',
-        desc: 'King-sized plush bed for couples or solo travelers who love extra comfort. Panoramic transparent cloud-view window, wooden flooring, and private ensuite bath.',
+        capacity: '2-3 Guests · Ridge View',
+        location: 'Suryanelli, Munnar · 7,900 FT',
+        price: 2499,
+        pkgId: 'pkg-kolukkumalai',
+        title: 'Geodesic Panoramic Sky Domes',
+        desc: 'Perched above rolling cloud beds. Features 360-degree transparent star-view dome windows, king plush bedding, private ridge patio, ensuite modern washrooms, and 4x4 sunrise jeep safari.',
         mainImg: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
         thumb: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=400&q=80',
-        amenities: ['King Size Bed', 'Cloud View Window', 'Ensuite Bath', 'Wooden Floors']
+        amenities: ['King Plush Bed', 'Cloud View Window', 'Ensuite Bath & Hot Water', '4x4 Sunrise Jeep']
     },
     {
-        id: 'stay-group',
-        badge: 'Squad Groups',
-        capacity: '4-6 Bunk Pods · Friends',
-        title: 'Group Suite',
-        desc: 'Spacious multi-person cabin tent equipped for 4-6 friends. Includes custom bunk setup, private campfire sit-out, and luggage storage lockers.',
-        mainImg: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&q=80',
-        thumb: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=400&q=80',
-        amenities: ['4-6 Bunk Beds', 'Campfire Sit-out', 'Lockers', 'Luggage Bay']
+        id: 'stay-summit',
+        badge: 'High Peak Challenge',
+        capacity: 'South India’s 2nd Peak',
+        location: 'Silent Valley, Munnar · 8,661 FT',
+        price: 3199,
+        pkgId: 'pkg-meesapulimala',
+        title: 'Meesapulimala Summit Ridge Pods',
+        desc: 'South India’s legendary summit basecamp. Sleep above dense oceans of white fog with thermal cold-weather sleeping gear, certified high-altitude guides, and starlit campfire acoustic sessions.',
+        mainImg: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        thumb: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=400&q=80',
+        amenities: ['8-Peak Ridge Trail', 'Thermal Sleeping Bags', 'Wilderness Marshals', 'Campfire Circle']
     },
     {
-        id: 'stay-common',
-        badge: 'Camp Clubhouse',
-        capacity: 'Open to All Campers',
-        title: 'Common Areas',
-        desc: 'Private pool, rooftop terrace with ridge views, fully equipped camp kitchen, coworking space, outdoor lounge zones, gear storage, and live BBQ area. Everything you need between sessions.',
-        mainImg: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80',
-        thumb: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=400&q=80',
-        amenities: ['Ridge Terrace', 'Campfire Circle', 'Camp Kitchen', 'Coworking Hub']
+        id: 'stay-rainforest',
+        badge: 'Glass Bridge & Mist',
+        capacity: '2-4 Guests · Canopy Deck',
+        location: 'Meppadi, Wayanad · 3,200 FT',
+        price: 2699,
+        pkgId: 'pkg-wayanad',
+        title: 'Wayanad 900 Kandi Rainforest Pods',
+        desc: 'Deep in ancient tropical evergreen forests with skywalk glass bridge access, canopy tree platforms, natural stream pools, and wild spice estate foraging walks.',
+        mainImg: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+        thumb: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=80',
+        amenities: ['Glass Bridge Pass', 'Rainforest Tree Deck', 'Stream Bathing', 'Spice Trail']
+    },
+    {
+        id: 'stay-pine',
+        badge: 'Squads & Acoustic Nights',
+        capacity: '4-6 Bunk Chalets · Friends',
+        location: 'Pine Forest, Vagamon · 4,800 FT',
+        price: 2199,
+        pkgId: 'pkg-vagamon',
+        title: 'Vagamon Pine Valley Camp Chalets',
+        desc: 'Spacious rustic cedarwood chalets nestled amidst whistling pine forests. Includes private campfire barbecue pits, pine grove hammock chill zones, and acoustic guitar circles.',
+        mainImg: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
+        thumb: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=400&q=80',
+        amenities: ['Pine Grove Chalet', 'Live BBQ Platter', 'Campfire Acoustic', 'Hammock Zone']
+    },
+    {
+        id: 'stay-rapids',
+        badge: 'Waterfalls & Rapids',
+        capacity: '2-4 Guests · Riverside',
+        location: 'Chalakudy River, Athirappilly · 1,200 FT',
+        price: 2499,
+        pkgId: 'pkg-athirappilly',
+        title: 'Athirappilly Jungle Rapids Riverbank Pods',
+        desc: 'Waterfront glamping sanctuary directly by roaring river rapids. Features bamboo raft crossings, night forest sounds, fresh river-to-plate barbecue, and waterfall trails.',
+        mainImg: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
+        thumb: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=400&q=80',
+        amenities: ['Riverbank Deck', 'Bamboo Raft Safari', 'Waterfall Permits', 'Night BBQ']
     }
 ];
 
@@ -2048,7 +2073,7 @@ export default function HomePage() {
                     
                     <div style={{ marginBottom: '44px' }}>
                         <div className="star-badge">
-                            <span className="star-icon">★</span> STAY & GLAMP
+                            <span className="star-icon">★</span> 8 VERIFIED KERALA SANCTUARIES
                         </div>
                         <h2 style={{
                             fontFamily: 'var(--font-heading)',
@@ -2057,7 +2082,7 @@ export default function HomePage() {
                             color: '#121613',
                             letterSpacing: '-0.035em'
                         }}>
-                            Live in a <span className="text-marker-1">tropical ridge glamp</span> <span style={{ color: '#8E9B92' }}>with friends or on your own</span>
+                            Signature Mountain Glamping & <span className="text-marker-1">High-Altitude Sanctuaries</span> <span style={{ color: '#8E9B92' }}>across Kerala</span>
                         </h2>
                     </div>
 
@@ -2065,7 +2090,7 @@ export default function HomePage() {
                         
                         {/* Mobile Paragraph: Appears FIRST on Mobile */}
                         <div className="stay-mobile-intro">
-                            Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
+                            From 7,900 FT panoramic geodesic domes in Suryanelli to misty rainforest tree decks in Wayanad and high-peak basecamps in Meesapulimala. Every verified sanctuary guarantees 100% gated security, clean western washrooms, hot water, and 24/7 mountain marshals.
                         </div>
 
                         {/* Mobile Room Selector Tabs */}
@@ -2099,7 +2124,7 @@ export default function HomePage() {
                         {/* Big Picture (Pinned Sticky on Left on Desktop, Clean Relative on Mobile) */}
                         <div className="stay-glamp-image-col">
                             <div className="stay-glamp-image-container">
-                                {/* Stacked Cross-Fade Images (Silky Smooth Cubic-Bezier Transition) */}
+                                {/* Stacked Cross-Fade Images */}
                                 {STAY_ACCOMMODATIONS.map((acc, idx) => (
                                     <img
                                         key={acc.id}
@@ -2122,9 +2147,9 @@ export default function HomePage() {
                                 ))}
                                 
                                 {/* Overlay Gradient */}
-                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, rgba(14, 24, 17, 0.2) 40%, transparent 60%)' }} />
+                                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.88) 0%, rgba(14, 24, 17, 0.25) 40%, transparent 60%)' }} />
 
-                                {/* Stacked Synchronized Caption & Badges (Smooth Cross-Fade) */}
+                                {/* Stacked Synchronized Caption & Badges */}
                                 {STAY_ACCOMMODATIONS.map((acc, idx) => {
                                     const isCurrent = activeStayAcc === idx;
                                     return (
@@ -2136,11 +2161,11 @@ export default function HomePage() {
                                                 opacity: isCurrent ? 1 : 0,
                                                 transform: isCurrent ? 'translateY(0)' : 'translateY(8px)',
                                                 transition: 'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
-                                                pointerEvents: 'none',
+                                                pointerEvents: isCurrent ? 'auto' : 'none',
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 justifyContent: 'space-between',
-                                                padding: '22px'
+                                                padding: '24px'
                                             }}
                                         >
                                             {/* Top Badges */}
@@ -2149,21 +2174,43 @@ export default function HomePage() {
                                                     {acc.badge}
                                                 </span>
                                                 <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
-                                                    {acc.capacity}
+                                                    📍 {acc.location}
                                                 </span>
                                             </div>
 
                                             {/* Bottom Caption on Image */}
                                             <div>
-                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#FFFFFF', marginBottom: '6px' }}>
+                                                <div style={{ fontSize: '12px', color: '#D5ED55', fontWeight: '800', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                                    Starting from ₹{acc.price.toLocaleString('en-IN')} / camper
+                                                </div>
+                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#FFFFFF', marginBottom: '8px' }}>
                                                     {acc.title}
                                                 </h3>
-                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '14px' }}>
                                                     {acc.amenities.map((amenity, i) => (
                                                         <span key={i} style={{ background: 'rgba(255, 255, 255, 0.2)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(4px)' }}>
                                                             ✓ {amenity}
                                                         </span>
                                                     ))}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '10px' }}>
+                                                    <Link
+                                                        href={`/camps/${acc.pkgId}`}
+                                                        style={{
+                                                            background: '#D5ED55',
+                                                            color: '#121613',
+                                                            padding: '8px 18px',
+                                                            borderRadius: '999px',
+                                                            fontSize: '12px',
+                                                            fontWeight: '800',
+                                                            textDecoration: 'none',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '6px'
+                                                        }}
+                                                    >
+                                                        <span>View Public Page ↗</span>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         </div>
@@ -2175,10 +2222,10 @@ export default function HomePage() {
                         {/* Right Column with Hover-Active Interactive Accommodation Cards */}
                         <motion.div variants={fadeInRight} className="stay-glamp-cards-container">
                             <p className="stay-desktop-intro" style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '24px' }}>
-                                Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
+                                From 7,900 FT panoramic geodesic domes in Suryanelli to misty rainforest tree decks in Wayanad and high-peak basecamps in Meesapulimala. Every verified sanctuary guarantees 100% gated security, clean western washrooms, hot water, and 24/7 mountain marshals.
                             </p>
 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                                 {STAY_ACCOMMODATIONS.map((acc, idx) => {
                                     const isActive = activeStayAcc === idx;
                                     return (
@@ -2192,7 +2239,7 @@ export default function HomePage() {
                                                 background: '#FFFFFF',
                                                 border: isActive ? '2px solid #121613' : '1px solid rgba(18, 22, 19, 0.08)',
                                                 borderRadius: '24px',
-                                                padding: '22px 26px',
+                                                padding: '20px 24px',
                                                 cursor: 'pointer',
                                                 boxShadow: isActive ? '0 12px 35px rgba(0, 0, 0, 0.06)' : '0 4px 12px rgba(0,0,0,0.01)',
                                                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -2209,12 +2256,12 @@ export default function HomePage() {
                                                         transition: 'all 0.2s ease'
                                                     }} />
                                                     <div>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18.5px', fontWeight: '800', color: '#121613' }}>
                                                             {acc.title}
                                                         </span>
-                                                        <span style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '600', marginLeft: '10px' }}>
-                                                            {acc.capacity}
-                                                        </span>
+                                                        <div style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '600' }}>
+                                                            {acc.location} · <span style={{ color: '#166534', fontWeight: '700' }}>₹{acc.price}/pax</span>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -2240,15 +2287,51 @@ export default function HomePage() {
                                                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                                         style={{ padding: '14px 0 0 24px', overflow: 'hidden' }}
                                                     >
-                                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: '0 0 12px' }}>
+                                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: '0 0 14px' }}>
                                                             {acc.desc}
                                                         </p>
-                                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '14px' }}>
                                                             {acc.amenities.map((amenity, i) => (
                                                                 <span key={i} style={{ background: '#F1F3EC', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
                                                                     ✓ {amenity}
                                                                 </span>
                                                             ))}
+                                                        </div>
+
+                                                        {/* Quick Explorer & Booking Actions */}
+                                                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                                                            <Link
+                                                                href={`/camps/${acc.pkgId}`}
+                                                                style={{
+                                                                    padding: '8px 16px',
+                                                                    borderRadius: '10px',
+                                                                    background: '#F1F3EC',
+                                                                    border: '1px solid rgba(18,22,19,0.1)',
+                                                                    color: '#121613',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: '800',
+                                                                    textDecoration: 'none'
+                                                                }}
+                                                            >
+                                                                View Camp Page ↗
+                                                            </Link>
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    const matched = EXPEDITION_PACKAGES.find(p => p.id === acc.pkgId) || EXPEDITION_PACKAGES[0];
+                                                                    handleOpenBooking(matched);
+                                                                }}
+                                                                className="btn-lime"
+                                                                style={{
+                                                                    padding: '8px 16px',
+                                                                    borderRadius: '10px',
+                                                                    fontSize: '12px',
+                                                                    fontWeight: '800',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                            >
+                                                                Book This Stay
+                                                            </button>
                                                         </div>
                                                     </motion.div>
                                                 )}
@@ -2258,17 +2341,34 @@ export default function HomePage() {
                                 })}
                             </div>
 
-                            {/* Reserve Your Spot Pill */}
-                            <button
-                                onClick={() => handleOpenBooking(EXPEDITION_PACKAGES[0])}
-                                className="action-arrow-btn"
-                                style={{ marginTop: '28px' }}
-                            >
-                                <span>Reserve Your Spot</span>
-                                <div className="btn-arrow-circle">
-                                    ↗
-                                </div>
-                            </button>
+                            {/* Action Buttons Row */}
+                            <div style={{ display: 'flex', gap: '14px', alignItems: 'center', marginTop: '28px', flexWrap: 'wrap' }}>
+                                <button
+                                    onClick={() => handleOpenBooking(EXPEDITION_PACKAGES[0])}
+                                    className="action-arrow-btn"
+                                >
+                                    <span>Reserve Your Spot</span>
+                                    <div className="btn-arrow-circle">
+                                        ↗
+                                    </div>
+                                </button>
+                                <Link
+                                    href="/camps"
+                                    style={{
+                                        padding: '14px 24px',
+                                        borderRadius: '999px',
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(18, 22, 19, 0.15)',
+                                        color: '#121613',
+                                        fontSize: '14px',
+                                        fontWeight: '800',
+                                        textDecoration: 'none',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
+                                    }}
+                                >
+                                    View All 8 Kerala Sanctuaries →
+                                </Link>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
