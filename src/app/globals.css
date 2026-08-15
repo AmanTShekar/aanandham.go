@@ -1254,6 +1254,31 @@ button:focus-visible, a:focus-visible {
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   PROGRAM DAYS FLOATING MOUSE-HOVER PREVIEW
+───────────────────────────────────────────────────────────── */
+.program-floating-preview {
+  position: absolute;
+  pointer-events: none;
+  z-index: 40;
+  width: 320px;
+  height: 200px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35), 0 8px 20px rgba(0,0,0,0.15);
+  border: 3px solid #FFFFFF;
+  background-color: #070E08;
+}
+
+@media (max-width: 900px), (hover: none), (pointer: coarse) {
+  .program-floating-preview {
+    display: none !important;
+  }
+  .program-mobile-inline-img {
+    display: block !important;
+  }
+}
+
 .btn-lime {
   background-color: var(--accent-lime);
   color: #121613;

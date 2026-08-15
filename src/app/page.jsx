@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
@@ -860,6 +860,21 @@ export default function HomePage() {
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedPackage, setSelectedPackage] = useState(EXPEDITION_PACKAGES[0]);
     const [currentUser, setCurrentUser] = useState(null);
+
+    // Floating Mouse-Follow Preview Card State for Program Section
+    const programContainerRef = useRef(null);
+    const [hoveredProgramDay, setHoveredProgramDay] = useState(null);
+    const programMouseX = useMotionValue(0);
+    const programMouseY = useMotionValue(0);
+    const smoothProgramX = useSpring(programMouseX, { stiffness: 350, damping: 28 });
+    const smoothProgramY = useSpring(programMouseY, { stiffness: 350, damping: 28 });
+
+    const handleProgramMouseMove = (e) => {
+        if (!programContainerRef.current) return;
+        const rect = programContainerRef.current.getBoundingClientRect();
+        programMouseX.set(e.clientX - rect.left);
+        programMouseY.set(e.clientY - rect.top);
+    };
 
     // Read logged-in user profile from localStorage
     useEffect(() => {
@@ -2087,7 +2102,7 @@ export default function HomePage() {
 
             {/* ─────────────────────────────────────────────────────────────
                 5. PROGRAM SECTION (Exact Match to media_1786657185483.png)
-                   "What we've planned for you:" + Interactive Small Mouse-Follow Floating Card
+                   "What we've planned for you:" + Interactive Mouse-Follow Hover Preview
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
                 id="program" 
@@ -2095,9 +2110,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto', position: 'relative' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%', position: 'relative' }}>
                     
                     {/* Header Row */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '60px' }}>
@@ -2139,16 +2154,56 @@ export default function HomePage() {
                         </a>
                     </div>
 
-                    {/* Interactive Days List */}
-                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
+                    {/* Interactive Days List with Mouse Tracking Container */}
+                    <div 
+                        ref={programContainerRef}
+                        onMouseMove={handleProgramMouseMove}
+                        onMouseLeave={() => setHoveredProgramDay(null)}
+                        style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}
+                    >
+                        {/* Desktop Floating Mouse-Follow Preview Card */}
+                        <AnimatePresence>
+                            {hoveredProgramDay !== null && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.88, y: 10 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.88, y: 10 }}
+                                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                                    style={{
+                                        left: smoothProgramX,
+                                        top: smoothProgramY,
+                                        transform: 'translate(28px, -50%)'
+                                    }}
+                                    className="program-floating-preview"
+                                >
+                                    <img 
+                                        src={PROGRAM_DAYS[hoveredProgramDay].img} 
+                                        alt={PROGRAM_DAYS[hoveredProgramDay].title} 
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    />
+                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(11,21,14,0.92) 0%, rgba(11,21,14,0.25) 50%, transparent 100%)' }} />
+                                    <div style={{ position: 'absolute', bottom: '16px', left: '18px', right: '18px', color: '#FFFFFF' }}>
+                                        <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '1.2px', display: 'block', marginBottom: '3px' }}>
+                                            {PROGRAM_DAYS[hoveredProgramDay].day}
+                                        </span>
+                                        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', lineHeight: 1.25 }}>
+                                            {PROGRAM_DAYS[hoveredProgramDay].title}
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
                         {PROGRAM_DAYS.map((item, idx) => {
-                            const isHovered = activeDayIdx === idx;
+                            const isHovered = hoveredProgramDay === idx;
                             const isExpanded = expandedDayIdx === idx;
+                            const isOpen = isHovered || isExpanded;
+
                             return (
                                 <motion.div
                                     key={idx}
                                     variants={cardReveal}
-                                    onMouseEnter={() => setActiveDayIdx(idx)}
+                                    onMouseEnter={() => setHoveredProgramDay(idx)}
                                     onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
                                     style={{
                                         borderTop: '1px solid rgba(18, 22, 19, 0.1)',
@@ -2164,19 +2219,19 @@ export default function HomePage() {
                                             position: 'absolute',
                                             top: '-1.5px',
                                             left: 0,
-                                            width: isHovered || isExpanded ? '180px' : '0px',
+                                            width: isOpen ? '180px' : '0px',
                                             height: '3px',
                                             backgroundColor: '#E5A93B',
                                             borderRadius: '999px',
-                                            boxShadow: isHovered || isExpanded ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
+                                            boxShadow: isOpen ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
                                             transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease',
-                                            opacity: isHovered || isExpanded ? 1 : 0
+                                            opacity: isOpen ? 1 : 0
                                         }} 
                                     />
 
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                         <div>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isHovered ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
+                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isOpen ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.2s ease' }}>
                                                 {item.day}
                                             </span>
                                             <h3 style={{
@@ -2194,13 +2249,13 @@ export default function HomePage() {
                                             width: '36px',
                                             height: '36px',
                                             borderRadius: '50%',
-                                            background: isExpanded ? '#121613' : '#F1F3EC',
+                                            background: isOpen ? '#121613' : '#F1F3EC',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
                                             fontSize: '12px',
-                                            color: isExpanded ? '#E5A93B' : '#121613',
-                                            transform: isExpanded ? 'rotate(180deg)' : 'none',
+                                            color: isOpen ? '#E5A93B' : '#121613',
+                                            transform: isOpen ? 'rotate(180deg)' : 'none',
                                             transition: 'all 0.3s ease'
                                         }}>
                                             <i className="fa-solid fa-chevron-down"></i>
@@ -2208,19 +2263,28 @@ export default function HomePage() {
                                     </div>
 
                                     <AnimatePresence>
-                                        {isExpanded && (
+                                        {isOpen && (
                                             <motion.div 
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
                                                 transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                                style={{ paddingTop: '16px', maxWidth: '640px', overflow: 'hidden' }}
+                                                style={{ paddingTop: '16px', maxWidth: '720px', overflow: 'hidden' }}
                                             >
-                                                <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
+                                                <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
                                                     {item.desc}
                                                 </p>
-                                                {/* In-line Image preview */}
-                                                <div style={{ height: '220px', borderRadius: '18px', overflow: 'hidden', marginTop: '16px' }}>
+                                                {/* In-line Image preview (shown cleanly on mobile / smaller viewports) */}
+                                                <div 
+                                                    className="program-mobile-inline-img"
+                                                    style={{ 
+                                                        height: '180px', 
+                                                        borderRadius: '16px', 
+                                                        overflow: 'hidden', 
+                                                        marginTop: '14px',
+                                                        display: 'none'
+                                                    }}
+                                                >
                                                     <img 
                                                         src={item.img} 
                                                         alt={item.title} 
