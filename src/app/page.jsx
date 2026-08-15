@@ -1967,22 +1967,17 @@ export default function HomePage() {
                         </h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 'clamp(32px, 4vw, 52px)', alignItems: 'start' }}>
+                    <div className="stay-glamp-layout">
                         
-                        {/* Left Big Picture (Positioned Higher With top: 80px For Balanced Bottom Breathing Room) */}
+                        {/* Mobile Paragraph: Appears FIRST on Mobile */}
+                        <div className="stay-mobile-intro">
+                            Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
+                        </div>
+
+                        {/* Big Picture (Positioned on Left on Desktop, Centered Full-Width on Mobile) */}
                         <motion.div 
                             variants={fadeInLeft}
-                            style={{ 
-                                position: 'sticky',
-                                top: '80px',
-                                height: 'clamp(380px, 46vh, 480px)',
-                                maxHeight: '500px',
-                                width: '100%',
-                                borderRadius: '28px', 
-                                overflow: 'hidden', 
-                                border: '1px solid rgba(18, 22, 19, 0.08)',
-                                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.08)' 
-                            }}
+                            className="stay-glamp-image-container"
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
@@ -2026,8 +2021,8 @@ export default function HomePage() {
                         </motion.div>
 
                         {/* Right Column with Hover-Active Interactive Accommodation Cards */}
-                        <motion.div variants={fadeInRight}>
-                            <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '24px' }}>
+                        <motion.div variants={fadeInRight} className="stay-glamp-cards-container">
+                            <p className="stay-desktop-intro" style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '24px' }}>
                                 Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
                             </p>
 
