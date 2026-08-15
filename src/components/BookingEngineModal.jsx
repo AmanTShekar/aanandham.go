@@ -234,31 +234,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 24 }}
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                className="modal-rounded-card booking-mobile-sheet"
-                style={{
-                    background: '#FFFFFF',
-                    width: '100%',
-                    maxWidth: '880px',
-                    maxHeight: 'min(94vh, 860px)',
-                    borderRadius: 'clamp(22px, 4vw, 32px)',
-                    boxShadow: '0 25px 70px rgba(0, 0, 0, 0.45)',
-                    position: 'relative',
-                    color: '#121613',
-                    transform: 'translateZ(0)',
-                    willChange: 'transform, opacity'
-                }}
+                className="booking-modal-card"
             >
                 {/* Header */}
-                <div style={{
-                    padding: '24px 28px 18px',
-                    borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    background: '#FAFAF7',
-                    borderTopLeftRadius: 'inherit',
-                    borderTopRightRadius: 'inherit'
-                }}>
+                <div className="booking-modal-header">
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
                             <span style={{
@@ -277,7 +256,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 Verified High-Altitude Basecamps
                             </span>
                         </div>
-                        <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
+                        <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 3vw, 24px)', fontWeight: '800', margin: 0 }}>
                             {step === 1 ? '1. Select Campsite & Dates' : '2. Add-Ons & Explorer Details'}
                         </h2>
                     </div>
@@ -306,7 +285,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 </div>
 
                 {/* Body Content */}
-                <div style={{ padding: '24px 28px 30px', overflowY: 'auto', maxHeight: 'calc(min(94vh, 860px) - 90px)' }}>
+                <div className="booking-modal-body">
                     {validationError && (
                         <div style={{
                             background: 'rgba(255, 90, 95, 0.12)',
@@ -333,11 +312,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                                     Select Signature Campsite (8 Destinations)
                                 </label>
-                                <div style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-                                    gap: '12px'
-                                }}>
+                                <div className="booking-pkgs-grid">
                                     {PACKAGES_LIST.map((pkg) => {
                                         const isSelected = pkg.id === selectedPkgId;
                                         return (
@@ -394,7 +369,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             </div>
 
                             {/* Date & Guests Layout */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginBottom: '24px' }}>
                                 <div>
                                     <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                                         Check-In Date
@@ -485,7 +460,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             </div>
 
                             {/* Step 1 Actions */}
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '10px' }}>
+                            <div className="booking-step-actions">
                                 <button
                                     type="button"
                                     onClick={handleProceedToStep2}
@@ -511,7 +486,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                                     Enhance Your Mountain Experience (Optional Add-ons)
                                 </label>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '12px' }}>
                                     {ADDONS_LIST.map((addon) => {
                                         const isChecked = selectedAddons.includes(addon.id);
                                         return (
@@ -557,10 +532,11 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                                     Lead Explorer Contact Information
                                 </label>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '12px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '14px', marginBottom: '12px' }}>
                                     <div>
                                         <input
                                             type="text"
+                                            className="booking-modal-input"
                                             placeholder="Your Full Name *"
                                             value={customerName}
                                             onChange={(e) => {
@@ -568,19 +544,12 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                 if (validationError) setValidationError('');
                                             }}
                                             required
-                                            style={{
-                                                width: '100%',
-                                                padding: '12px 16px',
-                                                borderRadius: '12px',
-                                                border: '1px solid rgba(0,0,0,0.15)',
-                                                fontSize: '14px',
-                                                outline: 'none'
-                                            }}
                                         />
                                     </div>
                                     <div>
                                         <input
                                             type="tel"
+                                            className="booking-modal-input"
                                             placeholder="WhatsApp Number (e.g. +91 9400...) *"
                                             value={customerPhone}
                                             onChange={(e) => {
@@ -588,31 +557,16 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                 if (validationError) setValidationError('');
                                             }}
                                             required
-                                            style={{
-                                                width: '100%',
-                                                padding: '12px 16px',
-                                                borderRadius: '12px',
-                                                border: '1px solid rgba(0,0,0,0.15)',
-                                                fontSize: '14px',
-                                                outline: 'none'
-                                            }}
                                         />
                                     </div>
                                 </div>
                                 <textarea
+                                    className="booking-modal-input"
                                     placeholder="Special requests (e.g. Dietary preferences, campfire acoustic guitar, sunrise wake-up call)"
                                     value={specialNotes}
                                     onChange={(e) => setSpecialNotes(e.target.value)}
                                     rows={2}
-                                    style={{
-                                        width: '100%',
-                                        padding: '12px 16px',
-                                        borderRadius: '12px',
-                                        border: '1px solid rgba(0,0,0,0.15)',
-                                        fontSize: '13px',
-                                        outline: 'none',
-                                        resize: 'vertical'
-                                    }}
+                                    style={{ resize: 'vertical' }}
                                 />
                             </div>
 
@@ -646,7 +600,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                             </div>
 
                             {/* Actions */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div className="booking-step-actions">
                                 <button
                                     type="button"
                                     onClick={() => setStep(1)}
