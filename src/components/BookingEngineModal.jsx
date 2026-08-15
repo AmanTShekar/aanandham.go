@@ -6,8 +6,8 @@ import CustomDateBatchPicker from './CustomDateBatchPicker';
 import LucideAmenityIcon from './common/LucideAmenityIcon';
 import { Check, Users, Tent, Sparkles, Plus, Minus } from 'lucide-react';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
-import { inr } from '../lib/utils';
-import { waLink } from '../lib/whatsapp';
+import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
+import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -27,7 +27,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
     const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
     const [selectedRoomId, setSelectedRoomId] = useState('');
-    const [travelDate, setTravelDate] = useState('');
+    const [travelDate, setTravelDate] = useState(() => getDefaultUpcomingBatch());
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
     const [customUnits, setCustomUnits] = useState(null);
@@ -39,6 +39,8 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [step, setStep] = useState(1); // 1: Campsite, Room & Details, 2: Addons & Review
     const [validationError, setValidationError] = useState('');
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [popupBlockedLink, setPopupBlockedLink] = useState('');
 
     // Load active camps list from localStorage / default data
     useEffect(() => {
@@ -197,7 +199,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         setStep(2);
     };
 
-    const handleConfirmBookingWhatsApp = (e) => {
+    const handleConfirmBookingWhatsApp = async (e) => {
         e?.preventDefault();
 
         // 🛡️ BOT & HONEYPOT TRAP (B5)
@@ -206,26 +208,36 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             return;
         }
 
+        if (isSubmitting) return;
+
         const now = Date.now();
         if (now - lastSubmitTime < 3000) {
             return;
         }
         setLastSubmitTime(now);
 
-        if (!customerName.trim()) {
-            setValidationError('Please enter your full name to generate permit request.');
+        // Strict Name & Phone Validation (N7)
+        if (!customerName.trim() || customerName.trim().length < 2) {
+            setValidationError('Please enter your full name (at least 2 characters).');
             return;
         }
-        if (!customerPhone.trim()) {
-            setValidationError('Please enter your WhatsApp / mobile number.');
+        if (!isValidPhoneNumber(customerPhone)) {
+            setValidationError('Please enter a valid 10-digit mobile or WhatsApp number.');
             return;
         }
 
+        setIsSubmitting(true);
+        setValidationError('');
+
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
+        const bookingId = generateBookingId();
+        const datesString = travelDate || getDefaultUpcomingBatch();
+
         const summaryText = `🏕️ *NEW AANANDHAM.GO RESERVATION REQUEST*\n\n` +
+            `🔖 *Booking Reference:* ${bookingId}\n` +
             `📍 *Expedition:* ${currentPkg.title}\n` +
             `🛏️ *Stay Allocation:* ${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Standard Glamp'} (Fits up to ${totalMaxCapacity} Campers)\n` +
-            `📅 *Date:* ${travelDate || 'Flexible / Upcoming Weekend'}\n` +
+            `📅 *Date:* ${datesString}\n` +
             `👥 *Guests:* ${adults} Adults${children > 0 ? `, ${children} Children` : ''} (Total: ${totalGuests})\n` +
             `✨ *Add-ons:* ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None'}\n` +
             `💰 *Est. Total:* ${inr(grandTotal)}${discountPercent > 0 ? ` (Includes ${discountPercent}% Squad Discount!)` : ''}\n\n` +
@@ -234,32 +246,61 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             `📝 *Notes:* ${specialNotes.trim() || 'None'}\n\n` +
             `Please confirm campsite availability & payment link! 🏔️`;
 
-        // Automatically persist booking into real admin database (localStorage)
+        const newBookingRecord = {
+            id: bookingId,
+            name: customerName.trim(),
+            phone: customerPhone.trim(),
+            package: currentPkg.title,
+            region: currentPkg.region || (currentPkg.location ? currentPkg.location.split(',')[0].trim() : 'Munnar'),
+            dates: datesString,
+            guests: totalGuests,
+            roomType: `${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Standard Mountain Glamp'}`,
+            addons: selectedAddonNames,
+            total: grandTotal,
+            status: 'Pending',
+            source: 'Website Booking Engine',
+            notes: specialNotes.trim(),
+            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+        };
+
+        // 1. Multi-device shared server synchronization (N2)
         try {
-            const newBookingRecord = {
-                id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
-                name: customerName.trim(),
-                phone: customerPhone.trim(),
-                package: currentPkg.title,
-                region: currentPkg.region || (currentPkg.location ? currentPkg.location.split(',')[0].trim() : 'Munnar'),
-                dates: travelDate || 'Flexible / Upcoming Weekend',
-                guests: totalGuests,
-                roomType: `${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Standard Mountain Glamp'}`,
-                addons: selectedAddonNames,
-                total: grandTotal,
-                status: 'Pending',
-                source: 'Website Booking Engine',
-                createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-            };
+            await fetch('/api/admin/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newBookingRecord)
+            });
+        } catch (err) {
+            console.error('Server booking sync error (will fallback to localStorage):', err);
+        }
+
+        // 2. Offline / Local browser storage fallback
+        try {
             const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
             const updatedBookings = [newBookingRecord, ...currentBookings];
             localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updatedBookings));
             window.dispatchEvent(new Event('storage'));
         } catch (err) {
-            console.error('Error persisting booking:', err);
+            console.error('Error persisting local booking:', err);
         }
 
-        window.open(waLink(summaryText), '_blank');
+        // 3. Launch WhatsApp link with popup-block safety (E8)
+        const waUrl = waLink(summaryText);
+        try {
+            const popup = window.open(waUrl, '_blank');
+            if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+                // Popup blocked
+                setPopupBlockedLink(waUrl);
+                setIsSubmitting(false);
+                return;
+            }
+        } catch (e) {
+            setPopupBlockedLink(waUrl);
+            setIsSubmitting(false);
+            return;
+        }
+
+        setIsSubmitting(false);
         onClose();
     };
 
@@ -505,8 +546,9 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                         />
                                                     )}
                                                     <div style={{ flex: 1, minWidth: 0 }}>
-                                                        <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px' }}>
-                                                            👥 {room.capacity || '2-4 Guests'}
+                                                        <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                                            <Users size={13} color="#59655D" />
+                                                            <span>{room.capacity || '2-4 Guests'}</span>
                                                         </div>
                                                         <div style={{ fontSize: '14.5px', fontWeight: '900', color: '#166534' }}>
                                                             ₹{room.price?.toLocaleString('en-IN')} <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
@@ -648,7 +690,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                <span style={{ fontSize: '12px' }}>⛺</span>
+                                                <Tent size={13} color="#166534" strokeWidth={2.5} />
                                                 <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                                     Smart Stay Allocation
                                                 </span>
@@ -678,8 +720,10 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#FFFFFF', padding: '2px 5px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)' }}>
                                                 <button
                                                     type="button"
-                                                    onClick={() => setCustomUnits(Math.max(1, allocatedUnits - 1))}
-                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '11px' }}
+                                                    onClick={() => setCustomUnits(Math.max(autoUnits, allocatedUnits - 1))}
+                                                    disabled={allocatedUnits <= autoUnits}
+                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: allocatedUnits <= autoUnits ? 'not-allowed' : 'pointer', opacity: allocatedUnits <= autoUnits ? 0.3 : 1, fontWeight: '800', fontSize: '11px' }}
+                                                    aria-label="Decrease Units"
                                                 >
                                                     -
                                                 </button>
@@ -690,6 +734,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                     type="button"
                                                     onClick={() => setCustomUnits(allocatedUnits + 1)}
                                                     style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '11px' }}
+                                                    aria-label="Increase Units"
                                                 >
                                                     +
                                                 </button>
@@ -697,8 +742,15 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                         </div>
 
                                         {/* Capacity Indicator */}
-                                        <div style={{ fontSize: '10.5px', fontWeight: '700', color: isUnderCapacity ? '#B91C1C' : '#166534', marginTop: '4px' }}>
-                                            {isUnderCapacity ? `⚠️ ${totalGuests} campers exceed ${totalMaxCapacity} slots. Add +1 unit!` : `✓ Comfortably accommodates ${totalGuests} campers.`}
+                                        <div style={{ fontSize: '10.5px', fontWeight: '700', color: isUnderCapacity ? '#B91C1C' : '#166534', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            {isUnderCapacity ? (
+                                                <span style={{ color: '#DC2626', fontWeight: '900' }}>!</span>
+                                            ) : (
+                                                <Check size={12} strokeWidth={3} color="#166534" />
+                                            )}
+                                            <span>
+                                                {isUnderCapacity ? `${totalGuests} campers exceed ${totalMaxCapacity} slots. Add +1 unit!` : `Comfortably accommodates ${totalGuests} campers.`}
+                                            </span>
                                         </div>
                                     </div>
 
@@ -886,6 +938,47 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 </div>
                             </div>
 
+                            {/* Pop-up Blocked Safety Alert Banner (E8) */}
+                            {popupBlockedLink && (
+                                <div style={{
+                                    background: 'rgba(213, 237, 85, 0.15)',
+                                    border: '1.5px solid #166534',
+                                    borderRadius: '16px',
+                                    padding: '14px 16px',
+                                    marginBottom: '16px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '8px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: '800', color: '#166534' }}>
+                                        <span>✅ Permit Generated & Saved!</span>
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#121613', lineHeight: 1.5 }}>
+                                        Your browser blocked the automatic WhatsApp popup. Click the button below to open your pre-filled expedition chat:
+                                    </div>
+                                    <a
+                                        href={popupBlockedLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-lime"
+                                        style={{
+                                            padding: '10px 18px',
+                                            fontSize: '13px',
+                                            fontWeight: '800',
+                                            textDecoration: 'none',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px',
+                                            width: 'fit-content'
+                                        }}
+                                    >
+                                        <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px' }}></i>
+                                        <span>Open WhatsApp Expedition Desk ↗</span>
+                                    </a>
+                                </div>
+                            )}
+
                             {/* Actions */}
                             <div className="booking-step-actions">
                                 <button
@@ -906,6 +999,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <button
                                     type="button"
                                     onClick={handleConfirmBookingWhatsApp}
+                                    disabled={isSubmitting}
                                     className="btn-lime"
                                     style={{
                                         padding: '15px 36px',
@@ -913,11 +1007,13 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                         fontWeight: '800',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '10px'
+                                        gap: '10px',
+                                        opacity: isSubmitting ? 0.65 : 1,
+                                        cursor: isSubmitting ? 'not-allowed' : 'pointer'
                                     }}
                                 >
                                     <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                    <span>Instant Reserve on WhatsApp ↗</span>
+                                    <span>{isSubmitting ? 'Connecting Concierge...' : 'Instant Reserve on WhatsApp ↗'}</span>
                                 </button>
                             </div>
                         </div>

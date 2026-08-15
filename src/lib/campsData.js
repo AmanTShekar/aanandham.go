@@ -524,6 +524,19 @@ export function getAllCamps() {
     return INITIAL_ALL_CAMPS;
 }
 
+// Helper to save all camps to localStorage
+export function saveAllCamps(camps) {
+    if (typeof window !== 'undefined') {
+        try {
+            localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(camps));
+            // Trigger storage event for other components in same window
+            window.dispatchEvent(new Event('storage'));
+        } catch (e) {
+            console.error('Error saving camps to localStorage:', e);
+        }
+    }
+}
+
 // Helper to find a specific camp by ID (handles prefixes like pkg- or raw slug)
 export function getCampById(id) {
     const all = getAllCamps();

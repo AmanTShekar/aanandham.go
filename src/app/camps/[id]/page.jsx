@@ -11,7 +11,7 @@ import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
 import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
-import { inr } from '../../../lib/utils';
+import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
 
 export function parseRoomCapacity(capacityStr) {
@@ -27,12 +27,13 @@ export default function CampPropertyDetailPage() {
 
     const [camp, setCamp] = useState(null);
     const [allCamps, setAllCamps] = useState(INITIAL_ALL_CAMPS);
+    const [isLoaded, setIsLoaded] = useState(false);
     const [activePhotoIdx, setActivePhotoIdx] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     
-    // Booking Selector State
+    // Booking Selector State with Dynamic Date (N5)
     const [selectedRoomId, setSelectedRoomId] = useState(null);
-    const [selectedDate, setSelectedDate] = useState('Aug 22 – 23, 2026');
+    const [selectedDate, setSelectedDate] = useState(() => getDefaultUpcomingBatch());
     const [guestsCount, setGuestsCount] = useState(2);
     const [customUnits, setCustomUnits] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -40,19 +41,53 @@ export default function CampPropertyDetailPage() {
     // Wishlist & Share Toast
     const [wishlist, setWishlist] = useState([]);
     const [shareToast, setShareToast] = useState('');
+    const toastTimerRef = React.useRef(null);
 
     useEffect(() => {
-        const campsList = getAllCamps();
-        setAllCamps(campsList);
-        const currentCamp = getCampById(campId);
-        setCamp(currentCamp);
-        if (currentCamp?.rooms && currentCamp.rooms.length > 0) {
-            setSelectedRoomId(currentCamp.rooms[0].id);
-        }
+        const refreshCampData = async () => {
+            const campsList = getAllCamps();
+            setAllCamps(campsList);
+            let currentCamp = getCampById(campId);
+            setCamp(currentCamp);
+            if (currentCamp?.rooms && currentCamp.rooms.length > 0) {
+                setSelectedRoomId(prev => prev || currentCamp.rooms[0].id);
+            }
+
+            try {
+                const res = await fetch('/api/admin/camps');
+                if (res.ok) {
+                    const serverCamps = await res.json();
+                    if (Array.isArray(serverCamps) && serverCamps.length > 0) {
+                        setAllCamps(serverCamps);
+                        const matched = serverCamps.find(c => c.id === campId);
+                        if (matched) {
+                            setCamp(matched);
+                            if (matched.rooms && matched.rooms.length > 0) {
+                                setSelectedRoomId(prev => prev || matched.rooms[0].id);
+                            }
+                        }
+                    }
+                }
+            } catch (e) {}
+        };
+
+        refreshCampData();
+
         try {
             const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
             setWishlist(savedWishlist);
         } catch (e) {}
+        setIsLoaded(true);
+
+        const handleStorage = () => {
+            refreshCampData();
+        };
+        window.addEventListener('storage', handleStorage);
+
+        return () => {
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+            window.removeEventListener('storage', handleStorage);
+        };
     }, [campId]);
 
     const handleToggleWishlist = () => {
@@ -70,8 +105,42 @@ export default function CampPropertyDetailPage() {
         try {
             localStorage.setItem('aanandham_user_wishlist', JSON.stringify(updated));
         } catch (e) {}
-        setTimeout(() => setShareToast(''), 3000);
+        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        toastTimerRef.current = setTimeout(() => setShareToast(''), 3000);
     };
+
+    // 404 SANCTUARY NOT FOUND SCREEN (N4 Fix)
+    if (isLoaded && !camp) {
+        return (
+            <div style={{ minHeight: '100vh', background: '#0B150E', color: '#FFFFFF', display: 'flex', flexDirection: 'column' }}>
+                <SiteHeader />
+                <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 20px 60px', textAlign: 'center' }}>
+                    <div style={{ maxWidth: '520px', width: '100%', background: '#121E15', padding: '44px 28px', borderRadius: '28px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 25px 60px rgba(0,0,0,0.5)' }}>
+                        <div style={{ fontSize: '54px', marginBottom: '16px' }}>🧭</div>
+                        <span style={{ fontSize: '11px', fontWeight: '800', background: 'rgba(213,237,85,0.15)', color: '#D5ED55', padding: '5px 14px', borderRadius: '999px', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                            404 · Basecamp Not Found
+                        </span>
+                        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: '800', margin: '18px 0 12px', color: '#FFFFFF' }}>
+                            Wilderness Sanctuary Not Found
+                        </h1>
+                        <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.6, marginBottom: '28px' }}>
+                            The high-altitude campsite or expedition route you requested does not exist or has been relocated by forest marshals.
+                        </p>
+                        <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                            <Link href="/camps" className="btn-lime" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                <span>Explore Verified Sanctuaries</span>
+                                <span>→</span>
+                            </Link>
+                            <Link href="/" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '800', color: '#FFFFFF', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', textDecoration: 'none' }}>
+                                Return Home
+                            </Link>
+                        </div>
+                    </div>
+                </main>
+                <Footer />
+            </div>
+        );
+    }
 
     if (!camp) {
         return (
@@ -720,7 +789,7 @@ export default function CampPropertyDetailPage() {
                                 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <span style={{ fontSize: '13px' }}>⛺</span>
+                                            <Tent size={14} color="#166534" strokeWidth={2.5} />
                                             <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                                                 Smart Stay Allocation
                                             </span>
@@ -750,8 +819,9 @@ export default function CampPropertyDetailPage() {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', padding: '3px 6px', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.1)' }}>
                                             <button
                                                 type="button"
-                                                onClick={() => setCustomUnits(Math.max(1, allocatedUnits - 1))}
-                                                style={{ width: '22px', height: '22px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '12px' }}
+                                                onClick={() => setCustomUnits(Math.max(autoUnits, allocatedUnits - 1))}
+                                                disabled={allocatedUnits <= autoUnits}
+                                                style={{ width: '22px', height: '22px', border: 'none', background: 'transparent', cursor: allocatedUnits <= autoUnits ? 'not-allowed' : 'pointer', opacity: allocatedUnits <= autoUnits ? 0.3 : 1, fontWeight: '800', fontSize: '12px' }}
                                                 aria-label="Decrease units"
                                             >
                                                 -
@@ -780,7 +850,11 @@ export default function CampPropertyDetailPage() {
                                         gap: '5px',
                                         marginTop: '4px'
                                     }}>
-                                        <span>{isUnderCapacity ? '⚠️' : '✓'}</span>
+                                        {isUnderCapacity ? (
+                                            <span style={{ color: '#DC2626', fontWeight: '900' }}>!</span>
+                                        ) : (
+                                            <Check size={13} strokeWidth={3} color="#166534" />
+                                        )}
                                         <span>
                                             {isUnderCapacity 
                                                 ? `${guestsCount} campers exceed ${totalMaxCapacity} capacity slots. Add +1 unit!` 

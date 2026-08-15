@@ -5,8 +5,8 @@ import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
-import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
-import { inr } from '../../lib/utils';
+import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
+import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 
 // ── SCHEDULED EXPEDITION BATCHES ──
@@ -149,20 +149,45 @@ export default function AdminPortal() {
         setTimeout(() => setToastMessage(''), 3000);
     };
 
-    // Load from LocalStorage
-    const reloadDataFromStorage = () => {
+    // Load from Server APIs + LocalStorage Fallback (N1)
+    const reloadDataFromStorage = async () => {
         const savedPhone = localStorage.getItem('aanandham_admin_phone');
         if (savedPhone) setAdminPhone(savedPhone);
         const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
         if (savedTelegram) setAdminTelegram(savedTelegram);
 
+        // Properties sync (Local cache first, then server fetch)
         const loadedProps = getAllCamps();
         setProperties(loadedProps);
+        try {
+            const campsRes = await fetch('/api/admin/camps');
+            if (campsRes.ok) {
+                const serverCamps = await campsRes.json();
+                if (Array.isArray(serverCamps) && serverCamps.length > 0) {
+                    setProperties(serverCamps);
+                    saveAllCamps(serverCamps);
+                }
+            }
+        } catch (e) {}
 
         const savedEvents = localStorage.getItem('aanandham_admin_events');
         if (savedEvents) {
             try { setEvents(JSON.parse(savedEvents)); } catch(e){}
         }
+
+        // Bookings sync (Server first, then local fallback)
+        try {
+            const bookingsRes = await fetch('/api/admin/bookings');
+            if (bookingsRes.ok) {
+                const serverBookings = await bookingsRes.json();
+                if (Array.isArray(serverBookings)) {
+                    setBookings(serverBookings);
+                    localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(serverBookings));
+                    return;
+                }
+            }
+        } catch (e) {}
+
         const savedBookings = localStorage.getItem('aanandham_admin_bookings_v2');
         if (savedBookings) {
             try { setBookings(JSON.parse(savedBookings)); } catch(e){}
@@ -331,10 +356,19 @@ export default function AdminPortal() {
         reader.readAsText(file);
     };
 
-    // Save Helpers
+    // Save Helpers with Server API Synchronization & LocalStorage Fallback (N1, N2)
     const saveProperties = (updated) => {
         setProperties(updated);
-        localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(updated));
+        saveAllCamps(updated);
+        fetch('/api/admin/camps', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated)
+        }).catch(e => console.error('Error syncing camps to server:', e));
+
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('storage'));
+        }
     };
 
     const saveEvents = (updated) => {
@@ -345,6 +379,15 @@ export default function AdminPortal() {
     const saveBookings = (updated) => {
         setBookings(updated);
         localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updated));
+        fetch('/api/admin/bookings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updated)
+        }).catch(e => console.error('Error syncing bookings to server:', e));
+
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('storage'));
+        }
     };
 
     // Toggle Property Availability
@@ -739,12 +782,12 @@ export default function AdminPortal() {
     // Save Manual Booking from Coordinator
     const handleSaveManualBooking = (e) => {
         e.preventDefault();
-        const guestsNum = Number(newBookingForm.guests) || 2;
-        const pricePerGuest = Number(newBookingForm.pricePerGuest) || 2499;
+        const guestsNum = Math.max(1, Number(newBookingForm.guests) || 2);
+        const pricePerGuest = Math.max(0, Number(newBookingForm.pricePerGuest) || 2499);
         const totalCalc = guestsNum * pricePerGuest;
 
         const newBooking = {
-            id: `BK-${Math.floor(1000 + Math.random() * 9000)}`,
+            id: generateBookingId(),
             name: newBookingForm.name.trim(),
             phone: newBookingForm.phone.trim(),
             email: newBookingForm.email.trim() || 'N/A',
@@ -794,10 +837,17 @@ export default function AdminPortal() {
         showToast(`✓ Booking ${id} marked as ${newStatus}`);
     };
 
-    // Export CSV
+    // Export CSV with Formula Injection Protection (E2)
     const handleExportCSV = () => {
         const headers = 'Booking ID,Customer Name,Phone,Email,Region,Package,Dates,Guests,Room Type,Total (INR),Status,Source,Created At';
-        const escapeCsv = (val) => `"${String(val || '').replace(/"/g, '""')}"`;
+        const escapeCsv = (val) => {
+            let str = String(val ?? '');
+            // Prevent CSV / Excel formula injection if text starts with =, +, -, @
+            if (/^[=+\-@\t\r]/.test(str)) {
+                str = "'" + str;
+            }
+            return `"${str.replace(/"/g, '""')}"`;
+        };
         const rows = bookings.map(b => [
             escapeCsv(b.id),
             escapeCsv(b.name),

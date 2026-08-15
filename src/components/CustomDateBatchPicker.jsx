@@ -5,55 +5,7 @@ import CustomThemeCalendar from './CustomThemeCalendar';
 
 import { Calendar as CalendarIcon, ChevronDown, Sparkles, Clock, Check, Plus } from 'lucide-react';
 import LucideAmenityIcon from './common/LucideAmenityIcon';
-
-// ── PRESET EXPEDITION WEEKEND BATCHES (Interactive 1-Tap Pills) ──
-const UPCOMING_WEEKEND_BATCHES = [
-    {
-        id: 'b-1',
-        title: 'Aug 22 – 23, 2026',
-        subtitle: 'This Weekend (Sat–Sun)',
-        status: 'Filling Fast 🔥',
-        statusColor: '#B45309',
-        spotsLeft: '6 spots left',
-        rawDate: '2026-08-22'
-    },
-    {
-        id: 'b-2',
-        title: 'Aug 29 – 30, 2026',
-        subtitle: 'Next Weekend (Sat–Sun)',
-        status: 'Open 🟢',
-        statusColor: '#166534',
-        spotsLeft: '14 spots left',
-        rawDate: '2026-08-29'
-    },
-    {
-        id: 'b-3',
-        title: 'Sep 05 – 06, 2026',
-        subtitle: 'September Batch 1',
-        status: 'Open 🟢',
-        statusColor: '#166534',
-        spotsLeft: '20 spots left',
-        rawDate: '2026-09-05'
-    },
-    {
-        id: 'b-4',
-        title: 'Sep 12 – 13, 2026',
-        subtitle: 'September Batch 2',
-        status: 'Open 🟢',
-        statusColor: '#166534',
-        spotsLeft: '18 spots left',
-        rawDate: '2026-09-12'
-    },
-    {
-        id: 'b-5',
-        title: 'Sep 19 – 20, 2026',
-        subtitle: 'Acoustic Weekend 🎸',
-        status: 'Special Event ⭐',
-        statusColor: '#7C3AED',
-        spotsLeft: '12 spots left',
-        rawDate: '2026-09-19'
-    }
-];
+import { generateUpcomingWeekendBatches } from '../lib/utils';
 
 export default function CustomDateBatchPicker({
     selectedDate,
@@ -61,6 +13,7 @@ export default function CustomDateBatchPicker({
     theme = 'light', // 'light' | 'dark'
     label = 'SELECT EXPEDITION DATES'
 }) {
+    const upcomingBatches = useMemo(() => generateUpcomingWeekendBatches(6), []);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
     const containerRef = useRef(null);
@@ -87,7 +40,7 @@ export default function CustomDateBatchPicker({
     }, [isDropdownOpen]);
 
     // Current display label
-    const matchedBatch = UPCOMING_WEEKEND_BATCHES.find(b => b.title === selectedDate || b.rawDate === selectedDate);
+    const matchedBatch = upcomingBatches.find(b => b.title === selectedDate || b.rawDate === selectedDate);
     const displayLabel = matchedBatch ? `${matchedBatch.title} · ${matchedBatch.subtitle}` : (selectedDate || 'Select Weekend Batch or Date');
 
     const handleSelectBatch = (batch) => {
@@ -211,7 +164,7 @@ export default function CustomDateBatchPicker({
 
                         {/* List of Weekend Batches */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            {UPCOMING_WEEKEND_BATCHES.map(batch => {
+                            {upcomingBatches.map(batch => {
                                 const isSelected = selectedDate === batch.title;
                                 return (
                                     <div

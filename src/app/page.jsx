@@ -1,11 +1,12 @@
 "use client";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring } from 'framer-motion';
 import Link from 'next/link';
 import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
 import BookingEngineModal from '../components/BookingEngineModal';
 import { useAuth } from '../hooks/useAuth';
+import { INITIAL_ALL_CAMPS, getAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
 
@@ -165,146 +166,6 @@ const EXPERIENCE_ITEMS = [
         title: 'Adventures Together',
         desc: 'Discover hidden natural rock pools, wild river bamboo rafting rapids, and extreme off-road Jeep climbs to misty sunrise viewpoints. Make lifetime bonds with fellow mountain travelers.',
         icon: '🏄'
-    }
-];
-
-// ── EXPEDITION PACKAGES (Expanded 8 Signature Campsites) ──
-const EXPEDITION_PACKAGES = [
-    {
-        id: 'pkg-kolukkumalai',
-        title: 'Kolukkumalai Sunrise & Cloud Bed Ridge Glamp',
-        category: 'Trek & Glamp',
-        tag: 'Most Popular',
-        location: 'Suryanelli, Munnar',
-        altitude: '7,900 FT Altitude',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Ridge Trail',
-        price: 2499,
-        originalPrice: 3200,
-        rating: 4.98,
-        reviewsCount: 342,
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-        description: 'Perched above the rolling cloud beds of Suryanelli. Includes high-altitude Quechua dome pods, private 4x4 Jeep climb to world’s highest tea estate sunrise, and campfire barbecue.',
-        highlights: ['Kolukkumalai Sunrise 4x4 Jeep Safari', 'Tiger Rock High Ridge Walk', 'Acoustic Campfire & Live BBQ Dinner', 'Weatherproof Quechua Dome Tents', 'Forest Entry Permits & Guide Marshals']
-    },
-    {
-        id: 'pkg-meesapulimala',
-        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
-        category: 'Summit Trek',
-        tag: 'High Peak Challenge',
-        location: 'Silent Valley, Munnar',
-        altitude: '8,661 FT Summit',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Strenuous High Peak',
-        price: 3199,
-        originalPrice: 4200,
-        rating: 4.99,
-        reviewsCount: 264,
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-        description: 'South India’s 2nd highest peak expedition. Trek through 8 rolling high-altitude hills, endless rhododendron valleys, and experience sleeping above dense oceans of white clouds.',
-        highlights: ['8-Peak Ridge Crossing', 'High Altitude Basecamp Pods', 'Certified Wilderness Marshals', 'Campfire Acoustic Night', 'Rhododendron Valley Trail']
-    },
-    {
-        id: 'pkg-suryanelli',
-        title: 'Suryanelli Valley Ridge Geodesic Glamping',
-        category: 'Trek & Glamp',
-        tag: 'Couples & Squads',
-        location: 'Suryanelli, Idukki',
-        altitude: '6,500 FT Altitude',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy Ridge Walk',
-        price: 1999,
-        originalPrice: 2600,
-        rating: 4.95,
-        reviewsCount: 286,
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-        description: 'Private geodesic dome pods facing cascading green tea slopes and misty sunset valleys. Live acoustic sessions, star observation scopes, and authentic farm-to-table Kerala dining.',
-        highlights: ['Geodesic Dome Glamping', 'Private Valley Deck', 'Campfire Acoustic Jams', 'Sunset Ridge Walk', 'Hot Breakfast Included']
-    },
-    {
-        id: 'pkg-phantom',
-        title: 'Phantom Head Peak & Golden Hour Sunset Trek',
-        category: 'Summit Trek',
-        tag: 'Sunset Vista',
-        location: 'Munnar Ridge, Kerala',
-        altitude: '6,800 FT Peak',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Trek',
-        price: 1799,
-        originalPrice: 2400,
-        rating: 4.91,
-        reviewsCount: 195,
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        description: '360-degree panoramic golden hour peak overlooking the Western Ghats mountain layers. Guided evening cliff walk, campfire dinner, and high-altitude tent stay.',
-        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Marshals', 'Campfire Dinner']
-    },
-    {
-        id: 'pkg-chembra',
-        title: 'Wayanad Chembra Peak & Heart Lake Expedition',
-        category: 'Summit Trek',
-        tag: 'Summit Challenge',
-        location: 'Meppadi, Wayanad',
-        altitude: '6,900 FT Peak',
-        duration: '3 Days / 2 Nights',
-        difficulty: 'High Endurance Peak',
-        price: 3799,
-        originalPrice: 4800,
-        rating: 4.95,
-        reviewsCount: 218,
-        image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&q=80',
-        description: 'Trek through dense Western Ghats rainforest canopies, discover the legendary perennial heart-shaped mountain lake, and sleep under millions of stars in secluded estate pods.',
-        highlights: ['Chembra Peak & Heart Lake Trek', 'Banasura Sagar Dam Kayaking', 'Rainforest Canopy Night Safari', 'Zero-Trace Wilderness Campout', 'Natural Rock Pool Swimming']
-    },
-    {
-        id: 'pkg-wayanad',
-        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
-        category: 'Water & Wild',
-        tag: 'Canopy Glamp',
-        location: 'Meppadi, Wayanad',
-        altitude: '3,200 FT Rainforest',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Jungle Trail',
-        price: 2699,
-        originalPrice: 3500,
-        rating: 4.96,
-        reviewsCount: 220,
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
-        description: 'Glass bridge canopy walks, off-road 4x4 jeep safaris into deep evergreen jungle, natural rock-pool swimming, and treehouse canopy stays.',
-        highlights: ['Glass Bridge Access', '4x4 Deep Forest Safari', 'Natural Stream Swims', 'Treehouse Glamp Villa', 'Tribal Dinner Feast']
-    },
-    {
-        id: 'pkg-vagamon',
-        title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
-        category: 'Camp & Relax',
-        tag: 'Relax & Chill',
-        location: 'Pine Forest, Vagamon',
-        altitude: '4,800 FT Valley',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy / Family & Friends',
-        price: 2199,
-        originalPrice: 2900,
-        rating: 4.92,
-        reviewsCount: 184,
-        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
-        description: 'Unwind in the misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, starlit barbecues, and refreshing morning walks through tea valleys.',
-        highlights: ['Pine Forest Glamping Site', 'Off-Road Jeep Trail to Kurisumala', 'Sunset at Vagamon Rolling Meadows', 'Open-Mic Acoustic Campfire', 'Live Barbecue Station']
-    },
-    {
-        id: 'pkg-athirappilly',
-        title: 'Athirappilly Jungle Rapids & Riverbank Glamping',
-        category: 'Water & Wild',
-        tag: 'Rainforest River',
-        location: 'Chalakudy River, Athirappilly',
-        altitude: '1,200 FT River Valley',
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy River Trails',
-        price: 2499,
-        originalPrice: 3400,
-        rating: 4.89,
-        reviewsCount: 156,
-        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
-        description: 'Experience Kerala’s grandest rainforest river cascades. Natural rock-pool swims, river kayaking, birding walks in hornbill sanctuaries, and riverside luxury canvas tents.',
-        highlights: ['Private River Stream Access', 'Canoeing & Kayak Equipment', 'Night Forest Insect & Hornbill Walk', 'Bamboo Raft Stream Ride', 'Forest-to-Table Kerala Feast']
     }
 ];
 
@@ -787,8 +648,36 @@ export default function HomePage() {
     const [testimonialIdx, setTestimonialIdx] = useState(0);
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-    const [selectedPackage, setSelectedPackage] = useState(EXPEDITION_PACKAGES[0]);
+    const [selectedPackage, setSelectedPackage] = useState(INITIAL_ALL_CAMPS[0]);
     const { user: currentUser, logout } = useAuth();
+    const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
+
+    useEffect(() => {
+        const syncCamps = () => {
+            const camps = getAllCamps();
+            setCampsList(camps);
+        };
+        syncCamps();
+        window.addEventListener('storage', syncCamps);
+        fetch('/api/admin/camps')
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data) && data.length > 0) {
+                    setCampsList(data);
+                }
+            })
+            .catch(() => {});
+        return () => window.removeEventListener('storage', syncCamps);
+    }, []);
+
+    const filteredPackages = useMemo(() => {
+        if (!campsList || !Array.isArray(campsList)) return INITIAL_ALL_CAMPS;
+        if (activeTab === 'All') return campsList;
+        if (activeTab === 'Treks') return campsList.filter(p => p.category?.toLowerCase().includes('trek') || p.title?.toLowerCase().includes('summit') || p.tags?.some(t => t?.toLowerCase().includes('trek')));
+        if (activeTab === 'Glamping') return campsList.filter(p => p.category?.toLowerCase().includes('glamp') || p.tags?.some(t => t?.toLowerCase().includes('glamp')) || p.title?.toLowerCase().includes('ridge'));
+        if (activeTab === 'Water') return campsList.filter(p => p.category?.toLowerCase().includes('water') || p.category?.toLowerCase().includes('lake') || p.tags?.some(t => t?.toLowerCase().includes('water') || t?.toLowerCase().includes('lake') || t?.toLowerCase().includes('rapids')));
+        return campsList;
+    }, [activeTab, campsList]);
 
     // User Wishlist & Share Toasts
     const [wishlist, setWishlist] = useState([]);
@@ -994,24 +883,6 @@ export default function HomePage() {
         }
     }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen]);
 
-    const filteredPackages = activeTab === 'All' 
-        ? EXPEDITION_PACKAGES 
-        : EXPEDITION_PACKAGES.filter(pkg => {
-            const cat = (pkg.category || '').toLowerCase();
-            const tag = (pkg.tag || '').toLowerCase();
-            const title = (pkg.title || '').toLowerCase();
-            if (activeTab === 'Treks') {
-                return cat.includes('trek') || cat.includes('summit') || tag.includes('challenge') || tag.includes('summit');
-            }
-            if (activeTab === 'Glamping') {
-                return cat.includes('glamp') || cat.includes('camp') || tag.includes('glamp') || tag.includes('relax') || tag.includes('popular');
-            }
-            if (activeTab === 'Water') {
-                return cat.includes('water') || cat.includes('wild') || tag.includes('river') || title.includes('lake') || title.includes('rapids') || title.includes('water');
-            }
-            return true;
-        });
-
     const nextTestimonial = () => setTestimonialIdx((prev) => (prev + 1) % TESTIMONIALS.length);
     const prevTestimonial = () => setTestimonialIdx((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
     const nextHighlight = () => setHighlightIdx((prev) => (prev + 1) % OVERVIEW_HIGHLIGHTS.length);
@@ -1057,7 +928,7 @@ export default function HomePage() {
             {
                 '@type': 'ItemList',
                 'name': 'Aanandham.go Wilderness Expeditions & Camp Packages',
-                'itemListElement': EXPEDITION_PACKAGES.map((pkg, idx) => ({
+                'itemListElement': INITIAL_ALL_CAMPS.map((pkg, idx) => ({
                     '@type': 'ListItem',
                     'position': idx + 1,
                     'item': {
@@ -1350,7 +1221,7 @@ export default function HomePage() {
                             </p>
 
                             <button
-                                onClick={() => handleOpenBooking(EXPEDITION_PACKAGES[0])}
+                                onClick={() => handleOpenBooking(INITIAL_ALL_CAMPS[0])}
                                 className="action-arrow-btn"
                             >
                                 <span>Join The Camp</span>
@@ -3149,7 +3020,7 @@ export default function HomePage() {
             ───────────────────────────────────────────────────────────── */}
             <CtaParallaxBanner 
                 onOpenBooking={handleOpenBooking} 
-                defaultPackage={EXPEDITION_PACKAGES[0]} 
+                defaultPackage={INITIAL_ALL_CAMPS[0]} 
             />
 
             {/* ─────────────────────────────────────────────────────────────
@@ -3444,7 +3315,7 @@ export default function HomePage() {
                                 </div>
                                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                                     <Link
-                                        href={`/camps/${(EXPEDITION_PACKAGES.find(p => p.id === `pkg-${selectedLightboxImg.id}` || p.id.includes(selectedLightboxImg.id) || selectedLightboxImg.id.includes(p.id.replace('pkg-', ''))) || EXPEDITION_PACKAGES[0]).id}`}
+                                        href={`/camps/${(INITIAL_ALL_CAMPS.find(p => p.id === `pkg-${selectedLightboxImg.id}` || p.id.includes(selectedLightboxImg.id) || selectedLightboxImg.id.includes(p.id.replace('pkg-', ''))) || INITIAL_ALL_CAMPS[0]).id}`}
                                         onClick={() => setSelectedLightboxImg(null)}
                                         style={{
                                             padding: '12px 24px',
@@ -3461,12 +3332,12 @@ export default function HomePage() {
                                     </Link>
                                     <button
                                         onClick={() => {
-                                            const matchingPkg = EXPEDITION_PACKAGES.find(p => 
+                                            const matchingPkg = INITIAL_ALL_CAMPS.find(p => 
                                                 p.id === `pkg-${selectedLightboxImg.id}` ||
                                                 p.id.includes(selectedLightboxImg.id) || 
                                                 selectedLightboxImg.id.includes(p.id.replace('pkg-', '')) ||
                                                 p.title.toLowerCase().includes(selectedLightboxImg.name.toLowerCase().split(' ')[0])
-                                            ) || EXPEDITION_PACKAGES[0];
+                                            ) || INITIAL_ALL_CAMPS[0];
                                             setSelectedLightboxImg(null);
                                             handleOpenBooking(matchingPkg);
                                         }}

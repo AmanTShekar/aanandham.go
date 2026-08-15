@@ -13,6 +13,15 @@ export const cleanPhone = (phone = '') => {
 };
 
 /**
+ * Validate phone number has at least 10 valid numeric digits
+ */
+export const isValidPhoneNumber = (phone = '') => {
+  if (!phone) return false;
+  const digits = String(phone).replace(/\D/g, '');
+  return digits.length >= 10;
+};
+
+/**
  * Build a standard wa.me URL
  * @param {string} text - Message text
  * @param {string} [phone=DEFAULT_WA_PHONE] - Optional phone override

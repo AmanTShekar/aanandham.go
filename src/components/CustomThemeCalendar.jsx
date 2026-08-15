@@ -2,16 +2,32 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Special Wilderness Event Batches & Calendar Annotations
-const SPECIAL_BATCHES = {
-    '2026-08-15': { label: 'Perseid Meteor Camp 🌠', type: 'meteor', badge: '🌠 Meteor Shower' },
-    '2026-08-22': { label: 'Weekend Cloud Bed Batch ☁️', type: 'weekend', badge: '🔥 Filling Fast' },
-    '2026-08-29': { label: 'Full Moon Ridge Glamp 🌕', type: 'moon', badge: '🌕 Full Moon' },
-    '2026-09-05': { label: 'Meesapulimala Summit Batch 🏔️', type: 'trek', badge: '⚡ Summit Trek' },
-    '2026-09-12': { label: 'Rainforest Canopy Camp 🌿', type: 'weekend', badge: '🌿 High Mist' },
-    '2026-09-19': { label: 'Acoustic Campfire Special 🎸', type: 'music', badge: '🎸 Live BBQ' },
-    '2026-09-26': { label: 'Harvest Moon Glamp 🌕', type: 'moon', badge: '🌕 Stargaze' }
-};
+// Dynamic Wilderness Event Batches & Calendar Annotations (N5)
+export function getSpecialBatchesForMonth(year, month) {
+    const batches = {};
+    const daysCount = new Date(year, month + 1, 0).getDate();
+    let saturdayIndex = 0;
+
+    for (let d = 1; d <= daysCount; d++) {
+        const dateObj = new Date(year, month, d);
+        if (dateObj.getDay() === 6) { // Saturday
+            saturdayIndex++;
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            if (saturdayIndex === 1) {
+                batches[dateStr] = { label: 'Full Moon Ridge Glamp 🌕', type: 'moon', badge: '🌕 Full Moon' };
+            } else if (saturdayIndex === 2) {
+                batches[dateStr] = { label: 'Meteor Stargaze Camp 🌠', type: 'meteor', badge: '🌠 Meteor Camp' };
+            } else if (saturdayIndex === 3) {
+                batches[dateStr] = { label: 'Acoustic Campfire & BBQ 🎸', type: 'music', badge: '🎸 Live BBQ' };
+            } else if (saturdayIndex === 4) {
+                batches[dateStr] = { label: 'Summit Cloud Bed Batch ☁️', type: 'weekend', badge: '🔥 Filling Fast' };
+            } else {
+                batches[dateStr] = { label: 'Canopy Rainforest Trek 🌿', type: 'trek', badge: '⚡ Summit Trek' };
+            }
+        }
+    }
+    return batches;
+}
 
 const MONTH_NAMES = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -74,7 +90,23 @@ export default function CustomThemeCalendar({
         return new Date(currentYear, currentMonth, 1).getDay();
     }, [currentYear, currentMonth]);
 
+    // Special batches for currently viewed month (N5)
+    const specialBatches = useMemo(() => {
+        return getSpecialBatchesForMonth(currentYear, currentMonth);
+    }, [currentYear, currentMonth]);
+
+    // Navigation limits: Cannot go before current month, max 6 months forward (E1)
+    const canGoPrev = useMemo(() => {
+        return !(currentYear < today.getFullYear() || (currentYear === today.getFullYear() && currentMonth <= today.getMonth()));
+    }, [currentYear, currentMonth, today]);
+
+    const canGoNext = useMemo(() => {
+        const maxDate = new Date(today.getFullYear(), today.getMonth() + 6, 1);
+        return !(currentYear > maxDate.getFullYear() || (currentYear === maxDate.getFullYear() && currentMonth >= maxDate.getMonth()));
+    }, [currentYear, currentMonth, today]);
+
     const handlePrevMonth = () => {
+        if (!canGoPrev) return;
         if (currentMonth === 0) {
             setCurrentMonth(11);
             setCurrentYear(prev => prev - 1);
@@ -84,6 +116,7 @@ export default function CustomThemeCalendar({
     };
 
     const handleNextMonth = () => {
+        if (!canGoNext) return;
         if (currentMonth === 11) {
             setCurrentMonth(0);
             setCurrentYear(prev => prev + 1);
@@ -173,16 +206,23 @@ export default function CustomThemeCalendar({
 
     // Inner Calendar UI Content (reused for both inline and modal view)
     const calendarContent = (
-        <div style={{
-            background: isDark ? '#0B150E' : '#FFFFFF',
-            borderRadius: '28px',
-            padding: '24px',
-            color: isDark ? '#FFFFFF' : '#0B150E',
-            width: '100%',
-            maxWidth: '460px',
-            border: isDark ? '1px solid rgba(229, 169, 59, 0.35)' : '1px solid rgba(11, 21, 14, 0.12)',
-            boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7)' : '0 20px 60px rgba(0, 0, 0, 0.14)'
-        }}>
+        <div
+            data-lenis-prevent="true"
+            data-lenis-prevent-wheel="true"
+            data-lenis-prevent-touch="true"
+            onWheel={(e) => e.stopPropagation()}
+            style={{
+                background: isDark ? '#0B150E' : '#FFFFFF',
+                borderRadius: '28px',
+                padding: '24px',
+                color: isDark ? '#FFFFFF' : '#0B150E',
+                width: '100%',
+                maxWidth: '460px',
+                border: isDark ? '1px solid rgba(229, 169, 59, 0.35)' : '1px solid rgba(11, 21, 14, 0.12)',
+                boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7)' : '0 20px 60px rgba(0, 0, 0, 0.14)',
+                overscrollBehavior: 'contain'
+            }}
+        >
             {/* Modal / Card Header */}
             <div style={{
                 display: 'flex',
@@ -202,10 +242,11 @@ export default function CustomThemeCalendar({
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Prev / Next Month Buttons */}
+                    {/* Prev / Next Month Buttons with Navigation Limit Guards (E1) */}
                     <button
                         type="button"
                         onClick={handlePrevMonth}
+                        disabled={!canGoPrev}
                         aria-label="Previous Month"
                         style={{
                             width: '34px',
@@ -214,7 +255,8 @@ export default function CustomThemeCalendar({
                             background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
                             border: 'none',
                             color: isDark ? '#FFFFFF' : '#121613',
-                            cursor: 'pointer',
+                            cursor: canGoPrev ? 'pointer' : 'not-allowed',
+                            opacity: canGoPrev ? 1 : 0.28,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -227,6 +269,7 @@ export default function CustomThemeCalendar({
                     <button
                         type="button"
                         onClick={handleNextMonth}
+                        disabled={!canGoNext}
                         aria-label="Next Month"
                         style={{
                             width: '34px',
@@ -235,7 +278,8 @@ export default function CustomThemeCalendar({
                             background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
                             border: 'none',
                             color: isDark ? '#FFFFFF' : '#121613',
-                            cursor: 'pointer',
+                            cursor: canGoNext ? 'pointer' : 'not-allowed',
+                            opacity: canGoNext ? 1 : 0.28,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -340,7 +384,7 @@ export default function CustomThemeCalendar({
                     const isStart = stagedDate === dateStr;
                     const isInRange = tripRangeDates.includes(dateStr);
                     const isEnd = checkoutDateString === dateStr && durationDays > 1;
-                    const special = SPECIAL_BATCHES[dateStr];
+                    const special = specialBatches[dateStr];
                     const isPast = new Date(currentYear, currentMonth, day) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
                     const isWeekend = new Date(currentYear, currentMonth, day).getDay() === 0 || new Date(currentYear, currentMonth, day).getDay() === 6;
 

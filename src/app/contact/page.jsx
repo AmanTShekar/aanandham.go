@@ -6,7 +6,7 @@ import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 import { useAuth } from '../../hooks/useAuth';
-import { inr } from '../../lib/utils';
+import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 
 // ── REUSABLE FRAMER MOTION REVEAL VARIANTS ──
@@ -228,23 +228,31 @@ export default function ContactPage() {
         const link = waLink(waText);
         setWaUrl(link);
 
-        // Automatically persist inquiry into real admin database (localStorage)
+        // Automatically persist inquiry into real admin database (Server API + localStorage fallback)
+        const newInquiryRecord = {
+            id: generateBookingId(),
+            name: formData.name.trim(),
+            phone: formData.phone ? formData.phone.trim() : 'N/A',
+            package: `[${formData.inquiryType.toUpperCase()}] ${formData.message.slice(0, 40)}...`,
+            region: 'Kerala Inquiry',
+            dates: formData.travelDates || 'Flexible',
+            guests: Number(formData.guests) || 2,
+            roomType: formData.inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
+            addons: [],
+            total: (Number(formData.guests) || 2) * 2499,
+            status: 'Pending',
+            source: 'Contact Form',
+            notes: formData.message.trim(),
+            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+        };
+
         try {
-            const newInquiryRecord = {
-                id: `INQ-${Math.floor(1000 + Math.random() * 9000)}`,
-                name: formData.name.trim(),
-                phone: formData.phone ? formData.phone.trim() : 'N/A',
-                package: `[${formData.inquiryType.toUpperCase()}] ${formData.message.slice(0, 40)}...`,
-                region: 'Kerala Inquiry',
-                dates: formData.travelDates || 'Flexible',
-                guests: Number(formData.guests) || 2,
-                roomType: formData.inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
-                addons: [],
-                total: (Number(formData.guests) || 2) * 2499,
-                status: 'Pending',
-                source: 'Contact Form',
-                createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-            };
+            fetch('/api/admin/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newInquiryRecord)
+            }).catch(err => console.error('Error syncing inquiry to server:', err));
+
             const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
             localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([newInquiryRecord, ...currentBookings]));
             window.dispatchEvent(new Event('storage'));

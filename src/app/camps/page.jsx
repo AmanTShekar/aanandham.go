@@ -30,10 +30,24 @@ export default function CampsDirectoryPage() {
     const [selectedLightboxPhoto, setSelectedLightboxPhoto] = useState(null);
     const [toastMessage, setToastMessage] = useState('');
 
-    // Load camps & wishlist from localStorage on mount
+    // Load camps & wishlist from localStorage on mount + listen for admin updates
     useEffect(() => {
-        const loadedCamps = getAllCamps();
-        setCamps(loadedCamps);
+        const refreshCamps = async () => {
+            const loadedCamps = getAllCamps();
+            setCamps(loadedCamps);
+
+            try {
+                const res = await fetch('/api/admin/camps');
+                if (res.ok) {
+                    const serverCamps = await res.json();
+                    if (Array.isArray(serverCamps) && serverCamps.length > 0) {
+                        setCamps(serverCamps);
+                    }
+                }
+            } catch (e) {}
+        };
+
+        refreshCamps();
 
         try {
             const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
@@ -43,6 +57,13 @@ export default function CampsDirectoryPage() {
         } catch (e) {
             console.error('Error reading wishlist from localStorage:', e);
         }
+
+        const handleStorage = () => {
+            refreshCamps();
+        };
+
+        window.addEventListener('storage', handleStorage);
+        return () => window.removeEventListener('storage', handleStorage);
     }, []);
 
     const showToast = (msg) => {
