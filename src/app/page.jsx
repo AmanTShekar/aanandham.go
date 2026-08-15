@@ -1914,9 +1914,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     <div style={{ marginBottom: '44px' }}>
                         <div className="star-badge">
@@ -1933,19 +1933,21 @@ export default function HomePage() {
                         </h2>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))', gap: 'clamp(32px, 4vw, 48px)', alignItems: 'stretch' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 'clamp(32px, 4vw, 52px)', alignItems: 'start' }}>
                         
-                        {/* Left Big Picture (Dynamic to active stay option) */}
+                        {/* Left Big Picture (Controlled Clamped Height & Sticky Pinning) */}
                         <motion.div 
                             variants={fadeInLeft}
                             style={{ 
-                                position: 'relative', 
-                                minHeight: '460px', 
-                                height: '100%',
+                                position: 'sticky',
+                                top: '110px',
+                                height: 'clamp(420px, 52vh, 520px)',
+                                maxHeight: '540px',
+                                width: '100%',
                                 borderRadius: '28px', 
                                 overflow: 'hidden', 
                                 border: '1px solid rgba(18, 22, 19, 0.08)',
-                                boxShadow: '0 12px 32px rgba(0, 0, 0, 0.06)' 
+                                boxShadow: '0 16px 40px rgba(0, 0, 0, 0.08)' 
                             }}
                         >
                             <AnimatePresence mode="wait">
