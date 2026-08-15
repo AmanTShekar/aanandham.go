@@ -3000,10 +3000,10 @@ export default function HomePage() {
                     id="events-slider-track" 
                     className="events-horizontal-track" 
                     style={{ 
-                        paddingLeft: 'max(16px, calc((100vw - 1240px) / 2 + clamp(16px, 3.5vw, 40px)))', 
-                        paddingRight: '16px',
+                        paddingLeft: 'clamp(16px, 3vw, 32px)', 
+                        paddingRight: 'clamp(16px, 3vw, 32px)',
                         paddingTop: '16px', 
-                        paddingBottom: '20px',
+                        paddingBottom: '24px',
                         width: '100%',
                         boxSizing: 'border-box'
                     }}
@@ -3279,10 +3279,11 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
+                className="wilderness-section-container"
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#FFFFFF' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-                    <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
+                    <div className="wilderness-section-header" style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
                         <div className="star-badge" style={{ margin: '0 auto 12px' }}>
                             <span className="star-icon">★</span> KERALA WILDERNESS GRID
                         </div>
