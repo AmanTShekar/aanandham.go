@@ -838,17 +838,17 @@ export default function AboutPage() {
                                         <div>
                                             <div className="stone-engraved-num" style={{
                                                 fontSize: 'clamp(28px, 3.2vw, 36px)',
-                                                color: tier.accentColor
+                                                color: '#2C1608'
                                             }}>
                                                 {tier.altitude}
                                             </div>
-                                            <div style={{ fontSize: '11px', color: '#B4C0B8', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                                            <div style={{ fontSize: '11px', color: '#5C3A1E', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
                                                 {tier.elevationMeters} · AMSL
                                             </div>
                                         </div>
 
-                                        {/* Clean Dark Stone Icon Pill */}
-                                        <div className="stone-icon-pill" style={{ color: tier.accentColor }}>
+                                        {/* Natural wood icon pill */}
+                                        <div className="stone-icon-pill">
                                             <i className={tier.icon}></i>
                                         </div>
                                     </div>
@@ -913,14 +913,14 @@ export default function AboutPage() {
                                             fontFamily: 'var(--font-heading)',
                                             fontSize: '18px',
                                             fontWeight: '800',
-                                            color: '#FFFFFF',
+                                            color: '#2C1608',
                                             margin: '0 0 10px',
                                             lineHeight: 1.3
                                         }}>
                                             {tier.name}
                                         </h3>
 
-                                        <p style={{ fontSize: '12.8px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 16px' }}>
+                                        <p style={{ fontSize: '12.8px', color: '#3E2210', lineHeight: 1.65, margin: '0 0 16px' }}>
                                             {tier.desc}
                                         </p>
 
@@ -941,22 +941,22 @@ export default function AboutPage() {
                                     <div style={{
                                         marginTop: 'auto',
                                         paddingTop: '14px',
-                                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                        borderTop: '1px solid rgba(80, 40, 10, 0.25)',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
                                         fontSize: '11.5px',
-                                        color: '#8E9B92',
+                                        color: '#5A3218',
                                         position: 'relative',
                                         zIndex: 2
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <span>🌡️</span>
-                                            <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                            <strong style={{ color: '#2C1608' }}>{tier.temp}</strong>
                                         </div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                                             <span>💨</span>
-                                            <span style={{ color: tier.badgeColor, fontWeight: '700' }}>{tier.wind}</span>
+                                            <span style={{ color: '#5A3218', fontWeight: '700' }}>{tier.wind}</span>
                                         </div>
                                     </div>
                                 </motion.div>

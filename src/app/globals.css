@@ -285,32 +285,32 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Base: warm natural tree wood — cross-section ring pattern */
+/* Base: light natural pine/cedar wood — cross-section ring pattern */
 .stone-slab-card {
   position: relative;
-  background-color: #7A4E2D;
+  background-color: #C4925A;
   background-image:
     repeating-radial-gradient(
       ellipse at 42% 48%,
-      #A0622A 0px,
-      #915520 6px,
-      #7C4518 12px,
-      #6B3A12 16px,
-      #7E4A1C 20px,
-      #8E5520 26px,
-      #9C5F28 30px,
-      #7A4418 36px,
-      #66360E 40px,
-      #7C4820 46px,
-      #8C5225 52px,
-      #9A5C2A 58px,
-      #6E3E14 64px,
-      #7E4A1E 72px
+      #D4A870 0px,
+      #C49868 6px,
+      #B88B60 12px,
+      #AA7E54 16px,
+      #B68860 20px,
+      #C4946A 26px,
+      #CFA06E 30px,
+      #B48A5E 36px,
+      #A87C52 40px,
+      #B68860 46px,
+      #C29266 52px,
+      #CC9C6C 58px,
+      #A87E52 64px,
+      #B88860 72px
     );
   padding: 30px 22px 26px 22px;
   display: flex;
   flex-direction: column;
-  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.7)) drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.55)) drop-shadow(0 4px 10px rgba(0,0,0,0.3));
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
   overflow: visible;
   cursor: default;
@@ -321,14 +321,15 @@ body::-webkit-scrollbar-thumb:active,
   filter: drop-shadow(0 28px 55px rgba(0, 0, 0, 0.85)) drop-shadow(0 8px 18px rgba(0,0,0,0.6)) !important;
 }
 
-/* 4 UNIQUE JAGGED BARK EDGE SHAPES — each with its own knot center for different ring patterns */
+/* 4 UNIQUE JAGGED BARK EDGE SHAPES — each a distinct natural wood tone */
 .stone-slab-tier-1 {
+  /* Light pine — warm honey-cream rings */
   background-image:
     repeating-radial-gradient(
       ellipse at 38% 44%,
-      #AA6530 0px, #8E4E20 7px, #764016 14px, #623410 18px,
-      #784418 24px, #8C5222 30px, #9E5E2A 36px,
-      #6E3C12 42px, #7E4A1E 50px, #906028 58px, #6A3C12 66px, #7C4A1C 76px
+      #DEB87A 0px, #CFA86A 8px, #C09862 14px, #B49058 18px,
+      #BA9460 24px, #C89E6A 30px, #D4A870 36px,
+      #C0986A 42px, #D0A474 50px, #DAB07A 58px, #BE9468 66px, #C89E6E 76px
     );
   clip-path: polygon(
     0% 18px, 8px 6px, 22px 0%, 50px 4px,
@@ -340,12 +341,13 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-2 {
+  /* Oak — slightly warmer amber tones */
   background-image:
     repeating-radial-gradient(
       ellipse at 55% 38%,
-      #A05C28 0px, #8A4A1C 7px, #724016 14px, #5E3210 18px,
-      #724018 24px, #885222 30px, #9C5E2C 36px,
-      #6A3A10 42px, #7C4A1E 50px, #8E5826 58px, #683A10 66px, #7A481C 76px
+      #CCA264 0px, #BE9458 8px, #B28852 14px, #A67E4C 18px,
+      #AE8454 24px, #BC9060 30px, #C89C6A 36px,
+      #B68C5E 42px, #C49866 50px, #CEA26E 58px, #B48C5E 66px, #C29866 76px
     );
   clip-path: polygon(
     0% 28px, 14px 8px, 38px 2px, 70px 0px,
@@ -357,12 +359,13 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-3 {
+  /* Birch — lighter, almost cream-tan rings */
   background-image:
     repeating-radial-gradient(
       ellipse at 32% 58%,
-      #B06C30 0px, #926022 7px, #7A4E1A 14px, #663E12 18px,
-      #7C5020 24px, #906028 30px, #A46C34 36px,
-      #6E4010 42px, #844E20 50px, #985E2A 58px, #6A3E10 66px, #7E4E1E 76px
+      #E0BC82 0px, #D4B074 8px, #C8A46C 14px, #BEA066 18px,
+      #C4A46A 24px, #CEAC72 30px, #D8B47C 36px,
+      #CCAC72 42px, #D6B47A 50px, #DCB880 58px, #CAA870 66px, #D2B076 76px
     );
   clip-path: polygon(
     0% 22px, 10px 4px, 28px 0px, 64px 8px,
@@ -374,12 +377,13 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-4 {
+  /* Cedar — richer, deeper warm tan */
   background-image:
     repeating-radial-gradient(
       ellipse at 48% 62%,
-      #A46230 0px, #885020 7px, #6E3E16 14px, #5C3210 18px,
-      #703E18 24px, #865022 30px, #9A5E2A 36px,
-      #663A10 42px, #7A481C 50px, #8C5826 58px, #643A10 66px, #784618 76px
+      #C89A60 0px, #BC8E58 8px, #B08452 14px, #A67A4C 18px,
+      #AC8054 24px, #BA8E60 30px, #C4986A 36px,
+      #B88A5E 42px, #C29464 50px, #C89C6A 58px, #B68C5E 66px, #C09462 76px
     );
   clip-path: polygon(
     0% 32px, 12px 12px, 34px 0px, 54px 6px,
@@ -390,34 +394,34 @@ body::-webkit-scrollbar-thumb:active,
   );
 }
 
-/* Wood light & shadow overlay — gives depth above the rings */
+/* Soft sunlight & shadow overlay on light wood */
 .stone-cleavage-overlay {
   position: absolute;
   inset: 0;
   background-image:
     linear-gradient(175deg,
-      rgba(255, 210, 150, 0.18) 0%,
-      rgba(255, 200, 140, 0.06) 25%,
-      transparent 50%,
-      rgba(0, 0, 0, 0.25) 80%,
-      rgba(0, 0, 0, 0.45) 100%
+      rgba(255, 240, 200, 0.25) 0%,
+      rgba(255, 230, 180, 0.08) 30%,
+      transparent 55%,
+      rgba(100, 55, 20, 0.12) 80%,
+      rgba(80, 40, 10, 0.28) 100%
     ),
-    radial-gradient(ellipse at 20% 30%, rgba(255, 200, 140, 0.12) 0%, transparent 45%);
+    radial-gradient(ellipse at 22% 28%, rgba(255, 235, 180, 0.2) 0%, transparent 50%);
   pointer-events: none;
   z-index: 1;
 }
 
-/* Burned/Carved Altitude Number Typography */
+/* Burned/Carved Altitude Number Typography (dark on light wood) */
 .stone-engraved-num {
   font-family: var(--font-heading), 'Bricolage Grotesque', sans-serif;
   font-weight: 900;
   letter-spacing: -0.02em;
   line-height: 1;
-  color: #FFECD5 !important;
+  color: #2C1608 !important;
   text-shadow:
-    0 1px 0 rgba(255, 230, 180, 0.5),
-    0 -1px 2px rgba(40, 15, 5, 0.95),
-    0 3px 8px rgba(0, 0, 0, 0.85);
+    0 1px 0 rgba(255, 220, 160, 0.4),
+    0 -1px 1px rgba(180, 100, 40, 0.3),
+    0 2px 4px rgba(100, 45, 10, 0.35);
 }
 
 /* Recessed bark-frame photo window */
@@ -428,8 +432,8 @@ body::-webkit-scrollbar-thumb:active,
   overflow: hidden;
   margin: 12px 0 14px;
   background: #000;
-  border: 2px solid rgba(60, 30, 10, 0.7);
-  box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.9);
+  border: 2px solid rgba(90, 45, 10, 0.6);
+  box-shadow: inset 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(180, 110, 50, 0.3);
   position: relative;
   z-index: 2;
   clip-path: polygon(4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px), 0% 4px);
@@ -446,34 +450,34 @@ body::-webkit-scrollbar-thumb:active,
   transform: scale(1.06);
 }
 
-/* Wood icon box */
+/* Wood icon box (dark on light wood) */
 .stone-icon-pill {
   width: 38px;
   height: 38px;
-  background: rgba(30, 14, 5, 0.7);
-  border: 1.5px solid rgba(200, 140, 80, 0.35);
+  background: rgba(60, 28, 8, 0.75);
+  border: 1.5px solid rgba(140, 80, 30, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 15px;
-  color: #F0C48A !important;
+  color: #FFE5BC !important;
   flex-shrink: 0;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(180, 110, 50, 0.3);
   position: relative;
   z-index: 2;
   clip-path: polygon(4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px), 0% 4px);
 }
 
-/* Wood spec chip */
+/* Wood spec chip (dark on light wood) */
 .stone-spec-chip {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(25, 10, 4, 0.7);
-  border: 1px solid rgba(180, 110, 55, 0.35);
+  background: rgba(55, 25, 8, 0.65);
+  border: 1px solid rgba(140, 80, 30, 0.4);
   padding: 6px 12px;
   font-size: 11.5px;
-  color: #F5DEC0;
+  color: #FFE8CC;
   clip-path: polygon(4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px), 0% 4px);
 }
 
