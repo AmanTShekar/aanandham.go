@@ -25,34 +25,54 @@ const OVERVIEW_HIGHLIGHTS = [
     }
 ];
 
-// ── SKILL LEVELS DATA (Ref Screenshot 1 Batch 2 - media_1786655245980.png) ──
+// ── SKILL LEVELS DATA (Interactive Stacked Deck of Cards) ──
 const SKILL_LEVELS = [
     {
         id: 'newbie',
-        badge: 'first-time',
+        step: '01',
+        badge: 'First-Timer',
         title: 'Total Newbie',
         avatar: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=150&q=80',
+        coverImg: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+        distance: '4-6 KM / Day',
+        elevation: '+200m Valley',
+        pace: 'Gentle & Relaxed',
         desc: 'Never hiked before? Our gentle ridge walks, forest nature trails, and cozy basecamp glamps ease you right into the mountain lifestyle.'
     },
     {
         id: 'beginner',
-        badge: 'beginner',
+        step: '02',
+        badge: 'Beginner',
         title: 'Still Learning',
         avatar: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=150&q=80',
+        coverImg: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        distance: '7-10 KM / Day',
+        elevation: '+450m Ridge',
+        pace: 'Steady Ridge Walk',
         desc: "You've trekked a few times and can navigate basic trails. We'll help you progress to high-altitude cloud ridges and build stamina in a supportive environment."
     },
     {
         id: 'intermediate',
-        badge: 'intermediate',
+        step: '03',
+        badge: 'Intermediate',
         title: 'Pretty Confident',
         avatar: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=150&q=80',
+        coverImg: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=800&q=80',
+        distance: '12-16 KM / Day',
+        elevation: '+800m Peak',
+        pace: 'Endurance Climbs',
         desc: 'Comfortable with 12km+ day hikes, steep climbs, and rocky terrain. Ready for Chembra Peak summits and Kolukkumalai off-road adventures.'
     },
     {
         id: 'advanced',
-        badge: 'advanced',
+        step: '04',
+        badge: 'Expert Mountaineer',
         title: 'Already a Pro',
         avatar: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=150&q=80',
+        coverImg: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        distance: '18-24 KM / Day',
+        elevation: '+1,400m Summit',
+        pace: 'Technical Wilderness',
         desc: 'Experienced mountaineer. Join our unmapped off-trail rainforest expeditions, river crossings, and sub-zero night ridge bivouacs.'
     }
 ];
@@ -848,7 +868,7 @@ export default function HomePage() {
     const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
-    const [activeLevelIdx, setActiveLevelIdx] = useState(null);
+    const [activeLevelIdx, setActiveLevelIdx] = useState(0);
     const [activeDayIdx, setActiveDayIdx] = useState(0);
     const [expandedDayIdx, setExpandedDayIdx] = useState(0);
     const [activeWhyIdx, setActiveWhyIdx] = useState(0);
@@ -901,7 +921,7 @@ export default function HomePage() {
         }
     };
 
-    // High-precision trigger-line scroll-driven auto-activation for Stay room cards & Program days
+    // High-precision trigger-line scroll-driven auto-activation for Stay, Program & Skill Levels Deck
     useEffect(() => {
         if (typeof window === 'undefined') return;
 
@@ -943,6 +963,23 @@ export default function HomePage() {
                         });
                         setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
                     }
+                }
+            }
+
+            // 3. Skill Levels Stacked Deck Auto-Deal on Scroll
+            const levelsSection = document.getElementById('levels');
+            if (levelsSection) {
+                const lRect = levelsSection.getBoundingClientRect();
+                const windowH = window.innerHeight;
+                if (lRect.top <= windowH * 0.80 && lRect.bottom >= windowH * 0.15) {
+                    const scrollDistance = lRect.height - windowH * 0.35;
+                    const progress = (windowH * 0.5 - lRect.top) / Math.max(scrollDistance, 1);
+                    let levelIdx = 0;
+                    if (progress < 0.25) levelIdx = 0;
+                    else if (progress < 0.50) levelIdx = 1;
+                    else if (progress < 0.75) levelIdx = 2;
+                    else levelIdx = 3;
+                    setActiveLevelIdx((prev) => (prev !== levelIdx ? levelIdx : prev));
                 }
             }
 
@@ -2539,118 +2576,245 @@ export default function HomePage() {
                         </a>
                     </div>
 
-                    <motion.div 
-                        ref={skillSliderRef}
-                        onScroll={handleSkillSliderScroll}
-                        variants={staggerContainer}
-                        onMouseLeave={() => setActiveLevelIdx(null)}
-                        className="skill-levels-grid"
+                    {/* Level Quick Select Tabs */}
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '36px' }}>
+                        {SKILL_LEVELS.map((level, idx) => {
+                            const isSelected = activeLevelIdx === idx;
+                            return (
+                                <button
+                                    key={level.id}
+                                    onClick={() => setActiveLevelIdx(idx)}
+                                    style={{
+                                        background: isSelected ? '#121613' : '#FFFFFF',
+                                        color: isSelected ? '#FFFFFF' : '#59655D',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        borderRadius: '999px',
+                                        padding: '8px 18px',
+                                        fontSize: '12.5px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.15)' : 'none',
+                                        transition: 'all 0.25s ease'
+                                    }}
+                                >
+                                    <span style={{ color: isSelected ? '#E5A93B' : '#8E9B92', fontSize: '11px', fontWeight: '800' }}>
+                                        {level.step}
+                                    </span>
+                                    <span>{level.title}</span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Stacked Interactive Card Deck Showcase */}
+                    <div 
+                        style={{
+                            position: 'relative',
+                            height: '430px',
+                            maxWidth: '540px',
+                            margin: '0 auto',
+                            perspective: '1200px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
                     >
                         {SKILL_LEVELS.map((level, idx) => {
-                            const isActive = activeLevelIdx === idx;
+                            const diff = idx - (activeLevelIdx !== null ? activeLevelIdx : 0);
+                            const isFront = diff === 0;
+                            const isBehind = diff > 0;
+                            const isPast = diff < 0;
+
                             return (
                                 <motion.div
                                     key={level.id}
-                                    id={`skill-card-${idx}`}
-                                    variants={cardReveal}
-                                    onMouseEnter={() => setActiveLevelIdx(idx)}
-                                    onClick={() => setActiveLevelIdx(activeLevelIdx === idx ? null : idx)}
-                                    className="hover-lift"
-                                    layout
+                                    initial={false}
+                                    animate={{
+                                        scale: isFront ? 1 : isBehind ? Math.max(1 - diff * 0.05, 0.8) : 0.88,
+                                        y: isFront ? 0 : isBehind ? diff * 15 : -20,
+                                        x: isPast ? -320 : isBehind ? diff * 4 : 0,
+                                        rotate: isPast ? -14 : isBehind ? diff * 2.2 : 0,
+                                        opacity: isPast ? 0 : Math.max(1 - diff * 0.25, 0),
+                                        zIndex: 10 - Math.abs(diff)
+                                    }}
+                                    transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                    drag={isFront ? "x" : false}
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    onDragEnd={(e, info) => {
+                                        if (info.offset.x < -50 && activeLevelIdx < SKILL_LEVELS.length - 1) {
+                                            setActiveLevelIdx(prev => prev + 1);
+                                        } else if (info.offset.x > 50 && activeLevelIdx > 0) {
+                                            setActiveLevelIdx(prev => prev - 1);
+                                        }
+                                    }}
+                                    onClick={() => {
+                                        if (isBehind && diff === 1) {
+                                            setActiveLevelIdx(idx);
+                                        }
+                                    }}
                                     style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
                                         background: '#FFFFFF',
-                                        border: isActive ? '1.5px solid rgba(18, 22, 19, 0.25)' : '1px solid rgba(18, 22, 19, 0.07)',
-                                        borderRadius: '32px',
-                                        padding: '28px 26px',
+                                        border: isFront ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                        borderRadius: '28px',
+                                        padding: '28px 28px',
+                                        boxShadow: isFront 
+                                            ? '0 24px 60px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.04)' 
+                                            : '0 12px 30px rgba(0,0,0,0.06)',
+                                        cursor: isFront ? 'grab' : isBehind ? 'pointer' : 'default',
+                                        overflow: 'hidden',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'space-between',
-                                        minHeight: '360px',
-                                        cursor: 'pointer',
-                                        boxShadow: isActive ? '0 14px 40px rgba(0, 0, 0, 0.08)' : '0 4px 16px rgba(0, 0, 0, 0.02)',
-                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                        minHeight: '390px'
                                     }}
                                 >
-                                    {/* Top Row: Avatar + Level Badge */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                        <img
-                                            src={level.avatar}
-                                            alt={level.title}
-                                            style={{
-                                                width: '48px',
-                                                height: '48px',
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
-                                            }}
-                                        />
-                                        <span style={{
-                                            background: isActive ? '#E5A93B' : '#F1F3EC',
-                                            border: 'none',
-                                            color: '#121613',
-                                            fontSize: '11.5px',
-                                            fontWeight: '800',
-                                            padding: '5px 16px',
-                                            borderRadius: '999px',
-                                            textTransform: 'lowercase',
-                                            transition: 'all 0.25s ease'
-                                        }}>
-                                            {level.badge}
+                                    {/* Card Top: Avatar + Badge + Step Number */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                            <img
+                                                src={level.avatar}
+                                                alt={level.title}
+                                                style={{
+                                                    width: '46px',
+                                                    height: '46px',
+                                                    borderRadius: '50%',
+                                                    objectFit: 'cover',
+                                                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                                                }}
+                                            />
+                                            <div>
+                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
+                                                    LEVEL {level.step} / 04
+                                                </span>
+                                                <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
+                                                    {level.badge}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <span style={{ background: '#F1F3EC', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px' }}>
+                                            {level.pace}
                                         </span>
                                     </div>
 
-                                    {/* Bottom Row: Title & Smooth Collapsible Content */}
-                                    <div style={{ marginTop: 'auto' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', margin: 0 }}>
-                                                {level.title}
-                                            </h3>
-                                            <span style={{
-                                                fontSize: '14px',
-                                                color: isActive ? '#E5A93B' : '#8E9B92',
-                                                transform: isActive ? 'rotate(90deg)' : 'none',
-                                                transition: 'all 0.25s ease'
-                                            }}>
-                                                →
-                                            </span>
-                                        </div>
+                                    {/* Card Center: Title & Description */}
+                                    <div style={{ margin: '18px 0 14px' }}>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613', marginBottom: '8px' }}>
+                                            {level.title}
+                                        </h3>
+                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
+                                            {level.desc}
+                                        </p>
+                                    </div>
 
-                                        <AnimatePresence>
-                                            {isActive && (
-                                                <motion.div 
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
-                                                    exit={{ opacity: 0, height: 0 }}
-                                                    transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                                                    style={{ overflow: 'hidden' }}
-                                                >
-                                                    <div style={{ width: '100%', height: '1px', background: 'rgba(18, 22, 19, 0.08)', margin: '14px 0 12px' }} />
-                                                    <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
-                                                        {level.desc}
-                                                    </p>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
+                                    {/* Card Stats Pills */}
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '18px' }}>
+                                        <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11.5px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px' }}>
+                                            🥾 {level.distance}
+                                        </span>
+                                        <span style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '11.5px', fontWeight: '700', padding: '4px 12px', borderRadius: '999px' }}>
+                                            ▲ {level.elevation}
+                                        </span>
+                                    </div>
+
+                                    {/* Bottom Action Row */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid rgba(18,22,19,0.06)' }}>
+                                        <a
+                                            href="#packages"
+                                            style={{
+                                                fontSize: '12.5px',
+                                                fontWeight: '800',
+                                                color: '#121613',
+                                                textDecoration: 'none',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '5px'
+                                            }}
+                                        >
+                                            <span>View Matching Treks</span>
+                                            <span>→</span>
+                                        </a>
+
+                                        <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '600' }}>
+                                            Swipe or tap next →
+                                        </span>
                                     </div>
                                 </motion.div>
                             );
                         })}
-                    </motion.div>
+                    </div>
 
-                    {/* Mobile Slider Pagination Dots */}
-                    <div className="mobile-slider-dots">
-                        {SKILL_LEVELS.map((_, idx) => (
-                            <button
-                                key={idx}
-                                onClick={() => {
-                                    setActiveLevelIdx(idx);
-                                    const el = document.getElementById(`skill-card-${idx}`);
-                                    el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                                }}
-                                className={`slider-dot ${activeLevelIdx === idx ? 'active' : ''}`}
-                                aria-label={`Go to skill level ${idx + 1}`}
-                            />
-                        ))}
+                    {/* Deck Navigation Controls */}
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '16px', marginTop: '24px' }}>
+                        <button
+                            onClick={() => setActiveLevelIdx(prev => Math.max(0, (prev || 0) - 1))}
+                            disabled={activeLevelIdx === 0}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18,22,19,0.12)',
+                                borderRadius: '999px',
+                                padding: '8px 18px',
+                                fontSize: '12.5px',
+                                fontWeight: '800',
+                                cursor: activeLevelIdx === 0 ? 'not-allowed' : 'pointer',
+                                opacity: activeLevelIdx === 0 ? 0.35 : 1,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <span>←</span>
+                            <span>Previous</span>
+                        </button>
+
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                            {SKILL_LEVELS.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setActiveLevelIdx(idx)}
+                                    style={{
+                                        width: activeLevelIdx === idx ? '22px' : '7px',
+                                        height: '7px',
+                                        borderRadius: '999px',
+                                        background: activeLevelIdx === idx ? '#121613' : 'rgba(18,22,19,0.2)',
+                                        border: 'none',
+                                        padding: 0,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                                    }}
+                                />
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setActiveLevelIdx(prev => Math.min(SKILL_LEVELS.length - 1, (prev || 0) + 1))}
+                            disabled={activeLevelIdx === SKILL_LEVELS.length - 1}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18,22,19,0.12)',
+                                borderRadius: '999px',
+                                padding: '8px 18px',
+                                fontSize: '12.5px',
+                                fontWeight: '800',
+                                cursor: activeLevelIdx === SKILL_LEVELS.length - 1 ? 'not-allowed' : 'pointer',
+                                opacity: activeLevelIdx === SKILL_LEVELS.length - 1 ? 0.35 : 1,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <span>Next</span>
+                            <span>→</span>
+                        </button>
                     </div>
                 </div>
             </motion.section>
