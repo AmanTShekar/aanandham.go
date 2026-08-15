@@ -2909,7 +2909,7 @@ input, textarea, select, button {
   scroll-behavior: smooth !important;
   -webkit-overflow-scrolling: touch !important;
   gap: 20px !important;
-  padding: 16px 0 28px 0 !important;
+  padding: 30px 0 38px 0 !important;
   scrollbar-width: none !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -2940,7 +2940,7 @@ input, textarea, select, button {
 @media (max-width: 900px) {
   .events-horizontal-track {
     gap: 16px !important;
-    padding: 14px 0 24px 0 !important;
+    padding: 26px 0 34px 0 !important;
   }
   .events-horizontal-card {
     flex: 0 0 85vw !important;
