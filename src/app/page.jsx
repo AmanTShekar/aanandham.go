@@ -828,16 +828,19 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
 
 // Isolated high-performance Scroll Progress Indicator (0 parent re-renders)
 function ScrollProgressBar() {
-    const [progress, setProgress] = useState(0);
+    const barRef = useRef(null);
 
     useEffect(() => {
         let ticking = false;
         const onScroll = () => {
             if (!ticking) {
                 requestAnimationFrame(() => {
-                    const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    if (totalHeight > 0) {
-                        setProgress((window.scrollY / totalHeight) * 100);
+                    if (barRef.current) {
+                        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+                        if (totalHeight > 0) {
+                            const scale = Math.min(1, Math.max(0, window.scrollY / totalHeight));
+                            barRef.current.style.transform = `scaleX(${scale})`;
+                        }
                     }
                     ticking = false;
                 });
@@ -851,9 +854,10 @@ function ScrollProgressBar() {
     return (
         <div className="scroll-progress-container">
             <div 
+                ref={barRef}
                 className="scroll-progress-bar" 
                 style={{ 
-                    transform: `scaleX(${progress / 100})`, 
+                    transform: 'scaleX(0)', 
                     transformOrigin: '0% 50%',
                     willChange: 'transform' 
                 }} 
@@ -940,66 +944,69 @@ export default function HomePage() {
 
         let ticking = false;
         const checkScrollInView = () => {
-            const triggerY = window.innerWidth <= 900 ? window.innerHeight * 0.52 : window.innerHeight * 0.48;
+            const windowH = window.innerHeight;
+            const triggerY = window.innerWidth <= 900 ? windowH * 0.52 : windowH * 0.48;
 
-            // 1. Stay & Glamp Room Cards Auto-Activation
-            const stayCardElements = document.querySelectorAll('[data-stay-card-idx]');
-            if (stayCardElements.length > 0) {
-                let activeStayIndex = 0;
-                stayCardElements.forEach((el) => {
-                    const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
-                    if (isNaN(idx)) return;
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top <= triggerY) {
-                        activeStayIndex = idx;
-                    }
-                });
-                setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
-            }
-
-            // 2. Program Expedition Days Auto-Activation (Sequential on scroll)
-            const programElements = document.querySelectorAll('[data-program-day-idx]');
-            if (programElements.length > 0) {
-                const programSection = document.getElementById('program');
-                if (programSection) {
-                    const pRect = programSection.getBoundingClientRect();
-                    // When user is viewing or scrolling through the Program section
-                    if (pRect.top <= window.innerHeight * 0.90 && pRect.bottom >= 0) {
-                        let activeProgramIndex = 0;
-                        programElements.forEach((el) => {
-                            const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
-                            if (isNaN(idx)) return;
-                            const rect = el.getBoundingClientRect();
-                            if (rect.top <= triggerY) {
-                                activeProgramIndex = idx;
-                            }
-                        });
-                        setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
-                    }
+            // 1. Stay & Glamp Room Cards Auto-Activation (Scoped to when Stay section is near/in viewport)
+            const staySection = document.getElementById('stay');
+            if (staySection) {
+                const sRect = staySection.getBoundingClientRect();
+                if (sRect.top <= windowH && sRect.bottom >= 0) {
+                    const stayCardElements = staySection.querySelectorAll('[data-stay-card-idx]');
+                    let activeStayIndex = 0;
+                    stayCardElements.forEach((el) => {
+                        const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
+                        if (isNaN(idx)) return;
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top <= triggerY) {
+                            activeStayIndex = idx;
+                        }
+                    });
+                    setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
                 }
             }
 
-            // 3. Skill Levels Sticky Deck Scroll Progress
+            // 2. Program Expedition Days Auto-Activation (Scoped to when Program section is near/in viewport)
+            const programSection = document.getElementById('program');
+            if (programSection) {
+                const pRect = programSection.getBoundingClientRect();
+                if (pRect.top <= windowH * 0.90 && pRect.bottom >= 0) {
+                    const programElements = programSection.querySelectorAll('[data-program-day-idx]');
+                    let activeProgramIndex = 0;
+                    programElements.forEach((el) => {
+                        const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
+                        if (isNaN(idx)) return;
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top <= triggerY) {
+                            activeProgramIndex = idx;
+                        }
+                    });
+                    setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
+                }
+            }
+
+            // 3. Skill Levels Sticky Deck Scroll Progress (Scoped to when Levels track is near/in viewport)
             const levelsTrack = document.getElementById('levels-scroll-track');
             if (levelsTrack) {
                 const rect = levelsTrack.getBoundingClientRect();
-                const windowH = window.innerHeight;
-                const totalDist = rect.height - windowH;
-                if (totalDist > 0) {
-                    const scrolledDist = -rect.top;
-                    const progress = Math.max(0, Math.min(1, scrolledDist / totalDist));
-                    
-                    let levelIdx = 0;
-                    if (progress < 0.22) {
-                        levelIdx = 0; // Total Newbie
-                    } else if (progress < 0.45) {
-                        levelIdx = 1; // Still Learning
-                    } else if (progress < 0.68) {
-                        levelIdx = 2; // Pretty Confident
-                    } else {
-                        levelIdx = 3; // Already a Pro (Huge 32% scroll dwell time)
+                if (rect.top <= windowH && rect.bottom >= 0) {
+                    const totalDist = rect.height - windowH;
+                    if (totalDist > 0) {
+                        const scrolledDist = -rect.top;
+                        const progress = Math.max(0, Math.min(1, scrolledDist / totalDist));
+                        
+                        let levelIdx = 0;
+                        if (progress < 0.22) {
+                            levelIdx = 0; // Total Newbie
+                        } else if (progress < 0.45) {
+                            levelIdx = 1; // Still Learning
+                        } else if (progress < 0.68) {
+                            levelIdx = 2; // Pretty Confident
+                        } else {
+                            levelIdx = 3; // Already a Pro (Huge 32% scroll dwell time)
+                        }
+                        setActiveLevelIdx((prev) => (prev !== levelIdx ? levelIdx : prev));
                     }
-                    setActiveLevelIdx((prev) => (prev !== levelIdx ? levelIdx : prev));
                 }
             }
 
