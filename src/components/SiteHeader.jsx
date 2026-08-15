@@ -133,7 +133,7 @@ export default function SiteHeader({
                     left: 0,
                     right: 0,
                     zIndex: 100000,
-                    padding: '12px clamp(20px, 3.5vw, 40px)',
+                    padding: '14px clamp(20px, 4vw, 48px)',
                     backgroundColor: 'rgba(11, 21, 14, 0.94)',
                     backdropFilter: 'blur(20px)',
                     WebkitBackdropFilter: 'blur(20px)',
@@ -144,7 +144,7 @@ export default function SiteHeader({
             >
                 <div style={{
                     width: '100%',
-                    maxWidth: '1240px',
+                    maxWidth: '1440px',
                     margin: '0 auto',
                     display: 'flex',
                     alignItems: 'center',
