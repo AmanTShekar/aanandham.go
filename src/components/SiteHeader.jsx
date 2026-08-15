@@ -415,37 +415,45 @@ export default function SiteHeader({
                         style={{
                             position: 'fixed',
                             inset: 0,
+                            width: '100vw',
+                            maxWidth: '100vw',
+                            height: '100vh',
+                            height: '100dvh',
                             zIndex: 99999,
                             background: 'radial-gradient(circle at calc(100% - 42px) 36px, #172B1E 0%, #0D1911 50%, #070E08 100%)',
                             border: '1px solid rgba(213, 237, 85, 0.12)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
-                            padding: 'calc(80px + 16px) 28px 36px',
+                            padding: 'calc(80px + 16px) 24px 36px',
                             overflowY: 'auto',
+                            overflowX: 'hidden',
+                            boxSizing: 'border-box',
                             transform: 'translateZ(0)',
                             WebkitTransform: 'translateZ(0)',
                             willChange: 'clip-path'
                         }}
                     >
-                        {/* Concentric Frosted Glass Liquid Ripple Rings */}
-                        <motion.div
-                            key="ripple-wave-1"
-                            initial={{ scale: 0.2, opacity: 0.9 }}
-                            animate={{ scale: [0.2, 2.0, 4.2], opacity: [0.9, 0.35, 0] }}
-                            transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
-                            style={{
-                                position: 'absolute',
-                                top: '14px',
-                                right: '20px',
-                                width: '44px',
-                                height: '44px',
-                                borderRadius: '50%',
-                                border: '1.5px solid rgba(213, 237, 85, 0.65)',
-                                boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
-                                pointerEvents: 'none'
-                            }}
-                        />
+                        {/* Concentric Frosted Glass Liquid Ripple Rings (Clipped to prevent horizontal spill) */}
+                        <div style={{ position: 'absolute', top: 0, right: 0, width: '120px', height: '120px', overflow: 'hidden', pointerEvents: 'none' }}>
+                            <motion.div
+                                key="ripple-wave-1"
+                                initial={{ scale: 0.2, opacity: 0.9 }}
+                                animate={{ scale: [0.2, 2.0, 3.5], opacity: [0.9, 0.35, 0] }}
+                                transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
+                                style={{
+                                    position: 'absolute',
+                                    top: '14px',
+                                    right: '20px',
+                                    width: '44px',
+                                    height: '44px',
+                                    borderRadius: '50%',
+                                    border: '1.5px solid rgba(213, 237, 85, 0.65)',
+                                    boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
+                                    pointerEvents: 'none'
+                                }}
+                            />
+                        </div>
 
                         {/* Unified Exit-Synchronized Drawer Body */}
                         <motion.div
@@ -453,7 +461,7 @@ export default function SiteHeader({
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%' }}
+                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%', width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}
                         >
                             <nav style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}>
                                 <motion.div variants={drawerItemVariants}>
