@@ -2092,9 +2092,16 @@ export default function HomePage() {
                                                         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                                         style={{ padding: '14px 0 0 24px', overflow: 'hidden' }}
                                                     >
-                                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: '0 0 10px' }}>
+                                                        <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.65, margin: '0 0 12px' }}>
                                                             {acc.desc}
                                                         </p>
+                                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                            {acc.amenities.map((amenity, i) => (
+                                                                <span key={i} style={{ background: '#F1F3EC', color: '#121613', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                                                    ✓ {amenity}
+                                                                </span>
+                                                            ))}
+                                                        </div>
                                                     </motion.div>
                                                 )}
                                             </AnimatePresence>
