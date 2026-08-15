@@ -32,7 +32,7 @@ export async function GET(request) {
     }
 
     try {
-        const bookings = getStoredBookings();
+        const bookings = await getStoredBookings();
         return NextResponse.json({ success: true, bookings });
     } catch (err) {
         console.error('Error fetching bookings:', err);
@@ -87,7 +87,8 @@ export async function POST(request) {
         const { camp, room } = findCampAndRoom(data.campsiteId, body.roomId);
 
         let capacity = campGuestCapacity(camp);
-        const existing = getStoredBookings().filter(b => isActiveStatus(b.status) && b.slotKey === slotKey);
+        const allBookings = await getStoredBookings();
+        const existing = allBookings.filter(b => isActiveStatus(b.status) && b.slotKey === slotKey);
         const bookedGuests = existing.reduce((sum, b) => sum + (Number(b.guests) || 0), 0);
         const incomingGuests = Number(data.guests) || 1;
 
@@ -170,7 +171,7 @@ export async function POST(request) {
             })
         };
 
-        addServerBooking(newBooking);
+        await addServerBooking(newBooking);
 
         if (isInquiryMode) {
             return NextResponse.json({

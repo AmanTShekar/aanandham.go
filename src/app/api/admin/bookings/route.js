@@ -73,7 +73,7 @@ export async function GET(request) {
     }
 
     try {
-        const bookings = getStoredBookings();
+        const bookings = await getStoredBookings();
         return NextResponse.json({ success: true, bookings });
     } catch (err) {
         console.error('Error fetching bookings:', err);
@@ -108,13 +108,13 @@ export async function POST(request) {
             }
             const normalized = body.map(normalizeRecord).filter(Boolean);
             // Bulk replace is dangerous — instead merge: keep existing ids, add/update normalized ones
-            const existing = getStoredBookings();
+            const existing = await getStoredBookings();
             const byId = new Map(existing.map(b => [b.id, b]));
             for (const rec of normalized) {
                 byId.set(rec.id, { ...(byId.get(rec.id) || {}), ...rec });
             }
             const merged = Array.from(byId.values());
-            saveStoredBookings(merged);
+            await saveStoredBookings(merged);
             return NextResponse.json({ success: true, bookings: merged, totalCount: merged.length });
         }
 
@@ -123,7 +123,7 @@ export async function POST(request) {
         if (!rec) {
             return NextResponse.json({ success: false, message: 'Invalid booking details.' }, { status: 400 });
         }
-        const updatedList = addServerBooking(rec);
+        const updatedList = await addServerBooking(rec);
         return NextResponse.json({ success: true, booking: rec, totalCount: updatedList.length });
     } catch (err) {
         console.error('Error creating booking:', err);
@@ -174,7 +174,7 @@ export async function PATCH(request) {
             return NextResponse.json({ success: false, message: 'No valid fields to update.' }, { status: 400 });
         }
 
-        const updatedList = updateServerBooking(id, cleanUpdates);
+        const updatedList = await updateServerBooking(id, cleanUpdates);
         return NextResponse.json({ success: true, bookings: updatedList });
     } catch (err) {
         console.error('Error updating booking:', err);
@@ -203,7 +203,7 @@ export async function DELETE(request) {
             return NextResponse.json({ success: false, message: 'Missing booking ID' }, { status: 400 });
         }
 
-        const updatedList = deleteServerBooking(id);
+        const updatedList = await deleteServerBooking(id);
         return NextResponse.json({ success: true, bookings: updatedList });
     } catch (err) {
         console.error('Error deleting booking:', err);

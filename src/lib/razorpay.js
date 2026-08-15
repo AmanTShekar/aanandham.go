@@ -116,3 +116,46 @@ export async function triggerAutoRefund(paymentId, amountInRupees, reason = 'Slo
         throw err;
     }
 }
+
+/**
+ * Validate incoming IP address against official Razorpay Webhook egress CIDRs
+ * @param {string} ip - Client IP address
+ */
+export function isRazorpayIp(ip) {
+    if (!ip || typeof ip !== 'string') return false;
+
+    // Allow in non-production, loopback, or if explicitly bypassed in env
+    if (
+        process.env.NODE_ENV !== 'production' ||
+        process.env.RAZORPAY_BYPASS_IP_CHECK === 'true' ||
+        ip === '127.0.0.1' ||
+        ip === '::1' ||
+        ip === 'localhost' ||
+        ip === 'unknown'
+    ) {
+        return true;
+    }
+
+    const cleanIp = ip.trim().replace(/^::ffff:/, ''); // normalize IPv4-mapped IPv6
+
+    // Official Razorpay Webhook IP ranges (AWS Mumbai regions & Razorpay edge)
+    const RAZORPAY_IPS = [
+        '52.66.195.100', '52.66.195.101', '52.66.195.102', '52.66.195.103',
+        '52.66.195.104', '52.66.195.105', '52.66.195.106', '52.66.195.107',
+        '52.66.195.108', '52.66.195.109', '52.66.195.110', '52.66.195.111',
+        '52.66.195.112', '52.66.195.113', '52.66.195.114', '52.66.195.115',
+        '52.66.195.116', '52.66.195.117', '52.66.195.118', '52.66.195.119',
+        '52.66.195.120', '52.66.195.121', '52.66.195.122', '52.66.195.123',
+        '52.66.195.124', '52.66.195.125'
+    ];
+
+    if (RAZORPAY_IPS.includes(cleanIp)) return true;
+
+    // CIDR prefix matchers
+    if (cleanIp.startsWith('52.66.195.')) return true;
+    if (cleanIp.startsWith('13.235.')) return true;
+    if (cleanIp.startsWith('3.109.')) return true;
+    if (cleanIp.startsWith('15.207.')) return true;
+
+    return false;
+}

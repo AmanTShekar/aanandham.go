@@ -223,3 +223,52 @@ export async function getWaitlistPosition(slotKey, bookingId) {
     const idx = list.findIndex(item => item.bookingId === bookingId);
     return idx === -1 ? null : idx + 1;
 }
+
+// ── 6. DISTRIBUTED WEBHOOK IDEMPOTENCY (7-Day TTL) ──
+const memoryProcessedWebhooks = new Map();
+
+export async function isWebhookProcessed(eventId) {
+    if (!eventId) return false;
+    const key = `webhook:processed:${eventId}`;
+
+    if (HAS_UPSTASH) {
+        try {
+            const res = await upstashCommand('get', key);
+            if (res !== null && res !== undefined) return true;
+        } catch (e) {
+            console.error('Error checking webhook dedupe in Redis:', e);
+        }
+    }
+
+    const now = Date.now();
+    const expiry = memoryProcessedWebhooks.get(key);
+    if (expiry && now < expiry) {
+        return true;
+    }
+    if (expiry) {
+        memoryProcessedWebhooks.delete(key);
+    }
+    return false;
+}
+
+export async function markWebhookProcessed(eventId, ttlSeconds = 604800) {
+    if (!eventId) return false;
+    const key = `webhook:processed:${eventId}`;
+    const value = String(Date.now());
+
+    if (HAS_UPSTASH) {
+        try {
+            await upstashCommand('setex', key, ttlSeconds, value);
+            return true;
+        } catch (e) {
+            console.error('Error marking webhook processed in Redis:', e);
+        }
+    }
+
+    if (memoryProcessedWebhooks.size > 5000) {
+        const firstKey = memoryProcessedWebhooks.keys().next().value;
+        memoryProcessedWebhooks.delete(firstKey);
+    }
+    memoryProcessedWebhooks.set(key, Date.now() + ttlSeconds * 1000);
+    return true;
+}

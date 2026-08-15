@@ -9,15 +9,17 @@ import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsDat
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 
-// Helper to safely validate, downscale and compress images before storing as Base64 (UP1)
+// Helper to safely validate, downscale and compress images before storing as Base64 (UP1, Item 9)
 function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
     return new Promise((resolve, reject) => {
         if (!file) return reject(new Error('No file provided'));
-        if (!file.type || !file.type.startsWith('image/')) {
-            return reject(new Error('Invalid file format. Please upload JPG, PNG, or WebP images only.'));
+        const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+        if (!file.type || !allowedMimeTypes.includes(file.type.toLowerCase())) {
+            return reject(new Error('Invalid file format. Please upload JPG, PNG, WebP, or AVIF images only.'));
         }
-        if (file.size > 15 * 1024 * 1024) {
-            return reject(new Error('Image file is too large (max 15MB).'));
+        // Cap file upload size to ~2MB as requested
+        if (file.size > 2 * 1024 * 1024) {
+            return reject(new Error('Image file is too large (max 2MB limit). Please upload an image under 2MB.'));
         }
 
         const reader = new FileReader();

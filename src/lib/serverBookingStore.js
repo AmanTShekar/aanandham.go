@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { prisma, isPrismaConfigured } from './prisma';
 
 const DATA_DIR = path.join(process.cwd(), '.data');
 const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
@@ -52,21 +53,22 @@ const INITIAL_SERVER_BOOKINGS = [
     }
 ];
 
-// Ensure directory exists
+// In-memory fallback if disk write is not available
+let memoryStore = [...INITIAL_SERVER_BOOKINGS];
+
+// Helper: Ensure directory exists on local disk
 function ensureDataDir() {
     try {
         if (!fs.existsSync(DATA_DIR)) {
             fs.mkdirSync(DATA_DIR, { recursive: true });
         }
     } catch (e) {
-        console.error('Error creating data dir:', e);
+        // Ignored on read-only serverless filesystems (e.g. Vercel)
     }
 }
 
-// In-memory fallback if disk write is not available
-let memoryStore = [...INITIAL_SERVER_BOOKINGS];
-
-export function getStoredBookings() {
+// Helper: Read local disk fallback
+function readLocalBookings() {
     try {
         ensureDataDir();
         if (fs.existsSync(BOOKINGS_FILE)) {
@@ -77,44 +79,187 @@ export function getStoredBookings() {
                 return data;
             }
         }
-        // Initialize with default demo bookings if file doesn't exist
         fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(INITIAL_SERVER_BOOKINGS, null, 2), 'utf-8');
         return INITIAL_SERVER_BOOKINGS;
     } catch (err) {
-        console.error('Error reading bookings file, falling back to memory store:', err);
         return memoryStore;
     }
 }
 
-export function saveStoredBookings(bookings) {
+// Helper: Write local disk fallback
+function writeLocalBookings(bookings) {
     try {
         memoryStore = bookings;
         ensureDataDir();
         fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2), 'utf-8');
         return true;
     } catch (err) {
-        console.error('Error writing bookings file, saved to memory store:', err);
         return true;
     }
 }
 
-export function addServerBooking(newBooking) {
-    const list = getStoredBookings();
-    const updated = [newBooking, ...list];
-    saveStoredBookings(updated);
+// Helper: Convert Prisma DB record to application JSON format
+function mapFromPrisma(record) {
+    if (!record) return null;
+    return {
+        ...record,
+        holdExpiresAt: record.holdExpiresAt != null ? Number(record.holdExpiresAt) : null,
+        paidAt: record.paidAt ? record.paidAt.toISOString() : null,
+        createdAt: typeof record.createdAt === 'string' ? record.createdAt : record.createdAt?.toISOString?.() || String(record.createdAt),
+        addons: Array.isArray(record.addons) ? record.addons : (typeof record.addons === 'string' ? JSON.parse(record.addons || '[]') : [])
+    };
+}
+
+// Helper: Convert application record to Prisma DB insert/update format
+function mapToPrisma(data) {
+    const payload = { ...data };
+    if (payload.holdExpiresAt !== undefined) {
+        payload.holdExpiresAt = payload.holdExpiresAt != null ? BigInt(Math.floor(Number(payload.holdExpiresAt))) : null;
+    }
+    if (payload.paidAt !== undefined) {
+        payload.paidAt = payload.paidAt ? new Date(payload.paidAt) : null;
+    }
+    if (payload.createdAt !== undefined) {
+        const d = new Date(payload.createdAt);
+        payload.createdAt = isNaN(d.getTime()) ? new Date() : d;
+    }
+    if (payload.addons !== undefined) {
+        payload.addons = Array.isArray(payload.addons) ? payload.addons : [];
+    }
+    if (payload.total !== undefined) {
+        payload.total = Number(payload.total) || 0;
+    }
+    if (payload.guests !== undefined) {
+        payload.guests = Number(payload.guests) || 1;
+    }
+    return payload;
+}
+
+/**
+ * Retrieve all bookings (Postgres/Neon if configured, otherwise local JSON/memory fallback)
+ */
+export async function getStoredBookings() {
+    if (isPrismaConfigured && prisma) {
+        try {
+            const records = await prisma.booking.findMany({
+                orderBy: { createdAt: 'desc' }
+            });
+            if (records && records.length > 0) {
+                return records.map(mapFromPrisma);
+            }
+            // Seed defaults if database is completely empty
+            for (const item of INITIAL_SERVER_BOOKINGS) {
+                try {
+                    await prisma.booking.upsert({
+                        where: { id: item.id },
+                        create: mapToPrisma(item),
+                        update: {}
+                    });
+                } catch {}
+            }
+            const seeded = await prisma.booking.findMany({
+                orderBy: { createdAt: 'desc' }
+            });
+            return seeded.map(mapFromPrisma);
+        } catch (err) {
+            console.error('Prisma query error, falling back to local store:', err);
+        }
+    }
+    return readLocalBookings();
+}
+
+/**
+ * Persist / Bulk-sync bookings list
+ */
+export async function saveStoredBookings(bookings) {
+    writeLocalBookings(bookings);
+    if (isPrismaConfigured && prisma && Array.isArray(bookings)) {
+        try {
+            for (const b of bookings) {
+                const mapped = mapToPrisma(b);
+                await prisma.booking.upsert({
+                    where: { id: b.id },
+                    create: mapped,
+                    update: mapped
+                });
+            }
+            return true;
+        } catch (err) {
+            console.error('Prisma bulk save error:', err);
+        }
+    }
+    return true;
+}
+
+/**
+ * Add a new booking record
+ */
+export async function addServerBooking(newBooking) {
+    if (isPrismaConfigured && prisma) {
+        try {
+            const mapped = mapToPrisma(newBooking);
+            const created = await prisma.booking.create({
+                data: mapped
+            });
+            // Update local memory sync as well
+            memoryStore = [mapFromPrisma(created), ...memoryStore.filter(b => b.id !== newBooking.id)];
+            writeLocalBookings(memoryStore);
+            return await getStoredBookings();
+        } catch (err) {
+            console.error('Prisma addServerBooking error, saving locally:', err);
+        }
+    }
+
+    const list = readLocalBookings();
+    const updated = [newBooking, ...list.filter(b => b.id !== newBooking.id)];
+    writeLocalBookings(updated);
     return updated;
 }
 
-export function updateServerBooking(id, updates) {
-    const list = getStoredBookings();
+/**
+ * Update an existing booking record by ID
+ */
+export async function updateServerBooking(id, updates) {
+    if (isPrismaConfigured && prisma) {
+        try {
+            const mapped = mapToPrisma(updates);
+            const updated = await prisma.booking.update({
+                where: { id },
+                data: mapped
+            });
+            memoryStore = memoryStore.map(b => b.id === id ? { ...b, ...mapFromPrisma(updated) } : b);
+            writeLocalBookings(memoryStore);
+            return await getStoredBookings();
+        } catch (err) {
+            console.error('Prisma updateServerBooking error, updating locally:', err);
+        }
+    }
+
+    const list = readLocalBookings();
     const updated = list.map(b => b.id === id ? { ...b, ...updates } : b);
-    saveStoredBookings(updated);
+    writeLocalBookings(updated);
     return updated;
 }
 
-export function deleteServerBooking(id) {
-    const list = getStoredBookings();
+/**
+ * Delete a booking record by ID
+ */
+export async function deleteServerBooking(id) {
+    if (isPrismaConfigured && prisma) {
+        try {
+            await prisma.booking.delete({
+                where: { id }
+            });
+            memoryStore = memoryStore.filter(b => b.id !== id);
+            writeLocalBookings(memoryStore);
+            return await getStoredBookings();
+        } catch (err) {
+            console.error('Prisma deleteServerBooking error, deleting locally:', err);
+        }
+    }
+
+    const list = readLocalBookings();
     const updated = list.filter(b => b.id !== id);
-    saveStoredBookings(updated);
+    writeLocalBookings(updated);
     return updated;
 }

@@ -18,7 +18,7 @@ export async function GET(request, { params }) {
     }
 
     try {
-        const bookings = getStoredBookings();
+        const bookings = await getStoredBookings();
         const booking = bookings.find(b => b.id === id);
 
         if (!booking) {
