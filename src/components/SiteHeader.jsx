@@ -261,114 +261,25 @@ export default function SiteHeader({
                             </Link>
                         </nav>
 
-                        {/* Camper Account or Login Button */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            {currentUser ? (
-                                <div ref={accountMenuRef} style={{ position: 'relative' }}>
-                                    <button
-                                        onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
-                                        aria-expanded={isAccountMenuOpen}
-                                        aria-haspopup="menu"
-                                        aria-label="Camper account menu"
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '8px',
-                                            background: 'rgba(255, 255, 255, 0.12)',
-                                            border: '1px solid rgba(229, 169, 59, 0.4)',
-                                            color: '#FFFFFF',
-                                            padding: '6px 14px',
-                                            borderRadius: '999px',
-                                            cursor: 'pointer',
-                                            fontSize: '13.5px',
-                                            fontWeight: '700',
-                                            backdropFilter: 'blur(10px)',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
-                                        <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: '800' }}>
-                                            {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
-                                        </span>
-                                        <span>{currentUser.name || 'Camper'}</span>
-                                        <i className={`fa-solid fa-chevron-${isAccountMenuOpen ? 'up' : 'down'}`} style={{ fontSize: '10px', color: '#E5A93B' }}></i>
-                                    </button>
-
-                                    {/* Account Dropdown */}
-                                    <AnimatePresence>
-                                        {isAccountMenuOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 'calc(100% + 10px)',
-                                                    right: 0,
-                                                    width: '240px',
-                                                    background: 'rgba(11, 21, 14, 0.96)',
-                                                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                                                    borderRadius: '20px',
-                                                    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
-                                                    backdropFilter: 'blur(24px)',
-                                                    WebkitBackdropFilter: 'blur(24px)',
-                                                    padding: '16px',
-                                                    zIndex: 1000,
-                                                    color: '#FFFFFF'
-                                                }}
-                                            >
-                                                <div style={{ paddingBottom: '12px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: '10px' }}>
-                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
-                                                    <div style={{ fontSize: '11.5px', color: '#8E9B92', wordBreak: 'break-all' }}>{currentUser.email || 'camper@aanandham.in'}</div>
-                                                </div>
-                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                                    <Link
-                                                        href="/#packages"
-                                                        onClick={() => setIsAccountMenuOpen(false)}
-                                                        style={{ color: '#FFFFFF', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}
-                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
-                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                                                    >
-                                                        <span>⛺ My Bookings & Packages</span>
-                                                    </Link>
-                                                    <button
-                                                        onClick={() => {
-                                                            if (onLogout) onLogout();
-                                                            setIsAccountMenuOpen(false);
-                                                        }}
-                                                        style={{ background: 'transparent', border: 'none', color: '#FF7B7B', padding: '8px 10px', borderRadius: '8px', fontSize: '13px', fontWeight: '700', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}
-                                                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(255, 123, 123, 0.1)'}
-                                                        onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
-                                                    >
-                                                        <span>🚪 Log Out</span>
-                                                    </button>
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </div>
-                            ) : (
-                                <Link
-                                    href="/login"
-                                    className="nav-login-btn"
-                                >
-                                    <span style={{
-                                        width: '26px',
-                                        height: '26px',
-                                        borderRadius: '50%',
-                                        background: '#121613',
-                                        color: '#D5ED55',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '10.5px',
-                                        flexShrink: 0
-                                    }}>
-                                        <i className="fa-solid fa-arrow-right-to-bracket"></i>
-                                    </span>
-                                    <span>Log In</span>
-                                </Link>
-                            )}
+                        {/* Direct Frictionless Booking CTA Button */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <Link
+                                href="/#packages"
+                                className="btn-lime"
+                                style={{
+                                    padding: '8px 20px',
+                                    fontSize: '13.5px',
+                                    fontWeight: '800',
+                                    textDecoration: 'none',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    boxShadow: '0 4px 14px rgba(213, 237, 85, 0.25)'
+                                }}
+                            >
+                                <span>Book Campsite</span>
+                                <span>↗</span>
+                            </Link>
                         </div>
                     </div>
 
@@ -511,47 +422,27 @@ export default function SiteHeader({
                                 </motion.div>
                             </nav>
 
-                            {/* Bottom Actions: User Account or Login / Signup */}
-                            <motion.div variants={drawerItemVariants} style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                {currentUser ? (
-                                    <div style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(229,169,59,0.3)', borderRadius: '20px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <span style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '800' }}>
-                                                    {currentUser.name ? currentUser.name[0].toUpperCase() : '🌲'}
-                                                </span>
-                                                <div>
-                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>{currentUser.name || 'Camper'}</div>
-                                                    <div style={{ fontSize: '11px', color: '#8E9B92' }}>{currentUser.email || 'camper@aanandham.in'}</div>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={onLogout}
-                                                style={{ background: 'rgba(255, 123, 123, 0.15)', border: '1px solid rgba(255, 123, 123, 0.3)', color: '#FF7B7B', padding: '6px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
-                                            >
-                                                Log Out
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                        <Link
-                                            href="/login"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#FFFFFF', padding: '12px', borderRadius: '999px', fontSize: '14px', fontWeight: '700', textDecoration: 'none' }}
-                                        >
-                                            Log In
-                                        </Link>
-                                        <Link
-                                            href="/signup"
-                                            onClick={() => setIsMobileMenuOpen(false)}
-                                            className="btn-lime"
-                                            style={{ padding: '12px', fontSize: '14px', textDecoration: 'none', fontWeight: '800', textAlign: 'center' }}
-                                        >
-                                            Sign Up
-                                        </Link>
-                                    </div>
-                                )}
+                            {/* Bottom Direct Frictionless Booking CTA */}
+                            <motion.div variants={drawerItemVariants} style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <Link
+                                    href="/#packages"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="btn-lime"
+                                    style={{
+                                        padding: '14px',
+                                        fontSize: '15px',
+                                        textDecoration: 'none',
+                                        fontWeight: '800',
+                                        textAlign: 'center',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px'
+                                    }}
+                                >
+                                    <span>Book A Campsite Now</span>
+                                    <span>↗</span>
+                                </Link>
 
                                 <a
                                     href={waLink('Hi Aanandham Team!')}
