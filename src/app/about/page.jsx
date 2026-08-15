@@ -836,17 +836,13 @@ export default function AboutPage() {
                                     {/* Altitude Header & Stone Icon Pill */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
                                         <div>
-                                            <div style={{
-                                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                            <div className="stone-engraved-num" style={{
                                                 fontSize: 'clamp(28px, 3.2vw, 36px)',
-                                                fontWeight: '800',
-                                                color: tier.accentColor,
-                                                letterSpacing: '-0.03em',
-                                                lineHeight: 1
+                                                color: tier.accentColor
                                             }}>
                                                 {tier.altitude}
                                             </div>
-                                            <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
+                                            <div style={{ fontSize: '11px', color: '#B4C0B8', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px', textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
                                                 {tier.elevationMeters} · AMSL
                                             </div>
                                         </div>
