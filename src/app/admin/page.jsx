@@ -784,12 +784,15 @@ export default function AdminPortal() {
                         boxShadow: '0 12px 40px rgba(0,0,0,0.06)' 
                     }}
                 >
-                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '56px', height: '56px', borderRadius: '16px', background: '#121613', color: '#E5A93B', fontSize: '20px', marginBottom: '20px', boxShadow: '0 4px 14px rgba(18,22,19,0.15)' }}>
-                        🔒
-                    </div>
-
-                    <div className="star-badge" style={{ margin: '0 auto 10px' }}>
-                        <span className="star-icon">★</span> BASECAMP COMMAND
+                    <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <img
+                            src="/logo.png"
+                            alt="Aanandham.go Official Logo"
+                            style={{ height: '62px', width: 'auto', objectFit: 'contain', marginBottom: '14px', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.12))' }}
+                        />
+                        <div className="star-badge">
+                            <span className="star-icon">★</span> BASECAMP COMMAND
+                        </div>
                     </div>
 
                     <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: '0 0 8px', color: '#121613', letterSpacing: '-0.02em' }}>
@@ -1317,9 +1320,11 @@ export default function AdminPortal() {
                 <div style={{ marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-                            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#121613', border: '1px solid rgba(229, 169, 59, 0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px' }}>
-                                🌲
-                            </div>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham.go Official Logo"
+                                style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }}
+                            />
                             <div>
                                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1 }}>
                                     Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
@@ -1561,12 +1566,19 @@ export default function AdminPortal() {
                     >
                         ☰
                     </button>
-                    <div>
-                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>
-                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                        </span>
-                        <div style={{ fontSize: '9.5px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>
-                            {activeTab.toUpperCase()}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img
+                            src="/logo.png"
+                            alt="Aanandham.go Official Logo"
+                            style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
+                        />
+                        <div>
+                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#FFFFFF', display: 'block', lineHeight: 1.1 }}>
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                            </span>
+                            <div style={{ fontSize: '9px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>
+                                {activeTab.toUpperCase()}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1625,27 +1637,13 @@ export default function AdminPortal() {
 
             <div style={{ display: 'flex', flex: 1, minHeight: '100vh' }}>
                 
-                {/* ── DESKTOP LEFT SIDEBAR (Sticky, Full Height) ── */}
-                <aside className="admin-desktop-sidebar" style={{
-                    width: '280px',
-                    minWidth: '280px',
-                    background: '#08110B',
-                    borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    position: 'sticky',
-                    top: 0,
-                    height: '100vh',
-                    boxSizing: 'border-box',
-                    padding: '24px 18px',
-                    color: '#FFFFFF',
-                    zIndex: 100
-                }}>
+                {/* ── DESKTOP LEFT SIDEBAR (Fixed Static, Full Viewport Height) ── */}
+                <aside className="admin-desktop-sidebar">
                     {renderSidebarContent(false)}
                 </aside>
 
-                {/* ── MAIN CONTENT WORKSPACE ── */}
-                <main style={{ flex: 1, minHeight: '100vh', padding: '36px clamp(20px, 3.5vw, 56px)', boxSizing: 'border-box', overflowY: 'auto' }}>
+                {/* ── MAIN CONTENT WORKSPACE (Scrolls independently next to static sidebar) ── */}
+                <main className="admin-main-workspace" style={{ flex: 1, minHeight: '100vh', padding: '36px clamp(20px, 3.5vw, 56px)', boxSizing: 'border-box', overflowY: 'auto' }}>
                 
                 {/* ─────────────────────────────────────────────────────────────
                     TAB 1: EXECUTIVE OVERVIEW
