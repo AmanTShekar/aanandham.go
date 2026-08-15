@@ -2383,17 +2383,18 @@ export default function HomePage() {
                         </AnimatePresence>
 
                         {PROGRAM_DAYS.map((item, idx) => {
-                            const isHovered = hoveredProgramDay === idx;
-                            const isExpanded = expandedDayIdx === idx;
-                            const isOpen = isHovered || isExpanded;
+                            const isOpen = expandedDayIdx === idx;
 
                             return (
                                 <motion.div
                                     key={idx}
                                     data-program-day-idx={idx}
                                     variants={cardReveal}
-                                    onMouseEnter={() => setHoveredProgramDay(idx)}
-                                    onClick={() => setExpandedDayIdx(isExpanded ? -1 : idx)}
+                                    onMouseEnter={() => {
+                                        setHoveredProgramDay(idx);
+                                        setExpandedDayIdx(idx);
+                                    }}
+                                    onClick={() => setExpandedDayIdx(idx)}
                                     style={{
                                         borderTop: '1px solid rgba(18, 22, 19, 0.1)',
                                         padding: '28px 0',
