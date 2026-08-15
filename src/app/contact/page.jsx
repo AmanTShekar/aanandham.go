@@ -964,7 +964,7 @@ export default function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Full-Bleed Edge-to-Edge Swipable Field Notebook Sheets (Zero Clipping with 40px Headroom) */}
+                    {/* Full-Bleed Edge-to-Edge Swipable Field Notebook Sheets (Clean Rectangular Proportions with Zero Clipping) */}
                     <div className="route-carousel-track">
                         {TRAVEL_STEPS.map((st, idx) => (
                             <div key={idx} className="route-carousel-card">
@@ -972,18 +972,7 @@ export default function ContactPage() {
                                     className="route-notebook-sheet hover-lift"
                                     style={{
                                         backgroundColor: st.paperBg,
-                                        color: st.inkColor,
-                                        borderRadius: '6px 6px 36px 6px',
-                                        padding: '36px 22px 26px 24px',
-                                        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0,0,0,0.2)',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        minHeight: '400px',
-                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 25px, rgba(59, 130, 246, 0.12) 26px)',
-                                        borderLeft: '3.5px solid rgba(239, 68, 68, 0.42)',
-                                        cursor: 'grab',
-                                        position: 'relative'
+                                        color: st.inkColor
                                     }}
                                 >
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
@@ -1006,37 +995,37 @@ export default function ContactPage() {
                                         position: 'absolute',
                                         bottom: 0,
                                         right: 0,
-                                        width: '32px',
-                                        height: '32px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.14) 50%, rgba(0,0,0,0.05) 100%)',
-                                        borderTopLeftRadius: '12px',
+                                        width: '26px',
+                                        height: '26px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0,0,0,0.04) 100%)',
+                                        borderTopLeftRadius: '10px',
                                         pointerEvents: 'none'
                                     }} />
 
                                     <div>
                                         {/* Top Row: Clean Stage Badge + Logo + Vintage Ink Stamp */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                 <img
                                                     src="/logo.png"
                                                     alt="Aanandham Logo"
                                                     style={{
-                                                        height: '20px',
-                                                        width: '20px',
+                                                        height: '18px',
+                                                        width: '18px',
                                                         objectFit: 'contain',
                                                         borderRadius: '50%',
                                                         border: '1px solid rgba(0,0,0,0.12)'
                                                     }}
                                                 />
                                                 <span style={{
-                                                    fontSize: '10px',
+                                                    fontSize: '9.5px',
                                                     fontWeight: '900',
-                                                    letterSpacing: '1px',
+                                                    letterSpacing: '0.8px',
                                                     textTransform: 'uppercase',
-                                                    background: 'rgba(0,0,0,0.07)',
+                                                    background: 'rgba(0,0,0,0.06)',
                                                     color: '#121613',
-                                                    padding: '3px 8px',
-                                                    borderRadius: '5px'
+                                                    padding: '2px 7px',
+                                                    borderRadius: '4px'
                                                 }}>
                                                     {st.tag}
                                                 </span>
@@ -1046,7 +1035,7 @@ export default function ContactPage() {
                                             <div 
                                                 className="notebook-rubber-stamp"
                                                 style={{
-                                                    border: `2px dashed ${st.stampColor}`,
+                                                    border: `1.5px dashed ${st.stampColor}`,
                                                     color: st.stampColor
                                                 }}
                                             >
@@ -1055,24 +1044,24 @@ export default function ContactPage() {
                                         </div>
 
                                         {/* Title with Icon */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                                             <div style={{
-                                                width: '34px',
-                                                height: '34px',
-                                                borderRadius: '10px',
+                                                width: '30px',
+                                                height: '30px',
+                                                borderRadius: '8px',
                                                 background: '#121613',
                                                 color: '#E5A93B',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                fontSize: '14px',
+                                                fontSize: '13px',
                                                 flexShrink: 0
                                             }}>
                                                 <i className={st.icon}></i>
                                             </div>
                                             <h3 style={{
                                                 fontFamily: 'var(--font-heading)',
-                                                fontSize: '18px',
+                                                fontSize: '16.5px',
                                                 fontWeight: '800',
                                                 color: '#121613',
                                                 margin: 0,
@@ -1084,10 +1073,10 @@ export default function ContactPage() {
 
                                         {/* Description */}
                                         <p style={{
-                                            fontSize: '13px',
+                                            fontSize: '12.5px',
                                             color: '#475569',
-                                            lineHeight: 1.6,
-                                            margin: '0 0 16px'
+                                            lineHeight: 1.5,
+                                            margin: '0 0 10px'
                                         }}>
                                             {st.desc}
                                         </p>
