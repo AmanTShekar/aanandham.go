@@ -1633,20 +1633,94 @@ button, a, input, select, textarea {
   -webkit-backface-visibility: hidden;
 }
 
-/* Explicit Device & Browser Dark Mode Prevention (Locks intended brand styling on iOS & Android) */
-@media (prefers-color-scheme: dark) {
-  :root, html, body {
-    color-scheme: light !important;
-    forced-color-adjust: none !important;
-    background-color: #F8F9F5 !important;
-    color: #121613 !important;
-  }
+/* Explicit Device & Browser Dark Mode Prevention (Locks intended brand styling on iOS & Android without breaking dark hero sections) */
+:root {
+  color-scheme: light;
+  supported-color-schemes: light;
 }
 
-/* Force Light Styling on All Native Form Inputs on Mobile */
+html, body {
+  color-scheme: light;
+  forced-color-adjust: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 input, textarea, select, button {
   color-scheme: light !important;
   forced-color-adjust: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE RESPONSIVE CALIBRATION (< 768px Viewports)
+───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Hero Section Mobile Padding & Sizing */
+  .hero-defensive-height {
+    padding-top: 100px !important;
+    padding-bottom: 36px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    min-height: 100dvh !important;
+  }
+
+  /* Section Padding Optimization */
+  section {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Sticky Split Layout on Mobile */
+  .sticky-split-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+  }
+  .sticky-pinned-col {
+    position: static !important;
+    top: auto !important;
+    padding-right: 0 !important;
+  }
+
+  /* Tactile Cards Mobile Straightening (Zero Overflow & Edge Clipping) */
+  .roughed-paper-scrap,
+  .pocket-notepad-card,
+  .why-pillar-card,
+  .route-notebook-card {
+    transform: none !important;
+    max-width: 100% !important;
+    padding: 30px 20px 24px 20px !important;
+    box-sizing: border-box !important;
+  }
+
+  .scotch-scraps-grid,
+  .pocket-notepad-grid,
+  .pillars-sticky-grid,
+  .route-notebook-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .scotch-tape-strip {
+    width: 90px !important;
+    height: 26px !important;
+    top: -13px !important;
+  }
+  
+  .corner-tape-scrap {
+    width: 48px !important;
+    height: 18px !important;
+    bottom: -9px !important;
+  }
+
+  /* Footer Mobile Refinement */
+  .footer-columns-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
 }
 
 
