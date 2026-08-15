@@ -830,136 +830,134 @@ export default function AboutPage() {
                                     whileHover={{ y: -8 }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                 >
-                                    <div className="stone-slab-inner">
-                                        {/* Altitude Header & Stone Icon Pill */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
-                                            <div>
-                                                <div style={{
-                                                    fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                                    fontSize: 'clamp(28px, 3.2vw, 36px)',
-                                                    fontWeight: '800',
-                                                    color: tier.accentColor,
-                                                    letterSpacing: '-0.03em',
-                                                    lineHeight: 1
-                                                }}>
-                                                    {tier.altitude}
-                                                </div>
-                                                <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
-                                                    {tier.elevationMeters} · AMSL
-                                                </div>
-                                            </div>
-
-                                            {/* Clean Dark Stone Icon Pill */}
-                                            <div className="stone-icon-pill" style={{ color: tier.accentColor }}>
-                                                <i className={tier.icon}></i>
-                                            </div>
-                                        </div>
-
-                                        {/* Chiseled Angular Stone Photo Window */}
-                                        <div className="stone-photo-thumb">
-                                            <img 
-                                                src={tier.image} 
-                                                alt={tier.name} 
-                                                loading="lazy"
-                                            />
+                                    {/* Altitude Header & Stone Icon Pill */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', position: 'relative', zIndex: 2 }}>
+                                        <div>
                                             <div style={{
-                                                position: 'absolute',
-                                                inset: 0,
-                                                background: 'linear-gradient(to top, rgba(11, 22, 15, 0.9) 0%, transparent 60%)'
-                                            }} />
-                                            <div style={{
-                                                position: 'absolute',
-                                                bottom: '8px',
-                                                left: '8px',
-                                                right: '8px',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center'
-                                            }}>
-                                                <span style={{
-                                                    background: 'rgba(0, 0, 0, 0.85)',
-                                                    color: '#FFFFFF',
-                                                    fontSize: '9.5px',
-                                                    fontWeight: '700',
-                                                    padding: '2px 7px',
-                                                    clipPath: 'polygon(0% 3px, 3px 0%, calc(100% - 3px) 0%, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0% calc(100% - 3px))',
-                                                    letterSpacing: '0.5px'
-                                                }}>
-                                                    📍 {tier.coord}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Badge & Title */}
-                                        <div style={{ position: 'relative', zIndex: 2 }}>
-                                            <div style={{
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '6px',
-                                                background: tier.accentBg,
-                                                border: `1px solid ${tier.borderTint}`,
-                                                clipPath: 'polygon(0% 4px, 4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px))',
-                                                padding: '3px 9px',
-                                                fontSize: '10px',
+                                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                                fontSize: 'clamp(28px, 3.2vw, 36px)',
                                                 fontWeight: '800',
-                                                color: tier.badgeColor,
-                                                letterSpacing: '0.8px',
-                                                textTransform: 'uppercase',
-                                                marginBottom: '10px'
+                                                color: tier.accentColor,
+                                                letterSpacing: '-0.03em',
+                                                lineHeight: 1
                                             }}>
-                                                <span>▲</span>
-                                                <span>{tier.badge}</span>
+                                                {tier.altitude}
                                             </div>
-
-                                            <h3 style={{
-                                                fontFamily: 'var(--font-heading)',
-                                                fontSize: '18px',
-                                                fontWeight: '800',
-                                                color: '#FFFFFF',
-                                                margin: '0 0 10px',
-                                                lineHeight: 1.3
-                                            }}>
-                                                {tier.name}
-                                            </h3>
-
-                                            <p style={{ fontSize: '12.8px', color: '#C8D6CD', lineHeight: 1.65, margin: '0 0 16px' }}>
-                                                {tier.desc}
-                                            </p>
-
-                                            {/* Chiseled Micro-Spec Chips */}
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '18px' }}>
-                                                <div className="stone-spec-chip">
-                                                    <span style={{ color: tier.accentColor }}>🧭</span>
-                                                    <span>{tier.terrainType}</span>
-                                                </div>
-                                                <div className="stone-spec-chip">
-                                                    <span style={{ color: tier.accentColor }}>🚙</span>
-                                                    <span>{tier.access}</span>
-                                                </div>
+                                            <div style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.8px', marginTop: '4px' }}>
+                                                {tier.elevationMeters} · AMSL
                                             </div>
                                         </div>
 
-                                        {/* Weather & Barometer Footer */}
+                                        {/* Clean Dark Stone Icon Pill */}
+                                        <div className="stone-icon-pill" style={{ color: tier.accentColor }}>
+                                            <i className={tier.icon}></i>
+                                        </div>
+                                    </div>
+
+                                    {/* Recessed Inscribed Stone Photo Window */}
+                                    <div className="stone-photo-thumb">
+                                        <img 
+                                            src={tier.image} 
+                                            alt={tier.name} 
+                                            loading="lazy"
+                                        />
                                         <div style={{
-                                            marginTop: 'auto',
-                                            paddingTop: '14px',
-                                            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                            position: 'absolute',
+                                            inset: 0,
+                                            background: 'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 60%)'
+                                        }} />
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: '8px',
+                                            left: '8px',
+                                            right: '8px',
                                             display: 'flex',
-                                            alignItems: 'center',
                                             justifyContent: 'space-between',
-                                            fontSize: '11.5px',
-                                            color: '#8E9B92',
-                                            position: 'relative',
-                                            zIndex: 2
+                                            alignItems: 'center'
                                         }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                <span>🌡️</span>
-                                                <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                            <span style={{
+                                                background: 'rgba(0, 0, 0, 0.85)',
+                                                color: '#FFFFFF',
+                                                fontSize: '9.5px',
+                                                fontWeight: '700',
+                                                padding: '2px 8px',
+                                                borderRadius: '4px',
+                                                letterSpacing: '0.5px'
+                                            }}>
+                                                📍 {tier.coord}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Badge & Title */}
+                                    <div style={{ position: 'relative', zIndex: 2 }}>
+                                        <div style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px',
+                                            background: tier.accentBg,
+                                            border: `1px solid ${tier.borderTint}`,
+                                            borderRadius: '6px',
+                                            padding: '3px 9px',
+                                            fontSize: '10px',
+                                            fontWeight: '800',
+                                            color: tier.badgeColor,
+                                            letterSpacing: '0.8px',
+                                            textTransform: 'uppercase',
+                                            marginBottom: '10px'
+                                        }}>
+                                            <span>▲</span>
+                                            <span>{tier.badge}</span>
+                                        </div>
+
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '18px',
+                                            fontWeight: '800',
+                                            color: '#FFFFFF',
+                                            margin: '0 0 10px',
+                                            lineHeight: 1.3
+                                        }}>
+                                            {tier.name}
+                                        </h3>
+
+                                        <p style={{ fontSize: '12.8px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 16px' }}>
+                                            {tier.desc}
+                                        </p>
+
+                                        {/* Micro-Spec Chips */}
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '18px' }}>
+                                            <div className="stone-spec-chip">
+                                                <span style={{ color: tier.accentColor }}>🧭</span>
+                                                <span>{tier.terrainType}</span>
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                <span>💨</span>
-                                                <span style={{ color: tier.badgeColor, fontWeight: '700' }}>{tier.wind}</span>
+                                            <div className="stone-spec-chip">
+                                                <span style={{ color: tier.accentColor }}>🚙</span>
+                                                <span>{tier.access}</span>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Weather & Barometer Footer */}
+                                    <div style={{
+                                        marginTop: 'auto',
+                                        paddingTop: '14px',
+                                        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        fontSize: '11.5px',
+                                        color: '#8E9B92',
+                                        position: 'relative',
+                                        zIndex: 2
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span>🌡️</span>
+                                            <strong style={{ color: '#FFFFFF' }}>{tier.temp}</strong>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <span>💨</span>
+                                            <span style={{ color: tier.badgeColor, fontWeight: '700' }}>{tier.wind}</span>
                                         </div>
                                     </div>
                                 </motion.div>

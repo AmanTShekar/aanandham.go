@@ -263,7 +263,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC CHIPPED GREY MOUNTAIN SLATE & GRANITE SLABS
+   ANCIENT MOUNTAIN STONE PONEGLYPHS & ELEVATION MONOLITHS
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
@@ -285,89 +285,75 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Base Clean Grey Stone Card */
+/* Ancient Monolith Stone Slab */
 .stone-slab-card {
   position: relative;
-  filter: drop-shadow(0 16px 30px rgba(0, 0, 0, 0.7));
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.06) 0%, transparent 60%),
+    linear-gradient(180deg, #202722 0%, #151A16 45%, #0C100D 100%);
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 20px 45px rgba(0, 0, 0, 0.75),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.9);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
   transform: translateZ(0);
+}
+
+/* Subtle Ancient Rock Stratum */
+.stone-slab-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(0, 0, 0, 0.2) 18px, rgba(0, 0, 0, 0.2) 19px);
+  background-size: 16px 16px, 100% 19px;
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .stone-slab-card:hover {
   transform: translateY(-8px);
-  filter: drop-shadow(0 24px 45px rgba(0, 0, 0, 0.85));
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.88),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.25),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.9);
 }
 
-.stone-slab-inner {
-  position: relative;
-  padding: 28px 24px;
-  display: flex;
-  flex-direction: column;
-  background: 
-    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
-    linear-gradient(150deg, #222723 0%, #171B18 50%, #101311 100%);
-  border-radius: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.15), inset -2px -2px 5px rgba(0, 0, 0, 0.8);
+/* 4 Unique Ancient Stele Borders */
+.stone-slab-tier-1 {
+  border-top: 3px solid #E5A93B;
 }
 
-/* Natural Rock Micro-Grain */
-.stone-slab-inner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-  background-size: 14px 14px;
-  opacity: 0.4;
-  pointer-events: none;
+.stone-slab-tier-2 {
+  border-top: 3px solid #F97316;
 }
 
-/* 4 UNIQUE ASYMMETRICAL CHIPPED CORNER SHAPES */
-.stone-slab-tier-1 .stone-slab-inner {
-  clip-path: polygon(
-    0% 24px, 20px 0%, calc(100% - 32px) 0%, 100% 26px, 
-    100% calc(100% - 24px), calc(100% - 20px) 100%, 28px 100%, 0% calc(100% - 20px)
-  );
-  border-top: 2px solid rgba(229, 169, 59, 0.6);
+.stone-slab-tier-3 {
+  border-top: 3px solid #D5ED55;
 }
 
-.stone-slab-tier-2 .stone-slab-inner {
-  clip-path: polygon(
-    0% 32px, 18px 0%, calc(100% - 16px) 0%, 100% 30px, 
-    calc(100% - 6px) 65%, 100% 80%, calc(100% - 36px) 100%, 20px 100%, 0% calc(100% - 28px)
-  );
-  border-top: 2px solid rgba(249, 115, 22, 0.6);
+.stone-slab-tier-4 {
+  border-top: 3px solid #38BDF8;
 }
 
-.stone-slab-tier-3 .stone-slab-inner {
-  clip-path: polygon(
-    0% 16px, 30px 0%, calc(100% - 36px) 0%, 100% 20px, 
-    100% calc(100% - 28px), calc(100% - 24px) 100%, 36px 100%, 0% calc(100% - 34px)
-  );
-  border-top: 2px solid rgba(213, 237, 85, 0.6);
-}
-
-.stone-slab-tier-4 .stone-slab-inner {
-  clip-path: polygon(
-    0% 36px, 22px 0%, calc(100% - 24px) 0%, 100% 26px, 
-    calc(100% - 10px) 50%, 100% calc(100% - 22px), calc(100% - 30px) 100%, 16px 100%, 0% calc(100% - 16px)
-  );
-  border-top: 2px solid rgba(56, 189, 248, 0.6);
-}
-
-/* Angular Stone Photo Window */
+/* Recessed Inscribed Stone Photo Window */
 .stone-photo-thumb {
   position: relative;
   width: 100%;
   height: 165px;
+  border-radius: 8px;
   overflow: hidden;
   margin: 14px 0 16px;
-  background: #0B0E0C;
-  clip-path: polygon(
-    0% 10px, 10px 0%, calc(100% - 12px) 0%, 100% 10px, 
-    100% calc(100% - 10px), calc(100% - 12px) 100%, 10px 100%, 0% calc(100% - 10px)
-  );
+  background: #000000;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.85);
 }
 
 .stone-photo-thumb img {
@@ -378,31 +364,32 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-card:hover .stone-photo-thumb img {
-  transform: scale(1.08);
+  transform: scale(1.06);
 }
 
-/* Clean Dark Stone Icon Pill */
+/* Ancient Inscribed Stele Marker Pill */
 .stone-icon-pill {
-  width: 42px;
-  height: 42px;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  clip-path: polygon(0% 6px, 6px 0%, calc(100% - 6px) 0%, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0% calc(100% - 6px));
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 17px;
+  font-size: 16px;
   flex-shrink: 0;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* Clean Stone Spec Chips */
+/* Ancient Engraved Chip */
 .stone-spec-chip {
   display: flex;
   align-items: center;
   gap: 8px;
   background: rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  clip-path: polygon(0% 4px, 4px 0%, calc(100% - 4px) 0%, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0% calc(100% - 4px));
+  border-radius: 6px;
   padding: 6px 12px;
   font-size: 11.5px;
   color: #D1DED5;
