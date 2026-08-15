@@ -876,6 +876,18 @@ export default function HomePage() {
         programMouseY.set(e.clientY - rect.top);
     };
 
+    // Mobile Horizontal Slider Scroll Tracker for Skill Levels
+    const skillSliderRef = useRef(null);
+    const handleSkillSliderScroll = () => {
+        if (!skillSliderRef.current) return;
+        const scrollLeft = skillSliderRef.current.scrollLeft;
+        const width = skillSliderRef.current.offsetWidth;
+        const newIdx = Math.round(scrollLeft / (width * 0.8));
+        if (newIdx >= 0 && newIdx < SKILL_LEVELS.length && newIdx !== activeLevelIdx) {
+            setActiveLevelIdx(newIdx);
+        }
+    };
+
     // Read logged-in user profile from localStorage
     useEffect(() => {
         try {
@@ -2344,6 +2356,8 @@ export default function HomePage() {
                     </div>
 
                     <motion.div 
+                        ref={skillSliderRef}
+                        onScroll={handleSkillSliderScroll}
                         variants={staggerContainer}
                         onMouseLeave={() => setActiveLevelIdx(null)}
                         className="skill-levels-grid"
@@ -2353,6 +2367,7 @@ export default function HomePage() {
                             return (
                                 <motion.div
                                     key={level.id}
+                                    id={`skill-card-${idx}`}
                                     variants={cardReveal}
                                     onMouseEnter={() => setActiveLevelIdx(idx)}
                                     onClick={() => setActiveLevelIdx(activeLevelIdx === idx ? null : idx)}
@@ -2437,6 +2452,22 @@ export default function HomePage() {
                             );
                         })}
                     </motion.div>
+
+                    {/* Mobile Slider Pagination Dots */}
+                    <div className="mobile-slider-dots">
+                        {SKILL_LEVELS.map((_, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => {
+                                    setActiveLevelIdx(idx);
+                                    const el = document.getElementById(`skill-card-${idx}`);
+                                    el?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                                }}
+                                className={`slider-dot ${activeLevelIdx === idx ? 'active' : ''}`}
+                                aria-label={`Go to skill level ${idx + 1}`}
+                            />
+                        ))}
+                    </div>
                 </div>
             </motion.section>
 
@@ -2908,9 +2939,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
                         <div>
@@ -2928,24 +2959,32 @@ export default function HomePage() {
                                 Read the stories from <span style={{ color: '#8E9B92' }}>past campers</span>
                             </h2>
                             <p style={{ color: '#59655D', fontSize: '15px', margin: 0 }}>
-                                A glimpse into life at our camp
+                                A glimpse into life at our high-altitude basecamp
                             </p>
                         </div>
 
                         {/* Carousel Navigation Buttons */}
                         <div style={{ display: 'flex', gap: '10px' }}>
-                            <button onClick={prevTestimonial} style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                            <button 
+                                onClick={prevTestimonial} 
+                                aria-label="Previous testimonial"
+                                style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
+                            >
                                 <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
                             </button>
-                            <button onClick={nextTestimonial} style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                            <button 
+                                onClick={nextTestimonial} 
+                                aria-label="Next testimonial"
+                                style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
+                            >
                                 <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
                             </button>
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 330px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
                         
-                        {/* Authentic Vintage Polaroid Photo Showcase (Shadow-Free & Crisp) */}
+                        {/* Authentic Real Polaroid Photo Card (Sharp Edges, Deep Bottom Chin, Tape Top) */}
                         <div 
                             onClick={() => setIsVideoModalOpen(true)} 
                             className="vintage-polaroid-frame"
@@ -2957,7 +2996,7 @@ export default function HomePage() {
                             {/* Washi Tape Scrap on Top */}
                             <div className="polaroid-tape" />
 
-                            {/* Polaroid Inner Photo Container */}
+                            {/* Sharp Authentic Photo Cutout */}
                             <div className="polaroid-inner-photo">
                                 <img 
                                     src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
@@ -2995,53 +3034,102 @@ export default function HomePage() {
                                     </span>
                                 </div>
 
-                                {/* Polaroid Bottom Stamp */}
+                                {/* Polaroid Bottom Timestamp Stamp */}
                                 <div style={{ position: 'absolute', bottom: '10px', left: '12px' }}>
-                                    <span style={{ background: 'rgba(18, 22, 19, 0.8)', color: '#D5ED55', fontSize: '10px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px', letterSpacing: '0.5px' }}>
+                                    <span style={{ background: 'rgba(18, 22, 19, 0.85)', color: '#D5ED55', fontSize: '10px', fontWeight: '800', padding: '3px 8px', borderRadius: '2px', letterSpacing: '0.5px' }}>
                                         REC ● CAMP CAM #04
                                     </span>
                                 </div>
                             </div>
 
-                            {/* Classic Polaroid White Bottom Chin */}
+                            {/* Authentic Polaroid Wide Bottom Chin */}
                             <div className="polaroid-chin-text">
                                 <div>
-                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
+                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613', letterSpacing: '-0.01em' }}>
                                         Kolukkumalai Sunrise & Campfire 🌄
                                     </div>
-                                    <div style={{ fontSize: '11.5px', color: '#8E9B92', marginTop: '2px' }}>
+                                    <div style={{ fontSize: '11.5px', color: '#7E8B82', marginTop: '3px', fontWeight: '600' }}>
                                         Batch #42 · Suryanelli Ridge (7,900 FT)
                                     </div>
                                 </div>
-                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', background: '#F1F3EC', padding: '5px 12px', borderRadius: '999px' }}>
+                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#EFECE6', padding: '5px 12px', borderRadius: '999px' }}>
                                     Play Video ↗
                                 </span>
                             </div>
                         </div>
 
-                        {/* Testimonial Cards (Circular modulo wrapping 2 cards to prevent layout jump) */}
+                        {/* Real Notebook Paper Review Sheets (Sharp Non-Rounded Edges, Ruled Lines, Red Margin) */}
                         {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
                             <motion.div 
                                 key={`${t.id}-${testimonialIdx}-${idx}`} 
                                 variants={cardReveal}
-                                className="hover-lift" 
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '36px', display: 'flex', flexDirection: 'column', boxShadow: '0 6px 25px rgba(0,0,0,0.02)' }}
+                                className="notebook-review-card"
+                                style={{
+                                    transform: idx === 0 ? 'rotate(-0.8deg)' : 'rotate(0.8deg)'
+                                }}
                             >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                    <img src={t.avatar} alt={t.author} style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover' }} />
-                                    <span style={{ background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.08)', color: '#8E9B92', fontSize: '12px', fontWeight: '700', padding: '4px 14px', borderRadius: '999px' }}>
+                                {/* Top Notebook Binder Punch Holes */}
+                                <div className="notebook-binder-holes">
+                                    <div className="notebook-binder-hole" />
+                                    <div className="notebook-binder-hole" />
+                                    <div className="notebook-binder-hole" />
+                                </div>
+
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', marginTop: '6px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                        <img 
+                                            src={t.avatar} 
+                                            alt={t.author} 
+                                            style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #FFFFFF', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} 
+                                        />
+                                        <div>
+                                            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613', lineHeight: 1.2 }}>
+                                                {t.author}
+                                            </div>
+                                            <div style={{ fontSize: '11.5px', color: '#8E9B92', fontWeight: '600' }}>
+                                                {t.batchDate}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <span style={{ 
+                                        background: '#EAE6DC', 
+                                        border: '1px solid rgba(0, 0, 0, 0.08)', 
+                                        color: '#3E4942', 
+                                        fontSize: '11px', 
+                                        fontWeight: '800', 
+                                        padding: '4px 12px', 
+                                        borderRadius: '4px',
+                                        letterSpacing: '0.3px',
+                                        textTransform: 'uppercase'
+                                    }}>
                                         {t.campBadge}
                                     </span>
                                 </div>
-                                <div style={{ fontSize: '36px', color: '#E5A93B', lineHeight: 1, marginBottom: '14px', fontWeight: '900' }}>
-                                    ”
+
+                                <div style={{ fontSize: '28px', color: '#C89228', lineHeight: 1, marginBottom: '8px', fontWeight: '900', opacity: 0.8 }}>
+                                    “
                                 </div>
-                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.7, marginBottom: '24px', flex: 1, fontWeight: '500' }}>
+
+                                <p style={{ 
+                                    fontSize: '14.5px', 
+                                    color: '#1E2520', 
+                                    lineHeight: '28px', /* Matches ruled notebook line height */
+                                    marginBottom: '20px', 
+                                    flex: 1, 
+                                    fontWeight: '500',
+                                    fontStyle: 'normal'
+                                }}>
                                     {t.quote}
                                 </p>
-                                <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.06)' }}>
-                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613' }}>{t.author}</div>
-                                    <div style={{ fontSize: '13px', color: '#8E9B92' }}>{t.batchDate}</div>
+
+                                <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px dashed rgba(0, 0, 0, 0.12)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', letterSpacing: '0.5px' }}>
+                                        VERIFIED CAMPER LOGBOOK
+                                    </span>
+                                    <span style={{ color: '#E5A93B', fontSize: '13px' }}>
+                                        ★★★★★
+                                    </span>
                                 </div>
                             </motion.div>
                         ))}

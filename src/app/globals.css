@@ -206,33 +206,37 @@ body::-webkit-scrollbar-thumb:active,
 /* ─────────────────────────────────────────────────────────────
    AUTHENTIC VINTAGE POLAROID TESTIMONIAL FRAME (Clean & Shadow-Free)
 ───────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   AUTHENTIC VINTAGE POLAROID TESTIMONIAL FRAME (Sharp Real Polaroid)
+───────────────────────────────────────────────────────────── */
 .vintage-polaroid-frame {
   position: relative;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid rgba(18, 22, 19, 0.1);
+  background-color: #FAF8F3;
+  border-radius: 2px; /* Real Polaroid: Crisp, non-rounded square card */
+  border: 1px solid rgba(0, 0, 0, 0.09);
   padding: 14px 14px 22px 14px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   transform: rotate(-1.5deg);
 }
 
 .vintage-polaroid-frame:hover {
-  transform: rotate(0deg) translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  transform: rotate(0deg) translateY(-8px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.18), 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
 .polaroid-inner-photo {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  min-height: 280px;
-  border-radius: 6px;
+  min-height: 260px;
+  border-radius: 1px; /* Sharp authentic photo cut */
   overflow: hidden;
   background: #0E1A11;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 .polaroid-tape {
@@ -240,12 +244,12 @@ body::-webkit-scrollbar-thumb:active,
   top: -12px;
   left: 50%;
   transform: translateX(-50%) rotate(2deg);
-  width: 80px;
+  width: 84px;
   height: 24px;
-  background: rgba(228, 192, 126, 0.82);
-  border-left: 2px dashed rgba(180, 140, 75, 0.5);
-  border-right: 2px dashed rgba(180, 140, 75, 0.5);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: rgba(228, 192, 126, 0.85);
+  border-left: 2px dashed rgba(180, 140, 75, 0.6);
+  border-right: 2px dashed rgba(180, 140, 75, 0.6);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   z-index: 10;
   pointer-events: none;
 }
@@ -260,6 +264,49 @@ body::-webkit-scrollbar-thumb:active,
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   AUTHENTIC NOTEBOOK PAPER REVIEW CARDS (Sharp Real Paper Sheets)
+───────────────────────────────────────────────────────────── */
+.notebook-review-card {
+  position: relative;
+  background-color: #FAF8F2;
+  background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(59, 130, 246, 0.12) 28px);
+  border-left: 3.5px solid rgba(239, 68, 68, 0.42);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 2px; /* Non-rounded sharp paper edge */
+  padding: 32px 26px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08), 0 3px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  cursor: default;
+}
+
+.notebook-review-card:hover {
+  transform: translateY(-8px) rotate(0deg) !important;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.14), 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+.notebook-binder-holes {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.notebook-binder-hole {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0B150E;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -336,7 +383,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   SKILL LEVELS GRID (Responsive 4 -> 2x2 -> 1)
+   SKILL LEVELS GRID & MOBILE SLIDER
 ───────────────────────────────────────────────────────────── */
 .skill-levels-grid {
   display: grid;
@@ -352,11 +399,60 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .skill-levels-grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 12px 6px 20px;
+    gap: 16px;
+    scrollbar-width: none;
+    margin: 0 -12px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
+  .skill-levels-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .skill-levels-grid > div {
+    flex: 0 0 84%;
+    max-width: 330px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+}
+
+.mobile-slider-dots {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+@media (max-width: 768px) {
+  .mobile-slider-dots {
+    display: flex;
+  }
+}
+
+.slider-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(18, 22, 19, 0.2);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.slider-dot.active {
+  width: 28px;
+  background: #E5A93B;
+  box-shadow: 0 0 10px rgba(229, 169, 59, 0.5);
 }
 
 /* Base: light warm pine — natural cross-section rings */
