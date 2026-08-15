@@ -3087,70 +3087,74 @@ input, textarea, select, button {
    EVENTS & ARRANGEMENTS SPACE-SAVING HORIZONTAL SLIDER
 ───────────────────────────────────────────────────────────── */
 
-/* Let the arrangements section allow horizontal scroll overflow */
+/* ─────────────────────────────────────────────────────────────
+   ARRANGEMENTS & EVENTS SECTION & BALANCED CARDS
+───────────────────────────────────────────────────────────── */
 #arrangements {
-  overflow-x: visible !important;
-  overflow-y: visible !important;
   overflow: visible !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
 }
 
 .events-horizontal-track {
-  display: flex !important;
-  overflow-x: auto !important;
-  scroll-snap-type: x mandatory !important;
-  scroll-behavior: smooth !important;
-  -webkit-overflow-scrolling: touch !important;
-  gap: 20px !important;
-  padding: 30px 0 38px 0 !important;
-  scrollbar-width: none !important;
-  width: 100% !important;
-  max-width: 100% !important;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: clamp(16px, 2vw, 24px) !important;
+  max-width: 1440px !important;
+  margin: 0 auto !important;
+  padding: 24px clamp(20px, 4vw, 48px) 36px clamp(20px, 4vw, 48px) !important;
   box-sizing: border-box !important;
-}
-
-.events-horizontal-track::-webkit-scrollbar {
-  display: none !important;
+  width: 100% !important;
+  align-items: stretch !important;
 }
 
 .events-horizontal-card {
-  flex: 0 0 360px !important;
-  width: 360px !important;
-  max-width: none !important;
-  min-width: 300px !important;
-  scroll-snap-align: start !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
   box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
-.events-horizontal-card:first-child {
-  margin-left: max(20px, calc((100vw - 1240px) / 2)) !important;
+.events-nav-arrows {
+  display: none !important;
 }
 
-.events-horizontal-card:last-child {
-  margin-right: max(20px, calc((100vw - 1240px) / 2)) !important;
-}
-
-@media (max-width: 900px) {
+@media (max-width: 1100px) and (min-width: 768px) {
   .events-horizontal-track {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 24px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .events-nav-arrows {
+    display: flex !important;
+    gap: 8px !important;
+  }
+  .events-horizontal-track {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
     gap: 16px !important;
-    padding: 26px 0 34px 0 !important;
+    padding: 20px 20px 32px 20px !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+  }
+  .events-horizontal-track::-webkit-scrollbar {
+    display: none !important;
   }
   .events-horizontal-card {
-    flex: 0 0 85vw !important;
-    width: 85vw !important;
-    max-width: 360px !important;
-    min-width: 270px !important;
-    box-sizing: border-box !important;
+    flex: 0 0 84vw !important;
+    width: 84vw !important;
+    max-width: 330px !important;
+    min-width: 260px !important;
+    scroll-snap-align: center !important;
+    margin: 0 !important;
   }
-  .events-horizontal-card:first-child {
-    margin-left: 20px !important;
-  }
-  .events-horizontal-card:last-child {
-    margin-right: 20px !important;
-  }
+}
 /* ─────────────────────────────────────────────────────────────
    ROUTE INTELLIGENCE FULL-BLEED CAROUSEL & STICKY NOTEBOOK CARDS
 ───────────────────────────────────────────────────────────── */

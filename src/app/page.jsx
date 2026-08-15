@@ -2614,8 +2614,8 @@ export default function HomePage() {
                             </h2>
                         </div>
 
-                        {/* Navigation Arrows */}
-                        <div style={{ display: 'flex', gap: '8px' }}>
+                        {/* Navigation Arrows (Visible on swipe screens) */}
+                        <div className="events-nav-arrows" style={{ display: 'flex', gap: '8px' }}>
                             <button
                                 onClick={() => {
                                     const el = document.getElementById('events-slider-track');
