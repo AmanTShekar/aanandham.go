@@ -964,7 +964,7 @@ export default function ContactPage() {
                         </div>
                     </div>
 
-                    {/* Full-Bleed Edge-to-Edge Carousel Track */}
+                    {/* Full-Bleed Edge-to-Edge Swipable Sticky Notebook Sheets (Generous vertical padding so 3D Pushpins and Shadows are NEVER cut off!) */}
                     <div className="route-carousel-track">
                         {TRAVEL_STEPS.map((st, idx) => (
                             <div
@@ -974,70 +974,178 @@ export default function ContactPage() {
                                     position: 'relative',
                                     background: st.paperBg,
                                     color: st.inkColor,
-                                    borderRadius: '24px',
-                                    padding: '28px 24px 24px',
-                                    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.35)',
+                                    borderRadius: '6px 6px 36px 6px',
+                                    padding: '36px 22px 26px 24px',
+                                    boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0,0,0,0.2)',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'space-between',
-                                    minHeight: '320px',
-                                    border: '1px solid rgba(255, 255, 255, 0.12)'
+                                    minHeight: '400px',
+                                    backgroundImage: 'repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.12) 25px)',
+                                    borderLeft: '3.5px solid rgba(239, 68, 68, 0.42)',
+                                    cursor: 'grab'
                                 }}
                             >
-                                <div>
-                                    {/* Header Row */}
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                                {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        top: '-12px',
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        zIndex: 6,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        pointerEvents: 'none'
+                                    }}
+                                >
+                                    {/* Pin Cast Shadow */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: '-4px',
+                                        right: '-4px',
+                                        width: '14px',
+                                        height: '14px',
+                                        borderRadius: '50%',
+                                        background: 'rgba(0, 0, 0, 0.4)',
+                                        filter: 'blur(2px)'
+                                    }} />
+                                    {/* 3D Brass Metallic Pin Head */}
+                                    <div style={{
+                                        width: '22px',
+                                        height: '22px',
+                                        borderRadius: '50%',
+                                        background: 'radial-gradient(circle at 32% 32%, #FEF08A 0%, #E5A93B 55%, #78350F 100%)',
+                                        boxShadow: '0 4px 10px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.8), inset 0 -2px 3px rgba(0,0,0,0.6)',
+                                        border: '1.5px solid #92400E',
+                                        position: 'relative'
+                                    }}>
+                                        {/* Specular Highlight Point */}
                                         <div style={{
-                                            width: '42px',
-                                            height: '42px',
-                                            borderRadius: '12px',
+                                            position: 'absolute',
+                                            top: '3px',
+                                            left: '4px',
+                                            width: '5px',
+                                            height: '5px',
+                                            borderRadius: '50%',
+                                            background: '#FFFFFF',
+                                            opacity: 0.9
+                                        }} />
+                                    </div>
+                                </div>
+
+                                {/* 3 Punched Spiral Binder Holes along Top Edge */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '8px',
+                                    left: '24px',
+                                    right: '24px',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    opacity: 0.25,
+                                    pointerEvents: 'none'
+                                }}>
+                                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
+                                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
+                                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
+                                </div>
+
+                                <div>
+                                    {/* Top Row: Stage Tag & Rubber Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                                        <span style={{
+                                            fontFamily: 'monospace',
+                                            fontSize: '11px',
+                                            fontWeight: '800',
+                                            color: '#64748B',
+                                            letterSpacing: '1px'
+                                        }}>
+                                            {st.tag}
+                                        </span>
+
+                                        {/* Rubber Stamp */}
+                                        <div style={{
+                                            border: `2px dashed ${st.stampColor}`,
+                                            color: st.stampColor,
+                                            padding: '3px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '10px',
+                                            fontWeight: '900',
+                                            letterSpacing: '0.8px',
+                                            transform: 'rotate(-2deg)',
+                                            opacity: 0.88
+                                        }}>
+                                            {st.stamp}
+                                        </div>
+                                    </div>
+
+                                    {/* Title with Icon */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                                        <div style={{
+                                            width: '32px',
+                                            height: '32px',
+                                            borderRadius: '8px',
                                             background: '#121613',
                                             color: '#E5A93B',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontSize: '18px'
+                                            fontSize: '14px',
+                                            flexShrink: 0
                                         }}>
                                             <i className={st.icon}></i>
                                         </div>
-                                        <span style={{
-                                            fontSize: '11px',
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '18px',
                                             fontWeight: '800',
-                                            background: 'rgba(18, 22, 19, 0.08)',
-                                            color: st.stampColor,
-                                            padding: '4px 10px',
-                                            borderRadius: '999px',
-                                            letterSpacing: '0.5px'
+                                            color: '#121613',
+                                            margin: 0,
+                                            lineHeight: 1.2
                                         }}>
-                                            {st.tag}
-                                        </span>
+                                            {st.title}
+                                        </h3>
                                     </div>
 
-                                    <h3 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '19px',
-                                        fontWeight: '800',
-                                        color: '#121613',
-                                        margin: '0 0 10px'
-                                    }}>
-                                        {st.title}
-                                    </h3>
-
+                                    {/* Description */}
                                     <p style={{
-                                        fontSize: '13.5px',
-                                        color: '#59655D',
+                                        fontSize: '13px',
+                                        color: '#475569',
                                         lineHeight: 1.6,
                                         margin: '0 0 16px'
                                     }}>
                                         {st.desc}
                                     </p>
+
+                                    {/* Field Memo Box */}
+                                    <div style={{
+                                        background: 'rgba(254, 240, 138, 0.35)',
+                                        borderLeft: '3px solid #EAB308',
+                                        padding: '8px 10px',
+                                        borderRadius: '4px',
+                                        fontSize: '11.5px',
+                                        color: '#475569',
+                                        fontStyle: 'italic',
+                                        lineHeight: 1.45
+                                    }}>
+                                        📌 <strong>Field Note:</strong> {st.memo}
+                                    </div>
                                 </div>
 
-                                <div style={{ paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', fontWeight: '800', color: '#121613' }}>
-                                        <span style={{ color: '#E5A93B' }}>⏱</span>
-                                        <span>{st.time}</span>
-                                    </div>
+                                {/* Bottom Timing Indicator */}
+                                <div style={{
+                                    paddingTop: '12px',
+                                    borderTop: '1px dashed rgba(18, 22, 19, 0.12)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '12px',
+                                    fontWeight: '800',
+                                    color: '#121613'
+                                }}>
+                                    <span style={{ color: '#E5A93B' }}>⏱</span>
+                                    <span>{st.time}</span>
                                 </div>
                             </div>
                         ))}

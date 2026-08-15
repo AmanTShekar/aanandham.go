@@ -3070,11 +3070,12 @@ input, textarea, select, button {
 .route-carousel-track {
   display: flex !important;
   overflow-x: auto !important;
+  overflow-y: visible !important;
   scroll-snap-type: x mandatory !important;
   scroll-behavior: smooth !important;
   -webkit-overflow-scrolling: touch !important;
-  gap: 20px !important;
-  padding: 30px 0 38px 0 !important;
+  gap: 22px !important;
+  padding: 38px 0 46px 0 !important;
   scrollbar-width: none !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -3086,10 +3087,10 @@ input, textarea, select, button {
 }
 
 .route-carousel-card {
-  flex: 0 0 340px !important;
-  width: 340px !important;
+  flex: 0 0 350px !important;
+  width: 350px !important;
   max-width: none !important;
-  min-width: 290px !important;
+  min-width: 300px !important;
   scroll-snap-align: start !important;
   box-sizing: border-box !important;
 }
@@ -3105,13 +3106,13 @@ input, textarea, select, button {
 @media (max-width: 900px) {
   .route-carousel-track {
     gap: 16px !important;
-    padding: 26px 0 34px 0 !important;
+    padding: 32px 0 40px 0 !important;
   }
   .route-carousel-card {
     flex: 0 0 85vw !important;
     width: 85vw !important;
     max-width: 360px !important;
-    min-width: 270px !important;
+    min-width: 275px !important;
     box-sizing: border-box !important;
   }
   .route-carousel-card:first-child {
