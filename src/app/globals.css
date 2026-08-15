@@ -293,7 +293,32 @@ body::-webkit-scrollbar-thumb:active,
   background: #D5ED55;
 }
 
-@media (max-width: 1024px) {
+.nav-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #D5ED55 0%, #C8EC34 100%);
+  color: #121613 !important;
+  padding: 8px 20px 8px 8px;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(213, 237, 85, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.25s ease;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.nav-login-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(213, 237, 85, 0.5);
+}
+
+@media (max-width: 1140px) {
   .nav-desktop-links {
     display: none !important;
   }
@@ -307,6 +332,7 @@ body::-webkit-scrollbar-thumb:active,
   .site-header {
     padding: 12px 20px !important;
   }
+
 
   .site-brand-logo {
     height: 32px !important;

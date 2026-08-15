@@ -349,23 +349,7 @@ export default function SiteHeader({
                             ) : (
                                 <Link
                                     href="/login"
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        background: 'linear-gradient(135deg, #D5ED55 0%, #C8EC34 100%)',
-                                        color: '#121613',
-                                        padding: '7px 18px 7px 8px',
-                                        borderRadius: '999px',
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '14px',
-                                        fontWeight: '800',
-                                        letterSpacing: '-0.01em',
-                                        textDecoration: 'none',
-                                        boxShadow: '0 4px 20px rgba(213, 237, 85, 0.35)',
-                                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                                        transition: 'all 0.25s ease'
-                                    }}
+                                    className="nav-login-btn"
                                 >
                                     <span style={{
                                         width: '26px',
@@ -376,7 +360,8 @@ export default function SiteHeader({
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '10.5px'
+                                        fontSize: '10.5px',
+                                        flexShrink: 0
                                     }}>
                                         <i className="fa-solid fa-arrow-right-to-bracket"></i>
                                     </span>
