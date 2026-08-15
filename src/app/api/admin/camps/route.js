@@ -2,17 +2,30 @@ import { NextResponse } from 'next/server';
 import { getAdminPayload, getClientIp } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
 import { getAllCamps } from '@/lib/campsData';
+import { prisma, isPrismaConfigured } from '@/lib/prisma';
 
-// In-memory override cache for admin-saved camps (lost on redeploy — same as today's behavior)
+// In-memory override cache for admin-saved camps fallback
 let campsOverride = null;
 
-// ── GET: Public read of the camps catalog (static data, safe to expose) ──
+// ── GET: Public read of the camps catalog (Prisma DB if connected, fallback to cache/static) ──
 export async function GET() {
+    if (isPrismaConfigured && prisma) {
+        try {
+            const record = await prisma.campOverride.findUnique({
+                where: { id: 'camps_catalog_v1' }
+            });
+            if (record && Array.isArray(record.data) && record.data.length > 0) {
+                return NextResponse.json(record.data);
+            }
+        } catch (err) {
+            console.error('Error reading camps from Prisma:', err);
+        }
+    }
     const camps = campsOverride || getAllCamps();
     return NextResponse.json(camps);
 }
 
-// ── POST: Bulk-sync camps catalog (admin only, validated) ──
+// ── POST: Bulk-sync camps catalog (admin only, validated, persists to DB) ──
 export async function POST(request) {
     const ip = getClientIp(request);
 
@@ -48,6 +61,19 @@ export async function POST(request) {
         }
 
         campsOverride = valid;
+
+        if (isPrismaConfigured && prisma) {
+            try {
+                await prisma.campOverride.upsert({
+                    where: { id: 'camps_catalog_v1' },
+                    create: { id: 'camps_catalog_v1', data: valid },
+                    update: { data: valid }
+                });
+            } catch (dbErr) {
+                console.error('Error saving camps to Prisma DB:', dbErr);
+            }
+        }
+
         return NextResponse.json({ success: true, totalCount: valid.length });
     } catch (err) {
         console.error('Error saving camps:', err);
