@@ -930,8 +930,8 @@ export default function HomePage() {
                 const programSection = document.getElementById('program');
                 if (programSection) {
                     const pRect = programSection.getBoundingClientRect();
-                    // Only auto-expand when user is scrolling in or near the Program section
-                    if (pRect.top <= window.innerHeight * 0.75 && pRect.bottom >= window.innerHeight * 0.2) {
+                    // When user is viewing or scrolling through the Program section
+                    if (pRect.top <= window.innerHeight * 0.90 && pRect.bottom >= 0) {
                         let activeProgramIndex = 0;
                         programElements.forEach((el) => {
                             const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
@@ -2463,15 +2463,16 @@ export default function HomePage() {
                                                 <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
                                                     {item.desc}
                                                 </p>
-                                                {/* In-line Image preview (shown cleanly on mobile / smaller viewports) */}
+                                                {/* In-line Image preview (shown cleanly with badges on active day) */}
                                                 <div 
-                                                    className="program-mobile-inline-img"
+                                                    className="program-day-inline-img"
                                                     style={{ 
-                                                        height: '180px', 
-                                                        borderRadius: '16px', 
+                                                        height: 'clamp(190px, 28vh, 250px)', 
+                                                        borderRadius: '18px', 
                                                         overflow: 'hidden', 
-                                                        marginTop: '14px',
-                                                        display: 'none'
+                                                        marginTop: '16px',
+                                                        position: 'relative',
+                                                        boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
                                                     }}
                                                 >
                                                     <img 
@@ -2481,6 +2482,11 @@ export default function HomePage() {
                                                         decoding="async"
                                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                                     />
+                                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.75) 0%, transparent 50%)' }} />
+                                                    <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
+                                                        <span>📍 {item.altitude || 'Western Ghats Ridge'}</span>
+                                                        <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 9px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>{item.terrain || 'Mountain Trail'}</span>
+                                                    </div>
                                                 </div>
                                             </motion.div>
                                         )}
