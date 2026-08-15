@@ -43,13 +43,20 @@ export default function AuthPanel({ initialMode = 'login' }) {
         setLoading(true);
         const userName = loginData.email.split('@')[0] || 'Camper';
         const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
+        const userObj = {
+            name: formattedName,
+            email: loginData.email,
+            role: 'camper',
+            loggedIn: true
+        };
         try {
-            localStorage.setItem('aanandham_user', JSON.stringify({
-                name: formattedName,
-                email: loginData.email,
-                role: 'camper',
-                loggedIn: true
-            }));
+            if (loginData.remember) {
+                localStorage.setItem('aanandham_user', JSON.stringify(userObj));
+                sessionStorage.removeItem('aanandham_user');
+            } else {
+                sessionStorage.setItem('aanandham_user', JSON.stringify(userObj));
+                localStorage.removeItem('aanandham_user');
+            }
         } catch (err) {}
         setTimeout(() => {
             setLoading(false);
@@ -103,7 +110,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
 
     return (
         <div style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
             backgroundColor: '#F8F9F5',
             color: '#121613',
             fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif',

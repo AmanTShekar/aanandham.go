@@ -438,10 +438,8 @@ export default function AdminPortal() {
                         setIsAuthenticated(false);
                     }
                 } catch {
-                    // Fallback verification if network hiccup
-                    if (savedAuth.includes('.')) {
-                        setIsAuthenticated(true);
-                    }
+                    // Safe failure on network failure
+                    setIsAuthenticated(false);
                 }
             }
         };
@@ -726,10 +724,10 @@ export default function AdminPortal() {
     // Save Event Form
     const handleSaveEventForm = (e) => {
         e.preventDefault();
-        const cap = Number(eventForm.capacity);
-        const bkd = Number(eventForm.booked);
+        const cap = Math.max(1, Number(eventForm.capacity) || 1);
+        const bkd = Math.max(0, Math.min(cap, Number(eventForm.booked) || 0));
         const spots = Math.max(0, cap - bkd);
-        const st = spots === 0 ? 'Sold Out' : eventForm.status;
+        const st = spots === 0 ? 'Sold Out' : (eventForm.status === 'Sold Out' ? 'Open' : (eventForm.status || 'Open'));
 
         if (editingEvent) {
             const updated = events.map(ev => ev.id === editingEvent.id ? { ...ev, ...eventForm, capacity: cap, booked: bkd, spotsLeft: spots, status: st } : ev);
@@ -746,6 +744,36 @@ export default function AdminPortal() {
             saveEvents([...events, newEvent]);
         }
         setIsEventModalOpen(false);
+    };
+
+    // Export Bookings to CSV (with UTF-8 BOM & proper cell escaping)
+    const handleExportBookingsCSV = () => {
+        const headers = ['Booking ID', 'Customer Name', 'Phone / WhatsApp', 'Email', 'Package', 'Dates', 'Guests', 'Amount (INR)', 'Payment Status', 'Booking Status', 'Source', 'Timestamp'];
+        const rows = bookings.map(b => [
+            `"${(b.id || '').replace(/"/g, '""')}"`,
+            `"${(b.guestName || b.customerName || b.name || '').replace(/"/g, '""')}"`,
+            `"${(b.phone || b.whatsapp || '').replace(/"/g, '""')}"`,
+            `"${(b.email || '').replace(/"/g, '""')}"`,
+            `"${(b.packageTitle || b.title || '').replace(/"/g, '""')}"`,
+            `"${(b.dates || b.checkIn || '').replace(/"/g, '""')}"`,
+            `"${b.guests || 1}"`,
+            `"${b.totalPrice || b.amount || 0}"`,
+            `"${(b.paymentStatus || 'Pending').replace(/"/g, '""')}"`,
+            `"${(b.status || 'Confirmed').replace(/"/g, '""')}"`,
+            `"${(b.source || 'Online Direct').replace(/"/g, '""')}"`,
+            `"${(b.createdAt || new Date().toISOString()).replace(/"/g, '""')}"`
+        ]);
+        const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `aanandham_bookings_${new Date().toISOString().slice(0, 10)}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('✓ Bookings CSV exported successfully');
     };
 
     // Delete Event
@@ -834,7 +862,7 @@ export default function AdminPortal() {
     // ── PIN AUTHENTICATION GATE ──
     if (!isAuthenticated) {
         return (
-            <div style={{ minHeight: '100vh', background: '#08120A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+            <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
                 <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} style={{ background: '#101E13', border: '1px solid rgba(213, 237, 85, 0.25)', borderRadius: '32px', padding: '44px 36px', maxWidth: '440px', width: '100%', textAlign: 'center', boxShadow: '0 25px 80px rgba(0,0,0,0.5)' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.1)', color: '#E5A93B', fontSize: '24px', marginBottom: '20px' }}>
                         <i className="fa-solid fa-lock"></i>
@@ -882,7 +910,7 @@ export default function AdminPortal() {
     // ─────────────────────────────────────────────────────────────
     if (activePropertyDetailId && currentDetailProperty) {
         return (
-            <div style={{ minHeight: '100vh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
+            <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
                 {/* Header with Back Navigation */}
                 <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(14, 24, 17, 0.96)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', padding: '16px 28px' }}>
                     <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
@@ -1293,7 +1321,7 @@ export default function AdminPortal() {
     // MAIN ADMIN DASHBOARD WITH ALL TABS
     // ─────────────────────────────────────────────────────────────
     return (
-        <div style={{ minHeight: '100vh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
+        <div style={{ minHeight: '100dvh', background: '#08120A', color: '#FFFFFF', paddingBottom: '90px' }}>
             
             {/* Top Navigation Bar */}
             <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(14, 24, 17, 0.96)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', padding: '16px 28px' }}>
@@ -1771,7 +1799,7 @@ export default function AdminPortal() {
                                 onChange={(e) => setBookingSearch(e.target.value)}
                                 style={{ flex: 1, minWidth: '240px', padding: '12px 18px', borderRadius: '14px', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', color: '#FFFFFF', fontSize: '13.5px', outline: 'none' }}
                             />
-                            <div style={{ display: 'flex', gap: '8px' }}>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                 {['All', 'Pending', 'Confirmed', 'Checked In', 'Cancelled'].map(st => (
                                     <button
                                         key={st}
@@ -1781,6 +1809,25 @@ export default function AdminPortal() {
                                         {st}
                                     </button>
                                 ))}
+                                <button
+                                    onClick={handleExportBookingsCSV}
+                                    style={{
+                                        padding: '8px 16px',
+                                        borderRadius: '999px',
+                                        border: '1px solid rgba(213, 237, 85, 0.4)',
+                                        background: 'rgba(213, 237, 85, 0.12)',
+                                        color: '#D5ED55',
+                                        fontSize: '12.5px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <span>📥</span>
+                                    <span>Export CSV</span>
+                                </button>
                             </div>
                         </div>
 

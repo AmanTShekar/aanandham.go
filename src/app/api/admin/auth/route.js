@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 
-// Secret key for HMAC token signing (falls back to secure server-generated secret)
+// Secret key for HMAC token signing (falls back to secure key)
 const AUTH_SECRET = process.env.ADMIN_AUTH_SECRET || 'aanandham_western_ghats_secure_marshal_key_2026';
-const VALID_PASSCODES = ['2026', 'aanandham', 'aanandham2026', 'wildadmin'];
+const VALID_PASSCODES = process.env.ADMIN_PASSCODES 
+    ? process.env.ADMIN_PASSCODES.split(',').map(s => s.trim().toLowerCase())
+    : ['2026', 'aanandham', 'aanandham2026', 'wildadmin'];
 
 // In-memory rate limiting for brute-force protection
 const loginAttempts = new Map();
@@ -40,20 +42,28 @@ function createSignedToken(payload) {
     return `${payloadStr}.${hmac}`;
 }
 
-// Verify signed cryptographic token and expiry
+// Verify signed cryptographic token and expiry (guaranteed crash-safe)
 function verifySignedToken(token) {
-    if (!token || typeof token !== 'string') return null;
-    const parts = token.split('.');
-    if (parts.length !== 2) return null;
-
-    const [payloadStr, signature] = parts;
-    const expectedSig = crypto.createHmac('sha256', AUTH_SECRET).update(payloadStr).digest('base64url');
-
-    if (!crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSig))) {
-        return null;
-    }
-
     try {
+        if (!token || typeof token !== 'string') return null;
+        const parts = token.split('.');
+        if (parts.length !== 2) return null;
+
+        const [payloadStr, signature] = parts;
+        const expectedSig = crypto.createHmac('sha256', AUTH_SECRET).update(payloadStr).digest('base64url');
+
+        const sigBuf = Buffer.from(signature);
+        const expBuf = Buffer.from(expectedSig);
+
+        // Prevent RangeError by checking length before timingSafeEqual
+        if (sigBuf.length !== expBuf.length || sigBuf.length === 0) {
+            return null;
+        }
+
+        if (!crypto.timingSafeEqual(sigBuf, expBuf)) {
+            return null;
+        }
+
         const payload = JSON.parse(Buffer.from(payloadStr, 'base64url').toString('utf-8'));
         if (payload.exp && Date.now() > payload.exp) {
             return null; // Expired
@@ -106,17 +116,21 @@ export async function POST(request) {
 
 // GET: Validate existing session token on page reload
 export async function GET(request) {
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return NextResponse.json({ authenticated: false, message: 'No authorization token provided.' }, { status: 401 });
-    }
+    try {
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return NextResponse.json({ authenticated: false, message: 'No authorization token provided.' }, { status: 401 });
+        }
 
-    const token = authHeader.split(' ')[1];
-    const payload = verifySignedToken(token);
+        const token = authHeader.split(' ')[1];
+        const payload = verifySignedToken(token);
 
-    if (payload && payload.role === 'admin_coordinator') {
-        return NextResponse.json({ authenticated: true, user: { role: 'admin_coordinator', exp: payload.exp } });
-    } else {
-        return NextResponse.json({ authenticated: false, message: 'Invalid or expired session token.' }, { status: 401 });
+        if (payload && payload.role === 'admin_coordinator') {
+            return NextResponse.json({ authenticated: true, user: { role: 'admin_coordinator', exp: payload.exp } });
+        } else {
+            return NextResponse.json({ authenticated: false, message: 'Invalid or expired session token.' }, { status: 401 });
+        }
+    } catch {
+        return NextResponse.json({ authenticated: false, message: 'Error validating session token.' }, { status: 401 });
     }
 }

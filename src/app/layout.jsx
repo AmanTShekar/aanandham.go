@@ -167,11 +167,9 @@ export default function RootLayout({ children }) {
         <meta name="supported-color-schemes" content="light" />
         <meta name="darkreader-lock" content="true" />
         <meta name="theme-color" content="#0E1A11" />
-        <link rel="icon" type="image/png" href="/logo.png" />
-        <link rel="apple-touch-icon" href="/logo.png" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        {/* Font Awesome 6 Icons - Loaded immediately for all UI icons and logos */}
+        {/* Font Awesome 6 Icons */}
         <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 

@@ -12,7 +12,7 @@ export default function Template({ children }) {
                 duration: 0.38, 
                 ease: [0.22, 1, 0.36, 1] 
             }}
-            style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
+            style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}
         >
             {/* Organic Kerala Forest Canopy Top Accent Bar */}
             <motion.div

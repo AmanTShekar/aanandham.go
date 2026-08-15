@@ -1016,7 +1016,7 @@ export default function HomePage() {
     // Read logged-in user profile from localStorage
     useEffect(() => {
         try {
-            const saved = localStorage.getItem('aanandham_user');
+            const saved = localStorage.getItem('aanandham_user') || sessionStorage.getItem('aanandham_user');
             if (saved) {
                 setCurrentUser(JSON.parse(saved));
             }
@@ -1026,6 +1026,7 @@ export default function HomePage() {
     const handleLogout = () => {
         try {
             localStorage.removeItem('aanandham_user');
+            sessionStorage.removeItem('aanandham_user');
         } catch (e) {}
         setCurrentUser(null);
         setIsAccountMenuOpen(false);
@@ -1158,7 +1159,7 @@ export default function HomePage() {
     };
 
     return (
-        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100vh', position: 'relative' }}>
+        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100dvh', position: 'relative' }}>
             
             {/* ── GOOGLE RICH RESULTS STRUCTURED DATA ── */}
             <script

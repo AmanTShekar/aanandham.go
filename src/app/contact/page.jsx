@@ -196,13 +196,16 @@ export default function ContactPage() {
 
     useEffect(() => {
         try {
-            const saved = localStorage.getItem('aanandham_user');
+            const saved = localStorage.getItem('aanandham_user') || sessionStorage.getItem('aanandham_user');
             if (saved) setCurrentUser(JSON.parse(saved));
         } catch (e) {}
     }, []);
 
     const handleLogout = () => {
-        try { localStorage.removeItem('aanandham_user'); } catch (e) {}
+        try { 
+            localStorage.removeItem('aanandham_user'); 
+            sessionStorage.removeItem('aanandham_user');
+        } catch (e) {}
         setCurrentUser(null);
     };
 
@@ -233,7 +236,7 @@ export default function ContactPage() {
 
     return (
         <div style={{
-            minHeight: '100vh',
+            minHeight: '100dvh',
             backgroundColor: '#F8F9F5',
             color: '#121613',
             fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif',
