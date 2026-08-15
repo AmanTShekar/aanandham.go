@@ -927,175 +927,286 @@ export default function ContactPage() {
                 </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    4. SECTION: 4-STEP ROUTE INTELLIGENCE (How to Reach Basecamp)
+                    4. 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP
                 ───────────────────────────────────────────────────────────── */}
                 <motion.section 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '90px clamp(20px, 4vw, 48px)',
-                        background: '#121613',
-                        color: '#FFFFFF',
-                        position: 'relative'
+                        padding: '100px 24px',
+                        background: '#0B150E',
+                        position: 'relative',
+                        color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
-                        <div style={{ marginBottom: '32px' }}>
-                            <div className="star-badge" style={{ background: 'rgba(229, 169, 59, 0.2)', border: '1px solid rgba(229, 169, 59, 0.4)', marginBottom: '12px' }}>
+                    <div style={{ width: '100%', maxWidth: 'min(100%, 1380px)', margin: '0 auto', boxSizing: 'border-box' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> ROUTE INTELLIGENCE
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
-                                <div>
-                                    <h2 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: 'clamp(28px, 4vw, 44px)',
-                                        fontWeight: '800',
-                                        color: '#FFFFFF',
-                                        letterSpacing: '-0.03em',
-                                        margin: '0 0 8px'
-                                    }}>
-                                        How to Reach <span style={{ color: '#E5A93B' }}>Suryanelli Basecamp</span>
-                                    </h2>
-                                    <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '600px' }}>
-                                        Step-by-step transit navigation from airport/train arrivals up to the 4x4 ridge safari.
-                                    </p>
-                                </div>
-                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                letterSpacing: '-0.03em',
+                                margin: '0 0 14px'
+                            }}>
+                                How to Reach <span style={{ color: '#E5A93B' }}>Suryanelli Basecamp</span>
+                            </h2>
+                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
+                                Clear step-by-step navigation from major Kerala & Tamil Nadu transit hubs.
+                            </p>
                         </div>
 
-                        {/* 4 Pinned Notebook Sheets: 4-in-a-Row on Desktop, Compact Swipe on Mobile */}
-                        <div className="route-notebook-grid">
+                        {/* 4 Pinned Notebook Pages Grid (4 in a Single Horizontal Row on Desktop) */}
+                        <motion.div 
+                            variants={staggerContainer}
+                            className="route-notebook-grid"
+                            style={{
+                                paddingTop: '24px'
+                            }}
+                        >
                             {TRAVEL_STEPS.map((st, idx) => (
-                                <motion.div 
-                                    key={idx} 
-                                    className="route-notebook-sheet hover-lift"
-                                    whileHover={{ y: -8, rotate: 0, scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                <motion.div
+                                    key={idx}
+                                    variants={cardReveal}
+                                    whileHover={{ 
+                                        y: -14, 
+                                        rotate: 0,
+                                        scale: 1.03,
+                                        boxShadow: '0 32px 70px -10px rgba(0, 0, 0, 0.7), 0 12px 24px -4px rgba(0, 0, 0, 0.35)'
+                                    }}
+                                    whileTap={{ scale: 0.97 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                     style={{
-                                        backgroundColor: st.paperBg,
+                                        position: 'relative',
+                                        background: st.paperBg,
                                         color: st.inkColor,
+                                        borderRadius: '6px 6px 36px 6px',
+                                        padding: '36px 22px 28px 24px',
+                                        boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0,0,0,0.2)',
                                         transform: `rotate(${st.rotation})`,
-                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.12) 25px)'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        minHeight: '440px',
+                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 25px, rgba(59, 130, 246, 0.13) 26px)',
+                                        borderLeft: '3.5px solid rgba(239, 68, 68, 0.42)',
+                                        cursor: 'grab'
                                     }}
                                 >
-                                    {/* Translucent Frosted Washi Tape Strip across Top */}
-                                    <div className="washi-tape-strip" />
-
-                                    {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
-                                    <div className="pushpin-3d-wrap">
-                                        <div className="pushpin-3d-shadow" />
-                                        <div className="pushpin-3d-head">
-                                            <div className="pushpin-3d-dot" />
+                                    {/* Realistic 3D Metallic Pushpin Pinned at Top Center (No Washi Tape) */}
+                                    <motion.div
+                                        whileHover={{ scale: 1.2, y: -2 }}
+                                        transition={{ type: 'spring', stiffness: 450, damping: 18 }}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '-12px',
+                                            left: '50%',
+                                            transform: 'translateX(-50%)',
+                                            zIndex: 6,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        {/* Pin Cast Shadow */}
+                                        <div style={{
+                                            position: 'absolute',
+                                            bottom: '-4px',
+                                            right: '-4px',
+                                            width: '14px',
+                                            height: '14px',
+                                            borderRadius: '50%',
+                                            background: 'rgba(0, 0, 0, 0.4)',
+                                            filter: 'blur(2px)'
+                                        }} />
+                                        {/* 3D Brass Metallic Pin Head */}
+                                        <div style={{
+                                            width: '22px',
+                                            height: '22px',
+                                            borderRadius: '50%',
+                                            background: 'radial-gradient(circle at 32% 32%, #FEF08A 0%, #E5A93B 55%, #78350F 100%)',
+                                            boxShadow: '0 4px 10px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.8), inset 0 -2px 3px rgba(0,0,0,0.6)',
+                                            border: '1.5px solid #92400E',
+                                            position: 'relative'
+                                        }}>
+                                            {/* Specular Highlight Point */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '3px',
+                                                left: '4px',
+                                                width: '5px',
+                                                height: '5px',
+                                                borderRadius: '50%',
+                                                background: '#FFFFFF',
+                                                opacity: 0.9
+                                            }} />
                                         </div>
-                                    </div>
+                                    </motion.div>
 
                                     {/* 3 Punched Spiral Binder Holes along Top Edge */}
-                                    <div className="notebook-spiral-holes">
-                                        <div className="notebook-spiral-hole" />
-                                        <div className="notebook-spiral-hole" />
-                                        <div className="notebook-spiral-hole" />
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '8px',
+                                        left: '24px',
+                                        right: '24px',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        opacity: 0.25,
+                                        pointerEvents: 'none'
+                                    }}>
+                                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
+                                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
+                                        <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0B150E' }} />
                                     </div>
 
                                     {/* 3D Folded Dog-Ear Corner at Bottom Right */}
-                                    <div className="notebook-dog-ear" />
+                                    <div style={{
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        right: 0,
+                                        width: '36px',
+                                        height: '36px',
+                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
+                                        borderTopLeftRadius: '14px',
+                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.12)',
+                                        pointerEvents: 'none'
+                                    }} />
 
-                                    <div>
-                                        {/* Top Row: Clean Stage Badge + Logo + Vintage Ink Stamp */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                <img
-                                                    src="/logo.png"
-                                                    alt="Aanandham Logo"
-                                                    style={{
-                                                        height: '18px',
-                                                        width: '18px',
-                                                        objectFit: 'contain',
-                                                        borderRadius: '50%',
-                                                        border: '1px solid rgba(0,0,0,0.12)'
-                                                    }}
-                                                />
-                                                <span style={{
-                                                    fontSize: '9.5px',
-                                                    fontWeight: '900',
-                                                    letterSpacing: '0.8px',
-                                                    textTransform: 'uppercase',
-                                                    background: 'rgba(0,0,0,0.06)',
-                                                    color: st.inkColor,
-                                                    padding: '2px 6px',
-                                                    borderRadius: '4px'
-                                                }}>
-                                                    {st.tag}
-                                                </span>
-                                            </div>
-
-                                            {/* Vintage Double-Dashed Rubber Stamp */}
-                                            <div 
-                                                className="notebook-rubber-stamp"
+                                    {/* Header Row: Stage Badge + Mini Logo + Vintage Ink Stamp */}
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '14px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <img
+                                                src="/logo.png"
+                                                alt="Aanandham Logo"
                                                 style={{
-                                                    border: `1.5px dashed ${st.stampColor}`,
-                                                    color: st.stampColor
+                                                    height: '22px',
+                                                    width: '22px',
+                                                    objectFit: 'contain',
+                                                    borderRadius: '50%',
+                                                    border: '1px solid rgba(0,0,0,0.15)'
                                                 }}
-                                            >
-                                                {st.stamp}
-                                            </div>
-                                        </div>
-
-                                        {/* Title with Icon */}
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                                            <div style={{
-                                                width: '28px',
-                                                height: '28px',
-                                                borderRadius: '8px',
-                                                background: '#121613',
-                                                color: '#E5A93B',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '12px',
-                                                flexShrink: 0
+                                            />
+                                            <span style={{
+                                                fontSize: '10.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '1px',
+                                                textTransform: 'uppercase',
+                                                background: 'rgba(0,0,0,0.07)',
+                                                padding: '3px 8px',
+                                                borderRadius: '5px'
                                             }}>
-                                                <i className={st.icon}></i>
-                                            </div>
-                                            <h3 style={{
-                                                fontFamily: 'var(--font-heading)',
-                                                fontSize: '15.5px',
-                                                fontWeight: '800',
-                                                color: st.inkColor,
-                                                margin: 0,
-                                                lineHeight: 1.25
-                                            }}>
-                                                {st.title}
-                                            </h3>
+                                                {st.tag}
+                                            </span>
                                         </div>
 
-                                        {/* Description */}
-                                        <p style={{
-                                            fontSize: '12px',
-                                            color: st.inkColor,
-                                            opacity: 0.88,
-                                            lineHeight: 1.5,
-                                            margin: '0 0 10px'
-                                        }}>
-                                            {st.desc}
-                                        </p>
-
-                                        {/* Field Memo Box */}
-                                        <div className="notebook-memo-box">
-                                            📌 <strong>Note:</strong> {st.memo}
-                                        </div>
+                                        {/* Vintage Double-Bordered Ink Stamp with Pop on Hover */}
+                                        <motion.div
+                                            whileHover={{ rotate: 0, scale: 1.08 }}
+                                            transition={{ type: 'spring', stiffness: 450, damping: 18 }}
+                                            style={{
+                                                border: `1.5px solid ${st.stampColor}`,
+                                                outline: `1px dashed ${st.stampColor}`,
+                                                outlineOffset: '2px',
+                                                color: st.stampColor,
+                                                padding: '3px 7px',
+                                                borderRadius: '4px',
+                                                fontSize: '8.5px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.8px',
+                                                textTransform: 'uppercase',
+                                                transform: 'rotate(-3deg)',
+                                                opacity: 0.95,
+                                                userSelect: 'none',
+                                                background: 'rgba(255,255,255,0.6)',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            {st.stamp}
+                                        </motion.div>
                                     </div>
 
-                                    {/* Bottom Timing Indicator */}
-                                    <div className="notebook-time-indicator" style={{ color: st.inkColor }}>
-                                        <span style={{ color: '#E5A93B' }}>⏱</span>
+                                    {/* Icon & Bold Headline */}
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                                        <div style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(0, 0, 0, 0.07)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '17px',
+                                            color: st.inkColor,
+                                            flexShrink: 0
+                                        }}>
+                                            <i className={st.icon}></i>
+                                        </div>
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                            fontSize: '18.5px',
+                                            fontWeight: '800',
+                                            lineHeight: 1.2,
+                                            margin: 0,
+                                            color: st.inkColor,
+                                            letterSpacing: '-0.02em'
+                                        }}>
+                                            {st.title}
+                                        </h3>
+                                    </div>
+
+                                    {/* Description */}
+                                    <p style={{
+                                        fontSize: '13px',
+                                        lineHeight: 1.7,
+                                        margin: '0 0 14px',
+                                        opacity: 0.94,
+                                        fontWeight: '500'
+                                    }}>
+                                        {st.desc}
+                                    </p>
+
+                                    {/* Transit Time Pill */}
+                                    <div style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        fontSize: '11.5px',
+                                        fontWeight: '800',
+                                        background: 'rgba(0,0,0,0.06)',
+                                        padding: '5px 10px',
+                                        borderRadius: '6px',
+                                        marginBottom: '14px',
+                                        width: 'fit-content',
+                                        color: st.stampColor
+                                    }}>
+                                        <span>⏱</span>
                                         <span>{st.time}</span>
+                                    </div>
+
+                                    {/* Handwritten Field Memo */}
+                                    <div style={{
+                                        marginTop: 'auto',
+                                        paddingTop: '12px',
+                                        borderTop: '1px dashed rgba(0, 0, 0, 0.16)',
+                                        fontStyle: 'italic',
+                                        fontSize: '12px',
+                                        lineHeight: '1.5',
+                                        opacity: '0.9',
+                                        display: 'flex',
+                                        alignItems: 'flex-start',
+                                        gap: '6px'
+                                    }}>
+                                        <span style={{ fontSize: '13px' }}>📌</span>
+                                        <span>{st.memo}</span>
                                     </div>
                                 </motion.div>
                             ))}
-                        </div>
+                        </motion.div>
                     </div>
                 </motion.section>
 
