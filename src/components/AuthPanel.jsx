@@ -2,8 +2,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useAuth } from '../hooks/useAuth';
 
 export default function AuthPanel({ initialMode = 'login' }) {
+    const { login } = useAuth();
     const [mode, setMode] = useState(initialMode); // 'login' | 'signup'
     const [showPassword, setShowPassword] = useState(false);
     const [selectedLevel, setSelectedLevel] = useState('beginner');
@@ -49,15 +51,8 @@ export default function AuthPanel({ initialMode = 'login' }) {
             role: 'camper',
             loggedIn: true
         };
-        try {
-            if (loginData.remember) {
-                localStorage.setItem('aanandham_user', JSON.stringify(userObj));
-                sessionStorage.removeItem('aanandham_user');
-            } else {
-                sessionStorage.setItem('aanandham_user', JSON.stringify(userObj));
-                localStorage.removeItem('aanandham_user');
-            }
-        } catch (err) {}
+        login(userObj, loginData.remember);
+
         setTimeout(() => {
             setLoading(false);
             setSubmitted(true);
@@ -89,16 +84,14 @@ export default function AuthPanel({ initialMode = 'login' }) {
         }
 
         setLoading(true);
-        try {
-            localStorage.setItem('aanandham_user', JSON.stringify({
-                name: signupData.name.trim(),
-                email: signupData.email.trim(),
-                phone: signupData.phone.trim(),
-                level: selectedLevel,
-                role: 'camper',
-                loggedIn: true
-            }));
-        } catch (err) {}
+        login({
+            name: signupData.name.trim(),
+            email: signupData.email.trim(),
+            phone: signupData.phone.trim(),
+            level: selectedLevel,
+            role: 'camper',
+            loggedIn: true
+        }, true);
         setTimeout(() => {
             setLoading(false);
             setSubmitted(true);

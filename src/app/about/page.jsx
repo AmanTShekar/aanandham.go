@@ -4,6 +4,9 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
+import { useAuth } from '../../hooks/useAuth';
+import { inr } from '../../lib/utils';
+import { waLink } from '../../lib/whatsapp';
 
 // ── REUSABLE FRAMER MOTION ULTRA-CLEAN REVEAL VARIANTS ──
 const sectionReveal = {
@@ -401,22 +404,7 @@ const ABOUT_FAQS = [
 export default function AboutPage() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeFaq, setActiveFaq] = useState(0);
-    const [currentUser, setCurrentUser] = useState(null);
-
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('aanandham_user') || sessionStorage.getItem('aanandham_user');
-            if (saved) setCurrentUser(JSON.parse(saved));
-        } catch (e) {}
-    }, []);
-
-    const handleLogout = () => {
-        try { 
-            localStorage.removeItem('aanandham_user'); 
-            sessionStorage.removeItem('aanandham_user');
-        } catch (e) {}
-        setCurrentUser(null);
-    };
+    const { user: currentUser, logout: handleLogout } = useAuth();
 
     const ctaRef = useRef(null);
     const { scrollYProgress: ctaScrollProgress } = useScroll({
@@ -1715,7 +1703,7 @@ export default function AboutPage() {
                                             </p>
 
                                             <a
-                                                href={`https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!%20I%20want%20to%20know%20how%20to%20visit%20${encodeURIComponent(place.title)}`}
+                                                href={waLink(`Hi Aanandham Desk! I want to know how to visit ${place.title}`)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="btn-lime"
@@ -2219,6 +2207,74 @@ export default function AboutPage() {
                         </div>
                     </div>
                 </motion.section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    SECTION: SQUAD & OFFSITE ESCAPES (Private Buyouts & Groups)
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section 
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '120px clamp(20px, 4vw, 48px)',
+                        background: '#0B150E',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+                    }}
+                >
+                    {/* Ambient Dark Forest Photo Backing */}
+                    <div
+                        style={{
+                            position: 'absolute',
+                            inset: 0,
+                            backgroundImage: 'url(https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1800&q=80)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            opacity: 0.32,
+                            pointerEvents: 'none'
+                        }}
+                    />
+
+                    <div style={{ maxWidth: '840px', margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 2 }}>
+                        <div className="star-badge" style={{ margin: '0 auto 16px', background: 'rgba(213, 237, 85, 0.15)', border: '1px solid rgba(213, 237, 85, 0.4)', color: '#D5ED55' }}>
+                            <span className="star-icon">★</span> SQUAD & OFFSITE ESCAPES
+                        </div>
+                        <h2 style={{
+                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                            fontSize: 'clamp(32px, 4.5vw, 54px)',
+                            fontWeight: '800',
+                            color: '#FFFFFF',
+                            letterSpacing: '-0.035em',
+                            margin: '0 0 16px'
+                        }}>
+                            Planning a Team Offsite or Squad Expedition?
+                        </h2>
+                        <p style={{ fontSize: '16px', color: '#C8D8CB', lineHeight: 1.65, maxWidth: '640px', margin: '0 auto 36px' }}>
+                            We host private 15 to 30 person mountain buyouts with high-altitude bonfire barbecues, private 4x4 safaris, and outdoor leadership treks.
+                        </p>
+                        <a
+                            href={waLink('Hi Aanandham Desk! We are planning a corporate offsite or group expedition.')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-lime"
+                            style={{
+                                padding: '16px 36px',
+                                fontSize: '15.5px',
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                boxShadow: '0 12px 35px rgba(213, 237, 85, 0.45)'
+                            }}
+                        >
+                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                            <span>Chat with Mountain Offsite Lead ↗</span>
+                        </a>
+                    </div>
+                </motion.section>
+
             </main>
 
             {/* ── UNIFIED REUSABLE FOOTER ── */}

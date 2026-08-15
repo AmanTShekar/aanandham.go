@@ -1,6 +1,8 @@
 "use client";
+
 import React from 'react';
 import Link from 'next/link';
+import { waLink } from '../lib/whatsapp';
 
 export default function Footer() {
     return (
@@ -56,21 +58,26 @@ export default function Footer() {
                         </p>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                            <a href="mailto:bookings@aanandhamgo.in" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a href="mailto:bookings@aanandhamgo.in" className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }}></i>
+                                    <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }} />
                                 </div>
                                 <span>bookings@aanandhamgo.in</span>
                             </a>
-                            <a href="tel:+919400987654" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a href="tel:+919400987654" className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-solid fa-phone" style={{ fontSize: '13px' }}></i>
+                                    <i className="fa-solid fa-phone" style={{ fontSize: '13px' }} />
                                 </div>
                                 <span>+91 9400 987 654</span>
                             </a>
-                            <a href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!%20I%20would%20like%20to%20know%20more%20about%20camping%20dates." target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#FFFFFF', fontSize: '13.5px', textDecoration: 'none', transition: 'color 0.2s ease' }} onMouseOver={(e) => e.currentTarget.style.color = '#E5A93B'} onMouseOut={(e) => e.currentTarget.style.color = '#FFFFFF'}>
+                            <a
+                                href={waLink('Hi Aanandham Team! I would like to know more about camping dates.')}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="footer-contact-link"
+                            >
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(37, 211, 102, 0.15)', color: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px' }}></i>
+                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px' }} />
                                 </div>
                                 <span>WhatsApp Concierge 24/7</span>
                             </a>
@@ -84,7 +91,7 @@ export default function Footer() {
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {[
                                     { name: 'Instagram', icon: 'fa-brands fa-instagram', href: 'https://instagram.com/aanandham.go', color: '#E4405F' },
-                                    { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: 'https://wa.me/919400987654', color: '#25D366' },
+                                    { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: waLink('Hi Aanandham.go!'), color: '#25D366' },
                                     { name: 'YouTube', icon: 'fa-brands fa-youtube', href: 'https://youtube.com/@aanandhamgo', color: '#FF0000' },
                                     { name: 'Facebook', icon: 'fa-brands fa-facebook-f', href: 'https://facebook.com/aanandham.go', color: '#1877F2' },
                                     { name: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: 'https://linkedin.com/company/aanandhamgo', color: '#0A66C2' }
@@ -122,7 +129,7 @@ export default function Footer() {
                                             e.currentTarget.style.boxShadow = 'none';
                                         }}
                                     >
-                                        <i className={soc.icon}></i>
+                                        <i className={soc.icon} />
                                     </a>
                                 ))}
                             </div>

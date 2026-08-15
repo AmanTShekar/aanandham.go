@@ -5,6 +5,9 @@ import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 import CustomThemeCalendar from '../../components/CustomThemeCalendar';
+import { useAuth } from '../../hooks/useAuth';
+import { inr } from '../../lib/utils';
+import { waLink } from '../../lib/whatsapp';
 
 // ── REUSABLE FRAMER MOTION REVEAL VARIANTS ──
 const sectionReveal = {
@@ -184,7 +187,7 @@ export default function ContactPage() {
     const [submitted, setSubmitted] = useState(false);
     const [waUrl, setWaUrl] = useState('');
     const [activeFaq, setActiveFaq] = useState(0);
-    const [currentUser, setCurrentUser] = useState(null);
+    const { user: currentUser, logout: handleLogout } = useAuth();
 
     const ctaRef = useRef(null);
     const { scrollYProgress: ctaScrollProgress } = useScroll({
@@ -192,21 +195,6 @@ export default function ContactPage() {
         offset: ["start end", "end start"]
     });
     const ctaBgScale = useTransform(ctaScrollProgress, [0, 0.5, 1], [1.0, 1.16, 1.28]);
-
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('aanandham_user') || sessionStorage.getItem('aanandham_user');
-            if (saved) setCurrentUser(JSON.parse(saved));
-        } catch (e) {}
-    }, []);
-
-    const handleLogout = () => {
-        try { 
-            localStorage.removeItem('aanandham_user'); 
-            sessionStorage.removeItem('aanandham_user');
-        } catch (e) {}
-        setCurrentUser(null);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -221,8 +209,7 @@ export default function ContactPage() {
             `Dates: ${formData.travelDates || 'Flexible'}\n` +
             `Message: ${formData.message}`;
 
-        const encoded = encodeURIComponent(waText);
-        const link = `https://wa.me/919400987654?text=${encoded}`;
+        const link = waLink(waText);
         setWaUrl(link);
 
         try {
@@ -973,6 +960,7 @@ export default function ContactPage() {
                                 <motion.div
                                     key={idx}
                                     variants={cardReveal}
+                                    className="route-notebook-sheet"
                                     whileHover={{ 
                                         y: -14, 
                                         rotate: 0,
@@ -982,20 +970,9 @@ export default function ContactPage() {
                                     whileTap={{ scale: 0.97 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                     style={{
-                                        position: 'relative',
                                         background: st.paperBg,
                                         color: st.inkColor,
-                                        borderRadius: '6px 6px 30px 6px',
-                                        padding: '24px 18px 16px 20px',
-                                        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45), 0 4px 10px rgba(0,0,0,0.2)',
-                                        transform: `rotate(${st.rotation})`,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        justifyContent: 'space-between',
-                                        minHeight: '290px',
-                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 24px, rgba(59, 130, 246, 0.13) 25px)',
-                                        borderLeft: '3.5px solid rgba(239, 68, 68, 0.42)',
-                                        cursor: 'grab'
+                                        transform: `rotate(${st.rotation})`
                                     }}
                                 >
                                     {/* Realistic 3D Metallic Pushpin Pinned at Top Center (No Washi Tape) */}

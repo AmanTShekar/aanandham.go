@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { inr } from '../../lib/utils';
+import { waLink } from '../../lib/whatsapp';
 
 // ── REGIONAL PROPERTIES WITH ROOMS, AMENITIES & ADD-ONS ──
 const INITIAL_PROPERTIES = [
@@ -1553,7 +1555,7 @@ export default function AdminPortal() {
                                             <span style={{ fontSize: '11px', fontWeight: '800', color: b.status === 'Confirmed' ? '#E5A93B' : '#FFB800' }}>{b.status}</span>
                                         </div>
                                         <div>
-                                            <a href={`https://wa.me/${b.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`)}`} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px' }}>
+                                            <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px' }}>
                                                 <i className="fa-brands fa-whatsapp"></i> Chat
                                             </a>
                                         </div>
@@ -1872,7 +1874,7 @@ export default function AdminPortal() {
                                     </div>
 
                                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-                                        <a href={`https://wa.me/${b.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hi ${b.name}! Aanandham desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`)}`} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
+                                        <a href={waLink(`Hi ${b.name}! Aanandham desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
                                             <i className="fa-brands fa-whatsapp"></i> Chat
                                         </a>
                                         <a href={`tel:${b.phone}`} style={{ padding: '8px 12px', borderRadius: '999px', background: 'rgba(255,255,255,0.08)', color: '#FFFFFF', textDecoration: 'none', fontSize: '12px', display: 'flex', alignItems: 'center' }}>

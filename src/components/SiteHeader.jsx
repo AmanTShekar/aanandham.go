@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { waLink } from '../lib/whatsapp';
 
 // ── SHARED LIQUID WAVE DRAWER VARIANTS ──
 const drawerWaveVariants = {
@@ -553,7 +554,7 @@ export default function SiteHeader({
                                 )}
 
                                 <a
-                                    href="https://wa.me/919400987654?text=Hi%20Aanandham%20Team!"
+                                    href={waLink('Hi Aanandham Team!')}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.1)', border: '1px solid rgba(229, 169, 59, 0.25)', fontSize: '14px', fontWeight: '700', textDecoration: 'none', padding: '12px', borderRadius: '999px' }}

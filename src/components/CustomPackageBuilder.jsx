@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { waLink } from '../lib/whatsapp';
 
 const VIBES = [
     { id: 'squad', name: 'Squad / Friends Trek', icon: '🚙', desc: 'High energy, off-road convoy, late campfire' },
@@ -78,8 +79,7 @@ export default function CustomPackageBuilder() {
             `📝 *Custom Notes/Budget:* ${budgetNotes || 'None'}\n\n` +
             `Please curate our custom itinerary and provide a tailored quote! 🏔️✨`;
 
-        const encoded = encodeURIComponent(customMessage);
-        window.open(`https://wa.me/919400987654?text=${encoded}`, '_blank');
+        window.open(waLink(customMessage), '_blank');
     };
 
     return (

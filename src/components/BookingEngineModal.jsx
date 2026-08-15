@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
+import { inr } from '../lib/utils';
+import { waLink } from '../lib/whatsapp';
 
 const PACKAGES_LIST = [
     {
@@ -193,20 +195,18 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         }
 
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
-        
         const summaryText = `🏕️ *NEW AANANDHAM.GO RESERVATION REQUEST*\n\n` +
             `📍 *Expedition:* ${currentPkg.title}\n` +
             `📅 *Date:* ${travelDate || 'Flexible / Upcoming Weekend'}\n` +
             `👥 *Guests:* ${adults} Adults${children > 0 ? `, ${children} Children` : ''} (Total: ${totalGuests})\n` +
             `✨ *Add-ons:* ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None'}\n` +
-            `💰 *Est. Total:* ₹${grandTotal.toLocaleString('en-IN')}${discountPercent > 0 ? ` (Includes ${discountPercent}% Squad Discount!)` : ''}\n\n` +
+            `💰 *Est. Total:* ${inr(grandTotal)}${discountPercent > 0 ? ` (Includes ${discountPercent}% Squad Discount!)` : ''}\n\n` +
             `👤 *Name:* ${customerName.trim()}\n` +
             `📞 *Phone:* ${customerPhone.trim()}\n` +
             `📝 *Notes:* ${specialNotes.trim() || 'None'}\n\n` +
             `Please confirm campsite availability & payment link! 🏔️`;
 
-        const encoded = encodeURIComponent(summaryText);
-        window.open(`https://wa.me/919400987654?text=${encoded}`, '_blank');
+        window.open(waLink(summaryText), '_blank');
         onClose();
     };
 

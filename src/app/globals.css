@@ -88,16 +88,30 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ROUTE NOTEBOOK NOTES (4 IN A ROW ON DESKTOP, COMPACT SWIPE ON MOBILE)
+   ROUTE NOTEBOOK NOTES (AUTHENTIC LUXURY TACTILE SHEETS)
 ───────────────────────────────────────────────────────────── */
 .route-notebook-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   align-items: stretch;
-  max-width: 1280px;
+  max-width: 1380px;
   margin: 0 auto;
   width: 100%;
+}
+
+.route-notebook-sheet {
+  position: relative;
+  border-radius: 6px 6px 36px 6px;
+  padding: 36px 22px 28px 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  min-height: 440px;
+  background-image: repeating-linear-gradient(transparent, transparent 25px, rgba(59, 130, 246, 0.13) 26px);
+  border-left: 3.5px solid rgba(239, 68, 68, 0.42);
+  cursor: grab;
+  box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
@@ -120,11 +134,13 @@ body::-webkit-scrollbar-thumb:active,
   .route-notebook-grid::-webkit-scrollbar {
     display: none !important;
   }
-  .route-notebook-grid > * {
+  .route-notebook-sheet {
     flex: 0 0 280px !important;
     width: 280px !important;
     max-width: 300px !important;
     min-width: 260px !important;
+    min-height: 380px !important;
+    padding: 28px 18px 20px 20px !important;
     scroll-snap-align: start !important;
     box-sizing: border-box !important;
     margin: 0 !important;
@@ -1912,6 +1928,20 @@ button:focus-visible, a:focus-visible {
   align-items: start;
   width: 100%;
   box-sizing: border-box;
+}
+
+.footer-contact-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #FFFFFF;
+  font-size: 13.5px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-contact-link:hover {
+  color: #E5A93B;
 }
 
 @media (max-width: 960px) {

@@ -1,32 +1,13 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import SiteHeader from '../components/SiteHeader';
 import Footer from '../components/Footer';
+import { useAuth } from '../hooks/useAuth';
 
 export default function NotFound() {
-    const [currentUser, setCurrentUser] = useState(null);
-
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('aanandham_user');
-            if (stored) {
-                setCurrentUser(JSON.parse(stored));
-            }
-        } catch (e) {
-            console.error("Auth load error:", e);
-        }
-    }, []);
-
-    const handleLogout = () => {
-        try {
-            localStorage.removeItem('aanandham_user');
-            setCurrentUser(null);
-        } catch (e) {
-            console.error("Logout error:", e);
-        }
-    };
+    const { user: currentUser, logout: handleLogout } = useAuth();
 
     const QUICK_TRAILS = [
         {
