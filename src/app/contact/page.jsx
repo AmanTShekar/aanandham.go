@@ -931,50 +931,40 @@ export default function ContactPage() {
                     viewport={{ once: true, margin: "-60px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '90px 0',
+                        padding: '90px clamp(20px, 4vw, 48px)',
                         background: '#121613',
                         color: '#FFFFFF',
-                        position: 'relative',
-                        overflowX: 'clip'
+                        position: 'relative'
                     }}
                 >
-                    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px)', marginBottom: '16px' }}>
-                        <div className="star-badge" style={{ background: 'rgba(229, 169, 59, 0.2)', border: '1px solid rgba(229, 169, 59, 0.4)' }}>
-                            <span className="star-icon">★</span> ROUTE INTELLIGENCE
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
-                            <div>
-                                <h2 style={{
-                                    fontFamily: 'var(--font-heading)',
-                                    fontSize: 'clamp(28px, 4vw, 44px)',
-                                    fontWeight: '800',
-                                    color: '#FFFFFF',
-                                    letterSpacing: '-0.03em',
-                                    margin: '0 0 8px'
-                                }}>
-                                    How to Reach <span style={{ color: '#E5A93B' }}>Suryanelli Basecamp</span>
-                                </h2>
-                                <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '600px' }}>
-                                    Swipe through step-by-step navigation from airport/train arrivals up to the private 4x4 ridge safari.
-                                </p>
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+                        <div style={{ marginBottom: '32px' }}>
+                            <div className="star-badge" style={{ background: 'rgba(229, 169, 59, 0.2)', border: '1px solid rgba(229, 169, 59, 0.4)', marginBottom: '12px' }}>
+                                <span className="star-icon">★</span> ROUTE INTELLIGENCE
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#D5ED55', fontWeight: '700' }}>
-                                <span>Swipe Stages</span> <span>→</span>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
+                                <div>
+                                    <h2 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(28px, 4vw, 44px)',
+                                        fontWeight: '800',
+                                        color: '#FFFFFF',
+                                        letterSpacing: '-0.03em',
+                                        margin: '0 0 8px'
+                                    }}>
+                                        How to Reach <span style={{ color: '#E5A93B' }}>Suryanelli Basecamp</span>
+                                    </h2>
+                                    <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '600px' }}>
+                                        Step-by-step transit navigation from airport/train arrivals up to the 4x4 ridge safari.
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Full-Bleed Edge-to-Edge Swipable Field Notebook Sheets (Clean Rectangular Proportions with Zero Clipping) */}
-                    <div className="route-carousel-track">
-                        {TRAVEL_STEPS.map((st, idx) => (
-                            <div key={idx} className="route-carousel-card">
-                                <div 
-                                    className="route-notebook-sheet hover-lift"
-                                    style={{
-                                        backgroundColor: st.paperBg,
-                                        color: st.inkColor
-                                    }}
-                                >
+                        {/* 4 Pinned Notebook Sheets: 4-in-a-Row on Desktop, Compact Swipe on Mobile */}
+                        <div className="route-notebook-grid">
+                            {TRAVEL_STEPS.map((st, idx) => (
+                                <div key={idx} className="route-notebook-sheet hover-lift">
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
                                     <div className="pushpin-3d-wrap">
                                         <div className="pushpin-3d-shadow" />
@@ -995,8 +985,8 @@ export default function ContactPage() {
                                         position: 'absolute',
                                         bottom: 0,
                                         right: 0,
-                                        width: '26px',
-                                        height: '26px',
+                                        width: '24px',
+                                        height: '24px',
                                         background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.12) 50%, rgba(0,0,0,0.04) 100%)',
                                         borderTopLeftRadius: '10px',
                                         pointerEvents: 'none'
@@ -1004,8 +994,8 @@ export default function ContactPage() {
 
                                     <div>
                                         {/* Top Row: Clean Stage Badge + Logo + Vintage Ink Stamp */}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '10px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px', marginBottom: '10px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                                                 <img
                                                     src="/logo.png"
                                                     alt="Aanandham Logo"
@@ -1024,7 +1014,7 @@ export default function ContactPage() {
                                                     textTransform: 'uppercase',
                                                     background: 'rgba(0,0,0,0.06)',
                                                     color: '#121613',
-                                                    padding: '2px 7px',
+                                                    padding: '2px 6px',
                                                     borderRadius: '4px'
                                                 }}>
                                                     {st.tag}
@@ -1046,26 +1036,26 @@ export default function ContactPage() {
                                         {/* Title with Icon */}
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                                             <div style={{
-                                                width: '30px',
-                                                height: '30px',
+                                                width: '28px',
+                                                height: '28px',
                                                 borderRadius: '8px',
                                                 background: '#121613',
                                                 color: '#E5A93B',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
-                                                fontSize: '13px',
+                                                fontSize: '12px',
                                                 flexShrink: 0
                                             }}>
                                                 <i className={st.icon}></i>
                                             </div>
                                             <h3 style={{
                                                 fontFamily: 'var(--font-heading)',
-                                                fontSize: '16.5px',
+                                                fontSize: '15.5px',
                                                 fontWeight: '800',
                                                 color: '#121613',
                                                 margin: 0,
-                                                lineHeight: 1.2
+                                                lineHeight: 1.25
                                             }}>
                                                 {st.title}
                                             </h3>
@@ -1073,7 +1063,7 @@ export default function ContactPage() {
 
                                         {/* Description */}
                                         <p style={{
-                                            fontSize: '12.5px',
+                                            fontSize: '12px',
                                             color: '#475569',
                                             lineHeight: 1.5,
                                             margin: '0 0 10px'
@@ -1083,7 +1073,7 @@ export default function ContactPage() {
 
                                         {/* Field Memo Box */}
                                         <div className="notebook-memo-box">
-                                            📌 <strong>Field Note:</strong> {st.memo}
+                                            📌 <strong>Note:</strong> {st.memo}
                                         </div>
                                     </div>
 
@@ -1093,8 +1083,8 @@ export default function ContactPage() {
                                         <span>{st.time}</span>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </motion.section>
 

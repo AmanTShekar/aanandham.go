@@ -88,7 +88,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   ROUTE NOTEBOOK NOTES (4 IN A SINGLE ROW ON DESKTOP)
+   ROUTE NOTEBOOK NOTES (4 IN A ROW ON DESKTOP, COMPACT SWIPE ON MOBILE)
 ───────────────────────────────────────────────────────────── */
 .route-notebook-grid {
   display: grid;
@@ -96,23 +96,42 @@ body::-webkit-scrollbar-thumb:active,
   gap: 20px;
   justify-content: center;
   align-items: stretch;
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
+  width: 100%;
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 1024px) {
   .route-notebook-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 28px;
-    max-width: 780px;
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: visible !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 16px !important;
+    padding: 24px 0 32px 0 !important;
+    margin: 0 !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
-}
-
-@media (max-width: 640px) {
-  .route-notebook-grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-    max-width: 440px;
+  .route-notebook-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  .route-notebook-grid > * {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    max-width: 300px !important;
+    min-width: 260px !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+  }
+  .route-notebook-grid > *:first-child {
+    margin-left: 20px !important;
+  }
+  .route-notebook-grid > *:last-child {
+    margin-right: 20px !important;
   }
 }
 
