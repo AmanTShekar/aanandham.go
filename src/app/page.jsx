@@ -852,7 +852,7 @@ export default function HomePage() {
     const [activeDayIdx, setActiveDayIdx] = useState(0);
     const [expandedDayIdx, setExpandedDayIdx] = useState(0);
     const [activeWhyIdx, setActiveWhyIdx] = useState(0);
-    const [activeStayAcc, setActiveStayAcc] = useState(3);
+    const [activeStayAcc, setActiveStayAcc] = useState(0);
     const [activeFaq, setActiveFaq] = useState(0);
     const [highlightIdx, setHighlightIdx] = useState(0);
     const [testimonialIdx, setTestimonialIdx] = useState(0);
@@ -1764,9 +1764,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '100px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
                         <div>
                             <div className="star-badge">
@@ -1969,14 +1969,14 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 420px), 1fr))', gap: 'clamp(32px, 4vw, 52px)', alignItems: 'start' }}>
                         
-                        {/* Left Big Picture (Controlled Clamped Height & Sticky Pinning) */}
+                        {/* Left Big Picture (Positioned Higher With top: 80px For Balanced Bottom Breathing Room) */}
                         <motion.div 
                             variants={fadeInLeft}
                             style={{ 
                                 position: 'sticky',
-                                top: '110px',
-                                height: 'clamp(420px, 52vh, 520px)',
-                                maxHeight: '540px',
+                                top: '80px',
+                                height: 'clamp(380px, 46vh, 480px)',
+                                maxHeight: '500px',
                                 width: '100%',
                                 borderRadius: '28px', 
                                 overflow: 'hidden', 
