@@ -263,7 +263,7 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 /* ─────────────────────────────────────────────────────────────
-   AUTHENTIC MOUNTAIN TREE BARK & LIVE-EDGE TIMBER SLABS
+   AUTHENTIC MOUNTAIN TREE WOOD & BARK SLABS
 ───────────────────────────────────────────────────────────── */
 .altitude-spectrum-grid {
   display: grid;
@@ -285,21 +285,25 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Base Natural Tree Bark Slab (Pure Organic Wood Tone, No Rainbow Tints) */
+/* Base Natural Tree Wood Slab */
 .stone-slab-card {
   position: relative;
-  background: 
-    linear-gradient(175deg, #3A2619 0%, #291A10 50%, #1A1009 100%);
+  background-color: #26180F;
+  background-image: 
+    linear-gradient(180deg, rgba(32, 20, 12, 0.72) 0%, rgba(18, 10, 6, 0.88) 100%),
+    url('https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?auto=format&fit=crop&w=800&q=85');
+  background-size: cover;
+  background-position: center;
   padding: 30px 24px 28px 24px;
   display: flex;
   flex-direction: column;
   border-radius: 8px 22px 10px 26px;
-  border: 2px solid #523522;
+  border: 2px solid #5C3A24;
   box-shadow: 
-    0 20px 45px rgba(0, 0, 0, 0.8),
-    0 6px 16px rgba(0, 0, 0, 0.5),
-    inset 1.5px 1.5px 3px rgba(255, 200, 140, 0.18),
-    inset -2px -2px 6px rgba(0, 0, 0, 0.85);
+    0 20px 45px rgba(0, 0, 0, 0.85),
+    0 6px 16px rgba(0, 0, 0, 0.6),
+    inset 1.5px 1.5px 3px rgba(255, 200, 140, 0.22),
+    inset -2px -2px 6px rgba(0, 0, 0, 0.9);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   cursor: default;
@@ -312,7 +316,7 @@ body::-webkit-scrollbar-thumb:active,
     0 12px 28px rgba(0, 0, 0, 0.75) !important;
 }
 
-/* 4 Organic Live-Edge Tree Bark Shapes (All Consistent Wood Color) */
+/* 4 Organic Live-Edge Tree Bark Shapes */
 .stone-slab-tier-1 {
   border-radius: 6px 26px 8px 28px;
 }
@@ -329,30 +333,14 @@ body::-webkit-scrollbar-thumb:active,
   border-radius: 24px 6px 26px 10px;
 }
 
-/* Natural Wood Grain & Tree Bark Fiber Lines */
+/* Natural Wood Grain & Fiber Overlay */
 .stone-cleavage-overlay {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   background-image: 
-    repeating-linear-gradient(
-      90deg, 
-      transparent 0px, 
-      transparent 18px, 
-      rgba(0, 0, 0, 0.25) 18px, 
-      rgba(0, 0, 0, 0.25) 19px, 
-      rgba(255, 255, 255, 0.02) 19px, 
-      rgba(255, 255, 255, 0.02) 20px
-    ),
-    repeating-linear-gradient(
-      0deg, 
-      transparent 0px, 
-      transparent 4px, 
-      rgba(0, 0, 0, 0.1) 4px, 
-      rgba(0, 0, 0, 0.1) 5px
-    ),
-    radial-gradient(ellipse at 80% 25%, rgba(0, 0, 0, 0.4) 0%, transparent 45%),
-    radial-gradient(ellipse at 20% 75%, rgba(0, 0, 0, 0.35) 0%, transparent 45%);
+    radial-gradient(ellipse at 80% 25%, rgba(0, 0, 0, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 75%, rgba(0, 0, 0, 0.3) 0%, transparent 50%);
   pointer-events: none;
   z-index: 1;
 }
@@ -379,7 +367,7 @@ body::-webkit-scrollbar-thumb:active,
   overflow: hidden;
   margin: 14px 0 16px;
   background: #000000;
-  border: 1.5px solid #523522;
+  border: 1.5px solid #5C3A24;
   box-shadow: inset 0 3px 12px rgba(0, 0, 0, 0.95);
   position: relative;
   z-index: 2;
@@ -401,8 +389,8 @@ body::-webkit-scrollbar-thumb:active,
   width: 40px;
   height: 40px;
   border-radius: 6px;
-  background: #23160D;
-  border: 1.5px solid #523522;
+  background: rgba(22, 12, 7, 0.8);
+  border: 1.5px solid #5C3A24;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -419,7 +407,7 @@ body::-webkit-scrollbar-thumb:active,
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(22, 14, 9, 0.75);
+  background: rgba(22, 12, 7, 0.8);
   border: 1px solid #4A2E1D;
   border-radius: 4px;
   padding: 6px 12px;
