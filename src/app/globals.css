@@ -431,7 +431,7 @@ body::-webkit-scrollbar-thumb:active,
   .stay-glamp-layout {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 16px;
     width: 100%;
     position: relative;
   }
@@ -440,26 +440,38 @@ body::-webkit-scrollbar-thumb:active,
     font-size: 14.5px;
     color: #59655D;
     line-height: 1.65;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     width: 100%;
   }
   .stay-desktop-intro {
     display: none;
   }
+  .stay-mobile-tabs {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+    scrollbar-width: none;
+    order: 2;
+  }
+  .stay-mobile-tabs::-webkit-scrollbar {
+    display: none;
+  }
   .stay-glamp-image-container {
-    position: sticky !important;
-    top: 68px !important;
+    position: relative !important;
+    top: auto !important;
     width: 100% !important;
     height: clamp(260px, 36vh, 320px) !important;
-    margin: 0 auto 12px !important;
-    z-index: 10;
-    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.16) !important;
-    order: 2;
+    margin: 0 0 16px !important;
+    z-index: 2;
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12) !important;
+    order: 3;
   }
   .stay-glamp-cards-container {
     width: 100% !important;
-    order: 3;
-    padding-top: 8px;
+    order: 4;
+    padding-top: 4px;
   }
 }
 

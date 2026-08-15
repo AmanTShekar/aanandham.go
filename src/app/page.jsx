@@ -947,32 +947,7 @@ export default function HomePage() {
             const windowH = window.innerHeight;
             const triggerY = window.innerWidth <= 900 ? windowH * 0.52 : windowH * 0.48;
 
-            // 1. Stay & Glamp Room Cards Auto-Activation (Scoped to when Stay section is near/in viewport)
-            const staySection = document.getElementById('stay');
-            if (staySection) {
-                const sRect = staySection.getBoundingClientRect();
-                if (sRect.top <= windowH && sRect.bottom >= 0) {
-                    const stayCardElements = staySection.querySelectorAll('[data-stay-card-idx]');
-                    let activeStayIndex = -1;
-                    let minDistance = Infinity;
-                    stayCardElements.forEach((el) => {
-                        const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
-                        if (isNaN(idx)) return;
-                        const rect = el.getBoundingClientRect();
-                        const cardCenter = rect.top + rect.height / 2;
-                        const dist = Math.abs(cardCenter - triggerY);
-                        if (dist < minDistance && rect.bottom > 80 && rect.top < windowH - 80) {
-                            minDistance = dist;
-                            activeStayIndex = idx;
-                        }
-                    });
-                    if (activeStayIndex >= 0) {
-                        setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
-                    }
-                }
-            }
-
-            // 2. Program Expedition Days Auto-Activation (Scoped to when Program section is near/in viewport)
+            // 1. Program Expedition Days Auto-Activation (Scoped to when Program section is near/in viewport)
             const programSection = document.getElementById('program');
             if (programSection) {
                 const pRect = programSection.getBoundingClientRect();
@@ -2161,6 +2136,34 @@ export default function HomePage() {
                         {/* Mobile Paragraph: Appears FIRST on Mobile */}
                         <div className="stay-mobile-intro">
                             Our campsite in Suryanelli has 8 luxury weatherproof dome tents and wooden pods sleeping 20-24 people maximum. Choose from shared twin rooms, private double pods for couples, or group suites for friends traveling together.
+                        </div>
+
+                        {/* Mobile Room Selector Tabs */}
+                        <div className="stay-mobile-tabs">
+                            {STAY_ACCOMMODATIONS.map((acc, idx) => {
+                                const isSelected = activeStayAcc === idx;
+                                return (
+                                    <button
+                                        key={`mobile-tab-${acc.id}`}
+                                        onClick={() => setActiveStayAcc(idx)}
+                                        style={{
+                                            flexShrink: 0,
+                                            padding: '8px 16px',
+                                            borderRadius: '999px',
+                                            border: isSelected ? '1px solid #121613' : '1px solid rgba(18, 22, 19, 0.12)',
+                                            background: isSelected ? '#121613' : '#FFFFFF',
+                                            color: isSelected ? '#D5ED55' : '#121613',
+                                            fontSize: '12.5px',
+                                            fontWeight: '800',
+                                            cursor: 'pointer',
+                                            boxShadow: isSelected ? '0 4px 14px rgba(18, 22, 19, 0.18)' : 'none',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {acc.title}
+                                    </button>
+                                );
+                            })}
                         </div>
 
                         {/* Big Picture (Positioned on Left on Desktop, Centered Full-Width on Mobile) */}

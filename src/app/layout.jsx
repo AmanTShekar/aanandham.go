@@ -169,21 +169,13 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#0E1A11" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
-        {/* Font Awesome 6 Icons (Async Non-Render-Blocking Load) */}
+        {/* Font Awesome 6 Icons */}
         <link 
           rel="stylesheet" 
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
-          media="print"
-          onLoad="this.media='all'"
         />
-        <noscript>
-          <link 
-            rel="stylesheet" 
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-          />
-        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
