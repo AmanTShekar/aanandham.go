@@ -477,6 +477,16 @@ body::-webkit-scrollbar-thumb:active,
     width: 100%;
   }
   .overview-3col-grid > * {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  .overview-3col-grid > :nth-child(3) {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    PACKAGES CARDS GRID & MOBILE SLIDER
 ───────────────────────────────────────────────────────────── */

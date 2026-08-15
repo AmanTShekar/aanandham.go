@@ -2906,22 +2906,20 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '100px 24px', background: '#FFFFFF' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#FFFFFF' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '44px' }}>
-                        <div>
-                            <div className="star-badge">
-                                <span className="star-icon">★</span> KERALA WILDERNESS GRID
-                            </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(30px, 4.5vw, 48px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: '0 0 10px' }}>
-                                Verified Peaks, Glamping & Off-Road Hubs
-                            </h2>
-                            <p style={{ color: '#59655D', fontSize: '15px', margin: 0, maxWidth: '640px' }}>
-                                Tap any spot to preview full resolution 4K imagery, mountain coordinates, altitude ratings, and safety reports.
-                            </p>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
+                        <div className="star-badge" style={{ margin: '0 auto 12px' }}>
+                            <span className="star-icon">★</span> KERALA WILDERNESS GRID
                         </div>
-                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" className="action-arrow-btn">
+                        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(30px, 4.5vw, 48px)', fontWeight: '800', color: '#121613', letterSpacing: '-0.035em', margin: '0 0 14px', lineHeight: 1.2 }}>
+                            Verified Peaks, Glamping & Off-Road Hubs
+                        </h2>
+                        <p style={{ color: '#59655D', fontSize: '15px', margin: '0 auto 20px', maxWidth: '640px', lineHeight: 1.65 }}>
+                            Tap any spot to preview full resolution 4K imagery, mountain coordinates, altitude ratings, and safety reports.
+                        </p>
+                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" className="action-arrow-btn" style={{ display: 'inline-flex', margin: '0 auto' }}>
                             <span>Follow @aanandham.go</span>
                             <div className="btn-arrow-circle">📸</div>
                         </a>
