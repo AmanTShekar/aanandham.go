@@ -285,28 +285,10 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Base: light natural pine/cedar wood — cross-section ring pattern */
+/* Base: light warm pine — natural cross-section rings */
 .stone-slab-card {
   position: relative;
-  background-color: #C4925A;
-  background-image:
-    repeating-radial-gradient(
-      ellipse at 42% 48%,
-      #D4A870 0px,
-      #C49868 6px,
-      #B88B60 12px,
-      #AA7E54 16px,
-      #B68860 20px,
-      #C4946A 26px,
-      #CFA06E 30px,
-      #B48A5E 36px,
-      #A87C52 40px,
-      #B68860 46px,
-      #C29266 52px,
-      #CC9C6C 58px,
-      #A87E52 64px,
-      #B88860 72px
-    );
+  background-color: #D4A870;
   padding: 30px 22px 26px 22px;
   display: flex;
   flex-direction: column;
@@ -321,16 +303,27 @@ body::-webkit-scrollbar-thumb:active,
   filter: drop-shadow(0 28px 55px rgba(0, 0, 0, 0.85)) drop-shadow(0 8px 18px rgba(0,0,0,0.6)) !important;
 }
 
-/* 4 UNIQUE JAGGED BARK EDGE SHAPES — each a distinct natural wood tone */
+/* 4 UNIQUE JAGGED BARK EDGES — each has natural irregular growth ring spacing */
+
 .stone-slab-tier-1 {
-  /* Light pine — warm honey-cream rings */
+  /* Pine: warm honey, knot at 38% 44%, rings get wider as they go out */
+  background-color: #D8B07A;
   background-image:
-    repeating-radial-gradient(
-      ellipse at 38% 44%,
-      #DEB87A 0px, #CFA86A 8px, #C09862 14px, #B49058 18px,
-      #BA9460 24px, #C89E6A 30px, #D4A870 36px,
-      #C0986A 42px, #D0A474 50px, #DAB07A 58px, #BE9468 66px, #C89E6E 76px
-    );
+    /* Heartwood warm glow at center */
+    radial-gradient(ellipse at 38% 44%, rgba(255, 220, 150, 0.5) 0%, rgba(220, 170, 100, 0.15) 18%, transparent 38%),
+    /* Ring 1 */ radial-gradient(ellipse at 38% 44%, transparent 13px, rgba(110, 60, 15, 0.32) 14px, rgba(110, 60, 15, 0.32) 16px, transparent 17px),
+    /* Ring 2 */ radial-gradient(ellipse at 38% 44%, transparent 25px, rgba(100, 55, 12, 0.28) 26px, rgba(100, 55, 12, 0.28) 28px, transparent 29px),
+    /* Ring 3 */ radial-gradient(ellipse at 38% 44%, transparent 37px, rgba(108, 58, 14, 0.25) 38px, rgba(108, 58, 14, 0.25) 40px, transparent 41px),
+    /* Ring 4 */ radial-gradient(ellipse at 38% 44%, transparent 51px, rgba(100, 52, 12, 0.23) 52px, rgba(100, 52, 12, 0.23) 54px, transparent 55px),
+    /* Ring 5 */ radial-gradient(ellipse at 38% 44%, transparent 68px, rgba(105, 56, 14, 0.2) 69px, rgba(105, 56, 14, 0.2) 71px, transparent 72px),
+    /* Ring 6 */ radial-gradient(ellipse at 38% 44%, transparent 82px, rgba(100, 52, 12, 0.18) 83px, rgba(100, 52, 12, 0.18) 85px, transparent 86px),
+    /* Ring 7 */ radial-gradient(ellipse at 38% 44%, transparent 100px, rgba(105, 56, 14, 0.17) 101px, rgba(105, 56, 14, 0.17) 103px, transparent 104px),
+    /* Ring 8 */ radial-gradient(ellipse at 38% 44%, transparent 122px, rgba(98, 50, 10, 0.15) 123px, rgba(98, 50, 10, 0.15) 125px, transparent 126px),
+    /* Ring 9 */ radial-gradient(ellipse at 38% 44%, transparent 146px, rgba(105, 56, 14, 0.13) 147px, rgba(105, 56, 14, 0.13) 149px, transparent 150px),
+    /* Ring 10 */ radial-gradient(ellipse at 38% 44%, transparent 175px, rgba(98, 50, 10, 0.11) 176px, rgba(98, 50, 10, 0.11) 178px, transparent 179px),
+    /* Ring 11 */ radial-gradient(ellipse at 38% 44%, transparent 208px, rgba(100, 52, 12, 0.09) 209px, rgba(100, 52, 12, 0.09) 211px, transparent 212px),
+    /* Ring 12 */ radial-gradient(ellipse at 38% 44%, transparent 248px, rgba(98, 50, 10, 0.07) 249px, rgba(98, 50, 10, 0.07) 251px, transparent 252px),
+    /* Ring 13 */ radial-gradient(ellipse at 38% 44%, transparent 295px, rgba(100, 52, 12, 0.05) 296px, rgba(100, 52, 12, 0.05) 298px, transparent 299px);
   clip-path: polygon(
     0% 18px, 8px 6px, 22px 0%, 50px 4px,
     calc(100% - 40px) 0px, calc(100% - 18px) 8px, 100% 20px,
@@ -341,14 +334,22 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-2 {
-  /* Oak — slightly warmer amber tones */
+  /* Oak: richer amber, knot at 55% 38%, slightly denser inner rings */
+  background-color: #C89860;
   background-image:
-    repeating-radial-gradient(
-      ellipse at 55% 38%,
-      #CCA264 0px, #BE9458 8px, #B28852 14px, #A67E4C 18px,
-      #AE8454 24px, #BC9060 30px, #C89C6A 36px,
-      #B68C5E 42px, #C49866 50px, #CEA26E 58px, #B48C5E 66px, #C29866 76px
-    );
+    radial-gradient(ellipse at 55% 38%, rgba(240, 200, 130, 0.45) 0%, rgba(200, 155, 85, 0.12) 20%, transparent 40%),
+    /* Ring 1 */ radial-gradient(ellipse at 55% 38%, transparent 11px, rgba(105, 56, 12, 0.32) 12px, rgba(105, 56, 12, 0.32) 14px, transparent 15px),
+    /* Ring 2 */ radial-gradient(ellipse at 55% 38%, transparent 22px, rgba(98, 50, 10, 0.28) 23px, rgba(98, 50, 10, 0.28) 25px, transparent 26px),
+    /* Ring 3 */ radial-gradient(ellipse at 55% 38%, transparent 34px, rgba(105, 56, 12, 0.25) 35px, rgba(105, 56, 12, 0.25) 37px, transparent 38px),
+    /* Ring 4 */ radial-gradient(ellipse at 55% 38%, transparent 47px, rgba(98, 50, 10, 0.23) 48px, rgba(98, 50, 10, 0.23) 50px, transparent 51px),
+    /* Ring 5 */ radial-gradient(ellipse at 55% 38%, transparent 62px, rgba(105, 56, 12, 0.2) 63px, rgba(105, 56, 12, 0.2) 65px, transparent 66px),
+    /* Ring 6 */ radial-gradient(ellipse at 55% 38%, transparent 80px, rgba(98, 50, 10, 0.18) 81px, rgba(98, 50, 10, 0.18) 83px, transparent 84px),
+    /* Ring 7 */ radial-gradient(ellipse at 55% 38%, transparent 100px, rgba(105, 56, 12, 0.16) 101px, rgba(105, 56, 12, 0.16) 103px, transparent 104px),
+    /* Ring 8 */ radial-gradient(ellipse at 55% 38%, transparent 124px, rgba(98, 50, 10, 0.14) 125px, rgba(98, 50, 10, 0.14) 127px, transparent 128px),
+    /* Ring 9 */ radial-gradient(ellipse at 55% 38%, transparent 152px, rgba(105, 56, 12, 0.12) 153px, rgba(105, 56, 12, 0.12) 155px, transparent 156px),
+    /* Ring 10 */ radial-gradient(ellipse at 55% 38%, transparent 184px, rgba(98, 50, 10, 0.1) 185px, rgba(98, 50, 10, 0.1) 187px, transparent 188px),
+    /* Ring 11 */ radial-gradient(ellipse at 55% 38%, transparent 222px, rgba(105, 56, 12, 0.08) 223px, rgba(105, 56, 12, 0.08) 225px, transparent 226px),
+    /* Ring 12 */ radial-gradient(ellipse at 55% 38%, transparent 266px, rgba(98, 50, 10, 0.06) 267px, rgba(98, 50, 10, 0.06) 269px, transparent 270px);
   clip-path: polygon(
     0% 28px, 14px 8px, 38px 2px, 70px 0px,
     calc(100% - 30px) 6px, calc(100% - 8px) 18px, 100% 32px,
@@ -359,14 +360,22 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-3 {
-  /* Birch — lighter, almost cream-tan rings */
+  /* Birch: lightest cream-tan, knot at 32% 58%, irregular wide gaps */
+  background-color: #DEBA80;
   background-image:
-    repeating-radial-gradient(
-      ellipse at 32% 58%,
-      #E0BC82 0px, #D4B074 8px, #C8A46C 14px, #BEA066 18px,
-      #C4A46A 24px, #CEAC72 30px, #D8B47C 36px,
-      #CCAC72 42px, #D6B47A 50px, #DCB880 58px, #CAA870 66px, #D2B076 76px
-    );
+    radial-gradient(ellipse at 32% 58%, rgba(255, 235, 180, 0.55) 0%, rgba(230, 190, 125, 0.15) 16%, transparent 36%),
+    /* Ring 1 */ radial-gradient(ellipse at 32% 58%, transparent 15px, rgba(112, 62, 15, 0.3) 16px, rgba(112, 62, 15, 0.3) 18px, transparent 19px),
+    /* Ring 2 */ radial-gradient(ellipse at 32% 58%, transparent 28px, rgba(102, 54, 12, 0.26) 29px, rgba(102, 54, 12, 0.26) 31px, transparent 32px),
+    /* Ring 3 */ radial-gradient(ellipse at 32% 58%, transparent 42px, rgba(110, 60, 14, 0.23) 43px, rgba(110, 60, 14, 0.23) 45px, transparent 46px),
+    /* Ring 4 */ radial-gradient(ellipse at 32% 58%, transparent 58px, rgba(102, 54, 12, 0.21) 59px, rgba(102, 54, 12, 0.21) 61px, transparent 62px),
+    /* Ring 5 */ radial-gradient(ellipse at 32% 58%, transparent 76px, rgba(110, 60, 14, 0.18) 77px, rgba(110, 60, 14, 0.18) 79px, transparent 80px),
+    /* Ring 6 */ radial-gradient(ellipse at 32% 58%, transparent 97px, rgba(102, 54, 12, 0.16) 98px, rgba(102, 54, 12, 0.16) 100px, transparent 101px),
+    /* Ring 7 */ radial-gradient(ellipse at 32% 58%, transparent 122px, rgba(110, 60, 14, 0.14) 123px, rgba(110, 60, 14, 0.14) 125px, transparent 126px),
+    /* Ring 8 */ radial-gradient(ellipse at 32% 58%, transparent 150px, rgba(102, 54, 12, 0.12) 151px, rgba(102, 54, 12, 0.12) 153px, transparent 154px),
+    /* Ring 9 */ radial-gradient(ellipse at 32% 58%, transparent 182px, rgba(110, 60, 14, 0.1) 183px, rgba(110, 60, 14, 0.1) 185px, transparent 186px),
+    /* Ring 10 */ radial-gradient(ellipse at 32% 58%, transparent 220px, rgba(102, 54, 12, 0.08) 221px, rgba(102, 54, 12, 0.08) 223px, transparent 224px),
+    /* Ring 11 */ radial-gradient(ellipse at 32% 58%, transparent 264px, rgba(108, 58, 14, 0.06) 265px, rgba(108, 58, 14, 0.06) 267px, transparent 268px),
+    /* Ring 12 */ radial-gradient(ellipse at 32% 58%, transparent 314px, rgba(102, 54, 12, 0.04) 315px, rgba(102, 54, 12, 0.04) 317px, transparent 318px);
   clip-path: polygon(
     0% 22px, 10px 4px, 28px 0px, 64px 8px,
     calc(100% - 44px) 2px, calc(100% - 22px) 0px, calc(100% - 6px) 14px, 100% 26px,
@@ -377,14 +386,22 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 .stone-slab-tier-4 {
-  /* Cedar — richer, deeper warm tan */
+  /* Cedar: rich warm tan, knot at 48% 62%, natural asymmetric pattern */
+  background-color: #C89460;
   background-image:
-    repeating-radial-gradient(
-      ellipse at 48% 62%,
-      #C89A60 0px, #BC8E58 8px, #B08452 14px, #A67A4C 18px,
-      #AC8054 24px, #BA8E60 30px, #C4986A 36px,
-      #B88A5E 42px, #C29464 50px, #C89C6A 58px, #B68C5E 66px, #C09462 76px
-    );
+    radial-gradient(ellipse at 48% 62%, rgba(245, 210, 145, 0.48) 0%, rgba(210, 165, 95, 0.14) 19%, transparent 40%),
+    /* Ring 1 */ radial-gradient(ellipse at 48% 62%, transparent 17px, rgba(108, 58, 14, 0.32) 18px, rgba(108, 58, 14, 0.32) 20px, transparent 21px),
+    /* Ring 2 */ radial-gradient(ellipse at 48% 62%, transparent 30px, rgba(100, 52, 10, 0.27) 31px, rgba(100, 52, 10, 0.27) 33px, transparent 34px),
+    /* Ring 3 */ radial-gradient(ellipse at 48% 62%, transparent 44px, rgba(108, 58, 14, 0.24) 45px, rgba(108, 58, 14, 0.24) 47px, transparent 48px),
+    /* Ring 4 */ radial-gradient(ellipse at 48% 62%, transparent 60px, rgba(100, 52, 10, 0.22) 61px, rgba(100, 52, 10, 0.22) 63px, transparent 64px),
+    /* Ring 5 */ radial-gradient(ellipse at 48% 62%, transparent 78px, rgba(108, 58, 14, 0.19) 79px, rgba(108, 58, 14, 0.19) 81px, transparent 82px),
+    /* Ring 6 */ radial-gradient(ellipse at 48% 62%, transparent 98px, rgba(100, 52, 10, 0.17) 99px, rgba(100, 52, 10, 0.17) 101px, transparent 102px),
+    /* Ring 7 */ radial-gradient(ellipse at 48% 62%, transparent 121px, rgba(108, 58, 14, 0.15) 122px, rgba(108, 58, 14, 0.15) 124px, transparent 125px),
+    /* Ring 8 */ radial-gradient(ellipse at 48% 62%, transparent 148px, rgba(100, 52, 10, 0.13) 149px, rgba(100, 52, 10, 0.13) 151px, transparent 152px),
+    /* Ring 9 */ radial-gradient(ellipse at 48% 62%, transparent 178px, rgba(108, 58, 14, 0.11) 179px, rgba(108, 58, 14, 0.11) 181px, transparent 182px),
+    /* Ring 10 */ radial-gradient(ellipse at 48% 62%, transparent 214px, rgba(100, 52, 10, 0.09) 215px, rgba(100, 52, 10, 0.09) 217px, transparent 218px),
+    /* Ring 11 */ radial-gradient(ellipse at 48% 62%, transparent 256px, rgba(108, 58, 14, 0.07) 257px, rgba(108, 58, 14, 0.07) 259px, transparent 260px),
+    /* Ring 12 */ radial-gradient(ellipse at 48% 62%, transparent 305px, rgba(100, 52, 10, 0.05) 306px, rgba(100, 52, 10, 0.05) 308px, transparent 309px);
   clip-path: polygon(
     0% 32px, 12px 12px, 34px 0px, 54px 6px,
     calc(100% - 36px) 4px, calc(100% - 12px) 0px, 100% 22px,

@@ -1265,7 +1265,7 @@ export default function AboutPage() {
                 </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    5. OUR MILESTONE TIMELINE (2021 — 2026) (Staggered Cascade)
+                    5. OUR JOURNEY — Ancient Stone Tablet Chronicles
                 ───────────────────────────────────────────────────────────── */}
                 <motion.section 
                     initial="hidden"
@@ -1274,101 +1274,217 @@ export default function AboutPage() {
                     variants={sectionReveal}
                     style={{
                         padding: '110px 24px',
-                        background: '#F8F9F5',
-                        position: 'relative'
+                        background: 'linear-gradient(175deg, #1A1410 0%, #0E0C0A 50%, #141008 100%)',
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> OUR JOURNEY
+                    {/* Stone dust texture background overlay */}
+                    <div style={{
+                        position: 'absolute', inset: 0, pointerEvents: 'none',
+                        backgroundImage: `
+                            radial-gradient(ellipse at 20% 30%, rgba(180, 140, 80, 0.06) 0%, transparent 55%),
+                            radial-gradient(ellipse at 80% 70%, rgba(120, 90, 50, 0.07) 0%, transparent 50%),
+                            repeating-linear-gradient(45deg, transparent 0px, transparent 18px, rgba(255,255,255,0.012) 18px, rgba(255,255,255,0.012) 19px)
+                        `
+                    }} />
+
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+                        {/* Section Header */}
+                        <div style={{ textAlign: 'center', marginBottom: '72px' }}>
+                            <div style={{
+                                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                                background: 'rgba(180, 140, 70, 0.12)',
+                                border: '1px solid rgba(180, 140, 70, 0.3)',
+                                borderRadius: '999px', padding: '5px 16px',
+                                fontSize: '11px', fontWeight: '800',
+                                color: '#C8A855', letterSpacing: '1.2px', textTransform: 'uppercase',
+                                marginBottom: '18px'
+                            }}>
+                                <span>⬡</span> CHRONICLES INSCRIBED IN STONE
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(32px, 4.5vw, 50px)',
+                                fontSize: 'clamp(30px, 4.2vw, 48px)',
                                 fontWeight: '800',
-                                color: '#0B150E',
+                                color: '#F5E8C8',
                                 letterSpacing: '-0.03em',
-                                margin: '0 0 14px'
+                                margin: '0 0 14px',
+                                textShadow: '0 2px 20px rgba(180, 130, 50, 0.25)'
                             }}>
-                                From A Solitary Ridge Tent to <span style={{ color: '#E5A93B' }}>Kerala’s Premier Basecamp</span>
+                                From A Solitary Ridge Tent to{' '}
+                                <span style={{
+                                    color: '#D4A845',
+                                    textShadow: '0 0 30px rgba(212, 168, 69, 0.4)'
+                                }}>Kerala's Premier Basecamp</span>
                             </h2>
-                            <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
-                                Our 5-year evolution driven by passion for raw wilderness, local tribal empowerment, and uncompromised camper safety.
+                            <p style={{ fontSize: '15.5px', color: '#8A7A62', maxWidth: '580px', margin: '0 auto', lineHeight: 1.65 }}>
+                                Our 5-year evolution — carved in stone, one milestone at a time.
                             </p>
                         </div>
 
-                        {/* Milestone Cards Grid */}
+                        {/* Ancient Stone Tablet Grid */}
                         <motion.div 
                             variants={staggerContainer}
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                                gap: '24px'
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
+                                gap: '32px',
+                                alignItems: 'start'
                             }}
                         >
-                            {TIMELINE_MILESTONES.map((mile, mIdx) => (
-                                <motion.div
-                                    key={mIdx}
-                                    variants={cardReveal}
-                                    whileHover={{ 
-                                        y: -10, 
-                                        boxShadow: '0 20px 45px rgba(0,0,0,0.09)' 
-                                    }}
-                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                                    style={{
-                                        background: '#FFFFFF',
-                                        border: '1px solid rgba(11, 21, 14, 0.08)',
-                                        borderRadius: '26px',
-                                        padding: '32px 26px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        boxShadow: '0 12px 30px rgba(0,0,0,0.04)',
-                                        position: 'relative',
-                                        cursor: 'default'
-                                    }}
-                                >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                        <span style={{
-                                            fontFamily: 'var(--font-heading)',
-                                            fontSize: '36px',
-                                            fontWeight: '800',
-                                            color: '#0B150E',
-                                            letterSpacing: '-0.02em'
-                                        }}>
-                                            {mile.year}
-                                        </span>
-                                        <span style={{
-                                            fontSize: '11px',
-                                            fontWeight: '800',
-                                            background: 'rgba(229, 169, 59, 0.15)',
-                                            color: '#C86D14',
-                                            padding: '4px 10px',
-                                            borderRadius: '999px'
-                                        }}>
-                                            {mile.tag}
-                                        </span>
-                                    </div>
+                            {TIMELINE_MILESTONES.map((mile, mIdx) => {
+                                // Each tablet has a unique chipped polygon shape
+                                const clipPaths = [
+                                    'polygon(0% 14px, 10px 4px, 30px 0%, calc(100% - 24px) 2px, calc(100% - 8px) 0%, 100% 12px, calc(100% - 2px) 45%, 100% calc(100% - 18px), calc(100% - 14px) 100%, 40px calc(100% - 3px), 12px 100%, 0% calc(100% - 14px), 6px 55%)',
+                                    'polygon(0% 20px, 14px 6px, 28px 0%, calc(100% - 30px) 0px, calc(100% - 10px) 8px, 100% 22px, calc(100% - 4px) 60%, 100% calc(100% - 20px), calc(100% - 20px) calc(100% - 4px), calc(100% - 40px) 100%, 20px calc(100% - 6px), 4px calc(100% - 22px), 0% calc(100% - 38px), 8px 48%)',
+                                    'polygon(0% 10px, 8px 0%, 28px 4px, calc(100% - 20px) 0px, calc(100% - 6px) 10px, 100% 28px, calc(100% - 6px) 58%, 100% calc(100% - 14px), calc(100% - 12px) 100%, 48px calc(100% - 2px), 14px calc(100% - 10px), 0% calc(100% - 26px), 4px 40%)',
+                                    'polygon(0% 24px, 16px 8px, 36px 0%, calc(100% - 26px) 4px, calc(100% - 4px) 0%, 100% 18px, calc(100% - 8px) 50%, 100% calc(100% - 22px), calc(100% - 16px) calc(100% - 8px), calc(100% - 38px) 100%, 18px calc(100% - 4px), 6px calc(100% - 18px), 0% calc(100% - 32px), 10px 62%)'
+                                ];
+                                // Slightly different stone tones per card
+                                const stoneBgs = [
+                                    { bg: '#3A3530', rings: 'rgba(80,65,45,0.9)', light: 'rgba(255,230,170,0.06)' },
+                                    { bg: '#2E2C28', rings: 'rgba(65,58,42,0.9)', light: 'rgba(255,220,150,0.05)' },
+                                    { bg: '#35312C', rings: 'rgba(72,62,46,0.9)', light: 'rgba(255,235,175,0.07)' },
+                                    { bg: '#312E2A', rings: 'rgba(68,58,44,0.9)', light: 'rgba(255,225,160,0.06)' }
+                                ];
+                                const s = stoneBgs[mIdx % 4];
+                                const rotations = ['-1.2deg', '1.0deg', '-0.8deg', '1.4deg'];
 
-                                    <h3 style={{
-                                        fontFamily: 'var(--font-heading)',
-                                        fontSize: '19px',
-                                        fontWeight: '800',
-                                        color: '#0B150E',
-                                        margin: '0 0 10px',
-                                        lineHeight: 1.25
-                                    }}>
-                                        {mile.title}
-                                    </h3>
+                                return (
+                                    <motion.div
+                                        key={mIdx}
+                                        variants={cardReveal}
+                                        whileHover={{ y: -12, rotate: 0 }}
+                                        transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                                        style={{
+                                            position: 'relative',
+                                            transform: `rotate(${rotations[mIdx % 4]})`,
+                                            filter: 'drop-shadow(0 22px 48px rgba(0,0,0,0.85)) drop-shadow(0 6px 14px rgba(0,0,0,0.6))',
+                                            cursor: 'default'
+                                        }}
+                                    >
+                                        {/* Stone Slab */}
+                                        <div style={{
+                                            background: s.bg,
+                                            backgroundImage: `
+                                                radial-gradient(ellipse at ${30 + mIdx * 12}% ${40 + mIdx * 8}%, rgba(90, 75, 50, 0.35) 0%, transparent 55%),
+                                                linear-gradient(${155 + mIdx * 10}deg, rgba(255,235,180,0.08) 0%, transparent 40%, rgba(0,0,0,0.45) 100%),
+                                                repeating-linear-gradient(${88 + mIdx * 5}deg,
+                                                    transparent 0px, transparent 4px,
+                                                    rgba(255,255,255,0.018) 4px, rgba(255,255,255,0.018) 5px,
+                                                    transparent 5px, transparent 14px,
+                                                    rgba(0,0,0,0.08) 14px, rgba(0,0,0,0.08) 15px
+                                                )
+                                            `,
+                                            clipPath: clipPaths[mIdx % 4],
+                                            padding: '38px 28px 34px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            minHeight: '320px'
+                                        }}>
+                                            {/* Engraved top rule */}
+                                            <div style={{
+                                                height: '2px',
+                                                background: 'linear-gradient(90deg, transparent, rgba(180,145,80,0.35), rgba(180,145,80,0.5), rgba(180,145,80,0.35), transparent)',
+                                                marginBottom: '22px',
+                                                borderRadius: '1px'
+                                            }} />
 
-                                    <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>
-                                        {mile.desc}
-                                    </p>
-                                </motion.div>
-                            ))}
+                                            {/* Tag — chiseled label */}
+                                            <div style={{
+                                                fontSize: '10px',
+                                                fontWeight: '800',
+                                                letterSpacing: '2px',
+                                                color: '#A08840',
+                                                textTransform: 'uppercase',
+                                                marginBottom: '10px',
+                                                fontFamily: 'var(--font-heading)',
+                                                opacity: 0.85
+                                            }}>
+                                                ◈ {mile.tag}
+                                            </div>
+
+                                            {/* Carved Year — deeply engraved */}
+                                            <div style={{
+                                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                                fontSize: '58px',
+                                                fontWeight: '900',
+                                                letterSpacing: '-0.04em',
+                                                lineHeight: 1,
+                                                color: '#C4A660',
+                                                textShadow: `
+                                                    0 1px 0 rgba(255,230,160,0.3),
+                                                    0 -1px 2px rgba(0,0,0,0.95),
+                                                    0 3px 10px rgba(0,0,0,0.9),
+                                                    inset 0 1px 2px rgba(0,0,0,0.8)
+                                                `,
+                                                marginBottom: '16px'
+                                            }}>
+                                                {mile.year}
+                                            </div>
+
+                                            {/* Carved divider groove */}
+                                            <div style={{
+                                                display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px'
+                                            }}>
+                                                <div style={{ flex: 1, height: '1px', background: 'rgba(160,130,60,0.3)' }} />
+                                                <div style={{ fontSize: '8px', color: 'rgba(160,130,60,0.5)', letterSpacing: '3px' }}>✦✦✦</div>
+                                                <div style={{ flex: 1, height: '1px', background: 'rgba(160,130,60,0.3)' }} />
+                                            </div>
+
+                                            {/* Title — inscribed */}
+                                            <h3 style={{
+                                                fontFamily: 'var(--font-heading)',
+                                                fontSize: '17px',
+                                                fontWeight: '800',
+                                                color: '#E8D8B0',
+                                                margin: '0 0 12px',
+                                                lineHeight: 1.28,
+                                                letterSpacing: '-0.01em',
+                                                textShadow: '0 1px 4px rgba(0,0,0,0.8)'
+                                            }}>
+                                                {mile.title}
+                                            </h3>
+
+                                            {/* Description — etched text */}
+                                            <p style={{
+                                                fontSize: '13px',
+                                                color: '#8A7A5C',
+                                                lineHeight: 1.7,
+                                                margin: '0 0 auto',
+                                                flexGrow: 1
+                                            }}>
+                                                {mile.desc}
+                                            </p>
+
+                                            {/* Engraved bottom rule */}
+                                            <div style={{
+                                                height: '1px',
+                                                background: 'linear-gradient(90deg, transparent, rgba(180,145,80,0.28), transparent)',
+                                                marginTop: '22px'
+                                            }} />
+
+                                            {/* Stone era marker */}
+                                            <div style={{
+                                                marginTop: '12px',
+                                                fontSize: '9.5px',
+                                                color: 'rgba(160,130,60,0.45)',
+                                                letterSpacing: '1.5px',
+                                                fontWeight: '700',
+                                                textTransform: 'uppercase',
+                                                textAlign: 'right'
+                                            }}>
+                                                AANANDHAM · ANNO {mile.year}
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
                         </motion.div>
                     </div>
                 </motion.section>
+
 
                 {/* ─────────────────────────────────────────────────────────────
                     6. SURROUNDING LANDMARKS & HIGH PEAKS (Category Tabs & Staggered Reveal)
