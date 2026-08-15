@@ -1247,19 +1247,19 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-60px" }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px 24px', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '48px', alignItems: 'center' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div className="overview-3col-grid">
                         
                         {/* Left Column */}
-                        <motion.div variants={fadeInLeft}>
+                        <motion.div variants={fadeInLeft} style={{ width: '100%' }}>
                             <div className="star-badge">
                                 <span className="star-icon">★</span> OVERVIEW
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(30px, 4vw, 46px)',
+                                fontSize: 'clamp(28px, 4vw, 46px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
@@ -1267,7 +1267,7 @@ export default function HomePage() {
                                 marginBottom: '20px'
                             }}>
                                 Spend a week living in a <br />
-                                <span className="text-marker-2" style={{ whiteSpace: 'nowrap' }}>trekker's paradise</span> — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
+                                <span className="text-marker-2">trekker's paradise</span> — <span style={{ color: '#8E9B92', fontWeight: '700' }}>Kerala</span>
                             </h2>
 
                             {/* 3 Checkmark Pills */}
@@ -1298,11 +1298,18 @@ export default function HomePage() {
                             </button>
                         </motion.div>
 
-                        {/* Center Highlight Image (Ref Screenshot 3 Batch 2) */}
+                        {/* Center Highlight Image */}
                         <motion.div 
                             variants={cardReveal}
                             className="card-img-zoom"
-                            style={{ position: 'relative', height: '480px', borderRadius: '36px', overflow: 'hidden', boxShadow: '0 20px 45px rgba(0, 0, 0, 0.08)' }}
+                            style={{ 
+                                position: 'relative', 
+                                height: 'clamp(360px, 48vh, 500px)', 
+                                width: '100%',
+                                borderRadius: '32px', 
+                                overflow: 'hidden', 
+                                boxShadow: '0 20px 45px rgba(0, 0, 0, 0.08)' 
+                            }}
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
@@ -1351,7 +1358,7 @@ export default function HomePage() {
                         </motion.div>
 
                         {/* Right Column: Metadata + Quote Card */}
-                        <motion.div variants={fadeInRight} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                        <motion.div variants={fadeInRight} style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
                             
                             {/* Metadata list */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '10px' }}>
