@@ -1313,7 +1313,7 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '110px 24px',
+                        padding: '110px clamp(20px, 4vw, 48px)',
                         background: 'linear-gradient(175deg, #1A1410 0%, #0E0C0A 50%, #141008 100%)',
                         position: 'relative',
                         overflow: 'hidden'
@@ -1329,9 +1329,9 @@ export default function AboutPage() {
                         `
                     }} />
 
-                    <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 1 }}>
                         {/* Section Header */}
-                        <div style={{ textAlign: 'center', marginBottom: '72px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div style={{
                                 display: 'inline-flex', alignItems: 'center', gap: '8px',
                                 background: 'rgba(180, 140, 70, 0.12)',
@@ -1366,12 +1366,7 @@ export default function AboutPage() {
                         {/* Ancient Stone Tablet Grid */}
                         <motion.div 
                             variants={staggerContainer}
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
-                                gap: '32px',
-                                alignItems: 'start'
-                            }}
+                            className="stone-tablets-grid"
                         >
                             {TIMELINE_MILESTONES.map((mile, mIdx) => {
                                 // Each tablet — unique chipped/cracked stone polygon edge
