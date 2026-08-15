@@ -2944,7 +2944,10 @@ export default function HomePage() {
                             <button
                                 onClick={() => {
                                     const el = document.getElementById('events-slider-track');
-                                    el?.scrollBy({ left: -360, behavior: 'smooth' });
+                                    if (el) {
+                                        const cardW = el.children[0]?.offsetWidth || 340;
+                                        el.scrollBy({ left: -(cardW + 16), behavior: 'smooth' });
+                                    }
                                 }}
                                 aria-label="Previous Event"
                                 style={{
@@ -2969,7 +2972,10 @@ export default function HomePage() {
                             <button
                                 onClick={() => {
                                     const el = document.getElementById('events-slider-track');
-                                    el?.scrollBy({ left: 360, behavior: 'smooth' });
+                                    if (el) {
+                                        const cardW = el.children[0]?.offsetWidth || 340;
+                                        el.scrollBy({ left: cardW + 16, behavior: 'smooth' });
+                                    }
                                 }}
                                 aria-label="Next Event"
                                 style={{
