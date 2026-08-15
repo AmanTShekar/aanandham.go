@@ -953,16 +953,22 @@ export default function HomePage() {
                 const sRect = staySection.getBoundingClientRect();
                 if (sRect.top <= windowH && sRect.bottom >= 0) {
                     const stayCardElements = staySection.querySelectorAll('[data-stay-card-idx]');
-                    let activeStayIndex = 0;
+                    let activeStayIndex = -1;
+                    let minDistance = Infinity;
                     stayCardElements.forEach((el) => {
                         const idx = parseInt(el.getAttribute('data-stay-card-idx'), 10);
                         if (isNaN(idx)) return;
                         const rect = el.getBoundingClientRect();
-                        if (rect.top <= triggerY) {
+                        const cardCenter = rect.top + rect.height / 2;
+                        const dist = Math.abs(cardCenter - triggerY);
+                        if (dist < minDistance && rect.bottom > 80 && rect.top < windowH - 80) {
+                            minDistance = dist;
                             activeStayIndex = idx;
                         }
                     });
-                    setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
+                    if (activeStayIndex >= 0) {
+                        setActiveStayAcc((prev) => (prev !== activeStayIndex ? activeStayIndex : prev));
+                    }
                 }
             }
 
@@ -972,16 +978,22 @@ export default function HomePage() {
                 const pRect = programSection.getBoundingClientRect();
                 if (pRect.top <= windowH * 0.90 && pRect.bottom >= 0) {
                     const programElements = programSection.querySelectorAll('[data-program-day-idx]');
-                    let activeProgramIndex = 0;
+                    let activeProgramIndex = -1;
+                    let minDistance = Infinity;
                     programElements.forEach((el) => {
                         const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
                         if (isNaN(idx)) return;
                         const rect = el.getBoundingClientRect();
-                        if (rect.top <= triggerY) {
+                        const cardCenter = rect.top + rect.height / 2;
+                        const dist = Math.abs(cardCenter - triggerY);
+                        if (dist < minDistance && rect.bottom > 80 && rect.top < windowH - 80) {
+                            minDistance = dist;
                             activeProgramIndex = idx;
                         }
                     });
-                    setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
+                    if (activeProgramIndex >= 0) {
+                        setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
+                    }
                 }
             }
 
@@ -1683,7 +1695,7 @@ export default function HomePage() {
                             </h2>
 
                             <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '22px' }}>
-                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 350+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
+                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 15,000+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
                             </p>
 
                             {/* Mobile Horizontal Scrollable Pillar Tabs */}
@@ -1983,6 +1995,8 @@ export default function HomePage() {
                                         <img 
                                             src={pkg.image} 
                                             alt={pkg.title} 
+                                            loading="lazy"
+                                            decoding="async"
                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                         />
                                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.6) 0%, transparent 45%)' }} />
@@ -2160,6 +2174,8 @@ export default function HomePage() {
                                     key={acc.id}
                                     src={acc.mainImg}
                                     alt={acc.title}
+                                    loading="lazy"
+                                    decoding="async"
                                     style={{
                                         position: 'absolute',
                                         inset: 0,
@@ -2405,6 +2421,8 @@ export default function HomePage() {
                                     <img 
                                         src={PROGRAM_DAYS[hoveredProgramDay].img} 
                                         alt={PROGRAM_DAYS[hoveredProgramDay].title} 
+                                        loading="lazy"
+                                        decoding="async"
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                     />
                                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(11,21,14,0.92) 0%, rgba(11,21,14,0.25) 50%, transparent 100%)' }} />
@@ -3326,7 +3344,7 @@ export default function HomePage() {
                                 }}
                             >
                                 <div style={{ position: 'relative', height: '260px' }}>
-                                    <img src={spot.img} alt={spot.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={spot.img} alt={spot.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     <span style={{
                                         position: 'absolute',
                                         top: '16px',
@@ -3460,6 +3478,8 @@ export default function HomePage() {
                                 <img 
                                     src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
                                     alt="Aanandham Wilderness Campfire" 
+                                    loading="lazy"
+                                    decoding="async"
                                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                                 />
                                 
@@ -3542,6 +3562,8 @@ export default function HomePage() {
                                         <img 
                                             src={t.avatar} 
                                             alt={t.author} 
+                                            loading="lazy"
+                                            decoding="async"
                                             style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #FFFFFF', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }} 
                                         />
                                         <div>

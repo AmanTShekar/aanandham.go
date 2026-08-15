@@ -1655,6 +1655,8 @@ export default function AboutPage() {
                                             <img
                                                 src={place.image}
                                                 alt={place.title}
+                                                loading="lazy"
+                                                decoding="async"
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                             <div style={{
@@ -1797,6 +1799,8 @@ export default function AboutPage() {
                                     <img
                                         src={member.img}
                                         alt={member.name}
+                                        loading="lazy"
+                                        decoding="async"
                                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                     />
 
@@ -1968,6 +1972,8 @@ export default function AboutPage() {
                                         <img
                                             src={rev.avatar}
                                             alt={rev.name}
+                                            loading="lazy"
+                                            decoding="async"
                                             style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #E5A93B' }}
                                         />
                                         <div>
