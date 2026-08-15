@@ -85,18 +85,20 @@ const CONTACT_CHANNELS = [
     }
 ];
 
-// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP ──
+// ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Vibrant Sticky Paper Notes) ──
 const TRAVEL_STEPS = [
     {
         num: 'STAGE 01',
         title: 'Arrive in Munnar / Kochi',
-        desc: 'Fly into Cochin Int\'l Airport (COK) or take the train to Aluva / Ernakulam. Luxury cabs & express mountain buses run directly to Munnar town.',
+        desc: 'Fly into Cochin Int\'l Airport (COK) or take the train to Aluva / Ernakulam. Luxury private cabs & express KSRTC mountain buses run daily directly to Munnar town.',
         time: 'Approx 3.5 hrs from Kochi (COK)',
         tag: 'STAGE · 01',
         stamp: 'PAVED HIGHWAY',
         stampColor: '#166534',
-        paperBg: '#FCFCF8',
-        inkColor: '#142016',
+        paperBg: '#FEF08A', // Sunlit Canary Yellow
+        inkColor: '#1A2218',
+        tapeColor: 'rgba(254, 240, 138, 0.85)',
+        rotation: '-1.5deg',
         icon: 'fa-solid fa-plane-departure',
         memo: 'Early morning drives through Neriamangalam forest offer misty river valley views.'
     },
@@ -108,8 +110,10 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 02',
         stamp: 'SCENIC CORRIDOR',
         stampColor: '#047857',
-        paperBg: '#FCFCF8',
-        inkColor: '#0C2417',
+        paperBg: '#A7F3D0', // Alpine Mint
+        inkColor: '#0A2518',
+        tapeColor: 'rgba(167, 243, 208, 0.85)',
+        rotation: '1.5deg',
         icon: 'fa-solid fa-car-side',
         memo: 'Roll windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
     },
@@ -121,8 +125,10 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 03',
         stamp: 'MONITORED PARKING',
         stampColor: '#C2410C',
-        paperBg: '#FCFCF8',
-        inkColor: '#2A1708',
+        paperBg: '#FED7AA', // Sunburst Peach
+        inkColor: '#2B1405',
+        tapeColor: 'rgba(254, 215, 170, 0.85)',
+        rotation: '-1.2deg',
         icon: 'fa-solid fa-square-parking',
         memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
     },
@@ -134,8 +140,10 @@ const TRAVEL_STEPS = [
         tag: 'STAGE · 04',
         stamp: '4X4 OFF-ROAD SAFARI',
         stampColor: '#15803D',
-        paperBg: '#FCFCF8',
-        inkColor: '#112513',
+        paperBg: '#BAE6FD', // Glacial Sky Blue
+        inkColor: '#0C2333',
+        tapeColor: 'rgba(186, 230, 253, 0.85)',
+        rotation: '1.6deg',
         icon: 'fa-solid fa-truck-monster',
         memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
     }
@@ -968,7 +976,24 @@ export default function ContactPage() {
                     <div className="route-carousel-track">
                         {TRAVEL_STEPS.map((st, idx) => (
                             <div key={idx} className="route-carousel-card">
-                                <div className="route-notebook-sheet">
+                                <div 
+                                    className="route-notebook-sheet hover-lift"
+                                    style={{
+                                        backgroundColor: st.paperBg,
+                                        color: st.inkColor
+                                    }}
+                                >
+                                    {/* Translucent Scotch Tape Strip at Top */}
+                                    <div 
+                                        className="scotch-tape-strip" 
+                                        style={{
+                                            width: '100px',
+                                            height: '28px',
+                                            top: '-14px',
+                                            background: 'rgba(228, 192, 126, 0.82)'
+                                        }} 
+                                    />
+
                                     {/* Realistic 3D Metallic Brass Pushpin Pinned at Top Center */}
                                     <div className="pushpin-3d-wrap">
                                         {/* Pin Cast Shadow */}
@@ -994,7 +1019,7 @@ export default function ContactPage() {
                                                 fontFamily: 'monospace',
                                                 fontSize: '11px',
                                                 fontWeight: '800',
-                                                color: '#64748B',
+                                                color: '#475569',
                                                 letterSpacing: '1px'
                                             }}>
                                                 {st.tag}
@@ -1032,7 +1057,7 @@ export default function ContactPage() {
                                                 fontFamily: 'var(--font-heading)',
                                                 fontSize: '18px',
                                                 fontWeight: '800',
-                                                color: '#121613',
+                                                color: st.inkColor,
                                                 margin: 0,
                                                 lineHeight: 1.2
                                             }}>
@@ -1043,7 +1068,7 @@ export default function ContactPage() {
                                         {/* Description */}
                                         <p style={{
                                             fontSize: '13px',
-                                            color: '#475569',
+                                            color: '#334155',
                                             lineHeight: 1.6,
                                             margin: '0 0 16px'
                                         }}>
@@ -1051,14 +1076,20 @@ export default function ContactPage() {
                                         </p>
 
                                         {/* Field Memo Box */}
-                                        <div className="notebook-memo-box">
+                                        <div 
+                                            className="notebook-memo-box"
+                                            style={{
+                                                background: 'rgba(255, 255, 255, 0.65)',
+                                                borderLeft: `3px solid ${st.stampColor}`
+                                            }}
+                                        >
                                             📌 <strong>Field Note:</strong> {st.memo}
                                         </div>
                                     </div>
 
                                     {/* Bottom Timing Indicator */}
-                                    <div className="notebook-time-indicator">
-                                        <span style={{ color: '#E5A93B' }}>⏱</span>
+                                    <div className="notebook-time-indicator" style={{ color: st.inkColor }}>
+                                        <span style={{ color: '#C86D14' }}>⏱</span>
                                         <span>{st.time}</span>
                                     </div>
                                 </div>
