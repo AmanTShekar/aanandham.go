@@ -12,6 +12,12 @@ import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsD
 import { inr } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
 
+export function parseRoomCapacity(capacityStr) {
+    if (!capacityStr) return 2;
+    const match = String(capacityStr).match(/\d+/);
+    return match ? Math.max(1, parseInt(match[0], 10)) : 2;
+}
+
 export default function CampPropertyDetailPage() {
     const params = useParams();
     const router = useRouter();
@@ -26,6 +32,7 @@ export default function CampPropertyDetailPage() {
     const [selectedRoomId, setSelectedRoomId] = useState(null);
     const [selectedDate, setSelectedDate] = useState('Aug 22 – 23, 2026');
     const [guestsCount, setGuestsCount] = useState(2);
+    const [customUnits, setCustomUnits] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
 
     // Wishlist & Share Toast
@@ -77,8 +84,17 @@ export default function CampPropertyDetailPage() {
 
     const galleryPhotos = (camp.gallery && camp.gallery.length > 0) ? camp.gallery : [camp.image];
     const selectedRoom = camp.rooms ? camp.rooms.find(r => r.id === selectedRoomId) || camp.rooms[0] : null;
+    const roomCapacity = parseRoomCapacity(selectedRoom?.capacity);
+    const autoUnits = Math.max(1, Math.ceil(guestsCount / roomCapacity));
+    const allocatedUnits = customUnits !== null ? customUnits : autoUnits;
+    const totalMaxCapacity = allocatedUnits * roomCapacity;
+    const isUnderCapacity = guestsCount > totalMaxCapacity;
+
     const unitPrice = selectedRoom ? selectedRoom.price : camp.price;
-    const computedTotal = unitPrice * guestsCount;
+    const baseTotal = unitPrice * guestsCount;
+    const squadDiscountPercent = guestsCount >= 8 ? 15 : guestsCount >= 4 ? 10 : 0;
+    const squadDiscountAmount = Math.round((baseTotal * squadDiscountPercent) / 100);
+    const computedTotal = baseTotal - squadDiscountAmount;
 
     // Suggestions (Other Camps)
     const suggestedCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
@@ -367,13 +383,16 @@ export default function CampPropertyDetailPage() {
                                             </div>
 
                                             <div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: '8px', marginBottom: '4px' }}>
                                                     <span style={{ fontSize: '11px', fontWeight: '800', background: '#121613', color: '#E5A93B', padding: '2px 8px', borderRadius: '999px' }}>
                                                         Capacity: {room.capacity}
                                                     </span>
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', background: isSelected ? '#166534' : '#E8EFEA', color: isSelected ? '#FFFFFF' : '#166534', padding: '2px 8px', borderRadius: '999px' }}>
+                                                        ⛺ {Math.max(1, Math.ceil(guestsCount / parseRoomCapacity(room.capacity)))} Unit(s) needed for {guestsCount} Campers
+                                                    </span>
                                                     {room.isAvailable && (
                                                         <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534' }}>
-                                                            ✓ Slots Available
+                                                            ✓ Available
                                                         </span>
                                                     )}
                                                 </div>
@@ -571,25 +590,155 @@ export default function CampPropertyDetailPage() {
                                 />
 
                                 <div>
-                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                        Number of Campers
-                                    </label>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.8px', margin: 0 }}>
+                                            Number of Campers
+                                        </label>
+                                        <span style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>
+                                            {guestsCount >= 8 ? '🎉 15% Squad Discount' : guestsCount >= 4 ? '✨ 10% Squad Discount' : 'Standard Rate'}
+                                        </span>
+                                    </div>
+
+                                    {/* Quick Preset Pills */}
+                                    <div style={{ display: 'flex', gap: '6px', marginBottom: '8px' }}>
+                                        {[
+                                            { count: 2, label: '2 Duo' },
+                                            { count: 4, label: '4 Squad' },
+                                            { count: 6, label: '6 Friends' },
+                                            { count: 8, label: '8 Tribe' }
+                                        ].map(preset => (
+                                            <button
+                                                key={preset.count}
+                                                type="button"
+                                                onClick={() => {
+                                                    setGuestsCount(preset.count);
+                                                    setCustomUnits(null); // auto-sync
+                                                }}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '5px 0',
+                                                    borderRadius: '8px',
+                                                    border: guestsCount === preset.count ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)',
+                                                    background: guestsCount === preset.count ? '#121613' : '#FFFFFF',
+                                                    color: guestsCount === preset.count ? '#D5ED55' : '#121613',
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.15s ease'
+                                                }}
+                                            >
+                                                {preset.label}
+                                            </button>
+                                        ))}
+                                    </div>
+
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.12)', borderRadius: '14px', padding: '8px 14px' }}>
-                                        <button type="button" onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>-</button>
-                                        <span style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>{guestsCount} Campers (₹{unitPrice}/pax)</span>
-                                        <button type="button" onClick={() => setGuestsCount(guestsCount + 1)} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>+</button>
+                                        <button type="button" onClick={() => { setGuestsCount(Math.max(1, guestsCount - 1)); setCustomUnits(null); }} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>-</button>
+                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>{guestsCount} Campers (₹{unitPrice}/pax)</span>
+                                        <button type="button" onClick={() => { setGuestsCount(guestsCount + 1); setCustomUnits(null); }} style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.12)', fontWeight: '800', cursor: 'pointer' }}>+</button>
+                                    </div>
+                                </div>
+
+                                {/* SMART STAY ALLOCATION ENGINE CARD */}
+                                <div style={{
+                                    background: '#F4F7EB',
+                                    borderRadius: '16px',
+                                    padding: '14px 16px',
+                                    border: '1px solid rgba(22, 101, 52, 0.2)'
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <span style={{ fontSize: '13px' }}>⛺</span>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                                Smart Stay Allocation
+                                            </span>
+                                        </div>
+                                        {customUnits !== null && (
+                                            <button
+                                                type="button"
+                                                onClick={() => setCustomUnits(null)}
+                                                style={{ background: 'none', border: 'none', fontSize: '10.5px', color: '#59655D', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                                            >
+                                                Auto-Reset
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <div>
+                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                                {allocatedUnits} × {selectedRoom?.name || 'Tent / Dome'}
+                                            </div>
+                                            <div style={{ fontSize: '11px', color: '#59655D' }}>
+                                                Fits up to {totalMaxCapacity} Campers ({roomCapacity} pax / unit)
+                                            </div>
+                                        </div>
+
+                                        {/* Manual Unit Tweaker */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', padding: '3px 6px', borderRadius: '10px', border: '1px solid rgba(0,0,0,0.1)' }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => setCustomUnits(Math.max(1, allocatedUnits - 1))}
+                                                style={{ width: '22px', height: '22px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '12px' }}
+                                                aria-label="Decrease units"
+                                            >
+                                                -
+                                            </button>
+                                            <span style={{ fontSize: '12px', fontWeight: '800', minWidth: '16px', textAlign: 'center' }}>
+                                                {allocatedUnits}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => setCustomUnits(allocatedUnits + 1)}
+                                                style={{ width: '22px', height: '22px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '12px' }}
+                                                aria-label="Increase units"
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Capacity Health Badge */}
+                                    <div style={{
+                                        fontSize: '11px',
+                                        fontWeight: '700',
+                                        color: isUnderCapacity ? '#B91C1C' : '#166534',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        marginTop: '4px'
+                                    }}>
+                                        <span>{isUnderCapacity ? '⚠️' : '✓'}</span>
+                                        <span>
+                                            {isUnderCapacity 
+                                                ? `${guestsCount} campers exceed ${totalMaxCapacity} capacity slots. Add +1 unit!` 
+                                                : `Comfortably accommodates your group of ${guestsCount} campers.`
+                                            }
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Total Calculation */}
-                            <div style={{ background: '#F8F9F5', padding: '14px 18px', borderRadius: '14px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                    <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '700' }}>Estimated Total</div>
-                                    <div style={{ fontSize: '12px', color: '#59655D' }}>{guestsCount} × ₹{unitPrice}</div>
+                            <div style={{ background: '#F8F9F5', padding: '16px 18px', borderRadius: '16px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px', color: '#59655D' }}>
+                                    <span>{guestsCount} Campers × ₹{unitPrice.toLocaleString('en-IN')}:</span>
+                                    <span>₹{baseTotal.toLocaleString('en-IN')}</span>
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>
-                                    ₹{computedTotal.toLocaleString('en-IN')}
+                                {squadDiscountAmount > 0 && (
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#166534', fontWeight: '700' }}>
+                                        <span>Squad Discount ({squadDiscountPercent}%):</span>
+                                        <span>-₹{squadDiscountAmount.toLocaleString('en-IN')}</span>
+                                    </div>
+                                )}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px solid rgba(18,22,19,0.08)' }}>
+                                    <div>
+                                        <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '700' }}>Estimated Total</div>
+                                        <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>Includes all meals, permits & 4x4</div>
+                                    </div>
+                                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', color: '#121613' }}>
+                                        ₹{computedTotal.toLocaleString('en-IN')}
+                                    </div>
                                 </div>
                             </div>
 

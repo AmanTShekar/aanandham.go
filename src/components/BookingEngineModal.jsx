@@ -7,6 +7,12 @@ import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
 
+export function parseRoomCapacity(capacityStr) {
+    if (!capacityStr) return 2;
+    const match = String(capacityStr).match(/\d+/);
+    return match ? Math.max(1, parseInt(match[0], 10)) : 2;
+}
+
 const ADDONS_LIST = [
     { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true, icon: '🔥' },
     { id: 'jeep', name: 'Private 4x4 Off-Road Jeep Upgrade', price: 1200, perPerson: false, icon: '🚙' },
@@ -22,6 +28,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const [travelDate, setTravelDate] = useState('');
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
+    const [customUnits, setCustomUnits] = useState(null);
     const [selectedAddons, setSelectedAddons] = useState(['bbq']);
     const [customerName, setCustomerName] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
@@ -44,6 +51,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         if (isOpen) {
             setStep(1);
             setValidationError('');
+            setCustomUnits(null);
             const targetId = initialPackage?.id || '';
             const targetTitle = (initialPackage?.title || '').toLowerCase();
             
@@ -109,6 +117,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             const exists = availableRooms.some(r => r.id === selectedRoomId);
             if (!exists) {
                 setSelectedRoomId(availableRooms[0].id);
+                setCustomUnits(null);
             }
         }
     }, [availableRooms, selectedRoomId]);
@@ -116,6 +125,32 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     const currentRoom = useMemo(() => {
         return availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0];
     }, [availableRooms, selectedRoomId]);
+
+    // Smart Allocation Engine
+    const totalGuests = adults + children;
+    const roomCapacity = parseRoomCapacity(currentRoom?.capacity);
+    const autoUnits = Math.max(1, Math.ceil(totalGuests / roomCapacity));
+    const allocatedUnits = customUnits !== null ? customUnits : autoUnits;
+    const totalMaxCapacity = allocatedUnits * roomCapacity;
+    const isUnderCapacity = totalGuests > totalMaxCapacity;
+
+    const roomPricePerPerson = currentRoom?.price || currentPkg?.price || 2499;
+
+    // Price Calculations
+    const baseTotal = (roomPricePerPerson * adults) + (Math.round(roomPricePerPerson * 0.5) * children);
+    
+    // Group discount
+    const discountPercent = totalGuests >= 8 ? 15 : totalGuests >= 4 ? 10 : 0;
+    const discountAmount = Math.round((baseTotal * discountPercent) / 100);
+
+    // Addons Calculation
+    const addonsTotal = selectedAddons.reduce((acc, addonId) => {
+        const addon = ADDONS_LIST.find(a => a.id === addonId);
+        if (!addon) return acc;
+        return acc + (addon.perPerson ? addon.price * totalGuests : addon.price);
+    }, 0);
+
+    const grandTotal = baseTotal - discountAmount + addonsTotal;
 
     // Handle ESC key to dismiss modal
     useEffect(() => {
@@ -142,25 +177,6 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
     }, [isOpen]);
 
     if (!isOpen) return null;
-
-    const totalGuests = adults + children;
-    const roomPricePerPerson = currentRoom?.price || currentPkg?.price || 2499;
-
-    // Price Calculations
-    const baseTotal = (roomPricePerPerson * adults) + (Math.round(roomPricePerPerson * 0.5) * children);
-    
-    // Group discount
-    const discountPercent = totalGuests >= 8 ? 15 : totalGuests >= 4 ? 10 : 0;
-    const discountAmount = Math.round((baseTotal * discountPercent) / 100);
-
-    // Addons Calculation
-    const addonsTotal = selectedAddons.reduce((acc, addonId) => {
-        const addon = ADDONS_LIST.find(a => a.id === addonId);
-        if (!addon) return acc;
-        return acc + (addon.perPerson ? addon.price * totalGuests : addon.price);
-    }, 0);
-
-    const grandTotal = baseTotal - discountAmount + addonsTotal;
 
     const toggleAddon = (id) => {
         setSelectedAddons(prev => 
@@ -191,7 +207,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
         const summaryText = `🏕️ *NEW AANANDHAM.GO RESERVATION REQUEST*\n\n` +
             `📍 *Expedition:* ${currentPkg.title}\n` +
-            `🛏️ *Room Type:* ${currentRoom ? currentRoom.name : 'Standard Glamp'} (₹${roomPricePerPerson.toLocaleString('en-IN')}/camper)\n` +
+            `🛏️ *Stay Allocation:* ${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Standard Glamp'} (Fits up to ${totalMaxCapacity} Campers)\n` +
             `📅 *Date:* ${travelDate || 'Flexible / Upcoming Weekend'}\n` +
             `👥 *Guests:* ${adults} Adults${children > 0 ? `, ${children} Children` : ''} (Total: ${totalGuests})\n` +
             `✨ *Add-ons:* ${selectedAddonNames.length > 0 ? selectedAddonNames.join(', ') : 'None'}\n` +
@@ -211,7 +227,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                 region: currentPkg.region || (currentPkg.location ? currentPkg.location.split(',')[0].trim() : 'Munnar'),
                 dates: travelDate || 'Flexible / Upcoming Weekend',
                 guests: totalGuests,
-                roomType: currentRoom ? currentRoom.name : 'Standard Mountain Glamp',
+                roomType: `${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Standard Mountain Glamp'}`,
                 addons: selectedAddonNames,
                 total: grandTotal,
                 status: 'Pending',
@@ -352,6 +368,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                 key={pkg.id}
                                                 onClick={() => {
                                                     setSelectedPkgId(pkg.id);
+                                                    setCustomUnits(null);
                                                     if (pkg.rooms && pkg.rooms.length > 0) {
                                                         setSelectedRoomId(pkg.rooms[0].id);
                                                     }
@@ -405,7 +422,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 </div>
                             </div>
 
-                            {/* Section 2: Room Types & Accommodation Selector (NEW USER REQUIREMENT) */}
+                            {/* Section 2: Room Types & Accommodation Selector */}
                             <div style={{ marginBottom: '24px', padding: '18px 20px', background: '#F8F9F5', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                                     <div>
@@ -424,10 +441,14 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '12px' }}>
                                     {availableRooms.map((room) => {
                                         const isRoomSelected = room.id === selectedRoomId;
+                                        const neededUnits = Math.max(1, Math.ceil(totalGuests / parseRoomCapacity(room.capacity)));
                                         return (
                                             <div
                                                 key={room.id}
-                                                onClick={() => setSelectedRoomId(room.id)}
+                                                onClick={() => {
+                                                    setSelectedRoomId(room.id);
+                                                    setCustomUnits(null);
+                                                }}
                                                 style={{
                                                     borderRadius: '16px',
                                                     border: isRoomSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
@@ -476,16 +497,17 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                                     </div>
                                                 </div>
 
-                                                {/* Feature highlights */}
-                                                {room.features && room.features.length > 0 && (
-                                                    <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                                        {room.features.slice(0, 2).map((ft, fIdx) => (
-                                                            <span key={fIdx} style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '600' }}>
-                                                                ✓ {ft}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                )}
+                                                {/* Allocation & Feature highlights */}
+                                                <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', marginTop: '10px' }}>
+                                                    <span style={{ fontSize: '10.5px', background: isRoomSelected ? '#D5ED55' : '#ECEEE6', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '800' }}>
+                                                        ⛺ {neededUnits} Unit(s) for {totalGuests} Campers
+                                                    </span>
+                                                    {room.features && room.features.slice(0, 1).map((ft, fIdx) => (
+                                                        <span key={fIdx} style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '2px 8px', borderRadius: '999px', fontWeight: '600' }}>
+                                                            ✓ {ft}
+                                                        </span>
+                                                    ))}
+                                                </div>
                                             </div>
                                         );
                                     })}
@@ -508,48 +530,88 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     />
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                            4. Number of Campers
-                                        </label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                            <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                                4. Number of Campers
+                                            </label>
+                                            <span style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>
+                                                {totalGuests >= 8 ? '🎉 15% Squad Discount' : totalGuests >= 4 ? '✨ 10% Squad Discount' : 'Standard Rate'}
+                                            </span>
+                                        </div>
+
+                                        {/* Quick Preset Buttons */}
+                                        <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
+                                            {[
+                                                { adultsCount: 2, label: '2 Duo' },
+                                                { adultsCount: 4, label: '4 Squad' },
+                                                { adultsCount: 6, label: '6 Friends' },
+                                                { adultsCount: 8, label: '8 Tribe' }
+                                            ].map(preset => (
+                                                <button
+                                                    key={preset.adultsCount}
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setAdults(preset.adultsCount);
+                                                        setChildren(0);
+                                                        setCustomUnits(null);
+                                                    }}
+                                                    style={{
+                                                        flex: 1,
+                                                        padding: '5px 0',
+                                                        borderRadius: '8px',
+                                                        border: (adults === preset.adultsCount && children === 0) ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)',
+                                                        background: (adults === preset.adultsCount && children === 0) ? '#121613' : '#FFFFFF',
+                                                        color: (adults === preset.adultsCount && children === 0) ? '#D5ED55' : '#121613',
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.15s ease'
+                                                    }}
+                                                >
+                                                    {preset.label}
+                                                </button>
+                                            ))}
+                                        </div>
+
                                         <div style={{ display: 'flex', gap: '12px' }}>
-                                            <div style={{ flex: 1, padding: '12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Adults (12+ yrs)</div>
+                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Adults (12+ yrs)</div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setAdults(Math.max(1, adults - 1))}
-                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        onClick={() => { setAdults(Math.max(1, adults - 1)); setCustomUnits(null); }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         -
                                                     </button>
-                                                    <span style={{ fontSize: '16px', fontWeight: '800' }}>{adults}</span>
+                                                    <span style={{ fontSize: '15px', fontWeight: '800' }}>{adults}</span>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setAdults(adults + 1)}
-                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        onClick={() => { setAdults(adults + 1); setCustomUnits(null); }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         +
                                                     </button>
                                                 </div>
                                             </div>
 
-                                            <div style={{ flex: 1, padding: '12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Kids (5–11 yrs)</div>
+                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Kids (5–11 yrs)</div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setChildren(Math.max(0, children - 1))}
-                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        onClick={() => { setChildren(Math.max(0, children - 1)); setCustomUnits(null); }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         -
                                                     </button>
-                                                    <span style={{ fontSize: '16px', fontWeight: '800' }}>{children}</span>
+                                                    <span style={{ fontSize: '15px', fontWeight: '800' }}>{children}</span>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setChildren(children + 1)}
-                                                        style={{ width: '32px', height: '32px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        onClick={() => { setChildren(children + 1); setCustomUnits(null); }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         +
                                                     </button>
@@ -558,25 +620,88 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                         </div>
                                     </div>
 
+                                    {/* Smart Stay Allocation Engine Card in Modal */}
+                                    <div style={{
+                                        background: '#F4F7EB',
+                                        borderRadius: '16px',
+                                        padding: '12px 14px',
+                                        border: '1px solid rgba(22, 101, 52, 0.2)'
+                                    }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <span style={{ fontSize: '12px' }}>⛺</span>
+                                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                    Smart Stay Allocation
+                                                </span>
+                                            </div>
+                                            {customUnits !== null && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setCustomUnits(null)}
+                                                    style={{ background: 'none', border: 'none', fontSize: '10px', color: '#59655D', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
+                                                >
+                                                    Auto-Reset
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div>
+                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
+                                                    {allocatedUnits} × {currentRoom?.name || 'Dome / Tent'}
+                                                </div>
+                                                <div style={{ fontSize: '10.5px', color: '#59655D' }}>
+                                                    Capacity: {totalMaxCapacity} Campers ({roomCapacity} pax / unit)
+                                                </div>
+                                            </div>
+
+                                            {/* Manual Unit Adjust */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#FFFFFF', padding: '2px 5px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)' }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setCustomUnits(Math.max(1, allocatedUnits - 1))}
+                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '11px' }}
+                                                >
+                                                    -
+                                                </button>
+                                                <span style={{ fontSize: '11.5px', fontWeight: '800', minWidth: '14px', textAlign: 'center' }}>
+                                                    {allocatedUnits}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setCustomUnits(allocatedUnits + 1)}
+                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '11px' }}
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Capacity Indicator */}
+                                        <div style={{ fontSize: '10.5px', fontWeight: '700', color: isUnderCapacity ? '#B91C1C' : '#166534', marginTop: '4px' }}>
+                                            {isUnderCapacity ? `⚠️ ${totalGuests} campers exceed ${totalMaxCapacity} slots. Add +1 unit!` : `✓ Comfortably accommodates ${totalGuests} campers.`}
+                                        </div>
+                                    </div>
+
                                     {/* Price Preview Card */}
-                                    <div style={{ marginTop: 'auto', padding: '16px', background: '#121613', borderRadius: '20px', color: '#FFFFFF' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px', color: '#A2B6A6' }}>
+                                    <div style={{ marginTop: 'auto', padding: '14px 16px', background: '#121613', borderRadius: '18px', color: '#FFFFFF' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3px', fontSize: '11.5px', color: '#A2B6A6' }}>
                                             <span>{currentRoom?.name || 'Selected Room'}:</span>
                                             <span>₹{roomPricePerPerson.toLocaleString('en-IN')}/pax</span>
                                         </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#A2B6A6' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '11.5px', color: '#A2B6A6' }}>
                                             <span>Base Rate ({totalGuests} Campers):</span>
                                             <span>₹{baseTotal.toLocaleString('en-IN')}</span>
                                         </div>
                                         {discountPercent > 0 && (
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12px', color: '#D5ED55' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '11.5px', color: '#D5ED55' }}>
                                                 <span>Squad Discount ({discountPercent}%):</span>
                                                 <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                                             </div>
                                         )}
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                                            <span style={{ fontSize: '13px', fontWeight: '700' }}>Estimated Total:</span>
-                                            <span style={{ fontSize: '20px', fontWeight: '900', color: '#D5ED55' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <span style={{ fontSize: '12.5px', fontWeight: '700' }}>Estimated Total:</span>
+                                            <span style={{ fontSize: '19px', fontWeight: '900', color: '#D5ED55' }}>
                                                 ₹{(baseTotal - discountAmount).toLocaleString('en-IN')}
                                             </span>
                                         </div>
@@ -708,7 +833,7 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
                                     <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '12.5px', color: '#D5ED55' }}>
-                                    <span>🛏️ {currentRoom?.name || 'Selected Room'} ({totalGuests} Campers):</span>
+                                    <span>🛏️ {allocatedUnits} × {currentRoom?.name || 'Selected Room'} ({totalGuests} Campers):</span>
                                     <span>₹{roomPricePerPerson.toLocaleString('en-IN')}/pax</span>
                                 </div>
                                 {addonsTotal > 0 && (
