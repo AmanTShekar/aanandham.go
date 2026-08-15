@@ -615,6 +615,43 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   KERALA WILDERNESS GRID (Swipable full-bleed deck on mobile)
+───────────────────────────────────────────────────────────── */
+.wilderness-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .wilderness-cards-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-top: 10px;
+    padding-bottom: 24px;
+    gap: 16px;
+    scrollbar-width: none;
+    margin-left: calc(-1 * clamp(20px, 4vw, 48px));
+    margin-right: calc(-1 * clamp(20px, 4vw, 48px));
+    padding-left: clamp(20px, 4vw, 48px);
+    padding-right: clamp(20px, 4vw, 48px);
+  }
+  .wilderness-cards-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .wilderness-cards-grid > div {
+    flex: 0 0 82vw !important;
+    max-width: 340px !important;
+    min-width: 270px !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: normal !important;
+  }
+}
+
 .mobile-slider-dots {
   display: none;
   justify-content: center;
