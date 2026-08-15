@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
+import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked, blockIp, addToWaitlist } from '@/lib/redis';
 import { validateBookingPayload } from '@/lib/validation';
 import { createRazorpayOrder } from '@/lib/razorpay';
 import { addServerBooking, getStoredBookings } from '@/lib/serverBookingStore';
+import { findCampAndRoom, computeBookingTotal, campGuestCapacity, parseRoomCapacity } from '@/lib/pricing';
 
 // Unique, collision-free human readable booking ID generator
 function generateBookingId() {
@@ -11,28 +13,34 @@ function generateBookingId() {
     return `BK-${timestampPart}-${entropyPart}`;
 }
 
-function getClientIp(request) {
-    if (request.ip) return request.ip;
-    const cfIp = request.headers.get('cf-connecting-ip');
-    if (cfIp) return cfIp.trim();
-    const xRealIp = request.headers.get('x-real-ip');
-    if (xRealIp) return xRealIp.trim();
-    const xff = request.headers.get('x-forwarded-for');
-    if (xff) return xff.split(',')[0].trim();
-    return '127.0.0.1';
+// Active bookings = everything not cancelled/refunded/expired
+function isActiveStatus(status) {
+    return !['Cancelled', 'Refunded', 'Expired'].includes(status);
 }
 
-// ── GET: Fetch public booking status or list (Admin/Authorized view) ──
+// ── GET: Booking list (admin only — never expose guest PII publicly) ──
 export async function GET(request) {
+    const ip = getClientIp(request);
+
+    const rateLimit = await checkRateLimit(`ratelimit:bookings_get:${ip}`, 30, 60);
+    if (!rateLimit.allowed) {
+        return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
+    }
+
+    if (!getAdminPayload(request)) {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
     try {
         const bookings = getStoredBookings();
         return NextResponse.json({ success: true, bookings });
     } catch (err) {
+        console.error('Error fetching bookings:', err);
         return NextResponse.json({ success: false, message: 'Failed to retrieve bookings' }, { status: 500 });
     }
 }
 
-// ── POST: Create Booking Intent, Atomic Slot Hold (10-min TTL), & Razorpay Order ──
+// ── POST: Booking intent (inquiry/WhatsApp mode or paid mode) ──
 export async function POST(request) {
     const ip = getClientIp(request);
 
@@ -72,26 +80,73 @@ export async function POST(request) {
         }
 
         const data = validation.sanitized;
-        const bookingId = generateBookingId();
+        const isInquiryMode = body.mode === 'whatsapp' || body.mode === 'inquiry';
+
+        // 4. Slot capacity check (atomic allocation on the slot key)
         const slotKey = `${data.campsiteId || 'camp'}_${data.roomType}_${data.dates}`.toLowerCase().replace(/[^a-z0-9]/g, '_');
+        const { camp, room } = findCampAndRoom(data.campsiteId, body.roomId);
 
-        // 4. Create Razorpay Order
-        const rzpOrder = await createRazorpayOrder({
-            amountInRupees: data.total,
-            receiptId: bookingId,
-            notes: {
-                guestName: data.name,
-                package: data.package,
-                dates: data.dates,
-                guests: data.guests
+        let capacity = campGuestCapacity(camp);
+        const existing = getStoredBookings().filter(b => isActiveStatus(b.status) && b.slotKey === slotKey);
+        const bookedGuests = existing.reduce((sum, b) => sum + (Number(b.guests) || 0), 0);
+        const incomingGuests = Number(data.guests) || 1;
+
+        if (camp && bookedGuests + incomingGuests > capacity) {
+            await addToWaitlist(ip, data.phone || 'unknown', slotKey);
+            return NextResponse.json(
+                { success: false, message: 'This campsite is fully booked for the selected dates. You have been added to the waitlist — we will notify you if a slot opens up.' },
+                { status: 409 }
+            );
+        }
+
+        // 5. Server-side price authority (client-supplied `total` is never trusted)
+        let serverTotal = Number(data.total) || 0;
+        let discountPercent = 0;
+        if (!isInquiryMode) {
+            const adults = Math.max(1, Number(body.adults) || Number(data.guests) || 1);
+            const children = Math.max(0, Number(body.children) || 0);
+            if (adults + children !== Number(data.guests)) {
+                return NextResponse.json({ success: false, message: 'Guest count mismatch.' }, { status: 400 });
             }
-        });
+            const pricing = computeBookingTotal({
+                camp,
+                room,
+                adults,
+                children,
+                addonIds: Array.isArray(body.addonIds) ? body.addonIds : []
+            });
+            serverTotal = pricing.total;
+            discountPercent = pricing.discountPercent;
 
-        // 5. Atomic 10-Minute Hold Record
+            // Price sanity bound: paid mode must always go through Razorpay
+            if (serverTotal < 100) {
+                return NextResponse.json({ success: false, message: 'Invalid booking amount.' }, { status: 400 });
+            }
+        }
+
+        const bookingId = generateBookingId();
+
+        // 6. Create Razorpay Order (paid mode only)
+        let rzpOrder = null;
+        if (!isInquiryMode) {
+            rzpOrder = await createRazorpayOrder({
+                amountInRupees: serverTotal,
+                receiptId: bookingId,
+                notes: {
+                    guestName: data.name,
+                    package: data.package,
+                    dates: data.dates,
+                    guests: data.guests
+                }
+            });
+        }
+
+        // 7. Persist booking record (10-minute hold on paid mode)
         const holdExpiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes TTL
 
         const newBooking = {
             id: bookingId,
+            slotKey,
             name: data.name,
             phone: data.rawPhone,
             package: data.package,
@@ -100,10 +155,10 @@ export async function POST(request) {
             guests: data.guests,
             roomType: data.roomType,
             addons: data.addons,
-            total: data.total,
-            status: 'Payment Pending', // PAYMENT_PENDING state
-            holdExpiresAt,
-            razorpayOrderId: rzpOrder.id,
+            total: serverTotal,
+            status: isInquiryMode ? 'Pending' : 'Payment Pending', // PAYMENT_PENDING state
+            holdExpiresAt: isInquiryMode ? null : holdExpiresAt,
+            razorpayOrderId: rzpOrder ? rzpOrder.id : null,
             source: data.source,
             notes: data.notes,
             createdAt: new Date().toLocaleString('en-IN', {
@@ -117,12 +172,22 @@ export async function POST(request) {
 
         addServerBooking(newBooking);
 
+        if (isInquiryMode) {
+            return NextResponse.json({
+                success: true,
+                bookingId,
+                status: 'PENDING',
+                message: 'Reservation request received. Our team will confirm availability shortly.'
+            });
+        }
+
         return NextResponse.json({
             success: true,
             bookingId,
             status: 'PAYMENT_PENDING',
             holdExpiresAt,
             ttlSeconds: 600,
+            discountPercent,
             razorpayOrder: {
                 id: rzpOrder.id,
                 amount: rzpOrder.amount,

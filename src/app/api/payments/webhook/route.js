@@ -50,7 +50,25 @@ export async function POST(request) {
             const now = Date.now();
             const isHoldExpired = booking.holdExpiresAt && now > booking.holdExpiresAt;
 
-            // 3. First-Paid-Wins Verification: If slot expired before payment arrived
+            // 3. Amount & currency verification (bank-grade): the captured amount MUST
+            //    exactly equal the server-validated booking total, in INR.
+            const paidPaise = Number(paymentEntity?.amount);
+            const expectedPaise = Math.round(Number(booking.total) * 100);
+            const paidCurrency = String(paymentEntity?.currency || '').toUpperCase();
+            const amountMismatch = !paidPaise || paidPaise !== expectedPaise || paidCurrency !== 'INR';
+
+            if (amountMismatch) {
+                console.warn(`⚠️ Payment amount mismatch for booking ${booking.id}: paid ₹${paidPaise / 100} ${paidCurrency} vs expected ₹${expectedPaise / 100} INR. Auto-refunding.`);
+                await triggerAutoRefund(paymentEntity.id, (paidPaise || 0) / 100, 'Payment amount/currency mismatch');
+                updateServerBooking(booking.id, {
+                    status: 'Refunded',
+                    refundReason: 'Payment amount/currency mismatch',
+                    paymentId: paymentEntity.id
+                });
+                return NextResponse.json({ success: true, message: 'Mismatched payment refunded' });
+            }
+
+            // 4. First-Paid-Wins Verification: If slot expired before payment arrived
             if (isHoldExpired && booking.status !== 'Confirmed') {
                 console.warn(`Booking ${booking.id} TTL expired before payment capture. Triggering instant refund.`);
                 await triggerAutoRefund(paymentEntity.id, (paymentEntity.amount || 0) / 100, '10-minute hold expired');
@@ -62,7 +80,7 @@ export async function POST(request) {
                 return NextResponse.json({ success: true, message: 'Expired booking refunded' });
             }
 
-            // 4. Confirm Booking
+            // 5. Confirm Booking
             updateServerBooking(booking.id, {
                 status: 'Confirmed',
                 paymentId: paymentEntity?.id || `pay_${Date.now()}`,

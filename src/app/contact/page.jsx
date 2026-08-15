@@ -243,11 +243,13 @@ export default function ContactPage() {
             status: 'Pending',
             source: 'Contact Form',
             notes: formData.message.trim(),
-            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+            mode: 'whatsapp',
+            source: 'Contact Form'
         };
 
         try {
-            fetch('/api/admin/bookings', {
+            fetch('/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newInquiryRecord)

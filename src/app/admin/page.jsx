@@ -224,10 +224,14 @@ export default function AdminPortal() {
 
         // Bookings sync (Server first, then local fallback)
         try {
-            const bookingsRes = await fetch('/api/admin/bookings');
+            const authToken = localStorage.getItem('aanandham_admin_auth');
+            const bookingsRes = await fetch('/api/admin/bookings', {
+                headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
+            });
             if (bookingsRes.ok) {
-                const serverBookings = await bookingsRes.json();
-                if (Array.isArray(serverBookings)) {
+                const serverData = await bookingsRes.json();
+                const serverBookings = Array.isArray(serverData) ? serverData : (Array.isArray(serverData?.bookings) ? serverData.bookings : null);
+                if (serverBookings) {
                     setBookings(serverBookings);
                     localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(serverBookings));
                     return;
@@ -418,7 +422,10 @@ export default function AdminPortal() {
         }
         fetch('/api/admin/camps', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...(localStorage.getItem('aanandham_admin_auth') ? { 'Authorization': `Bearer ${localStorage.getItem('aanandham_admin_auth')}` } : {})
+            },
             body: JSON.stringify(updated)
         }).catch(e => console.error('Error syncing camps to server:', e));
 
@@ -447,7 +454,10 @@ export default function AdminPortal() {
         }
         fetch('/api/admin/bookings', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...(localStorage.getItem('aanandham_admin_auth') ? { 'Authorization': `Bearer ${localStorage.getItem('aanandham_admin_auth')}` } : {})
+            },
             body: JSON.stringify(updated)
         }).catch(e => console.error('Error syncing bookings to server:', e));
 

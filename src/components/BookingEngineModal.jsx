@@ -265,12 +265,18 @@ export default function BookingEngineModal({ isOpen, onClose, initialPackage }) 
             status: 'Pending',
             source: 'Website Booking Engine',
             notes: specialNotes.trim(),
-            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+            mode: 'whatsapp',
+            campsiteId: currentPkg.id,
+            roomId: currentRoom ? currentRoom.id : '',
+            addonIds: selectedAddons,
+            adults,
+            children
         };
 
-        // 1. Multi-device shared server synchronization (N2)
+        // 1. Multi-device shared server synchronization (N2) — public endpoint, no payment
         try {
-            await fetch('/api/admin/bookings', {
+            await fetch('/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newBookingRecord)
