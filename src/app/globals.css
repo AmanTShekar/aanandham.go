@@ -565,7 +565,7 @@ body::-webkit-scrollbar-thumb:active,
     scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 16px !important;
-    padding: 12px 0 24px 0 !important;
+    padding: 24px 0 32px 0 !important;
     margin: 0 !important;
     scrollbar-width: none !important;
     width: 100% !important;

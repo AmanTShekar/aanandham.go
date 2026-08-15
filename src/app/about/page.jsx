@@ -1589,7 +1589,7 @@ export default function AboutPage() {
                                 </h2>
                             </div>
 
-                            {/* Filter Tabs */}
+                            {/* Filter Tabs (Touch Scrollable on Mobile) */}
                             <div style={{
                                 display: 'flex',
                                 gap: '8px',
@@ -1597,14 +1597,17 @@ export default function AboutPage() {
                                 padding: '6px',
                                 borderRadius: '999px',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                                boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
+                                boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                                overflowX: 'auto',
+                                maxWidth: '100%',
+                                scrollbarWidth: 'none'
                             }}>
                                 {['All', 'High Peaks', 'Trails', 'Lakes & Waterfalls'].map((cat) => (
                                     <button
                                         key={cat}
                                         onClick={() => setActiveCategory(cat)}
                                         style={{
-                                            padding: '8px 20px',
+                                            padding: '8px 18px',
                                             borderRadius: '999px',
                                             border: 'none',
                                             background: activeCategory === cat ? '#E5A93B' : 'transparent',
@@ -1612,7 +1615,9 @@ export default function AboutPage() {
                                             fontSize: '13px',
                                             fontWeight: activeCategory === cat ? '800' : '600',
                                             cursor: 'pointer',
-                                            transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                                            whiteSpace: 'nowrap',
+                                            flexShrink: 0,
+                                            transition: 'all 0.2s ease'
                                         }}
                                     >
                                         {cat}

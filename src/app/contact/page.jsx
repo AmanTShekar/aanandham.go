@@ -165,7 +165,7 @@ export default function ContactPage() {
                             {/* 4 Compact Dispatch Channels Grid */}
                             <div style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(2, 1fr)',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
                                 gap: '12px',
                                 marginBottom: '20px'
                             }}>
@@ -264,7 +264,7 @@ export default function ContactPage() {
                         <div style={{
                             background: '#FFFFFF',
                             borderRadius: '24px',
-                            padding: 'clamp(22px, 3vw, 32px)',
+                            padding: 'clamp(20px, 3vw, 32px)',
                             border: '1px solid rgba(18, 22, 19, 0.08)',
                             boxShadow: '0 12px 36px rgba(0, 0, 0, 0.04)'
                         }}>
@@ -376,12 +376,12 @@ export default function ContactPage() {
                                                         key={t.id}
                                                         onClick={() => setFormData({ ...formData, inquiryType: t.id })}
                                                         style={{
-                                                            padding: '8px 8px',
+                                                            padding: '8px 6px',
                                                             borderRadius: '10px',
                                                             border: isSel ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
                                                             background: isSel ? '#121613' : '#F8F9F5',
                                                             color: isSel ? '#D5ED55' : '#121613',
-                                                            fontSize: '12px',
+                                                            fontSize: '11.5px',
                                                             fontWeight: isSel ? '800' : '600',
                                                             cursor: 'pointer',
                                                             textAlign: 'center',
@@ -396,7 +396,7 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* Name & Phone */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '10px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px' }}>
                                         <div>
                                             <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                                 Your Name *
@@ -447,7 +447,7 @@ export default function ContactPage() {
                                     </div>
 
                                     {/* Email & Guests */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 160px), 1fr))', gap: '10px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '10px' }}>
                                         <div>
                                             <label style={{ display: 'block', fontSize: '10.5px', fontWeight: '800', color: '#121613', letterSpacing: '0.6px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                                 Email Address *
