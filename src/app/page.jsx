@@ -901,34 +901,51 @@ export default function HomePage() {
         }
     };
 
-    // Scroll-driven active room tracking for Stay & Glamp
+    // High-precision scroll-driven focal point auto-activation for Stay & Glamp room cards
     const stayRoomRefs = useRef([]);
     useEffect(() => {
-        if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') return;
+        if (typeof window === 'undefined') return;
 
-        const observers = [];
-        stayRoomRefs.current.forEach((el, idx) => {
-            if (!el) return;
-            const observer = new IntersectionObserver(
-                (entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            setActiveStayAcc(idx);
-                        }
-                    });
-                },
-                {
-                    root: null,
-                    rootMargin: '-20% 0px -40% 0px',
-                    threshold: 0.25
+        let ticking = false;
+        const updateActiveStayCardOnScroll = () => {
+            const triggerPoint = window.innerHeight * 0.48; // Focal point line around center of viewport
+            let bestIdx = -1;
+            let minDistance = Infinity;
+
+            stayRoomRefs.current.forEach((el, idx) => {
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const dist = Math.abs(cardCenter - triggerPoint);
+
+                // If card intersects the active vertical reading zone
+                if (rect.top <= triggerPoint + 120 && rect.bottom >= triggerPoint - 120) {
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        bestIdx = idx;
+                    }
                 }
-            );
-            observer.observe(el);
-            observers.push(observer);
-        });
+            });
+
+            if (bestIdx !== -1) {
+                setActiveStayAcc(bestIdx);
+            }
+            ticking = false;
+        };
+
+        const handleScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateActiveStayCardOnScroll);
+                ticking = true;
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        // Trigger initial check on load
+        setTimeout(updateActiveStayCardOnScroll, 300);
 
         return () => {
-            observers.forEach((obs) => obs.disconnect());
+            window.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
