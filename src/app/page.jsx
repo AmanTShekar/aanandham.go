@@ -648,8 +648,6 @@ function ScrollProgressBar() {
 }
 
 export default function HomePage() {
-    const [scrolled, setScrolled] = useState(false);
-    const scrolledRef = useRef(false);
     const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
@@ -849,19 +847,6 @@ export default function HomePage() {
     const handleOpenBooking = (pkg) => {
         setSelectedPackage(pkg);
         setIsBookingModalOpen(true);
-    };
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const handleBookingSubmit = (e) => {
-        e.preventDefault();
-        const text = `Hi Aanandham Team! I would like to reserve a spot for *${formData.packageName}*.\nName: ${formData.name}\nPhone: ${formData.phone}\nGuests: ${formData.guests}\nDate: ${formData.date}\nNotes: ${formData.notes}`;
-        const encoded = encodeURIComponent(text);
-        setTimeout(() => {
-            window.open(`https://wa.me/919400987654?text=${encoded}`, '_blank');
-        }, 300);
     };
 
     const schemaData = {
