@@ -22,8 +22,8 @@ export const viewport = {
   initialScale: 1,
   maximumScale: 5,
   viewportFit: 'cover',
-  themeColor: '#070E08',
-  colorScheme: 'dark',
+  themeColor: '#F8F9F5',
+  colorScheme: 'light dark',
 };
 
 export const metadata = {
@@ -183,12 +183,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-IN" className={`${bricolage.variable} ${plusJakarta.variable}`}>
       <head>
-        <meta name="color-scheme" content="dark light" />
-        <meta name="supported-color-schemes" content="dark light" />
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
         <meta name="darkreader-lock" content="true" />
-        <meta name="theme-color" content="#070E08" />
-        <meta name="msapplication-navbutton-color" content="#070E08" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#F8F9F5" />
+        <meta name="msapplication-navbutton-color" content="#F8F9F5" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
@@ -209,26 +209,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#070E08' }}>
-        {/* Fixed Extended Canvas Underlay (Pre-paints 35vh beyond viewport to prevent any black toolbar gap) */}
-        <div 
-          id="mobile-canvas-underlay" 
-          aria-hidden="true" 
-          style={{ 
-            position: 'fixed', 
-            top: '-35vh', 
-            left: 0, 
-            right: 0, 
-            bottom: '-35vh', 
-            width: '100vw', 
-            height: '170vh', 
-            backgroundColor: '#070E08', 
-            zIndex: -99999, 
-            pointerEvents: 'none', 
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)'
-          }} 
-        />
+      <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#F8F9F5', color: '#121613' }}>
         <SmoothScroll />
         {children}
         <AanandhamBot />
