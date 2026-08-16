@@ -66,6 +66,8 @@ export default function SiteHeader({
 }) {
     const [scrolled, setScrolled] = useState(!transparentOnTop);
     const scrolledRef = useRef(!transparentOnTop);
+    const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+    const lastScrollY = useRef(0);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
     const accountMenuRef = useRef(null);
@@ -84,25 +86,38 @@ export default function SiteHeader({
         }
     }, [isAccountMenuOpen]);
 
-    // Scroll listener with threshold debounce
+    // Scroll listener with threshold debounce and directional auto-hide
     useEffect(() => {
-        if (!transparentOnTop) {
-            setScrolled(true);
-            return;
-        }
-
         const handleScroll = () => {
-            const isPast = window.scrollY > 40;
+            const currentScrollY = window.scrollY;
+            const isPast = currentScrollY > 40;
             if (isPast !== scrolledRef.current) {
                 scrolledRef.current = isPast;
                 setScrolled(isPast);
             }
+
+            if (isMobileMenuOpen) {
+                setIsHeaderVisible(true);
+                return;
+            }
+
+            if (currentScrollY <= 60) {
+                setIsHeaderVisible(true);
+            } else if (currentScrollY > lastScrollY.current + 8) {
+                // Scrolling down -> Auto hide header
+                setIsHeaderVisible(false);
+            } else if (currentScrollY < lastScrollY.current - 10) {
+                // Scrolling up -> Reveal header
+                setIsHeaderVisible(true);
+            }
+
+            lastScrollY.current = Math.max(0, currentScrollY);
         };
 
         handleScroll();
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [transparentOnTop]);
+    }, [transparentOnTop, isMobileMenuOpen]);
 
     // Scroll Lock when mobile drawer is open
     useEffect(() => {
@@ -125,8 +140,11 @@ export default function SiteHeader({
             <motion.header
                 className="site-header"
                 initial={{ y: -20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                animate={{ 
+                    y: isHeaderVisible || isMobileMenuOpen ? 0 : -100, 
+                    opacity: isHeaderVisible || isMobileMenuOpen ? 1 : 0 
+                }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                     position: 'fixed',
                     top: 0,
@@ -139,7 +157,7 @@ export default function SiteHeader({
                     WebkitBackdropFilter: 'blur(20px)',
                     borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                     boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
-                    transition: 'all 0.3s ease'
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease'
                 }}
             >
                 <div style={{
