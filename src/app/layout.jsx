@@ -231,18 +231,6 @@ export default function RootLayout({ children }) {
         />
         <SmoothScroll />
         {children}
-        {/* Mobile Toolbar Rest Buffer (Provides natural overshoot room for mobile Chrome/Safari menu) */}
-        <div 
-          className="mobile-bottom-rest-buffer" 
-          aria-hidden="true" 
-          style={{ 
-            width: '100%', 
-            height: 'calc(100px + env(safe-area-inset-bottom, 0px))', 
-            minHeight: '100px', 
-            pointerEvents: 'none',
-            background: 'transparent'
-          }} 
-        />
         <AanandhamBot />
         <Analytics />
         <SpeedInsights />

@@ -6,12 +6,12 @@ import { waLink } from '../lib/whatsapp';
 
 export default function Footer() {
     return (
-        <footer style={{
+        <footer className="site-main-footer" style={{
             background: 'linear-gradient(180deg, #101E13 0%, #08120A 100%)',
-            padding: '90px clamp(20px, 4vw, 48px) 36px',
             color: '#FFFFFF',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            width: '100%'
         }}>
             {/* Ambient Basecamp Radial Glow */}
             <div style={{
