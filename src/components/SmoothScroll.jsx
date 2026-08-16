@@ -22,7 +22,18 @@ export default function SmoothScroll() {
             return;
         }
 
-        // Initialize Lenis for buttery smooth momentum scrolling
+        // Bypass Lenis on touch/mobile devices so mobile Chrome/Safari use native 120Hz hardware scroll without toolbar stutter
+        const isTouchDevice = typeof window !== 'undefined' && (
+            'ontouchstart' in window || 
+            navigator.maxTouchPoints > 0 || 
+            window.matchMedia('(pointer: coarse)').matches
+        );
+
+        if (isTouchDevice) {
+            return;
+        }
+
+        // Initialize Lenis for buttery smooth momentum scrolling (Desktop / Mouse wheel)
         const lenis = new Lenis({
             duration: 1.15,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential dampening curve

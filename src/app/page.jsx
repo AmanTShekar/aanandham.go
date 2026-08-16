@@ -3150,7 +3150,59 @@ export default function HomePage() {
                 borderTop: '1px solid rgba(255, 255, 255, 0.08)'
             }}>
                 <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-                    {/* Header Strip */}
+                    <style dangerouslySetInnerHTML={{__html: `
+                        .insta-story-card {
+                            position: relative;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            aspect-ratio: 4 / 5;
+                            display: block;
+                            text-decoration: none;
+                            background: #000;
+                            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+                        }
+                        .insta-story-card:hover {
+                            transform: translateY(-4px);
+                            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+                        }
+                        .insta-story-card .story-card-img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
+                        .insta-story-card:hover .story-card-img {
+                            transform: scale(1.05);
+                        }
+                        .insta-story-card .story-card-overlay {
+                            position: absolute;
+                            inset: 0;
+                            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0) 100%);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-end;
+                            padding: 24px;
+                            color: #FFFFFF;
+                        }
+                        .insta-brand-button {
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 10px;
+                            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+                            color: #FFFFFF !important;
+                            padding: 12px 28px;
+                            border-radius: 100px;
+                            text-decoration: none;
+                            box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+                            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                        }
+                        .insta-brand-button:hover {
+                            transform: translateY(-3px) scale(1.02);
+                            box-shadow: 0 8px 25px rgba(220, 39, 67, 0.5);
+                        }
+                    `}} />
+                    {/* Clean Header Strip */}
                     <div style={{
                         display: 'flex',
                         flexDirection: 'row',
@@ -3161,21 +3213,9 @@ export default function HomePage() {
                         marginBottom: '36px'
                     }}>
                         <div>
-                            <div style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: 'rgba(228, 64, 95, 0.15)',
-                                border: '1px solid rgba(228, 64, 95, 0.35)',
-                                borderRadius: '999px',
-                                padding: '6px 14px',
-                                marginBottom: '14px'
-                            }}>
-                                <i className="fa-brands fa-instagram" style={{ color: '#E4405F', fontSize: '14px' }} />
-                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', color: '#FFFFFF', textTransform: 'uppercase' }}>
-                                    OFFICIAL BRAND CHANNEL @AANANDHAM.GO
-                                </span>
-                            </div>
+                            <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#E5A93B', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
+                                LIVE DISPATCHES · @AANANDHAM.GO
+                            </span>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: 'clamp(28px, 3.6vw, 44px)',
@@ -3184,10 +3224,10 @@ export default function HomePage() {
                                 margin: '0 0 10px 0',
                                 letterSpacing: '-0.02em'
                             }}>
-                                Live Wilderness Diaries
+                                The Wilderness Diaries
                             </h2>
-                            <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '560px', lineHeight: 1.6 }}>
-                                Daily 4x4 sunrise summits, starlit campfire acoustic jams, and live ridge weather reports from our basecamp marshals.
+                            <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '580px', lineHeight: 1.6 }}>
+                                Catch unscripted 4x4 cloud summits, night campfires, and ridge sunrises from Kerala Western Ghats.
                             </p>
                         </div>
 
@@ -3195,84 +3235,107 @@ export default function HomePage() {
                             href="https://www.instagram.com/aanandham.go/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="insta-follow-btn"
+                            className="insta-brand-button"
                         >
-                            <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }} />
-                            <span>Follow @aanandham.go ↗</span>
+                            <i className="fa-brands fa-instagram" style={{ fontSize: '20px' }} />
+                            <span style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: '15px' }}>Instagram</span>
                         </a>
                     </div>
 
-                    {/* Instagram Grid (6 Cards) */}
+                    {/* Minimalist Editorial Story Grid (6 Cards, Zero Clutter) */}
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(160px, 16vw, 220px), 1fr))',
-                        gap: '16px'
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(180px, 18vw, 230px), 1fr))',
+                        gap: '18px'
                     }}>
                         {[
                             {
                                 title: 'Kolukkumalai Sunrise 4x4',
                                 subtitle: '7,130 FT Golden Cloud Bed',
+                                location: 'Kolukkumalai Peak',
                                 img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-                                tag: '#SunriseJeepSafari'
+                                tag: '7,130 FT · KOLUKKUMALAI'
                             },
                             {
                                 title: 'Starlit Ridge Campfire',
                                 subtitle: 'Kerala Spiced BBQ & Jams',
+                                location: 'Suryanelli Basecamp',
                                 img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
-                                tag: '#CampfireVibes'
+                                tag: 'SURYANELLI RIDGE'
                             },
                             {
-                                title: 'Alpine Geodesic Dome',
-                                subtitle: 'Misty Suryanelli Morning',
+                                title: 'Geodesic Alpine Dome',
+                                subtitle: 'Misty Sunrise Pod View',
+                                location: 'Suryanelli Valley',
                                 img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
-                                tag: '#LuxuryGlamping'
+                                tag: 'ALPINE GLAMPING'
                             },
                             {
                                 title: 'Phantom Head Ridge Hike',
-                                subtitle: 'Panoramic Valley Sunset',
+                                subtitle: 'Panoramic Sunset Trek',
+                                location: 'Phantom Hill, Munnar',
                                 img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-                                tag: '#PhantomHeadTrek'
+                                tag: 'PHANTOM HEAD'
                             },
                             {
-                                title: 'Traditional Camp Feast',
-                                subtitle: 'Hot Mountain Clay Pot Buffet',
+                                title: 'Mountain Clay Pot Feast',
+                                subtitle: 'Authentic Kerala Camp Buffet',
+                                location: 'Basecamp Kitchen',
                                 img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80',
-                                tag: '#MountainFeast'
+                                tag: 'MOUNTAIN FEAST'
                             },
                             {
-                                title: 'Wayanad Canopy Trail',
-                                subtitle: 'Rainforest Stream Dip',
+                                title: 'Wayanad Rainforest Stream',
+                                subtitle: 'Private Waterfall Dip',
+                                location: 'Wayanad Estate',
                                 img: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80',
-                                tag: '#WildKerala'
+                                tag: 'WAYANAD CANOPY'
                             }
-                        ].map((item, idx) => (
+                        ].map((story, idx) => (
                             <a
                                 key={idx}
                                 href="https://www.instagram.com/aanandham.go/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="instagram-card-item"
+                                className="insta-story-card"
                             >
                                 <img
-                                    src={item.img}
-                                    alt={item.title}
-                                    className="insta-img"
+                                    src={story.img}
+                                    alt={story.title}
+                                    className="story-card-img"
                                 />
-                                <div className="insta-overlay">
-                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                                        <div className="insta-badge-circle">
-                                            <i className="fa-brands fa-instagram" style={{ color: '#FFFFFF' }} />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <span className="insta-tag">
-                                            {item.tag}
+                                <div className="story-card-overlay">
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '6px'
+                                    }}>
+                                        <span style={{
+                                            fontSize: '10px',
+                                            fontWeight: '700',
+                                            letterSpacing: '1px',
+                                            color: '#E5A93B',
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            {story.tag}
                                         </span>
-                                        <h4 style={{ fontSize: '14px', fontWeight: '800', margin: '0 0 2px 0', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
-                                            {item.title}
-                                        </h4>
-                                        <p style={{ fontSize: '11.5px', color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.3 }}>
-                                            {item.subtitle}
+                                        <h3 style={{
+                                            fontFamily: 'var(--font-heading)',
+                                            fontSize: '16px',
+                                            fontWeight: '700',
+                                            color: '#FFFFFF',
+                                            margin: 0,
+                                            lineHeight: 1.2
+                                        }}>
+                                            {story.title}
+                                        </h3>
+                                        <p style={{
+                                            fontSize: '12px',
+                                            color: 'rgba(255, 255, 255, 0.7)',
+                                            margin: 0,
+                                            lineHeight: 1.4
+                                        }}>
+                                            {story.subtitle}
                                         </p>
                                     </div>
                                 </div>

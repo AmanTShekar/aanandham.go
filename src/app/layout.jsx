@@ -20,8 +20,10 @@ const plusJakarta = Plus_Jakarta_Sans({
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#0E1A11',
-  colorScheme: 'only light',
+  maximumScale: 5,
+  viewportFit: 'cover',
+  themeColor: '#070E08',
+  colorScheme: 'dark',
 };
 
 export const metadata = {

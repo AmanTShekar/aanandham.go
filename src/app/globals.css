@@ -3564,114 +3564,67 @@ input, textarea, select, button {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   INSTAGRAM WILDERNESS SHOWCASE INTERACTIVE HOVER EFFECTS
+   MINIMALIST WILDERNESS PHOTO & INSTAGRAM EDITORIAL SHOWCASE
 ───────────────────────────────────────────────────────────── */
-.instagram-card-item {
+.insta-story-card {
   position: relative;
-  border-radius: 20px;
+  border-radius: 12px;
   overflow: hidden;
-  aspect-ratio: 1 / 1.18;
+  aspect-ratio: 4 / 5;
   display: block;
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: #0E1A11;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
+  background: #000;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
 }
 
-.instagram-card-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(229, 169, 59, 0.7) !important;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 28px rgba(229, 169, 59, 0.25) !important;
+.insta-story-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
 }
 
-.instagram-card-item .insta-img {
+.insta-story-card .story-card-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
-  filter: brightness(0.92) contrast(1.04);
-}
-
-.instagram-card-item:hover .insta-img {
-  transform: scale(1.12) rotate(0.75deg);
-  filter: brightness(1.05) contrast(1.08);
-}
-
-.instagram-card-item .insta-badge-circle {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease, border-color 0.3s ease;
-}
-
-.instagram-card-item:hover .insta-badge-circle {
-  transform: scale(1.18) rotate(-12deg);
-  background: linear-gradient(45deg, #F58529, #D62976, #962FBF);
-  border-color: rgba(255, 255, 255, 0.6);
-}
-
-.instagram-card-item .insta-tag {
-  font-size: 11px;
-  font-weight: 800;
-  color: #D5ED55;
   display: block;
-  margin-bottom: 3px;
-  letter-spacing: 0.3px;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.instagram-card-item:hover .insta-tag {
-  color: #E5A93B;
-  text-shadow: 0 0 12px rgba(229, 169, 59, 0.5);
+.insta-story-card:hover .story-card-img {
+  transform: scale(1.05);
 }
 
-.instagram-card-item .insta-overlay {
+.insta-story-card .story-card-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.4) 40%, rgba(6,12,8,0.92) 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0) 100%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 16px;
+  justify-content: flex-end;
+  padding: 24px;
   color: #FFFFFF;
-  transition: background 0.4s ease;
 }
 
-.instagram-card-item:hover .insta-overlay {
-  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.3) 35%, rgba(6,12,8,0.96) 100%);
-}
-
-.insta-follow-btn {
+.insta-brand-button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(45deg, #F58529, #D62976, #962FBF, #4F5BD5);
-  background-size: 200% 200%;
-  color: #FFFFFF;
-  padding: 13px 26px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 800;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #FFFFFF !important;
+  padding: 12px 28px;
+  border-radius: 100px;
   text-decoration: none;
-  box-shadow: 0 8px 24px rgba(214, 41, 118, 0.35);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, background-position 0.5s ease;
+  box-shadow: 0 4px 15px rgba(220, 39, 67, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.insta-follow-btn:hover {
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 14px 34px rgba(214, 41, 118, 0.55), 0 0 20px rgba(245, 133, 41, 0.3);
-  background-position: right center;
+.insta-brand-button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(220, 39, 67, 0.5);
 }
+
+
+
 
 
 
