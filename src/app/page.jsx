@@ -404,61 +404,56 @@ const FAQ_DATA = [
     }
 ];
 
-// ── REUSABLE FRAMER MOTION ULTRA-CLEAN VARIANTS ──
+// ── REUSABLE FRAMER MOTION ULTRA-CLEAN VARIANTS (Fast Eager Paint) ──
 const sectionReveal = {
-    hidden: { opacity: 0, y: 28 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
-    }
+    hidden: { opacity: 1, y: 0 },
+    visible: { opacity: 1, y: 0 }
 };
 
 const fadeInUp = {
-    hidden: { opacity: 0, y: 24 },
+    hidden: { opacity: 0.85, y: 12 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const staggerContainer = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.1,
-            delayChildren: 0.05
+            staggerChildren: 0.05,
+            delayChildren: 0.02
         }
     }
 };
 
 const cardReveal = {
-    hidden: { opacity: 0, y: 24, scale: 0.97 },
+    hidden: { opacity: 0.85, y: 12 },
     visible: {
         opacity: 1,
         y: 0,
-        scale: 1,
-        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const fadeInLeft = {
-    hidden: { opacity: 0, x: -28 },
+    hidden: { opacity: 0.85, x: -12 },
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const fadeInRight = {
-    hidden: { opacity: 0, x: 28 },
+    hidden: { opacity: 0.85, x: 12 },
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
@@ -792,36 +787,9 @@ export default function HomePage() {
     };
 
     // Read logged-in user profile from localStorage
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('aanandham_user') || sessionStorage.getItem('aanandham_user');
-            if (saved) {
-                setCurrentUser(JSON.parse(saved));
-            }
-        } catch (e) {}
-    }, []);
-
     const handleLogout = () => {
-        try {
-            localStorage.removeItem('aanandham_user');
-            sessionStorage.removeItem('aanandham_user');
-        } catch (e) {}
-        setCurrentUser(null);
-        setIsAccountMenuOpen(false);
+        logout?.();
     };
-
-    // Threshold-gated scroll listener (Only fires state updates when crossing 40px boundary)
-    useEffect(() => {
-        const handleScroll = () => {
-            const isPast = window.scrollY > 40;
-            if (isPast !== scrolledRef.current) {
-                scrolledRef.current = isPast;
-                setScrolled(isPast);
-            }
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
 
     // Disable background page scrolling when modals are open
     useEffect(() => {
@@ -1155,12 +1123,8 @@ export default function HomePage() {
             {/* ─────────────────────────────────────────────────────────────
                 1. OVERVIEW SECTION (Ref Screenshot 3 Batch 2 - media_1786655246018.png)
             ───────────────────────────────────────────────────────────── */}
-            <motion.section 
+            <section 
                 id="overview" 
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
-                variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
@@ -1312,7 +1276,7 @@ export default function HomePage() {
 
                     </div>
                 </div>
-            </motion.section>
+            </section>
 
             {/* ─────────────────────────────────────────────────────────────
                 2. WHY AANANDHAM.GO SECTION (Flagship Value & Trust Pillars)

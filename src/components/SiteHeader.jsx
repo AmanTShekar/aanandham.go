@@ -86,37 +86,52 @@ export default function SiteHeader({
         }
     }, [isAccountMenuOpen]);
 
-    // Scroll listener with threshold debounce and directional auto-hide
+    // High-performance RAF-scheduled scroll listener with directional auto-hide
     useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            const isPast = currentScrollY > 40;
-            if (isPast !== scrolledRef.current) {
-                scrolledRef.current = isPast;
-                setScrolled(isPast);
-            }
+        let rafId = null;
+        let isVisibleLocal = true;
 
-            if (isMobileMenuOpen) {
-                setIsHeaderVisible(true);
-                return;
-            }
+        const onScroll = () => {
+            if (rafId) return;
 
-            if (currentScrollY <= 60) {
-                setIsHeaderVisible(true);
-            } else if (currentScrollY > lastScrollY.current + 8) {
-                // Scrolling down -> Auto hide header
-                setIsHeaderVisible(false);
-            } else if (currentScrollY < lastScrollY.current - 10) {
-                // Scrolling up -> Reveal header
-                setIsHeaderVisible(true);
-            }
+            rafId = requestAnimationFrame(() => {
+                const currentScrollY = Math.max(0, window.scrollY);
+                const isPast = currentScrollY > 40;
 
-            lastScrollY.current = Math.max(0, currentScrollY);
+                if (isPast !== scrolledRef.current) {
+                    scrolledRef.current = isPast;
+                    setScrolled(isPast);
+                }
+
+                if (isMobileMenuOpen || currentScrollY <= 70) {
+                    if (!isVisibleLocal) {
+                        isVisibleLocal = true;
+                        setIsHeaderVisible(true);
+                    }
+                } else if (currentScrollY > lastScrollY.current + 12) {
+                    // Scrolling down past threshold -> hide
+                    if (isVisibleLocal) {
+                        isVisibleLocal = false;
+                        setIsHeaderVisible(false);
+                    }
+                } else if (currentScrollY < lastScrollY.current - 12) {
+                    // Scrolling up past threshold -> show
+                    if (!isVisibleLocal) {
+                        isVisibleLocal = true;
+                        setIsHeaderVisible(true);
+                    }
+                }
+
+                lastScrollY.current = currentScrollY;
+                rafId = null;
+            });
         };
 
-        handleScroll();
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            if (rafId) cancelAnimationFrame(rafId);
+        };
     }, [transparentOnTop, isMobileMenuOpen]);
 
     // Scroll Lock when mobile drawer is open
