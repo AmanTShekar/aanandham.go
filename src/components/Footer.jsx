@@ -58,11 +58,11 @@ export default function Footer() {
                         </p>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                            <a href="mailto:bookings@aanandhamgo.in" className="footer-contact-link">
+                            <a href="mailto:bookings@aanandham.in" className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }} />
                                 </div>
-                                <span>bookings@aanandhamgo.in</span>
+                                <span>bookings@aanandham.in</span>
                             </a>
                             <a href="tel:+919400987654" className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

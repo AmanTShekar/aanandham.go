@@ -3139,6 +3139,149 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {/* ─────────────────────────────────────────────────────────────
+                INSTAGRAM WILDERNESS DIARIES SHOWCASE (@aanandham.go)
+            ───────────────────────────────────────────────────────────── */}
+            <section style={{
+                padding: '90px clamp(16px, 4vw, 48px)',
+                background: '#0B150E',
+                position: 'relative',
+                overflow: 'hidden',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)'
+            }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+                    {/* Header Strip */}
+                    <div style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'flex-end',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '24px',
+                        marginBottom: '36px'
+                    }}>
+                        <div>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                background: 'rgba(228, 64, 95, 0.15)',
+                                border: '1px solid rgba(228, 64, 95, 0.35)',
+                                borderRadius: '999px',
+                                padding: '6px 14px',
+                                marginBottom: '14px'
+                            }}>
+                                <i className="fa-brands fa-instagram" style={{ color: '#E4405F', fontSize: '14px' }} />
+                                <span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '1px', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                                    OFFICIAL BRAND CHANNEL @AANANDHAM.GO
+                                </span>
+                            </div>
+                            <h2 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(28px, 3.6vw, 44px)',
+                                fontWeight: '800',
+                                color: '#FFFFFF',
+                                margin: '0 0 10px 0',
+                                letterSpacing: '-0.02em'
+                            }}>
+                                Live Wilderness Diaries
+                            </h2>
+                            <p style={{ fontSize: '15px', color: '#A2B6A6', margin: 0, maxWidth: '560px', lineHeight: 1.6 }}>
+                                Daily 4x4 sunrise summits, starlit campfire acoustic jams, and live ridge weather reports from our basecamp marshals.
+                            </p>
+                        </div>
+
+                        <a
+                            href="https://www.instagram.com/aanandham.go/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="insta-follow-btn"
+                        >
+                            <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }} />
+                            <span>Follow @aanandham.go ↗</span>
+                        </a>
+                    </div>
+
+                    {/* Instagram Grid (6 Cards) */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(160px, 16vw, 220px), 1fr))',
+                        gap: '16px'
+                    }}>
+                        {[
+                            {
+                                title: 'Kolukkumalai Sunrise 4x4',
+                                subtitle: '7,130 FT Golden Cloud Bed',
+                                img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
+                                tag: '#SunriseJeepSafari'
+                            },
+                            {
+                                title: 'Starlit Ridge Campfire',
+                                subtitle: 'Kerala Spiced BBQ & Jams',
+                                img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
+                                tag: '#CampfireVibes'
+                            },
+                            {
+                                title: 'Alpine Geodesic Dome',
+                                subtitle: 'Misty Suryanelli Morning',
+                                img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
+                                tag: '#LuxuryGlamping'
+                            },
+                            {
+                                title: 'Phantom Head Ridge Hike',
+                                subtitle: 'Panoramic Valley Sunset',
+                                img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
+                                tag: '#PhantomHeadTrek'
+                            },
+                            {
+                                title: 'Traditional Camp Feast',
+                                subtitle: 'Hot Mountain Clay Pot Buffet',
+                                img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80',
+                                tag: '#MountainFeast'
+                            },
+                            {
+                                title: 'Wayanad Canopy Trail',
+                                subtitle: 'Rainforest Stream Dip',
+                                img: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80',
+                                tag: '#WildKerala'
+                            }
+                        ].map((item, idx) => (
+                            <a
+                                key={idx}
+                                href="https://www.instagram.com/aanandham.go/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="instagram-card-item"
+                            >
+                                <img
+                                    src={item.img}
+                                    alt={item.title}
+                                    className="insta-img"
+                                />
+                                <div className="insta-overlay">
+                                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        <div className="insta-badge-circle">
+                                            <i className="fa-brands fa-instagram" style={{ color: '#FFFFFF' }} />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <span className="insta-tag">
+                                            {item.tag}
+                                        </span>
+                                        <h4 style={{ fontSize: '14px', fontWeight: '800', margin: '0 0 2px 0', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                                            {item.title}
+                                        </h4>
+                                        <p style={{ fontSize: '11.5px', color: 'rgba(255,255,255,0.75)', margin: 0, lineHeight: 1.3 }}>
+                                            {item.subtitle}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
             </main>
 
             {/* ─────────────────────────────────────────────────────────────

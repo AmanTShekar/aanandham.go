@@ -68,10 +68,10 @@ const CONTACT_CHANNELS = [
         id: 'email',
         badge: 'EXPEDITION DESK',
         title: 'Reservations & Media',
-        val: 'bookings@aanandhamgo.in',
+        val: 'bookings@aanandham.in',
         sub: 'Replies within 2 to 4 hours',
         icon: 'fa-regular fa-envelope',
-        href: 'mailto:bookings@aanandhamgo.in',
+        href: 'mailto:bookings@aanandham.in',
         actionLabel: 'Send Email ↗',
         accent: '#D5ED55'
     },
