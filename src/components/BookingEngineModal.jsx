@@ -1395,13 +1395,13 @@ export default function BookingEngineModal({
                                                             href={upiPayLink}
                                                             style={{ padding: '7px', background: '#FFFFFF', borderRadius: '8px', color: '#121613', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
                                                         >
-                                                            <span>GPay ↗</span>
+                                                            <span>GPay →</span>
                                                         </a>
                                                         <a
                                                             href={upiPayLink}
                                                             style={{ padding: '7px', background: '#5F259F', borderRadius: '8px', color: '#FFFFFF', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
                                                         >
-                                                            <span>PhonePe ↗</span>
+                                                            <span>PhonePe →</span>
                                                         </a>
                                                     </div>
                                                 </div>
@@ -1444,8 +1444,8 @@ export default function BookingEngineModal({
                                                 {isSubmitting 
                                                     ? 'Generating Pass...' 
                                                     : paymentSettings.mode === 'coming_soon'
-                                                        ? 'Confirm Reservation (₹0 Advance) ↗'
-                                                        : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) ↗`}
+                                                        ? 'Confirm Reservation (₹0 Advance) →'
+                                                        : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) →`}
                                             </span>
                                             <Check size={16} />
                                         </button>
@@ -1562,7 +1562,7 @@ export default function BookingEngineModal({
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            <span>Sync with Host on WhatsApp ↗</span>
+                                            <span>Sync with Host on WhatsApp →</span>
                                         </button>
                                         
                                         <button

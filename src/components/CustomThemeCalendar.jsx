@@ -549,7 +549,7 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        <span>Confirm This Expedition Window ({durationDays} Days) ↗</span>
+                        <span>Confirm This Expedition Window ({durationDays} Days) →</span>
                     </button>
                 </motion.div>
             )}

@@ -404,7 +404,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                             gap: '8px'
                                         }}
                                     >
-                                        {loading ? 'Authenticating...' : submitted ? 'Success! Redirecting...' : 'Log In to Basecamp ↗'}
+                                        {loading ? 'Authenticating...' : submitted ? 'Success! Redirecting...' : 'Log In to Basecamp →'}
                                     </button>
                                 </form>
                             </motion.div>
@@ -602,7 +602,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                             gap: '8px'
                                         }}
                                     >
-                                        {loading ? 'Creating Explorer Pass...' : submitted ? 'Pass Created! Redirecting...' : 'Create Free Member Account ↗'}
+                                        {loading ? 'Creating Explorer Pass...' : submitted ? 'Pass Created! Redirecting...' : 'Create Free Member Account →'}
                                     </button>
                                 </form>
                             </motion.div>

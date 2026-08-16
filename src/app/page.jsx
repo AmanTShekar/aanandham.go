@@ -571,7 +571,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                     gap: '10px'
                                 }}
                             >
-                                <span>Instant Reserve Spot ↗</span>
+                                <span>Instant Reserve Spot →</span>
                             </motion.button>
                             <a
                                 href={waLink('Hi Aanandham Team! I want to reserve a spot for the upcoming wilderness camp.')}
@@ -1020,7 +1020,7 @@ export default function HomePage() {
                                 boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                             }}
                         >
-                            ⛺ Explore Stays & Camps ↗
+                            ⛺ Explore Stays & Camps →
                         </a>
 
                         {/* Translucent Learn More Button */}
@@ -1171,7 +1171,7 @@ export default function HomePage() {
                             >
                                 <span>Join The Camp</span>
                                 <div className="btn-arrow-circle">
-                                    ↗
+                                    →
                                 </div>
                             </button>
                         </motion.div>
@@ -1268,7 +1268,7 @@ export default function HomePage() {
                                 <a href="#stories" className="action-arrow-btn" style={{ width: '100%', justifyContent: 'space-between' }}>
                                     <span>Read Our Story</span>
                                     <div className="btn-arrow-circle">
-                                        ↗
+                                        →
                                     </div>
                                 </a>
                             </div>
@@ -1683,7 +1683,7 @@ export default function HomePage() {
                                     whiteSpace: 'nowrap'
                                 }}
                             >
-                                All Camps ↗
+                                All Camps →
                             </Link>
                         </div>
                     </div>
@@ -1861,7 +1861,7 @@ export default function HomePage() {
                                                             gap: '3px'
                                                         }}
                                                     >
-                                                        <span>Explore ↗</span>
+                                                        <span>Explore →</span>
                                                     </Link>
 
                                                     {/* 2. Instant Book ⚡ */}
@@ -2547,7 +2547,7 @@ export default function HomePage() {
                                         borderRadius: '6px',
                                         boxShadow: '0 2px 6px rgba(0, 0, 0, 0.12)'
                                     }}>
-                                        Inquire ↗
+                                        Inquire →
                                     </span>
                                 </div>
 
@@ -2900,7 +2900,7 @@ export default function HomePage() {
                                     </div>
                                 </div>
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#EFECE6', padding: '5px 12px', borderRadius: '999px' }}>
-                                    Play Video ↗
+                                    Play Video →
                                 </span>
                             </div>
                         </div>
@@ -3062,7 +3062,7 @@ export default function HomePage() {
                             >
                                 <span>Contact Us</span>
                                 <div className="btn-arrow-circle">
-                                    ↗
+                                    →
                                 </div>
                             </Link>
                         </div>
@@ -3544,7 +3544,7 @@ export default function HomePage() {
                                             textDecoration: 'none'
                                         }}
                                     >
-                                        Explore Full Details ↗
+                                        Explore Full Details →
                                     </Link>
                                     <button
                                         onClick={() => {
@@ -3560,7 +3560,7 @@ export default function HomePage() {
                                         className="btn-lime"
                                         style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '800' }}
                                     >
-                                        Book This Campsite ↗
+                                        Book This Campsite →
                                     </button>
                                 </div>
                             </div>

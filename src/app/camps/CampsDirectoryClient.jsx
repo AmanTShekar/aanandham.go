@@ -565,7 +565,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                         boxShadow: '0 4px 14px rgba(0,0,0,0.25)'
                                                     }}
                                                 >
-                                                    <span style={{ fontSize: '15px', color: '#FFFFFF' }}>↗</span>
+                                                    <span style={{ fontSize: '15px', color: '#FFFFFF' }}>→</span>
                                                 </button>
                                             </div>
 
@@ -668,7 +668,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                             gap: '4px'
                                                         }}
                                                     >
-                                                        <span>Explore ↗</span>
+                                                        <span>Explore →</span>
                                                     </Link>
 
                                                     <button

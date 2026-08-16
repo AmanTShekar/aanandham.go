@@ -749,7 +749,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                             boxShadow: '0 4px 14px rgba(213,237,85,0.3)'
                                         }}
                                     >
-                                        <span>Check Availability & Book ↗</span>
+                                        <span>Check Availability & Book →</span>
                                     </button>
 
                                     {/* Secondary WhatsApp Inquire Button */}

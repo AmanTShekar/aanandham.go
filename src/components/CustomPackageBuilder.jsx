@@ -433,7 +433,7 @@ export default function CustomPackageBuilder() {
                                 }}
                             >
                                 <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                <span>Get Custom Quote on WhatsApp ↗</span>
+                                <span>Get Custom Quote on WhatsApp →</span>
                             </button>
                         </form>
 

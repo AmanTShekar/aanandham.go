@@ -50,7 +50,7 @@ export default function AanandhamBot() {
                     >
                         <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#25D366', boxShadow: '0 0 8px #25D366' }} />
                         <span>Chat on WhatsApp</span>
-                        <span style={{ color: '#D5ED55', fontSize: '11px' }}>↗</span>
+                        <span style={{ color: '#D5ED55', fontSize: '11px' }}>→</span>
                     </motion.div>
                 )}
             </AnimatePresence>

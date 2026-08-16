@@ -61,7 +61,7 @@ const CONTACT_CHANNELS = [
         sub: 'Instant booking & route guidance',
         icon: 'fa-brands fa-whatsapp',
         href: 'https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20have%20an%20inquiry%20regarding%20campsites%20and%20treks.',
-        actionLabel: 'WhatsApp Chat ↗',
+        actionLabel: 'WhatsApp Chat →',
         accent: '#25D366'
     },
     {
@@ -72,7 +72,7 @@ const CONTACT_CHANNELS = [
         sub: 'Replies within 2 to 4 hours',
         icon: 'fa-regular fa-envelope',
         href: 'mailto:bookings@aanandham.in',
-        actionLabel: 'Send Email ↗',
+        actionLabel: 'Send Email →',
         accent: '#D5ED55'
     },
     {
@@ -83,7 +83,7 @@ const CONTACT_CHANNELS = [
         sub: '6,500 FT Elevation · Western Ghats',
         icon: 'fa-solid fa-mountain-sun',
         href: 'https://maps.google.com/?q=Suryanelli+Munnar+Kerala',
-        actionLabel: 'Google Maps ↗',
+        actionLabel: 'Google Maps →',
         accent: '#F28B66'
     }
 ];
@@ -416,7 +416,7 @@ export default function ContactPage() {
                                 }}
                             >
                                 <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                <span>Instant WhatsApp Concierge ↗</span>
+                                <span>Instant WhatsApp Concierge →</span>
                             </a>
 
                             <a
@@ -560,7 +560,7 @@ export default function ContactPage() {
                                         style={{ textDecoration: 'none' }}
                                     >
                                         <span>{ch.actionLabel}</span>
-                                        <div className="btn-arrow-circle">↗</div>
+                                        <div className="btn-arrow-circle">→</div>
                                     </a>
                                 </motion.div>
                             ))}
@@ -732,7 +732,7 @@ export default function ContactPage() {
                                                     }}
                                                 >
                                                     <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px' }}></i>
-                                                    <span>Open WhatsApp Chat ↗</span>
+                                                    <span>Open WhatsApp Chat →</span>
                                                 </a>
                                             )}
                                             <button
@@ -1426,7 +1426,7 @@ export default function ContactPage() {
                             }}
                         >
                             <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                            <span>Chat with Mountain Offsite Lead ↗</span>
+                            <span>Chat with Mountain Offsite Lead →</span>
                         </a>
                     </div>
                 </motion.section>

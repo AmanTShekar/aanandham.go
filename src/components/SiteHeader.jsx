@@ -329,7 +329,7 @@ export default function SiteHeader({
                                 }}
                             >
                                 <span>Book Campsite</span>
-                                <span>↗</span>
+                                <span>→</span>
                             </Link>
                         </div>
                     </div>
@@ -499,7 +499,7 @@ export default function SiteHeader({
                                     }}
                                 >
                                     <span>Book A Campsite Now</span>
-                                    <span>↗</span>
+                                    <span>→</span>
                                 </Link>
 
                                 <a
@@ -508,7 +508,7 @@ export default function SiteHeader({
                                     rel="noopener noreferrer"
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.1)', border: '1px solid rgba(229, 169, 59, 0.25)', fontSize: '14px', fontWeight: '700', textDecoration: 'none', padding: '12px', borderRadius: '999px' }}
                                 >
-                                    <span>🏕️ WhatsApp Concierge (24/7) ↗</span>
+                                    <span>🏕️ WhatsApp Concierge (24/7) →</span>
                                 </a>
                             </motion.div>
                         </motion.div>

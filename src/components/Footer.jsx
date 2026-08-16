@@ -152,7 +152,7 @@ export default function Footer() {
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>
-                                    <span className="arrow-icon">↗</span>
+                                    <span className="arrow-icon">→</span>
                                 </Link>
                             ))}
                         </div>
@@ -174,7 +174,7 @@ export default function Footer() {
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>
-                                    <span className="arrow-icon">↗</span>
+                                    <span className="arrow-icon">→</span>
                                 </Link>
                             ))}
                         </div>
@@ -201,7 +201,7 @@ export default function Footer() {
                         <Link href="/contact" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Contact & Booking</Link>
                         <Link href="/login" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Member Login</Link>
                         <Link href="/signup" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Join Tribe</Link>
-                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" style={{ color: '#E5A93B', textDecoration: 'none', fontWeight: '700' }}>@aanandham.go ↗</a>
+                        <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" style={{ color: '#E5A93B', textDecoration: 'none', fontWeight: '700' }}>@aanandham.go →</a>
                     </div>
                     <div>
                         Copyright © 2026 Aanandham.go Wilderness Platform – Crafted for Mountain Explorers.

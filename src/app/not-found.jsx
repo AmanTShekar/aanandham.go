@@ -259,7 +259,7 @@ export default function NotFound() {
                             }}
                         >
                             <span style={{ fontWeight: '800' }}>Explore Expeditions</span>
-                            <div className="btn-arrow-circle">↗</div>
+                            <div className="btn-arrow-circle">→</div>
                         </Link>
                     </motion.div>
 
@@ -333,7 +333,7 @@ export default function NotFound() {
                                         justifyContent: 'space-between'
                                     }}>
                                         <span>{trail.title}</span>
-                                        <span style={{ fontSize: '12px', opacity: 0.6 }}>↗</span>
+                                        <span style={{ fontSize: '12px', opacity: 0.6 }}>→</span>
                                     </h3>
                                     <p style={{
                                         fontSize: '12.5px',

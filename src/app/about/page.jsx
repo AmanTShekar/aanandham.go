@@ -558,7 +558,7 @@ export default function AboutPage() {
                                     boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                                 }}
                             >
-                                ⛺ Explore Our Camps ↗
+                                ⛺ Explore Our Camps →
                             </Link>
 
                             <a
@@ -1693,7 +1693,7 @@ export default function AboutPage() {
                                                     marginTop: 'auto'
                                                 }}
                                             >
-                                                Inquire Trail Route ↗
+                                                Inquire Trail Route →
                                             </a>
                                         </div>
                                     </motion.div>
@@ -2160,7 +2160,7 @@ export default function AboutPage() {
                                         boxShadow: '0 10px 30px rgba(213, 237, 85, 0.4)'
                                     }}
                                 >
-                                    Explore Campsite Packages ↗
+                                    Explore Campsite Packages →
                                 </Link>
                                 <Link
                                     href="/contact"
@@ -2249,7 +2249,7 @@ export default function AboutPage() {
                             }}
                         >
                             <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                            <span>Chat with Mountain Offsite Lead ↗</span>
+                            <span>Chat with Mountain Offsite Lead →</span>
                         </a>
                     </div>
                 </motion.section>

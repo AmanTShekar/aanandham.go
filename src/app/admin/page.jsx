@@ -1174,7 +1174,7 @@ export default function AdminPortal() {
                                     textDecoration: 'none'
                                 }}
                             >
-                                🌐 View Public Page ↗
+                                🌐 View Public Page →
                             </Link>
                             <button
                                 onClick={() => handleToggleAvailability(currentDetailProperty.id)}
@@ -1863,7 +1863,7 @@ export default function AdminPortal() {
                             gap: '4px'
                         }}
                     >
-                        <span>Website ↗</span>
+                        <span>Website →</span>
                     </Link>
                     <button
                         onClick={handleLogout}
@@ -2122,7 +2122,7 @@ export default function AdminPortal() {
                                                 </div>
                                                 <div>
                                                     <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '7px 12px', fontSize: '11.5px', fontWeight: '800' }}>
-                                                        WhatsApp ↗
+                                                        WhatsApp →
                                                     </a>
                                                 </div>
                                             </div>
@@ -2274,7 +2274,7 @@ export default function AdminPortal() {
                                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                             <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
                                                 <span>WhatsApp</span>
-                                                <span>↗</span>
+                                                <span>→</span>
                                             </a>
                                             <button onClick={() => handleDeleteBooking(b.id)} style={{ padding: '8px 11px', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', cursor: 'pointer', fontSize: '12px' }}>
                                                 🗑️

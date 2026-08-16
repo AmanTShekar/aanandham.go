@@ -11,7 +11,7 @@ function getSmartLocalResponse(query) {
             text: "🌄 **Kolukkumalai Sunrise 4x4 Expedition** is our signature sanctuary!\n\nPerched at **7,900 FT**, it is the world's highest organic tea estate. You wake up directly above rolling cloud beds, followed by a guided sunrise ridge trek to Tiger Rock.\n\n• **Price:** Starts at ₹2,499/camper\n• **Stay:** Geodesic Sky Domes & Alpine Ridge Tents\n• **Inclusions:** 4x4 Jeep convoy, campfire BBQ buffet, and certified mountain marshals.",
             suggestedCampId: 'pkg-kolukkumalai',
             quickActions: [
-                { label: 'Book Kolukkumalai ↗', action: 'OPEN_BOOKING', campId: 'pkg-kolukkumalai' },
+                { label: 'Book Kolukkumalai →', action: 'OPEN_BOOKING', campId: 'pkg-kolukkumalai' },
                 { label: 'View Details', action: 'VIEW_CAMP', campId: 'pkg-kolukkumalai' }
             ]
         };
@@ -121,8 +121,8 @@ Respond in a warm, enthusiastic, concise, well-formatted markdown response with 
                             reply: aiReply,
                             source: 'gemini',
                             quickActions: [
-                                { label: 'Reserve Campsite ↗', action: 'OPEN_BOOKING' },
-                                { label: 'Connect on WhatsApp ↗', action: 'WHATSAPP' }
+                                { label: 'Reserve Campsite →', action: 'OPEN_BOOKING' },
+                                { label: 'Connect on WhatsApp →', action: 'WHATSAPP' }
                             ]
                         });
                     }
@@ -148,7 +148,7 @@ Respond in a warm, enthusiastic, concise, well-formatted markdown response with 
             success: false,
             reply: "🌲 I'm here to help with your camping booking! You can ask about our campsites, pricing, squad discounts, or click below to open the booking engine directly.",
             quickActions: [
-                { label: 'Open Booking Engine ↗', action: 'OPEN_BOOKING' }
+                { label: 'Open Booking Engine →', action: 'OPEN_BOOKING' }
             ]
         }, { status: 500 });
     }
