@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
 import AanandhamBot from '@/components/AanandhamBot';
 import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -190,6 +191,7 @@ export default function RootLayout({ children }) {
         {children}
         <AanandhamBot />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
