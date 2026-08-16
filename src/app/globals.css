@@ -7,6 +7,19 @@ html, body {
   padding: 0 !important;
   background-color: #070E08 !important;
   color: #F4F5F0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* 60Hz iPhones & standard Android touch physics optimization */
+@media (pointer: coarse) {
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
 }
 
 main, section, header, footer {
@@ -2504,8 +2517,8 @@ button:focus-visible, a:focus-visible {
 /* Floating WhatsApp Concierge Button */
 .floating-whatsapp-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  right: calc(24px + env(safe-area-inset-right, 0px));
   z-index: 999;
   background: #25D366;
   color: #FFFFFF;
