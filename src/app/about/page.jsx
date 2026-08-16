@@ -420,7 +420,7 @@ export default function AboutPage() {
 
     return (
         <div style={{
-            minHeight: '100dvh',
+            minHeight: '100%',
             backgroundColor: '#F8F9F5',
             color: '#121613',
             fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif',

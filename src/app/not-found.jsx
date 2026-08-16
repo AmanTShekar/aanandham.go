@@ -45,7 +45,7 @@ export default function NotFound() {
     ];
 
     return (
-        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100dvh', display: 'flex', flexDirection: 'column', position: 'relative', overflowX: 'clip' }}>
+        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100%', display: 'flex', flexDirection: 'column', position: 'relative', overflowX: 'clip' }}>
             
             {/* ── UNIFIED SITE HEADER ── */}
             <SiteHeader 

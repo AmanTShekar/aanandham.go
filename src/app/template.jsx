@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export default function Template({ children }) {
   return (
-    <div style={{ position: 'relative', width: '100%', minHeight: '100dvh', backgroundColor: '#070E08' }}>
+    <div style={{ position: 'relative', width: '100%', minHeight: '100%', backgroundColor: '#070E08' }}>
       
       {/* ── 120 FPS GPU COMPOSITOR TOP-DOWN SOLID REVEAL SHADE ── */}
       <motion.div
@@ -32,7 +32,7 @@ export default function Template({ children }) {
       />
 
       {/* ── CLEAN SETTLED DESTINATION PAGE ── */}
-      <div style={{ width: '100%', minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '100%', minHeight: '100%', display: 'flex', flexDirection: 'column' }}>
         {children}
       </div>
     </div>

@@ -962,7 +962,7 @@ export default function HomePage() {
     };
 
     return (
-        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100dvh', position: 'relative' }}>
+        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100%', position: 'relative' }}>
             
             {/* ── GOOGLE RICH RESULTS STRUCTURED DATA ── */}
             <script
