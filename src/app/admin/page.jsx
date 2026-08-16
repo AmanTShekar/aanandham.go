@@ -8,6 +8,7 @@ import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
+import { getPaymentSettings, savePaymentSettings } from '../../lib/paymentSettings';
 
 // Helper to safely validate, downscale and compress images before storing as Base64 (UP1, Item 9)
 function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
@@ -189,6 +190,31 @@ export default function AdminPortal() {
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
     const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
+    // Payment Gateway & QR Settings State
+    const [paymentSettings, setPaymentSettings] = useState(() => getPaymentSettings());
+    const [qrImageUploading, setQrImageUploading] = useState(false);
+
+    const handleSavePaymentSettings = (e) => {
+        if (e) e.preventDefault();
+        savePaymentSettings(paymentSettings);
+        showToast('✓ Payment Gateway Settings Saved & Synchronized Live!');
+    };
+
+    const handleQrImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+            setQrImageUploading(true);
+            const compressed = await compressImageFile(file, 800, 800, 0.9);
+            setPaymentSettings(prev => ({ ...prev, customQrUrl: compressed }));
+            showToast('✓ Custom QR Code Image Loaded');
+        } catch (err) {
+            alert(err.message || 'Failed to process QR image');
+        } finally {
+            setQrImageUploading(false);
+        }
+    };
+
     // Toast message state with cleanup ref (UP5)
     const [toastMessage, setToastMessage] = useState('');
     const toastTimerRef = useRef(null);
@@ -200,6 +226,7 @@ export default function AdminPortal() {
 
     // Load from Server APIs + LocalStorage Fallback (N1)
     const reloadDataFromStorage = async () => {
+        setPaymentSettings(getPaymentSettings());
         const savedPhone = localStorage.getItem('aanandham_admin_phone');
         if (savedPhone) setAdminPhone(savedPhone);
         const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
@@ -1638,6 +1665,7 @@ export default function AdminPortal() {
             category: 'FINANCE & CONTROL',
             items: [
                 { id: 'financials', name: 'Revenue & Margin', icon: '💰', desc: `₹${totalRevenue.toLocaleString('en-IN')}` },
+                { id: 'payment', name: 'Payment & QR Gateway', icon: '💳', desc: paymentSettings.mode === 'coming_soon' ? '⏳ Coming Soon' : '⚡ Live UPI' },
                 { id: 'settings', name: 'Alerts & Dispatch', icon: '⚙️', desc: 'WhatsApp & Bot' }
             ]
         }
@@ -2504,6 +2532,268 @@ export default function AdminPortal() {
                                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#166534', margin: '8px 0' }}>₹{estimatedNetProfit.toLocaleString('en-IN')}</div>
                                 <div style={{ fontSize: '12.5px', color: '#166534', fontWeight: '700' }}>✓ {profitMarginPercent}% Net Margin</div>
                             </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
+                    TAB: PAYMENT GATEWAY & DYNAMIC QR CONTROL
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'payment' && (
+                    <div style={{ maxWidth: '980px' }}>
+                        <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                    <span className="star-icon">★</span> PAYMENT CONTROL CENTER
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                    Payment Gateway, QR Code & Checkout Mode
+                                </h2>
+                                <p style={{ fontSize: '13.5px', color: '#59655D', margin: 0 }}>
+                                    Toggle between "Coming Soon" concierge reservation mode and "Live UPI / QR Gateway" mode in 1 click.
+                                </p>
+                            </div>
+                            <button
+                                onClick={handleSavePaymentSettings}
+                                className="btn-lime"
+                                style={{ padding: '11px 24px', fontSize: '13.5px', fontWeight: '800', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                            >
+                                <span>💾 Save & Apply Live</span>
+                            </button>
+                        </div>
+
+                        {/* SECTION 1: MODE SELECTOR CARDS */}
+                        <div style={{ marginBottom: '32px' }}>
+                            <label style={{ fontSize: '11px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                                1. ACTIVE CHECKOUT PAYMENT MODE
+                            </label>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
+                                {/* Mode 1: Coming Soon (Default) */}
+                                <div
+                                    onClick={() => setPaymentSettings(prev => ({ ...prev, mode: 'coming_soon' }))}
+                                    style={{
+                                        border: paymentSettings.mode === 'coming_soon' ? '2px solid #E5A93B' : '1px solid rgba(18,22,19,0.1)',
+                                        background: paymentSettings.mode === 'coming_soon' ? '#FFFDF5' : '#FFFFFF',
+                                        borderRadius: '20px',
+                                        padding: '24px',
+                                        cursor: 'pointer',
+                                        boxShadow: paymentSettings.mode === 'coming_soon' ? '0 8px 30px rgba(229,169,59,0.14)' : '0 2px 8px rgba(0,0,0,0.02)',
+                                        transition: 'all 0.2s ease',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                        <span style={{ fontSize: '24px' }}>⏳</span>
+                                        <span style={{
+                                            background: paymentSettings.mode === 'coming_soon' ? '#E5A93B' : 'rgba(18,22,19,0.06)',
+                                            color: paymentSettings.mode === 'coming_soon' ? '#121613' : '#59655D',
+                                            fontSize: '10.5px',
+                                            fontWeight: '900',
+                                            padding: '3px 10px',
+                                            borderRadius: '999px',
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            {paymentSettings.mode === 'coming_soon' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
+                                        </span>
+                                    </div>
+                                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                        "Coming Soon" Concierge Mode
+                                    </h4>
+                                    <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.55, margin: '0 0 14px' }}>
+                                        Displays a clean "Gateway Coming Soon" notice. Guests complete bookings with <strong>₹0 advance</strong> and their reservation pass dispatches directly to your WhatsApp desk for personal confirmation.
+                                    </p>
+                                    <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#B45309', background: 'rgba(245,158,11,0.1)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
+                                        ✓ 0 Payment Friction · High Conversion
+                                    </div>
+                                </div>
+
+                                {/* Mode 2: Live UPI & QR Gateway */}
+                                <div
+                                    onClick={() => setPaymentSettings(prev => ({ ...prev, mode: 'active' }))}
+                                    style={{
+                                        border: paymentSettings.mode === 'active' ? '2px solid #22C55E' : '1px solid rgba(18,22,19,0.1)',
+                                        background: paymentSettings.mode === 'active' ? '#F0FDF4' : '#FFFFFF',
+                                        borderRadius: '20px',
+                                        padding: '24px',
+                                        cursor: 'pointer',
+                                        boxShadow: paymentSettings.mode === 'active' ? '0 8px 30px rgba(34,197,94,0.14)' : '0 2px 8px rgba(0,0,0,0.02)',
+                                        transition: 'all 0.2s ease',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                        <span style={{ fontSize: '24px' }}>⚡</span>
+                                        <span style={{
+                                            background: paymentSettings.mode === 'active' ? '#22C55E' : 'rgba(18,22,19,0.06)',
+                                            color: paymentSettings.mode === 'active' ? '#FFFFFF' : '#59655D',
+                                            fontSize: '10.5px',
+                                            fontWeight: '900',
+                                            padding: '3px 10px',
+                                            borderRadius: '999px',
+                                            letterSpacing: '0.5px'
+                                        }}>
+                                            {paymentSettings.mode === 'active' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
+                                        </span>
+                                    </div>
+                                    <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                        Live Dynamic UPI & QR Gateway
+                                    </h4>
+                                    <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.55, margin: '0 0 14px' }}>
+                                        Generates dynamic UPI QR codes, 1-click GPay / PhonePe payment intent buttons, and accepts 12-digit UTR transaction IDs from guests during checkout.
+                                    </p>
+                                    <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#15803D', background: 'rgba(34,197,94,0.12)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
+                                        ✓ Direct Settlement · 0% Gateway Fees
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SECTION 2: UPI & QR CODE CONFIGURATION */}
+                        <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', marginBottom: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
+                                        2. OFFICIAL UPI VPA & CUSTOM QR CODE CONFIGURATION
+                                    </label>
+                                    <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '2px' }}>
+                                        These credentials are embedded into the dynamic QR codes and 1-tap mobile payment links.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '20px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
+                                        Official UPI VPA ID (Virtual Payment Address):
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. aanandhamgo@okhdfcbank or 9400987654@upi"
+                                        value={paymentSettings.upiId || ''}
+                                        onChange={(e) => setPaymentSettings(prev => ({ ...prev, upiId: e.target.value }))}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
+                                        Official Payee Display Name:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Aanandham Wilderness Stays"
+                                        value={paymentSettings.payeeName || ''}
+                                        onChange={(e) => setPaymentSettings(prev => ({ ...prev, payeeName: e.target.value }))}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Custom QR Upload / URL */}
+                            <div style={{ borderTop: '1px solid rgba(18,22,19,0.06)', paddingTop: '20px', marginTop: '10px' }}>
+                                <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
+                                    Custom QR Code Image (Optional - Overrides Dynamic Amount QR):
+                                </label>
+                                <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                    {paymentSettings.customQrUrl ? (
+                                        <div style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(18,22,19,0.12)', background: '#FFFFFF', padding: '4px' }}>
+                                            <img src={paymentSettings.customQrUrl} alt="Custom QR Preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                                            <button
+                                                type="button"
+                                                onClick={() => setPaymentSettings(prev => ({ ...prev, customQrUrl: '' }))}
+                                                style={{ position: 'absolute', top: '4px', right: '4px', background: '#DC2626', color: '#FFFFFF', border: 'none', borderRadius: '50%', width: '20px', height: '20px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                                title="Remove Custom QR"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div style={{ width: '90px', height: '90px', borderRadius: '12px', border: '1px dashed rgba(18,22,19,0.2)', background: '#F8F9F5', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#7D8880', fontSize: '11px', textAlign: 'center', padding: '8px' }}>
+                                            <span style={{ fontSize: '20px' }}>📱</span>
+                                            <span>Dynamic Auto QR</span>
+                                        </div>
+                                    )}
+
+                                    <div style={{ flex: 1, minWidth: '220px' }}>
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            id="qr-image-uploader"
+                                            onChange={handleQrImageUpload}
+                                            style={{ display: 'none' }}
+                                        />
+                                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                            <label
+                                                htmlFor="qr-image-uploader"
+                                                style={{ padding: '9px 16px', borderRadius: '10px', background: '#121613', color: '#FFFFFF', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                            >
+                                                <span>📷 {qrImageUploading ? 'Processing...' : 'Upload QR Image'}</span>
+                                            </label>
+                                            {paymentSettings.customQrUrl && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setPaymentSettings(prev => ({ ...prev, customQrUrl: '' }))}
+                                                    style={{ padding: '9px 14px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', color: '#DC2626', border: 'none', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
+                                                >
+                                                    Reset to Dynamic QR
+                                                </button>
+                                            )}
+                                        </div>
+                                        <div style={{ fontSize: '11.5px', color: '#7D8880', marginTop: '6px' }}>
+                                            {paymentSettings.customQrUrl ? 'Using custom static QR code image.' : 'Currently using real-time dynamic UPI QR code generator for exact amounts.'}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* SECTION 3: COMING SOON MESSAGE CUSTOMIZER */}
+                        <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', marginBottom: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                            <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                                3. COMING SOON BANNER & CONCIERGE TEXT CUSTOMIZATION
+                            </label>
+
+                            <div style={{ marginBottom: '16px' }}>
+                                <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
+                                    Heading / Title:
+                                </label>
+                                <input
+                                    type="text"
+                                    value={paymentSettings.comingSoonTitle || ''}
+                                    onChange={(e) => setPaymentSettings(prev => ({ ...prev, comingSoonTitle: e.target.value }))}
+                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', boxSizing: 'border-box' }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
+                                    Notice Description & Guest Guidance:
+                                </label>
+                                <textarea
+                                    rows={3}
+                                    value={paymentSettings.comingSoonMessage || ''}
+                                    onChange={(e) => setPaymentSettings(prev => ({ ...prev, comingSoonMessage: e.target.value }))}
+                                    style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.5 }}
+                                />
+                            </div>
+                        </div>
+
+                        {/* SECTION 4: LIVE PREVIEW & SAVE */}
+                        <div style={{ background: '#121613', borderRadius: '20px', padding: '24px 28px', color: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+                            <div>
+                                <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                    ACTIVE STATUS: {paymentSettings.mode === 'coming_soon' ? '⏳ COMING SOON MODE' : '⚡ LIVE UPI GATEWAY'}
+                                </div>
+                                <div style={{ fontSize: '13.5px', color: '#A2B6A6', marginTop: '2px' }}>
+                                    Changes take effect immediately across all booking modals on the website.
+                                </div>
+                            </div>
+                            <button
+                                onClick={handleSavePaymentSettings}
+                                className="btn-lime"
+                                style={{ padding: '13px 32px', fontSize: '14px', fontWeight: '900', border: 'none', cursor: 'pointer' }}
+                            >
+                                💾 Save & Apply Settings
+                            </button>
                         </div>
                     </div>
                 )}

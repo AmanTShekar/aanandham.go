@@ -30,6 +30,7 @@ import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
 import { useFocusTrap } from '../hooks/useFocusTrap';
+import { getPaymentSettings } from '../lib/paymentSettings';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -85,14 +86,23 @@ export default function BookingEngineModal({
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    // Payment Options (Step 4)
+    // Payment Options (Step 4) & Admin Dynamic Controls
+    const [paymentSettings, setPaymentSettings] = useState(() => getPaymentSettings());
     const [paymentMode, setPaymentMode] = useState('advance'); // 'advance' (30%) | 'full' (100%)
     const [utrNumber, setUtrNumber] = useState('');
     const [copiedUpi, setCopiedUpi] = useState(false);
     const [confirmedPass, setConfirmedPass] = useState(null);
 
-    const UPI_ID = 'aanandhamgo@okhdfcbank';
-    const UPI_PAYEE_NAME = 'Aanandham Wilderness Stays';
+    const UPI_ID = paymentSettings.upiId || 'aanandhamgo@okhdfcbank';
+    const UPI_PAYEE_NAME = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
+
+    // Synchronize payment settings on custom event & modal open
+    useEffect(() => {
+        const syncSettings = () => setPaymentSettings(getPaymentSettings());
+        syncSettings();
+        window.addEventListener('aanandham_payment_settings_updated', syncSettings);
+        return () => window.removeEventListener('aanandham_payment_settings_updated', syncSettings);
+    }, [isOpen]);
 
     // Load active camps list from localStorage / default data
     useEffect(() => {
@@ -500,47 +510,55 @@ export default function BookingEngineModal({
 
                 {/* ── BREADCRUMB PROGRESS STEPS ── */}
                 {step < 5 && (
-                    <div style={{ background: '#F8F9F5', padding: '12px 28px', borderBottom: '1px solid rgba(18, 22, 19, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', overflowX: 'auto' }}>
+                    <div className="booking-steps-bar">
                         {[
-                            { num: 1, label: 'Stay & Dates' },
-                            { num: 2, label: 'Add-Ons' },
-                            { num: 3, label: 'Explorer Info' },
-                            { num: 4, label: '0% UPI Payment' }
+                            { num: 1, label: 'Stay & Dates', shortLabel: 'Stays' },
+                            { num: 2, label: 'Add-Ons', shortLabel: 'Add-Ons' },
+                            { num: 3, label: 'Explorer Info', shortLabel: 'Details' },
+                            { num: 4, label: paymentSettings.mode === 'coming_soon' ? 'Voucher Pass' : '0% Payment', shortLabel: 'Payment' }
                         ].map((s, idx) => {
                             const isActive = step === s.num;
                             const isCompleted = step > s.num;
                             return (
-                                <div 
-                                    key={s.num}
-                                    onClick={() => { if (isCompleted) setStep(s.num); }}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '6px',
-                                        cursor: isCompleted ? 'pointer' : 'default',
-                                        opacity: isActive ? 1 : isCompleted ? 0.9 : 0.45,
-                                        whiteSpace: 'nowrap'
-                                    }}
-                                >
-                                    <div style={{
-                                        width: '24px',
-                                        height: '24px',
-                                        borderRadius: '50%',
-                                        background: isActive ? '#166534' : isCompleted ? '#D5ED55' : 'rgba(18,22,19,0.15)',
-                                        color: isActive ? '#FFFFFF' : isCompleted ? '#121613' : '#59655D',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        fontSize: '11px',
-                                        fontWeight: '900'
-                                    }}>
-                                        {isCompleted ? '✓' : s.num}
+                                <React.Fragment key={s.num}>
+                                    <div 
+                                        className="booking-step-item"
+                                        onClick={() => { if (isCompleted) setStep(s.num); }}
+                                        style={{
+                                            cursor: isCompleted ? 'pointer' : 'default',
+                                            opacity: isActive ? 1 : isCompleted ? 0.95 : 0.5,
+                                            background: isActive ? 'rgba(22, 101, 52, 0.08)' : 'transparent'
+                                        }}
+                                    >
+                                        <div 
+                                            className="booking-step-badge"
+                                            style={{
+                                                background: isActive ? '#166534' : isCompleted ? '#D5ED55' : 'rgba(18,22,19,0.14)',
+                                                color: isActive ? '#FFFFFF' : isCompleted ? '#121613' : '#59655D'
+                                            }}
+                                        >
+                                            {isCompleted ? '✓' : s.num}
+                                        </div>
+                                        <span 
+                                            className="booking-step-label-full"
+                                            style={{ 
+                                                fontWeight: isActive ? '800' : '600', 
+                                                color: isActive ? '#166534' : '#121613' 
+                                            }}
+                                        >
+                                            {s.label}
+                                        </span>
+                                        <span 
+                                            className="booking-step-label-short"
+                                            style={{ 
+                                                color: isActive ? '#166534' : '#121613' 
+                                            }}
+                                        >
+                                            {s.shortLabel}
+                                        </span>
                                     </div>
-                                    <span style={{ fontSize: '12.5px', fontWeight: isActive ? '800' : '600', color: isActive ? '#166534' : '#121613' }}>
-                                        {s.label}
-                                    </span>
-                                    {idx < 3 && <span style={{ color: 'rgba(18,22,19,0.2)', margin: '0 4px' }}>→</span>}
-                                </div>
+                                    {idx < 3 && <span className="booking-step-arrow">→</span>}
+                                </React.Fragment>
                             );
                         })}
                     </div>
@@ -895,709 +913,677 @@ export default function BookingEngineModal({
                                 </div>
                             </div>
 
-                            {/* Actions */}
-                            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
-                                <button
-                                    type="button"
-                                    onClick={handleProceedToStep2}
-                                    className="btn-lime"
-                                    style={{
-                                        padding: '14px 34px',
-                                        fontSize: '15px',
-                                        fontWeight: '800',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <span>Proceed to Add-ons & Upgrades</span>
-                                    <ArrowRight size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ════════════════ STEP 2: ADD-ONS & EXPERIENCES ════════════════ */}
-                    {step === 2 && (
-                        <div>
-                            <div style={{ marginBottom: '24px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                    <label style={{ fontSize: '13px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                        Customize Your Mountain Journey (Optional Upgrades)
-                                    </label>
-                                    <span style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}>
-                                        {selectedAddons.length} selected
-                                    </span>
+                                    {/* Actions */}
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+                                        <button
+                                            type="button"
+                                            onClick={handleProceedToStep2}
+                                            className="btn-lime"
+                                            style={{
+                                                padding: '12px 28px',
+                                                fontSize: '14px',
+                                                fontWeight: '800',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <span>Proceed to Add-ons</span>
+                                            <ArrowRight size={15} />
+                                        </button>
+                                    </div>
                                 </div>
+                            )}
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                    {ADDONS_LIST.map((addon) => {
-                                        const isChecked = selectedAddons.includes(addon.id);
-                                        return (
+                            {/* ════════════════ STEP 2: ADD-ONS & EXPERIENCES ════════════════ */}
+                            {step === 2 && (
+                                <div>
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                            <label style={{ fontSize: '13px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                                Customize Your Mountain Journey (Optional Upgrades)
+                                            </label>
+                                            <span style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}>
+                                                {selectedAddons.length} selected
+                                            </span>
+                                        </div>
+
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                            {ADDONS_LIST.map((addon) => {
+                                                const isChecked = selectedAddons.includes(addon.id);
+                                                return (
+                                                    <div
+                                                        key={addon.id}
+                                                        onClick={() => toggleAddon(addon.id)}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            padding: '12px 16px',
+                                                            borderRadius: '16px',
+                                                            border: isChecked ? '2px solid #166534' : '1px solid rgba(0,0,0,0.08)',
+                                                            background: isChecked ? '#F4F7EB' : '#FFFFFF',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.2s ease',
+                                                            gap: '12px'
+                                                        }}
+                                                    >
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: 0 }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isChecked}
+                                                                onChange={() => toggleAddon(addon.id)}
+                                                                style={{ width: '18px', height: '18px', accentColor: '#166534', cursor: 'pointer' }}
+                                                            />
+                                                            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: isChecked ? '#166534' : '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>
+                                                                {addon.icon}
+                                                            </div>
+                                                            <div>
+                                                                <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                                                    {addon.name}
+                                                                </div>
+                                                                <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>
+                                                                    {addon.desc}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                                                            <div style={{ fontSize: '13.5px', fontWeight: '900', color: '#166534' }}>
+                                                                +₹{addon.price}
+                                                            </div>
+                                                            <div style={{ fontSize: '10.5px', color: '#59655D' }}>
+                                                                {addon.perPerson ? `₹${addon.price * totalGuests} total` : 'Flat group fee'}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+
+                                    {/* Summary Preview Box */}
+                                    <div style={{ padding: '14px 18px', background: '#121613', borderRadius: '16px', color: '#FFFFFF', marginBottom: '18px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12.5px' }}>
+                                            <span style={{ color: '#A2B6A6' }}>{currentPkg.title} ({totalGuests} Campers):</span>
+                                            <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
+                                        </div>
+                                        {addonsTotal > 0 && (
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12.5px', color: '#D5ED55' }}>
+                                                <span>Add-ons ({selectedAddons.length} Selected):</span>
+                                                <span>+₹{addonsTotal.toLocaleString('en-IN')}</span>
+                                            </div>
+                                        )}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                                            <span style={{ fontSize: '13px', fontWeight: '800' }}>Updated Grand Total:</span>
+                                            <span style={{ fontSize: '20px', fontWeight: '900', color: '#D5ED55' }}>
+                                                ₹{grandTotal.toLocaleString('en-IN')}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setStep(1)}
+                                            className="btn-secondary"
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '8px 14px', borderRadius: '10px' }}
+                                        >
+                                            ← Back
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleProceedToStep3}
+                                            className="btn-lime"
+                                            style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                                        >
+                                            <span>Continue to Details</span>
+                                            <ArrowRight size={15} />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ════════════════ STEP 3: LEAD EXPLORER & SQUAD INFO ════════════════ */}
+                            {step === 3 && (
+                                <div>
+                                    <div style={{ marginBottom: '20px' }}>
+                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                            Lead Explorer Contact & Expedition Preferences
+                                        </label>
+                                        
+                                        <div style={{ display: 'none', position: 'absolute', left: '-9999px' }} aria-hidden="true">
+                                            <input
+                                                type="text"
+                                                tabIndex="-1"
+                                                value={honeypot}
+                                                onChange={(e) => setHoneypot(e.target.value)}
+                                            />
+                                        </div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '12px', marginBottom: '14px' }}>
+                                            <div>
+                                                <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                                    Full Name *
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="booking-modal-input"
+                                                    placeholder="e.g. Anand Kumar"
+                                                    value={customerName}
+                                                    onChange={(e) => { setCustomerName(e.target.value); setValidationError(''); }}
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                                    WhatsApp Contact Number *
+                                                </label>
+                                                <input
+                                                    type="tel"
+                                                    className="booking-modal-input"
+                                                    placeholder="e.g. +91 94001 23456"
+                                                    value={customerPhone}
+                                                    onChange={(e) => { setCustomerPhone(e.target.value); setValidationError(''); }}
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                                    Email Address (For Pass Sync)
+                                                </label>
+                                                <input
+                                                    type="email"
+                                                    className="booking-modal-input"
+                                                    placeholder="e.g. anand@gmail.com"
+                                                    value={customerEmail}
+                                                    onChange={(e) => setCustomerEmail(e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {/* Campfire Meal Preference */}
+                                        <div style={{ background: '#F8F9F5', padding: '16px 18px', borderRadius: '18px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '14px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
+                                                <div>
+                                                    <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                        🍽️ Live Campfire Dinner & Breakfast Prep
+                                                    </div>
+                                                    <div style={{ fontSize: '11px', color: '#59655D' }}>
+                                                        Distribute {totalGuests} camper meal portions (Vegetarian vs Non-Veg BBQ):
+                                                    </div>
+                                                </div>
+                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '2px 8px', borderRadius: '999px' }}>
+                                                    {vegCount} Veg + {nonVegCount} Non-Veg
+                                                </span>
+                                            </div>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                                                <div style={{ background: '#FFFFFF', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                    <div style={{ fontSize: '11px', color: '#166534', fontWeight: '800', marginBottom: '4px' }}>🥦 Vegetarian Campers</div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newVeg = Math.max(0, vegCount - 1);
+                                                                setVegCount(newVeg);
+                                                                setNonVegCount(totalGuests - newVeg);
+                                                            }}
+                                                            style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <span style={{ fontSize: '14px', fontWeight: '800' }}>{vegCount}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newVeg = Math.min(totalGuests, vegCount + 1);
+                                                                setVegCount(newVeg);
+                                                                setNonVegCount(totalGuests - newVeg);
+                                                            }}
+                                                            style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ background: '#FFFFFF', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                                    <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '800', marginBottom: '4px' }}>🍗 Non-Veg BBQ Campers</div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newNonVeg = Math.max(0, nonVegCount - 1);
+                                                                setNonVegCount(newNonVeg);
+                                                                setVegCount(totalGuests - newNonVeg);
+                                                            }}
+                                                            style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
+                                                        >
+                                                            -
+                                                        </button>
+                                                        <span style={{ fontSize: '14px', fontWeight: '800' }}>{nonVegCount}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                const newNonVeg = Math.min(totalGuests, nonVegCount + 1);
+                                                                setNonVegCount(newNonVeg);
+                                                                setVegCount(totalGuests - newNonVeg);
+                                                            }}
+                                                            style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
+                                                        >
+                                                            +
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Dietary Special Notes */}
+                                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                {['Standard Spicing', 'Mild Kids Spicing', 'Jain Pure Veg', 'Gluten Sensitive'].map(diet => (
+                                                    <button
+                                                        key={diet}
+                                                        type="button"
+                                                        onClick={() => setDietaryChoice(diet)}
+                                                        style={{
+                                                            padding: '4px 10px',
+                                                            borderRadius: '8px',
+                                                            border: dietaryChoice === diet ? '1px solid #166534' : '1px solid rgba(18,22,19,0.12)',
+                                                            background: dietaryChoice === diet ? '#166534' : '#FFFFFF',
+                                                            color: dietaryChoice === diet ? '#FFFFFF' : '#121613',
+                                                            fontSize: '11px',
+                                                            fontWeight: '700',
+                                                            cursor: 'pointer'
+                                                        }}
+                                                    >
+                                                        {diet}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Special Notes */}
+                                        <div>
+                                            <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                                Special Requests / Pickup Logistics / Notes (Optional):
+                                            </label>
+                                            <textarea
+                                                rows={2}
+                                                className="booking-modal-input"
+                                                placeholder="e.g. Arriving via Munnar bus stop at 1 PM; celebrating anniversary."
+                                                value={specialNotes}
+                                                onChange={(e) => setSpecialNotes(e.target.value)}
+                                                style={{ resize: 'vertical' }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setStep(2)}
+                                            className="btn-secondary"
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '8px 14px', borderRadius: '10px' }}
+                                        >
+                                            ← Back
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleProceedToStep4}
+                                            className="btn-lime"
+                                            style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                                        >
+                                            <span>Continue to Payment</span>
+                                            <ArrowRight size={15} />
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ════════════════ STEP 4: 0-FEE DYNAMIC UPI PAYMENT ════════════════ */}
+                            {step === 4 && (
+                                <div>
+                                    {/* Payment Mode Selector */}
+                                    <div style={{ marginBottom: '18px' }}>
+                                        <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                            Select Payment Amount Choice
+                                        </label>
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                                             <div
-                                                key={addon.id}
-                                                onClick={() => toggleAddon(addon.id)}
+                                                onClick={() => setPaymentMode('advance')}
                                                 style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    padding: '14px 18px',
-                                                    borderRadius: '16px',
-                                                    border: isChecked ? '2px solid #166534' : '1px solid rgba(0,0,0,0.08)',
-                                                    background: isChecked ? '#F4F7EB' : '#FFFFFF',
+                                                    padding: '12px 14px',
+                                                    borderRadius: '14px',
+                                                    border: paymentMode === 'advance' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
+                                                    background: paymentMode === 'advance' ? '#F4F7EB' : '#FFFFFF',
                                                     cursor: 'pointer',
-                                                    transition: 'all 0.2s ease',
-                                                    gap: '14px'
+                                                    transition: 'all 0.2s ease'
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={isChecked}
-                                                        onChange={() => toggleAddon(addon.id)}
-                                                        style={{ width: '18px', height: '18px', accentColor: '#166534', cursor: 'pointer' }}
-                                                    />
-                                                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: isChecked ? '#166534' : '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0 }}>
-                                                        {addon.icon}
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>30% Advance</span>
+                                                    <span style={{ background: '#D5ED55', color: '#121613', fontSize: '9.5px', fontWeight: '900', padding: '1px 6px', borderRadius: '999px' }}>POPULAR</span>
+                                                </div>
+                                                <div style={{ fontSize: '18px', fontWeight: '900', color: '#166534' }}>
+                                                    ₹{advanceAmount.toLocaleString('en-IN')}
+                                                </div>
+                                                <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
+                                                    Locks permits now. Balance on arrival.
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                onClick={() => setPaymentMode('full')}
+                                                style={{
+                                                    padding: '12px 14px',
+                                                    borderRadius: '14px',
+                                                    border: paymentMode === 'full' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
+                                                    background: paymentMode === 'full' ? '#F4F7EB' : '#FFFFFF',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>100% Full</span>
+                                                    <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '9.5px', fontWeight: '800', padding: '1px 6px', borderRadius: '999px' }}>VIP</span>
+                                                </div>
+                                                <div style={{ fontSize: '18px', fontWeight: '900', color: '#121613' }}>
+                                                    ₹{grandTotal.toLocaleString('en-IN')}
+                                                </div>
+                                                <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
+                                                    Zero balance on arrival. Fast key pickup.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* ── PAYMENT CARD: DYNAMIC COMING SOON vs LIVE UPI GATEWAY ── */}
+                                    {paymentSettings.mode === 'coming_soon' ? (
+                                        <div style={{ background: '#121613', borderRadius: '20px', padding: '20px 18px', color: '#FFFFFF', marginBottom: '18px', border: '1px solid rgba(213, 237, 85, 0.25)' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '900', padding: '3px 8px', borderRadius: '999px', letterSpacing: '0.5px' }}>
+                                                    ⏳ COMING SOON
+                                                </span>
+                                                <span style={{ color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase' }}>
+                                                    Concierge Desk Active
+                                                </span>
+                                            </div>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 8px' }}>
+                                                {paymentSettings.comingSoonTitle || 'Online UPI & Gateway Payment · Coming Soon'}
+                                            </h3>
+                                            <p style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.55, margin: '0 0 16px' }}>
+                                                {paymentSettings.comingSoonMessage || 'Our automated instant payment gateway is launching soon! You can lock your dates and room reservation right now with zero upfront advance. Our 24/7 mountain concierge will confirm your booking instantly via WhatsApp.'}
+                                            </p>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E', fontSize: '14px', fontWeight: '900' }}>
+                                                        ✓
                                                     </div>
                                                     <div>
-                                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
-                                                            {addon.name}
-                                                        </div>
-                                                        <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
-                                                            {addon.desc}
-                                                        </div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Advance Deposit</div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#D5ED55' }}>₹0 (Zero Advance)</div>
                                                     </div>
                                                 </div>
-
-                                                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                                                    <div style={{ fontSize: '14px', fontWeight: '900', color: '#166534' }}>
-                                                        +₹{addon.price}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(229, 169, 59, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E5A93B', fontSize: '14px' }}>
+                                                        🏕️
                                                     </div>
-                                                    <div style={{ fontSize: '10.5px', color: '#59655D' }}>
-                                                        {addon.perPerson ? `₹${addon.price * totalGuests} total` : 'Flat group fee'}
+                                                    <div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Trip Fare (Pay on Arrival)</div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>₹{grandTotal.toLocaleString('en-IN')}</div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+                                        </div>
+                                    ) : (
+                                        /* Dynamic UPI Payment Card */
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '16px', background: '#121613', borderRadius: '20px', padding: '18px', color: '#FFFFFF', marginBottom: '18px' }}>
+                                            {/* Left Column: QR Code */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', padding: '14px', borderRadius: '16px' }}>
+                                                <img
+                                                    src={qrCodeImageUrl}
+                                                    alt="Aanandham Dynamic UPI QR Code"
+                                                    style={{ width: '160px', height: '160px', display: 'block', borderRadius: '8px', objectFit: 'contain' }}
+                                                />
+                                                <div style={{ textAlign: 'center', marginTop: '8px', color: '#121613' }}>
+                                                    <div style={{ fontSize: '10.5px', fontWeight: '800', textTransform: 'uppercase', color: '#166534' }}>
+                                                        Scan With Any UPI App
+                                                    </div>
+                                                    <div style={{ fontSize: '15px', fontWeight: '900', color: '#121613' }}>
+                                                        ₹{payableNow.toLocaleString('en-IN')}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                            {/* Summary Preview Box */}
-                            <div style={{ padding: '16px 20px', background: '#121613', borderRadius: '18px', color: '#FFFFFF', marginBottom: '22px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px' }}>
-                                    <span style={{ color: '#A2B6A6' }}>{currentPkg.title} ({totalGuests} Campers):</span>
-                                    <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
-                                </div>
-                                {addonsTotal > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '13px', color: '#D5ED55' }}>
-                                        <span>Add-ons ({selectedAddons.length} Selected):</span>
-                                        <span>+₹{addonsTotal.toLocaleString('en-IN')}</span>
+                                            {/* Right Column: 1-Tap Buttons & UPI ID */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+                                                        <ShieldCheck size={13} color="#D5ED55" />
+                                                        <span>0% Processing Fees</span>
+                                                    </div>
+                                                    <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF' }}>
+                                                        Instant UPI Settlement
+                                                    </h3>
+                                                    
+                                                    {/* Copy UPI ID */}
+                                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.08)', padding: '6px 10px', borderRadius: '8px', marginBottom: '10px' }}>
+                                                        <div>
+                                                            <div style={{ fontSize: '9.5px', color: '#A2B6A6' }}>Official UPI VPA:</div>
+                                                            <div style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55' }}>{UPI_ID}</div>
+                                                        </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={handleCopyUpi}
+                                                            style={{ background: '#FFFFFF', border: 'none', color: '#121613', padding: '4px 10px', borderRadius: '6px', fontSize: '10.5px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        >
+                                                            <Copy size={11} />
+                                                            <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
+                                                        </button>
+                                                    </div>
+
+                                                    {/* 1-Tap Mobile Intent Buttons */}
+                                                    <div style={{ fontSize: '11px', color: '#A2B6A6', marginBottom: '6px' }}>
+                                                        On mobile? Tap app directly:
+                                                    </div>
+                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
+                                                        <a
+                                                            href={upiPayLink}
+                                                            style={{ padding: '7px', background: '#FFFFFF', borderRadius: '8px', color: '#121613', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                                                        >
+                                                            <span>GPay ↗</span>
+                                                        </a>
+                                                        <a
+                                                            href={upiPayLink}
+                                                            style={{ padding: '7px', background: '#5F259F', borderRadius: '8px', color: '#FFFFFF', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                                                        >
+                                                            <span>PhonePe ↗</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+
+                                                {/* UTR Input */}
+                                                <div>
+                                                    <label style={{ fontSize: '10.5px', color: '#A2B6A6', display: 'block', marginBottom: '3px' }}>
+                                                        12-Digit UPI Ref / UTR No. (Optional):
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="e.g. 423871928371"
+                                                        value={utrNumber}
+                                                        onChange={(e) => setUtrNumber(e.target.value)}
+                                                        style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#FFFFFF', fontSize: '11.5px', boxSizing: 'border-box' }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Actions */}
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <button
+                                            type="button"
+                                            onClick={() => setStep(3)}
+                                            className="btn-secondary"
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '8px 14px', borderRadius: '10px' }}
+                                        >
+                                            ← Back
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleConfirmBookingAndIssuePass}
+                                            disabled={isSubmitting}
+                                            className="btn-lime"
+                                            style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
+                                        >
+                                            <span>
+                                                {isSubmitting 
+                                                    ? 'Generating Pass...' 
+                                                    : paymentSettings.mode === 'coming_soon'
+                                                        ? 'Confirm Reservation (₹0 Advance) ↗'
+                                                        : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) ↗`}
+                                            </span>
+                                            <Check size={16} />
+                                        </button>
                                     </div>
-                                )}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                                    <span style={{ fontSize: '14px', fontWeight: '800' }}>Updated Grand Total:</span>
-                                    <span style={{ fontSize: '22px', fontWeight: '900', color: '#D5ED55' }}>
-                                        ₹{grandTotal.toLocaleString('en-IN')}
+                                </div>
+                            )}
+
+                            {/* ════════════════ STEP 5: OFFICIAL CONFIRMED EXPEDITION PASS ════════════════ */}
+                            {step === 5 && confirmedPass && (
+                                <div style={{ textAlign: 'center' }}>
+                                    {/* Success Icon */}
+                                    <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '26px' }}>
+                                        🏕️
+                                    </div>
+
+                                    <span style={{ background: '#166534', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 12px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                        Wilderness Permit Locked
                                     </span>
-                                </div>
-                            </div>
 
-                            {/* Actions */}
-                            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => setStep(1)}
-                                    style={{ background: 'none', border: 'none', fontSize: '14px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px' }}
-                                >
-                                    ← Back to Selection
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleProceedToStep3}
-                                    className="btn-lime"
-                                    style={{ padding: '14px 34px', fontSize: '15px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-                                >
-                                    <span>Proceed to Explorer Details</span>
-                                    <ArrowRight size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', margin: '10px 0 4px' }}>
+                                        You're Headed to {confirmedPass.package}!
+                                    </h2>
+                                    <p style={{ fontSize: '12.5px', color: '#59655D', margin: '0 0 18px' }}>
+                                        Your reservation has been recorded in our high-altitude basecamp roster. Present this pass on arrival.
+                                    </p>
 
-                    {/* ════════════════ STEP 3: LEAD EXPLORER & SQUAD INFO ════════════════ */}
-                    {step === 3 && (
-                        <div>
-                            <div style={{ marginBottom: '24px' }}>
-                                <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#59655D', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                    Lead Explorer Contact & Expedition Preferences
-                                </label>
-                                
-                                <div style={{ display: 'none', position: 'absolute', left: '-9999px' }} aria-hidden="true">
-                                    <input
-                                        type="text"
-                                        tabIndex="-1"
-                                        value={honeypot}
-                                        onChange={(e) => setHoneypot(e.target.value)}
-                                    />
-                                </div>
-
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '14px', marginBottom: '14px' }}>
-                                    <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                            Full Name *
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="booking-modal-input"
-                                            placeholder="e.g. Anand Kumar"
-                                            value={customerName}
-                                            onChange={(e) => { setCustomerName(e.target.value); setValidationError(''); }}
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                            WhatsApp Contact Number *
-                                        </label>
-                                        <input
-                                            type="tel"
-                                            className="booking-modal-input"
-                                            placeholder="e.g. +91 94001 23456"
-                                            value={customerPhone}
-                                            onChange={(e) => { setCustomerPhone(e.target.value); setValidationError(''); }}
-                                            required
-                                        />
-                                    </div>
-                                    <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                            Email Address (For Pass Sync)
-                                        </label>
-                                        <input
-                                            type="email"
-                                            className="booking-modal-input"
-                                            placeholder="e.g. anand@gmail.com"
-                                            value={customerEmail}
-                                            onChange={(e) => setCustomerEmail(e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* EXACT PARTICIPANT MEAL BREAKDOWN (VEG & NON-VEG COUNTERS) */}
-                                <div style={{
-                                    marginBottom: '18px',
-                                    padding: '16px 18px',
-                                    background: '#F8F9F5',
-                                    borderRadius: '18px',
-                                    border: '1px solid rgba(18, 22, 19, 0.08)'
-                                }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                        <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                            Campfire Dinner & BBQ Meal Allocation
-                                        </label>
-                                        <span style={{
-                                            fontSize: '11px',
-                                            fontWeight: '800',
-                                            padding: '2px 8px',
-                                            borderRadius: '999px',
-                                            background: (vegCount + nonVegCount === totalGuests) ? '#DCFCE7' : '#FEE2E2',
-                                            color: (vegCount + nonVegCount === totalGuests) ? '#166534' : '#DC2626'
-                                        }}>
-                                            {vegCount + nonVegCount === totalGuests ? `✓ All ${totalGuests} Meals Allocated` : `⚠️ Total: ${vegCount + nonVegCount} / ${totalGuests} Campers`}
-                                        </span>
-                                    </div>
-                                    <div style={{ fontSize: '11.5px', color: '#59655D', marginBottom: '12px' }}>
-                                        Specify the exact count of Vegetarian vs Non-Vegetarian eaters in your group for fresh campfire skewers & buffet prep.
-                                    </div>
-
-                                    {/* Quick Preset Buttons */}
-                                    <div style={{ display: 'flex', gap: '6px', marginBottom: '14px', flexWrap: 'wrap' }}>
-                                        <button
-                                            type="button"
-                                            onClick={() => { setNonVegCount(totalGuests); setVegCount(0); }}
-                                            style={{
-                                                padding: '5px 12px',
-                                                borderRadius: '8px',
-                                                border: (nonVegCount === totalGuests && vegCount === 0) ? '1.5px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                background: (nonVegCount === totalGuests && vegCount === 0) ? '#166534' : '#FFFFFF',
-                                                color: (nonVegCount === totalGuests && vegCount === 0) ? '#FFFFFF' : '#121613',
-                                                fontSize: '11.5px',
-                                                fontWeight: '800',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            🍗 All Non-Veg ({totalGuests})
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => { setVegCount(totalGuests); setNonVegCount(0); }}
-                                            style={{
-                                                padding: '5px 12px',
-                                                borderRadius: '8px',
-                                                border: (vegCount === totalGuests && nonVegCount === 0) ? '1.5px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                background: (vegCount === totalGuests && nonVegCount === 0) ? '#166534' : '#FFFFFF',
-                                                color: (vegCount === totalGuests && nonVegCount === 0) ? '#FFFFFF' : '#121613',
-                                                fontSize: '11.5px',
-                                                fontWeight: '800',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            🥦 All Veg ({totalGuests})
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                const half = Math.floor(totalGuests / 2);
-                                                setVegCount(half);
-                                                setNonVegCount(totalGuests - half);
-                                            }}
-                                            style={{
-                                                padding: '5px 12px',
-                                                borderRadius: '8px',
-                                                border: '1px solid rgba(18,22,19,0.1)',
-                                                background: '#FFFFFF',
-                                                color: '#121613',
-                                                fontSize: '11.5px',
-                                                fontWeight: '800',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            ⚖️ Split ({Math.floor(totalGuests / 2)} Veg, {totalGuests - Math.floor(totalGuests / 2)} Non-Veg)
-                                        </button>
-                                    </div>
-
-                                    {/* Counters Grid */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
-                                        {/* Veg Counter */}
-                                        <div style={{ background: '#FFFFFF', borderRadius: '14px', padding: '12px 14px', border: '1px solid #BBF7D0' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                                                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#22C55E' }} />
-                                                <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#166534' }}>Vegetarian</span>
-                                            </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const next = Math.max(0, vegCount - 1);
-                                                        setVegCount(next);
-                                                        setNonVegCount(totalGuests - next);
-                                                    }}
-                                                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '900', fontSize: '13px' }}
-                                                >
-                                                    -
-                                                </button>
-                                                <div style={{ textAlign: 'center' }}>
-                                                    <span style={{ fontSize: '17px', fontWeight: '900', color: '#121613' }}>{vegCount}</span>
-                                                    <span style={{ fontSize: '10.5px', color: '#59655D', display: 'block' }}>Campers</span>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const next = Math.min(totalGuests, vegCount + 1);
-                                                        setVegCount(next);
-                                                        setNonVegCount(totalGuests - next);
-                                                    }}
-                                                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '900', fontSize: '13px' }}
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        {/* Non-Veg Counter */}
-                                        <div style={{ background: '#FFFFFF', borderRadius: '14px', padding: '12px 14px', border: '1px solid #FECACA' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                                                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#EF4444' }} />
-                                                <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#B91C1C' }}>Non-Veg BBQ</span>
-                                            </div>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const next = Math.max(0, nonVegCount - 1);
-                                                        setNonVegCount(next);
-                                                        setVegCount(totalGuests - next);
-                                                    }}
-                                                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '900', fontSize: '13px' }}
-                                                >
-                                                    -
-                                                </button>
-                                                <div style={{ textAlign: 'center' }}>
-                                                    <span style={{ fontSize: '17px', fontWeight: '900', color: '#121613' }}>{nonVegCount}</span>
-                                                    <span style={{ fontSize: '10.5px', color: '#59655D', display: 'block' }}>Campers</span>
-                                                </div>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        const next = Math.min(totalGuests, nonVegCount + 1);
-                                                        setNonVegCount(next);
-                                                        setVegCount(totalGuests - next);
-                                                    }}
-                                                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '900', fontSize: '13px' }}
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Dietary Customization Chips */}
-                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                        {['Standard Kerala Spicing', 'Jain (No Onion/Garlic)', 'Halal Prepared', 'Kids Mild Spice'].map(diet => (
-                                            <button
-                                                key={diet}
-                                                type="button"
-                                                onClick={() => setDietaryChoice(diet)}
-                                                style={{
-                                                    padding: '6px 12px',
-                                                    borderRadius: '8px',
-                                                    border: dietaryChoice === diet ? '1.5px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                    background: dietaryChoice === diet ? '#F4F7EB' : '#FFFFFF',
-                                                    color: '#121613',
-                                                    fontSize: '11px',
-                                                    fontWeight: '700',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                {dietaryChoice === diet ? '✓ ' : ''}{diet}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                        Special Requests / Notes for Basecamp Marshals
-                                    </label>
-                                    <textarea
-                                        className="booking-modal-input"
-                                        placeholder="e.g. Sunrise 5:00 AM wake-up alarm, acoustic guitar songs request, private Jeep pickup point in Munnar town"
-                                        value={specialNotes}
-                                        onChange={(e) => setSpecialNotes(e.target.value)}
-                                        rows={2}
-                                        style={{ resize: 'vertical' }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => setStep(2)}
-                                    style={{ background: 'none', border: 'none', fontSize: '14px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px' }}
-                                >
-                                    ← Back to Add-ons
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleProceedToStep4}
-                                    className="btn-lime"
-                                    style={{ padding: '14px 34px', fontSize: '15px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-                                >
-                                    <span>Proceed to 0-Fee Payment Step</span>
-                                    <ArrowRight size={16} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ════════════════ STEP 4: 0-FEE DYNAMIC UPI PAYMENT ════════════════ */}
-                    {step === 4 && (
-                        <div>
-                            {/* Payment Mode Selector */}
-                            <div style={{ marginBottom: '20px' }}>
-                                <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                    Select Payment Amount Choice
-                                </label>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                                    <div
-                                        onClick={() => setPaymentMode('advance')}
-                                        style={{
-                                            padding: '16px',
-                                            borderRadius: '16px',
-                                            border: paymentMode === 'advance' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                            background: paymentMode === 'advance' ? '#F4F7EB' : '#FFFFFF',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>30% Advance Deposit</span>
-                                            <span style={{ background: '#D5ED55', color: '#121613', fontSize: '10px', fontWeight: '900', padding: '2px 7px', borderRadius: '999px' }}>POPULAR</span>
-                                        </div>
-                                        <div style={{ fontSize: '20px', fontWeight: '900', color: '#166534' }}>
-                                            ₹{advanceAmount.toLocaleString('en-IN')}
-                                        </div>
-                                        <div style={{ fontSize: '11px', color: '#59655D', marginTop: '4px' }}>
-                                            Locks permits now. Balance ₹{balanceOnArrival.toLocaleString('en-IN')} on campsite arrival.
-                                        </div>
-                                    </div>
-
-                                    <div
-                                        onClick={() => setPaymentMode('full')}
-                                        style={{
-                                            padding: '16px',
-                                            borderRadius: '16px',
-                                            border: paymentMode === 'full' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                            background: paymentMode === 'full' ? '#F4F7EB' : '#FFFFFF',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s ease'
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>100% Full Payment</span>
-                                            <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '10px', fontWeight: '800', padding: '2px 7px', borderRadius: '999px' }}>VIP CHECK-IN</span>
-                                        </div>
-                                        <div style={{ fontSize: '20px', fontWeight: '900', color: '#121613' }}>
-                                            ₹{grandTotal.toLocaleString('en-IN')}
-                                        </div>
-                                        <div style={{ fontSize: '11px', color: '#59655D', marginTop: '4px' }}>
-                                            Zero balance on arrival. Instant fast-track key handover.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Dynamic UPI Payment Card */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', background: '#121613', borderRadius: '24px', padding: '24px', color: '#FFFFFF', marginBottom: '22px' }}>
-                                {/* Left Column: QR Code */}
-                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', padding: '16px', borderRadius: '20px' }}>
-                                    <img
-                                        src={qrCodeImageUrl}
-                                        alt="Aanandham Dynamic UPI QR Code"
-                                        style={{ width: '180px', height: '180px', display: 'block', borderRadius: '8px' }}
-                                    />
-                                    <div style={{ textAlign: 'center', marginTop: '10px', color: '#121613' }}>
-                                        <div style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', color: '#166534' }}>
-                                            Scan With Any UPI App
-                                        </div>
-                                        <div style={{ fontSize: '16px', fontWeight: '900', color: '#121613' }}>
-                                            ₹{payableNow.toLocaleString('en-IN')}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Right Column: 1-Tap Buttons & UPI ID */}
-                                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                                    <div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D5ED55', fontSize: '11.5px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>
-                                            <ShieldCheck size={14} color="#D5ED55" />
-                                            <span>0% Processing Fees · Direct Settlement</span>
-                                        </div>
-                                        <h3 style={{ fontSize: '18px', fontWeight: '800', margin: '0 0 10px', color: '#FFFFFF' }}>
-                                            Instant UPI Settlement
-                                        </h3>
-                                        
-                                        {/* Copy UPI ID */}
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.08)', padding: '8px 12px', borderRadius: '10px', marginBottom: '14px' }}>
+                                    {/* Digital Boarding Pass Ticket Card */}
+                                    <div style={{
+                                        background: '#101E13',
+                                        borderRadius: '20px',
+                                        padding: '18px',
+                                        color: '#FFFFFF',
+                                        textAlign: 'left',
+                                        border: '1px solid rgba(213,237,85,0.3)',
+                                        boxShadow: '0 16px 48px rgba(0,0,0,0.25)',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        marginBottom: '18px'
+                                    }}>
+                                        {/* Pass Header */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px dashed rgba(255,255,255,0.2)', paddingBottom: '12px', marginBottom: '12px' }}>
                                             <div>
-                                                <div style={{ fontSize: '10px', color: '#A2B6A6' }}>Official UPI VPA:</div>
-                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#D5ED55' }}>{UPI_ID}</div>
+                                                <div style={{ fontSize: '10px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                                                    Official Boarding Pass
+                                                </div>
+                                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', marginTop: '2px' }}>
+                                                    {confirmedPass.package}
+                                                </div>
+                                                <div style={{ fontSize: '11.5px', color: '#A2B6A6' }}>
+                                                    {confirmedPass.location} · {confirmedPass.altitude}
+                                                </div>
                                             </div>
-                                            <button
-                                                type="button"
-                                                onClick={handleCopyUpi}
-                                                style={{ background: '#FFFFFF', border: 'none', color: '#121613', padding: '6px 12px', borderRadius: '6px', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                            >
-                                                <Copy size={12} />
-                                                <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
-                                            </button>
+                                            <div style={{ textAlign: 'right' }}>
+                                                <div style={{ fontSize: '9.5px', color: '#A2B6A6' }}>PASS CODE:</div>
+                                                <div style={{ fontSize: '14px', fontWeight: '900', color: '#D5ED55', letterSpacing: '0.5px' }}>
+                                                    {confirmedPass.id}
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        {/* 1-Tap Mobile Intent Buttons */}
-                                        <div style={{ fontSize: '11.5px', color: '#A2B6A6', marginBottom: '8px' }}>
-                                            On mobile? Tap your preferred UPI app directly:
+                                        {/* Pass Grid Details */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', marginBottom: '12px' }}>
+                                            <div>
+                                                <div style={{ fontSize: '10px', color: '#A2B6A6', textTransform: 'uppercase' }}>Lead Camper</div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.name}</div>
+                                                <div style={{ fontSize: '10.5px', color: '#D5ED55' }}>{confirmedPass.phone}</div>
+                                            </div>
+                                            <div>
+                                                <div style={{ fontSize: '10px', color: '#A2B6A6', textTransform: 'uppercase' }}>Expedition Batch</div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.dates}</div>
+                                                <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Check-in: 02:00 PM</div>
+                                            </div>
+                                            <div>
+                                                <div style={{ fontSize: '10px', color: '#A2B6A6', textTransform: 'uppercase' }}>Stay Units</div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.roomType}</div>
+                                                <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>{confirmedPass.guests} Campers</div>
+                                            </div>
+                                            <div>
+                                                <div style={{ fontSize: '10px', color: '#A2B6A6', textTransform: 'uppercase' }}>Fare & Payment</div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#D5ED55' }}>Paid: {inr(confirmedPass.paidAmount)}</div>
+                                                <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Due: {inr(confirmedPass.balanceDue)}</div>
+                                            </div>
                                         </div>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '14px' }}>
-                                            <a
-                                                href={upiPayLink}
-                                                style={{ padding: '8px', background: '#FFFFFF', borderRadius: '8px', color: '#121613', textDecoration: 'none', fontSize: '12px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                                            >
-                                                <span>GPay / UPI ↗</span>
-                                            </a>
-                                            <a
-                                                href={upiPayLink}
-                                                style={{ padding: '8px', background: '#5F259F', borderRadius: '8px', color: '#FFFFFF', textDecoration: 'none', fontSize: '12px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}
-                                            >
-                                                <span>PhonePe ↗</span>
-                                            </a>
+
+                                        <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '8px' }}>
+                                            🍽️ <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount} Vegetarian + {confirmedPass.nonVegCount} Non-Veg BBQ ({confirmedPass.dietaryChoice})
+                                        </div>
+
+                                        {confirmedPass.addons.length > 0 && (
+                                            <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '10px' }}>
+                                                ✨ <strong>Included Upgrades:</strong> {confirmedPass.addons.join(', ')}
+                                            </div>
+                                        )}
+
+                                        <div style={{ fontSize: '11px', color: '#A2B6A6', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                            <MapPin size={12} color="#D5ED55" />
+                                            <span>Jeep convoy pickup coordinates shared via WhatsApp.</span>
                                         </div>
                                     </div>
 
-                                    {/* UTR Input */}
-                                    <div>
-                                        <label style={{ fontSize: '11px', color: '#A2B6A6', display: 'block', marginBottom: '4px' }}>
-                                            12-Digit UPI Ref / UTR No. (Optional for auto-match):
-                                        </label>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g. 423871928371"
-                                            value={utrNumber}
-                                            onChange={(e) => setUtrNumber(e.target.value)}
-                                            style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#FFFFFF', fontSize: '12px', boxSizing: 'border-box' }}
-                                        />
+                                    {/* Pass Action Buttons */}
+                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                        <button
+                                            type="button"
+                                            onClick={handleSharePassToWhatsApp}
+                                            className="btn-lime"
+                                            style={{
+                                                padding: '10px 20px',
+                                                fontSize: '13px',
+                                                fontWeight: '900',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <span>Sync with Host on WhatsApp ↗</span>
+                                        </button>
+                                        
+                                        <button
+                                            type="button"
+                                            onClick={onClose}
+                                            style={{
+                                                padding: '10px 18px',
+                                                borderRadius: '999px',
+                                                background: '#ECEEE6',
+                                                border: 'none',
+                                                color: '#121613',
+                                                fontSize: '12.5px',
+                                                fontWeight: '800',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Done & Close
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Actions */}
-                            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <button
-                                    type="button"
-                                    onClick={() => setStep(3)}
-                                    style={{ background: 'none', border: 'none', fontSize: '14px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px' }}
-                                >
-                                    ← Back to Details
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleConfirmBookingAndIssuePass}
-                                    disabled={isSubmitting}
-                                    className="btn-lime"
-                                    style={{ padding: '15px 36px', fontSize: '15px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '10px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
-                                >
-                                    <span>{isSubmitting ? 'Generating Official Pass...' : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) ↗`}</span>
-                                    <Check size={18} />
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* ════════════════ STEP 5: OFFICIAL CONFIRMED EXPEDITION PASS ════════════════ */}
-                    {step === 5 && confirmedPass && (
-                        <div style={{ textAlign: 'center' }}>
-                            {/* Success Icon */}
-                            <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', fontSize: '32px' }}>
-                                🏕️
-                            </div>
-
-                            <span style={{ background: '#166534', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                Wilderness Permit Locked
-                            </span>
-
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', color: '#121613', margin: '12px 0 6px' }}>
-                                You're Headed to {confirmedPass.package}!
-                            </h2>
-                            <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 24px' }}>
-                                Your reservation has been recorded in our high-altitude basecamp roster. Present this pass on arrival.
-                            </p>
-
-                            {/* Digital Boarding Pass Ticket Card */}
-                            <div style={{
-                                background: '#101E13',
-                                borderRadius: '24px',
-                                padding: '24px',
-                                color: '#FFFFFF',
-                                textAlign: 'left',
-                                border: '1px solid rgba(213,237,85,0.3)',
-                                boxShadow: '0 16px 48px rgba(0,0,0,0.25)',
-                                position: 'relative',
-                                overflow: 'hidden',
-                                marginBottom: '24px'
-                            }}>
-                                {/* Pass Header */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px dashed rgba(255,255,255,0.2)', paddingBottom: '16px', marginBottom: '16px' }}>
-                                    <div>
-                                        <div style={{ fontSize: '10.5px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                                            Official Boarding Pass
-                                        </div>
-                                        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#FFFFFF', marginTop: '2px' }}>
-                                            {confirmedPass.package}
-                                        </div>
-                                        <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                            {confirmedPass.location} · {confirmedPass.altitude}
-                                        </div>
-                                    </div>
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '10px', color: '#A2B6A6' }}>PASS CODE:</div>
-                                        <div style={{ fontSize: '15px', fontWeight: '900', color: '#D5ED55', letterSpacing: '0.5px' }}>
-                                            {confirmedPass.id}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Pass Grid Details */}
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '14px', marginBottom: '16px' }}>
-                                    <div>
-                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>Lead Camper</div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.name}</div>
-                                        <div style={{ fontSize: '11px', color: '#D5ED55' }}>{confirmedPass.phone}</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>Expedition Batch</div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.dates}</div>
-                                        <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Check-in: 02:00 PM</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>Stay Units</div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF' }}>{confirmedPass.roomType}</div>
-                                        <div style={{ fontSize: '11px', color: '#A2B6A6' }}>{confirmedPass.guests} Campers</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>Fare & Payment</div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#D5ED55' }}>Paid: {inr(confirmedPass.paidAmount)}</div>
-                                        <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Due: {inr(confirmedPass.balanceDue)}</div>
-                                    </div>
-                                </div>
-
-                                <div style={{ background: 'rgba(255,255,255,0.06)', padding: '10px 14px', borderRadius: '10px', fontSize: '12px', color: '#D5ED55', marginBottom: '10px' }}>
-                                    🍽️ <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount} Vegetarian + {confirmedPass.nonVegCount} Non-Veg BBQ ({confirmedPass.dietaryChoice})
-                                </div>
-
-                                {confirmedPass.addons.length > 0 && (
-                                    <div style={{ background: 'rgba(255,255,255,0.06)', padding: '10px 14px', borderRadius: '10px', fontSize: '12px', color: '#D5ED55', marginBottom: '12px' }}>
-                                        ✨ <strong>Included Upgrades:</strong> {confirmedPass.addons.join(', ')}
-                                    </div>
-                                )}
-
-                                <div style={{ fontSize: '11.5px', color: '#A2B6A6', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                    <MapPin size={13} color="#D5ED55" />
-                                    <span>Jeep convoy pickup location will be shared 24h prior to arrival via WhatsApp.</span>
-                                </div>
-                            </div>
-
-                            {/* Pass Action Buttons */}
-                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                                <button
-                                    type="button"
-                                    onClick={handleSharePassToWhatsApp}
-                                    className="btn-lime"
-                                    style={{
-                                        padding: '14px 28px',
-                                        fontSize: '14.5px',
-                                        fontWeight: '900',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '10px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
-                                    <span>Sync Voucher with Host on WhatsApp ↗</span>
-                                </button>
-                                
-                                <button
-                                    type="button"
-                                    onClick={onClose}
-                                    style={{
-                                        padding: '14px 24px',
-                                        borderRadius: '999px',
-                                        background: '#ECEEE6',
-                                        border: 'none',
-                                        color: '#121613',
-                                        fontSize: '14px',
-                                        fontWeight: '800',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    Done & Return to Site
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                            )}
                 </div>
             </motion.div>
         </div>
