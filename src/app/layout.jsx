@@ -183,10 +183,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-IN" className={`${bricolage.variable} ${plusJakarta.variable}`}>
       <head>
-        <meta name="color-scheme" content="only light" />
-        <meta name="supported-color-schemes" content="light" />
+        <meta name="color-scheme" content="dark light" />
+        <meta name="supported-color-schemes" content="dark light" />
         <meta name="darkreader-lock" content="true" />
-        <meta name="theme-color" content="#0E1A11" />
+        <meta name="theme-color" content="#070E08" />
+        <meta name="msapplication-navbutton-color" content="#070E08" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
