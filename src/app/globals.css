@@ -5,6 +5,8 @@ html, body {
   position: relative;
   margin: 0 !important;
   padding: 0 !important;
+  background-color: #070E08 !important;
+  color: #F4F5F0;
 }
 
 main, section, header, footer {
@@ -71,19 +73,207 @@ body::-webkit-scrollbar-thumb:active,
 ───────────────────────────────────────────────────────────── */
 .pillars-sticky-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 36px;
-  justify-content: center;
-  align-items: stretch;
-  max-width: 1180px;
+  width: 100%;
+  max-width: 1240px;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
-@media (max-width: 900px) {
+@media (min-width: 769px) and (max-width: 960px) {
   .pillars-sticky-grid {
     grid-template-columns: 1fr;
-    gap: 40px;
-    max-width: 580px;
+    gap: 36px;
+    max-width: 620px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE HORIZONTAL SWIPEABLE CARDS (CLEAN CENTERED APP-LIKE SWIPE)
+───────────────────────────────────────────────────────────── */
+.mobile-swipe-track {
+  display: grid;
+  width: 100%;
+}
+
+.altitude-spectrum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 28px;
+  width: 100%;
+}
+
+.stone-tablets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+  gap: 28px;
+  width: 100%;
+}
+
+.about-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+  gap: 28px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .mobile-swipe-track,
+  .pillars-sticky-grid,
+  .route-notebook-grid,
+  .about-landmarks-grid,
+  .about-team-grid,
+  .altitude-spectrum-grid,
+  .stone-tablets-grid,
+  .about-reviews-grid,
+  .why-desktop-pillars,
+  .similar-camps-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    gap: 16px !important;
+    padding: 14px 20px 28px 20px !important;
+    scrollbar-width: none !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    scroll-padding-left: 20px !important;
+    scroll-padding-right: 20px !important;
+    touch-action: pan-x pan-y !important;
+  }
+
+  .mobile-swipe-track::-webkit-scrollbar,
+  .pillars-sticky-grid::-webkit-scrollbar,
+  .route-notebook-grid::-webkit-scrollbar,
+  .about-landmarks-grid::-webkit-scrollbar,
+  .about-team-grid::-webkit-scrollbar,
+  .altitude-spectrum-grid::-webkit-scrollbar,
+  .stone-tablets-grid::-webkit-scrollbar,
+  .about-reviews-grid::-webkit-scrollbar,
+  .why-desktop-pillars::-webkit-scrollbar,
+  .similar-camps-grid::-webkit-scrollbar {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  .mobile-swipe-track > *,
+  .pillars-sticky-grid > *,
+  .route-notebook-grid > *,
+  .about-landmarks-grid > *,
+  .about-team-grid > *,
+  .altitude-spectrum-grid > *,
+  .stone-tablets-grid > *,
+  .about-reviews-grid > *,
+  .why-desktop-pillars > *,
+  .similar-camps-grid > * {
+    flex: 0 0 min(86vw, 360px) !important;
+    min-width: min(86vw, 360px) !important;
+    max-width: min(86vw, 360px) !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+    margin: 0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CAMP DETAIL RESPONSIVE 2-COLUMN LAYOUT (WIDE CONTENT + SLEEK SIDEBAR)
+───────────────────────────────────────────────────────────── */
+.camp-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .camp-detail-layout {
+    grid-template-columns: 1fr 350px;
+    gap: 36px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE CAMP GALLERY MOSAIC (12-COL DESKTOP / FLUID MOBILE)
+───────────────────────────────────────────────────────────── */
+.camp-gallery-mosaic {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 220px);
+  gap: 14px;
+  border-radius: 28px;
+  overflow: hidden;
+}
+
+.gallery-tile-main {
+  grid-column: span 7;
+  grid-row: span 2;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.gallery-tile-top {
+  grid-column: span 5;
+  grid-row: span 1;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.gallery-tile-bot-1 {
+  grid-column: span 3;
+  grid-row: span 1;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.gallery-tile-bot-2 {
+  grid-column: span 2;
+  grid-row: span 1;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  background: #121613;
+}
+
+@media (max-width: 768px) {
+  .camp-gallery-mosaic {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 240px 90px;
+    gap: 8px;
+    border-radius: 18px;
+  }
+
+  .gallery-tile-main {
+    grid-column: span 3;
+    grid-row: span 1;
+    height: 240px;
+  }
+
+  .gallery-tile-top {
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 90px;
+  }
+
+  .gallery-tile-bot-1 {
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 90px;
+  }
+
+  .gallery-tile-bot-2 {
+    grid-column: span 1;
+    grid-row: span 1;
+    height: 90px;
   }
 }
 
@@ -838,126 +1028,73 @@ body::-webkit-scrollbar-thumb:active,
 .stone-slab-card {
   position: relative;
   background-color: #D4A870;
-  padding: 30px 22px 26px 22px;
+  border-radius: 24px;
+  padding: 30px 24px 26px 24px;
   display: flex;
   flex-direction: column;
-  filter: drop-shadow(0 18px 36px rgba(0, 0, 0, 0.55)) drop-shadow(0 4px 10px rgba(0,0,0,0.3));
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
-  overflow: visible;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0,0,0,0.2);
+  border: 1.5px solid rgba(229, 169, 59, 0.25);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  overflow: hidden;
   cursor: default;
+  box-sizing: border-box;
 }
 
 .stone-slab-card:hover {
-  transform: translateY(-10px) rotate(-0.6deg) !important;
-  filter: drop-shadow(0 28px 55px rgba(0, 0, 0, 0.85)) drop-shadow(0 8px 18px rgba(0,0,0,0.6)) !important;
+  transform: translateY(-8px) !important;
+  box-shadow: 0 28px 55px rgba(0, 0, 0, 0.65), 0 8px 18px rgba(0,0,0,0.4) !important;
 }
 
-/* 4 UNIQUE JAGGED BARK EDGES — each has natural irregular growth ring spacing */
+/* 4 UNIQUE WARM TIMBER SPECTRUMS — each has natural woodgrain gradients without clipped edges */
 
 .stone-slab-tier-1 {
-  /* Pine: warm honey, knot at 38% 44%, rings get wider as they go out */
   background-color: #D8B07A;
   background-image:
-    /* Heartwood warm glow at center */
     radial-gradient(ellipse at 38% 44%, rgba(255, 220, 150, 0.5) 0%, rgba(220, 170, 100, 0.15) 18%, transparent 38%),
-    /* Ring 1 */ radial-gradient(ellipse at 38% 44%, transparent 13px, rgba(110, 60, 15, 0.32) 14px, rgba(110, 60, 15, 0.32) 16px, transparent 17px),
-    /* Ring 2 */ radial-gradient(ellipse at 38% 44%, transparent 25px, rgba(100, 55, 12, 0.28) 26px, rgba(100, 55, 12, 0.28) 28px, transparent 29px),
-    /* Ring 3 */ radial-gradient(ellipse at 38% 44%, transparent 37px, rgba(108, 58, 14, 0.25) 38px, rgba(108, 58, 14, 0.25) 40px, transparent 41px),
-    /* Ring 4 */ radial-gradient(ellipse at 38% 44%, transparent 51px, rgba(100, 52, 12, 0.23) 52px, rgba(100, 52, 12, 0.23) 54px, transparent 55px),
-    /* Ring 5 */ radial-gradient(ellipse at 38% 44%, transparent 68px, rgba(105, 56, 14, 0.2) 69px, rgba(105, 56, 14, 0.2) 71px, transparent 72px),
-    /* Ring 6 */ radial-gradient(ellipse at 38% 44%, transparent 82px, rgba(100, 52, 12, 0.18) 83px, rgba(100, 52, 12, 0.18) 85px, transparent 86px),
-    /* Ring 7 */ radial-gradient(ellipse at 38% 44%, transparent 100px, rgba(105, 56, 14, 0.17) 101px, rgba(105, 56, 14, 0.17) 103px, transparent 104px),
-    /* Ring 8 */ radial-gradient(ellipse at 38% 44%, transparent 122px, rgba(98, 50, 10, 0.15) 123px, rgba(98, 50, 10, 0.15) 125px, transparent 126px),
-    /* Ring 9 */ radial-gradient(ellipse at 38% 44%, transparent 146px, rgba(105, 56, 14, 0.13) 147px, rgba(105, 56, 14, 0.13) 149px, transparent 150px),
-    /* Ring 10 */ radial-gradient(ellipse at 38% 44%, transparent 175px, rgba(98, 50, 10, 0.11) 176px, rgba(98, 50, 10, 0.11) 178px, transparent 179px),
-    /* Ring 11 */ radial-gradient(ellipse at 38% 44%, transparent 208px, rgba(100, 52, 12, 0.09) 209px, rgba(100, 52, 12, 0.09) 211px, transparent 212px),
-    /* Ring 12 */ radial-gradient(ellipse at 38% 44%, transparent 248px, rgba(98, 50, 10, 0.07) 249px, rgba(98, 50, 10, 0.07) 251px, transparent 252px),
-    /* Ring 13 */ radial-gradient(ellipse at 38% 44%, transparent 295px, rgba(100, 52, 12, 0.05) 296px, rgba(100, 52, 12, 0.05) 298px, transparent 299px);
-  clip-path: polygon(
-    0% 18px, 8px 6px, 22px 0%, 50px 4px,
-    calc(100% - 40px) 0px, calc(100% - 18px) 8px, 100% 20px,
-    calc(100% - 4px) 50%, 100% 75%, calc(100% - 12px) calc(100% - 14px),
-    calc(100% - 28px) 100%, 60px calc(100% - 4px), 20px 100%,
-    4px calc(100% - 16px), 0% calc(100% - 30px), 6px 55%
-  );
+    radial-gradient(ellipse at 38% 44%, transparent 13px, rgba(110, 60, 15, 0.32) 14px, rgba(110, 60, 15, 0.32) 16px, transparent 17px),
+    radial-gradient(ellipse at 38% 44%, transparent 25px, rgba(100, 55, 12, 0.28) 26px, rgba(100, 55, 12, 0.28) 28px, transparent 29px),
+    radial-gradient(ellipse at 38% 44%, transparent 37px, rgba(108, 58, 14, 0.25) 38px, rgba(108, 58, 14, 0.25) 40px, transparent 41px),
+    radial-gradient(ellipse at 38% 44%, transparent 51px, rgba(100, 52, 12, 0.23) 52px, rgba(100, 52, 12, 0.23) 54px, transparent 55px),
+    radial-gradient(ellipse at 38% 44%, transparent 68px, rgba(105, 56, 14, 0.2) 69px, rgba(105, 56, 14, 0.2) 71px, transparent 72px),
+    radial-gradient(ellipse at 38% 44%, transparent 82px, rgba(100, 52, 12, 0.18) 83px, rgba(100, 52, 12, 0.18) 85px, transparent 86px),
+    radial-gradient(ellipse at 38% 44%, transparent 100px, rgba(105, 56, 14, 0.17) 101px, rgba(105, 56, 14, 0.17) 103px, transparent 104px),
+    radial-gradient(ellipse at 38% 44%, transparent 122px, rgba(98, 50, 10, 0.15) 123px, rgba(98, 50, 10, 0.15) 125px, transparent 126px);
 }
 
 .stone-slab-tier-2 {
-  /* Oak: richer amber, knot at 55% 38%, slightly denser inner rings */
   background-color: #C89860;
   background-image:
     radial-gradient(ellipse at 55% 38%, rgba(240, 200, 130, 0.45) 0%, rgba(200, 155, 85, 0.12) 20%, transparent 40%),
-    /* Ring 1 */ radial-gradient(ellipse at 55% 38%, transparent 11px, rgba(105, 56, 12, 0.32) 12px, rgba(105, 56, 12, 0.32) 14px, transparent 15px),
-    /* Ring 2 */ radial-gradient(ellipse at 55% 38%, transparent 22px, rgba(98, 50, 10, 0.28) 23px, rgba(98, 50, 10, 0.28) 25px, transparent 26px),
-    /* Ring 3 */ radial-gradient(ellipse at 55% 38%, transparent 34px, rgba(105, 56, 12, 0.25) 35px, rgba(105, 56, 12, 0.25) 37px, transparent 38px),
-    /* Ring 4 */ radial-gradient(ellipse at 55% 38%, transparent 47px, rgba(98, 50, 10, 0.23) 48px, rgba(98, 50, 10, 0.23) 50px, transparent 51px),
-    /* Ring 5 */ radial-gradient(ellipse at 55% 38%, transparent 62px, rgba(105, 56, 12, 0.2) 63px, rgba(105, 56, 12, 0.2) 65px, transparent 66px),
-    /* Ring 6 */ radial-gradient(ellipse at 55% 38%, transparent 80px, rgba(98, 50, 10, 0.18) 81px, rgba(98, 50, 10, 0.18) 83px, transparent 84px),
-    /* Ring 7 */ radial-gradient(ellipse at 55% 38%, transparent 100px, rgba(105, 56, 12, 0.16) 101px, rgba(105, 56, 12, 0.16) 103px, transparent 104px),
-    /* Ring 8 */ radial-gradient(ellipse at 55% 38%, transparent 124px, rgba(98, 50, 10, 0.14) 125px, rgba(98, 50, 10, 0.14) 127px, transparent 128px),
-    /* Ring 9 */ radial-gradient(ellipse at 55% 38%, transparent 152px, rgba(105, 56, 12, 0.12) 153px, rgba(105, 56, 12, 0.12) 155px, transparent 156px),
-    /* Ring 10 */ radial-gradient(ellipse at 55% 38%, transparent 184px, rgba(98, 50, 10, 0.1) 185px, rgba(98, 50, 10, 0.1) 187px, transparent 188px),
-    /* Ring 11 */ radial-gradient(ellipse at 55% 38%, transparent 222px, rgba(105, 56, 12, 0.08) 223px, rgba(105, 56, 12, 0.08) 225px, transparent 226px),
-    /* Ring 12 */ radial-gradient(ellipse at 55% 38%, transparent 266px, rgba(98, 50, 10, 0.06) 267px, rgba(98, 50, 10, 0.06) 269px, transparent 270px);
-  clip-path: polygon(
-    0% 28px, 14px 8px, 38px 2px, 70px 0px,
-    calc(100% - 30px) 6px, calc(100% - 8px) 18px, 100% 32px,
-    calc(100% - 6px) 60%, calc(100% - 2px) 78%, 100% calc(100% - 22px),
-    calc(100% - 16px) calc(100% - 6px), calc(100% - 40px) 100%, 30px calc(100% - 2px),
-    10px calc(100% - 14px), 0% calc(100% - 28px), 4px 48%
-  );
+    radial-gradient(ellipse at 55% 38%, transparent 11px, rgba(105, 56, 12, 0.32) 12px, rgba(105, 56, 12, 0.32) 14px, transparent 15px),
+    radial-gradient(ellipse at 55% 38%, transparent 22px, rgba(98, 50, 10, 0.28) 23px, rgba(98, 50, 10, 0.28) 25px, transparent 26px),
+    radial-gradient(ellipse at 55% 38%, transparent 34px, rgba(105, 56, 12, 0.25) 35px, rgba(105, 56, 12, 0.25) 37px, transparent 38px),
+    radial-gradient(ellipse at 55% 38%, transparent 47px, rgba(98, 50, 10, 0.23) 48px, rgba(98, 50, 10, 0.23) 50px, transparent 51px),
+    radial-gradient(ellipse at 55% 38%, transparent 62px, rgba(105, 56, 12, 0.2) 63px, rgba(105, 56, 12, 0.2) 65px, transparent 66px),
+    radial-gradient(ellipse at 55% 38%, transparent 80px, rgba(98, 50, 10, 0.18) 81px, rgba(98, 50, 10, 0.18) 83px, transparent 84px),
+    radial-gradient(ellipse at 55% 38%, transparent 100px, rgba(105, 56, 12, 0.16) 101px, rgba(105, 56, 12, 0.16) 103px, transparent 104px);
 }
 
 .stone-slab-tier-3 {
-  /* Birch: lightest cream-tan, knot at 32% 58%, irregular wide gaps */
   background-color: #DEBA80;
   background-image:
     radial-gradient(ellipse at 32% 58%, rgba(255, 235, 180, 0.55) 0%, rgba(230, 190, 125, 0.15) 16%, transparent 36%),
-    /* Ring 1 */ radial-gradient(ellipse at 32% 58%, transparent 15px, rgba(112, 62, 15, 0.3) 16px, rgba(112, 62, 15, 0.3) 18px, transparent 19px),
-    /* Ring 2 */ radial-gradient(ellipse at 32% 58%, transparent 28px, rgba(102, 54, 12, 0.26) 29px, rgba(102, 54, 12, 0.26) 31px, transparent 32px),
-    /* Ring 3 */ radial-gradient(ellipse at 32% 58%, transparent 42px, rgba(110, 60, 14, 0.23) 43px, rgba(110, 60, 14, 0.23) 45px, transparent 46px),
-    /* Ring 4 */ radial-gradient(ellipse at 32% 58%, transparent 58px, rgba(102, 54, 12, 0.21) 59px, rgba(102, 54, 12, 0.21) 61px, transparent 62px),
-    /* Ring 5 */ radial-gradient(ellipse at 32% 58%, transparent 76px, rgba(110, 60, 14, 0.18) 77px, rgba(110, 60, 14, 0.18) 79px, transparent 80px),
-    /* Ring 6 */ radial-gradient(ellipse at 32% 58%, transparent 97px, rgba(102, 54, 12, 0.16) 98px, rgba(102, 54, 12, 0.16) 100px, transparent 101px),
-    /* Ring 7 */ radial-gradient(ellipse at 32% 58%, transparent 122px, rgba(110, 60, 14, 0.14) 123px, rgba(110, 60, 14, 0.14) 125px, transparent 126px),
-    /* Ring 8 */ radial-gradient(ellipse at 32% 58%, transparent 150px, rgba(102, 54, 12, 0.12) 151px, rgba(102, 54, 12, 0.12) 153px, transparent 154px),
-    /* Ring 9 */ radial-gradient(ellipse at 32% 58%, transparent 182px, rgba(110, 60, 14, 0.1) 183px, rgba(110, 60, 14, 0.1) 185px, transparent 186px),
-    /* Ring 10 */ radial-gradient(ellipse at 32% 58%, transparent 220px, rgba(102, 54, 12, 0.08) 221px, rgba(102, 54, 12, 0.08) 223px, transparent 224px),
-    /* Ring 11 */ radial-gradient(ellipse at 32% 58%, transparent 264px, rgba(108, 58, 14, 0.06) 265px, rgba(108, 58, 14, 0.06) 267px, transparent 268px),
-    /* Ring 12 */ radial-gradient(ellipse at 32% 58%, transparent 314px, rgba(102, 54, 12, 0.04) 315px, rgba(102, 54, 12, 0.04) 317px, transparent 318px);
-  clip-path: polygon(
-    0% 22px, 10px 4px, 28px 0px, 64px 8px,
-    calc(100% - 44px) 2px, calc(100% - 22px) 0px, calc(100% - 6px) 14px, 100% 26px,
-    calc(100% - 8px) 52%, 100% 80%, calc(100% - 10px) calc(100% - 18px),
-    calc(100% - 32px) 100%, 44px calc(100% - 6px), 16px calc(100% - 10px),
-    0px calc(100% - 24px), 8px 62%
-  );
+    radial-gradient(ellipse at 32% 58%, transparent 15px, rgba(112, 62, 15, 0.3) 16px, rgba(112, 62, 15, 0.3) 18px, transparent 19px),
+    radial-gradient(ellipse at 32% 58%, transparent 28px, rgba(102, 54, 12, 0.26) 29px, rgba(102, 54, 12, 0.26) 31px, transparent 32px),
+    radial-gradient(ellipse at 32% 58%, transparent 42px, rgba(110, 60, 14, 0.23) 43px, rgba(110, 60, 14, 0.23) 45px, transparent 46px),
+    radial-gradient(ellipse at 32% 58%, transparent 58px, rgba(102, 54, 12, 0.21) 59px, rgba(102, 54, 12, 0.21) 61px, transparent 62px),
+    radial-gradient(ellipse at 32% 58%, transparent 76px, rgba(110, 60, 14, 0.18) 77px, rgba(110, 60, 14, 0.18) 79px, transparent 80px),
+    radial-gradient(ellipse at 32% 58%, transparent 97px, rgba(102, 54, 12, 0.16) 98px, rgba(102, 54, 12, 0.16) 100px, transparent 101px);
 }
 
 .stone-slab-tier-4 {
-  /* Cedar: rich warm tan, knot at 48% 62%, natural asymmetric pattern */
   background-color: #C89460;
   background-image:
     radial-gradient(ellipse at 48% 62%, rgba(245, 210, 145, 0.48) 0%, rgba(210, 165, 95, 0.14) 19%, transparent 40%),
-    /* Ring 1 */ radial-gradient(ellipse at 48% 62%, transparent 17px, rgba(108, 58, 14, 0.32) 18px, rgba(108, 58, 14, 0.32) 20px, transparent 21px),
-    /* Ring 2 */ radial-gradient(ellipse at 48% 62%, transparent 30px, rgba(100, 52, 10, 0.27) 31px, rgba(100, 52, 10, 0.27) 33px, transparent 34px),
-    /* Ring 3 */ radial-gradient(ellipse at 48% 62%, transparent 44px, rgba(108, 58, 14, 0.24) 45px, rgba(108, 58, 14, 0.24) 47px, transparent 48px),
-    /* Ring 4 */ radial-gradient(ellipse at 48% 62%, transparent 60px, rgba(100, 52, 10, 0.22) 61px, rgba(100, 52, 10, 0.22) 63px, transparent 64px),
-    /* Ring 5 */ radial-gradient(ellipse at 48% 62%, transparent 78px, rgba(108, 58, 14, 0.19) 79px, rgba(108, 58, 14, 0.19) 81px, transparent 82px),
-    /* Ring 6 */ radial-gradient(ellipse at 48% 62%, transparent 98px, rgba(100, 52, 10, 0.17) 99px, rgba(100, 52, 10, 0.17) 101px, transparent 102px),
-    /* Ring 7 */ radial-gradient(ellipse at 48% 62%, transparent 121px, rgba(108, 58, 14, 0.15) 122px, rgba(108, 58, 14, 0.15) 124px, transparent 125px),
-    /* Ring 8 */ radial-gradient(ellipse at 48% 62%, transparent 148px, rgba(100, 52, 10, 0.13) 149px, rgba(100, 52, 10, 0.13) 151px, transparent 152px),
-    /* Ring 9 */ radial-gradient(ellipse at 48% 62%, transparent 178px, rgba(108, 58, 14, 0.11) 179px, rgba(108, 58, 14, 0.11) 181px, transparent 182px),
-    /* Ring 10 */ radial-gradient(ellipse at 48% 62%, transparent 214px, rgba(100, 52, 10, 0.09) 215px, rgba(100, 52, 10, 0.09) 217px, transparent 218px),
-    /* Ring 11 */ radial-gradient(ellipse at 48% 62%, transparent 256px, rgba(108, 58, 14, 0.07) 257px, rgba(108, 58, 14, 0.07) 259px, transparent 260px),
-    /* Ring 12 */ radial-gradient(ellipse at 48% 62%, transparent 305px, rgba(100, 52, 10, 0.05) 306px, rgba(100, 52, 10, 0.05) 308px, transparent 309px);
-  clip-path: polygon(
-    0% 32px, 12px 12px, 34px 0px, 54px 6px,
-    calc(100% - 36px) 4px, calc(100% - 12px) 0px, 100% 22px,
-    calc(100% - 2px) 46px, 100% 68%, calc(100% - 14px) calc(100% - 10px),
-    calc(100% - 38px) 100%, 26px calc(100% - 8px), 8px calc(100% - 20px),
-    0% calc(100% - 36px), 4px 52%
-  );
+    radial-gradient(ellipse at 48% 62%, transparent 17px, rgba(108, 58, 14, 0.32) 18px, rgba(108, 58, 14, 0.32) 20px, transparent 21px),
+    radial-gradient(ellipse at 48% 62%, transparent 30px, rgba(100, 52, 10, 0.27) 31px, rgba(100, 52, 10, 0.27) 33px, transparent 34px),
+    radial-gradient(ellipse at 48% 62%, transparent 44px, rgba(108, 58, 14, 0.24) 45px, rgba(108, 58, 14, 0.24) 47px, transparent 48px),
+    radial-gradient(ellipse at 48% 62%, transparent 60px, rgba(100, 52, 10, 0.22) 61px, rgba(100, 52, 10, 0.22) 63px, transparent 64px),
+    radial-gradient(ellipse at 48% 62%, transparent 78px, rgba(108, 58, 14, 0.19) 79px, rgba(108, 58, 14, 0.19) 81px, transparent 82px);
 }
 
 /* Soft sunlight & shadow overlay on light wood */
@@ -2837,18 +2974,29 @@ button, a, input, select, textarea {
     right: 16px !important;
   }
   .why-desktop-pillars {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    gap: 14px !important;
+    padding: 6px 4px 18px !important;
+    margin-bottom: 20px !important;
+    scrollbar-width: none !important;
+    touch-action: pan-x pan-y !important;
+  }
+  .why-desktop-pillars::-webkit-scrollbar {
     display: none !important;
   }
-  .why-mobile-tabs {
-    display: flex !important;
-    overflow-x: auto !important;
-    gap: 8px !important;
-    padding-bottom: 6px !important;
-    margin-bottom: 18px !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
+  .why-desktop-pillars > * {
+    flex: 0 0 78vw !important;
+    min-width: 78vw !important;
+    max-width: 310px !important;
+    scroll-snap-align: start !important;
+    transform: none !important;
   }
-  .why-mobile-tabs::-webkit-scrollbar {
+  .why-mobile-tabs {
     display: none !important;
   }
 }

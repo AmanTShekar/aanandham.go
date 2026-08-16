@@ -1486,39 +1486,7 @@ export default function HomePage() {
                                 We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 15,000+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
                             </p>
 
-                            {/* Mobile Horizontal Scrollable Pillar Tabs */}
-                            <div className="why-mobile-tabs">
-                                {WHY_AANANDHAM_PILLARS.map((pillar, idx) => {
-                                    const isSelected = activeWhyIdx === idx;
-                                    return (
-                                        <button
-                                            key={pillar.id}
-                                            onClick={() => setActiveWhyIdx(idx)}
-                                            style={{
-                                                flexShrink: 0,
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '6px',
-                                                padding: '8px 16px',
-                                                borderRadius: '999px',
-                                                background: isSelected ? '#121613' : '#FFFFFF',
-                                                color: isSelected ? '#FFFFFF' : '#59655D',
-                                                border: isSelected ? '1px solid #121613' : '1px solid rgba(18,22,19,0.12)',
-                                                fontSize: '13px',
-                                                fontWeight: '700',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.2s ease',
-                                                boxShadow: isSelected ? '0 4px 14px rgba(0,0,0,0.15)' : 'none'
-                                            }}
-                                        >
-                                            <span>{pillar.statIcon}</span>
-                                            <span>{pillar.title.split(' ')[0]} {pillar.title.split(' ')[1]}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            {/* Desktop 4 Interactive Expedition Tag Note Cards (2x2 Balanced Grid) */}
+                            {/* 4 Interactive Expedition Tag Note Cards (2x2 Grid on Desktop / Smooth Swipe Track on Mobile) */}
                             <div className="why-desktop-pillars" style={{ 
                                 display: 'grid', 
                                 gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
@@ -1544,17 +1512,17 @@ export default function HomePage() {
                                             transition={{ type: 'spring', stiffness: 450, damping: 22 }}
                                             style={{
                                                 position: 'relative',
-                                                background: isSelected ? '#FFFFFF' : pillar.paperBg,
+                                                background: isSelected ? '#FFFFFF' : '#FAFAF7',
                                                 border: isSelected 
                                                     ? '2px solid #E5A93B' 
-                                                    : '1.5px solid rgba(18, 22, 19, 0.12)',
+                                                    : '1.5px solid rgba(18, 22, 19, 0.18)',
                                                 borderRadius: '16px',
                                                 padding: '22px 20px 18px 20px',
                                                 cursor: 'pointer',
-                                                transform: `rotate(${isSelected ? '0deg' : pillar.rotation})`,
-                                                transition: 'border-color 0.25s ease, background 0.25s ease',
+                                                transform: 'none',
+                                                transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
                                                 boxShadow: isSelected 
-                                                    ? '0 14px 34px rgba(229, 169, 59, 0.2), 0 4px 12px rgba(0,0,0,0.06)' 
+                                                    ? '0 14px 34px rgba(229, 169, 59, 0.22), 0 4px 12px rgba(0,0,0,0.06)' 
                                                     : '0 4px 14px rgba(0,0,0,0.04)',
                                                 display: 'flex',
                                                 flexDirection: 'column',
@@ -1587,10 +1555,10 @@ export default function HomePage() {
                                             {/* Top Row: Serial Tag + Seal Stamp Badge */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', paddingLeft: '14px' }}>
                                                 <span style={{
-                                                    fontSize: '9.5px',
+                                                    fontSize: '10px',
                                                     fontWeight: '900',
                                                     letterSpacing: '1px',
-                                                    color: isSelected ? '#E5A93B' : '#7D8880',
+                                                    color: isSelected ? '#E5A93B' : '#2D3748',
                                                     textTransform: 'uppercase',
                                                     fontFamily: 'monospace'
                                                 }}>
@@ -1598,15 +1566,15 @@ export default function HomePage() {
                                                 </span>
 
                                                 <span style={{
-                                                    fontSize: '8.5px',
+                                                    fontSize: '9px',
                                                     fontWeight: '900',
                                                     letterSpacing: '0.8px',
                                                     textTransform: 'uppercase',
-                                                    padding: '2px 7px',
+                                                    padding: '3px 8px',
                                                     borderRadius: '4px',
-                                                    background: isSelected ? 'rgba(229, 169, 59, 0.15)' : 'rgba(0, 0, 0, 0.05)',
-                                                    color: isSelected ? '#B45309' : pillar.accentColor,
-                                                    border: `1px solid ${isSelected ? 'rgba(229, 169, 59, 0.4)' : 'rgba(0,0,0,0.08)'}`
+                                                    background: isSelected ? 'rgba(229, 169, 59, 0.2)' : 'rgba(0, 0, 0, 0.08)',
+                                                    color: isSelected ? '#92400E' : '#1A202C',
+                                                    border: `1px solid ${isSelected ? 'rgba(229, 169, 59, 0.5)' : 'rgba(0,0,0,0.12)'}`
                                                 }}>
                                                     ✓ {pillar.seal}
                                                 </span>
@@ -1618,7 +1586,7 @@ export default function HomePage() {
                                                     width: '38px',
                                                     height: '38px',
                                                     borderRadius: '10px',
-                                                    background: isSelected ? '#121613' : 'rgba(0, 0, 0, 0.06)',
+                                                    background: isSelected ? '#121613' : 'rgba(0, 0, 0, 0.08)',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -1632,7 +1600,7 @@ export default function HomePage() {
                                                     fontFamily: 'var(--font-heading)',
                                                     fontSize: '15.5px',
                                                     fontWeight: '800',
-                                                    color: '#121613',
+                                                    color: '#0F172A',
                                                     margin: 0,
                                                     lineHeight: 1.25,
                                                     letterSpacing: '-0.02em'
@@ -1644,14 +1612,14 @@ export default function HomePage() {
                                             {/* High-Contrast Tagline Pill */}
                                             <div style={{
                                                 fontSize: '11.5px',
-                                                fontWeight: '700',
-                                                color: isSelected ? '#121613' : '#49564E',
-                                                background: isSelected ? 'rgba(229, 169, 59, 0.18)' : 'rgba(0,0,0,0.04)',
+                                                fontWeight: '800',
+                                                color: isSelected ? '#121613' : '#1E293B',
+                                                background: isSelected ? 'rgba(229, 169, 59, 0.22)' : 'rgba(0, 0, 0, 0.06)',
                                                 padding: '4px 10px',
                                                 borderRadius: '6px',
                                                 marginTop: 'auto',
                                                 width: 'fit-content',
-                                                border: isSelected ? '1px solid rgba(229, 169, 59, 0.4)' : '1px solid transparent'
+                                                border: isSelected ? '1px solid rgba(229, 169, 59, 0.45)' : '1px solid rgba(0,0,0,0.06)'
                                             }}>
                                                 ✦ {pillar.tagline}
                                             </div>

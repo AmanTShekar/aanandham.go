@@ -144,16 +144,16 @@ export default function SiteHeader({
             >
                 <div style={{
                     width: '100%',
-                    maxWidth: '1440px',
+                    maxWidth: '1560px',
                     margin: '0 auto',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '16px',
+                    gap: '20px',
                     boxSizing: 'border-box'
                 }}>
-                    {/* Brand Logo & Name */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {/* Brand Logo & Name (Far Left End) */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                         <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
                             <img
                                 src="/logo.png"
@@ -170,9 +170,9 @@ export default function SiteHeader({
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation Links */}
-                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(16px, 2vw, 28px)' }}>
-                        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 1.4vw, 22px)' }}>
+                    {/* Right-Side Group: Desktop Navigation Links & Action Button (Far Right End) */}
+                    <div className="nav-desktop-links" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(20px, 2.4vw, 32px)', marginLeft: 'auto' }}>
+                        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(14px, 1.8vw, 26px)' }}>
                             <Link 
                                 href="/" 
                                 className={`text-hover-marker text-hover-marker-dark ${activePage === 'home' ? 'is-active-link' : ''}`}
@@ -180,9 +180,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -195,9 +195,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -210,9 +210,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -225,9 +225,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -240,9 +240,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -255,9 +255,9 @@ export default function SiteHeader({
                                     fontFamily: 'var(--font-heading)',
                                     color: '#FFFFFF', 
                                     textDecoration: 'none', 
-                                    fontSize: '16px', 
+                                    fontSize: '15px', 
                                     fontWeight: '700', 
-                                    letterSpacing: '-0.02em',
+                                    letterSpacing: '-0.01em',
                                     padding: '4px 6px'
                                 }}
                             >
@@ -271,13 +271,14 @@ export default function SiteHeader({
                                 href="/#packages"
                                 className="btn-lime"
                                 style={{
-                                    padding: '8px 20px',
+                                    padding: '9px 22px',
                                     fontSize: '13.5px',
                                     fontWeight: '800',
                                     textDecoration: 'none',
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '6px',
+                                    borderRadius: '12px',
                                     boxShadow: '0 4px 14px rgba(213, 237, 85, 0.25)'
                                 }}
                             >

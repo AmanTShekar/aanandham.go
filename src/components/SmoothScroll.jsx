@@ -1,9 +1,21 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Lenis from 'lenis';
 
 export default function SmoothScroll() {
+    const pathname = usePathname();
+
+    // Reset scroll on page change without jump
+    useEffect(() => {
+        if (window.__lenis) {
+            window.__lenis.scrollTo(0, { immediate: true });
+        } else {
+            window.scrollTo(0, 0);
+        }
+    }, [pathname]);
+
     useEffect(() => {
         // Respect accessibility prefers-reduced-motion
         if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

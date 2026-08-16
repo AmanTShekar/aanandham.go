@@ -1,6 +1,8 @@
 import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
+import AanandhamBot from '@/components/AanandhamBot';
+import { Analytics } from '@vercel/analytics/next';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -64,6 +66,7 @@ export const metadata = {
     ],
     locale: 'en_IN',
     type: 'website',
+    override: true,
   },
   twitter: {
     card: 'summary_large_image',
@@ -185,6 +188,8 @@ export default function RootLayout({ children }) {
       <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif' }}>
         <SmoothScroll />
         {children}
+        <AanandhamBot />
+        <Analytics />
       </body>
     </html>
   );

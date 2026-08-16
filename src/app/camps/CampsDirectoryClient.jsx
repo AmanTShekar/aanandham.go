@@ -184,7 +184,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                 <section style={{
                     background: 'linear-gradient(180deg, #101E13 0%, #0D170F 100%)',
                     color: '#FFFFFF',
-                    padding: 'clamp(60px, 8vw, 100px) clamp(20px, 4vw, 48px) clamp(40px, 6vw, 70px)',
+                    padding: 'clamp(115px, 12vw, 150px) clamp(20px, 4vw, 48px) clamp(44px, 6vw, 72px)',
                     position: 'relative',
                     overflow: 'hidden'
                 }}>
@@ -463,7 +463,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                             </button>
                         </div>
                     ) : (
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '32px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', gap: '28px' }}>
                             {filteredCamps.map((camp) => {
                                 const isLiked = wishlist.includes(camp.id);
                                 const galleryList = camp.gallery && camp.gallery.length > 0 ? camp.gallery : [camp.image];
@@ -713,7 +713,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                             </p>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
                             {[
                                 {
                                     title: 'Geodesic Luxury Dome Pods',
@@ -826,6 +826,13 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* ── INTERACTIVE EXPEDITION BOOKING MODAL ── */}
+            <BookingEngineModal
+                isOpen={isBookingModalOpen}
+                onClose={() => setIsBookingModalOpen(false)}
+                initialPackage={selectedPackageForBooking}
+            />
 
             {/* ── TOAST NOTIFICATION ── */}
             <AnimatePresence>

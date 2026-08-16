@@ -1002,7 +1002,7 @@ export default function AboutPage() {
                 <motion.section 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-80px" }}
+                    viewport={{ once: true, amount: 0.05 }}
                     variants={sectionReveal}
                     style={{
                         padding: '120px 24px 140px',
@@ -1074,45 +1074,42 @@ export default function AboutPage() {
                                     key={idx}
                                     variants={stickyReveal}
                                     whileHover={{
-                                        y: -20,
-                                        rotate: 0,
-                                        scale: 1.04,
-                                        boxShadow: '0 36px 80px -10px rgba(0, 0, 0, 0.55), 0 16px 30px -6px rgba(0, 0, 0, 0.3)'
+                                        y: -10,
+                                        scale: 1.02,
+                                        boxShadow: '0 30px 70px -10px rgba(0, 0, 0, 0.55), 0 16px 30px -6px rgba(0, 0, 0, 0.3)'
                                     }}
-                                    whileTap={{ scale: 0.97 }}
+                                    whileTap={{ scale: 0.98 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 22 }}
                                     style={{
                                         position: 'relative',
                                         background: pillar.paperBg,
                                         color: pillar.inkColor,
-                                        borderRadius: '10px 10px 40px 10px',
-                                        padding: '44px 36px 36px',
+                                        borderRadius: '24px',
+                                        padding: '40px 32px 32px',
                                         boxShadow: '0 20px 48px rgba(0, 0, 0, 0.38), 0 6px 16px rgba(0,0,0,0.18)',
-                                        transform: `rotate(${pillar.rotation})`,
+                                        border: '1.5px solid rgba(0, 0, 0, 0.08)',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        minHeight: '440px',
-                                        backgroundImage: 'repeating-linear-gradient(transparent, transparent 27px, rgba(0,0,0,0.04) 28px)',
-                                        cursor: 'grab'
+                                        height: '100%',
+                                        boxSizing: 'border-box'
                                     }}
                                 >
                                     {/* Textured Washi Tape Strip with Brass Pin on Top */}
-                                    <motion.div
-                                        whileHover={{ y: -3, scale: 1.04, rotate: 0 }}
-                                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                    <div
                                         style={{
                                             position: 'absolute',
-                                            top: '-14px',
+                                            top: '-12px',
                                             left: '50%',
-                                            transform: `translateX(-50%) rotate(${pillar.tapeRotation})`,
-                                            width: '140px',
-                                            height: '28px',
+                                            transform: 'translateX(-50%)',
+                                            width: '130px',
+                                            height: '24px',
                                             background: pillar.tapeColor,
+                                            borderRadius: '4px',
                                             backdropFilter: 'blur(8px)',
                                             WebkitBackdropFilter: 'blur(8px)',
                                             boxShadow: '0 3px 8px rgba(0,0,0,0.2)',
-                                            borderLeft: '3px dashed rgba(0,0,0,0.25)',
-                                            borderRight: '3px dashed rgba(0,0,0,0.25)',
+                                            borderLeft: '3px dashed rgba(0,0,0,0.2)',
+                                            borderRight: '3px dashed rgba(0,0,0,0.2)',
                                             opacity: 0.95,
                                             zIndex: 4,
                                             display: 'flex',
@@ -1121,27 +1118,14 @@ export default function AboutPage() {
                                         }}
                                     >
                                         <div style={{
-                                            width: '8px',
-                                            height: '8px',
+                                            width: '7px',
+                                            height: '7px',
                                             borderRadius: '50%',
                                             background: '#FFFFFF',
                                             boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.4)',
                                             border: '1.5px solid #E5A93B'
                                         }} />
-                                    </motion.div>
-
-                                    {/* 3D Folded Dog-Ear Corner at Bottom Right */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        right: 0,
-                                        width: '40px',
-                                        height: '40px',
-                                        background: 'linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.22) 50%, rgba(0,0,0,0.08) 100%)',
-                                        borderTopLeftRadius: '16px',
-                                        boxShadow: '-2px -2px 6px rgba(0,0,0,0.14)',
-                                        pointerEvents: 'none'
-                                    }} />
+                                    </div>
 
                                     {/* Header Row: Dispatch Badge + Mini Logo + Metric Pill + Vintage Ink Stamp */}
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '20px' }}>
@@ -1301,7 +1285,7 @@ export default function AboutPage() {
                 <motion.section 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-80px" }}
+                    viewport={{ once: true, amount: 0.05 }}
                     variants={sectionReveal}
                     style={{
                         padding: '110px clamp(20px, 4vw, 48px)',
@@ -1360,16 +1344,6 @@ export default function AboutPage() {
                             className="stone-tablets-grid"
                         >
                             {TIMELINE_MILESTONES.map((mile, mIdx) => {
-                                // Each tablet — unique chipped/cracked stone polygon edge
-                                const clipPaths = [
-                                    'polygon(0% 14px, 10px 4px, 30px 0%, calc(100% - 24px) 2px, calc(100% - 8px) 0%, 100% 12px, calc(100% - 2px) 45%, 100% calc(100% - 18px), calc(100% - 14px) 100%, 40px calc(100% - 3px), 12px 100%, 0% calc(100% - 14px), 6px 55%)',
-                                    'polygon(0% 20px, 14px 6px, 28px 0%, calc(100% - 30px) 0px, calc(100% - 10px) 8px, 100% 22px, calc(100% - 4px) 60%, 100% calc(100% - 20px), calc(100% - 20px) calc(100% - 4px), calc(100% - 40px) 100%, 20px calc(100% - 6px), 4px calc(100% - 22px), 0% calc(100% - 38px), 8px 48%)',
-                                    'polygon(0% 10px, 8px 0%, 28px 4px, calc(100% - 20px) 0px, calc(100% - 6px) 10px, 100% 28px, calc(100% - 6px) 58%, 100% calc(100% - 14px), calc(100% - 12px) 100%, 48px calc(100% - 2px), 14px calc(100% - 10px), 0% calc(100% - 26px), 4px 40%)',
-                                    'polygon(0% 24px, 16px 8px, 36px 0%, calc(100% - 26px) 4px, calc(100% - 4px) 0%, 100% 18px, calc(100% - 8px) 50%, 100% calc(100% - 22px), calc(100% - 16px) calc(100% - 8px), calc(100% - 38px) 100%, 18px calc(100% - 4px), 6px calc(100% - 18px), 0% calc(100% - 32px), 10px 62%)'
-                                ];
-
-                                // Natural stone mottling — layered radial patches, NO stripes
-                                // Each card: unique base, darker veins, lighter mineral spots
                                 const stoneConfigs = [
                                     {
                                         // Limestone — warm beige-grey
@@ -1426,32 +1400,34 @@ export default function AboutPage() {
                                 ];
 
                                 const s = stoneConfigs[mIdx % 4];
-                                const rotations = ['-1.2deg', '1.0deg', '-0.8deg', '1.4deg'];
 
                                 return (
                                     <motion.div
                                         key={mIdx}
                                         variants={cardReveal}
-                                        whileHover={{ y: -12, rotate: 0 }}
+                                        whileHover={{ y: -8 }}
                                         transition={{ type: 'spring', stiffness: 320, damping: 22 }}
                                         style={{
                                             position: 'relative',
-                                            transform: `rotate(${rotations[mIdx % 4]})`,
+                                            transform: 'none',
                                             filter: 'drop-shadow(0 18px 40px rgba(0,0,0,0.65)) drop-shadow(0 4px 10px rgba(0,0,0,0.4))',
                                             cursor: 'default'
                                         }}
                                     >
-                                        {/* Stone Slab — mottled mineral patches, no stripes */}
+                                        {/* Stone Slab — clean rounded luxury tablet */}
                                         <div style={{
                                             backgroundColor: s.base,
                                             backgroundImage: s.mottle,
-                                            clipPath: clipPaths[mIdx % 4],
+                                            borderRadius: '24px',
+                                            border: '1.5px solid rgba(180, 140, 70, 0.35)',
                                             padding: '36px 26px 32px',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             minHeight: '330px',
+                                            height: '100%',
                                             position: 'relative',
-                                            overflow: 'hidden'
+                                            overflow: 'hidden',
+                                            boxSizing: 'border-box'
                                         }}>
 
 
@@ -1617,6 +1593,7 @@ export default function AboutPage() {
                         {/* Landmarks Cards Grid */}
                         <motion.div 
                             variants={staggerContainer}
+                            className="about-landmarks-grid"
                             style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
@@ -1763,6 +1740,7 @@ export default function AboutPage() {
                         {/* Large Photo-First Portrait Cards */}
                         <motion.div 
                             variants={staggerContainer}
+                            className="about-team-grid"
                             style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
@@ -1889,7 +1867,7 @@ export default function AboutPage() {
                 <motion.section 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-80px" }}
+                    viewport={{ once: true, amount: 0.05 }}
                     variants={sectionReveal}
                     style={{
                         padding: '110px 24px',
@@ -1898,7 +1876,7 @@ export default function AboutPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+                    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> VERIFIED CAMPER TESTIMONIALS
@@ -1921,6 +1899,7 @@ export default function AboutPage() {
                         {/* Review Cards Grid */}
                         <motion.div 
                             variants={staggerContainer}
+                            className="about-reviews-grid"
                             style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',

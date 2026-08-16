@@ -10,7 +10,7 @@ const BookingEngineModal = dynamic(() => import('../../../components/BookingEngi
 import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
-import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users } from 'lucide-react';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
@@ -165,7 +165,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     ];
 
     const currentRoom = availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0];
-    const roomPrice = currentRoom?.pricePerPerson || camp.price;
+    const roomPrice = currentRoom?.price || currentRoom?.pricePerPerson || camp.price || 2499;
     const capacityNum = parseRoomCapacity(currentRoom?.capacity);
     const calculatedUnits = Math.ceil(guestsCount / capacityNum);
     const effectiveUnits = customUnits !== null ? customUnits : calculatedUnits;
@@ -208,49 +208,49 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
             <main style={{ paddingBottom: '120px' }}>
                 
                 {/* ── BREADCRUMB & TITLE BAR ── */}
-                <section style={{ background: '#101E13', color: '#FFFFFF', padding: '36px clamp(20px, 4vw, 48px) 30px' }}>
-                    <div style={{ maxWidth: '1440px', margin: '0 auto' }}>
+                <section style={{ background: '#101E13', color: '#FFFFFF', padding: 'clamp(105px, 11vw, 130px) clamp(20px, 4vw, 48px) clamp(34px, 4vw, 46px)' }}>
+                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         {/* Breadcrumbs */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#A2B6A6', marginBottom: '16px', flexWrap: 'wrap' }}>
-                            <Link href="/" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Home</Link>
-                            <span>/</span>
-                            <Link href="/camps" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Campsites</Link>
-                            <span>/</span>
-                            <span style={{ color: '#D5ED55', fontWeight: '700' }}>{camp.title}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#C5D8C8', marginBottom: '16px', flexWrap: 'wrap', fontWeight: '600' }}>
+                            <Link href="/" style={{ color: '#C5D8C8', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+                            <span style={{ color: '#6A7D6E' }}>/</span>
+                            <Link href="/camps" style={{ color: '#C5D8C8', textDecoration: 'none', transition: 'color 0.2s' }}>Campsites</Link>
+                            <span style={{ color: '#6A7D6E' }}>/</span>
+                            <span style={{ color: '#D5ED55', fontWeight: '800' }}>{camp.title}</span>
                         </div>
 
                         {/* Title & Actions Bar */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
                             <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
-                                    <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11.5px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                                    <span style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
                                         {camp.altitude || 'Western Ghats'}
                                     </span>
-                                    <span style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', fontSize: '11.5px', fontWeight: '800', padding: '4px 12px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.3)' }}>
+                                    <span style={{ background: 'rgba(213, 237, 85, 0.2)', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.4)' }}>
                                         ★ {camp.rating || '4.98'} ({camp.reviewsCount || 342} verified campers)
                                     </span>
                                     {camp.tag && (
-                                        <span style={{ background: 'rgba(255,255,255,0.1)', color: '#FFFFFF', fontSize: '11px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px' }}>
+                                        <span style={{ background: 'rgba(255,255,255,0.12)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.18)' }}>
                                             {camp.tag}
                                         </span>
                                     )}
                                 </div>
 
-                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: '800', margin: '0 0 10px', color: '#FFFFFF', letterSpacing: '-0.025em' }}>
+                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: '800', margin: '0 0 12px', color: '#FFFFFF', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
                                     {camp.title}
                                 </h1>
 
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '18px', fontSize: '13.5px', color: '#A2B6A6', flexWrap: 'wrap' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '14px', color: '#C5D8C8', flexWrap: 'wrap', fontWeight: '600' }}>
                                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                        <MapPin size={15} color="#D5ED55" />
+                                        <MapPin size={16} color="#D5ED55" />
                                         <span>{camp.location || 'Suryanelli, Munnar'}</span>
                                     </span>
                                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                        <Clock size={15} color="#D5ED55" />
+                                        <Clock size={16} color="#D5ED55" />
                                         <span>{camp.duration || '2 Days / 1 Night'}</span>
                                     </span>
                                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                        <Compass size={15} color="#D5ED55" />
+                                        <Compass size={16} color="#D5ED55" />
                                         <span>{camp.difficulty || 'Easy - Moderate Expedition'}</span>
                                     </span>
                                 </div>
@@ -303,27 +303,13 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                     </div>
                 </section>
 
-                {/* ── PHOTO GALLERY MOSAIC SECTION ── */}
+                {/* ── PHOTO GALLERY MOSAIC SECTION (RESPONSIVE) ── */}
                 <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(12, 1fr)',
-                        gridTemplateRows: 'repeat(2, 220px)',
-                        gap: '14px',
-                        borderRadius: '28px',
-                        overflow: 'hidden'
-                    }}>
+                    <div className="camp-gallery-mosaic">
                         {/* Main Featured Photo (Left Large) */}
                         <div
                             onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
-                            style={{
-                                gridColumn: 'span 7',
-                                gridRow: 'span 2',
-                                position: 'relative',
-                                cursor: 'pointer',
-                                overflow: 'hidden'
-                            }}
-                            className="card-img-zoom"
+                            className="gallery-tile-main card-img-zoom"
                         >
                             <img
                                 src={gallery[0]}
@@ -335,17 +321,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
                         </div>
 
-                        {/* Sub Photo 1 (Top Right 1) */}
+                        {/* Sub Photo 1 (Top Right) */}
                         <div
                             onClick={() => { setActivePhotoIdx(1 % gallery.length); setIsLightboxOpen(true); }}
-                            style={{
-                                gridColumn: 'span 5',
-                                gridRow: 'span 1',
-                                position: 'relative',
-                                cursor: 'pointer',
-                                overflow: 'hidden'
-                            }}
-                            className="card-img-zoom"
+                            className="gallery-tile-top card-img-zoom"
                         >
                             <img
                                 src={gallery[1] || gallery[0]}
@@ -354,17 +333,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             />
                         </div>
 
-                        {/* Sub Photo 2 (Bottom Right Half 1) */}
+                        {/* Sub Photo 2 (Bottom Right 1) */}
                         <div
                             onClick={() => { setActivePhotoIdx(2 % gallery.length); setIsLightboxOpen(true); }}
-                            style={{
-                                gridColumn: 'span 3',
-                                gridRow: 'span 1',
-                                position: 'relative',
-                                cursor: 'pointer',
-                                overflow: 'hidden'
-                            }}
-                            className="card-img-zoom"
+                            className="gallery-tile-bot-1 card-img-zoom"
                         >
                             <img
                                 src={gallery[2] || gallery[0]}
@@ -373,18 +345,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             />
                         </div>
 
-                        {/* Sub Photo 3 (Bottom Right Half 2 with View All overlay) */}
+                        {/* Sub Photo 3 (Bottom Right 2 with View All overlay) */}
                         <div
                             onClick={() => { setActivePhotoIdx(3 % gallery.length); setIsLightboxOpen(true); }}
-                            style={{
-                                gridColumn: 'span 2',
-                                gridRow: 'span 1',
-                                position: 'relative',
-                                cursor: 'pointer',
-                                overflow: 'hidden',
-                                background: '#121613'
-                            }}
-                            className="card-img-zoom"
+                            className="gallery-tile-bot-2 card-img-zoom"
                         >
                             <img
                                 src={gallery[3] || gallery[0]}
@@ -400,10 +364,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
                 {/* ── TWO-COLUMN EXPEDITION DETAILS & SMART STAY BOOKING ENGINE ── */}
                 <section style={{ maxWidth: '1440px', margin: '48px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: '44px', alignItems: 'start' }}>
+                    <div className="camp-detail-layout">
                         
-                        {/* ── LEFT COLUMN: CAMPSITE CONTENT & SPECS (SPAN 7) ── */}
-                        <div style={{ gridColumn: 'span 12', '@media (min-width: 1024px)': { gridColumn: 'span 7' } }}>
+                        {/* ── LEFT COLUMN: CAMPSITE CONTENT & SPECS ── */}
+                        <div>
                             
                             {/* SECTION 1: HIGHLIGHTS & DESCRIPTION */}
                             <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
@@ -497,7 +461,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                     <div>
                                                         <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Per Person</span>
                                                         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613' }}>
-                                                            ₹{room.pricePerPerson?.toLocaleString('en-IN')}
+                                                            ₹{(room.price || room.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
                                                     <button
@@ -608,7 +572,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
                             {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
                             <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '32px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '32px' }}>
                                     <div>
                                         <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#166534', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                                             <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DCFCE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>✓</span>
@@ -656,40 +620,41 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
                         </div>
 
-                        {/* ── RIGHT COLUMN: DYNAMIC SMART STAY ALLOCATION ENGINE (SPAN 5) ── */}
-                        <div style={{ gridColumn: 'span 12', '@media (min-width: 1024px)': { gridColumn: 'span 5' }, position: 'sticky', top: '90px' }}>
+                        {/* ── RIGHT COLUMN: SLEEK COMPACT STICKY AVAILABILITY & BOOKING CARD ── */}
+                        <div style={{ position: 'sticky', top: '90px' }}>
                             <div style={{
                                 background: '#FFFFFF',
-                                borderRadius: '28px',
-                                padding: '32px',
+                                borderRadius: '22px',
+                                padding: '20px 22px',
                                 border: '1px solid rgba(18, 22, 19, 0.1)',
-                                boxShadow: '0 16px 48px rgba(0, 0, 0, 0.08)',
+                                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.06)',
                                 color: '#121613'
                             }}>
                                 
                                 {/* Header / Per-Camper Pricing Display */}
-                                <div style={{ borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '20px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                                <div style={{ borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px', marginBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
-                                        <span style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Per Person Rate</span>
-                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '900', color: '#121613' }}>
+                                        <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Starts at</div>
+                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '900', color: '#121613' }}>
                                                 ₹{roomPrice.toLocaleString('en-IN')}
                                             </span>
-                                            <span style={{ fontSize: '13px', color: '#59655D' }}>/ camper</span>
+                                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
                                         </div>
                                     </div>
-                                    <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                        Instant Confirmation
+                                    <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '10.5px', fontWeight: '800', padding: '4px 9px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E' }} />
+                                        <span>⚡ Live Available</span>
                                     </span>
                                 </div>
 
-                                {/* Form Inputs */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                                {/* Form Inputs (Compact) */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                     
                                     {/* 1. Date Batch Selector */}
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                                            1. Select Expedition Batch Date
+                                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', display: 'block', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                                            1. Check-In Weekend Batch
                                         </label>
                                         <CustomDateBatchPicker
                                             value={selectedDate}
@@ -700,31 +665,31 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
                                     {/* 2. Room Type Selector */}
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
-                                            2. Select Lodging Style
+                                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', display: 'block', marginBottom: '4px', letterSpacing: '0.5px' }}>
+                                            2. Accommodation Style
                                         </label>
                                         <CustomSelectDropdown
                                             value={selectedRoomId}
                                             onChange={(val) => { setSelectedRoomId(val); setCustomUnits(null); }}
                                             options={availableRooms.map(r => ({
                                                 value: r.id,
-                                                label: `${r.name} (${r.capacity}) — ₹${r.pricePerPerson?.toLocaleString('en-IN')}`
+                                                label: `${r.name} (${r.capacity}) — ₹${(r.price || r.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}`
                                             }))}
                                         />
                                     </div>
 
-                                    {/* 3. Campers / Guests Counter with Auto Increment */}
+                                    {/* 3. Campers Counter (Compact) */}
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>
-                                                3. Number of Campers (Persons)
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                            <label style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                3. Total Campers
                                             </label>
-                                            <span style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>
-                                                ₹{roomPrice} × {guestsCount}
+                                            <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
+                                                {guestsCount >= 8 ? '🎉 15% Squad Off' : guestsCount >= 4 ? '✨ 10% Squad Off' : `${effectiveUnits} Unit(s)`}
                                             </span>
                                         </div>
 
-                                        <div style={{ display: 'flex', alignItems: 'center', background: '#F8F9F5', borderRadius: '14px', border: '1px solid rgba(18, 22, 19, 0.12)', padding: '6px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', background: '#F8F9F5', borderRadius: '12px', border: '1px solid rgba(18, 22, 19, 0.1)', padding: '4px 6px' }}>
                                             <button
                                                 type="button"
                                                 onClick={() => {
@@ -732,11 +697,11 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                     setGuestsCount(next);
                                                     setCustomUnits(null);
                                                 }}
-                                                style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
+                                                style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '16px', fontWeight: '800', cursor: 'pointer' }}
                                             >
                                                 −
                                             </button>
-                                            <div style={{ flex: 1, textAlign: 'center', fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900' }}>
+                                            <div style={{ flex: 1, textAlign: 'center', fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800' }}>
                                                 {guestsCount} {guestsCount === 1 ? 'Camper' : 'Campers'}
                                             </div>
                                             <button
@@ -746,115 +711,159 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                     setGuestsCount(next);
                                                     setCustomUnits(null);
                                                 }}
-                                                style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
+                                                style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '16px', fontWeight: '800', cursor: 'pointer' }}
                                             >
                                                 +
                                             </button>
                                         </div>
                                     </div>
 
-                                    {/* SMART STAY AUTO-ALLOCATION CARD */}
-                                    <div style={{ background: '#F4F8F4', borderRadius: '18px', padding: '16px', border: '1px solid #BBF7D0' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                            <span style={{ fontSize: '12px', fontWeight: '800', color: '#166534', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                                <Tent size={14} color="#166534" />
-                                                <span>Smart Stay Allocation</span>
-                                            </span>
-                                            <span style={{ fontSize: '11px', color: '#166534', background: '#DCFCE7', padding: '2px 8px', borderRadius: '999px', fontWeight: '800' }}>
-                                                {currentRoom.capacity || '2-Person'} Units
+                                    {/* Price & Summary Box */}
+                                    <div style={{ background: '#F4F7EB', borderRadius: '14px', padding: '12px 14px', border: '1px solid rgba(22, 101, 52, 0.15)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2px' }}>
+                                            <span style={{ fontSize: '12px', fontWeight: '700', color: '#59655D' }}>Estimated Total:</span>
+                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#166534' }}>
+                                                ₹{estimatedTotal.toLocaleString('en-IN')}
                                             </span>
                                         </div>
-
-                                        <p style={{ fontSize: '12.5px', color: '#374151', margin: '0 0 10px', lineHeight: 1.5 }}>
-                                            For <strong>{guestsCount} {guestsCount === 1 ? 'person' : 'people'}</strong> in <strong>{currentRoom.name}</strong> ({capacityNum} per unit):
-                                        </p>
-
-                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#FFFFFF', padding: '8px 12px', borderRadius: '10px', border: '1px solid #DCFCE7' }}>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: '#121613' }}>
-                                                Tent Units Allocated:
-                                            </span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCustomUnits(Math.max(1, effectiveUnits - 1))}
-                                                    style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#F1F3EC', border: 'none', cursor: 'pointer', fontWeight: '800', fontSize: '12px' }}
-                                                >
-                                                    −
-                                                </button>
-                                                <span style={{ fontWeight: '900', fontSize: '13px', color: '#166534' }}>
-                                                    {effectiveUnits} {effectiveUnits === 1 ? 'Tent' : 'Tents'}
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCustomUnits(effectiveUnits + 1)}
-                                                    style={{ width: '24px', height: '24px', borderRadius: '6px', background: '#F1F3EC', border: 'none', cursor: 'pointer', fontWeight: '800', fontSize: '12px' }}
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
+                                        <div style={{ fontSize: '10.5px', color: '#166534', fontWeight: '600' }}>
+                                            ✓ Includes {effectiveUnits} × {currentRoom.name}, Dinner BBQ & Guided Trek
                                         </div>
-
-                                        {totalCapacity < guestsCount && (
-                                            <p style={{ fontSize: '11px', color: '#DC2626', fontWeight: '700', margin: '8px 0 0' }}>
-                                                ⚠️ Current units hold {totalCapacity} max. Click (+) above to add another tent!
-                                            </p>
-                                        )}
                                     </div>
 
-                                    {/* Estimated Total Price Summary */}
-                                    <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '16px' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                            <span style={{ fontSize: '13px', color: '#59655D' }}>Base Fare ({guestsCount} × ₹{roomPrice}):</span>
-                                            <span style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>₹{estimatedTotal.toLocaleString('en-IN')}</span>
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                            <span style={{ fontSize: '13px', color: '#59655D' }}>Allocated Tents ({effectiveUnits} Units):</span>
-                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#166534' }}>Included ✓</span>
-                                        </div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                                            <span style={{ fontSize: '13px', color: '#59655D' }}>Campfire & Meals:</span>
-                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#166534' }}>Included ✓</span>
-                                        </div>
+                                    {/* Primary Booking Button */}
+                                    <button
+                                        onClick={() => setIsBookingModalOpen(true)}
+                                        className="btn-lime"
+                                        style={{
+                                            width: '100%',
+                                            padding: '13px',
+                                            fontSize: '14px',
+                                            fontWeight: '900',
+                                            borderRadius: '12px',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '8px',
+                                            boxShadow: '0 4px 14px rgba(213,237,85,0.3)'
+                                        }}
+                                    >
+                                        <span>Check Availability & Book ↗</span>
+                                    </button>
 
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '12px', marginBottom: '18px' }}>
-                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800', color: '#121613' }}>Total Amount</span>
-                                            <div style={{ textAlign: 'right' }}>
-                                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '900', color: '#121613' }}>
-                                                    ₹{estimatedTotal.toLocaleString('en-IN')}
-                                                </span>
-                                                <span style={{ fontSize: '10.5px', color: '#7D8880', display: 'block' }}>All taxes & permits included</span>
-                                            </div>
-                                        </div>
+                                    {/* Secondary WhatsApp Inquire Button */}
+                                    <a
+                                        href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{
+                                            width: '100%',
+                                            padding: '10px',
+                                            borderRadius: '12px',
+                                            background: '#F1F3EC',
+                                            border: '1px solid rgba(18,22,19,0.08)',
+                                            color: '#121613',
+                                            fontSize: '12.5px',
+                                            fontWeight: '800',
+                                            textDecoration: 'none',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    >
+                                        <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px', color: '#25D366' }}></i>
+                                        <span>Quick Inquire on WhatsApp</span>
+                                    </a>
 
-                                        {/* Instant Reserve Button */}
-                                        <button
-                                            onClick={() => setIsBookingModalOpen(true)}
-                                            className="btn-lime"
-                                            style={{
-                                                width: '100%',
-                                                padding: '16px',
-                                                fontSize: '15px',
-                                                fontWeight: '900',
-                                                borderRadius: '16px',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '10px'
-                                            }}
-                                        >
-                                            <span>Reserve Now — ₹{estimatedTotal.toLocaleString('en-IN')}</span>
-                                            <span>→</span>
-                                        </button>
-
-                                        <p style={{ textAlign: 'center', fontSize: '11px', color: '#7D8880', margin: '10px 0 0' }}>
-                                            🔒 Instant lock with 30% advance or full payment.
-                                        </p>
+                                    <div style={{ textAlign: 'center', fontSize: '10.5px', color: '#7D8880', marginTop: '2px' }}>
+                                        🔒 0% Fee Direct UPI · 30% Advance Deposit locks permits
                                     </div>
 
                                 </div>
 
                             </div>
+
+                            {/* ── CARD 2: QUICK EXPEDITION TIMINGS ── */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                borderRadius: '20px',
+                                padding: '18px 20px',
+                                marginTop: '16px',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                    <Clock size={15} color="#166534" />
+                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                        Expedition Timings
+                                    </span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                        <span style={{ color: '#59655D' }}>Basecamp Check-in:</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>02:00 PM (Snacks & Tea)</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                        <span style={{ color: '#59655D' }}>Campfire & Live BBQ:</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>08:00 PM</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                        <span style={{ color: '#59655D' }}>4x4 Sunrise Jeep Safari:</span>
+                                        <span style={{ fontWeight: '800', color: '#166534' }}>04:30 AM (Peak Sunrise)</span>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                        <span style={{ color: '#59655D' }}>Breakfast & Checkout:</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>11:00 AM</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ── CARD 3: AANANDHAM WILDERNESS SAFETY PROMISE ── */}
+                            <div style={{
+                                background: 'linear-gradient(135deg, #101E13 0%, #172B1C 100%)',
+                                borderRadius: '20px',
+                                padding: '18px 20px',
+                                marginTop: '16px',
+                                color: '#FFFFFF',
+                                border: '1px solid rgba(213, 237, 85, 0.2)'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                    <ShieldCheck size={16} color="#D5ED55" />
+                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                        Wilderness Guarantee
+                                    </span>
+                                </div>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: '#E2E8F0' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ color: '#D5ED55', fontWeight: '900' }}>✓</span>
+                                        <span>24/7 Gated Perimeter & Certified Marshals</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ color: '#D5ED55', fontWeight: '900' }}>✓</span>
+                                        <span>Western Washrooms with Hot Water</span>
+                                    </div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ color: '#D5ED55', fontWeight: '900' }}>✓</span>
+                                        <span>Free Date Reschedule in Heavy Rain</span>
+                                    </div>
+                                </div>
+
+                                <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '14px', paddingTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Have Squad Questions?</div>
+                                    <a
+                                        href={waLink(`Hi Aanandham! I have questions regarding ${camp.title} facilities and group booking.`)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                    >
+                                        <span>Chat with Marshal →</span>
+                                    </a>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -877,7 +886,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </Link>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+                        <div className="similar-camps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '24px' }}>
                             {nearbyCamps.map((nc) => (
                                 <Link
                                     key={nc.id}
@@ -934,8 +943,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                 onClose={() => setIsBookingModalOpen(false)}
                 initialPackage={camp}
                 initialRoom={currentRoom}
+                initialRoomId={selectedRoomId}
                 initialDate={selectedDate}
                 initialGuests={guestsCount}
+                initialCustomUnits={customUnits}
             />
 
             {/* ── FULLSCREEN PHOTO LIGHTBOX ── */}
