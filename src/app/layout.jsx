@@ -209,9 +209,40 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif' }}>
+      <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#070E08' }}>
+        {/* Fixed Extended Canvas Underlay (Pre-paints 35vh beyond viewport to prevent any black toolbar gap) */}
+        <div 
+          id="mobile-canvas-underlay" 
+          aria-hidden="true" 
+          style={{ 
+            position: 'fixed', 
+            top: '-35vh', 
+            left: 0, 
+            right: 0, 
+            bottom: '-35vh', 
+            width: '100vw', 
+            height: '170vh', 
+            backgroundColor: '#070E08', 
+            zIndex: -99999, 
+            pointerEvents: 'none', 
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)'
+          }} 
+        />
         <SmoothScroll />
         {children}
+        {/* Mobile Toolbar Rest Buffer (Provides natural overshoot room for mobile Chrome/Safari menu) */}
+        <div 
+          className="mobile-bottom-rest-buffer" 
+          aria-hidden="true" 
+          style={{ 
+            width: '100%', 
+            height: 'calc(100px + env(safe-area-inset-bottom, 0px))', 
+            minHeight: '100px', 
+            pointerEvents: 'none',
+            background: 'transparent'
+          }} 
+        />
         <AanandhamBot />
         <Analytics />
         <SpeedInsights />

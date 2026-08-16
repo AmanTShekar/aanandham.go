@@ -22,18 +22,18 @@ export default function SmoothScroll() {
             return;
         }
 
-        // Bypass Lenis on touch/mobile devices so mobile Chrome/Safari use native 120Hz hardware scroll without toolbar stutter
-        const isTouchDevice = typeof window !== 'undefined' && (
+        // Completely bypass Lenis on mobile/touch screens so mobile Chrome & Safari use 100% pure native GPU compositor scrolling
+        const isTouchScreen = typeof window !== 'undefined' && (
+            window.matchMedia('(pointer: coarse)').matches || 
             'ontouchstart' in window || 
-            navigator.maxTouchPoints > 0 || 
-            window.matchMedia('(pointer: coarse)').matches
+            navigator.maxTouchPoints > 0
         );
 
-        if (isTouchDevice) {
+        if (isTouchScreen) {
             return;
         }
 
-        // Initialize Lenis for buttery smooth momentum scrolling (Desktop / Mouse wheel)
+        // Initialize Lenis for buttery smooth desktop mouse wheel momentum scrolling
         const lenis = new Lenis({
             duration: 1.15,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential dampening curve
@@ -41,7 +41,7 @@ export default function SmoothScroll() {
             gestureOrientation: 'vertical',
             smoothWheel: true,
             wheelMultiplier: 1.0,
-            touchMultiplier: 1.0,
+            touchMultiplier: 0,
             syncTouch: false,
             infinite: false,
         });

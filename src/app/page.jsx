@@ -595,29 +595,41 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
     );
 }
 
-// Isolated high-performance Scroll Progress Indicator (0 parent re-renders)
+// Isolated high-performance Scroll Progress Indicator (0 parent re-renders, 0 layout reflows)
 function ScrollProgressBar() {
     const barRef = useRef(null);
 
     useEffect(() => {
         let ticking = false;
+        let cachedTotalHeight = 1;
+
+        const updateHeight = () => {
+            cachedTotalHeight = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        };
+        updateHeight();
+
         const onScroll = () => {
             if (!ticking) {
                 requestAnimationFrame(() => {
                     if (barRef.current) {
-                        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-                        if (totalHeight > 0) {
-                            const scale = Math.min(1, Math.max(0, window.scrollY / totalHeight));
-                            barRef.current.style.transform = `scaleX(${scale})`;
-                        }
+                        const scale = Math.min(1, Math.max(0, window.scrollY / cachedTotalHeight));
+                        barRef.current.style.transform = `scaleX(${scale})`;
                     }
                     ticking = false;
                 });
                 ticking = true;
             }
         };
+
         window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
+        window.addEventListener('resize', updateHeight, { passive: true });
+        window.addEventListener('orientationchange', updateHeight, { passive: true });
+
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', updateHeight);
+            window.removeEventListener('orientationchange', updateHeight);
+        };
     }, []);
 
     return (
@@ -757,8 +769,10 @@ export default function HomePage() {
     const handlePackageSliderScroll = () => {
         if (!packagesSliderRef.current) return;
         const scrollLeft = packagesSliderRef.current.scrollLeft;
-        const width = packagesSliderRef.current.offsetWidth;
-        const newIdx = Math.round(scrollLeft / (width * 0.86));
+        const cardEl = packagesSliderRef.current.children[0];
+        const cardWidth = cardEl ? cardEl.offsetWidth : 300;
+        const cardStep = cardWidth + 18;
+        const newIdx = Math.round(scrollLeft / cardStep);
         if (newIdx >= 0 && newIdx < filteredPackages.length && newIdx !== activePackageSlideIdx) {
             setActivePackageSlideIdx(newIdx);
         }
@@ -770,74 +784,14 @@ export default function HomePage() {
     const handleWildernessSliderScroll = () => {
         if (!wildernessSliderRef.current) return;
         const scrollLeft = wildernessSliderRef.current.scrollLeft;
-        const width = wildernessSliderRef.current.offsetWidth;
-        const newIdx = Math.round(scrollLeft / (width * 0.82));
+        const cardEl = wildernessSliderRef.current.children[0];
+        const cardWidth = cardEl ? cardEl.offsetWidth : 300;
+        const cardStep = cardWidth + 18;
+        const newIdx = Math.round(scrollLeft / cardStep);
         if (newIdx >= 0 && newIdx < KERALA_WILDERNESS_GALLERY.length && newIdx !== activeWildernessIdx) {
             setActiveWildernessIdx(newIdx);
         }
     };
-
-    // High-precision trigger-line scroll-driven auto-activation for Stay, Program & Skill Levels Deck
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        let ticking = false;
-        const checkScrollInView = () => {
-            const windowH = window.innerHeight;
-            const triggerY = window.innerWidth <= 900 ? windowH * 0.52 : windowH * 0.48;
-
-            // 1. Program Expedition Days Auto-Activation (Scoped to when Program section is near/in viewport)
-            const programSection = document.getElementById('program');
-            if (programSection) {
-                const pRect = programSection.getBoundingClientRect();
-                if (pRect.top <= windowH * 0.90 && pRect.bottom >= 0) {
-                    const programElements = programSection.querySelectorAll('[data-program-day-idx]');
-                    let activeProgramIndex = -1;
-                    let minDistance = Infinity;
-                    programElements.forEach((el) => {
-                        const idx = parseInt(el.getAttribute('data-program-day-idx'), 10);
-                        if (isNaN(idx)) return;
-                        const rect = el.getBoundingClientRect();
-                        const cardCenter = rect.top + rect.height / 2;
-                        const dist = Math.abs(cardCenter - triggerY);
-                        if (dist < minDistance && rect.bottom > 80 && rect.top < windowH - 80) {
-                            minDistance = dist;
-                            activeProgramIndex = idx;
-                        }
-                    });
-                    if (activeProgramIndex >= 0) {
-                        setExpandedDayIdx((prev) => (prev !== activeProgramIndex ? activeProgramIndex : prev));
-                    }
-                }
-            }
-
-            ticking = false;
-        };
-
-        const onScroll = () => {
-            if (!ticking) {
-                requestAnimationFrame(checkScrollInView);
-                ticking = true;
-            }
-        };
-
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('touchmove', onScroll, { passive: true });
-        window.addEventListener('resize', onScroll, { passive: true });
-
-        // Initial triggers
-        checkScrollInView();
-        const t1 = setTimeout(checkScrollInView, 200);
-        const t2 = setTimeout(checkScrollInView, 600);
-
-        return () => {
-            window.removeEventListener('scroll', onScroll);
-            window.removeEventListener('touchmove', onScroll);
-            window.removeEventListener('resize', onScroll);
-            clearTimeout(t1);
-            clearTimeout(t2);
-        };
-    }, []);
 
     // Read logged-in user profile from localStorage
     useEffect(() => {
@@ -2122,9 +2076,8 @@ export default function HomePage() {
                                     variants={cardReveal}
                                     onMouseEnter={() => {
                                         setHoveredProgramDay(idx);
-                                        setExpandedDayIdx(idx);
                                     }}
-                                    onClick={() => setExpandedDayIdx(idx)}
+                                    onClick={() => setExpandedDayIdx(isOpen ? -1 : idx)}
                                     style={{
                                         borderTop: '1px solid rgba(18, 22, 19, 0.1)',
                                         padding: '28px 0',
@@ -2182,41 +2135,43 @@ export default function HomePage() {
                                         </div>
                                     </div>
 
-                                    <AnimatePresence>
+                                    <AnimatePresence initial={false}>
                                         {isOpen && (
                                             <motion.div 
                                                 initial={{ opacity: 0, height: 0 }}
                                                 animate={{ opacity: 1, height: 'auto' }}
                                                 exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                                                style={{ paddingTop: '16px', maxWidth: '720px', overflow: 'hidden' }}
+                                                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                                                style={{ overflow: 'hidden' }}
                                             >
-                                                <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
-                                                    {item.desc}
-                                                </p>
-                                                {/* In-line Image preview (shown cleanly with badges on active day) */}
-                                                <div 
-                                                    className="program-day-inline-img"
-                                                    style={{ 
-                                                        height: 'clamp(190px, 28vh, 250px)', 
-                                                        borderRadius: '18px', 
-                                                        overflow: 'hidden', 
-                                                        marginTop: '16px',
-                                                        position: 'relative',
-                                                        boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
-                                                    }}
-                                                >
-                                                    <img 
-                                                        src={item.img} 
-                                                        alt={item.title} 
-                                                        loading="lazy"
-                                                        decoding="async"
-                                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                                                    />
-                                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.75) 0%, transparent 50%)' }} />
-                                                    <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
-                                                        <span>📍 {item.altitude || 'Western Ghats Ridge'}</span>
-                                                        <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 9px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>{item.terrain || 'Mountain Trail'}</span>
+                                                <div style={{ paddingTop: '16px', maxWidth: '720px' }}>
+                                                    <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
+                                                        {item.desc}
+                                                    </p>
+                                                    {/* In-line Image preview (shown cleanly with badges on active day) */}
+                                                    <div 
+                                                        className="program-day-inline-img"
+                                                        style={{ 
+                                                            height: 'clamp(190px, 28vh, 250px)', 
+                                                            borderRadius: '18px', 
+                                                            overflow: 'hidden', 
+                                                            marginTop: '16px',
+                                                            position: 'relative',
+                                                            boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
+                                                        }}
+                                                    >
+                                                        <img 
+                                                            src={item.img} 
+                                                            alt={item.title} 
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                        />
+                                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.75) 0%, transparent 50%)' }} />
+                                                        <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
+                                                            <span>📍 {item.altitude || 'Western Ghats Ridge'}</span>
+                                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 9px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>{item.terrain || 'Mountain Trail'}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </motion.div>
@@ -2336,6 +2291,72 @@ export default function HomePage() {
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '70px 0', background: '#F8F9F5', width: '100%' }}
             >
+                <style dangerouslySetInnerHTML={{__html: `
+                    #arrangements {
+                        overflow: visible !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        box-sizing: border-box !important;
+                        padding: 80px 0 !important;
+                    }
+                    .events-horizontal-track {
+                        display: grid !important;
+                        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+                        gap: clamp(20px, 2.5vw, 32px) !important;
+                        max-width: 1400px !important;
+                        margin: 0 auto !important;
+                        padding: 36px clamp(28px, 4vw, 56px) 44px !important;
+                        box-sizing: border-box !important;
+                        width: 100% !important;
+                        align-items: stretch !important;
+                        overflow: visible !important;
+                    }
+                    .events-horizontal-card {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        min-width: 0 !important;
+                        box-sizing: border-box !important;
+                        margin: 0 !important;
+                        overflow: visible !important;
+                    }
+                    .events-nav-arrows {
+                        display: none !important;
+                    }
+                    @media (max-width: 960px) {
+                        .events-nav-arrows {
+                            display: flex !important;
+                            gap: 8px !important;
+                        }
+                        .events-horizontal-track {
+                            display: flex !important;
+                            overflow-x: auto !important;
+                            overflow-y: visible !important;
+                            scroll-snap-type: x mandatory !important;
+                            scroll-behavior: smooth !important;
+                            -webkit-overflow-scrolling: touch !important;
+                            gap: 18px !important;
+                            padding: 32px calc((100vw - min(84vw, 340px)) / 2) 44px !important;
+                            scroll-padding: 0 calc((100vw - min(84vw, 340px)) / 2) !important;
+                            scrollbar-width: none !important;
+                            width: 100% !important;
+                            max-width: 100% !important;
+                            box-sizing: border-box !important;
+                        }
+                        .events-horizontal-track::-webkit-scrollbar {
+                            display: none !important;
+                        }
+                        .events-horizontal-card {
+                            flex: 0 0 min(84vw, 340px) !important;
+                            width: min(84vw, 340px) !important;
+                            max-width: 340px !important;
+                            min-width: 270px !important;
+                            scroll-snap-align: center !important;
+                            scroll-snap-stop: always !important;
+                            margin: 0 !important;
+                            overflow: visible !important;
+                        }
+                    }
+                `}} />
                 {/* Header Row with Centered Max-Width */}
                 <div style={{ maxWidth: '1440px', margin: '0 auto 28px', padding: '0 clamp(20px, 4vw, 48px)', width: '100%', boxSizing: 'border-box' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '16px' }}>
@@ -2413,13 +2434,7 @@ export default function HomePage() {
                 {/* Full-Bleed Roughed Paper Scraps Horizontal Track */}
                 <div 
                     id="events-slider-track" 
-                    className="events-horizontal-track" 
-                    style={{ 
-                        paddingTop: '16px', 
-                        paddingBottom: '28px',
-                        width: '100%',
-                        boxSizing: 'border-box'
-                    }}
+                    className="events-horizontal-track"
                 >
                     {EVENT_ARRANGEMENTS.map((ev, idx) => (
                         <motion.div 
@@ -3118,16 +3133,18 @@ export default function HomePage() {
                                                 <i className="fa-solid fa-chevron-down" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease', fontSize: '11px' }}></i>
                                             </div>
                                         </button>
-                                        <AnimatePresence>
+                                        <AnimatePresence initial={false}>
                                             {isOpen && (
                                                 <motion.div 
                                                     initial={{ opacity: 0, height: 0 }}
                                                     animate={{ opacity: 1, height: 'auto' }}
                                                     exit={{ opacity: 0, height: 0 }}
-                                                    transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                                    style={{ padding: '16px 0 0 38px', overflow: 'hidden' }}
+                                                    transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                                                    style={{ overflow: 'hidden' }}
                                                 >
-                                                    <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>{faq.answer}</p>
+                                                    <div style={{ padding: '16px 0 0 38px' }}>
+                                                        <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.65, margin: 0 }}>{faq.answer}</p>
+                                                    </div>
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
@@ -3142,18 +3159,39 @@ export default function HomePage() {
             {/* ─────────────────────────────────────────────────────────────
                 INSTAGRAM WILDERNESS DIARIES SHOWCASE (@aanandham.go)
             ───────────────────────────────────────────────────────────── */}
-            <section style={{
-                padding: '90px clamp(16px, 4vw, 48px)',
-                background: '#0B150E',
-                position: 'relative',
-                overflow: 'hidden',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)'
-            }}>
-                <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+            <section 
+                className="insta-section-container"
+                style={{
+                    background: '#0B150E',
+                    position: 'relative',
+                    borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                    width: '100%'
+                }}
+            >
+                <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2, width: '100%' }}>
                     <style dangerouslySetInnerHTML={{__html: `
+                        .insta-section-container {
+                            padding: 90px clamp(20px, 4vw, 48px);
+                        }
+                        .insta-section-header {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: flex-end;
+                            justify-content: space-between;
+                            flex-wrap: wrap;
+                            gap: 24px;
+                            margin-bottom: 36px;
+                            width: 100%;
+                        }
+                        .insta-stories-grid {
+                            display: grid;
+                            grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 18vw, 230px), 1fr));
+                            gap: 18px;
+                            width: 100%;
+                        }
                         .insta-story-card {
                             position: relative;
-                            border-radius: 12px;
+                            border-radius: 14px;
                             overflow: hidden;
                             aspect-ratio: 4 / 5;
                             display: block;
@@ -3182,7 +3220,7 @@ export default function HomePage() {
                             display: flex;
                             flex-direction: column;
                             justify-content: flex-end;
-                            padding: 24px;
+                            padding: 22px;
                             color: #FFFFFF;
                         }
                         .insta-brand-button {
@@ -3201,17 +3239,45 @@ export default function HomePage() {
                             transform: translateY(-3px) scale(1.02);
                             box-shadow: 0 8px 25px rgba(220, 39, 67, 0.5);
                         }
+                        @media (max-width: 768px) {
+                            .insta-section-container {
+                                padding: 70px 0 50px !important;
+                            }
+                            .insta-section-header {
+                                padding: 0 20px !important;
+                                margin-bottom: 24px !important;
+                            }
+                            .insta-stories-grid {
+                                display: flex !important;
+                                overflow-x: auto !important;
+                                scroll-snap-type: x mandatory !important;
+                                scroll-behavior: smooth !important;
+                                -webkit-overflow-scrolling: touch !important;
+                                gap: 16px !important;
+                                padding: 12px calc((100vw - min(80vw, 290px)) / 2) 28px !important;
+                                scroll-padding: 0 calc((100vw - min(80vw, 290px)) / 2) !important;
+                                scrollbar-width: none !important;
+                                margin: 0 !important;
+                                width: 100% !important;
+                                max-width: 100% !important;
+                                box-sizing: border-box !important;
+                            }
+                            .insta-stories-grid::-webkit-scrollbar {
+                                display: none !important;
+                            }
+                            .insta-stories-grid .insta-story-card {
+                                flex: 0 0 min(80vw, 290px) !important;
+                                width: min(80vw, 290px) !important;
+                                max-width: 290px !important;
+                                min-width: 240px !important;
+                                scroll-snap-align: center !important;
+                                scroll-snap-stop: always !important;
+                                margin: 0 !important;
+                            }
+                        }
                     `}} />
                     {/* Clean Header Strip */}
-                    <div style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'flex-end',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
-                        gap: '24px',
-                        marginBottom: '36px'
-                    }}>
+                    <div className="insta-section-header">
                         <div>
                             <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#E5A93B', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
                                 LIVE DISPATCHES · @AANANDHAM.GO
@@ -3242,12 +3308,8 @@ export default function HomePage() {
                         </a>
                     </div>
 
-                    {/* Minimalist Editorial Story Grid (6 Cards, Zero Clutter) */}
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(clamp(180px, 18vw, 230px), 1fr))',
-                        gap: '18px'
-                    }}>
+                    {/* Responsive Story Grid (Desktop: Grid, Mobile: Smooth Centered Carousel) */}
+                    <div className="insta-stories-grid">
                         {[
                             {
                                 title: 'Kolukkumalai Sunrise 4x4',
