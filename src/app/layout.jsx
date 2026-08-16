@@ -25,7 +25,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandhamgo.in'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in'),
   title: {
     default: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar, Vagamon & Wayanad, Kerala',
     template: '%s | Aanandham.go Wilderness Camps'
@@ -55,7 +55,7 @@ export const metadata = {
   openGraph: {
     title: 'Aanandham.go — Luxury Camping & Peak Stays in Munnar, Kerala',
     description: 'Experience 4x4 sunrise treks, starlit campfire nights, and verified high-altitude tent glamping at Suryanelli ridge.',
-    url: 'https://aanandhamgo.in',
+    url: 'https://aanandham.in',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -89,19 +89,19 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon.ico?v=2' },
+      { url: '/favicon-16x16.png?v=2', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png?v=2', sizes: '32x32', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/apple-touch-icon.png?v=2', sizes: '180x180', type: 'image/png' },
     ],
     other: [
-      { rel: 'android-chrome-192x192', url: '/android-chrome-192x192.png' },
-      { rel: 'android-chrome-512x512', url: '/android-chrome-512x512.png' },
+      { rel: 'android-chrome-192x192', url: '/android-chrome-192x192.png?v=2' },
+      { rel: 'android-chrome-512x512', url: '/android-chrome-512x512.png?v=2' },
     ],
   },
-  manifest: '/site.webmanifest',
+  manifest: '/site.webmanifest?v=2',
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'JGDIH7jk1TNyNCKm6PRveZc5VIoWPCuj4ShHzpEwn1U',
   },
@@ -185,11 +185,11 @@ export default function RootLayout({ children }) {
         <meta name="supported-color-schemes" content="light" />
         <meta name="darkreader-lock" content="true" />
         <meta name="theme-color" content="#0E1A11" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+        <link rel="manifest" href="/site.webmanifest?v=2" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         {/* Font Awesome 6 Icons with Subresource Integrity (SRI) */}

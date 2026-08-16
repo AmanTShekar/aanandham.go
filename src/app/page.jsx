@@ -937,12 +937,53 @@ export default function HomePage() {
                         'name': pkg.title,
                         'description': pkg.description,
                         'image': pkg.image,
+                        'sku': pkg.id,
+                        'brand': {
+                            '@type': 'Brand',
+                            'name': 'Aanandham.go'
+                        },
                         'offers': {
                             '@type': 'Offer',
                             'price': pkg.price,
                             'priceCurrency': 'INR',
+                            'priceValidUntil': '2027-12-31',
                             'availability': 'https://schema.org/InStock',
-                            'url': 'https://aanandham.in/#packages'
+                            'url': `https://aanandham.in/camps/${pkg.id}`,
+                            'hasMerchantReturnPolicy': {
+                                '@type': 'MerchantReturnPolicy',
+                                'applicableCountry': 'IN',
+                                'returnPolicyCategory': 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                                'merchantReturnDays': 2,
+                                'returnMethod': 'https://schema.org/ReturnByMail',
+                                'returnFees': 'https://schema.org/FreeReturn'
+                            },
+                            'shippingDetails': {
+                                '@type': 'OfferShippingDetails',
+                                'shippingRate': {
+                                    '@type': 'MonetaryAmount',
+                                    'value': 0,
+                                    'currency': 'INR'
+                                },
+                                'shippingDestination': {
+                                    '@type': 'DefinedRegion',
+                                    'addressCountry': 'IN'
+                                },
+                                'deliveryTime': {
+                                    '@type': 'ShippingDeliveryTime',
+                                    'handlingTime': {
+                                        '@type': 'QuantitativeValue',
+                                        'minValue': 0,
+                                        'maxValue': 0,
+                                        'unitCode': 'DAY'
+                                    },
+                                    'transitTime': {
+                                        '@type': 'QuantitativeValue',
+                                        'minValue': 0,
+                                        'maxValue': 0,
+                                        'unitCode': 'DAY'
+                                    }
+                                }
+                            }
                         },
                         'aggregateRating': {
                             '@type': 'AggregateRating',

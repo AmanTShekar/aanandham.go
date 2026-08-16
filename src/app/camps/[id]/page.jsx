@@ -62,7 +62,12 @@ export default async function CampPropertyDetailPage({ params }) {
         "@type": ["Campground", "Product", "LodgingBusiness"],
         "name": camp.title,
         "description": camp.description,
-        "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `https://aanandhamgo.com${camp.image}`) : undefined,
+        "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `https://aanandham.in${camp.image}`) : undefined,
+        "sku": camp.id,
+        "brand": {
+            "@type": "Brand",
+            "name": "Aanandham.go"
+        },
         "address": {
             "@type": "PostalAddress",
             "addressLocality": camp.location || "Munnar",
@@ -72,8 +77,8 @@ export default async function CampPropertyDetailPage({ params }) {
         "priceRange": `₹${camp.price || 1800}`,
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": camp.rating || "4.95",
-            "reviewCount": camp.reviewsCount || 120,
+            "ratingValue": camp.rating ? camp.rating.toString() : "4.95",
+            "reviewCount": camp.reviewsCount ? camp.reviewsCount.toString() : "120",
             "bestRating": "5",
             "worstRating": "1"
         },
@@ -81,9 +86,45 @@ export default async function CampPropertyDetailPage({ params }) {
             "@type": "Offer",
             "price": camp.price || 1800,
             "priceCurrency": "INR",
+            "priceValidUntil": "2027-12-31",
             "availability": "https://schema.org/InStock",
-            "url": `https://aanandhamgo.com/camps/${camp.id}`,
-            "validFrom": new Date().toISOString().split('T')[0]
+            "url": `https://aanandham.in/camps/${camp.id}`,
+            "validFrom": new Date().toISOString().split('T')[0],
+            "hasMerchantReturnPolicy": {
+                "@type": "MerchantReturnPolicy",
+                "applicableCountry": "IN",
+                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                "merchantReturnDays": 2,
+                "returnMethod": "https://schema.org/ReturnByMail",
+                "returnFees": "https://schema.org/FreeReturn"
+            },
+            "shippingDetails": {
+                "@type": "OfferShippingDetails",
+                "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": 0,
+                    "currency": "INR"
+                },
+                "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "IN"
+                },
+                "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 0,
+                        "maxValue": 0,
+                        "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                        "@type": "QuantitativeValue",
+                        "minValue": 0,
+                        "maxValue": 0,
+                        "unitCode": "DAY"
+                    }
+                }
+            }
         },
         "amenityFeature": (camp.amenities || []).map(a => ({
             "@type": "LocationFeatureSpecification",
