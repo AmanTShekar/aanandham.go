@@ -10,7 +10,7 @@ export default function Footer() {
             background: 'linear-gradient(180deg, #101E13 0%, #08120A 100%)',
             color: '#FFFFFF',
             position: 'relative',
-            overflow: 'visible',
+            overflow: 'hidden',
             width: '100%'
         }}>
             {/* Ambient Basecamp Radial Glow */}

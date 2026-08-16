@@ -22,18 +22,12 @@ export default function SmoothScroll() {
             return;
         }
 
-        // Completely bypass Lenis on mobile/touch screens so mobile Chrome & Safari use 100% pure native GPU compositor scrolling
-        const isTouchScreen = typeof window !== 'undefined' && (
-            window.matchMedia('(pointer: coarse)').matches || 
-            'ontouchstart' in window || 
-            navigator.maxTouchPoints > 0
-        );
-
-        if (isTouchScreen) {
+        // On small mobile phones (< 680px), use 100% native compositor scrolling
+        if (typeof window !== 'undefined' && window.innerWidth < 680 && window.matchMedia('(pointer: coarse)').matches) {
             return;
         }
 
-        // Initialize Lenis for buttery smooth desktop mouse wheel momentum scrolling
+        // Initialize Lenis for signature buttery smooth momentum scrolling
         const lenis = new Lenis({
             duration: 1.15,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential dampening curve
@@ -41,7 +35,7 @@ export default function SmoothScroll() {
             gestureOrientation: 'vertical',
             smoothWheel: true,
             wheelMultiplier: 1.0,
-            touchMultiplier: 0,
+            touchMultiplier: 1.0,
             syncTouch: false,
             infinite: false,
         });

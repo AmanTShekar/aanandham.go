@@ -1138,7 +1138,7 @@ export default function HomePage() {
             </section>
 
             {/* ── LIVE BASECAMP MARQUEE TICKER ── */}
-            <div className="marquee-container" aria-hidden="true">
+            <div className="marquee-container" aria-hidden="true" style={{ background: '#0B150E', color: '#FFFFFF' }}>
                 <div className="marquee-track">
                     {[
                         { icon: '★', label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
