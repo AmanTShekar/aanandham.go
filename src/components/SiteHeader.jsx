@@ -153,18 +153,31 @@ export default function SiteHeader({
                     boxSizing: 'border-box'
                 }}>
                     {/* Brand Logo & Name (Far Left End) */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
-                        <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                        <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go Wilderness Basecamps"
-                                width="34"
-                                height="34"
+                                width="48"
+                                height="48"
                                 decoding="async"
                                 className="site-brand-logo"
-                                style={{ width: '34px', height: '34px', objectFit: 'contain' }}
+                                style={{
+                                    width: 'clamp(42px, 3.4vw, 48px)',
+                                    height: 'clamp(42px, 3.4vw, 48px)',
+                                    objectFit: 'contain',
+                                    borderRadius: '50%',
+                                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45))',
+                                    transition: 'transform 0.25s ease'
+                                }}
                             />
-                            <span className="marker-text site-brand-text">
+                            <span className="marker-text site-brand-text" style={{
+                                fontSize: 'clamp(18px, 1.4vw, 21px)',
+                                fontWeight: '900',
+                                letterSpacing: '-0.02em',
+                                color: '#FFFFFF',
+                                fontFamily: 'var(--font-heading)'
+                            }}>
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                         </Link>
