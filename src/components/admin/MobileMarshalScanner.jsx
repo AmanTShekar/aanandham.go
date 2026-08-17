@@ -1730,52 +1730,89 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
                                 </div>
 
-                                {/* Attendee Checkboxes */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                    {rosterChecklist.map((camper, idx) => (
-                                        <div
-                                            key={idx}
-                                            onClick={() => toggleCamperAttendance(idx)}
-                                            style={{
-                                                background: camper.present ? 'rgba(213, 237, 85, 0.06)' : 'rgba(239, 68, 68, 0.08)',
-                                                border: `1px solid ${camper.present ? 'rgba(213, 237, 85, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                                                borderRadius: '12px',
-                                                padding: '10px 14px',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <div style={{
-                                                    width: '26px',
-                                                    height: '26px',
-                                                    borderRadius: '50%',
-                                                    background: camper.present ? '#D5ED55' : '#EF4444',
-                                                    color: '#0B150E',
+                                {/* Attendee Checkboxes with Status Dropdowns */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {rosterChecklist.map((camper, idx) => {
+                                        const camperStatus = camper.status || (camper.present ? 'present' : 'absent');
+                                        return (
+                                            <div
+                                                key={idx}
+                                                style={{
+                                                    background: camperStatus === 'present' 
+                                                        ? 'rgba(213, 237, 85, 0.06)' 
+                                                        : camperStatus === 'late' 
+                                                            ? 'rgba(234, 179, 8, 0.08)' 
+                                                            : 'rgba(239, 68, 68, 0.08)',
+                                                    border: `1px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.3)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.35)' : 'rgba(239, 68, 68, 0.3)'}`,
+                                                    borderRadius: '14px',
+                                                    padding: '12px 14px',
                                                     display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    fontWeight: '900',
-                                                    fontSize: '12px'
-                                                }}>
-                                                    {camper.present ? '✓' : '✕'}
-                                                </div>
-                                                <div>
-                                                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#FFFFFF', display: 'block' }}>
-                                                        {camper.name}
-                                                    </span>
-                                                    <span style={{ fontSize: '10.5px', color: '#8E9B92' }}>
-                                                        {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
-                                                    </span>
+                                                    flexDirection: 'column',
+                                                    gap: '8px'
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                        <div style={{
+                                                            width: '28px',
+                                                            height: '28px',
+                                                            borderRadius: '50%',
+                                                            background: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
+                                                            color: '#0B150E',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            fontWeight: '900',
+                                                            fontSize: '13px'
+                                                        }}>
+                                                            {camperStatus === 'present' ? '✓' : camperStatus === 'late' ? '⏳' : '✕'}
+                                                        </div>
+                                                        <div>
+                                                            <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
+                                                                {camper.name}
+                                                            </span>
+                                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                                {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    {/* Status Dropdown Selector */}
+                                                    <select
+                                                        value={camperStatus}
+                                                        onChange={(e) => {
+                                                            const newStatus = e.target.value;
+                                                            setRosterChecklist(prev => {
+                                                                const updated = [...prev];
+                                                                updated[idx] = {
+                                                                    ...updated[idx],
+                                                                    status: newStatus,
+                                                                    present: newStatus === 'present'
+                                                                };
+                                                                return updated;
+                                                            });
+                                                        }}
+                                                        style={{
+                                                            padding: '6px 10px',
+                                                            borderRadius: '8px',
+                                                            background: camperStatus === 'present' ? 'rgba(213, 237, 85, 0.15)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                                                            color: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
+                                                            border: `1px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.4)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                                                            fontSize: '11.5px',
+                                                            fontWeight: '800',
+                                                            cursor: 'pointer',
+                                                            outline: 'none'
+                                                        }}
+                                                    >
+                                                        <option value="present" style={{ background: '#101E13', color: '#D5ED55' }}>🟢 Present (Checked In)</option>
+                                                        <option value="late" style={{ background: '#101E13', color: '#FACC15' }}>⏳ Arriving Late (Next Jeep)</option>
+                                                        <option value="absent" style={{ background: '#101E13', color: '#EF4444' }}>❌ Absent / No-Show</option>
+                                                        <option value="departed" style={{ background: '#101E13', color: '#8E9B92' }}>🚶 Departed Camp</option>
+                                                    </select>
                                                 </div>
                                             </div>
-                                            <span style={{ fontSize: '11.5px', fontWeight: '800', color: camper.present ? '#D5ED55' : '#EF4444' }}>
-                                                {camper.present ? 'Present (In)' : 'Absent / Short'}
-                                            </span>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                 </div>
 
                                 {/* Walk-In / Extra Guest Adder */}
@@ -1802,7 +1839,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── TENT & WRISTBAND ALLOCATION ── */}
+                            {/* ── TENT & WRISTBAND ALLOCATION WITH PRESET DROPDOWN ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1819,25 +1856,38 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                                     <div>
                                         <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
-                                            Assigned Tent / Pod:
+                                            Assigned Tent / Pod (Dropdown):
                                         </label>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g. Pod #3 (Ridge Deck)"
+                                        <select
                                             value={assignedTent}
                                             onChange={e => setAssignedTent(e.target.value)}
                                             style={{
                                                 width: '100%',
-                                                padding: '10px 12px',
+                                                padding: '11px 12px',
                                                 borderRadius: '10px',
                                                 background: '#08120A',
-                                                border: '1px solid rgba(255, 255, 255, 0.12)',
-                                                color: '#FFFFFF',
+                                                border: '1px solid rgba(213, 237, 85, 0.4)',
+                                                color: '#D5ED55',
                                                 fontSize: '12.5px',
+                                                fontWeight: '700',
                                                 outline: 'none',
-                                                boxSizing: 'border-box'
+                                                boxSizing: 'border-box',
+                                                cursor: 'pointer'
                                             }}
-                                        />
+                                        >
+                                            <option value="" style={{ background: '#08120A', color: '#8E9B92' }}>-- Select Tent / Dome Pod --</option>
+                                            <option value="Pod #1 (Sunset Ridge Deck)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #1 (Sunset Ridge Deck)</option>
+                                            <option value="Pod #2 (Panoramic Glass Dome)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #2 (Panoramic Glass Dome)</option>
+                                            <option value="Pod #3 (Sunrise Cliff Edge)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #3 (Sunrise Cliff Edge)</option>
+                                            <option value="Pod #4 (Valley View Dome)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #4 (Valley View Dome)</option>
+                                            <option value="Pod #5 (Cloud View Pod)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #5 (Cloud View Pod)</option>
+                                            <option value="Alpine Tent A-1 (2-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Tent A-1 (2-Person)</option>
+                                            <option value="Alpine Tent A-2 (2-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Tent A-2 (2-Person)</option>
+                                            <option value="Alpine Quad Q-1 (4-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Quad Q-1 (4-Person)</option>
+                                            <option value="Alpine Quad Q-2 (4-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Quad Q-2 (4-Person)</option>
+                                            <option value="Cottage #1 (Cliffside Wooden)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏡 Cottage #1 (Cliffside Wooden)</option>
+                                            <option value="Cottage #2 (Honeymoon Suite)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏡 Cottage #2 (Honeymoon Suite)</option>
+                                        </select>
                                     </div>
 
                                     <div>
