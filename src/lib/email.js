@@ -208,8 +208,11 @@ export async function sendBookingConfirmationEmail(booking) {
                         </span>
                     </div>
                     ${Number(booking.balanceDue) > 0 ? `
-                    <div style="margin-top: 12px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #C8D8CB; line-height: 1.5;">
-                        💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> can be settled at the Suryanelli basecamp hub via UPI (GPay / PhonePe) or cash upon arrival.
+                    <div style="margin-top: 14px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #C8D8CB; line-height: 1.5;">
+                        <div style="margin-bottom: 4px;">💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> is payable upon arrival at <strong style="color: #FFFFFF;">${safeHub}</strong>.</div>
+                        <div style="color: #E5A93B; font-size: 11.5px; margin-top: 6px; line-height: 1.45;">
+                            ⚠️ <strong>Mountain Network &amp; Cash Note:</strong> Mobile internet and UPI (GPay / PhonePe) can be erratic due to low mountain coverage, and ATMs past Munnar town are often unavailable. <em>We strongly advise carrying sufficient liquid cash or withdrawing from Munnar town before ascending.</em>
+                        </div>
                     </div>
                     ` : ''}
                 </div>

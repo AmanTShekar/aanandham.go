@@ -189,7 +189,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const balBorder = balDue > 0 ? AMBER : GREEN;
         const balTitle = balDue > 0 ? 'BALANCE PAYABLE AT CHECK-IN' : 'PAYMENT STATUS';
         const balText = balDue > 0 
-            ? `₹${balDue.toLocaleString('en-IN')} (UPI / Cash at Basecamp)`
+            ? `₹${balDue.toLocaleString('en-IN')} (Cash / UPI · Carry cash from Munnar)`
             : '✓ 100% Fully Settled Online';
 
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).fill(balBg);
@@ -197,7 +197,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
 
         doc.font('Helvetica-Bold').fontSize(7.5).fill(TEXT_MUTED)
            .text(balTitle, LEFT_X + 12, mY + 8, { characterSpacing: 0.8 });
-        doc.font('Helvetica-Bold').fontSize(11).fill(balBorder)
+        doc.font('Helvetica-Bold').fontSize(10).fill(balBorder)
            .text(balText, LEFT_X + 12, mY + 22);
 
         // ── RIGHT COLUMN: SMART ACCESS CONTROL & QR ─────────────────
