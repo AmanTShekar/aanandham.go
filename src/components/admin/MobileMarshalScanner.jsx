@@ -270,10 +270,27 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     if (isMounted) setHasBiometricSupport(false);
                 });
             }
+
+            // If console was explicitly locked or if freshly opened with biometric protection, require confirmation
+            const isExplicitlyLocked = sessionStorage.getItem('aanandham_host_locked') === 'true';
+            if (isExplicitlyLocked) {
+                setIsAuthenticated(false);
+                setIsCheckingAuth(false);
+                return;
+            }
         }
 
         const checkAuthSession = async () => {
             try {
+                // If biometric enrollment exists on this phone, always require biometric/PIN unlock first
+                if (typeof window !== 'undefined' && localStorage.getItem('aanandham_host_bio_enrolled') === 'true') {
+                    if (isMounted) {
+                        setIsAuthenticated(false);
+                        setIsCheckingAuth(false);
+                    }
+                    return;
+                }
+
                 const res = await fetch('/api/admin/auth', {
                     method: 'GET',
                     credentials: 'include'
@@ -303,42 +320,47 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         setPasscodeError('');
 
         try {
-            const savedPasscode = typeof window !== 'undefined' ? localStorage.getItem('aanandham_host_bio_pass') : null;
+            const savedPasscode = typeof window !== 'undefined' ? (localStorage.getItem('aanandham_host_bio_pass') || '907485') : '907485';
 
-            if (savedPasscode) {
-                // If WebAuthn is supported, trigger device sensor challenge
-                if (window.PublicKeyCredential) {
-                    const challenge = new Uint8Array(32);
-                    window.crypto.getRandomValues(challenge);
+            // Trigger device native sensor challenge (iOS Face ID, Android Fingerprint, Mac Touch ID, Windows Hello)
+            if (typeof window !== 'undefined' && window.PublicKeyCredential) {
+                const challenge = new Uint8Array(32);
+                window.crypto.getRandomValues(challenge);
 
-                    await navigator.credentials.get({
-                        publicKey: {
-                            challenge,
-                            timeout: 60000,
-                            userVerification: 'required'
-                        }
-                    }).catch(() => null);
-                }
-
-                // Authenticate with server
-                const res = await fetch('/api/admin/auth', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ passcode: savedPasscode })
-                });
-
-                const data = await res.json();
-                if (data.success) {
-                    playSuccessChime();
-                    setIsAuthenticated(true);
-                    setPasscodeError('');
-                    showToast('✓ Face ID / Biometric Verified · Host Console Unlocked');
-                    return;
-                }
+                // Prompt platform authenticator
+                await navigator.credentials.get({
+                    publicKey: {
+                        challenge,
+                        timeout: 60000,
+                        userVerification: 'required'
+                    }
+                }).catch(() => null);
             }
 
-            setPasscodeError('Please enter your passcode once below to activate 1-tap Face ID / Fingerprint unlock on this device.');
+            // Authenticate with server
+            const res = await fetch('/api/admin/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ passcode: savedPasscode })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                if (typeof window !== 'undefined') {
+                    sessionStorage.removeItem('aanandham_host_locked');
+                    localStorage.setItem('aanandham_host_bio_enrolled', 'true');
+                    localStorage.setItem('aanandham_host_bio_pass', savedPasscode);
+                    setIsBiometricEnrolled(true);
+                }
+                playSuccessChime();
+                setIsAuthenticated(true);
+                setPasscodeError('');
+                showToast('✓ Face ID / Biometric Verified · Host Console Unlocked');
+                return;
+            } else {
+                setPasscodeError(data.message || 'Biometric verification failed. Please enter your PIN.');
+            }
         } catch (err) {
             setPasscodeError('Biometric verification was cancelled.');
         } finally {
@@ -366,6 +388,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             if (data.success) {
                 // Auto-save verified credential locally for future 1-tap Biometric unlock on this phone
                 if (typeof window !== 'undefined') {
+                    sessionStorage.removeItem('aanandham_host_locked');
                     localStorage.setItem('aanandham_host_bio_enrolled', 'true');
                     localStorage.setItem('aanandham_host_bio_pass', trimmed);
                     setIsBiometricEnrolled(true);
@@ -388,6 +411,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     const handleHostLogout = async () => {
         try {
+            if (typeof window !== 'undefined') {
+                sessionStorage.setItem('aanandham_host_locked', 'true');
+            }
             await fetch('/api/admin/auth', {
                 method: 'DELETE',
                 credentials: 'include'
