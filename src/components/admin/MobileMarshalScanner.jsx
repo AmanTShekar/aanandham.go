@@ -20,7 +20,8 @@ import {
     Utensils, 
     Tent, 
     MapPin, 
-    ArrowLeft, 
+    ArrowLeft,
+    ArrowRight,
     Volume2, 
     VolumeX,
     X,
@@ -783,6 +784,35 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         if (extraGuestsCount <= 0) return;
         setRosterChecklist(prev => prev.slice(0, -1));
         setExtraGuestsCount(prev => Math.max(0, prev - 1));
+    };
+
+    // ── AUTO-GENERATE WRISTBAND SEQUENCE ──
+    const handleAutoGenerateWristbands = () => {
+        const startNum = 101;
+        const count = Math.max(1, presentCount || totalCount || 1);
+        const endNum = startNum + count - 1;
+        const rangeStr = count > 1 ? `#${startNum} - #${endNum}` : `#${startNum}`;
+        setWristbandRange(rangeStr);
+        showToast(`✓ Auto-generated wristbands: ${rangeStr}`);
+    };
+
+    // ── COPY KITCHEN HEADCOUNT DISPATCH FOR CHEF (WHATSAPP) ──
+    const handleCopyKitchenHeadcount = () => {
+        const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+        const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        const msg = `🏕️ *AANANDHAM MOUNTAIN SANCTUARY — KITCHEN HEADCOUNT*\n` +
+            `📅 *Date:* ${dateStr} • ${timeStr}\n\n` +
+            `🥗 *Veg BBQ Meals:* ${stats.vegMealsCount} Portions\n` +
+            `🍗 *Chicken BBQ Meals:* ${stats.nonVegMealsCount} Portions\n` +
+            `👥 *Campers On Ridge:* ${stats.totalCheckedInCampers} Present\n` +
+            `⏳ *Campers En Route:* ${stats.totalPendingCampers} Expected\n` +
+            `⚠️ *Short / No-Show:* ${stats.totalShortCampers}\n\n` +
+            `_Dispatched from Basecamp Marshal Console._`;
+        
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(msg);
+            showToast('✓ Copied kitchen headcount for WhatsApp dispatch!');
+        }
     };
 
     // ── ATTENDANCE CALCULATIONS ──
@@ -2027,38 +2057,68 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <p style={{ color: '#8E9B92', margin: 0, fontSize: '13px' }}>No reservations match your filter.</p>
                         </div>
                     ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {filteredRoster.map(guest => {
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            {filteredRoster.map((guest, gIdx) => {
                                 const isCheckedIn = guest.status === 'Checked In';
                                 const isPartial = guest.status === 'Partial Check-In' || guest.shortCount > 0;
+                                const guestInitials = guest.name 
+                                    ? guest.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+                                    : 'EX';
+                                
+                                const avatarGradients = [
+                                    'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                    'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                                    'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                                    'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                                    'linear-gradient(135deg, #EC4899 0%, #DB2777 100%)'
+                                ];
+
                                 return (
                                     <div
                                         key={guest.id}
-                                        onClick={() => selectGuestFromRoster(guest)}
                                         style={{
                                             background: '#101E13',
-                                            border: `1px solid ${isCheckedIn ? 'rgba(34, 197, 94, 0.25)' : isPartial ? 'rgba(234, 179, 8, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
-                                            borderRadius: '16px',
-                                            padding: '14px 16px',
+                                            border: `1px solid ${isCheckedIn ? 'rgba(34, 197, 94, 0.3)' : isPartial ? 'rgba(234, 179, 8, 0.35)' : 'rgba(255, 255, 255, 0.08)'}`,
+                                            borderRadius: '18px',
+                                            padding: '16px',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            gap: '8px',
-                                            cursor: 'pointer'
+                                            gap: '10px'
                                         }}
                                     >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                                            <div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    <span style={{ fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>
-                                                        {guest.name}
-                                                    </span>
-                                                    <span style={{ fontSize: '11px', color: '#8E9B92' }}>
-                                                        #{guest.id}
+                                        {/* Top Row: Avatar, Guest Info & Status Badge */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{
+                                                    width: '42px',
+                                                    height: '42px',
+                                                    borderRadius: '14px',
+                                                    background: avatarGradients[gIdx % avatarGradients.length],
+                                                    color: '#FFFFFF',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontWeight: '900',
+                                                    fontSize: '14px',
+                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+                                                    flexShrink: 0
+                                                }}>
+                                                    {guestInitials}
+                                                </div>
+
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: '15.5px', fontWeight: '900', color: '#FFFFFF' }}>
+                                                            {guest.name}
+                                                        </span>
+                                                        <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                            #{guest.id}
+                                                        </span>
+                                                    </div>
+                                                    <span style={{ fontSize: '12px', color: '#A2B6A6', display: 'block', marginTop: '2px' }}>
+                                                        🏕️ {guest.campsite} • {guest.convoyTime}
                                                     </span>
                                                 </div>
-                                                <span style={{ fontSize: '12px', color: '#A2B6A6', display: 'block', marginTop: '2px' }}>
-                                                    🏕️ {guest.campsite} • {guest.convoyTime}
-                                                </span>
                                             </div>
 
                                             <span style={{
@@ -2066,22 +2126,91 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                 borderRadius: '999px',
                                                 background: isCheckedIn ? 'rgba(34,197,94,0.2)' : isPartial ? 'rgba(234,179,8,0.2)' : 'rgba(255,255,255,0.08)',
                                                 color: isCheckedIn ? '#4ADE80' : isPartial ? '#FACC15' : '#C8D8CB',
-                                                fontSize: '11px',
+                                                fontSize: '11.5px',
                                                 fontWeight: '800'
                                             }}>
                                                 {isCheckedIn ? '✓ Checked In' : isPartial ? `⚠️ ${guest.checkedInCount}/${guest.totalGuests} Present` : '⏳ Expected'}
                                             </span>
                                         </div>
 
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '8px' }}>
-                                            <div style={{ display: 'flex', gap: '12px', fontSize: '12px', color: '#8E9B92' }}>
-                                                <span>👥 <strong>{guest.totalGuests}</strong> Campers</span>
-                                                <span>🥗 <strong>{guest.vegCount}</strong>V / <strong>{guest.nonVegCount}</strong>NV</span>
-                                                <span>💰 {guest.isBalancePaid ? '✓ Paid' : `₹${guest.balanceDue} Due`}</span>
-                                            </div>
-                                            <span style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                                                Open Pass Ticket →
+                                        {/* Middle Info Bar: Headcount, Catering & Balance */}
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '12px', color: '#8E9B92', background: 'rgba(0,0,0,0.25)', padding: '8px 12px', borderRadius: '10px' }}>
+                                            <span>👥 <strong>{guest.totalGuests}</strong> Campers</span>
+                                            <span>🥗 <strong style={{ color: '#4ADE80' }}>{guest.vegCount}V</strong> / 🍗 <strong style={{ color: '#FB923C' }}>{guest.nonVegCount}NV</strong></span>
+                                            <span style={{ color: guest.isBalancePaid ? '#4ADE80' : '#FCA5A5', fontWeight: '700' }}>
+                                                {guest.isBalancePaid ? '✓ Balance Paid' : `💰 ₹${guest.balanceDue} Due`}
                                             </span>
+                                        </div>
+
+                                        {/* Bottom Action Bar: WhatsApp, Call, Fast Check-in */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '10px' }}>
+                                            <div style={{ display: 'flex', gap: '6px' }}>
+                                                {guest.phone && (
+                                                    <>
+                                                        <a
+                                                            href={`https://wa.me/${guest.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(guest.name)}%2C%20welcome%20to%20Aanandham!%20Your%20campsite%20is%20ready.`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '4px',
+                                                                padding: '6px 10px',
+                                                                borderRadius: '8px',
+                                                                background: 'rgba(37, 211, 102, 0.12)',
+                                                                border: '1px solid rgba(37, 211, 102, 0.25)',
+                                                                color: '#25D366',
+                                                                fontSize: '11px',
+                                                                fontWeight: '800',
+                                                                textDecoration: 'none'
+                                                            }}
+                                                        >
+                                                            <MessageCircle size={12} />
+                                                            <span>WhatsApp</span>
+                                                        </a>
+                                                        <a
+                                                            href={`tel:${guest.phone}`}
+                                                            style={{
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '4px',
+                                                                padding: '6px 10px',
+                                                                borderRadius: '8px',
+                                                                background: 'rgba(255, 255, 255, 0.06)',
+                                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                                color: '#FFFFFF',
+                                                                fontSize: '11px',
+                                                                fontWeight: '800',
+                                                                textDecoration: 'none'
+                                                            }}
+                                                        >
+                                                            <Phone size={12} />
+                                                            <span>Call</span>
+                                                        </a>
+                                                    </>
+                                                )}
+                                            </div>
+
+                                            <button
+                                                type="button"
+                                                onClick={() => selectGuestFromRoster(guest)}
+                                                style={{
+                                                    padding: '7px 14px',
+                                                    borderRadius: '10px',
+                                                    background: '#D5ED55',
+                                                    color: '#0B150E',
+                                                    fontSize: '12px',
+                                                    fontWeight: '900',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '4px'
+                                                }}
+                                            >
+                                                <span>⚡ Verify Pass & Check-In</span>
+                                                <ArrowRight size={13} />
+                                            </button>
                                         </div>
                                     </div>
                                 );
@@ -2103,6 +2232,52 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
+                    {/* WhatsApp Kitchen Dispatch Banner */}
+                    <div style={{
+                        background: 'linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(213, 237, 85, 0.1) 100%)',
+                        border: '1px solid rgba(37, 211, 102, 0.3)',
+                        borderRadius: '18px',
+                        padding: '14px 18px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '16px',
+                        flexWrap: 'wrap',
+                        gap: '10px'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <MessageCircle size={18} color="#25D366" />
+                            <div>
+                                <span style={{ fontSize: '13px', fontWeight: '900', color: '#FFFFFF', display: 'block' }}>
+                                    Kitchen Staff Headcount Sync
+                                </span>
+                                <span style={{ fontSize: '11px', color: '#A2B6A6' }}>
+                                    {stats.vegMealsCount} Veg BBQ • {stats.nonVegMealsCount} Chicken BBQ • {stats.totalCheckedInCampers} In Camp
+                                </span>
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={handleCopyKitchenHeadcount}
+                            style={{
+                                padding: '8px 14px',
+                                borderRadius: '10px',
+                                background: '#25D366',
+                                color: '#0B150E',
+                                fontSize: '12px',
+                                fontWeight: '900',
+                                border: 'none',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '6px'
+                            }}
+                        >
+                            <Copy size={13} />
+                            <span>📋 Copy for WhatsApp</span>
+                        </button>
+                    </div>
+
                     {/* Headcount Gauge */}
                     <div style={{
                         background: '#101E13',
@@ -2440,36 +2615,37 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             ) : null}
 
-                            {/* ── ATTENDEE PER-PERSON TICKETS WITH CUSTOM DROPDOWNS ── */}
+                            {/* ── ATTENDEE PER-PERSON TICKETS WITH AVATARS, MEAL BADGES & 1-TAP PILLS ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                                borderRadius: '20px',
+                                borderRadius: '22px',
                                 padding: '20px'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <Ticket size={18} color="#D5ED55" />
-                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
+                                        <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
                                             Camper Headcount & Attendance
                                         </span>
                                     </div>
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <button
+                                            type="button"
                                             onClick={checkInAllRemaining}
                                             style={{
-                                                padding: '4px 8px',
-                                                borderRadius: '6px',
+                                                padding: '5px 10px',
+                                                borderRadius: '8px',
                                                 background: 'rgba(213, 237, 85, 0.15)',
+                                                border: '1px solid rgba(213, 237, 85, 0.3)',
                                                 color: '#D5ED55',
                                                 fontSize: '11px',
                                                 fontWeight: '800',
-                                                border: 'none',
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            All Present
+                                            ✓ All Present
                                         </button>
                                         <span style={{
                                             padding: '4px 10px',
@@ -2484,73 +2660,203 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
                                 </div>
 
-                                {/* Custom Dropdown for each Camper (Non-Squished Mobile Wrap) */}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                {/* Per-Camper Visual Cards with 1-Tap Attendance Pills */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {rosterChecklist.map((camper, idx) => {
                                         const camperStatus = camper.status || (camper.present ? 'present' : 'absent');
+                                        const isLead = idx === 0;
+                                        const camperInitials = camper.name
+                                            ? camper.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+                                            : `C${idx + 1}`;
+                                        
+                                        const avatarGradients = [
+                                            'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                                            'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+                                            'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+                                            'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+                                            'linear-gradient(135deg, #EC4899 0%, #DB2777 100%)',
+                                            'linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)'
+                                        ];
+
+                                        const camperMeal = camper.mealType || (idx < (scannedBooking?.vegCount || 0) ? 'Veg' : 'Non-Veg');
+
                                         return (
                                             <div
                                                 key={idx}
                                                 style={{
                                                     background: camperStatus === 'present' 
-                                                        ? 'rgba(213, 237, 85, 0.06)' 
+                                                        ? 'rgba(213, 237, 85, 0.05)' 
                                                         : camperStatus === 'late' 
-                                                            ? 'rgba(234, 179, 8, 0.08)' 
-                                                            : 'rgba(239, 68, 68, 0.08)',
-                                                    border: `1px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.3)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.35)' : 'rgba(239, 68, 68, 0.3)'}`,
-                                                    borderRadius: '16px',
-                                                    padding: '12px 14px',
+                                                            ? 'rgba(234, 179, 8, 0.07)' 
+                                                            : 'rgba(239, 68, 68, 0.07)',
+                                                    border: `1.5px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.35)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.4)' : 'rgba(239, 68, 68, 0.35)'}`,
+                                                    borderRadius: '18px',
+                                                    padding: '14px',
                                                     display: 'flex',
-                                                    flexWrap: 'wrap',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    gap: '10px'
+                                                    flexDirection: 'column',
+                                                    gap: '10px',
+                                                    transition: 'all 0.2s ease'
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '160px', flex: '1 1 auto' }}>
-                                                    <div style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        borderRadius: '50%',
-                                                        background: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
-                                                        color: '#0B150E',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        fontWeight: '900',
-                                                        fontSize: '14px',
-                                                        flexShrink: 0
-                                                    }}>
-                                                        {camperStatus === 'present' ? '✓' : camperStatus === 'late' ? '⏳' : '✕'}
-                                                    </div>
-                                                    <div style={{ minWidth: 0 }}>
-                                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF', display: 'block', wordBreak: 'break-word' }}>
-                                                            {camper.name}
-                                                        </span>
-                                                        <span style={{ fontSize: '11px', color: '#8E9B92' }}>
-                                                            {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
-                                                        </span>
+                                                {/* Top Row: Avatar, Name, Meal Token & Badges */}
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '150px', flex: '1 1 auto' }}>
+                                                        {/* Avatar Circle with Initials */}
+                                                        <div style={{
+                                                            width: '38px',
+                                                            height: '38px',
+                                                            borderRadius: '12px',
+                                                            background: avatarGradients[idx % avatarGradients.length],
+                                                            color: '#FFFFFF',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            fontWeight: '900',
+                                                            fontSize: '13px',
+                                                            boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                                                            flexShrink: 0,
+                                                            position: 'relative'
+                                                        }}>
+                                                            {camperInitials}
+                                                            {isLead && (
+                                                                <span style={{ position: 'absolute', top: '-6px', right: '-6px', fontSize: '12px' }}>
+                                                                    👑
+                                                                </span>
+                                                            )}
+                                                        </div>
+
+                                                        <div style={{ minWidth: 0 }}>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                                <span style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF' }}>
+                                                                    {camper.name}
+                                                                </span>
+                                                                {isLead && (
+                                                                    <span style={{ fontSize: '9px', fontWeight: '900', background: 'rgba(229, 169, 59, 0.2)', border: '1px solid rgba(229, 169, 59, 0.4)', color: '#E5A93B', padding: '1px 5px', borderRadius: '4px', textTransform: 'uppercase' }}>
+                                                                        Lead Explorer
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px', flexWrap: 'wrap' }}>
+                                                                <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                                    Ticket #{idx + 1}
+                                                                </span>
+                                                                <span style={{ fontSize: '10.5px', color: '#60A5FA', fontWeight: '700', background: 'rgba(96, 165, 250, 0.1)', padding: '1px 6px', borderRadius: '4px' }}>
+                                                                    👤 Adult
+                                                                </span>
+                                                                <span style={{
+                                                                    fontSize: '10.5px',
+                                                                    fontWeight: '800',
+                                                                    padding: '1px 6px',
+                                                                    borderRadius: '4px',
+                                                                    background: camperMeal === 'Veg' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(249, 115, 22, 0.15)',
+                                                                    color: camperMeal === 'Veg' ? '#4ADE80' : '#FB923C'
+                                                                }}>
+                                                                    {camperMeal === 'Veg' ? '🥗 Veg BBQ' : '🍗 Chicken BBQ'}
+                                                                </span>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
 
-                                                {/* Custom Dropdown Selector - Responsive Width */}
-                                                <div style={{ flex: '1 1 180px', minWidth: '150px', maxWidth: '100%' }}>
-                                                    <CustomDropdown
-                                                        value={camperStatus}
-                                                        options={camperStatusOptions}
-                                                        width="100%"
-                                                        onChange={(newVal) => {
+                                                {/* Bottom Row: 3-Pill Instant Attendance Mode Toggle */}
+                                                <div style={{
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                                    gap: '6px',
+                                                    background: '#07120A',
+                                                    padding: '4px',
+                                                    borderRadius: '12px',
+                                                    border: '1px solid rgba(255,255,255,0.06)'
+                                                }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
                                                             setRosterChecklist(prev => {
                                                                 const updated = [...prev];
-                                                                updated[idx] = {
-                                                                    ...updated[idx],
-                                                                    status: newVal,
-                                                                    present: newVal === 'present'
-                                                                };
+                                                                updated[idx] = { ...updated[idx], status: 'present', present: true };
                                                                 return updated;
                                                             });
                                                         }}
-                                                    />
+                                                        style={{
+                                                            padding: '8px 4px',
+                                                            minHeight: '36px',
+                                                            borderRadius: '9px',
+                                                            border: 'none',
+                                                            background: camperStatus === 'present' ? '#D5ED55' : 'transparent',
+                                                            color: camperStatus === 'present' ? '#0B150E' : '#8E9B92',
+                                                            fontSize: '11.5px',
+                                                            fontWeight: '900',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '4px',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <span>🟢</span>
+                                                        <span>Present</span>
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setRosterChecklist(prev => {
+                                                                const updated = [...prev];
+                                                                updated[idx] = { ...updated[idx], status: 'late', present: false };
+                                                                return updated;
+                                                            });
+                                                        }}
+                                                        style={{
+                                                            padding: '8px 4px',
+                                                            minHeight: '36px',
+                                                            borderRadius: '9px',
+                                                            border: 'none',
+                                                            background: camperStatus === 'late' ? '#FACC15' : 'transparent',
+                                                            color: camperStatus === 'late' ? '#0B150E' : '#8E9B92',
+                                                            fontSize: '11.5px',
+                                                            fontWeight: '900',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '4px',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <span>⏳</span>
+                                                        <span>Late (Jeep)</span>
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setRosterChecklist(prev => {
+                                                                const updated = [...prev];
+                                                                updated[idx] = { ...updated[idx], status: 'absent', present: false };
+                                                                return updated;
+                                                            });
+                                                        }}
+                                                        style={{
+                                                            padding: '8px 4px',
+                                                            minHeight: '36px',
+                                                            borderRadius: '9px',
+                                                            border: 'none',
+                                                            background: camperStatus === 'absent' ? '#EF4444' : 'transparent',
+                                                            color: camperStatus === 'absent' ? '#FFFFFF' : '#8E9B92',
+                                                            fontSize: '11.5px',
+                                                            fontWeight: '900',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '4px',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <span>✕</span>
+                                                        <span>Absent</span>
+                                                    </button>
                                                 </div>
                                             </div>
                                         );
@@ -2583,24 +2889,73 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── TENT & WRISTBAND ALLOCATION (RESPONSIVE GRID) ── */}
+                            {/* ── TENT & WRISTBAND ALLOCATION (RESPONSIVE GRID + 1-TAP QUICK PRESETS) ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
                                 borderRadius: '20px',
                                 padding: '20px'
                             }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-                                    <Tent size={18} color="#D5ED55" />
-                                    <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                        Tent & Wristband Assignment
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Tent size={18} color="#D5ED55" />
+                                        <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
+                                            Tent & Wristband Assignment
+                                        </span>
+                                    </div>
+                                    <span style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800' }}>
+                                        ⛺ {assignedTent.split('(')[0].trim()}
                                     </span>
+                                </div>
+
+                                {/* Quick Tent Preset Chips */}
+                                <div style={{ marginBottom: '12px' }}>
+                                    <label style={{ fontSize: '10.5px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '6px', textTransform: 'uppercase' }}>
+                                        ⚡ 1-Tap Quick Pod / Tent Presets:
+                                    </label>
+                                    <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                                        {[
+                                            'Pod #1 (Sunset Ridge Deck)',
+                                            'Pod #2 (Panoramic Glass Dome)',
+                                            'Pod #3 (Sunrise Cliff Edge)',
+                                            'Pod #4 (Valley View Dome)',
+                                            'Pod #5 (Cloud View Pod)',
+                                            'Alpine Tent A-1 (2-Person)',
+                                            'Alpine Tent A-2 (2-Person)',
+                                            'Alpine Quad Q-1 (4-Person)',
+                                            'Cottage #1 (Cliffside Wooden)'
+                                        ].map(t => {
+                                            const shortLabel = t.split('(')[0].trim();
+                                            const isSelected = assignedTent === t;
+                                            return (
+                                                <button
+                                                    key={t}
+                                                    type="button"
+                                                    onClick={() => { setAssignedTent(t); showToast(`✓ Assigned ${shortLabel}`); }}
+                                                    style={{
+                                                        padding: '6px 10px',
+                                                        borderRadius: '999px',
+                                                        background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.06)',
+                                                        color: isSelected ? '#0B150E' : '#C8D8CB',
+                                                        border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255,255,255,0.1)'}`,
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        whiteSpace: 'nowrap',
+                                                        cursor: 'pointer',
+                                                        flexShrink: 0
+                                                    }}
+                                                >
+                                                    {isSelected ? '✓ ' : ''}{shortLabel}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
 
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
                                     <div>
                                         <CustomDropdown
-                                            label="Assigned Tent / Pod / Villa:"
+                                            label="Or Search All Accommodations:"
                                             value={assignedTent}
                                             options={tentOptions}
                                             onChange={(val) => setAssignedTent(val)}
@@ -2608,12 +2963,30 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
-                                            Wristband Tag # Range:
-                                        </label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                                            <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92' }}>
+                                                Wristband Tag # Range:
+                                            </label>
+                                            <button
+                                                type="button"
+                                                onClick={handleAutoGenerateWristbands}
+                                                style={{
+                                                    background: 'rgba(213, 237, 85, 0.15)',
+                                                    border: '1px solid rgba(213, 237, 85, 0.3)',
+                                                    color: '#D5ED55',
+                                                    fontSize: '10.5px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '6px',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                ⚡ Auto-Fill
+                                            </button>
+                                        </div>
                                         <input
                                             type="text"
-                                            placeholder="e.g. #104 - #107"
+                                            placeholder="e.g. #101 - #104"
                                             value={wristbandRange}
                                             onChange={e => setWristbandRange(e.target.value)}
                                             style={{
