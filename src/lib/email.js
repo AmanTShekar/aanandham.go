@@ -227,42 +227,44 @@ export async function sendBookingConfirmationEmail(booking) {
             <div class="content">
                 
                 <!-- 1. MAIN STAY & PAYMENT DETAILS (HERO) -->
-                <div style="background: rgba(255,255,255,0.04); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Stay Details</div>
-                    <div class="table-row">
-                        <span class="label">Lead Guest:</span>
-                        <span class="val">${safeName}</span>
-                    </div>
-                    <div class="table-row">
-                        <span class="label">Dates:</span>
-                        <span class="val">${safeDates}</span>
-                    </div>
-                    <div class="table-row">
-                        <span class="label">Lodging:</span>
-                        <span class="val">${safeRoom}</span>
-                    </div>
-                    <div class="table-row">
-                        <span class="label">Guests:</span>
-                        <span class="val">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</span>
-                    </div>
-                    <div class="table-row">
-                        <span class="label">Meal Plan:</span>
-                        <span class="val">${safeMeal}</span>
-                    </div>
-                    <div class="table-row">
-                        <span class="label">Total Amount:</span>
-                        <span class="val">₹${Number(booking.total || 0).toLocaleString('en-IN')}</span>
-                    </div>
-                    <div class="table-row" style="border: none; padding-top: 12px;">
-                        <span class="label" style="font-weight: 700; color: #FFFFFF; font-size: 14px;">Balance Payable at Check-In:</span>
-                        <span class="val" style="color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; font-size: 17px; font-weight: 900;">
-                            ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
-                        </span>
-                    </div>
+                <div style="background-color: rgba(255,255,255,0.04); border-radius: 18px; padding: 24px; margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.08);">
+                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Stay Details</div>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Lead Guest:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeName}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Dates:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeDates}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Lodging:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeRoom}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Guests:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Meal Plan:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeMeal}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Total Amount:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">₹${Number(booking.total || 0).toLocaleString('en-IN')}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; vertical-align: middle;">Balance Payable at Check-In:</td>
+                            <td align="right" style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; text-align: right; vertical-align: middle;">
+                                ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
+                            </td>
+                        </tr>
+                    </table>
                     ${Number(booking.balanceDue) > 0 ? `
-                    <div style="margin-top: 14px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 12px; padding: 12px 14px; font-size: 12px; color: #C8D8CB; line-height: 1.5;">
-                        <div style="margin-bottom: 4px;">💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> is payable upon arrival at <strong style="color: #FFFFFF;">${safeHub}</strong>.</div>
-                        <div style="color: #E5A93B; font-size: 11.5px; margin-top: 6px; line-height: 1.45;">
+                    <div style="margin-top: 16px; background-color: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 12px; padding: 14px 16px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; color: #C8D8CB; line-height: 1.55;">
+                        <div style="margin-bottom: 5px;">💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> is payable upon arrival at <strong style="color: #FFFFFF;">${safeHub}</strong>.</div>
+                        <div style="color: #E5A93B; font-size: 12px; margin-top: 6px; line-height: 1.45;">
                             ⚠️ <strong>Mountain Network &amp; Cash Note:</strong> Mobile internet and UPI (GPay / PhonePe) can be erratic due to low mountain coverage, and ATMs past Munnar town are often unavailable. <em>We strongly advise carrying sufficient liquid cash or withdrawing from Munnar town before ascending.</em>
                         </div>
                     </div>
@@ -272,33 +274,33 @@ export async function sendBookingConfirmationEmail(booking) {
                 ${pendingNoticeHtml}
 
                 <!-- 2. DIGITAL PASS PORTAL CTA -->
-                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
-                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
-                    <div style="font-size: 30px; margin-bottom: 6px;">🎫</div>
-                    <div class="brand-title" style="font-size: 17px; font-weight: 800; color: #FFFFFF; margin-bottom: 4px;">
+                <div style="background-color: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
+                    <div style="font-size: 32px; margin-bottom: 6px;">🎫</div>
+                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 18px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">
                         ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
                     </div>
-                    <div style="font-size: 12px; color: #A2B6A6; margin-bottom: 16px;">
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12.5px; color: #A2B6A6; margin-bottom: 18px;">
                         ${isConfirmed
                             ? 'Tap below to open your live digital pass with scannable QR code for check-in'
                             : 'Tap below to track your verification status and unlock your pass'
                         }
                     </div>
-                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
                         🏳️&nbsp; View Live Pass &amp; Check-In QR →
                     </a>
-                    <div style="font-size: 11px; color: #59655D; margin-top: 12px;">
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; color: #59655D; margin-top: 12px;">
                         Secure signed link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
                     </div>
                 </div>
 
                 <!-- 3. PICKUP & ARRIVAL GUIDE -->
-                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 10px;">🚙 Pickup &amp; Arrival Details</div>
-                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Pickup Point:</strong> ${safeHub}</p>
-                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
-                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 8px;"><strong>Camp Support Hotline:</strong> ${safePhone}</p>
-                    <p style="font-size: 12px; color: #E5A93B; margin: 0;">⚠️ <em>${safeOfflineNote}</em></p>
+                <div style="background-color: rgba(255,255,255,0.04); border-radius: 16px; padding: 20px; margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.06); font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
+                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 12px;">🚙 Pickup &amp; Arrival Details</div>
+                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #FFFFFF;">Pickup Point:</strong> ${safeHub}</p>
+                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #FFFFFF;">Parking:</strong> ${safeParking}</p>
+                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 10px; line-height: 1.5;"><strong style="color: #FFFFFF;">Camp Support Hotline:</strong> ${safePhone}</p>
+                    <p style="font-size: 12px; color: #E5A93B; margin: 0; line-height: 1.45;">⚠️ <em>${safeOfflineNote}</em></p>
                 </div>
 
                 <!-- 4. CALENDAR INVITE ATTACHMENT CARD (AT END) -->
