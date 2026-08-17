@@ -201,34 +201,34 @@ export async function sendBookingConfirmationEmail(booking) {
                 <!-- 1. MAIN STAY & PAYMENT DETAILS (HERO) -->
                 <div style="background-color: #F8FAF7; border-radius: 18px; padding: 24px; margin-bottom: 22px; border: 1px solid #E2E8F0;">
                     <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Stay Details</div>
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse; table-layout: fixed;">
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lead Guest:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeName}</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lead Guest:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeName}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Dates:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeDates}</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Dates:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeDates}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lodging:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeRoom}</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lodging:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeRoom}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Guests:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Guests:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Meal Plan:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeMeal}</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Meal Plan:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeMeal}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Total Amount:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">₹${Number(booking.total || 0).toLocaleString('en-IN')}</td>
+                            <td width="38%" align="left" style="width: 38%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Total Amount:</td>
+                            <td width="62%" align="right" style="width: 62%; padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">₹${Number(booking.total || 0).toLocaleString('en-IN')}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; vertical-align: middle;">Balance Payable at Check-In:</td>
-                            <td align="right" style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#B45309' : '#15803D'}; text-align: right; vertical-align: middle;">
+                            <td width="48%" align="left" style="width: 48%; padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; vertical-align: middle;">Balance Payable at Check-In:</td>
+                            <td width="52%" align="right" style="width: 52%; padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#B45309' : '#15803D'}; text-align: right; vertical-align: middle;">
                                 ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
                             </td>
                         </tr>
@@ -245,24 +245,24 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pendingNoticeHtml}
 
-                <!-- 2. DIGITAL PASS PORTAL CTA -->
-                <div style="background-color: #121613; border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
+                <!-- 2. DIGITAL PASS PORTAL CTA (CLEAN LIGHT CARD) -->
+                <div style="background-color: #F8FAF7; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
                     <div style="font-size: 32px; margin-bottom: 6px;">🎫</div>
-                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 18px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">
+                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 19px; font-weight: 800; color: #121613; margin-bottom: 6px;">
                         ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
                     </div>
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12.5px; color: #A2B6A6; margin-bottom: 18px;">
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 13px; color: #59655D; margin-bottom: 18px;">
                         ${isConfirmed
                             ? 'Tap below to open your live digital pass with scannable QR code for check-in'
                             : 'Tap below to track your verification status and unlock your pass'
                         }
                     </div>
-                    <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
+                    <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; border: 1px solid #C3DE32; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
                         🏳️&nbsp; View Live Pass &amp; Check-In QR →
                     </a>
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; color: #8F9E93; margin-top: 12px;">
-                        Secure signed link · Ref: <strong style="color: #FFFFFF; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11.5px; color: #64748B; margin-top: 12px;">
+                        Secure signed link · Ref: <strong style="color: #121613; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
                     </div>
                 </div>
 

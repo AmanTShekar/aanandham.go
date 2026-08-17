@@ -110,7 +110,7 @@ export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) 
     } else if (key.includes('kolukkumalai') || key.includes('suryanelli')) {
         guide.hubName = 'Suryanelli Town Basecamp Hub';
         guide.parkingArea = 'Designated 4x4 Private Parking Yard (Behind Suryanelli Tea Factory)';
-        guide.offlineNote = 'Mobile data drops past Suryanelli factory. Please screenshot your pass & PIN before leaving Munnar town.';
+        guide.offlineNote = 'Mobile data drops past Suryanelli factory. Please save your pass voucher before leaving Munnar town.';
     }
 
     // ── Custom Admin / Booking-level overrides ──

@@ -170,7 +170,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                     <span>Payment Verification In Progress</span>
                                 </div>
                                 <p style={{ margin: 0, fontSize: '12.5px', color: '#E2E8F0', lineHeight: 1.5 }}>
-                                    Your booking request and payment are currently being reconciled by the basecamp coordinator. This pass is <strong>not yet valid for gate check-in</strong>. Your official gate PIN and scannable QR will activate automatically upon verification.
+                                    Your booking request and payment are currently being reconciled by the basecamp coordinator. Your scannable check-in QR and official pass voucher will activate automatically upon verification.
                                 </p>
                                 <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                     <a
