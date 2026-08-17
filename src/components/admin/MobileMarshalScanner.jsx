@@ -57,10 +57,7 @@ import {
     ShieldAlert,
     LogIn,
     Eye,
-    EyeOff,
-    Fingerprint,
-    ScanFace,
-    Smartphone
+    EyeOff
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -244,94 +241,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── HOST SECURITY & PASSCODE AUTHENTICATION ──
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isCheckingAuth, setIsCheckingAuth] = useState(false);
     const [hostPasscode, setHostPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [showPasscodeText, setShowPasscodeText] = useState(false);
-
-    // ── BIOMETRIC (FACE ID / TOUCH ID / FINGERPRINT) STATE ──
-    const [hasBiometricSupport, setHasBiometricSupport] = useState(false);
-    const [isBiometricEnrolled, setIsBiometricEnrolled] = useState(false);
-    const [isBiometricPrompting, setIsBiometricPrompting] = useState(false);
-
-    // Detect WebAuthn hardware biometrics on mount (Always start in locked mode)
-    useEffect(() => {
-        let isMounted = true;
-
-        if (typeof window !== 'undefined') {
-            const enrolled = localStorage.getItem('aanandham_host_bio_enrolled') === 'true';
-            setIsBiometricEnrolled(enrolled);
-
-            if (window.PublicKeyCredential && typeof window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable === 'function') {
-                window.PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable().then(available => {
-                    if (isMounted) setHasBiometricSupport(Boolean(available));
-                }).catch(() => {
-                    if (isMounted) setHasBiometricSupport(false);
-                });
-            }
-        }
-
-        // Always require explicit Biometric / PIN unlock on open
-        setIsAuthenticated(false);
-        setIsCheckingAuth(false);
-
-        return () => { isMounted = false; };
-    }, []);
-
-    // One-Tap Native Face ID / Touch ID / Fingerprint Unlock
-    const handleBiometricUnlock = async () => {
-        setIsBiometricPrompting(true);
-        setPasscodeError('');
-
-        try {
-            const savedPasscode = typeof window !== 'undefined' ? (localStorage.getItem('aanandham_host_bio_pass') || '907485') : '907485';
-
-            // Trigger device native sensor challenge (iOS Face ID, Android Fingerprint, Mac Touch ID, Windows Hello)
-            if (typeof window !== 'undefined' && window.PublicKeyCredential) {
-                const challenge = new Uint8Array(32);
-                window.crypto.getRandomValues(challenge);
-
-                // Prompt platform authenticator
-                await navigator.credentials.get({
-                    publicKey: {
-                        challenge,
-                        timeout: 60000,
-                        userVerification: 'required'
-                    }
-                }).catch(() => null);
-            }
-
-            // Authenticate with server
-            const res = await fetch('/api/admin/auth', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
-                body: JSON.stringify({ passcode: savedPasscode })
-            });
-
-            const data = await res.json();
-            if (data.success) {
-                if (typeof window !== 'undefined') {
-                    sessionStorage.removeItem('aanandham_host_locked');
-                    localStorage.setItem('aanandham_host_bio_enrolled', 'true');
-                    localStorage.setItem('aanandham_host_bio_pass', savedPasscode);
-                    setIsBiometricEnrolled(true);
-                }
-                playSuccessChime();
-                setIsAuthenticated(true);
-                setPasscodeError('');
-                showToast('✓ Face ID / Biometric Verified · Host Console Unlocked');
-                return;
-            } else {
-                setPasscodeError(data.message || 'Biometric verification failed. Please enter your PIN.');
-            }
-        } catch (err) {
-            setPasscodeError('Biometric verification was cancelled.');
-        } finally {
-            setIsBiometricPrompting(false);
-        }
-    };
 
     const handleHostLogin = async (e) => {
         e?.preventDefault();
@@ -351,19 +264,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
             const data = await res.json();
             if (data.success) {
-                // Auto-save verified credential locally for future 1-tap Biometric unlock on this phone
-                if (typeof window !== 'undefined') {
-                    sessionStorage.removeItem('aanandham_host_locked');
-                    localStorage.setItem('aanandham_host_bio_enrolled', 'true');
-                    localStorage.setItem('aanandham_host_bio_pass', trimmed);
-                    setIsBiometricEnrolled(true);
-                }
-
                 playSuccessChime();
                 setIsAuthenticated(true);
                 setHostPasscode('');
                 setPasscodeError('');
-                showToast('✓ Host Access Granted · Fast Biometric Unlock Enabled');
+                showToast('✓ Host Access Granted · Console Unlocked');
             } else {
                 setPasscodeError(data.message || 'Invalid passcode. Access denied.');
             }
@@ -376,9 +281,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     const handleHostLogout = async () => {
         try {
-            if (typeof window !== 'undefined') {
-                sessionStorage.setItem('aanandham_host_locked', 'true');
-            }
             await fetch('/api/admin/auth', {
                 method: 'DELETE',
                 credentials: 'include'
@@ -916,36 +818,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         { value: 'departed', label: 'Departed Camp', icon: '🚶', color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
     ];
 
-    // ── CHECKING AUTH LOADING STATE ──
-    if (isCheckingAuth) {
-        return (
-            <div style={{
-                minHeight: '100dvh',
-                background: 'radial-gradient(circle at 50% 0%, #112015 0%, #071009 100%)',
-                color: '#FFFFFF',
-                fontFamily: 'var(--font-jakarta), sans-serif',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: '16px'
-            }}>
-                <div style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '50%',
-                    border: '3px solid rgba(213, 237, 85, 0.2)',
-                    borderTopColor: '#D5ED55',
-                    animation: 'spin 0.8s linear infinite'
-                }} />
-                <span style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '800', letterSpacing: '0.8px' }}>
-                    VERIFYING HOST CREDENTIALS...
-                </span>
-                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-            </div>
-        );
-    }
-
     // ── HOST PASSCODE SECURITY LOCK SCREEN ──
     if (!isAuthenticated) {
         return (
@@ -1027,41 +899,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <span>{passcodeError}</span>
                         </div>
                     )}
-
-                    {/* One-Tap Biometric Unlock Button (Face ID / Touch ID / Fingerprint) */}
-                    <button
-                        type="button"
-                        onClick={handleBiometricUnlock}
-                        disabled={isBiometricPrompting}
-                        style={{
-                            width: '100%',
-                            background: 'linear-gradient(135deg, rgba(213, 237, 85, 0.16) 0%, rgba(229, 169, 59, 0.16) 100%)',
-                            border: '1.5px solid rgba(213, 237, 85, 0.55)',
-                            borderRadius: '16px',
-                            padding: '13px 18px',
-                            color: '#D5ED55',
-                            fontSize: '13.5px',
-                            fontWeight: '900',
-                            letterSpacing: '0.2px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '10px',
-                            cursor: 'pointer',
-                            marginBottom: '14px',
-                            boxShadow: '0 0 24px rgba(213, 237, 85, 0.18)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        <Fingerprint size={20} color="#D5ED55" />
-                        <span>{isBiometricPrompting ? 'Verifying Sensor...' : 'Unlock with Face ID / Fingerprint'}</span>
-                    </button>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '4px 0 14px' }}>
-                        <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
-                        <span style={{ fontSize: '10px', color: '#8E9B92', fontWeight: '800', letterSpacing: '0.5px' }}>OR USE PIN / PASSCODE</span>
-                        <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.1)' }} />
-                    </div>
 
                     <form onSubmit={handleHostLogin} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                         <div style={{ position: 'relative' }}>
