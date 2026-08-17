@@ -612,22 +612,32 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                             )}
 
                                             {/* Price & Action Buttons Footer */}
-                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                <div>
-                                                    <span style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Starts at</span>
-                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', color: '#121613' }}>
-                                                            ₹{camp.price.toLocaleString('en-IN')}
+                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '18px', display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'auto' }}>
+                                                {/* Price Header */}
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                                                    <div>
+                                                        <span style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block', marginBottom: '2px' }}>
+                                                            Starts at
                                                         </span>
-                                                        <span style={{ fontSize: '11.5px', color: '#59655D' }}>/ camper</span>
+                                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '25px', fontWeight: '900', color: '#121613' }}>
+                                                                ₹{camp.price.toLocaleString('en-IN')}
+                                                            </span>
+                                                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                                        </div>
                                                     </div>
+
+                                                    <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534', background: 'rgba(22, 101, 52, 0.08)', padding: '4px 10px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        ✓ Instant Booking
+                                                    </span>
                                                 </div>
 
-                                                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                                {/* Action Buttons */}
+                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                                                     <Link
                                                         href={`/camps/${camp.id}`}
                                                         style={{
-                                                            padding: '11px 18px',
+                                                            padding: '12px 14px',
                                                             borderRadius: '12px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -635,9 +645,12 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                             fontSize: '13px',
                                                             fontWeight: '800',
                                                             textDecoration: 'none',
-                                                            display: 'inline-flex',
+                                                            display: 'flex',
                                                             alignItems: 'center',
-                                                            gap: '4px'
+                                                            justifyContent: 'center',
+                                                            gap: '4px',
+                                                            transition: 'all 0.2s ease',
+                                                            textAlign: 'center'
                                                         }}
                                                     >
                                                         <span>Explore →</span>
@@ -650,11 +663,17 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                         }}
                                                         className="btn-lime"
                                                         style={{
-                                                            padding: '11px 18px',
+                                                            padding: '12px 14px',
                                                             borderRadius: '12px',
                                                             fontSize: '13px',
                                                             fontWeight: '800',
-                                                            cursor: 'pointer'
+                                                            cursor: 'pointer',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            border: 'none',
+                                                            width: '100%',
+                                                            textAlign: 'center'
                                                         }}
                                                     >
                                                         Book Now
