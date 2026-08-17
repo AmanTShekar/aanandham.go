@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
 import CustomSelectDropdown from '../../components/CustomSelectDropdown';
@@ -21,6 +22,7 @@ const SORT_OPTIONS = [
 ];
 
 export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS }) {
+    const router = useRouter();
     const [camps, setCamps] = useState(initialCamps);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRegion, setSelectedRegion] = useState('All');
@@ -441,6 +443,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                 return (
                                     <div
                                         key={camp.id}
+                                        onClick={() => router.push(`/camps/${camp.id}`)}
                                         className="hover-lift card-img-zoom"
                                         style={{
                                             background: '#FFFFFF',
@@ -450,7 +453,8 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                             boxShadow: '0 6px 24px rgba(0, 0, 0, 0.03)',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            position: 'relative'
+                                            position: 'relative',
+                                            cursor: 'pointer'
                                         }}
                                     >
                                         {/* Top Image & Interactive Photo Carousel / Badges */}
@@ -496,7 +500,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                             </div>
 
                                             {/* Action Buttons Top Right: Like & Share */}
-                                            <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '8px' }}>
+                                            <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '8px', zIndex: 2 }}>
                                                 <button
                                                     onClick={(e) => handleToggleWishlist(camp.id, camp.title, e)}
                                                     aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
@@ -542,9 +546,12 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                             </div>
 
                                             {/* Bottom Overlay Info (Gallery Count & Rating) */}
-                                            <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF' }}>
+                                            <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', zIndex: 2 }}>
                                                 <button
-                                                    onClick={() => setSelectedLightboxPhoto(camp.image)}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedLightboxPhoto(camp.image);
+                                                    }}
                                                     style={{
                                                         background: 'rgba(0, 0, 0, 0.55)',
                                                         border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -589,9 +596,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
 
                                             {/* Campsite Title */}
                                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', margin: '0 0 10px', lineHeight: 1.35 }}>
-                                                <Link href={`/camps/${camp.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                                    {camp.title}
-                                                </Link>
+                                                {camp.title}
                                             </h3>
 
                                             {/* Description snippet */}
@@ -611,74 +616,42 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                 </div>
                                             )}
 
-                                            {/* Price & Action Buttons Footer */}
-                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '18px', display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'auto' }}>
-                                                {/* Price Header */}
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                                                    <div>
-                                                        <span style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block', marginBottom: '2px' }}>
-                                                            Starts at
-                                                        </span>
-                                                        <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '25px', fontWeight: '900', color: '#121613' }}>
-                                                                ₹{camp.price.toLocaleString('en-IN')}
-                                                            </span>
-                                                            <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
-                                                        </div>
-                                                    </div>
-
-                                                    <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534', background: 'rgba(22, 101, 52, 0.08)', padding: '4px 10px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                        ✓ Instant Booking
+                                            {/* Price & Book Now Action Footer */}
+                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                                <div>
+                                                    <span style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block', marginBottom: '2px' }}>
+                                                        Starts at
                                                     </span>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', color: '#121613' }}>
+                                                            ₹{camp.price.toLocaleString('en-IN')}
+                                                        </span>
+                                                        <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                                    </div>
                                                 </div>
 
-                                                {/* Action Buttons */}
-                                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                                    <Link
-                                                        href={`/camps/${camp.id}`}
-                                                        style={{
-                                                            padding: '12px 14px',
-                                                            borderRadius: '12px',
-                                                            background: '#F1F3EC',
-                                                            border: '1px solid rgba(18, 22, 19, 0.08)',
-                                                            color: '#121613',
-                                                            fontSize: '13px',
-                                                            fontWeight: '800',
-                                                            textDecoration: 'none',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            gap: '4px',
-                                                            transition: 'all 0.2s ease',
-                                                            textAlign: 'center'
-                                                        }}
-                                                    >
-                                                        <span>Explore →</span>
-                                                    </Link>
-
-                                                    <button
-                                                        onClick={() => {
-                                                            setSelectedPackageForBooking(camp);
-                                                            setIsBookingModalOpen(true);
-                                                        }}
-                                                        className="btn-lime"
-                                                        style={{
-                                                            padding: '12px 14px',
-                                                            borderRadius: '12px',
-                                                            fontSize: '13px',
-                                                            fontWeight: '800',
-                                                            cursor: 'pointer',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            border: 'none',
-                                                            width: '100%',
-                                                            textAlign: 'center'
-                                                        }}
-                                                    >
-                                                        Book Now
-                                                    </button>
-                                                </div>
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedPackageForBooking(camp);
+                                                        setIsBookingModalOpen(true);
+                                                    }}
+                                                    className="btn-lime"
+                                                    style={{
+                                                        padding: '12px 24px',
+                                                        borderRadius: '12px',
+                                                        fontSize: '13.5px',
+                                                        fontWeight: '800',
+                                                        cursor: 'pointer',
+                                                        border: 'none',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '6px',
+                                                        boxShadow: '0 4px 14px rgba(213, 237, 85, 0.35)'
+                                                    }}
+                                                >
+                                                    <span>Book Now</span>
+                                                </button>
                                             </div>
 
                                         </div>
