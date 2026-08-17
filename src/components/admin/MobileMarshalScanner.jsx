@@ -247,6 +247,26 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [passcodeError, setPasscodeError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [showPasscodeText, setShowPasscodeText] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+
+    // Check for remembered session on mount
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem('hostSession_aanandham');
+            if (stored) {
+                const session = JSON.parse(stored);
+                if (session?.expires && Date.now() < session.expires) {
+                    setIsAuthenticated(true);
+                    showToast('✓ Welcome back · Session restored');
+                } else {
+                    localStorage.removeItem('hostSession_aanandham');
+                }
+            }
+        } catch {
+            // localStorage not available
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleHostLogin = async (e) => {
         e?.preventDefault();
@@ -267,6 +287,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
             if (data.success) {
                 playSuccessChime();
+                // Store remembered session (24h) if requested
+                if (rememberMe) {
+                    try {
+                        localStorage.setItem('hostSession_aanandham', JSON.stringify({
+                            expires: Date.now() + 24 * 60 * 60 * 1000
+                        }));
+                    } catch { /* ignore */ }
+                }
                 setIsAuthenticated(true);
                 setHostPasscode('');
                 setPasscodeError('');
@@ -290,6 +318,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         } catch {
             // Ignored
         }
+        try { localStorage.removeItem('hostSession_aanandham'); } catch { /* ignore */ }
         stopCamera();
         setIsAuthenticated(false);
         setScannedBooking(null);
@@ -560,17 +589,20 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             }
         };
 
+        // Only kick off the scan loop when camera is active
         if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking && !clearedGatePermit) {
             animFrameRef.current = requestAnimationFrame(scanFrame);
-        } else {
-            stopCamera();
         }
 
         return () => {
             isSubscribed = false;
-            stopCamera();
+            // Only cancel the animation frame — do NOT stop the camera stream here
+            if (animFrameRef.current) {
+                cancelAnimationFrame(animFrameRef.current);
+                animFrameRef.current = null;
+            }
         };
-    }, [isCameraEnabled, activeTab, scannedBooking, clearedGatePermit, handleScannedResult, stopCamera]);
+    }, [isCameraEnabled, activeTab, scannedBooking, clearedGatePermit, handleScannedResult]);
 
     // ── MANUAL LOOKUP ──
     const handleManualSearch = async (e) => {
@@ -1034,6 +1066,42 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         >
                             <LogIn size={17} />
                             <span>{isLoggingIn ? 'Authenticating...' : 'Unlock Host Console'}</span>
+                        </button>
+
+                        {/* Remember Me toggle */}
+                        <button
+                            type="button"
+                            onClick={() => setRememberMe(prev => !prev)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: rememberMe ? '#D5ED55' : '#8E9B92',
+                                fontSize: '12px',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                padding: '4px 0',
+                                transition: 'color 0.2s ease'
+                            }}
+                        >
+                            <div style={{
+                                width: '18px',
+                                height: '18px',
+                                borderRadius: '5px',
+                                border: `2px solid ${rememberMe ? '#D5ED55' : 'rgba(255,255,255,0.2)'}`,
+                                background: rememberMe ? 'rgba(213,237,85,0.2)' : 'transparent',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0,
+                                transition: 'all 0.2s ease'
+                            }}>
+                                {rememberMe && <Check size={11} color="#D5ED55" strokeWidth={3} />}
+                            </div>
+                            Remember me for 24 hours
                         </button>
                     </form>
 
