@@ -186,17 +186,18 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const balDue = Number(booking.balanceDue || 0);
         const balBg = balDue > 0 ? [45, 32, 12] : [14, 40, 24];
         const balBorder = balDue > 0 ? AMBER : GREEN;
+        const balTitle = balDue > 0 ? 'BALANCE PAYABLE AT CHECK-IN' : 'PAYMENT STATUS';
         const balText = balDue > 0 
-            ? `COLLECT ₹${balDue.toLocaleString('en-IN')} ON ARRIVAL`
-            : '✓ 100% FULLY SETTLED ONLINE';
+            ? `₹${balDue.toLocaleString('en-IN')} (UPI / Cash at Basecamp)`
+            : '✓ 100% Fully Settled Online';
 
-        doc.roundedRect(LEFT_X, mY, LEFT_W, 40, 8).fill(balBg);
-        doc.roundedRect(LEFT_X, mY, LEFT_W, 40, 8).lineWidth(1).strokeColor(balBorder).stroke();
+        doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).fill(balBg);
+        doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).lineWidth(1).strokeColor(balBorder).stroke();
 
-        doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('CHECK-IN SETTLEMENT STATUS', LEFT_X + 12, mY + 7, { characterSpacing: 0.8 });
+        doc.font('Helvetica-Bold').fontSize(7.5).fill(TEXT_MUTED)
+           .text(balTitle, LEFT_X + 12, mY + 8, { characterSpacing: 0.8 });
         doc.font('Helvetica-Bold').fontSize(11).fill(balBorder)
-           .text(balText, LEFT_X + 12, mY + 20);
+           .text(balText, LEFT_X + 12, mY + 22);
 
         // ── RIGHT COLUMN: SMART ACCESS CONTROL & QR ─────────────────
         doc.font('Helvetica-Bold').fontSize(9).fill(LIME)

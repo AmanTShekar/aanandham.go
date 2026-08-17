@@ -185,18 +185,10 @@ export async function sendBookingConfirmationEmail(booking) {
 
             <div class="content">
                 
-                <!-- ARRIVAL BALANCE STATUS -->
-                <div class="balance-box">
-                    <div style="font-size: 11px; color: #A2B6A6; font-weight: 800; text-transform: uppercase;">Check-In Settlement Status</div>
-                    <div style="font-size: 16px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#E5A93B' : '#22C55E'}; margin-top: 2px;">
-                        ${Number(booking.balanceDue) > 0 ? `Collect ₹${Number(booking.balanceDue).toLocaleString('en-IN')} on Arrival` : '100% Fully Settled Online'}
-                    </div>
-                </div>
-
                 ${pinBoxHtml}
 
                 <!-- DIGITAL PASS PORTAL — secure link, QR only in PDF attachment -->
-                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 20px 0;">
+                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
                     <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass ★</div>
                     <div style="font-size: 32px; margin-bottom: 8px;">🎫</div>
                     <div style="font-size: 14px; font-weight: 900; color: #FFFFFF; margin-bottom: 4px;">
@@ -217,14 +209,14 @@ export async function sendBookingConfirmationEmail(booking) {
                 </div>
 
                 <!-- PASS PORTAL LINK (calendar .ics is auto-attached to email) -->
-                <div style="text-align: center; margin: 18px 0; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
+                <div style="text-align: center; margin: 0 0 20px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
                     <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
                     <div style="font-size: 11.5px; color: #A2B6A6;">Open the <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> attachment to instantly add your stay to Google Calendar, Apple Calendar, or Outlook.</div>
                 </div>
 
-                <!-- ITINERARY & SQUAD SUMMARY -->
-                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 16px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 10px;">Expedition Details</div>
+                <!-- ITINERARY & PAYMENT SUMMARY -->
+                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Expedition &amp; Payment Summary</div>
                     <div class="table-row">
                         <span class="label">Lead Explorer:</span>
                         <span class="val">${safeName}</span>
@@ -249,15 +241,22 @@ export async function sendBookingConfirmationEmail(booking) {
                         <span class="label">Total Fare:</span>
                         <span class="val">₹${Number(booking.total || 0).toLocaleString('en-IN')}</span>
                     </div>
-                    <div class="table-row" style="border: none;">
-                        <span class="label">Balance on Arrival:</span>
-                        <span class="val" style="color: #D5ED55; font-size: 15px;">₹${Number(booking.balanceDue || 0).toLocaleString('en-IN')}</span>
+                    <div class="table-row" style="border: none; padding-top: 10px;">
+                        <span class="label" style="font-weight: 700; color: #FFFFFF;">Balance Due on Check-In:</span>
+                        <span class="val" style="color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; font-size: 16px; font-weight: 900;">
+                            ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
+                        </span>
                     </div>
+                    ${Number(booking.balanceDue) > 0 ? `
+                    <div style="margin-top: 12px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.3); border-radius: 10px; padding: 10px 12px; font-size: 11.5px; color: #A2B6A6; line-height: 1.5;">
+                        💳 <strong style="color: #FFFFFF;">Arrival Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> can be settled at the Suryanelli basecamp hub via UPI (GPay / PhonePe) or cash during check-in.
+                    </div>
+                    ` : ''}
                 </div>
 
                 <!-- OFFLINE 4x4 CONVOY DIRECTIONS -->
                 <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 8px;">4x4 Convoy & Landmark Guide</div>
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 8px;">4x4 Convoy &amp; Landmark Guide</div>
                     <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 6px;"><strong>Meeting Hub:</strong> ${safeHub}</p>
                     <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
                     <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 8px;"><strong>Basecamp Marshal Hotline:</strong> ${safePhone}</p>
