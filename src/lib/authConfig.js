@@ -39,29 +39,68 @@ function resolveAuthSecret() {
 
 export const AUTH_SECRET = resolveAuthSecret();
 
-function resolvePasscodes() {
-    const raw = process.env.ADMIN_PASSCODES || 
-                process.env.ADMIN_PASSCODE || 
-                process.env.HOST_PASSCODE || 
-                process.env.HOST_PIN || 
-                process.env.MARSHAL_PASSCODE;
-    const parsed = raw ? raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : [];
+function parsePasscodeList(raw) {
+    if (!raw) return [];
+    return raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+}
 
+function resolveAdminPasscodes() {
+    const raw = process.env.ADMIN_PASSCODES || process.env.ADMIN_PASSCODE;
+    const parsed = parsePasscodeList(raw);
     if (IS_PROD) {
-        const safeCodes = parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
-        if (safeCodes.length === 0) {
-            console.error('🚨 [SECURITY WARNING] ADMIN_PASSCODE / HOST_PASSCODE in production is missing, too short (<6 chars), or uses a disallowed default. Admin login is disabled.');
-        }
-        return safeCodes;
-    }
-
-    if (parsed.length === 0) {
-        console.warn('⚠️ [DEV WARNING] No ADMIN_PASSCODE / HOST_PASSCODE is set in .env.local.');
+        return parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
     }
     return parsed;
 }
 
-export const VALID_PASSCODES = resolvePasscodes();
+function resolveHostPasscodes() {
+    const raw = process.env.HOST_PASSCODES || 
+                process.env.HOST_PASSCODE || 
+                process.env.HOST_PIN || 
+                process.env.MARSHAL_PASSCODE;
+    const parsed = parsePasscodeList(raw);
+    if (IS_PROD) {
+        return parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
+    }
+    return parsed;
+}
+
+export const ADMIN_PASSCODES = resolveAdminPasscodes();
+export const HOST_PASSCODES = resolveHostPasscodes();
+export const VALID_PASSCODES = [...new Set([...ADMIN_PASSCODES, ...HOST_PASSCODES])];
+
+/**
+ * Validates a submitted passcode and identifies its authorized role
+ */
+export function authenticatePasscodeRole(inputPasscode) {
+    if (!inputPasscode || typeof inputPasscode !== 'string') {
+        return { valid: false };
+    }
+    const normalized = inputPasscode.trim().toLowerCase();
+
+    // Check Master Admin passcodes first
+    for (const code of ADMIN_PASSCODES) {
+        if (constantTimeCompare(normalized, code)) {
+            return { valid: true, role: 'admin_coordinator', isMasterAdmin: true };
+        }
+    }
+
+    // Check Basecamp Host / Gate PINs
+    for (const code of HOST_PASSCODES) {
+        if (constantTimeCompare(normalized, code)) {
+            return { valid: true, role: 'basecamp_host', isMasterAdmin: false };
+        }
+    }
+
+    // If no distinct host passcodes are configured, fallback to valid passcodes
+    for (const code of VALID_PASSCODES) {
+        if (constantTimeCompare(normalized, code)) {
+            return { valid: true, role: 'admin_coordinator', isMasterAdmin: true };
+        }
+    }
+
+    return { valid: false };
+}
 
 // In-memory revocation blacklist for logged-out tokens (bounded, 2000 entries)
 const revokedTokens = new Set();

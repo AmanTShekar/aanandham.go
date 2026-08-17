@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
-import { AUTH_SECRET, VALID_PASSCODES, IS_PROD, createSignedToken, verifySignedToken, constantTimeCompare, getClientIp, revokeToken } from '@/lib/authConfig';
+import { AUTH_SECRET, VALID_PASSCODES, IS_PROD, createSignedToken, verifySignedToken, constantTimeCompare, getClientIp, revokeToken, authenticatePasscodeRole } from '@/lib/authConfig';
 
 // In-memory audit trail of recent login events (capped at 50 entries)
 const authAuditLog = [];
@@ -106,18 +106,9 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Passcode is required.' }, { status: 400 });
         }
 
-        const normalized = passcode.trim().toLowerCase();
-        
-        // Use constant-time comparison across all valid passcodes
-        let isValid = false;
-        for (const validCode of VALID_PASSCODES) {
-            if (constantTimeCompare(normalized, validCode)) {
-                isValid = true;
-                break;
-            }
-        }
+        const authResult = authenticatePasscodeRole(passcode);
 
-        if (!isValid) {
+        if (!authResult.valid) {
             recordFailedAttempt(ip);
             logAuthEvent({ ip, action: 'LOGIN_FAILED_INVALID_PASSCODE', success: false });
             // Artificial delay to mitigate high-speed automated brute-forcing
@@ -130,16 +121,19 @@ export async function POST(request) {
 
         // Generate signed, tamper-proof session token (expires in 24 hours)
         const token = createSignedToken({
-            role: 'admin_coordinator',
+            role: authResult.role,
+            isMasterAdmin: authResult.isMasterAdmin,
             issuedAt: Date.now()
         }, 24 * 60 * 60);
 
-        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', success: true });
+        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', role: authResult.role, success: true });
 
         // Set HttpOnly, Secure, SameSite=Strict cookie (NEVER exposed to client JavaScript)
         const response = NextResponse.json({
             success: true,
-            message: 'Administrative session authenticated successfully.'
+            role: authResult.role,
+            isMasterAdmin: authResult.isMasterAdmin,
+            message: 'Session authenticated successfully.'
         });
 
         response.cookies.set({
@@ -172,20 +166,24 @@ export async function GET(request) {
 
         const payload = verifySignedToken(token);
 
-        if (payload && payload.role === 'admin_coordinator') {
+        if (payload && (payload.role === 'admin_coordinator' || payload.role === 'basecamp_host')) {
             const url = new URL(request.url);
             // If requested audit logs
             if (url.searchParams.get('audit') === 'true') {
                 return NextResponse.json({
                     authenticated: true,
-                    user: { role: 'admin_coordinator', exp: payload.exp },
+                    role: payload.role,
+                    isMasterAdmin: payload.isMasterAdmin !== false,
+                    user: { role: payload.role, exp: payload.exp },
                     auditLogs: authAuditLog
                 });
             }
 
             return NextResponse.json({
                 authenticated: true,
-                user: { role: 'admin_coordinator', exp: payload.exp }
+                role: payload.role,
+                isMasterAdmin: payload.isMasterAdmin !== false,
+                user: { role: payload.role, exp: payload.exp }
             });
         } else {
             return NextResponse.json({ authenticated: false, message: 'Invalid or expired session token.' }, { status: 401 });
