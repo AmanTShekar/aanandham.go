@@ -139,7 +139,25 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         if (qrBuffer) {
             try { doc.image(qrBuffer, QR_X, rightY, { width: QR_SIZE, height: QR_SIZE }); } catch (_) {}
         }
-        rightY += QR_SIZE + 18;
+
+        // ── Logo centered on QR (white circle bg + logo overlay) ──
+        if (fs.existsSync(LOGO_PATH)) {
+            try {
+                const LOGO_BADGE = 28;  // logo size in QR center
+                const BADGE_PAD  = 4;   // white circle padding
+                const logoX = QR_X + QR_SIZE / 2 - LOGO_BADGE / 2;
+                const logoY = rightY + QR_SIZE / 2 - LOGO_BADGE / 2;
+                // White circle background so logo is readable
+                doc.circle(logoX + LOGO_BADGE / 2, logoY + LOGO_BADGE / 2, LOGO_BADGE / 2 + BADGE_PAD).fill(WHITE);
+                doc.image(LOGO_PATH, logoX, logoY, { width: LOGO_BADGE, height: LOGO_BADGE });
+            } catch (_) {}
+        }
+
+        // "aanandham.go" label below QR
+        doc.font('Helvetica-Bold').fontSize(7.5).fill(LIME)
+           .text('aanandham.go', QR_X - 8, rightY + QR_SIZE + 14, { width: QR_SIZE + 16, align: 'center', characterSpacing: 1 });
+
+        rightY += QR_SIZE + 28;
 
         // Gate PIN
         if (isConfirmed && booking.gatePin) {

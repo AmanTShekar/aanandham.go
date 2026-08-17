@@ -58,10 +58,10 @@ export async function generateQrBuffer(text, size = 260) {
             margin: 3,
             type: 'png',
             color: {
-                dark: '#D5ED55',   // Aanandham signature lime-yellow
-                light: '#0B150E'   // Deep forest dark — matches website bg
+                dark: '#FFFFFF',   // White dots — clean on dark backgrounds
+                light: '#0B150E'   // Deep forest dark — matches Aanandham brand
             },
-            errorCorrectionLevel: 'M'
+            errorCorrectionLevel: 'H'  // High error correction — needed for center logo overlay
         });
         return buffer;
     } catch (e) {

@@ -66,8 +66,8 @@ export async function sendBookingConfirmationEmail(booking) {
     });
 
     // QR as public URL for email HTML (api.qrserver.com — renders inline, no attachment needed)
-    // Brand colors: #D5ED55 dots on #0B150E dark background
-    const qrEmailUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(passUrl)}&color=D5ED55&bgcolor=0B150E&margin=10&ecc=M`;
+    // White dots on deep forest dark background
+    const qrEmailUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(passUrl)}&color=FFFFFF&bgcolor=0B150E&margin=12&ecc=H`;
 
     // QR buffer still needed for the PDF attachment
     const qrBuffer = await generateQrBuffer(passUrl, 280);
@@ -247,6 +247,24 @@ export async function sendBookingConfirmationEmail(booking) {
                     <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
                     <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 8px;"><strong>Basecamp Marshal Hotline:</strong> ${safePhone}</p>
                     <p style="font-size: 11.5px; color: #E5A93B; margin: 0;">⚠️ <em>${safeOfflineNote}</em></p>
+                </div>
+            </div>
+
+            <!-- WARM CLOSING MESSAGE -->
+            <div style="background: linear-gradient(135deg, #121F16 0%, #0E1A11 100%); border-top: 1px solid rgba(213,237,85,0.15); padding: 28px 24px; text-align: center;">
+                <div style="font-size: 22px; margin-bottom: 10px;">🏔️ 🌿 ✨</div>
+                <h2 style="font-size: 18px; font-weight: 900; color: #FFFFFF; margin: 0 0 8px;">Enjoy Your <span style="color: #D5ED55;">Wilderness Escape!</span></h2>
+                <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.7; margin: 0 0 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
+                    The mountains are waiting. Breathe in the fresh Munnar air, watch the sunrise from Kolukkumalai,
+                    and let the forest reset your soul. This is your time — we've taken care of everything else.
+                </p>
+                <div style="display: inline-block; background: rgba(213,237,85,0.08); border: 1px solid rgba(213,237,85,0.25); border-radius: 14px; padding: 14px 22px; margin-bottom: 16px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">🏕️ Need anything before you arrive?</div>
+                    <div style="font-size: 13px; color: #FFFFFF;">WhatsApp us anytime — <strong style="color: #D5ED55;">+91 90748 58014</strong></div>
+                    <div style="font-size: 11.5px; color: #A2B6A6; margin-top: 4px;">Our basecamp marshal team is active 24/7 for you</div>
+                </div>
+                <div style="font-size: 12px; color: #59655D;">
+                    📎 Your <strong style="color: #A2B6A6;">Wilderness Pass PDF</strong> and <strong style="color: #A2B6A6;">Calendar Invite (.ics)</strong> are attached below
                 </div>
             </div>
 
