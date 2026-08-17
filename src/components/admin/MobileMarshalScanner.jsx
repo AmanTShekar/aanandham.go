@@ -448,11 +448,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                             <span style={{ fontSize: '10px', background: '#D5ED55', color: '#0B150E', padding: '2px 6px', borderRadius: '4px', fontWeight: '900', letterSpacing: '0.5px' }}>
-                                MARSHAL
+                                CAMP HOST
                             </span>
                         </div>
                         <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>
-                            Basecamp QR & Headcount Scanner
+                            Basecamp QR & Headcount Check-In
                         </span>
                     </div>
                 </div>
@@ -1042,10 +1042,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </label>
                     </div>
 
-                    {/* Marshal Notes Field */}
+                    {/* Host Check-In Notes Field */}
                     <div style={{ marginBottom: '24px' }}>
                         <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '6px' }}>
-                            Marshal Observation & Tent Allocation Notes:
+                            Host Check-In & Tent Allocation Notes:
                         </label>
                         <input
                             type="text"

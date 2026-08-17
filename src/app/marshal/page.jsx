@@ -2,7 +2,7 @@ import React from 'react';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
 
 export const metadata = {
-  title: 'Basecamp Marshal Scanner | Aanandham.go',
+  title: 'Camp Host Check-In & Scanner | Aanandham.go',
   description: 'Mobile QR pass verification, camper attendance, and headcount tracker.',
   robots: {
     index: false,

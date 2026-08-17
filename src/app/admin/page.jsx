@@ -1668,7 +1668,7 @@ export default function AdminPortal() {
         {
             category: 'BASECAMP OPERATIONS',
             items: [
-                { id: 'scanner', name: 'Marshal QR Scanner', icon: '📱', desc: 'Live Headcount & Attendance', count: 'LIVE ⚡', badgeColor: '#D5ED55' },
+                { id: 'scanner', name: 'Camp Check-In & Scanner', icon: '📱', desc: 'Live Headcount & Attendance', count: 'LIVE ⚡', badgeColor: '#D5ED55' },
                 { id: 'overview', name: 'Dashboard Overview', icon: '📊', desc: 'Live KPIs & ops' },
                 { id: 'bookings', name: 'Camper Reservations', icon: '📋', count: bookings.length, badgeColor: '#E5A93B' },
                 { id: 'properties', name: 'Campsites & Pods', icon: '⛺', count: properties.length, badgeColor: '#22C55E' },
@@ -2045,7 +2045,7 @@ export default function AdminPortal() {
                             </div>
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                 <button onClick={() => setActiveTab('scanner')} style={{ padding: '9px 18px', borderRadius: '999px', background: '#D5ED55', border: '1px solid #D5ED55', color: '#0B150E', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 14px rgba(213, 237, 85, 0.3)' }}>
-                                    <span>📱 Open Marshal Scanner</span>
+                                    <span>📱 Open Camp Check-In</span>
                                 </button>
                                 <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
                                     <span>📥 Export CSV</span>
