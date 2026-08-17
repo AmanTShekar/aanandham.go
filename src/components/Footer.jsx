@@ -1,10 +1,11 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { waLink } from '../lib/whatsapp';
 
 export default function Footer() {
+    const [emailCopied, setEmailCopied] = useState(false);
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
     const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
         ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
@@ -72,11 +73,22 @@ export default function Footer() {
                         </p>
                         
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-                            <a href="mailto:bookings@aanandham.in" className="footer-contact-link">
+                            <a 
+                                href="mailto:bookings@aanandham.in" 
+                                onClick={(e) => {
+                                    if (navigator.clipboard) {
+                                        navigator.clipboard.writeText('bookings@aanandham.in');
+                                        setEmailCopied(true);
+                                        setTimeout(() => setEmailCopied(false), 3000);
+                                    }
+                                    window.open('https://mail.google.com/mail/?view=cm&fs=1&to=bookings@aanandham.in&su=Aanandham%20Wilderness%20Stay%20Inquiry', '_blank');
+                                }}
+                                className="footer-contact-link"
+                            >
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }} />
                                 </div>
-                                <span>bookings@aanandham.in</span>
+                                <span>{emailCopied ? 'Email Copied! ✓' : 'bookings@aanandham.in'}</span>
                             </a>
                             <a href={`tel:+${adminPhone}`} className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

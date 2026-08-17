@@ -192,6 +192,7 @@ export default function ContactPage() {
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
     const [waUrl, setWaUrl] = useState('');
+    const [copiedEmail, setCopiedEmail] = useState(false);
     const [activeFaq, setActiveFaq] = useState(0);
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
     const { user: currentUser, logout: handleLogout } = useAuth();
@@ -203,8 +204,13 @@ export default function ContactPage() {
     });
     const ctaBgScale = useTransform(ctaScrollProgress, [0, 0.5, 1], [1.0, 1.16, 1.28]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSend = (e, mode = 'whatsapp') => {
+        if (e) e.preventDefault();
+
+        if (!formData.name || !formData.email) {
+            alert('Please fill in your name and email address.');
+            return;
+        }
 
         // 🛡️ BOT & HONEYPOT TRAP (B5)
         if (formData.honeypot && formData.honeypot.trim().length > 0) {
@@ -215,30 +221,27 @@ export default function ContactPage() {
 
         // Rapid submission cooldown
         const now = Date.now();
-        if (now - lastSubmitTime < 4000) {
+        if (now - lastSubmitTime < 3000) {
             return;
         }
         setLastSubmitTime(now);
         setLoading(true);
 
-        const waText = `*New Expedition Inquiry via Aanandham.go*\n` +
+        const summaryText = `*New Expedition Inquiry via Aanandham.go*\n` +
             `Type: ${formData.inquiryType.toUpperCase()}\n` +
             `Name: ${formData.name}\n` +
             `Email: ${formData.email}\n` +
             `Phone: ${formData.phone || 'N/A'}\n` +
             `Guests: ${formData.guests}\n` +
             `Dates: ${formData.travelDates || 'Flexible'}\n` +
-            `Message: ${formData.message}`;
+            `Message: ${formData.message || 'None'}`;
 
-        const link = waLink(waText);
-        setWaUrl(link);
-
-        // Automatically persist inquiry into real admin database (Server API + localStorage fallback)
         const newInquiryRecord = {
             id: generateBookingId(),
             name: formData.name.trim(),
+            email: formData.email.trim(),
             phone: formData.phone ? formData.phone.trim() : 'N/A',
-            package: `[${formData.inquiryType.toUpperCase()}] ${formData.message.slice(0, 40)}...`,
+            package: `[${formData.inquiryType.toUpperCase()}] ${formData.message ? formData.message.slice(0, 40) : 'General Inquiry'}...`,
             region: 'Kerala Inquiry',
             dates: formData.travelDates || 'Flexible',
             guests: Number(formData.guests) || 2,
@@ -249,8 +252,7 @@ export default function ContactPage() {
             source: 'Contact Form',
             notes: formData.message.trim(),
             createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-            mode: 'whatsapp',
-            source: 'Contact Form'
+            mode: mode
         };
 
         try {
@@ -267,9 +269,39 @@ export default function ContactPage() {
             console.error('Error persisting inquiry:', e);
         }
 
-        try {
-            window.open(link, '_blank');
-        } catch (err) {}
+        if (mode === 'whatsapp') {
+            const link = waLink(summaryText);
+            setWaUrl(link);
+            try {
+                window.open(link, '_blank');
+            } catch (err) {}
+        } else {
+            const emailSubject = encodeURIComponent(`Expedition Inquiry: [${formData.inquiryType.toUpperCase()}] - ${formData.name}`);
+            const emailBody = encodeURIComponent(
+                `Hi Aanandham Reservations Desk,\n\n` +
+                `I would like to make an inquiry for Aanandham Wilderness Stays.\n\n` +
+                `Name: ${formData.name}\n` +
+                `Email: ${formData.email}\n` +
+                `Phone: ${formData.phone || 'N/A'}\n` +
+                `Inquiry Type: ${formData.inquiryType.toUpperCase()}\n` +
+                `Group Size: ${formData.guests} Campers\n` +
+                `Target Dates: ${formData.travelDates || 'Flexible'}\n` +
+                `Message: ${formData.message || 'Please share package details and availability.'}\n\n` +
+                `Thank you!`
+            );
+            const mailtoUrl = `mailto:bookings@aanandham.in?subject=${emailSubject}&body=${emailBody}`;
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=bookings@aanandham.in&su=${emailSubject}&body=${emailBody}`;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(`To: bookings@aanandham.in\nSubject: ${decodeURIComponent(emailSubject)}\n\n${decodeURIComponent(emailBody)}`);
+            }
+
+            try {
+                window.open(gmailUrl, '_blank');
+            } catch (err) {
+                window.location.href = mailtoUrl;
+            }
+        }
 
         setLoading(false);
         setSubmitted(true);
@@ -561,11 +593,22 @@ export default function ContactPage() {
                                         href={ch.href}
                                         target={ch.href.startsWith('http') ? '_blank' : '_self'}
                                         rel="noopener noreferrer"
+                                        onClick={(e) => {
+                                            if (ch.id === 'email') {
+                                                if (navigator.clipboard) {
+                                                    navigator.clipboard.writeText('bookings@aanandham.in');
+                                                    setCopiedEmail(true);
+                                                    setTimeout(() => setCopiedEmail(false), 3500);
+                                                }
+                                                // If on desktop or browser without default email client, also open Gmail compose in new tab
+                                                window.open('https://mail.google.com/mail/?view=cm&fs=1&to=bookings@aanandham.in&su=Aanandham%20Wilderness%20Stay%20Inquiry', '_blank');
+                                            }
+                                        }}
                                         className="action-arrow-btn-dark"
-                                        style={{ textDecoration: 'none' }}
+                                        style={{ textDecoration: 'none', position: 'relative' }}
                                     >
-                                        <span>{ch.actionLabel}</span>
-                                        <div className="btn-arrow-circle">→</div>
+                                        <span>{ch.id === 'email' && copiedEmail ? 'Email Copied! ✓' : ch.actionLabel}</span>
+                                        <div className="btn-arrow-circle">{ch.id === 'email' && copiedEmail ? '✓' : '→'}</div>
                                     </a>
                                 </motion.div>
                             ))}
@@ -759,7 +802,7 @@ export default function ContactPage() {
                                         </div>
                                     </motion.div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                    <form onSubmit={(e) => handleSend(e, 'whatsapp')} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                         
                                         {/* Honeypot Bot Trap (Invisible to humans) */}
                                         <div style={{ display: 'none', position: 'absolute', left: '-9999px' }} aria-hidden="true">
@@ -951,27 +994,58 @@ export default function ContactPage() {
                                             />
                                         </div>
 
-                                        {/* Submit Button */}
-                                        <button
-                                            type="submit"
-                                            disabled={loading}
-                                            className="btn-lime hover-lift"
-                                            style={{
-                                                padding: '14px',
-                                                fontSize: '14.5px',
-                                                fontWeight: '800',
-                                                width: '100%',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '8px',
-                                                boxShadow: '0 8px 24px rgba(213, 237, 85, 0.4)',
-                                                marginTop: '4px'
-                                            }}
-                                        >
-                                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '17px' }}></i>
-                                            <span>{loading ? 'Sending Request...' : 'Send Request via WhatsApp & Email →'}</span>
-                                        </button>
+                                        {/* Dual Action Submit Buttons: WhatsApp & Email */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '8px' }}>
+                                            <button
+                                                type="button"
+                                                disabled={loading}
+                                                onClick={(e) => handleSend(e, 'whatsapp')}
+                                                className="btn-lime hover-lift"
+                                                style={{
+                                                    padding: '13px 18px',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '800',
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '8px',
+                                                    boxShadow: '0 8px 24px rgba(213, 237, 85, 0.4)',
+                                                    cursor: 'pointer',
+                                                    border: 'none',
+                                                    borderRadius: '12px'
+                                                }}
+                                            >
+                                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '17px' }}></i>
+                                                <span>{loading ? 'Sending...' : 'Send via WhatsApp →'}</span>
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                disabled={loading}
+                                                onClick={(e) => handleSend(e, 'email')}
+                                                className="hover-lift"
+                                                style={{
+                                                    padding: '13px 18px',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '800',
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '8px',
+                                                    background: '#121613',
+                                                    color: '#FFFFFF',
+                                                    borderRadius: '12px',
+                                                    border: '1px solid rgba(255,255,255,0.15)',
+                                                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <i className="fa-regular fa-envelope" style={{ fontSize: '15px', color: '#D5ED55' }}></i>
+                                                <span>{loading ? 'Sending...' : 'Send via Email →'}</span>
+                                            </button>
+                                        </div>
                                     </form>
                                 )}
                             </div>
