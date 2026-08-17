@@ -119,9 +119,13 @@ export async function sendBookingConfirmationEmail(booking) {
     <body>
         <div class="container">
             <div class="header">
+                <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
+                    <img src="${siteUrl}/logo.png" alt="Aanandham Logo" width="56" height="56" style="display: block; margin: 0 auto 10px; border-radius: 12px; object-fit: contain;" />
+                    <div style="font-size: 14px; font-weight: 900; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 12px;">Aanandham<span style="color: #D5ED55;">.go</span> Wilderness Stays</div>
+                </a>
                 ${badgeHtml}
                 <h1 style="margin: 12px 0 0; font-size: 22px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
-                <p style="margin: 6px 0 0; color: #A2B6A6; font-size: 13px;">Permit Reference: <strong style="color: #D5ED55;">${safeId}</strong></p>
+                <p style="margin: 6px 0 0; color: #A2B6A6; font-size: 13px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace;">${safeId}</strong></p>
             </div>
 
             <div class="content">

@@ -125,7 +125,20 @@ export default async function PassDetailPage({ params, searchParams }) {
                 <div className="pass-card-container" style={{ background: '#121F15', borderRadius: '24px', overflow: 'hidden', border: isConfirmed ? '1px solid rgba(213, 237, 85, 0.25)' : '1px solid rgba(229, 169, 59, 0.35)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                     
                     {/* Header */}
-                    <div className="pass-header" style={{ background: '#0A130D', padding: '24px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div className="pass-header" style={{ background: '#0A130D', padding: '28px 24px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '14px' }}>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham.go Logo"
+                                width="38"
+                                height="38"
+                                style={{ objectFit: 'contain' }}
+                            />
+                            <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '-0.5px' }}>
+                                Aanandham<span style={{ color: '#D5ED55' }}>.go</span> Wilderness Stays
+                            </div>
+                        </div>
+
                         {isConfirmed ? (
                             <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#166534', color: '#D5ED55', fontSize: '11px', fontWeight: '900', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                                 <CheckCircle2 size={14} color="#D5ED55" />
