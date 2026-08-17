@@ -5,6 +5,7 @@ import { Resend } from 'resend';
 import { generateGatePin, getCheckInLandmarkGuide, generatePassToken } from './accessControl.js';
 import { buildGoogleCalendarUrl } from './calendarLink.js';
 import { generateQrBuffer } from './qrGenerator.js';
+import { generateBookingPassPdf } from './pdfGenerator.js';
 
 // ── Resolve /public/logo.png as a Buffer for inline CID attachment ──
 const __emailDir = path.dirname(fileURLToPath(import.meta.url));
@@ -63,9 +64,25 @@ export async function sendBookingConfirmationEmail(booking) {
         description: `Official Aanandham Wilderness Booking (Ref: ${booking.id}). Smart Gate PIN: ${gatePin}. Arrive at Suryanelli Hub by 1:30 PM for 4x4 convoy.`,
         bookingId: booking.id
     });
-    
-    // Generate QR as a PNG buffer for inline CID attachment (data: URIs are blocked by Gmail/Outlook)
+
+    // QR as public URL for email HTML (api.qrserver.com — renders inline, no attachment needed)
+    // Brand colors: #D5ED55 dots on #0B150E dark background
+    const qrEmailUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(passUrl)}&color=D5ED55&bgcolor=0B150E&margin=10&ecc=M`;
+
+    // QR buffer still needed for the PDF attachment
     const qrBuffer = await generateQrBuffer(passUrl, 280);
+
+    // Generate branded PDF pass attachment
+    const pdfBuffer = await generateBookingPassPdf(
+        { ...booking, gatePin, id: booking.id },
+        qrBuffer
+    ).catch(err => {
+        console.warn('[EMAIL] PDF generation failed, skipping attachment:', err.message);
+        return null;
+    });
+
+    // Production public URL for logo — works in all email clients (no attachment trick needed)
+    const logoPublicUrl = 'https://aanandham.in/logo.png';
 
     const safeId = escapeHtml(booking.id);
     const safeName = escapeHtml(booking.name);
@@ -138,7 +155,7 @@ export async function sendBookingConfirmationEmail(booking) {
         <div class="container">
             <div class="header">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
-                    <img src="cid:aanandham-logo" alt="Aanandham Wilderness Stays" width="64" height="64" style="display: block; margin: 0 auto 8px; border-radius: 14px; object-fit: contain;" />
+                    <img src="${logoPublicUrl}" alt="Aanandham Wilderness Stays" width="64" height="64" style="display: block; margin: 0 auto 8px; border-radius: 14px; object-fit: contain;" />
                     <div style="font-size: 16px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span> <span style="color: #A2B6A6;">Wilderness Stays</span></div>
                 </a>
                 ${badgeHtml}
@@ -158,10 +175,10 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pinBoxHtml}
 
-                <!-- SCANNABLE MARSHAL QR CODE (CID inline attachment, yellow on dark = brand colors) -->
+                <!-- SCANNABLE MARSHAL QR CODE — rendered via public api.qrserver.com (not attachment) -->
                 <div class="qr-card">
                     <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass QR ★</div>
-                    <img src="cid:qr-pass" alt="Digital Pass QR Code — Scan to Check In" style="width:200px;height:200px;display:block;margin:0 auto;border-radius:10px;" />
+                    <img src="${qrEmailUrl}" alt="Digital Pass QR Code — Scan to Check In" style="width:210px;height:210px;display:block;margin:0 auto;border-radius:10px;" />
                     <div style="font-size: 12.5px; font-weight: 900; text-transform: uppercase; color: #D5ED55; margin-top: 10px; letter-spacing: 0.5px;">
                         ${isConfirmed ? 'Marshal Check-In QR · Scan to Verify' : 'Pass Verification QR Code'}
                     </div>
@@ -237,25 +254,13 @@ export async function sendBookingConfirmationEmail(booking) {
         try {
             const resend = new Resend(apiKey);
 
-            // Build inline attachments: logo + QR code as CID so Gmail/Outlook render them correctly
-            const logoBuffer = readLogoBuffer();
+            // Only PDF is a real attachment — logo and QR render via public URLs (no file attachments)
             const attachments = [];
-            if (logoBuffer) {
+            if (pdfBuffer) {
                 attachments.push({
-                    filename: 'aanandham-logo.png',
-                    content: logoBuffer,
-                    content_type: 'image/png',
-                    content_id: 'aanandham-logo',
-                    inline: true
-                });
-            }
-            if (qrBuffer) {
-                attachments.push({
-                    filename: 'qr-pass.png',
-                    content: qrBuffer,
-                    content_type: 'image/png',
-                    content_id: 'qr-pass',
-                    inline: true
+                    filename: `wilderness-pass-${booking.id}.pdf`,
+                    content: pdfBuffer,
+                    content_type: 'application/pdf'
                 });
             }
 
@@ -372,7 +377,7 @@ export async function sendContactInquiryEmail(inquiry) {
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0B150E; color: #FFFFFF; padding: 24px; margin: 0;">
             <div style="max-width: 600px; margin: 0 auto; background: #121F16; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px;">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="cid:aanandham-logo" alt="Aanandham Wilderness" width="56" height="56" style="display:block;margin:0 auto 10px;border-radius:12px;object-fit:contain;" />
+                    <img src="https://aanandham.in/logo.png" alt="Aanandham Wilderness" width="56" height="56" style="display:block;margin:0 auto 10px;border-radius:12px;object-fit:contain;" />
                     <div style="font-size: 11px; font-weight: 800; color: #D5ED55; letter-spacing: 2px; text-transform: uppercase;">AANANDHAM WILDERNESS BASECAMPS</div>
                     <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 8px 0 0;">We Received Your Inquiry! 🏔️</h1>
                 </div>
@@ -400,33 +405,21 @@ export async function sendContactInquiryEmail(inquiry) {
         </html>
         `;
 
-        // Build logo inline attachment for both emails
-        const logoBuffer = readLogoBuffer();
-        const logoAttachment = logoBuffer ? [{
-            filename: 'aanandham-logo.png',
-            content: logoBuffer,
-            content_type: 'image/png',
-            content_id: 'aanandham-logo',
-            inline: true
-        }] : [];
-
-        // Send to admin desk and guest
+        // Send to admin desk and guest (no attachments needed — logo renders via public URL)
         const [adminResult, guestResult] = await Promise.allSettled([
             resend.emails.send({
                 from: fromEmail,
                 to: [adminDestEmail],
                 replyTo: safeEmail,
                 subject: `[INQUIRY] ${safeType}: ${safeName} (${safeGuests} Campers)`,
-                html: adminHtml,
-                ...(logoAttachment.length > 0 ? { attachments: logoAttachment } : {})
+                html: adminHtml
             }),
             resend.emails.send({
                 from: fromEmail,
                 to: [inquiry.email],
                 replyTo: adminDestEmail,
                 subject: `🏔️ Aanandham Wilderness — We received your inquiry (Ref: ${inquiryId})`,
-                html: guestHtml,
-                ...(logoAttachment.length > 0 ? { attachments: logoAttachment } : {})
+                html: guestHtml
             })
         ]);
 
