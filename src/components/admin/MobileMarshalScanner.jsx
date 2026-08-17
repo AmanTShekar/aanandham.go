@@ -57,12 +57,18 @@ import {
     ShieldAlert,
     LogIn,
     Eye,
-    EyeOff
+    EyeOff,
+    Copy,
+    CreditCard,
+    Smartphone,
+    Edit2,
+    Save,
+    Wallet
 } from 'lucide-react';
 import Link from 'next/link';
 
-// ── CUSTOM LUXURY ANIMATED DROPDOWN COMPONENT ──
-function CustomDropdown({ label, value, options, onChange, placeholder = "Select...", width = "100%" }) {
+// ── CUSTOM LUXURY ANIMATED DROPDOWN COMPONENT (RESPONSIVE & MOBILE-FIRST) ──
+function CustomDropdown({ label, value, options, onChange, placeholder = "Select...", width = "100%", style = {} }) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -79,7 +85,7 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
     const selectedOption = options.find(opt => opt.value === value) || null;
 
     return (
-        <div ref={dropdownRef} style={{ position: 'relative', width, minWidth: '160px' }}>
+        <div ref={dropdownRef} style={{ position: 'relative', width, minWidth: '120px', boxSizing: 'border-box', ...style }}>
             {label && (
                 <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
                     {label}
@@ -90,28 +96,32 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                 onClick={() => setIsOpen(!isOpen)}
                 style={{
                     width: '100%',
-                    padding: '10px 14px',
+                    minHeight: '42px',
+                    padding: '9px 12px',
                     borderRadius: '12px',
                     background: '#0B160E',
-                    border: `1px solid ${isOpen ? '#D5ED55' : selectedOption?.borderColor || 'rgba(255, 255, 255, 0.12)'}`,
+                    border: `1px solid ${isOpen ? '#D5ED55' : selectedOption?.borderColor || 'rgba(255, 255, 255, 0.14)'}`,
                     color: selectedOption ? selectedOption.color || '#FFFFFF' : '#8E9B92',
                     fontSize: '12.5px',
                     fontWeight: '700',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '8px',
+                    gap: '6px',
                     cursor: 'pointer',
                     outline: 'none',
                     boxShadow: isOpen ? '0 0 16px rgba(213, 237, 85, 0.15)' : 'none',
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    boxSizing: 'border-box'
                 }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {selectedOption?.icon && <span>{selectedOption.icon}</span>}
-                    <span>{selectedOption ? selectedOption.label : placeholder}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+                    {selectedOption?.icon && <span style={{ flexShrink: 0 }}>{selectedOption.icon}</span>}
+                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {selectedOption ? selectedOption.label : placeholder}
+                    </span>
                 </div>
-                <ChevronDown size={15} color={isOpen ? '#D5ED55' : '#8E9B92'} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+                <ChevronDown size={14} color={isOpen ? '#D5ED55' : '#8E9B92'} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', flexShrink: 0 }} />
             </button>
 
             <AnimatePresence>
@@ -130,10 +140,11 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                             border: '1px solid rgba(213, 237, 85, 0.3)',
                             borderRadius: '14px',
                             padding: '6px',
-                            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
-                            zIndex: 120,
+                            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.8)',
+                            zIndex: 150,
                             maxHeight: '260px',
-                            overflowY: 'auto'
+                            overflowY: 'auto',
+                            boxSizing: 'border-box'
                         }}
                     >
                         {options.map((option) => {
@@ -148,7 +159,8 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                                     }}
                                     style={{
                                         width: '100%',
-                                        padding: '9px 12px',
+                                        minHeight: '38px',
+                                        padding: '8px 10px',
                                         borderRadius: '8px',
                                         background: isSelected ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
                                         color: isSelected ? '#D5ED55' : option.color || '#E1ECE3',
@@ -158,18 +170,19 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'space-between',
-                                        gap: '8px',
+                                        gap: '6px',
                                         cursor: 'pointer',
                                         textAlign: 'left',
                                         marginBottom: '2px',
-                                        transition: 'background 0.15s ease'
+                                        transition: 'background 0.15s ease',
+                                        boxSizing: 'border-box'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        {option.icon && <span>{option.icon}</span>}
-                                        <span>{option.label}</span>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
+                                        {option.icon && <span style={{ flexShrink: 0 }}>{option.icon}</span>}
+                                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{option.label}</span>
                                     </div>
-                                    {isSelected && <Check size={14} color="#D5ED55" />}
+                                    {isSelected && <Check size={14} color="#D5ED55" style={{ flexShrink: 0 }} />}
                                 </button>
                             );
                         })}
@@ -237,6 +250,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [marshalNotes, setMarshalNotes] = useState('');
     const [isSubmittingCheckin, setIsSubmittingCheckin] = useState(false);
     const [extraGuestsCount, setExtraGuestsCount] = useState(0);
+
+    // ── GATE SETTLEMENT & MULTI-OPTION PAYMENT STATE ──
+    const [settlementMethod, setSettlementMethod] = useState('upi_direct'); // 'upi_direct' | 'cash' | 'gateway'
+    const [hostUpiId, setHostUpiId] = useState('9074858014@upi');
+    const [isEditingUpi, setIsEditingUpi] = useState(false);
+    const [tempUpiInput, setTempUpiInput] = useState('9074858014@upi');
+    const [copiedUpi, setCopiedUpi] = useState(false);
 
     // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
     const [clearedGatePermit, setClearedGatePermit] = useState(null);
@@ -778,6 +798,15 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
         setIsSubmittingCheckin(true);
 
+        const activeUpiId = hostUpiId.trim() || '9074858014@upi';
+        const formattedPaymentMode = isBalancePaid 
+            ? (settlementMethod === 'cash' 
+                ? 'Cash Collected at Gate' 
+                : settlementMethod === 'upi_direct' 
+                    ? `Direct UPI (${activeUpiId})` 
+                    : 'Online Payment Gateway')
+            : 'Payment Pending at Gate';
+
         try {
             const res = await fetch('/api/marshal/checkin', {
                 method: 'POST',
@@ -788,9 +817,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     shortCount,
                     roster: rosterChecklist,
                     isBalancePaid,
+                    paymentMode: formattedPaymentMode,
+                    settlementMethod: isBalancePaid ? settlementMethod : null,
+                    balanceCollected: isBalancePaid ? dynamicBalanceDue : 0,
                     assignedTent,
                     wristbandRange,
-                    marshalNotes: `[Tent: ${assignedTent || 'Unassigned'} | Wristbands: ${wristbandRange || 'None'}] ${marshalNotes || ''}`,
+                    marshalNotes: `[Tent: ${assignedTent || 'Unassigned'} | Wristbands: ${wristbandRange || 'None'} | Payment: ${formattedPaymentMode}] ${marshalNotes || ''}`,
                     marshalName: 'Basecamp Host'
                 })
             });
@@ -813,6 +845,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     nonVegCount: scannedBooking.nonVegCount,
                     balanceCollected: isBalancePaid ? dynamicBalanceDue : 0,
                     isFullySettled: isBalancePaid,
+                    settlementMethod: isBalancePaid ? settlementMethod : null,
+                    settlementLabel: formattedPaymentMode,
                     convoyTime: scannedBooking.convoyTime,
                     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 };
@@ -2450,7 +2484,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
                                 </div>
 
-                                {/* Custom Dropdown for each Camper */}
+                                {/* Custom Dropdown for each Camper (Non-Squished Mobile Wrap) */}
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {rosterChecklist.map((camper, idx) => {
                                         const camperStatus = camper.status || (camper.present ? 'present' : 'absent');
@@ -2464,18 +2498,19 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                             ? 'rgba(234, 179, 8, 0.08)' 
                                                             : 'rgba(239, 68, 68, 0.08)',
                                                     border: `1px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.3)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.35)' : 'rgba(239, 68, 68, 0.3)'}`,
-                                                    borderRadius: '14px',
+                                                    borderRadius: '16px',
                                                     padding: '12px 14px',
                                                     display: 'flex',
+                                                    flexWrap: 'wrap',
                                                     alignItems: 'center',
                                                     justifyContent: 'space-between',
                                                     gap: '10px'
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '160px', flex: '1 1 auto' }}>
                                                     <div style={{
-                                                        width: '28px',
-                                                        height: '28px',
+                                                        width: '32px',
+                                                        height: '32px',
                                                         borderRadius: '50%',
                                                         background: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
                                                         color: '#0B150E',
@@ -2483,12 +2518,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                         alignItems: 'center',
                                                         justifyContent: 'center',
                                                         fontWeight: '900',
-                                                        fontSize: '13px'
+                                                        fontSize: '14px',
+                                                        flexShrink: 0
                                                     }}>
                                                         {camperStatus === 'present' ? '✓' : camperStatus === 'late' ? '⏳' : '✕'}
                                                     </div>
-                                                    <div>
-                                                        <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
+                                                    <div style={{ minWidth: 0 }}>
+                                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF', display: 'block', wordBreak: 'break-word' }}>
                                                             {camper.name}
                                                         </span>
                                                         <span style={{ fontSize: '11px', color: '#8E9B92' }}>
@@ -2497,45 +2533,49 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                     </div>
                                                 </div>
 
-                                                {/* Custom Dropdown Selector */}
-                                                <CustomDropdown
-                                                    value={camperStatus}
-                                                    options={camperStatusOptions}
-                                                    width="180px"
-                                                    onChange={(newVal) => {
-                                                        setRosterChecklist(prev => {
-                                                            const updated = [...prev];
-                                                            updated[idx] = {
-                                                                ...updated[idx],
-                                                                status: newVal,
-                                                                present: newVal === 'present'
-                                                            };
-                                                            return updated;
-                                                        });
-                                                    }}
-                                                />
+                                                {/* Custom Dropdown Selector - Responsive Width */}
+                                                <div style={{ flex: '1 1 180px', minWidth: '150px', maxWidth: '100%' }}>
+                                                    <CustomDropdown
+                                                        value={camperStatus}
+                                                        options={camperStatusOptions}
+                                                        width="100%"
+                                                        onChange={(newVal) => {
+                                                            setRosterChecklist(prev => {
+                                                                const updated = [...prev];
+                                                                updated[idx] = {
+                                                                    ...updated[idx],
+                                                                    status: newVal,
+                                                                    present: newVal === 'present'
+                                                                };
+                                                                return updated;
+                                                            });
+                                                        }}
+                                                    />
+                                                </div>
                                             </div>
                                         );
                                     })}
                                 </div>
 
                                 {/* Walk-In / Extra Guest Adder */}
-                                <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                                <div style={{ marginTop: '14px', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px', gap: '8px' }}>
                                     <span style={{ fontSize: '12px', color: '#8E9B92' }}>
                                         Walk-In / Extra Guest on Arrival?
                                     </span>
-                                    <div style={{ display: 'flex', gap: '6px' }}>
+                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                         {extraGuestsCount > 0 && (
                                             <button
+                                                type="button"
                                                 onClick={handleRemoveExtraCamper}
-                                                style={{ padding: '4px 8px', borderRadius: '8px', background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer' }}
+                                                style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer' }}
                                             >
                                                 - Remove Extra
                                             </button>
                                         )}
                                         <button
+                                            type="button"
                                             onClick={handleAddExtraCamper}
-                                            style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(213,237,85,0.15)', color: '#D5ED55', border: '1px solid rgba(213,237,85,0.3)', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
+                                            style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(213,237,85,0.15)', color: '#D5ED55', border: '1px solid rgba(213,237,85,0.3)', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
                                         >
                                             + Add Extra Camper (+₹2,499)
                                         </button>
@@ -2543,7 +2583,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── TENT & WRISTBAND ALLOCATION WITH CUSTOM DROPDOWN ── */}
+                            {/* ── TENT & WRISTBAND ALLOCATION (RESPONSIVE GRID) ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -2557,10 +2597,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </span>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '10px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
                                     <div>
                                         <CustomDropdown
-                                            label="Assigned Tent / Pod (Custom Dropdown):"
+                                            label="Assigned Tent / Pod / Villa:"
                                             value={assignedTent}
                                             options={tentOptions}
                                             onChange={(val) => setAssignedTent(val)}
@@ -2578,12 +2618,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                             onChange={e => setWristbandRange(e.target.value)}
                                             style={{
                                                 width: '100%',
-                                                padding: '10px 12px',
+                                                minHeight: '42px',
+                                                padding: '10px 14px',
                                                 borderRadius: '12px',
                                                 background: '#08120A',
-                                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                                border: '1px solid rgba(255, 255, 255, 0.14)',
                                                 color: '#FFFFFF',
-                                                fontSize: '12.5px',
+                                                fontSize: '13px',
                                                 outline: 'none',
                                                 boxSizing: 'border-box'
                                             }}
@@ -2592,69 +2633,422 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── BALANCE & CASH SETTLEMENT ── */}
+                            {/* ── GATE SETTLEMENT & MULTI-OPTION PAYMENT CARD ── */}
                             <div style={{
                                 background: '#101E13',
-                                border: '1px solid rgba(255, 255, 255, 0.08)',
-                                borderRadius: '20px',
-                                padding: '20px'
+                                border: `1px solid ${isBalancePaid ? 'rgba(34, 197, 94, 0.35)' : 'rgba(229, 169, 59, 0.4)'}`,
+                                borderRadius: '22px',
+                                padding: '20px',
+                                position: 'relative',
+                                overflow: 'hidden'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                {/* Header */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <DollarSign size={18} color="#D5ED55" />
-                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                            Gate Settlement
+                                        <Wallet size={18} color="#D5ED55" />
+                                        <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
+                                            Gate Balance & Payment Options
                                         </span>
                                     </div>
-                                    <span style={{ fontSize: '12px', fontWeight: '800', color: isBalancePaid ? '#4ADE80' : '#FACC15' }}>
-                                        {isBalancePaid ? '✓ SETTLED' : '⚠️ PAYMENT DUE'}
+                                    <span style={{
+                                        fontSize: '11.5px',
+                                        fontWeight: '900',
+                                        padding: '4px 10px',
+                                        borderRadius: '999px',
+                                        background: isBalancePaid ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                                        color: isBalancePaid ? '#4ADE80' : '#FCA5A5'
+                                    }}>
+                                        {isBalancePaid ? '✓ ALL SETTLED' : '⚠️ PAYMENT DUE'}
                                     </span>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.2fr', gap: '8px', marginBottom: '14px' }}>
-                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
-                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Total</span>
-                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>₹{(scannedBooking.totalPrice + extraBalance).toLocaleString('en-IN')}</span>
+                                {/* Financial Summary Ribbon */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(85px, 1fr))', gap: '8px', marginBottom: '16px' }}>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px 12px', borderRadius: '12px' }}>
+                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Total</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '900', color: '#FFFFFF' }}>₹{(scannedBooking.totalPrice + extraBalance).toLocaleString('en-IN')}</span>
                                     </div>
-                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
-                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Advance</span>
-                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#4ADE80' }}>₹{scannedBooking.advancePaid.toLocaleString('en-IN')}</span>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px 12px', borderRadius: '12px' }}>
+                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>Advance</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '900', color: '#4ADE80' }}>₹{scannedBooking.advancePaid.toLocaleString('en-IN')}</span>
                                     </div>
-                                    <div style={{ background: isBalancePaid ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.12)', padding: '8px 10px', borderRadius: '8px' }}>
-                                        <span style={{ fontSize: '10px', color: isBalancePaid ? '#4ADE80' : '#FCA5A5', display: 'block' }}>Collect</span>
-                                        <span style={{ fontSize: '14px', fontWeight: '900', color: isBalancePaid ? '#4ADE80' : '#EF4444' }}>₹{isBalancePaid ? '0' : dynamicBalanceDue.toLocaleString('en-IN')}</span>
+                                    <div style={{ background: isBalancePaid ? 'rgba(34,197,94,0.12)' : 'rgba(239,68,68,0.15)', border: `1px solid ${isBalancePaid ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'}`, padding: '10px 12px', borderRadius: '12px' }}>
+                                        <span style={{ fontSize: '10px', color: isBalancePaid ? '#4ADE80' : '#FCA5A5', display: 'block', textTransform: 'uppercase', fontWeight: '700' }}>
+                                            {isBalancePaid ? 'Collected' : 'Due on Entry'}
+                                        </span>
+                                        <span style={{ fontSize: '15px', fontWeight: '900', color: isBalancePaid ? '#4ADE80' : '#EF4444' }}>
+                                            ₹{isBalancePaid ? '0' : dynamicBalanceDue.toLocaleString('en-IN')}
+                                        </span>
                                     </div>
                                 </div>
 
-                                <label style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '10px',
-                                    background: isBalancePaid ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                                    border: `1px solid ${isBalancePaid ? '#22C55E' : 'rgba(255, 255, 255, 0.12)'}`,
-                                    padding: '10px 12px',
-                                    borderRadius: '12px',
-                                    cursor: 'pointer'
+                                {/* 3-WAY SETTLEMENT METHOD TABS */}
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                    gap: '6px',
+                                    background: 'rgba(0, 0, 0, 0.4)',
+                                    padding: '4px',
+                                    borderRadius: '14px',
+                                    marginBottom: '16px'
                                 }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={isBalancePaid}
-                                        onChange={(e) => setIsBalancePaid(e.target.checked)}
-                                        style={{ width: '18px', height: '18px', accentColor: '#22C55E', cursor: 'pointer' }}
-                                    />
-                                    <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
-                                        Mark balance (₹{dynamicBalanceDue}) as collected (Cash / UPI)
+                                    <button
+                                        type="button"
+                                        onClick={() => setSettlementMethod('upi_direct')}
+                                        style={{
+                                            padding: '8px 4px',
+                                            borderRadius: '10px',
+                                            border: 'none',
+                                            background: settlementMethod === 'upi_direct' ? '#D5ED55' : 'transparent',
+                                            color: settlementMethod === 'upi_direct' ? '#0B150E' : '#A2B6A6',
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '4px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <Smartphone size={13} />
+                                        <span>Instant UPI</span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setSettlementMethod('cash')}
+                                        style={{
+                                            padding: '8px 4px',
+                                            borderRadius: '10px',
+                                            border: 'none',
+                                            background: settlementMethod === 'cash' ? '#D5ED55' : 'transparent',
+                                            color: settlementMethod === 'cash' ? '#0B150E' : '#A2B6A6',
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '4px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <DollarSign size={13} />
+                                        <span>Cash Gate</span>
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setSettlementMethod('gateway')}
+                                        style={{
+                                            padding: '8px 4px',
+                                            borderRadius: '10px',
+                                            border: 'none',
+                                            background: settlementMethod === 'gateway' ? '#D5ED55' : 'transparent',
+                                            color: settlementMethod === 'gateway' ? '#0B150E' : '#A2B6A6',
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '4px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <CreditCard size={13} />
+                                        <span>Online Link</span>
+                                    </button>
+                                </div>
+
+                                {/* TAB 1: INSTANT DIRECT UPI QR */}
+                                {settlementMethod === 'upi_direct' && (
+                                    <div style={{
+                                        background: 'rgba(213, 237, 85, 0.05)',
+                                        border: '1px solid rgba(213, 237, 85, 0.2)',
+                                        borderRadius: '16px',
+                                        padding: '16px',
+                                        marginBottom: '16px',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                                            📲 Scan with GPay / PhonePe / Paytm / BHIM
+                                        </div>
+
+                                        {/* Dynamic UPI QR Code for exact balance amount */}
+                                        {dynamicBalanceDue > 0 ? (
+                                            <div style={{
+                                                background: '#FFFFFF',
+                                                padding: '12px',
+                                                borderRadius: '16px',
+                                                display: 'inline-block',
+                                                boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                                                margin: '4px auto 12px'
+                                            }}>
+                                                <img 
+                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9074858014@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`)}`}
+                                                    alt="UPI QR Code for Balance Due"
+                                                    style={{ width: '180px', height: '180px', display: 'block', borderRadius: '8px' }}
+                                                />
+                                                <span style={{ fontSize: '12px', fontWeight: '900', color: '#0B150E', display: 'block', marginTop: '6px' }}>
+                                                    Pay ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div style={{ padding: '16px', color: '#4ADE80', fontWeight: '800', fontSize: '13px' }}>
+                                                ✓ Zero balance remaining (Full advance was paid online)
+                                            </div>
+                                        )}
+
+                                        {/* UPI ID & Host Customization */}
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '8px',
+                                            background: '#08120A',
+                                            padding: '12px',
+                                            borderRadius: '12px',
+                                            border: '1px solid rgba(255,255,255,0.08)',
+                                            margin: '8px 0'
+                                        }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                                                <div style={{ textAlign: 'left' }}>
+                                                    <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block' }}>Receiving UPI ID:</span>
+                                                    {isEditingUpi ? (
+                                                        <input
+                                                            type="text"
+                                                            value={tempUpiInput}
+                                                            onChange={e => setTempUpiInput(e.target.value)}
+                                                            placeholder="e.g. yourname@upi"
+                                                            style={{
+                                                                background: '#101E13',
+                                                                border: '1px solid #D5ED55',
+                                                                color: '#FFFFFF',
+                                                                fontSize: '13px',
+                                                                padding: '6px 8px',
+                                                                borderRadius: '6px',
+                                                                outline: 'none',
+                                                                marginTop: '2px'
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <strong style={{ fontSize: '13px', color: '#D5ED55', wordBreak: 'break-all' }}>
+                                                            {hostUpiId}
+                                                        </strong>
+                                                    )}
+                                                </div>
+
+                                                <div style={{ display: 'flex', gap: '6px' }}>
+                                                    {isEditingUpi ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setHostUpiId(tempUpiInput.trim() || '9074858014@upi');
+                                                                setIsEditingUpi(false);
+                                                                showToast('✓ Updated receiving UPI ID');
+                                                            }}
+                                                            style={{ padding: '6px 10px', borderRadius: '8px', background: '#D5ED55', color: '#0B150E', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        >
+                                                            <Save size={12} />
+                                                            <span>Save</span>
+                                                        </button>
+                                                    ) : (
+                                                        <>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    if (navigator.clipboard) {
+                                                                        navigator.clipboard.writeText(hostUpiId);
+                                                                        setCopiedUpi(true);
+                                                                        showToast(`✓ Copied UPI ID: ${hostUpiId}`);
+                                                                        setTimeout(() => setCopiedUpi(false), 2500);
+                                                                    }
+                                                                }}
+                                                                style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.12)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                            >
+                                                                <Copy size={12} />
+                                                                <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    setTempUpiInput(hostUpiId);
+                                                                    setIsEditingUpi(true);
+                                                                }}
+                                                                style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(229,169,59,0.15)', color: '#E5A93B', border: '1px solid rgba(229,169,59,0.3)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                            >
+                                                                <Edit2 size={12} />
+                                                                <span>Host UPI</span>
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Direct Open in UPI App button (for mobile test/host phone) */}
+                                        {dynamicBalanceDue > 0 && (
+                                            <a
+                                                href={`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9074858014@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`}
+                                                style={{
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    width: '100%',
+                                                    padding: '10px',
+                                                    borderRadius: '10px',
+                                                    background: 'rgba(213, 237, 85, 0.15)',
+                                                    border: '1px solid rgba(213, 237, 85, 0.3)',
+                                                    color: '#D5ED55',
+                                                    fontSize: '12px',
+                                                    fontWeight: '800',
+                                                    textDecoration: 'none',
+                                                    boxSizing: 'border-box'
+                                                }}
+                                            >
+                                                <ExternalLink size={13} />
+                                                <span>Open in UPI App (GPay / PhonePe / Paytm)</span>
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* TAB 2: CASH AT GATE */}
+                                {settlementMethod === 'cash' && (
+                                    <div style={{
+                                        background: 'rgba(34, 197, 94, 0.06)',
+                                        border: '1px solid rgba(34, 197, 94, 0.25)',
+                                        borderRadius: '16px',
+                                        padding: '16px',
+                                        marginBottom: '16px',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#4ADE80', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                                            💵 Physical Cash Handover at Basecamp
+                                        </div>
+                                        <div style={{ fontSize: '28px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0' }}>
+                                            ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+                                        </div>
+                                        <p style={{ fontSize: '12px', color: '#8E9B92', margin: '0 0 10px' }}>
+                                            Collect physical cash from {scannedBooking.name} at the gate counter and issue receipt.
+                                        </p>
+                                    </div>
+                                )}
+
+                                {/* TAB 3: ONLINE PAYMENT GATEWAY LINK */}
+                                {settlementMethod === 'gateway' && (
+                                    <div style={{
+                                        background: 'rgba(96, 165, 250, 0.06)',
+                                        border: '1px solid rgba(96, 165, 250, 0.25)',
+                                        borderRadius: '16px',
+                                        padding: '16px',
+                                        marginBottom: '16px',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
+                                            💳 Card, NetBanking & Razorpay Link
+                                        </div>
+                                        <div style={{ fontSize: '22px', fontWeight: '900', color: '#FFFFFF', margin: '4px 0' }}>
+                                            ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+                                        </div>
+                                        <p style={{ fontSize: '12px', color: '#8E9B92', margin: '0 0 12px' }}>
+                                            Guest can settle remaining balance via debit/credit card, netbanking, or UPI link.
+                                        </p>
+                                        <a
+                                            href={`https://wa.me/${scannedBooking.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20here%20is%20your%20Aanandham%20Gate%20Pass%20settlement%20link%20for%20balance%20%E2%82%B9${dynamicBalanceDue}%3A%20https%3A%2F%2Faanandham.in%2Fpass%2F${scannedBooking.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px',
+                                                width: '100%',
+                                                padding: '10px',
+                                                borderRadius: '10px',
+                                                background: 'rgba(37, 211, 102, 0.15)',
+                                                border: '1px solid rgba(37, 211, 102, 0.3)',
+                                                color: '#25D366',
+                                                fontSize: '12px',
+                                                fontWeight: '800',
+                                                textDecoration: 'none',
+                                                boxSizing: 'border-box'
+                                            }}
+                                        >
+                                            <MessageCircle size={14} />
+                                            <span>Send Payment Link via WhatsApp</span>
+                                        </a>
+                                    </div>
+                                )}
+
+                                {/* ONE-TAP TOGGLE TO MARK PAYMENT COLLECTED */}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const nextState = !isBalancePaid;
+                                        setIsBalancePaid(nextState);
+                                        if (nextState) {
+                                            playSuccessChime();
+                                            showToast(`✓ Marked balance (₹${dynamicBalanceDue}) as collected!`);
+                                        }
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '13px 14px',
+                                        borderRadius: '14px',
+                                        background: isBalancePaid 
+                                            ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.15) 100%)' 
+                                            : 'rgba(255, 255, 255, 0.05)',
+                                        border: `1.5px solid ${isBalancePaid ? '#22C55E' : 'rgba(255, 255, 255, 0.15)'}`,
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        gap: '10px',
+                                        cursor: 'pointer',
+                                        boxSizing: 'border-box',
+                                        transition: 'all 0.2s ease'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left' }}>
+                                        <div style={{
+                                            width: '24px',
+                                            height: '24px',
+                                            borderRadius: '6px',
+                                            background: isBalancePaid ? '#22C55E' : 'transparent',
+                                            border: `2px solid ${isBalancePaid ? '#22C55E' : 'rgba(255, 255, 255, 0.3)'}`,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0
+                                        }}>
+                                            {isBalancePaid && <Check size={16} color="#0B150E" strokeWidth={3} />}
+                                        </div>
+                                        <span>
+                                            {isBalancePaid 
+                                                ? `✓ Balance Settled (₹${dynamicBalanceDue} received via ${settlementMethod === 'cash' ? 'Cash' : settlementMethod === 'upi_direct' ? 'Direct UPI' : 'Gateway'})` 
+                                                : `Mark ₹${dynamicBalanceDue.toLocaleString('en-IN')} balance as collected (${settlementMethod === 'cash' ? 'Cash' : settlementMethod === 'upi_direct' ? 'Direct UPI' : 'Gateway'})`}
+                                        </span>
+                                    </div>
+                                    <span style={{ fontSize: '11px', color: isBalancePaid ? '#4ADE80' : '#8E9B92', fontWeight: '700', flexShrink: 0 }}>
+                                        {isBalancePaid ? 'Tap to Undo' : 'Tap to Confirm'}
                                     </span>
-                                </label>
+                                </button>
                             </div>
 
                             {/* ── ACTION BUTTONS ── */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 <button
+                                    type="button"
                                     onClick={handleConfirmCheckin}
                                     disabled={isSubmittingCheckin}
                                     style={{
                                         width: '100%',
+                                        minHeight: '52px',
                                         padding: '16px',
                                         borderRadius: '16px',
                                         background: shortCount > 0 ? '#F59E0B' : '#D5ED55',
@@ -2667,7 +3061,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         gap: '8px',
-                                        boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
+                                        boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                                        boxSizing: 'border-box'
                                     }}
                                 >
                                     <CheckCircle2 size={18} />
@@ -2681,9 +3076,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </button>
 
                                 <button
+                                    type="button"
                                     onClick={resetScanner}
                                     style={{
                                         width: '100%',
+                                        minHeight: '44px',
                                         padding: '12px',
                                         borderRadius: '14px',
                                         background: 'rgba(255, 255, 255, 0.08)',
@@ -2695,7 +3092,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        gap: '6px'
+                                        gap: '6px',
+                                        boxSizing: 'border-box'
                                     }}
                                 >
                                     <ArrowLeft size={16} />

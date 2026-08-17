@@ -20,6 +20,9 @@ export async function POST(request) {
             shortCount, 
             roster, 
             isBalancePaid, 
+            paymentMode = '',
+            settlementMethod = '',
+            balanceCollected = 0,
             assignedTent = '',
             wristbandRange = '',
             marshalNotes,
@@ -51,6 +54,9 @@ export async function POST(request) {
             attendanceRoster: Array.isArray(roster) ? roster : [],
             isBalancePaid: Boolean(isBalancePaid),
             balanceDue: isBalancePaid ? 0 : (existing.balanceDue || 0),
+            paymentMode: isBalancePaid ? (paymentMode || existing.paymentMode || 'Cash / UPI at Gate') : existing.paymentMode,
+            settlementMethod: isBalancePaid ? settlementMethod : (existing.settlementMethod || null),
+            balanceCollected: isBalancePaid ? (Number(balanceCollected) || existing.balanceDue || 0) : 0,
             assignedTent: String(assignedTent || existing.assignedTent || '').slice(0, 100),
             wristbandRange: String(wristbandRange || existing.wristbandRange || '').slice(0, 100),
             checkInAt: existing.checkInAt || new Date().toISOString(),
@@ -66,7 +72,8 @@ export async function POST(request) {
         try {
             await updateServerBooking(bookingId, {
                 status: newStatus,
-                notes: `[Checked-In by ${marshalName} on ${new Date().toLocaleTimeString('en-IN')}: ${numPresent} Present, ${numShort} Short. Balance Paid: ${isBalancePaid ? 'YES' : 'NO'}] ${marshalNotes || ''}`
+                paymentMode: updatedRecord.paymentMode,
+                notes: `[Checked-In by ${marshalName} on ${new Date().toLocaleTimeString('en-IN')}: ${numPresent} Present, ${numShort} Short. Balance Paid: ${isBalancePaid ? `YES (${paymentMode || 'Settled'})` : 'NO'}] ${marshalNotes || ''}`
             });
         } catch (e) {
             console.warn('Supabase sync skipped, stored locally:', e.message);
