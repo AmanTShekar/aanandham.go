@@ -7,22 +7,28 @@ import { waLink } from '../lib/whatsapp';
 // ── SHARED LIQUID WAVE DRAWER VARIANTS ──
 const drawerWaveVariants = {
     hidden: { 
+        opacity: 0,
+        y: -6,
         clipPath: 'circle(0% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
     },
     visible: { 
+        opacity: 1,
+        y: 0,
         clipPath: 'circle(260% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.48, 
+            duration: 0.42, 
             ease: [0.22, 1, 0.36, 1] 
         }
     },
     exit: { 
+        opacity: 0,
+        y: -6,
         clipPath: 'circle(0% at calc(100% - 42px) 36px)',
         WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
         transition: { 
-            duration: 0.38, 
+            duration: 0.3, 
             ease: [0.4, 0, 0.2, 1] 
         }
     }
@@ -143,8 +149,10 @@ export default function SiteHeader({
                     zIndex: 100000,
                     padding: '14px clamp(20px, 4vw, 48px)',
                     backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.97)' : 'transparent',
-                    borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+                    borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid transparent',
                     boxShadow: isHeaderSolid ? '0 8px 24px rgba(0, 0, 0, 0.35)' : 'none',
+                    backdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
+                    WebkitBackdropFilter: isHeaderSolid ? 'blur(16px)' : 'none',
                     transition: 'background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease'
                 }}
             >

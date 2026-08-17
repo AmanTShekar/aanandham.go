@@ -9,7 +9,7 @@ import { buildGoogleCalendarUrl } from '@/lib/calendarLink';
 import { generateQrDataUri } from '@/lib/qrGenerator';
 import { calculateRefundAmount } from '@/lib/cancellation';
 import PrintPassButton from '@/components/PrintPassButton';
-import { ShieldCheck, MapPin, Calendar, Users, Phone, ArrowLeft, KeyRound, QrCode, Utensils, IndianRupee, CheckCircle2, Download, Lock, RefreshCw } from 'lucide-react';
+import { ShieldCheck, MapPin, Calendar, Users, Phone, ArrowLeft, KeyRound, QrCode, Utensils, IndianRupee, CheckCircle2, Download, Lock, RefreshCw, Clock, AlertTriangle } from 'lucide-react';
 
 export const metadata = {
     title: 'Verified Expedition Pass · Aanandham Wilderness',
@@ -42,7 +42,7 @@ export default async function PassDetailPage({ params, searchParams }) {
     // 1. Verify Cryptographic HMAC Token
     const isTokenVerified = token ? verifyPassToken(data.id, token, data.status) : false;
 
-    // 2. Gate sensitive PII if accessed without cryptographic token
+    // Defensive PII masking: Mask guest phone unless accessed via cryptographically signed token
     const maskedName = isTokenVerified 
         ? data.name 
         : data.name ? `${data.name.split(' ')[0]} ${data.name.split(' ')[1] ? data.name.split(' ')[1][0] + '.' : ''}` : 'Verified Explorer';
@@ -50,7 +50,11 @@ export default async function PassDetailPage({ params, searchParams }) {
         ? data.phone 
         : data.phone ? `••••••${String(data.phone).slice(-4)}` : '••••••••••';
 
-    const gatePin = isTokenVerified ? generateGatePin(data.id, data.dates) : '••••';
+    const isConfirmed = data.status === 'Confirmed' || data.status === 'confirmed';
+    const isCancelled = data.status === 'Cancelled' || data.status === 'cancelled';
+    const isPending = !isConfirmed && !isCancelled;
+
+    const gatePin = (isTokenVerified && isConfirmed) ? generateGatePin(data.id, data.dates) : '••••';
     const landmarkGuide = getCheckInLandmarkGuide(data.campsiteId || data.package);
     const refundInfo = calculateRefundAmount(data.rawDate || data.dates || data.createdAt, Number(data.paidAmount || data.total || 0));
     const passToken = generatePassToken(data.id);
@@ -70,7 +74,7 @@ export default async function PassDetailPage({ params, searchParams }) {
     const marshalWaMsg = `🏕️ *AANANDHAM CAMPER SELF CHECK-IN PING*\n\n` +
         `🔖 *Pass Reference:* ${data.id}\n` +
         `👤 *Lead Camper:* ${data.name}\n` +
-        `🔑 *Gate PIN:* ${isTokenVerified ? gatePin : 'Active on arrival'}\n` +
+        `🔑 *Gate PIN:* ${isConfirmed && isTokenVerified ? gatePin : 'Pending Approval'}\n` +
         `📍 *Destination:* ${data.package}\n` +
         `👥 *Squad:* ${data.guests} Campers\n` +
         `🍽️ *Food Allocation:* ${data.mealSummary || `${data.vegCount || 0} Veg + ${data.nonVegCount || 0} Non-Veg BBQ`}\n` +
@@ -115,24 +119,58 @@ export default async function PassDetailPage({ params, searchParams }) {
                 </div>
 
                 {/* Main Pass Card */}
-                <div className="pass-card-container" style={{ background: '#121F15', borderRadius: '24px', overflow: 'hidden', border: '1px solid rgba(213, 237, 85, 0.25)', boxShadw: '0 20px 40px rgba(0,0,0,0.5)' }}>
+                <div className="pass-card-container" style={{ background: '#121F15', borderRadius: '24px', overflow: 'hidden', border: isConfirmed ? '1px solid rgba(213, 237, 85, 0.25)' : '1px solid rgba(229, 169, 59, 0.35)', boxShadow: '0 20px 40px rgba(0,0,0,0.5)' }}>
                     
                     {/* Header */}
                     <div className="pass-header" style={{ background: '#0A130D', padding: '24px', textAlign: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#166534', color: '#D5ED55', fontSize: '11px', fontWeight: '900', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                            <CheckCircle2 size={14} color="#D5ED55" />
-                            <span>Verified Wilderness Permit · Active</span>
-                        </div>
+                        {isConfirmed ? (
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#166534', color: '#D5ED55', fontSize: '11px', fontWeight: '900', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                <CheckCircle2 size={14} color="#D5ED55" />
+                                <span>Verified Wilderness Permit · Active</span>
+                            </div>
+                        ) : isCancelled ? (
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#991B1B', color: '#FFFFFF', fontSize: '11px', fontWeight: '900', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                <span>Permit Cancelled / Inactive</span>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#D97706', color: '#FFFFFF', fontSize: '11px', fontWeight: '900', padding: '4px 14px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                <Clock size={14} color="#FFFFFF" />
+                                <span>Pending Verification · Awaiting Approval</span>
+                            </div>
+                        )}
                         <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '12px 0 4px', color: '#FFFFFF' }}>
                             {data.package}
                         </h1>
                         <p style={{ fontSize: '13px', color: '#A2B6A6', margin: 0 }}>
-                            Permit ID: <strong style={{ color: '#D5ED55', letterSpacing: '1px' }}>{data.id}</strong>
+                            Permit ID: <strong style={{ color: isConfirmed ? '#D5ED55' : '#FBBF24', letterSpacing: '1px' }}>{data.id}</strong>
                         </p>
                     </div>
 
                     <div style={{ padding: '24px' }}>
                         
+                        {/* ── PENDING VERIFICATION ALERT BANNER ── */}
+                        {isPending && (
+                            <div className="no-print" style={{ background: 'rgba(217, 119, 6, 0.15)', border: '1px solid rgba(217, 119, 6, 0.5)', borderRadius: '16px', padding: '16px 18px', marginBottom: '20px', textAlign: 'left' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#FBBF24', fontWeight: '800', fontSize: '13px', marginBottom: '4px' }}>
+                                    <AlertTriangle size={16} color="#FBBF24" />
+                                    <span>Payment Verification In Progress</span>
+                                </div>
+                                <p style={{ margin: 0, fontSize: '12.5px', color: '#E2E8F0', lineHeight: 1.5 }}>
+                                    Your booking request and payment are currently being reconciled by the basecamp coordinator. This pass is <strong>not yet valid for gate check-in</strong>. Your official gate PIN and scannable QR will activate automatically upon verification.
+                                </p>
+                                <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                    <a
+                                        href={waLink('919400987654', `Hi Aanandham Coordinator, checking verification status for Booking Ref: ${data.id} (${data.name})`)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{ background: '#25D366', color: '#0B150E', padding: '8px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                    >
+                                        <span>💬 Chat with Camp Coordinator</span>
+                                    </a>
+                                </div>
+                            </div>
+                        )}
+
                         {/* ── BALANCE COLLECTION BANNER (FOR HOST / MARSHAL) ── */}
                         <div className="details-box-print" style={{
                             background: Number(data.balanceDue) > 0 ? 'rgba(229, 169, 59, 0.15)' : 'rgba(34, 197, 94, 0.15)',
@@ -159,36 +197,47 @@ export default async function PassDetailPage({ params, searchParams }) {
                         </div>
 
                         {/* ── GATE ACCESS PIN BOX ── */}
-                        <div className="pin-box-print" style={{ background: '#172B1E', border: '2px dashed #D5ED55', borderRadius: '18px', padding: '20px', textAlign: 'center', marginBottom: '24px' }}>
+                        <div className="pin-box-print" style={{ background: '#172B1E', border: isConfirmed ? '2px dashed #D5ED55' : '2px dashed #D97706', borderRadius: '18px', padding: '20px', textAlign: 'center', marginBottom: '24px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: '#A2B6A6', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                <KeyRound size={15} color="#D5ED55" />
+                                <KeyRound size={15} color={isConfirmed ? '#D5ED55' : '#D97706'} />
                                 <span>Smart Gate & Barrier Keypad PIN</span>
                             </div>
-                            <div className="pin-code-print" style={{ fontFamily: 'monospace', fontSize: '38px', fontWeight: '900', color: '#D5ED55', letterSpacing: '8px', margin: '8px 0' }}>
-                                {gatePin}
+                            <div className="pin-code-print" style={{ fontFamily: 'monospace', fontSize: isConfirmed ? '38px' : '26px', fontWeight: '900', color: isConfirmed ? '#D5ED55' : '#FBBF24', letterSpacing: isConfirmed ? '8px' : '4px', margin: '8px 0' }}>
+                                {isConfirmed ? gatePin : '•••• (LOCKED)'}
                             </div>
                             <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                Active from 2:00 PM on arrival date. Enter on the digital keypad at the summit barrier gate.
+                                {isConfirmed 
+                                    ? 'Active from 2:00 PM on arrival date. Enter on the digital keypad at the summit barrier gate.'
+                                    : 'PIN unlocks automatically once payment is verified and approved by camp coordinator.'}
                             </div>
                         </div>
 
                         {/* ── SCANNABLE QR CODE FOR BASECAMP MARSHALS ── */}
                         <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '20px', textAlign: 'center', color: '#121613', marginBottom: '24px' }}>
-                            <img 
-                                src={qrImageUrl} 
-                                alt={`Pass QR Code for ${data.id}`}
-                                style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto 10px', borderRadius: '8px' }}
-                            />
-                            <div style={{ fontSize: '13px', fontWeight: '900', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                Marshal Scan & Verification QR
+                            {isConfirmed ? (
+                                <img 
+                                    src={qrImageUrl} 
+                                    alt={`Pass QR Code for ${data.id}`}
+                                    style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto 10px', borderRadius: '8px' }}
+                                />
+                            ) : (
+                                <div style={{ width: '180px', height: '180px', margin: '0 auto 10px', background: '#F8FAFC', borderRadius: '12px', border: '2px dashed #CBD5E1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
+                                    <Clock size={38} color="#D97706" />
+                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>QR Unlocks On Approval</span>
+                                </div>
+                            )}
+                            <div style={{ fontSize: '13px', fontWeight: '900', color: isConfirmed ? '#166534' : '#D97706', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                {isConfirmed ? 'Marshal Scan & Verification QR' : 'Verification In Progress'}
                             </div>
                             <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
-                                Scan with any phone camera to verify camper roster & meal requirements
+                                {isConfirmed 
+                                    ? 'Scan with any phone camera to verify camper roster & meal requirements'
+                                    : 'Official check-in QR code will activate immediately once transaction is approved.'}
                             </div>
                         </div>
 
                         {/* ── 1-CLICK ADD TO CALENDAR ── */}
-                        <div className="no-print" style={{ textAlgn: 'center', margin: '0 0 20px', background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div className="no-print" style={{ textAlign: 'center', margin: '0 0 20px', background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
                             <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
                                 Sync Stay to Your Calendar
                             </div>
