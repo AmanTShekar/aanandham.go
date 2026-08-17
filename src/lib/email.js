@@ -1,7 +1,7 @@
 import { Resend } from 'resend';
-import { generateGatePin, getCheckInLandmarkGuide, generatePassToken } from './accessControl';
-import { buildGoogleCalendarUrl } from './calendarLink';
-import { generateQrDataUri } from './qrGenerator';
+import { generateGatePin, getCheckInLandmarkGuide, generatePassToken } from './accessControl.js';
+import { buildGoogleCalendarUrl } from './calendarLink.js';
+import { generateQrBuffer } from './qrGenerator.js';
 
 function escapeHtml(str) {
     if (!str) return '';
@@ -47,7 +47,8 @@ export async function sendBookingConfirmationEmail(booking) {
         bookingId: booking.id
     });
     
-    const qrImageUrl = await generateQrDataUri(passUrl, 260);
+    // Generate QR as a PNG buffer for inline CID attachment (data: URIs are blocked by Gmail/Outlook)
+    const qrBuffer = await generateQrBuffer(passUrl, 280);
 
     const safeId = escapeHtml(booking.id);
     const safeName = escapeHtml(booking.name);
@@ -140,9 +141,9 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pinBoxHtml}
 
-                <!-- SCANNABLE MARSHAL QR CODE -->
+                <!-- SCANNABLE MARSHAL QR CODE (CID inline attachment) -->
                 <div class="qr-card">
-                    <img src="${qrImageUrl}" alt="Digital Pass QR Code" />
+                    <img src="cid:qr-pass" alt="Digital Pass QR Code — Scan to Check In" style="width:200px;height:200px;display:block;margin:0 auto;" />
                     <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; color: ${isConfirmed ? '#166534' : '#D97706'}; margin-top: 8px;">
                         ${isConfirmed ? 'Marshal Check-In QR Code' : 'Pass Verification QR Code'}
                     </div>
@@ -217,11 +218,25 @@ export async function sendBookingConfirmationEmail(booking) {
     if (apiKey) {
         try {
             const resend = new Resend(apiKey);
+
+            // Build inline attachments (QR code as CID so Gmail/Outlook render it correctly)
+            const attachments = [];
+            if (qrBuffer) {
+                attachments.push({
+                    filename: 'qr-pass.png',
+                    content: qrBuffer,
+                    content_type: 'image/png',
+                    content_id: 'qr-pass',
+                    inline: true
+                });
+            }
+
             const { data, error } = await resend.emails.send({
                 from: fromEmail,
                 to: [booking.email],
                 subject: emailSubject,
-                html: htmlContent
+                html: htmlContent,
+                ...(attachments.length > 0 ? { attachments } : {})
             });
 
             if (error) {
