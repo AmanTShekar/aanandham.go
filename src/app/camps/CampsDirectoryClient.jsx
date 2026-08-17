@@ -4,12 +4,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
 import Footer from '../../components/Footer';
+import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import { MapPin, Clock, Heart, Camera, Star, Search, X } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
+
+const SORT_OPTIONS = [
+    { value: 'recommended', label: 'Recommended', icon: 'Sparkles' },
+    { value: 'price-asc', label: 'Price: Low to High', icon: 'TrendingDown' },
+    { value: 'price-desc', label: 'Price: High to Low', icon: 'TrendingUp' },
+    { value: 'altitude', label: 'Highest Altitude (FT)', icon: 'Mountain' },
+    { value: 'rating', label: 'Top Rated (4.9+)', icon: 'Star' }
+];
 
 export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS }) {
     const [camps, setCamps] = useState(initialCamps);
@@ -21,8 +30,6 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
 
     // User Wishlist stored in localStorage
     const [wishlist, setWishlist] = useState([]);
-    const [userEmailSync, setUserEmailSync] = useState('');
-    const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
 
     // Modals state
     const [selectedPackageForBooking, setSelectedPackageForBooking] = useState(null);
@@ -53,8 +60,6 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
         try {
             const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
             setWishlist(savedWishlist);
-            const savedEmail = localStorage.getItem('aanandham_user_email') || '';
-            setUserEmailSync(savedEmail);
         } catch (e) {
             console.error('Error reading wishlist from localStorage:', e);
         }
@@ -88,17 +93,6 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
         setWishlist(updated);
         try {
             localStorage.setItem('aanandham_user_wishlist', JSON.stringify(updated));
-        } catch (e) {}
-    };
-
-    // Save Email Sync
-    const handleSaveEmailSync = (e) => {
-        e.preventDefault();
-        if (!userEmailSync.trim()) return;
-        try {
-            localStorage.setItem('aanandham_user_email', userEmailSync.trim());
-            showToast(`✓ Wishlist linked to ${userEmailSync.trim()}!`);
-            setIsSyncModalOpen(false);
         } catch (e) {}
     };
 
@@ -229,43 +223,30 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                 Explore verified campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.
                             </p>
 
-                            {/* Wishlist Bar Pill */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-                                <button
-                                    onClick={() => setOnlyWishlisted(!onlyWishlisted)}
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '8px',
-                                        padding: '10px 20px',
-                                        borderRadius: '999px',
-                                        background: onlyWishlisted ? '#D5ED55' : 'rgba(255, 255, 255, 0.1)',
-                                        border: onlyWishlisted ? '1px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.2)',
-                                        color: onlyWishlisted ? '#121613' : '#FFFFFF',
-                                        fontSize: '13.5px',
-                                        fontWeight: '800',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
-                                    }}
-                                >
-                                    <span>{onlyWishlisted ? '❤️ Showing Wishlist Only' : `❤️ Saved Wishlist (${wishlist.length})`}</span>
-                                </button>
-
-                                <button
-                                    onClick={() => setIsSyncModalOpen(true)}
-                                    style={{
-                                        background: 'transparent',
-                                        border: 'none',
-                                        color: '#D5ED55',
-                                        fontSize: '13px',
-                                        fontWeight: '700',
-                                        textDecoration: 'underline',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {userEmailSync ? `🔗 Linked to ${userEmailSync}` : '☁️ Save / Link to Email'}
-                                </button>
-                            </div>
+                            {/* Wishlist Bar Pill (Only shown if wishlist has items) */}
+                            {wishlist.length > 0 && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+                                    <button
+                                        onClick={() => setOnlyWishlisted(!onlyWishlisted)}
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            padding: '10px 20px',
+                                            borderRadius: '999px',
+                                            background: onlyWishlisted ? '#D5ED55' : 'rgba(255, 255, 255, 0.1)',
+                                            border: onlyWishlisted ? '1px solid #D5ED55' : '1px solid rgba(255, 255, 255, 0.2)',
+                                            color: onlyWishlisted ? '#121613' : '#FFFFFF',
+                                            fontSize: '13.5px',
+                                            fontWeight: '800',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        <span>{onlyWishlisted ? '❤️ Showing Wishlist Only' : `❤️ Saved Wishlist (${wishlist.length})`}</span>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>
@@ -325,32 +306,20 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                 )}
                             </div>
 
-                            {/* Sort Selector */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <span style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                            {/* Sort Selector with Reusable CustomSelectDropdown */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '240px' }}>
+                                <span style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px', flexShrink: 0 }}>
                                     Sort:
                                 </span>
-                                <select
-                                    value={sortBy}
-                                    onChange={e => setSortBy(e.target.value)}
-                                    style={{
-                                        padding: '13px 18px',
-                                        borderRadius: '14px',
-                                        background: '#F8F9F5',
-                                        border: '1px solid rgba(18, 22, 19, 0.12)',
-                                        color: '#121613',
-                                        fontSize: '13.5px',
-                                        fontWeight: '700',
-                                        cursor: 'pointer',
-                                        outline: 'none'
-                                    }}
-                                >
-                                    <option value="recommended">⭐ Recommended</option>
-                                    <option value="price-asc">Price: Low to High</option>
-                                    <option value="price-desc">Price: High to Low</option>
-                                    <option value="altitude">Highest Altitude (FT)</option>
-                                    <option value="rating">Top Camper Rated (4.9+)</option>
-                                </select>
+                                <div style={{ flex: 1, minWidth: '200px' }}>
+                                    <CustomSelectDropdown
+                                        options={SORT_OPTIONS}
+                                        value={sortBy}
+                                        onChange={val => setSortBy(val)}
+                                        theme="light"
+                                        placeholder="Sort By..."
+                                    />
+                                </div>
                             </div>
                         </div>
 
@@ -779,41 +748,6 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                 onClose={() => setIsBookingModalOpen(false)}
                 initialPackage={selectedPackageForBooking}
             />
-
-            {/* ── EMAIL / WISHLIST SYNC MODAL ── */}
-            <AnimatePresence>
-                {isSyncModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 99999, background: 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} style={{ background: '#FFFFFF', borderRadius: '28px', padding: '36px', maxWidth: '480px', width: '100%', boxShadow: '0 25px 80px rgba(0,0,0,0.3)', color: '#121613' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={{ fontSize: '22px' }}>❤️</span>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0 }}>
-                                        Save Your Campsite Wishlist
-                                    </h3>
-                                </div>
-                                <button onClick={() => setIsSyncModalOpen(false)} style={{ background: '#F1F3EC', border: 'none', width: '32px', height: '32px', borderRadius: '50%', cursor: 'pointer', fontWeight: '800' }}>✕</button>
-                            </div>
-                            <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.6, marginBottom: '20px' }}>
-                                Enter your email to automatically sync your saved {wishlist.length} campsites to your browser session and receive notifications when special weekend batches open.
-                            </p>
-                            <form onSubmit={handleSaveEmailSync} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                                <input
-                                    type="email"
-                                    required
-                                    placeholder="Enter your email (e.g. explorer@gmail.com)"
-                                    value={userEmailSync}
-                                    onChange={e => setUserEmailSync(e.target.value)}
-                                    style={{ width: '100%', padding: '14px 18px', borderRadius: '14px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.15)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
-                                />
-                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14.5px', fontWeight: '800', cursor: 'pointer' }}>
-                                    Save & Link Wishlist
-                                </button>
-                            </form>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
 
             {/* ── FULLSCREEN PHOTO LIGHTBOX ── */}
             <AnimatePresence>
