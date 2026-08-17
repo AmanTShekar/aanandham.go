@@ -136,17 +136,17 @@ export async function sendBookingConfirmationEmail(booking) {
     <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Wilderness Permit Pass - ${safeId}</title>
+        <title>Booking Pass - ${safeId}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08110A; color: #FFFFFF; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased; }
+            @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+            body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08110A; color: #FFFFFF; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased; }
+            h1, h2, h3, .brand-title { font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; }
             .container { max-width: 660px; margin: 0 auto; background: #0E1A11; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
             .header { background: #060E08; padding: 32px 28px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
-            .badge { font-size: 11px; font-weight: 900; padding: 5px 16px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; }
+            .badge { font-size: 11px; font-weight: 800; padding: 5px 16px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; }
             .content { padding: 28px; }
-            .pin-box { background: #14261A; border: 2px dashed #D5ED55; border-radius: 18px; padding: 20px; text-align: center; margin: 20px 0; }
-            .pin-code { font-family: monospace; font-size: 36px; font-weight: 900; color: #D5ED55; letter-spacing: 8px; margin: 6px 0; }
-            .table-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
+            .table-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
             .label { color: #A2B6A6; }
             .val { color: #FFFFFF; font-weight: 700; text-align: right; }
             .footer { background: #060E08; padding: 22px; text-align: center; font-size: 12px; color: #59655D; border-top: 1px solid rgba(255,255,255,0.08); }
@@ -157,39 +157,39 @@ export async function sendBookingConfirmationEmail(booking) {
             <div class="header">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
                     <img src="${logoPublicUrl}" alt="Aanandham.go" width="76" height="76" style="display: block; margin: 0 auto 12px; border-radius: 18px; object-fit: contain;" />
-                    <div style="font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
+                    <div class="brand-title" style="font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
                 </a>
                 <h1 style="margin: 8px 0 0; font-size: 24px; color: #FFFFFF; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
-                <p style="margin: 8px 0 0; color: #A2B6A6; font-size: 13.5px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
+                <p style="margin: 8px 0 0; color: #A2B6A6; font-size: 13.5px;">Booking Ref: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
             </div>
 
             <div class="content">
                 
-                <!-- 1. MAIN EXPEDITION & PAYMENT DETAILS (HERO) -->
+                <!-- 1. MAIN STAY & PAYMENT DETAILS (HERO) -->
                 <div style="background: rgba(255,255,255,0.04); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Expedition &amp; Stay Summary</div>
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Stay Details</div>
                     <div class="table-row">
-                        <span class="label">Lead Explorer:</span>
+                        <span class="label">Lead Guest:</span>
                         <span class="val">${safeName}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Stay Dates:</span>
+                        <span class="label">Dates:</span>
                         <span class="val">${safeDates}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Lodging Sanctuary:</span>
+                        <span class="label">Lodging:</span>
                         <span class="val">${safeRoom}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Squad Roster:</span>
+                        <span class="label">Guests:</span>
                         <span class="val">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Kitchen Provisions:</span>
+                        <span class="label">Meal Plan:</span>
                         <span class="val">${safeMeal}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Total Fare:</span>
+                        <span class="label">Total Amount:</span>
                         <span class="val">₹${Number(booking.total || 0).toLocaleString('en-IN')}</span>
                     </div>
                     <div class="table-row" style="border: none; padding-top: 12px;">
@@ -212,9 +212,9 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 <!-- 2. DIGITAL PASS PORTAL CTA -->
                 <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
-                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Official Wilderness Pass ★</div>
+                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
                     <div style="font-size: 30px; margin-bottom: 6px;">🎫</div>
-                    <div style="font-size: 15px; font-weight: 900; color: #FFFFFF; margin-bottom: 4px;">
+                    <div class="brand-title" style="font-size: 17px; font-weight: 800; color: #FFFFFF; margin-bottom: 4px;">
                         ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
                     </div>
                     <div style="font-size: 12px; color: #A2B6A6; margin-bottom: 16px;">
@@ -223,24 +223,24 @@ export async function sendBookingConfirmationEmail(booking) {
                             : 'Tap below to track your verification status and unlock your pass'
                         }
                     </div>
-                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 900; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px;">
-                        🏳️&nbsp; View &amp; Track Live Wilderness Pass →
+                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; font-family: 'Plus Jakarta Sans', sans-serif;">
+                        🏳️&nbsp; View Live Pass &amp; Check-In QR →
                     </a>
                     <div style="font-size: 11px; color: #59655D; margin-top: 12px;">
-                        Secure signed link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · QR code inside the PDF attachment
+                        Secure signed link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
                     </div>
                 </div>
 
-                <!-- 4. 4x4 CONVOY DIRECTIONS -->
+                <!-- 3. PICKUP & ARRIVAL GUIDE -->
                 <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 10px;">🚙 4x4 Convoy &amp; Arrival Guide</div>
-                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Meeting Hub:</strong> ${safeHub}</p>
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 10px;">🚙 Pickup &amp; Arrival Details</div>
+                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Pickup Point:</strong> ${safeHub}</p>
                     <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
-                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 8px;"><strong>Basecamp Marshal Hotline:</strong> ${safePhone}</p>
+                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 8px;"><strong>Camp Support Hotline:</strong> ${safePhone}</p>
                     <p style="font-size: 12px; color: #E5A93B; margin: 0;">⚠️ <em>${safeOfflineNote}</em></p>
                 </div>
 
-                <!-- 5. CALENDAR INVITE ATTACHMENT CARD (AT END) -->
+                <!-- 4. CALENDAR INVITE ATTACHMENT CARD (AT END) -->
                 <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
                     <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
                     <div style="font-size: 12px; color: #A2B6A6;">Open the attached <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> file to sync your stay with Google Calendar, Apple Calendar, or Outlook.</div>
@@ -250,7 +250,7 @@ export async function sendBookingConfirmationEmail(booking) {
             <!-- WARM CLOSING MESSAGE -->
             <div style="background: linear-gradient(135deg, #121F16 0%, #0E1A11 100%); border-top: 1px solid rgba(213,237,85,0.15); padding: 28px 24px; text-align: center;">
                 <div style="font-size: 22px; margin-bottom: 10px;">🏔️ 🌿 ✨</div>
-                <h2 style="font-size: 18px; font-weight: 900; color: #FFFFFF; margin: 0 0 8px;">Enjoy Your <span style="color: #D5ED55;">Wilderness Escape!</span></h2>
+                <h2 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin: 0 0 8px;">Enjoy Your <span style="color: #D5ED55;">Wilderness Escape!</span></h2>
                 <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.7; margin: 0 0 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
                     The mountains are waiting. Breathe in the fresh Munnar air, watch the sunrise from Kolukkumalai,
                     and let the forest reset your soul. We're getting everything ready for your stay.
@@ -261,13 +261,13 @@ export async function sendBookingConfirmationEmail(booking) {
                     <div style="font-size: 11.5px; color: #A2B6A6; margin-top: 4px;">Have questions about routes, weather, or meals? We're here for you.</div>
                 </div>
                 <div style="font-size: 12px; color: #59655D;">
-                    📎 Your <strong style="color: #A2B6A6;">Wilderness Pass PDF</strong> and <strong style="color: #A2B6A6;">Calendar Invite (.ics)</strong> are attached below
+                    📎 Your <strong style="color: #A2B6A6;">Booking Pass PDF</strong> and <strong style="color: #A2B6A6;">Calendar Invite (.ics)</strong> are attached below
                 </div>
             </div>
 
             <div class="footer">
                 <p style="margin: 0 0 4px;">Aanandham.go · Suryanelli, Munnar, Kerala</p>
-                <p style="margin: 0;">Mountain Dispatch: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
+                <p style="margin: 0;">Camp Hotline: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
             </div>
         </div>
     </body>
