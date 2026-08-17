@@ -42,6 +42,14 @@ function escapeHtml(str) {
  * - Meal & Provision Allocations
  */
 
+function resolveSiteUrl() {
+    const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://aanandham.in';
+    if (!raw || raw.includes('localhost') || raw.includes('127.0.0.1')) {
+        return 'https://aanandham.in';
+    }
+    return raw.replace(/\/+$/, '');
+}
+
 export async function sendBookingConfirmationEmail(booking) {
     if (!booking || !booking.email) {
         console.warn('[EMAIL] ⚠️ No recipient email provided for booking:', booking?.id);
@@ -50,7 +58,7 @@ export async function sendBookingConfirmationEmail(booking) {
 
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+    const siteUrl = resolveSiteUrl();
 
     const gatePin = generateGatePin(booking.id, booking.dates);
     const landmarkGuide = getCheckInLandmarkGuide(booking.campsiteId || booking.package);
@@ -345,7 +353,7 @@ export async function sendContactInquiryEmail(inquiry) {
     const apiKey = process.env.RESEND_API_KEY;
     const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
     const adminDestEmail = 'bookings@aanandham.in';
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+    const siteUrl = resolveSiteUrl();
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
     const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
         ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
