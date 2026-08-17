@@ -40,19 +40,23 @@ function resolveAuthSecret() {
 export const AUTH_SECRET = resolveAuthSecret();
 
 function resolvePasscodes() {
-    const raw = process.env.ADMIN_PASSCODES || process.env.ADMIN_PASSCODE;
+    const raw = process.env.ADMIN_PASSCODES || 
+                process.env.ADMIN_PASSCODE || 
+                process.env.HOST_PASSCODE || 
+                process.env.HOST_PIN || 
+                process.env.MARSHAL_PASSCODE;
     const parsed = raw ? raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : [];
 
     if (IS_PROD) {
-        const safeCodes = parsed.filter(code => code.length >= 12 && !DISALLOWED_PROD_PASSCODES.includes(code));
+        const safeCodes = parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
         if (safeCodes.length === 0) {
-            console.error('🚨 [SECURITY WARNING] ADMIN_PASSCODE in production is missing or uses a disallowed default. Admin login is disabled.');
+            console.error('🚨 [SECURITY WARNING] ADMIN_PASSCODE / HOST_PASSCODE in production is missing, too short (<6 chars), or uses a disallowed default. Admin login is disabled.');
         }
         return safeCodes;
     }
 
     if (parsed.length === 0) {
-        console.warn('⚠️ [DEV WARNING] No ADMIN_PASSCODE is set in .env.local. Configure ADMIN_PASSCODE to log into /admin.');
+        console.warn('⚠️ [DEV WARNING] No ADMIN_PASSCODE / HOST_PASSCODE is set in .env.local.');
     }
     return parsed;
 }
