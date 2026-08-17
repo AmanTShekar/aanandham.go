@@ -74,11 +74,11 @@ export function getCheckInLandmarkGuide(campsiteId = '') {
             steps: [
                 'Arrive at Suryanelli Town Hub by 1:30 PM (before 4x4 convoy departs).',
                 'Park your private vehicle in the reserved fenced parking zone.',
-                'Show your Aanandham digital permit pass to Marshal Suresh (+91 94009 87654).',
+                'Show your Aanandham digital permit pass to Marshal Suresh (+91 90748 58014).',
                 'Board your allocated 4x4 Mahindra Thar/Jeep for the 35-minute offroad ascent to the ridge.',
                 'Use Gate PIN at the summit barrier gate.'
             ],
-            emergencyMarshalPhone: '+91 94009 87654',
+            emergencyMarshalPhone: '+91 90748 58014',
             offlineNote: 'Mobile data drops past Suryanelli factory. Please screenshot your pass & PIN before leaving Munnar town.'
         };
     }
@@ -92,7 +92,7 @@ export function getCheckInLandmarkGuide(campsiteId = '') {
             'Enter your 4-digit PIN on the digital keypad.',
             'Proceed to reception for key handover and welcome tea.'
         ],
-        emergencyMarshalPhone: '+91 94009 87654',
+        emergencyMarshalPhone: '+91 90748 58014',
         offlineNote: 'Download offline Google Maps for Idukki district before ascent.'
     };
 }

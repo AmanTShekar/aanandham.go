@@ -40,7 +40,7 @@ export async function GET(request, { params }) {
         `Smart Gate PIN: ${gatePin}\\n` +
         `Lead Explorer: ${safeName}\\n` +
         `Stay Units: ${safeRoom}\\n` +
-        `Meeting Hub: Suryanelli Basecamp Hub (+91 94009 87654)\\n` +
+        `Meeting Hub: Suryanelli Basecamp Hub (+${process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014'})\\n` +
         `Please arrive by 1:30 PM for 4x4 Jeep convoy pickup.`;
 
     const now = new Date();

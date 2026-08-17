@@ -202,7 +202,7 @@ export async function sendBookingConfirmationEmail(booking) {
 
             <div class="footer">
                 <p style="margin: 0 0 4px;">Aanandham Wilderness Stays · Suryanelli, Munnar, Kerala</p>
-                <p style="margin: 0;">24/7 Mountain Dispatch: +91 94009 87654 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
+                <p style="margin: 0;">24/7 Mountain Dispatch: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
             </div>
         </div>
     </body>

@@ -49,7 +49,7 @@ export const ADVENTURE_ACTIVITIES = [
  */
 export function assignMountainGuide(activityId, languagePreference = 'english') {
     const guides = [
-        { id: 'GD-01', name: 'Suresh Kumar', language: ['malayalam', 'tamil', 'english'], certifications: 'Kerala Forest Dept Certified / Wilderness First Aid', phone: '+91 94009 87654' },
+        { id: 'GD-01', name: 'Suresh Kumar', language: ['malayalam', 'tamil', 'english'], certifications: 'Kerala Forest Dept Certified / Wilderness First Aid', phone: '+91 90748 58014' },
         { id: 'GD-02', name: 'Anand Mani', language: ['tamil', 'english', 'hindi'], certifications: 'Nehru Institute of Mountaineering (NIM) Certified', phone: '+91 94479 79088' }
     ];
 

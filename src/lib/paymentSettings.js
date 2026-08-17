@@ -5,7 +5,7 @@
 
 export const DEFAULT_PAYMENT_SETTINGS = {
     mode: 'coming_soon', // 'coming_soon' | 'active'
-    upiId: '9400987654@upi',
+    upiId: '9074858014@upi',
     payeeName: 'Aanandham Wilderness Stays',
     customQrUrl: '',
     allowPayOnArrival: true,

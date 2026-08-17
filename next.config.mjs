@@ -57,6 +57,60 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
   },
+  async redirects() {
+    return [
+      {
+        source: '/experiences',
+        destination: '/camps',
+        permanent: true,
+      },
+      {
+        source: '/hotels',
+        destination: '/camps',
+        permanent: true,
+      },
+      {
+        source: '/places',
+        destination: '/camps',
+        permanent: true,
+      },
+      {
+        source: '/stories/munnar-tent-stay',
+        destination: '/camps/pkg-suryanelli',
+        permanent: true,
+      },
+      {
+        source: '/stories/vagamon-glamping',
+        destination: '/camps/pkg-vagamon-glamp',
+        permanent: true,
+      },
+      {
+        source: '/stories/wayanad-camping-guide',
+        destination: '/camps/pkg-wayanad-forest',
+        permanent: true,
+      },
+      {
+        source: '/stories/strangers-camp',
+        destination: '/camps/pkg-meesapulimala',
+        permanent: true,
+      },
+      {
+        source: '/stories/solo-trekking-safety',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/stories',
+        destination: '/about',
+        permanent: true,
+      },
+      {
+        source: '/stories/:slug*',
+        destination: '/camps',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

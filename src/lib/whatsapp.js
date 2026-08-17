@@ -1,6 +1,4 @@
-// ── CENTRALIZED WHATSAPP LINK & MESSAGE BUILDER ──
-
-export const DEFAULT_WA_PHONE = '919400987654';
+export const DEFAULT_WA_PHONE = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
 
 /**
  * Format a phone number into an international numeric string without special chars

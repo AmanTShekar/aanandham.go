@@ -40,16 +40,21 @@ const cardReveal = {
     }
 };
 
+const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+const formattedAdminPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
+    ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
+    : `+${adminPhone}`;
+
 // ── CONTACT DISPATCH CHANNELS ──
 const CONTACT_CHANNELS = [
     {
         id: 'phone',
         badge: '24/7 EXPEDITION HOTLINE',
         title: 'Direct Voice Concierge',
-        val: '+91 9400 987 654',
+        val: formattedAdminPhone,
         sub: 'Live basecamp coordinators on ridge',
         icon: 'fa-solid fa-phone',
-        href: 'tel:+919400987654',
+        href: `tel:+${adminPhone}`,
         actionLabel: 'Call Concierge',
         accent: '#E5A93B'
     },
@@ -57,10 +62,10 @@ const CONTACT_CHANNELS = [
         id: 'whatsapp',
         badge: 'PRIORITY DISPATCH',
         title: 'WhatsApp Travel Desk',
-        val: '+91 9400 987 654',
+        val: formattedAdminPhone,
         sub: 'Instant booking & route guidance',
         icon: 'fa-brands fa-whatsapp',
-        href: 'https://wa.me/919400987654?text=Hi%20Aanandham%20Concierge!%20I%20have%20an%20inquiry%20regarding%20campsites%20and%20treks.',
+        href: waLink('Hi Aanandham Concierge! I have an inquiry regarding campsites and treks.'),
         actionLabel: 'WhatsApp Chat →',
         accent: '#25D366'
     },
@@ -401,7 +406,7 @@ export default function ContactPage() {
                             }}
                         >
                             <a
-                                href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!%20I%20have%20an%20inquiry%20regarding%20campsites%20and%20treks."
+                                href={waLink('Hi Aanandham Desk! I have an inquiry regarding campsites and treks.')}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn-lime"
@@ -1411,7 +1416,7 @@ export default function ContactPage() {
                             We host private 15 to 30 person mountain buyouts with high-altitude bonfire barbecues, private 4x4 safaris, and outdoor leadership treks.
                         </p>
                         <a
-                            href="https://wa.me/919400987654?text=Hi%20Aanandham%20Desk!%20We%20are%20planning%20a%20corporate%20offsite%20or%20group%20expedition."
+                            href={waLink('Hi Aanandham Desk! We are planning a corporate offsite or group expedition.')}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn-lime"

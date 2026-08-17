@@ -32,7 +32,7 @@ export const EMERGENCY_DIRECTORY = {
     },
     basecampRescueConvoy: {
         name: 'Aanandham 4x4 High-Altitude Rescue Fleet',
-        helpline: '+91 94009 87654',
+        helpline: '+91 90748 58014',
         standbyJeeps: 'Suryanelli Hub 24/7'
     }
 };

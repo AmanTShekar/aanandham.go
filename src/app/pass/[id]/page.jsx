@@ -82,7 +82,10 @@ export default async function PassDetailPage({ params, searchParams }) {
         `📅 *Dates:* ${data.dates}\n\n` +
         `We are arriving at Suryanelli Hub. Please allocate our 4x4 convoy! 🏔️✨`;
 
-    const cleanGuestPhone = String(data.phone || '').replace(/\D/g, '');
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+    const formattedAdminPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
+        ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
+        : `+${adminPhone}`;
 
     return (
         <main className="pass-page-main" style={{ minHeight: '100vh', background: '#0D1710', color: '#FFFFFF', padding: '32px 16px', fontFamily: 'var(--font-sans, system-ui, sans-serif)' }}>
@@ -160,7 +163,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 </p>
                                 <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                                     <a
-                                        href={waLink('919400987654', `Hi Aanandham Coordinator, checking verification status for Booking Ref: ${data.id} (${data.name})`)}
+                                        href={waLink(`Hi Aanandham Coordinator, checking verification status for Booking Ref: ${data.id} (${data.name})`)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         style={{ background: '#25D366', color: '#0B150E', padding: '8px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
@@ -389,7 +392,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                         {/* ── HOST / CAMPER 1-TAP ACTION BUTTONS ── */}
                         <div className="no-print" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
                             <a
-                                href={`tel:${cleanGuestPhone || '9400987654'}`}
+                                href={`tel:${cleanGuestPhone || adminPhone}`}
                                 style={{
                                     padding: '12px',
                                     borderRadius: '12px',
@@ -435,7 +438,7 @@ export default async function PassDetailPage({ params, searchParams }) {
 
                     {/* Footer */}
                     <div style={{ background: '#0A130D', padding: '16px', textAlign: 'center', fontSize: '11.5px', color: '#59655D', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                        Aanandham Wilderness Stays · 24/7 Mountain Dispatch: +91 94009 87654
+                        Aanandham Wilderness Stays · 24/7 Mountain Dispatch: {formattedAdminPhone}
                     </div>
                 </div>
             </div>

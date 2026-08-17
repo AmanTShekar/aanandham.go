@@ -2755,7 +2755,7 @@ export default function AdminPortal() {
                                     </label>
                                     <input
                                         type="text"
-                                        placeholder="e.g. aanandhamgo@okhdfcbank or 9400987654@upi"
+                                        placeholder="e.g. aanandhamgo@okhdfcbank or 9074858014@upi"
                                         value={paymentSettings.upiId || ''}
                                         onChange={(e) => setPaymentSettings(prev => ({ ...prev, upiId: e.target.value }))}
                                         style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}

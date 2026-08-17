@@ -5,6 +5,11 @@ import Link from 'next/link';
 import { waLink } from '../lib/whatsapp';
 
 export default function Footer() {
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+    const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
+        ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
+        : `+${adminPhone}`;
+
     return (
         <footer className="site-main-footer" style={{
             background: 'linear-gradient(180deg, #101E13 0%, #08120A 100%)',
@@ -23,28 +28,37 @@ export default function Footer() {
                 height: '300px',
                 background: 'radial-gradient(circle, rgba(213, 237, 85, 0.08) 0%, rgba(14, 24, 17, 0) 70%)',
                 pointerEvents: 'none',
-                filter: 'blur(50px)'
+                zIndex: 1
             }} />
 
-            <div style={{ width: '100%', maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2, boxSizing: 'border-box' }}>
-                
-                <div className="footer-columns-grid">
-                    
-                    {/* Column 1: Brand & Coordinates */}
-                    <div className="footer-brand-col" style={{ paddingRight: '12px' }}>
-                        <Link href="/" className="text-hover-marker text-hover-marker-dark" style={{ marginBottom: '14px' }}>
+            <div style={{
+                maxWidth: '1560px',
+                margin: '0 auto',
+                padding: 'clamp(48px, 6vw, 80px) clamp(20px, 4vw, 48px) clamp(32px, 4vw, 48px)',
+                position: 'relative',
+                zIndex: 2,
+                boxSizing: 'border-box'
+            }}>
+                <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(240px, 22vw, 300px), 1fr))',
+                    gap: 'clamp(32px, 4vw, 56px)',
+                    marginBottom: 'clamp(40px, 5vw, 64px)'
+                }}>
+                    {/* Brand Column */}
+                    <div>
+                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginBottom: '16px' }}>
                             <img
                                 src="/logo.png"
-                                alt="Aanandham.go"
-                                style={{
-                                    height: '44px',
-                                    width: 'auto',
-                                    objectFit: 'contain'
-                                }}
+                                alt="Aanandham.go Wilderness Basecamps"
+                                width="40"
+                                height="40"
+                                decoding="async"
+                                style={{ objectFit: 'contain' }}
                             />
-                            <h3 className="marker-text" style={{
+                            <h3 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: '32px',
+                                fontSize: '20px',
                                 fontWeight: '800',
                                 color: '#FFFFFF',
                                 margin: 0,
@@ -64,11 +78,11 @@ export default function Footer() {
                                 </div>
                                 <span>bookings@aanandham.in</span>
                             </a>
-                            <a href="tel:+919400987654" className="footer-contact-link">
+                            <a href={`tel:+${adminPhone}`} className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <i className="fa-solid fa-phone" style={{ fontSize: '13px' }} />
                                 </div>
-                                <span>+91 9400 987 654</span>
+                                <span>{formattedPhone}</span>
                             </a>
                             <a
                                 href={waLink('Hi Aanandham Team! I would like to know more about camping dates.')}
