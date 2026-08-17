@@ -9,7 +9,7 @@ import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
-import { MapPin, Clock, Heart, Camera, Star, Search, X } from 'lucide-react';
+import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2 } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 
@@ -538,10 +538,11 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                                         justifyContent: 'center',
                                                         cursor: 'pointer',
                                                         backdropFilter: 'blur(6px)',
-                                                        boxShadow: '0 4px 14px rgba(0,0,0,0.25)'
+                                                        boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
+                                                        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                                                     }}
                                                 >
-                                                    <span style={{ fontSize: '15px', color: '#FFFFFF' }}>→</span>
+                                                    <Share2 size={15} color="#FFFFFF" strokeWidth={2.2} />
                                                 </button>
                                             </div>
 
