@@ -35,12 +35,23 @@ import {
     Send,
     Mail,
     Flame,
-    Compass
+    Compass,
+    Ticket,
+    CheckSquare,
+    Square,
+    UserPlus,
+    UserMinus,
+    Tag,
+    Layers,
+    History,
+    Check,
+    FileText,
+    ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MobileMarshalScanner({ onBackToAdmin = null }) {
-    // ── NAVIGATION: 'scanner' | 'roster' | 'kitchen' ──
+    // ── NAVIGATION TABS: 'scanner' | 'roster' | 'kitchen' ──
     const [activeTab, setActiveTab] = useState('scanner');
 
     // ── CAMERA & SCANNER STATE ──
@@ -89,11 +100,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isValidating, setIsValidating] = useState(false);
     const [rosterChecklist, setRosterChecklist] = useState([]);
     const [isBalancePaid, setIsBalancePaid] = useState(false);
+    const [assignedTent, setAssignedTent] = useState('');
+    const [wristbandRange, setWristbandRange] = useState('');
     const [marshalNotes, setMarshalNotes] = useState('');
     const [isSubmittingCheckin, setIsSubmittingCheckin] = useState(false);
     const [checkinSuccessMessage, setCheckinSuccessMessage] = useState('');
+    const [extraGuestsCount, setExtraGuestsCount] = useState(0);
 
-    // ── SHOW TEMPORARY TOAST ──
+    // ── TOAST NOTIFICATION HELPER ──
     const showToast = (msg) => {
         setToastMessage(msg);
         setTimeout(() => setToastMessage(''), 4000);
@@ -136,7 +150,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }
     }, [soundEnabled]);
 
-    // ── FETCH ROSTER ──
+    // ── FETCH ROSTER & HEADCOUNT DATA ──
     const fetchRosterData = useCallback(async () => {
         setIsLoadingRoster(true);
         try {
@@ -157,7 +171,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         fetchRosterData();
     }, [fetchRosterData]);
 
-    // ── CAMERA CONTROL ──
+    // ── CAMERA CONTROLS ──
     const stopCamera = useCallback(() => {
         if (videoRef.current && videoRef.current.srcObject) {
             const tracks = videoRef.current.srcObject.getTracks();
@@ -173,7 +187,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const startCamera = useCallback(async () => {
         if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             setHasCameraPermission(false);
-            setErrorMessage('Camera is not supported on this browser. Use gallery upload or manual search.');
+            setErrorMessage('Camera not supported. Use gallery upload or manual search.');
             return;
         }
 
@@ -259,6 +273,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
+                setAssignedTent(data.booking.assignedTent || '');
+                setWristbandRange(data.booking.wristbandRange || '');
+                setExtraGuestsCount(0);
                 stopCamera();
                 setIsCameraEnabled(false);
             } else {
@@ -339,6 +356,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
+                setAssignedTent(data.booking.assignedTent || '');
+                setWristbandRange(data.booking.wristbandRange || '');
+                setExtraGuestsCount(0);
                 setIsManualModalOpen(false);
                 stopCamera();
                 setIsCameraEnabled(false);
@@ -380,7 +400,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         reader.readAsDataURL(file);
     };
 
-    // ── TRIGGER DEMO EMAIL DISPATCH ──
+    // ── TRIGGER DEMO EMAIL PASS ──
     const handleSendTestEmail = async (e) => {
         e.preventDefault();
         if (!testEmailInput.trim()) return;
@@ -406,6 +426,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     setScannedBooking(data.booking);
                     setRosterChecklist(data.booking.attendanceRoster || []);
                     setIsBalancePaid(false);
+                    setExtraGuestsCount(0);
                 }
             } else {
                 setErrorMessage(data.message || 'Failed to dispatch test pass');
@@ -437,12 +458,15 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }
     };
 
-    // ── SELECT GUEST FROM ROSTER LIST ──
+    // ── SELECT GUEST FROM ROSTER ──
     const selectGuestFromRoster = (guest) => {
         setScannedBooking(guest);
         setRosterChecklist(guest.roster || []);
         setIsBalancePaid(Boolean(guest.isBalancePaid));
         setMarshalNotes(guest.notes || '');
+        setAssignedTent(guest.assignedTent || '');
+        setWristbandRange(guest.wristbandRange || '');
+        setExtraGuestsCount(0);
         setCheckinSuccessMessage('');
         setErrorMessage('');
     };
@@ -459,11 +483,37 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         });
     };
 
+    // ── ONE-TAP "CHECK IN ALL REMAINING LATE CAMPERS" ──
+    const checkInAllRemaining = () => {
+        setRosterChecklist(prev => prev.map(c => ({ ...c, present: true })));
+        showToast('✓ Marked all campers as present!');
+    };
+
+    // ── ADD EXTRA WALK-IN CAMPER ──
+    const handleAddExtraCamper = () => {
+        const nextId = rosterChecklist.length + 1;
+        setRosterChecklist(prev => [
+            ...prev,
+            { id: nextId, name: `Extra Camper #${nextId} (Walk-In)`, present: true, isExtra: true }
+        ]);
+        setExtraGuestsCount(prev => prev + 1);
+        showToast('✓ Added 1 extra walk-in camper (+₹2,499 added to balance)');
+    };
+
+    const handleRemoveExtraCamper = () => {
+        if (extraGuestsCount <= 0) return;
+        setRosterChecklist(prev => prev.slice(0, -1));
+        setExtraGuestsCount(prev => Math.max(0, prev - 1));
+    };
+
+    // ── ATTENDANCE CALCULATIONS ──
     const presentCount = rosterChecklist.filter(c => c.present).length;
     const totalCount = rosterChecklist.length;
     const shortCount = Math.max(0, totalCount - presentCount);
+    const extraBalance = extraGuestsCount * 2499;
+    const dynamicBalanceDue = Math.max(0, (scannedBooking?.balanceDue || 0) + extraBalance);
 
-    // ── CONFIRM CHECK-IN ──
+    // ── CONFIRM CHECK-IN & ISSUE ENTRY PERMIT ──
     const handleConfirmCheckin = async () => {
         if (!scannedBooking) return;
 
@@ -480,7 +530,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     shortCount,
                     roster: rosterChecklist,
                     isBalancePaid,
-                    marshalNotes,
+                    assignedTent,
+                    wristbandRange,
+                    marshalNotes: `[Tent: ${assignedTent || 'Unassigned'} | Wristbands: ${wristbandRange || 'None'}] ${marshalNotes || ''}`,
                     marshalName: 'Basecamp Host'
                 })
             });
@@ -494,7 +546,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     status: shortCount > 0 ? 'Partial Check-In' : 'Checked In',
                     checkedInCount: presentCount,
                     shortCount,
-                    isBalancePaid
+                    isBalancePaid,
+                    assignedTent,
+                    wristbandRange
                 }));
                 playSuccessChime();
                 fetchRosterData();
@@ -559,7 +613,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             transform: 'translateX(-50%)',
                             background: '#D5ED55',
                             color: '#0B150E',
-                            padding: '10px 20px',
+                            padding: '10px 22px',
                             borderRadius: '999px',
                             fontWeight: '800',
                             fontSize: '13px',
@@ -576,7 +630,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 )}
             </AnimatePresence>
 
-            {/* ── TOP HEADER ── */}
+            {/* ── TOP APP BAR ── */}
             <header style={{
                 background: 'rgba(11, 21, 14, 0.85)',
                 backdropFilter: 'blur(20px)',
@@ -637,7 +691,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </span>
                         </div>
                         <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>
-                            Live Check-In & Headcount Command
+                            Gate Pass, Headcount & Attendance Console
                         </span>
                     </div>
                 </div>
@@ -767,7 +821,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 </button>
             </div>
 
-            {/* ── ERROR MESSAGE ── */}
+            {/* ── ERROR MESSAGE BANNER ── */}
             {errorMessage && (
                 <div style={{
                     background: '#DC2626',
@@ -805,7 +859,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     padding: '20px 20px 80px',
-                    maxWidth: '480px',
+                    maxWidth: '520px',
                     margin: '0 auto',
                     width: '100%',
                     boxSizing: 'border-box'
@@ -1074,7 +1128,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 <main style={{
                     flex: 1,
                     padding: '16px clamp(16px, 4vw, 24px) 80px',
-                    maxWidth: '680px',
+                    maxWidth: '800px',
                     margin: '0 auto',
                     width: '100%',
                     boxSizing: 'border-box'
@@ -1253,7 +1307,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                 <span>💰 {guest.isBalancePaid ? '✓ Paid' : `₹${guest.balanceDue} Due`}</span>
                                             </div>
                                             <span style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '2px' }}>
-                                                Check In →
+                                                Open Pass Ticket →
                                             </span>
                                         </div>
                                     </div>
@@ -1271,7 +1325,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 <main style={{
                     flex: 1,
                     padding: '20px clamp(16px, 4vw, 24px) 80px',
-                    maxWidth: '680px',
+                    maxWidth: '800px',
                     margin: '0 auto',
                     width: '100%',
                     boxSizing: 'border-box'
@@ -1383,13 +1437,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             )}
 
             {/* ══════════════════════════════════════════════════════════
-                SCANNED / SELECTED CAMPER CHECK-IN VIEW
+                CINEMA TICKET STUB / BOARDING PASS CHECK-IN WORKSPACE
+                (Responsive 1-Col Mobile, 2-Col Tablet/Laptop)
             ══════════════════════════════════════════════════════════ */}
             {scannedBooking && (
                 <main style={{
                     flex: 1,
-                    padding: '20px clamp(16px, 4vw, 24px) 100px',
-                    maxWidth: '640px',
+                    padding: '20px clamp(16px, 4vw, 32px) 100px',
+                    maxWidth: '1080px',
                     margin: '0 auto',
                     width: '100%',
                     boxSizing: 'border-box'
@@ -1413,334 +1468,514 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     )}
 
-                    {/* Authenticity Status Card */}
+                    {/* ── RESPONSIVE GRID LAYOUT ── */}
                     <div style={{
-                        background: scannedBooking.status === 'Checked In' 
-                            ? 'rgba(59, 130, 246, 0.12)' 
-                            : 'rgba(213, 237, 85, 0.12)',
-                        border: `1px solid ${scannedBooking.status === 'Checked In' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(213, 237, 85, 0.3)'}`,
-                        borderRadius: '20px',
-                        padding: '18px 20px',
-                        marginBottom: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '12px'
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                        gap: '20px',
+                        alignItems: 'start'
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <div style={{
-                                width: '42px',
-                                height: '42px',
-                                borderRadius: '12px',
-                                background: scannedBooking.status === 'Checked In' ? '#3B82F6' : '#D5ED55',
-                                color: '#0B150E',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                <ShieldCheck size={24} />
-                            </div>
-                            <div>
-                                <span style={{ fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '1px', color: scannedBooking.status === 'Checked In' ? '#93C5FD' : '#D5ED55' }}>
-                                    {scannedBooking.status === 'Checked In' ? 'ALREADY CHECKED IN' : 'VERIFIED PASS'}
-                                </span>
-                                <div style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    #{scannedBooking.id}
-                                </div>
-                            </div>
-                        </div>
-                        <span style={{
-                            padding: '4px 10px',
-                            borderRadius: '999px',
-                            background: scannedBooking.status === 'Checked In' ? 'rgba(59,130,246,0.2)' : 'rgba(213,237,85,0.2)',
-                            color: scannedBooking.status === 'Checked In' ? '#93C5FD' : '#D5ED55',
-                            fontSize: '11.5px',
-                            fontWeight: '800'
+
+                        {/* ── LEFT COLUMN: PVR CINEMA BOARDING TICKET STUB ── */}
+                        <div style={{
+                            background: '#0F1E13',
+                            border: '1px solid rgba(213, 237, 85, 0.25)',
+                            borderRadius: '24px',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)'
                         }}>
-                            {scannedBooking.status}
-                        </span>
-                    </div>
-
-                    {/* Camper Profile Card */}
-                    <div style={{
-                        background: '#101E13',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '20px',
-                        padding: '20px',
-                        marginBottom: '16px'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-                            <div>
-                                <span style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', textTransform: 'uppercase' }}>
-                                    Lead Camper
-                                </span>
-                                <div style={{ fontSize: '18px', fontWeight: '800', color: '#FFFFFF', marginTop: '2px' }}>
-                                    {scannedBooking.name}
-                                </div>
-                                <div style={{ fontSize: '13px', color: '#A2B6A6', marginTop: '2px' }}>
-                                    📱 {scannedBooking.phone}
-                                </div>
-                            </div>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                                <a
-                                    href={`tel:${scannedBooking.phone}`}
-                                    style={{
-                                        width: '36px',
-                                        height: '36px',
-                                        borderRadius: '10px',
-                                        background: 'rgba(255, 255, 255, 0.08)',
-                                        color: '#FFFFFF',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        textDecoration: 'none'
-                                    }}
-                                >
-                                    <Phone size={15} />
-                                </a>
-                                <a
-                                    href={`https://wa.me/${scannedBooking.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                        width: '36px',
-                                        height: '36px',
-                                        borderRadius: '10px',
-                                        background: 'rgba(37, 211, 102, 0.15)',
-                                        color: '#25D366',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        textDecoration: 'none'
-                                    }}
-                                >
-                                    <MessageCircle size={15} />
-                                </a>
-                            </div>
-                        </div>
-
-                        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', fontSize: '12px' }}>
-                            <div>
-                                <span style={{ color: '#8E9B92', display: 'block' }}>Campsite:</span>
-                                <strong style={{ color: '#D5ED55' }}>{scannedBooking.campsite}</strong>
-                            </div>
-                            <div>
-                                <span style={{ color: '#8E9B92', display: 'block' }}>Convoy Time:</span>
-                                <strong style={{ color: '#FFFFFF' }}>{scannedBooking.convoyTime}</strong>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Attendance Checklist */}
-                    <div style={{
-                        background: '#101E13',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '20px',
-                        padding: '20px',
-                        marginBottom: '16px'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <Users size={18} color="#D5ED55" />
-                                <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    Camper Attendance Checklist
-                                </span>
-                            </div>
-                            <span style={{
-                                padding: '4px 10px',
-                                borderRadius: '999px',
-                                background: shortCount === 0 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(234, 179, 8, 0.2)',
-                                color: shortCount === 0 ? '#4ADE80' : '#FACC15',
-                                fontSize: '11.5px',
-                                fontWeight: '800'
+                            {/* Top Golden Header */}
+                            <div style={{
+                                background: 'linear-gradient(135deg, #142819 0%, #0D1C11 100%)',
+                                padding: '20px 22px',
+                                borderBottom: '2px dashed rgba(255, 255, 255, 0.15)',
+                                position: 'relative'
                             }}>
-                                {shortCount === 0 
-                                    ? `🟢 All ${presentCount} Present` 
-                                    : `⚠️ ${presentCount} of ${totalCount} Present (${shortCount} Short)`}
-                            </span>
-                        </div>
+                                {/* Circular ticket side cutouts */}
+                                <div style={{ position: 'absolute', left: '-12px', bottom: '-12px', width: '24px', height: '24px', borderRadius: '50%', background: '#071009', zIndex: 5 }} />
+                                <div style={{ position: 'absolute', right: '-12px', bottom: '-12px', width: '24px', height: '24px', borderRadius: '50%', background: '#071009', zIndex: 5 }} />
 
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            {rosterChecklist.map((camper, idx) => (
-                                <div
-                                    key={idx}
-                                    onClick={() => toggleCamperAttendance(idx)}
-                                    style={{
-                                        background: camper.present ? 'rgba(213, 237, 85, 0.06)' : 'rgba(239, 68, 68, 0.08)',
-                                        border: `1px solid ${camper.present ? 'rgba(213, 237, 85, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
-                                        borderRadius: '12px',
-                                        padding: '10px 14px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <div style={{
-                                            width: '26px',
-                                            height: '26px',
-                                            borderRadius: '50%',
-                                            background: camper.present ? '#D5ED55' : '#EF4444',
-                                            color: '#0B150E',
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                            EXPEDITION BOARDING PASS
+                                        </span>
+                                        <h2 style={{ margin: '4px 0 0', fontSize: '20px', fontWeight: '900', color: '#FFFFFF' }}>
+                                            {scannedBooking.name}
+                                        </h2>
+                                        <span style={{ fontSize: '12px', color: '#A2B6A6' }}>
+                                            Pass #{scannedBooking.id}
+                                        </span>
+                                    </div>
+
+                                    {/* Status Pill */}
+                                    <span style={{
+                                        padding: '5px 12px',
+                                        borderRadius: '999px',
+                                        background: scannedBooking.status === 'Checked In' 
+                                            ? '#22C55E' 
+                                            : scannedBooking.status === 'Partial Check-In' 
+                                                ? '#F59E0B' 
+                                                : '#D5ED55',
+                                        color: '#0B150E',
+                                        fontSize: '11px',
+                                        fontWeight: '900',
+                                        letterSpacing: '0.5px',
+                                        textTransform: 'uppercase'
+                                    }}>
+                                        {scannedBooking.status === 'Checked In' ? '✓ Checked In' : scannedBooking.status === 'Partial Check-In' ? '⚠️ Partial In' : 'Confirmed'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Ticket Details Body */}
+                            <div style={{ padding: '22px' }}>
+                                {/* Campsite & Convoy Grid */}
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '18px', background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '16px' }}>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', color: '#8E9B92', textTransform: 'uppercase', fontWeight: '700', display: 'block' }}>Sanctuary</span>
+                                        <strong style={{ fontSize: '13.5px', color: '#D5ED55' }}>{scannedBooking.campsite}</strong>
+                                    </div>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', color: '#8E9B92', textTransform: 'uppercase', fontWeight: '700', display: 'block' }}>Convoy Batch</span>
+                                        <strong style={{ fontSize: '13.5px', color: '#FFFFFF' }}>{scannedBooking.convoyTime || '02:30 PM Batch'}</strong>
+                                    </div>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', color: '#8E9B92', textTransform: 'uppercase', fontWeight: '700', display: 'block' }}>Accommodation</span>
+                                        <strong style={{ fontSize: '13.5px', color: '#FFFFFF' }}>{scannedBooking.roomType}</strong>
+                                    </div>
+                                    <div>
+                                        <span style={{ fontSize: '10.5px', color: '#8E9B92', textTransform: 'uppercase', fontWeight: '700', display: 'block' }}>Stay Dates</span>
+                                        <strong style={{ fontSize: '13.5px', color: '#FFFFFF' }}>{scannedBooking.dates}</strong>
+                                    </div>
+                                </div>
+
+                                {/* Catering & BBQ Tokens */}
+                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 14px', borderRadius: '14px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Utensils size={15} color="#D5ED55" />
+                                        <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
+                                            Catering Tokens:
+                                        </span>
+                                    </div>
+                                    <div style={{ display: 'flex', gap: '10px', fontSize: '12px' }}>
+                                        <span style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ADE80', padding: '3px 8px', borderRadius: '6px', fontWeight: '800' }}>
+                                            🥗 {scannedBooking.vegCount} Veg
+                                        </span>
+                                        <span style={{ background: 'rgba(249, 115, 22, 0.15)', color: '#FB923C', padding: '3px 8px', borderRadius: '6px', fontWeight: '800' }}>
+                                            🍗 {scannedBooking.nonVegCount} Non-Veg
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Lead Contact & WhatsApp */}
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                    <a
+                                        href={`tel:${scannedBooking.phone}`}
+                                        style={{
+                                            flex: 1,
+                                            padding: '10px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(255, 255, 255, 0.06)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            color: '#FFFFFF',
+                                            fontSize: '12.5px',
+                                            fontWeight: '700',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
-                                            fontWeight: '900',
-                                            fontSize: '12px'
-                                        }}>
-                                            {camper.present ? '✓' : '✕'}
+                                            gap: '6px',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        <Phone size={14} />
+                                        <span>Call ({scannedBooking.phone})</span>
+                                    </a>
+                                    <a
+                                        href={`https://wa.me/${scannedBooking.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{
+                                            padding: '10px 16px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(37, 211, 102, 0.15)',
+                                            border: '1px solid rgba(37, 211, 102, 0.3)',
+                                            color: '#25D366',
+                                            fontSize: '12.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '6px',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        <MessageCircle size={15} />
+                                        <span>WhatsApp</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* ── RIGHT COLUMN: ATTENDANCE CHECKLIST & GATE SETTLEMENT ── */}
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+                            {/* RE-SCAN & LATE ARRIVAL NOTIFICATION BANNER */}
+                            {scannedBooking.status === 'Checked In' ? (
+                                <div style={{
+                                    background: 'rgba(34, 197, 94, 0.12)',
+                                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                                    borderRadius: '18px',
+                                    padding: '16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '12px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <CheckCircle2 size={24} color="#4ADE80" />
+                                        <div>
+                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#4ADE80', display: 'block' }}>
+                                                Pass Already Verified & Checked In
+                                            </span>
+                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                You can modify attendance, add walk-ins, or re-issue gate wristbands below.
+                                            </span>
                                         </div>
-                                        <span style={{ fontSize: '13px', fontWeight: '700', color: '#FFFFFF' }}>
-                                            {camper.name}
+                                    </div>
+                                </div>
+                            ) : scannedBooking.status === 'Partial Check-In' ? (
+                                <div style={{
+                                    background: 'rgba(234, 179, 8, 0.12)',
+                                    border: '1px solid rgba(234, 179, 8, 0.35)',
+                                    borderRadius: '18px',
+                                    padding: '16px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    gap: '12px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <Clock size={24} color="#FACC15" />
+                                        <div>
+                                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#FACC15', display: 'block' }}>
+                                                Late Campers Joining Active Group
+                                            </span>
+                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                {presentCount} of {totalCount} currently at camp. {shortCount} arriving late.
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={checkInAllRemaining}
+                                        style={{
+                                            padding: '8px 14px',
+                                            borderRadius: '10px',
+                                            background: '#FACC15',
+                                            color: '#0B150E',
+                                            fontSize: '11.5px',
+                                            fontWeight: '900',
+                                            border: 'none',
+                                            cursor: 'pointer',
+                                            whiteSpace: 'nowrap'
+                                        }}
+                                    >
+                                        ✓ Check In All Late
+                                    </button>
+                                </div>
+                            ) : null}
+
+                            {/* ── ATTENDEE PER-PERSON TICKETS ── */}
+                            <div style={{
+                                background: '#101E13',
+                                border: '1px solid rgba(255, 255, 255, 0.08)',
+                                borderRadius: '20px',
+                                padding: '20px'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Ticket size={18} color="#D5ED55" />
+                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
+                                            Camper Headcount & Attendance
                                         </span>
                                     </div>
-                                    <span style={{ fontSize: '11.5px', fontWeight: '800', color: camper.present ? '#D5ED55' : '#EF4444' }}>
-                                        {camper.present ? 'Present' : 'Absent / Short'}
+
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                        <button
+                                            onClick={checkInAllRemaining}
+                                            style={{
+                                                padding: '4px 8px',
+                                                borderRadius: '6px',
+                                                background: 'rgba(213, 237, 85, 0.15)',
+                                                color: '#D5ED55',
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                border: 'none',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            All Present
+                                        </button>
+                                        <span style={{
+                                            padding: '4px 10px',
+                                            borderRadius: '999px',
+                                            background: shortCount === 0 ? 'rgba(34, 197, 94, 0.2)' : 'rgba(234, 179, 8, 0.2)',
+                                            color: shortCount === 0 ? '#4ADE80' : '#FACC15',
+                                            fontSize: '11.5px',
+                                            fontWeight: '800'
+                                        }}>
+                                            {shortCount === 0 ? `🟢 ${presentCount}/${totalCount} Full Party` : `⚠️ ${presentCount}/${totalCount} (${shortCount} Short)`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Attendee Checkboxes */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                    {rosterChecklist.map((camper, idx) => (
+                                        <div
+                                            key={idx}
+                                            onClick={() => toggleCamperAttendance(idx)}
+                                            style={{
+                                                background: camper.present ? 'rgba(213, 237, 85, 0.06)' : 'rgba(239, 68, 68, 0.08)',
+                                                border: `1px solid ${camper.present ? 'rgba(213, 237, 85, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                                                borderRadius: '12px',
+                                                padding: '10px 14px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={{
+                                                    width: '26px',
+                                                    height: '26px',
+                                                    borderRadius: '50%',
+                                                    background: camper.present ? '#D5ED55' : '#EF4444',
+                                                    color: '#0B150E',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontWeight: '900',
+                                                    fontSize: '12px'
+                                                }}>
+                                                    {camper.present ? '✓' : '✕'}
+                                                </div>
+                                                <div>
+                                                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#FFFFFF', display: 'block' }}>
+                                                        {camper.name}
+                                                    </span>
+                                                    <span style={{ fontSize: '10.5px', color: '#8E9B92' }}>
+                                                        {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <span style={{ fontSize: '11.5px', fontWeight: '800', color: camper.present ? '#D5ED55' : '#EF4444' }}>
+                                                {camper.present ? 'Present (In)' : 'Absent / Short'}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Walk-In / Extra Guest Adder */}
+                                <div style={{ marginTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '12px' }}>
+                                    <span style={{ fontSize: '12px', color: '#8E9B92' }}>
+                                        Walk-In / Extra Guest on Arrival?
+                                    </span>
+                                    <div style={{ display: 'flex', gap: '6px' }}>
+                                        {extraGuestsCount > 0 && (
+                                            <button
+                                                onClick={handleRemoveExtraCamper}
+                                                style={{ padding: '4px 8px', borderRadius: '8px', background: 'rgba(239,68,68,0.15)', color: '#EF4444', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer' }}
+                                            >
+                                                - Remove Extra
+                                            </button>
+                                        )}
+                                        <button
+                                            onClick={handleAddExtraCamper}
+                                            style={{ padding: '4px 10px', borderRadius: '8px', background: 'rgba(213,237,85,0.15)', color: '#D5ED55', border: '1px solid rgba(213,237,85,0.3)', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer' }}
+                                        >
+                                            + Add Extra Camper (+₹2,499)
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* ── TENT & WRISTBAND ALLOCATION ── */}
+                            <div style={{
+                                background: '#101E13',
+                                border: '1px solid rgba(255, 255, 255, 0.08)',
+                                borderRadius: '20px',
+                                padding: '20px'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                                    <Tent size={18} color="#D5ED55" />
+                                    <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
+                                        Tent & Wristband Assignment
                                     </span>
                                 </div>
-                            ))}
-                        </div>
 
-                        <div style={{ marginTop: '14px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', display: 'flex', justifyContent: 'space-around', fontSize: '12px' }}>
-                            <span>🥗 Veg BBQ: <strong>{scannedBooking.vegCount}</strong></span>
-                            <span>🍗 Non-Veg BBQ: <strong>{scannedBooking.nonVegCount}</strong></span>
-                        </div>
-                    </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                    <div>
+                                        <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                            Assigned Tent / Pod:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. Pod #3 (Ridge Deck)"
+                                            value={assignedTent}
+                                            onChange={e => setAssignedTent(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderRadius: '10px',
+                                                background: '#08120A',
+                                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                                color: '#FFFFFF',
+                                                fontSize: '12.5px',
+                                                outline: 'none',
+                                                boxSizing: 'border-box'
+                                            }}
+                                        />
+                                    </div>
 
-                    {/* Balance Settlement */}
-                    <div style={{
-                        background: '#101E13',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
-                        borderRadius: '20px',
-                        padding: '20px',
-                        marginBottom: '16px'
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <DollarSign size={18} color="#D5ED55" />
-                                <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    Balance Settlement
-                                </span>
+                                    <div>
+                                        <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                            Wristband Tag # Range:
+                                        </label>
+                                        <input
+                                            type="text"
+                                            placeholder="e.g. #104 - #107"
+                                            value={wristbandRange}
+                                            onChange={e => setWristbandRange(e.target.value)}
+                                            style={{
+                                                width: '100%',
+                                                padding: '10px 12px',
+                                                borderRadius: '10px',
+                                                background: '#08120A',
+                                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                                color: '#FFFFFF',
+                                                fontSize: '12.5px',
+                                                outline: 'none',
+                                                boxSizing: 'border-box'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <span style={{ fontSize: '12px', fontWeight: '800', color: isBalancePaid ? '#4ADE80' : '#FACC15' }}>
-                                {isBalancePaid ? '✓ SETTLED' : '⚠️ PAYMENT DUE'}
-                            </span>
-                        </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.2fr', gap: '8px', marginBottom: '14px' }}>
-                            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Total</span>
-                                <span style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>₹{scannedBooking.totalPrice.toLocaleString('en-IN')}</span>
-                            </div>
-                            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Advance</span>
-                                <span style={{ fontSize: '13px', fontWeight: '800', color: '#4ADE80' }}>₹{scannedBooking.advancePaid.toLocaleString('en-IN')}</span>
-                            </div>
-                            <div style={{ background: isBalancePaid ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.12)', padding: '8px 10px', borderRadius: '8px' }}>
-                                <span style={{ fontSize: '10px', color: isBalancePaid ? '#4ADE80' : '#FCA5A5', display: 'block' }}>Collect</span>
-                                <span style={{ fontSize: '14px', fontWeight: '900', color: isBalancePaid ? '#4ADE80' : '#EF4444' }}>₹{isBalancePaid ? '0' : scannedBooking.balanceDue.toLocaleString('en-IN')}</span>
-                            </div>
-                        </div>
-
-                        <label style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            background: isBalancePaid ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                            border: `1px solid ${isBalancePaid ? '#22C55E' : 'rgba(255, 255, 255, 0.12)'}`,
-                            padding: '10px 12px',
-                            borderRadius: '12px',
-                            cursor: 'pointer'
-                        }}>
-                            <input
-                                type="checkbox"
-                                checked={isBalancePaid}
-                                onChange={(e) => setIsBalancePaid(e.target.checked)}
-                                style={{ width: '18px', height: '18px', accentColor: '#22C55E', cursor: 'pointer' }}
-                            />
-                            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
-                                Mark remaining balance (₹{scannedBooking.balanceDue}) as collected
-                            </span>
-                        </label>
-                    </div>
-
-                    {/* Host Notes Field */}
-                    <div style={{ marginBottom: '20px' }}>
-                        <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '6px' }}>
-                            Host Check-In & Tent Allocation Notes:
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="e.g. Tent #4 allocated. 1 guest joining at dinner."
-                            value={marshalNotes}
-                            onChange={e => setMarshalNotes(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '12px 14px',
-                                borderRadius: '12px',
+                            {/* ── BALANCE & CASH SETTLEMENT ── */}
+                            <div style={{
                                 background: '#101E13',
-                                border: '1px solid rgba(255, 255, 255, 0.12)',
-                                color: '#FFFFFF',
-                                fontSize: '13px',
-                                outline: 'none',
-                                boxSizing: 'border-box'
-                            }}
-                        />
-                    </div>
+                                border: '1px solid rgba(255, 255, 255, 0.08)',
+                                borderRadius: '20px',
+                                padding: '20px'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <DollarSign size={18} color="#D5ED55" />
+                                        <span style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
+                                            Gate Settlement
+                                        </span>
+                                    </div>
+                                    <span style={{ fontSize: '12px', fontWeight: '800', color: isBalancePaid ? '#4ADE80' : '#FACC15' }}>
+                                        {isBalancePaid ? '✓ SETTLED' : '⚠️ PAYMENT DUE'}
+                                    </span>
+                                </div>
 
-                    {/* Actions */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <button
-                            onClick={handleConfirmCheckin}
-                            disabled={isSubmittingCheckin}
-                            style={{
-                                width: '100%',
-                                padding: '16px',
-                                borderRadius: '16px',
-                                background: shortCount > 0 ? '#F59E0B' : '#D5ED55',
-                                color: '#0B150E',
-                                fontSize: '15px',
-                                fontWeight: '800',
-                                border: 'none',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '8px'
-                            }}
-                        >
-                            <CheckCircle2 size={18} />
-                            <span>
-                                {isSubmittingCheckin 
-                                    ? 'Saving Check-In...' 
-                                    : shortCount > 0 
-                                        ? `Confirm Partial Check-In (${presentCount} Present, ${shortCount} Short)` 
-                                        : `Confirm Full Check-In (${presentCount}/${totalCount})`}
-                            </span>
-                        </button>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1.2fr', gap: '8px', marginBottom: '14px' }}>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
+                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Total</span>
+                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>₹{(scannedBooking.totalPrice + extraBalance).toLocaleString('en-IN')}</span>
+                                    </div>
+                                    <div style={{ background: 'rgba(255,255,255,0.03)', padding: '8px 10px', borderRadius: '8px' }}>
+                                        <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block' }}>Advance</span>
+                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#4ADE80' }}>₹{scannedBooking.advancePaid.toLocaleString('en-IN')}</span>
+                                    </div>
+                                    <div style={{ background: isBalancePaid ? 'rgba(34,197,94,0.1)' : 'rgba(239,68,68,0.12)', padding: '8px 10px', borderRadius: '8px' }}>
+                                        <span style={{ fontSize: '10px', color: isBalancePaid ? '#4ADE80' : '#FCA5A5', display: 'block' }}>Collect</span>
+                                        <span style={{ fontSize: '14px', fontWeight: '900', color: isBalancePaid ? '#4ADE80' : '#EF4444' }}>₹{isBalancePaid ? '0' : dynamicBalanceDue.toLocaleString('en-IN')}</span>
+                                    </div>
+                                </div>
 
-                        <button
-                            onClick={resetScanner}
-                            style={{
-                                width: '100%',
-                                padding: '12px',
-                                borderRadius: '14px',
-                                background: 'rgba(255, 255, 255, 0.08)',
-                                border: '1px solid rgba(255, 255, 255, 0.12)',
-                                color: '#FFFFFF',
-                                fontSize: '13.5px',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '6px'
-                            }}
-                        >
-                            <ArrowLeft size={16} />
-                            <span>Back to Check-In Center</span>
-                        </button>
+                                <label style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    background: isBalancePaid ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                                    border: `1px solid ${isBalancePaid ? '#22C55E' : 'rgba(255, 255, 255, 0.12)'}`,
+                                    padding: '10px 12px',
+                                    borderRadius: '12px',
+                                    cursor: 'pointer'
+                                }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isBalancePaid}
+                                        onChange={(e) => setIsBalancePaid(e.target.checked)}
+                                        style={{ width: '18px', height: '18px', accentColor: '#22C55E', cursor: 'pointer' }}
+                                    />
+                                    <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
+                                        Mark balance (₹{dynamicBalanceDue}) as collected (Cash / UPI)
+                                    </span>
+                                </label>
+                            </div>
+
+                            {/* ── ACTION BUTTONS ── */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <button
+                                    onClick={handleConfirmCheckin}
+                                    disabled={isSubmittingCheckin}
+                                    style={{
+                                        width: '100%',
+                                        padding: '16px',
+                                        borderRadius: '16px',
+                                        background: shortCount > 0 ? '#F59E0B' : '#D5ED55',
+                                        color: '#0B150E',
+                                        fontSize: '15px',
+                                        fontWeight: '900',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px',
+                                        boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
+                                    }}
+                                >
+                                    <CheckCircle2 size={18} />
+                                    <span>
+                                        {isSubmittingCheckin 
+                                            ? 'Saving Gate Pass...' 
+                                            : shortCount > 0 
+                                                ? `Confirm Partial Gate Check-In (${presentCount} Present, ${shortCount} Short)` 
+                                                : `Confirm Full Gate Entry (${presentCount}/${totalCount})`}
+                                    </span>
+                                </button>
+
+                                <button
+                                    onClick={resetScanner}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        borderRadius: '14px',
+                                        background: 'rgba(255, 255, 255, 0.08)',
+                                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                                        color: '#FFFFFF',
+                                        fontSize: '13.5px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <ArrowLeft size={16} />
+                                    <span>Scan Next Arrival / Back</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </main>
             )}

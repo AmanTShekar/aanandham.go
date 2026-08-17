@@ -20,8 +20,10 @@ export async function POST(request) {
             shortCount, 
             roster, 
             isBalancePaid, 
+            assignedTent = '',
+            wristbandRange = '',
             marshalNotes,
-            marshalName = 'Basecamp Marshal' 
+            marshalName = 'Basecamp Host' 
         } = body;
 
         if (!bookingId) {
@@ -49,7 +51,9 @@ export async function POST(request) {
             attendanceRoster: Array.isArray(roster) ? roster : [],
             isBalancePaid: Boolean(isBalancePaid),
             balanceDue: isBalancePaid ? 0 : (existing.balanceDue || 0),
-            checkInAt: new Date().toISOString(),
+            assignedTent: String(assignedTent || existing.assignedTent || '').slice(0, 100),
+            wristbandRange: String(wristbandRange || existing.wristbandRange || '').slice(0, 100),
+            checkInAt: existing.checkInAt || new Date().toISOString(),
             marshalName: String(marshalName).slice(0, 80),
             marshalNotes: String(marshalNotes || '').slice(0, 500),
             lastUpdated: new Date().toISOString()
