@@ -30,6 +30,7 @@ import {
     Power,
     SlidersHorizontal,
     ChevronRight,
+    ChevronDown,
     TrendingUp,
     ListFilter,
     Send,
@@ -46,9 +47,131 @@ import {
     History,
     Check,
     FileText,
-    ExternalLink
+    ExternalLink,
+    Printer,
+    Share2,
+    Award
 } from 'lucide-react';
 import Link from 'next/link';
+
+// ── CUSTOM LUXURY ANIMATED DROPDOWN COMPONENT ──
+function CustomDropdown({ label, value, options, onChange, placeholder = "Select...", width = "100%" }) {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const selectedOption = options.find(opt => opt.value === value) || null;
+
+    return (
+        <div ref={dropdownRef} style={{ position: 'relative', width, minWidth: '160px' }}>
+            {label && (
+                <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                    {label}
+                </label>
+            )}
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: '12px',
+                    background: '#0B160E',
+                    border: `1px solid ${isOpen ? '#D5ED55' : selectedOption?.borderColor || 'rgba(255, 255, 255, 0.12)'}`,
+                    color: selectedOption ? selectedOption.color || '#FFFFFF' : '#8E9B92',
+                    fontSize: '12.5px',
+                    fontWeight: '700',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '8px',
+                    cursor: 'pointer',
+                    outline: 'none',
+                    boxShadow: isOpen ? '0 0 16px rgba(213, 237, 85, 0.15)' : 'none',
+                    transition: 'all 0.2s ease'
+                }}
+            >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {selectedOption?.icon && <span>{selectedOption.icon}</span>}
+                    <span>{selectedOption ? selectedOption.label : placeholder}</span>
+                </div>
+                <ChevronDown size={15} color={isOpen ? '#D5ED55' : '#8E9B92'} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }} />
+            </button>
+
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -6, scale: 0.98 }}
+                        animate={{ opacity: 1, y: 4, scale: 1 }}
+                        exit={{ opacity: 0, y: -6, scale: 0.98 }}
+                        transition={{ duration: 0.15 }}
+                        style={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            background: '#0F1E13',
+                            border: '1px solid rgba(213, 237, 85, 0.3)',
+                            borderRadius: '14px',
+                            padding: '6px',
+                            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.7)',
+                            zIndex: 120,
+                            maxHeight: '260px',
+                            overflowY: 'auto'
+                        }}
+                    >
+                        {options.map((option) => {
+                            const isSelected = option.value === value;
+                            return (
+                                <button
+                                    key={option.value}
+                                    type="button"
+                                    onClick={() => {
+                                        onChange(option.value);
+                                        setIsOpen(false);
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '9px 12px',
+                                        borderRadius: '8px',
+                                        background: isSelected ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
+                                        color: isSelected ? '#D5ED55' : option.color || '#E1ECE3',
+                                        border: 'none',
+                                        fontSize: '12px',
+                                        fontWeight: isSelected ? '800' : '600',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        gap: '8px',
+                                        cursor: 'pointer',
+                                        textAlign: 'left',
+                                        marginBottom: '2px',
+                                        transition: 'background 0.15s ease'
+                                    }}
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        {option.icon && <span>{option.icon}</span>}
+                                        <span>{option.label}</span>
+                                    </div>
+                                    {isSelected && <Check size={14} color="#D5ED55" />}
+                                </button>
+                            );
+                        })}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+}
 
 export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     // ── NAVIGATION TABS: 'scanner' | 'roster' | 'kitchen' ──
@@ -100,12 +223,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isValidating, setIsValidating] = useState(false);
     const [rosterChecklist, setRosterChecklist] = useState([]);
     const [isBalancePaid, setIsBalancePaid] = useState(false);
-    const [assignedTent, setAssignedTent] = useState('');
-    const [wristbandRange, setWristbandRange] = useState('');
+    const [assignedTent, setAssignedTent] = useState('Pod #1 (Sunset Ridge Deck)');
+    const [wristbandRange, setWristbandRange] = useState('#101 - #104');
     const [marshalNotes, setMarshalNotes] = useState('');
     const [isSubmittingCheckin, setIsSubmittingCheckin] = useState(false);
-    const [checkinSuccessMessage, setCheckinSuccessMessage] = useState('');
     const [extraGuestsCount, setExtraGuestsCount] = useState(0);
+
+    // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
+    const [clearedGatePermit, setClearedGatePermit] = useState(null);
 
     // ── TOAST NOTIFICATION HELPER ──
     const showToast = (msg) => {
@@ -255,7 +380,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
         setIsValidating(true);
         setErrorMessage('');
-        setCheckinSuccessMessage('');
+        setClearedGatePermit(null);
 
         playSuccessChime();
 
@@ -273,8 +398,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                setAssignedTent(data.booking.assignedTent || '');
-                setWristbandRange(data.booking.wristbandRange || '');
+                setAssignedTent(data.booking.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
+                setWristbandRange(data.booking.wristbandRange || '#101 - #104');
                 setExtraGuestsCount(0);
                 stopCamera();
                 setIsCameraEnabled(false);
@@ -296,7 +421,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         const scanFrame = () => {
             if (!isSubscribed) return;
 
-            if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking && videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
+            if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking && !clearedGatePermit && videoRef.current && videoRef.current.readyState === videoRef.current.HAVE_ENOUGH_DATA) {
                 const canvas = canvasRef.current;
                 if (canvas) {
                     const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -316,12 +441,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 }
             }
 
-            if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking) {
+            if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking && !clearedGatePermit) {
                 animFrameRef.current = requestAnimationFrame(scanFrame);
             }
         };
 
-        if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking) {
+        if (isCameraEnabled && activeTab === 'scanner' && !scannedBooking && !clearedGatePermit) {
             animFrameRef.current = requestAnimationFrame(scanFrame);
         } else {
             stopCamera();
@@ -331,7 +456,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             isSubscribed = false;
             stopCamera();
         };
-    }, [isCameraEnabled, activeTab, scannedBooking, handleScannedResult, stopCamera]);
+    }, [isCameraEnabled, activeTab, scannedBooking, clearedGatePermit, handleScannedResult, stopCamera]);
 
     // ── MANUAL LOOKUP ──
     const handleManualSearch = async (e) => {
@@ -356,8 +481,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                setAssignedTent(data.booking.assignedTent || '');
-                setWristbandRange(data.booking.wristbandRange || '');
+                setAssignedTent(data.booking.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
+                setWristbandRange(data.booking.wristbandRange || '#101 - #104');
                 setExtraGuestsCount(0);
                 setIsManualModalOpen(false);
                 stopCamera();
@@ -464,28 +589,16 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         setRosterChecklist(guest.roster || []);
         setIsBalancePaid(Boolean(guest.isBalancePaid));
         setMarshalNotes(guest.notes || '');
-        setAssignedTent(guest.assignedTent || '');
-        setWristbandRange(guest.wristbandRange || '');
+        setAssignedTent(guest.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
+        setWristbandRange(guest.wristbandRange || '#101 - #104');
         setExtraGuestsCount(0);
-        setCheckinSuccessMessage('');
+        setClearedGatePermit(null);
         setErrorMessage('');
-    };
-
-    // ── TOGGLE ATTENDANCE ON INDIVIDUAL CAMPER ──
-    const toggleCamperAttendance = (index) => {
-        setRosterChecklist(prev => {
-            const updated = [...prev];
-            updated[index] = {
-                ...updated[index],
-                present: !updated[index].present
-            };
-            return updated;
-        });
     };
 
     // ── ONE-TAP "CHECK IN ALL REMAINING LATE CAMPERS" ──
     const checkInAllRemaining = () => {
-        setRosterChecklist(prev => prev.map(c => ({ ...c, present: true })));
+        setRosterChecklist(prev => prev.map(c => ({ ...c, present: true, status: 'present' })));
         showToast('✓ Marked all campers as present!');
     };
 
@@ -494,7 +607,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         const nextId = rosterChecklist.length + 1;
         setRosterChecklist(prev => [
             ...prev,
-            { id: nextId, name: `Extra Camper #${nextId} (Walk-In)`, present: true, isExtra: true }
+            { id: nextId, name: `Extra Camper #${nextId} (Walk-In)`, present: true, status: 'present', isExtra: true }
         ]);
         setExtraGuestsCount(prev => prev + 1);
         showToast('✓ Added 1 extra walk-in camper (+₹2,499 added to balance)');
@@ -507,18 +620,17 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     };
 
     // ── ATTENDANCE CALCULATIONS ──
-    const presentCount = rosterChecklist.filter(c => c.present).length;
+    const presentCount = rosterChecklist.filter(c => c.present || c.status === 'present').length;
     const totalCount = rosterChecklist.length;
     const shortCount = Math.max(0, totalCount - presentCount);
     const extraBalance = extraGuestsCount * 2499;
     const dynamicBalanceDue = Math.max(0, (scannedBooking?.balanceDue || 0) + extraBalance);
 
-    // ── CONFIRM CHECK-IN & ISSUE ENTRY PERMIT ──
+    // ── CONFIRM CHECK-IN & OPEN THE NEW GATE PERMIT CONFIRMATION SCREEN ──
     const handleConfirmCheckin = async () => {
         if (!scannedBooking) return;
 
         setIsSubmittingCheckin(true);
-        setCheckinSuccessMessage('');
 
         try {
             const res = await fetch('/api/marshal/checkin', {
@@ -540,16 +652,26 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
 
             if (data.success) {
-                setCheckinSuccessMessage(data.message);
-                setScannedBooking(prev => ({
-                    ...prev,
-                    status: shortCount > 0 ? 'Partial Check-In' : 'Checked In',
-                    checkedInCount: presentCount,
-                    shortCount,
-                    isBalancePaid,
+                const permitNumber = `GP-${Math.floor(1000 + Math.random() * 9000)}`;
+                const permitDetails = {
+                    permitId: permitNumber,
+                    bookingId: scannedBooking.id,
+                    name: scannedBooking.name,
+                    campsite: scannedBooking.campsite,
                     assignedTent,
-                    wristbandRange
-                }));
+                    wristbandRange,
+                    presentCount,
+                    totalCount,
+                    shortCount,
+                    vegCount: scannedBooking.vegCount,
+                    nonVegCount: scannedBooking.nonVegCount,
+                    balanceCollected: isBalancePaid ? dynamicBalanceDue : 0,
+                    isFullySettled: isBalancePaid,
+                    convoyTime: scannedBooking.convoyTime,
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                };
+
+                setClearedGatePermit(permitDetails);
                 playSuccessChime();
                 fetchRosterData();
             } else {
@@ -564,7 +686,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     const resetScanner = () => {
         setScannedBooking(null);
-        setCheckinSuccessMessage('');
+        setClearedGatePermit(null);
         setErrorMessage('');
         setManualIdInput('');
     };
@@ -585,6 +707,29 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
         return true;
     });
+
+    // ── TENT / POD DROPDOWN OPTIONS ──
+    const tentOptions = [
+        { value: 'Pod #1 (Sunset Ridge Deck)', label: 'Pod #1 (Sunset Ridge Deck)', icon: '⛺', color: '#D5ED55' },
+        { value: 'Pod #2 (Panoramic Glass Dome)', label: 'Pod #2 (Panoramic Glass Dome)', icon: '⛺', color: '#D5ED55' },
+        { value: 'Pod #3 (Sunrise Cliff Edge)', label: 'Pod #3 (Sunrise Cliff Edge)', icon: '⛺', color: '#D5ED55' },
+        { value: 'Pod #4 (Valley View Dome)', label: 'Pod #4 (Valley View Dome)', icon: '⛺', color: '#D5ED55' },
+        { value: 'Pod #5 (Cloud View Pod)', label: 'Pod #5 (Cloud View Pod)', icon: '⛺', color: '#D5ED55' },
+        { value: 'Alpine Tent A-1 (2-Person)', label: 'Alpine Tent A-1 (2-Person)', icon: '🏕️', color: '#60A5FA' },
+        { value: 'Alpine Tent A-2 (2-Person)', label: 'Alpine Tent A-2 (2-Person)', icon: '🏕️', color: '#60A5FA' },
+        { value: 'Alpine Quad Q-1 (4-Person)', label: 'Alpine Quad Q-1 (4-Person)', icon: '🏕️', color: '#34D399' },
+        { value: 'Alpine Quad Q-2 (4-Person)', label: 'Alpine Quad Q-2 (4-Person)', icon: '🏕️', color: '#34D399' },
+        { value: 'Cottage #1 (Cliffside Wooden)', label: 'Cottage #1 (Cliffside Wooden)', icon: '🏡', color: '#FBBF24' },
+        { value: 'Cottage #2 (Honeymoon Suite)', label: 'Cottage #2 (Honeymoon Suite)', icon: '🏡', color: '#FBBF24' }
+    ];
+
+    // ── CAMPER ATTENDANCE STATUS OPTIONS ──
+    const camperStatusOptions = [
+        { value: 'present', label: 'Present (Checked In)', icon: '🟢', color: '#D5ED55', borderColor: 'rgba(213,237,85,0.4)' },
+        { value: 'late', label: 'Arriving Late (Next Jeep)', icon: '⏳', color: '#FACC15', borderColor: 'rgba(234,179,8,0.4)' },
+        { value: 'absent', label: 'Absent / No-Show', icon: '❌', color: '#EF4444', borderColor: 'rgba(239,68,68,0.4)' },
+        { value: 'departed', label: 'Departed Camp', icon: '🚶', color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
+    ];
 
     return (
         <div style={{
@@ -739,87 +884,89 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 </div>
             </header>
 
-            {/* ── 3-TAB SEGMENTED CONTROLLER ── */}
-            <div style={{
-                background: 'rgba(11, 21, 14, 0.9)',
-                backdropFilter: 'blur(12px)',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                padding: '8px 16px',
-                display: 'flex',
-                gap: '8px',
-                position: 'sticky',
-                top: '64px',
-                zIndex: 35
-            }}>
-                <button
-                    onClick={() => { setActiveTab('scanner'); setScannedBooking(null); }}
-                    style={{
-                        flex: 1,
-                        padding: '10px 8px',
-                        borderRadius: '12px',
-                        background: activeTab === 'scanner' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
-                        color: activeTab === 'scanner' ? '#0B150E' : '#A2B6A6',
-                        border: 'none',
-                        fontSize: '12.5px',
-                        fontWeight: '800',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                    }}
-                >
-                    <Camera size={15} />
-                    <span>QR Scanner</span>
-                </button>
+            {/* ── 3-TAB SEGMENTED CONTROLLER (Hidden during full-screen permit view) ── */}
+            {!clearedGatePermit && (
+                <div style={{
+                    background: 'rgba(11, 21, 14, 0.9)',
+                    backdropFilter: 'blur(12px)',
+                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                    padding: '8px 16px',
+                    display: 'flex',
+                    gap: '8px',
+                    position: 'sticky',
+                    top: '64px',
+                    zIndex: 35
+                }}>
+                    <button
+                        onClick={() => { setActiveTab('scanner'); setScannedBooking(null); }}
+                        style={{
+                            flex: 1,
+                            padding: '10px 8px',
+                            borderRadius: '12px',
+                            background: activeTab === 'scanner' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                            color: activeTab === 'scanner' ? '#0B150E' : '#A2B6A6',
+                            border: 'none',
+                            fontSize: '12.5px',
+                            fontWeight: '800',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                    >
+                        <Camera size={15} />
+                        <span>QR Scanner</span>
+                    </button>
 
-                <button
-                    onClick={() => { setActiveTab('roster'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
-                    style={{
-                        flex: 1,
-                        padding: '10px 8px',
-                        borderRadius: '12px',
-                        background: activeTab === 'roster' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
-                        color: activeTab === 'roster' ? '#0B150E' : '#A2B6A6',
-                        border: 'none',
-                        fontSize: '12.5px',
-                        fontWeight: '800',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                    }}
-                >
-                    <Users size={15} />
-                    <span>Guest Roster ({rosterList.length})</span>
-                </button>
+                    <button
+                        onClick={() => { setActiveTab('roster'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
+                        style={{
+                            flex: 1,
+                            padding: '10px 8px',
+                            borderRadius: '12px',
+                            background: activeTab === 'roster' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                            color: activeTab === 'roster' ? '#0B150E' : '#A2B6A6',
+                            border: 'none',
+                            fontSize: '12.5px',
+                            fontWeight: '800',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                    >
+                        <Users size={15} />
+                        <span>Guest Roster ({rosterList.length})</span>
+                    </button>
 
-                <button
-                    onClick={() => { setActiveTab('kitchen'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
-                    style={{
-                        flex: 1,
-                        padding: '10px 8px',
-                        borderRadius: '12px',
-                        background: activeTab === 'kitchen' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
-                        color: activeTab === 'kitchen' ? '#0B150E' : '#A2B6A6',
-                        border: 'none',
-                        fontSize: '12.5px',
-                        fontWeight: '800',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s ease'
-                    }}
-                >
-                    <Utensils size={15} />
-                    <span>Kitchen & Tally</span>
-                </button>
-            </div>
+                    <button
+                        onClick={() => { setActiveTab('kitchen'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
+                        style={{
+                            flex: 1,
+                            padding: '10px 8px',
+                            borderRadius: '12px',
+                            background: activeTab === 'kitchen' ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                            color: activeTab === 'kitchen' ? '#0B150E' : '#A2B6A6',
+                            border: 'none',
+                            fontSize: '12.5px',
+                            fontWeight: '800',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease'
+                        }}
+                    >
+                        <Utensils size={15} />
+                        <span>Kitchen & Tally</span>
+                    </button>
+                </div>
+            )}
 
             {/* ── ERROR MESSAGE BANNER ── */}
             {errorMessage && (
@@ -849,9 +996,183 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             )}
 
             {/* ══════════════════════════════════════════════════════════
+                NEW SCREEN: CINEMATIC GATE ENTRY PERMIT CLEARED
+            ══════════════════════════════════════════════════════════ */}
+            {clearedGatePermit && (
+                <main style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '30px 20px 80px',
+                    maxWidth: '560px',
+                    margin: '0 auto',
+                    width: '100%',
+                    boxSizing: 'border-box'
+                }}>
+                    <motion.div
+                        initial={{ scale: 0.88, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: 'spring', damping: 20, stiffness: 260 }}
+                        style={{
+                            width: '100%',
+                            background: '#0D1C11',
+                            border: '2px solid #D5ED55',
+                            borderRadius: '28px',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            boxShadow: '0 0 60px rgba(213, 237, 85, 0.25), 0 30px 60px rgba(0,0,0,0.8)'
+                        }}
+                    >
+                        {/* Glowing Approved Banner */}
+                        <div style={{
+                            background: 'linear-gradient(135deg, #15301B 0%, #0F2314 100%)',
+                            padding: '28px 24px 22px',
+                            textAlign: 'center',
+                            borderBottom: '2px dashed rgba(213, 237, 85, 0.3)',
+                            position: 'relative'
+                        }}>
+                            {/* Perforated cutout circles */}
+                            <div style={{ position: 'absolute', left: '-14px', bottom: '-14px', width: '28px', height: '28px', borderRadius: '50%', background: '#071009', zIndex: 10 }} />
+                            <div style={{ position: 'absolute', right: '-14px', bottom: '-14px', width: '28px', height: '28px', borderRadius: '50%', background: '#071009', zIndex: 10 }} />
+
+                            <div style={{
+                                width: '68px',
+                                height: '68px',
+                                borderRadius: '50%',
+                                background: '#D5ED55',
+                                color: '#0B150E',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                margin: '0 auto 14px',
+                                boxShadow: '0 0 30px rgba(213, 237, 85, 0.6)'
+                            }}>
+                                <Award size={36} />
+                            </div>
+
+                            <span style={{ fontSize: '11px', fontWeight: '900', letterSpacing: '2px', color: '#D5ED55', textTransform: 'uppercase' }}>
+                                OFFICIAL GATE CLEARANCE
+                            </span>
+                            <h1 style={{ margin: '6px 0 2px', fontSize: '24px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '-0.02em' }}>
+                                CAMP ENTRY APPROVED
+                            </h1>
+                            <span style={{ fontSize: '13px', color: '#A2B6A6' }}>
+                                Permit #{clearedGatePermit.permitId} • Issued at {clearedGatePermit.timestamp}
+                            </span>
+                        </div>
+
+                        {/* Permit Summary Card Body */}
+                        <div style={{ padding: '24px' }}>
+                            {/* Explorer Details */}
+                            <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '16px', marginBottom: '14px' }}>
+                                <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700', textTransform: 'uppercase' }}>Lead Explorer:</span>
+                                <div style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF', marginTop: '2px' }}>
+                                    {clearedGatePermit.name}
+                                </div>
+                                <span style={{ fontSize: '12px', color: '#D5ED55' }}>
+                                    Pass #{clearedGatePermit.bookingId} • {clearedGatePermit.campsite}
+                                </span>
+                            </div>
+
+                            {/* Tent & Wristband Allocation Badges */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', marginBottom: '14px' }}>
+                                <div style={{ background: 'rgba(213, 237, 85, 0.08)', border: '1px solid rgba(213, 237, 85, 0.3)', padding: '12px 14px', borderRadius: '14px' }}>
+                                    <span style={{ fontSize: '10.5px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>⛺ Assigned Tent / Pod</span>
+                                    <strong style={{ fontSize: '13.5px', color: '#FFFFFF', marginTop: '2px', display: 'block' }}>{clearedGatePermit.assignedTent}</strong>
+                                </div>
+                                <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '12px 14px', borderRadius: '14px' }}>
+                                    <span style={{ fontSize: '10.5px', color: '#8E9B92', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>🏷️ Wristbands Issued</span>
+                                    <strong style={{ fontSize: '13.5px', color: '#FFFFFF', marginTop: '2px', display: 'block' }}>{clearedGatePermit.wristbandRange || 'All Issued'}</strong>
+                                </div>
+                            </div>
+
+                            {/* Headcount & Catering Chits */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '18px', textAlign: 'center' }}>
+                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '10px 6px', borderRadius: '12px' }}>
+                                    <span style={{ fontSize: '10px', color: '#8E9B92', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Campers</span>
+                                    <strong style={{ fontSize: '16px', color: '#4ADE80' }}>{clearedGatePermit.presentCount}/{clearedGatePermit.totalCount}</strong>
+                                </div>
+                                <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '10px 6px', borderRadius: '12px' }}>
+                                    <span style={{ fontSize: '10px', color: '#4ADE80', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Veg BBQ</span>
+                                    <strong style={{ fontSize: '16px', color: '#4ADE80' }}>{clearedGatePermit.vegCount}</strong>
+                                </div>
+                                <div style={{ background: 'rgba(249, 115, 22, 0.1)', padding: '10px 6px', borderRadius: '12px' }}>
+                                    <span style={{ fontSize: '10px', color: '#FB923C', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Chicken BBQ</span>
+                                    <strong style={{ fontSize: '16px', color: '#FB923C' }}>{clearedGatePermit.nonVegCount}</strong>
+                                </div>
+                            </div>
+
+                            {/* Settlement Summary */}
+                            <div style={{ background: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '12px 16px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <CheckCircle2 size={18} color="#4ADE80" />
+                                    <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>
+                                        Gate Balance Settlement:
+                                    </span>
+                                </div>
+                                <span style={{ fontSize: '13px', fontWeight: '900', color: '#4ADE80' }}>
+                                    ✓ ALL SETTLED
+                                </span>
+                            </div>
+
+                            {/* Big Action Buttons */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <button
+                                    onClick={resetScanner}
+                                    style={{
+                                        width: '100%',
+                                        padding: '16px',
+                                        borderRadius: '16px',
+                                        background: '#D5ED55',
+                                        color: '#0B150E',
+                                        fontSize: '15px',
+                                        fontWeight: '900',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px',
+                                        boxShadow: '0 8px 24px rgba(0,0,0,0.5)'
+                                    }}
+                                >
+                                    <Camera size={18} />
+                                    <span>Scan Next Camper Pass →</span>
+                                </button>
+
+                                <button
+                                    onClick={() => { resetScanner(); setActiveTab('roster'); }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px',
+                                        borderRadius: '14px',
+                                        background: 'rgba(255, 255, 255, 0.08)',
+                                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <Users size={16} />
+                                    <span>View in Guest Roster</span>
+                                </button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </main>
+            )}
+
+            {/* ══════════════════════════════════════════════════════════
                 TAB 1: LIVE QR CAMERA SCANNER
             ══════════════════════════════════════════════════════════ */}
-            {activeTab === 'scanner' && !scannedBooking && (
+            {activeTab === 'scanner' && !scannedBooking && !clearedGatePermit && (
                 <main style={{
                     flex: 1,
                     display: 'flex',
@@ -1124,7 +1445,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             {/* ══════════════════════════════════════════════════════════
                 TAB 2: GUEST ROSTER & HEADCOUNT LIST
             ══════════════════════════════════════════════════════════ */}
-            {activeTab === 'roster' && !scannedBooking && (
+            {activeTab === 'roster' && !scannedBooking && !clearedGatePermit && (
                 <main style={{
                     flex: 1,
                     padding: '16px clamp(16px, 4vw, 24px) 80px',
@@ -1321,7 +1642,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             {/* ══════════════════════════════════════════════════════════
                 TAB 3: KITCHEN & OCCUPANCY TALLY
             ══════════════════════════════════════════════════════════ */}
-            {activeTab === 'kitchen' && !scannedBooking && (
+            {activeTab === 'kitchen' && !scannedBooking && !clearedGatePermit && (
                 <main style={{
                     flex: 1,
                     padding: '20px clamp(16px, 4vw, 24px) 80px',
@@ -1440,7 +1761,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 CINEMA TICKET STUB / BOARDING PASS CHECK-IN WORKSPACE
                 (Responsive 1-Col Mobile, 2-Col Tablet/Laptop)
             ══════════════════════════════════════════════════════════ */}
-            {scannedBooking && (
+            {scannedBooking && !clearedGatePermit && (
                 <main style={{
                     flex: 1,
                     padding: '20px clamp(16px, 4vw, 32px) 100px',
@@ -1449,25 +1770,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
-                    {checkinSuccessMessage && (
-                        <div style={{
-                            background: 'rgba(34, 197, 94, 0.15)',
-                            border: '1px solid #22C55E',
-                            borderRadius: '16px',
-                            padding: '16px',
-                            color: '#4ADE80',
-                            fontSize: '13.5px',
-                            fontWeight: '700',
-                            marginBottom: '16px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px'
-                        }}>
-                            <CheckCircle2 size={20} />
-                            <span>{checkinSuccessMessage}</span>
-                        </div>
-                    )}
-
                     {/* ── RESPONSIVE GRID LAYOUT ── */}
                     <div style={{
                         display: 'grid',
@@ -1640,7 +1942,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                 Pass Already Verified & Checked In
                                             </span>
                                             <span style={{ fontSize: '11px', color: '#8E9B92' }}>
-                                                You can modify attendance, add walk-ins, or re-issue gate wristbands below.
+                                                You can modify attendance, change tents, or re-issue gate permits below.
                                             </span>
                                         </div>
                                     </div>
@@ -1686,7 +1988,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             ) : null}
 
-                            {/* ── ATTENDEE PER-PERSON TICKETS ── */}
+                            {/* ── ATTENDEE PER-PERSON TICKETS WITH CUSTOM DROPDOWNS ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1730,7 +2032,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
                                 </div>
 
-                                {/* Attendee Checkboxes with Status Dropdowns */}
+                                {/* Custom Dropdown for each Camper */}
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {rosterChecklist.map((camper, idx) => {
                                         const camperStatus = camper.status || (camper.present ? 'present' : 'absent');
@@ -1747,69 +2049,53 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                     borderRadius: '14px',
                                                     padding: '12px 14px',
                                                     display: 'flex',
-                                                    flexDirection: 'column',
-                                                    gap: '8px'
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '10px'
                                                 }}
                                             >
-                                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                        <div style={{
-                                                            width: '28px',
-                                                            height: '28px',
-                                                            borderRadius: '50%',
-                                                            background: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
-                                                            color: '#0B150E',
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            fontWeight: '900',
-                                                            fontSize: '13px'
-                                                        }}>
-                                                            {camperStatus === 'present' ? '✓' : camperStatus === 'late' ? '⏳' : '✕'}
-                                                        </div>
-                                                        <div>
-                                                            <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
-                                                                {camper.name}
-                                                            </span>
-                                                            <span style={{ fontSize: '11px', color: '#8E9B92' }}>
-                                                                {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
-                                                            </span>
-                                                        </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{
+                                                        width: '28px',
+                                                        height: '28px',
+                                                        borderRadius: '50%',
+                                                        background: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
+                                                        color: '#0B150E',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        fontWeight: '900',
+                                                        fontSize: '13px'
+                                                    }}>
+                                                        {camperStatus === 'present' ? '✓' : camperStatus === 'late' ? '⏳' : '✕'}
                                                     </div>
-
-                                                    {/* Status Dropdown Selector */}
-                                                    <select
-                                                        value={camperStatus}
-                                                        onChange={(e) => {
-                                                            const newStatus = e.target.value;
-                                                            setRosterChecklist(prev => {
-                                                                const updated = [...prev];
-                                                                updated[idx] = {
-                                                                    ...updated[idx],
-                                                                    status: newStatus,
-                                                                    present: newStatus === 'present'
-                                                                };
-                                                                return updated;
-                                                            });
-                                                        }}
-                                                        style={{
-                                                            padding: '6px 10px',
-                                                            borderRadius: '8px',
-                                                            background: camperStatus === 'present' ? 'rgba(213, 237, 85, 0.15)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                                                            color: camperStatus === 'present' ? '#D5ED55' : camperStatus === 'late' ? '#FACC15' : '#EF4444',
-                                                            border: `1px solid ${camperStatus === 'present' ? 'rgba(213, 237, 85, 0.4)' : camperStatus === 'late' ? 'rgba(234, 179, 8, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
-                                                            fontSize: '11.5px',
-                                                            fontWeight: '800',
-                                                            cursor: 'pointer',
-                                                            outline: 'none'
-                                                        }}
-                                                    >
-                                                        <option value="present" style={{ background: '#101E13', color: '#D5ED55' }}>🟢 Present (Checked In)</option>
-                                                        <option value="late" style={{ background: '#101E13', color: '#FACC15' }}>⏳ Arriving Late (Next Jeep)</option>
-                                                        <option value="absent" style={{ background: '#101E13', color: '#EF4444' }}>❌ Absent / No-Show</option>
-                                                        <option value="departed" style={{ background: '#101E13', color: '#8E9B92' }}>🚶 Departed Camp</option>
-                                                    </select>
+                                                    <div>
+                                                        <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
+                                                            {camper.name}
+                                                        </span>
+                                                        <span style={{ fontSize: '11px', color: '#8E9B92' }}>
+                                                            {idx === 0 ? 'Lead Organizer' : `Camper Ticket #${idx + 1}`}
+                                                        </span>
+                                                    </div>
                                                 </div>
+
+                                                {/* Custom Dropdown Selector */}
+                                                <CustomDropdown
+                                                    value={camperStatus}
+                                                    options={camperStatusOptions}
+                                                    width="180px"
+                                                    onChange={(newVal) => {
+                                                        setRosterChecklist(prev => {
+                                                            const updated = [...prev];
+                                                            updated[idx] = {
+                                                                ...updated[idx],
+                                                                status: newVal,
+                                                                present: newVal === 'present'
+                                                            };
+                                                            return updated;
+                                                        });
+                                                    }}
+                                                />
                                             </div>
                                         );
                                     })}
@@ -1839,7 +2125,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── TENT & WRISTBAND ALLOCATION WITH PRESET DROPDOWN ── */}
+                            {/* ── TENT & WRISTBAND ALLOCATION WITH CUSTOM DROPDOWN ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1853,41 +2139,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </span>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '10px' }}>
                                     <div>
-                                        <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
-                                            Assigned Tent / Pod (Dropdown):
-                                        </label>
-                                        <select
+                                        <CustomDropdown
+                                            label="Assigned Tent / Pod (Custom Dropdown):"
                                             value={assignedTent}
-                                            onChange={e => setAssignedTent(e.target.value)}
-                                            style={{
-                                                width: '100%',
-                                                padding: '11px 12px',
-                                                borderRadius: '10px',
-                                                background: '#08120A',
-                                                border: '1px solid rgba(213, 237, 85, 0.4)',
-                                                color: '#D5ED55',
-                                                fontSize: '12.5px',
-                                                fontWeight: '700',
-                                                outline: 'none',
-                                                boxSizing: 'border-box',
-                                                cursor: 'pointer'
-                                            }}
-                                        >
-                                            <option value="" style={{ background: '#08120A', color: '#8E9B92' }}>-- Select Tent / Dome Pod --</option>
-                                            <option value="Pod #1 (Sunset Ridge Deck)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #1 (Sunset Ridge Deck)</option>
-                                            <option value="Pod #2 (Panoramic Glass Dome)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #2 (Panoramic Glass Dome)</option>
-                                            <option value="Pod #3 (Sunrise Cliff Edge)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #3 (Sunrise Cliff Edge)</option>
-                                            <option value="Pod #4 (Valley View Dome)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #4 (Valley View Dome)</option>
-                                            <option value="Pod #5 (Cloud View Pod)" style={{ background: '#08120A', color: '#FFFFFF' }}>⛺ Pod #5 (Cloud View Pod)</option>
-                                            <option value="Alpine Tent A-1 (2-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Tent A-1 (2-Person)</option>
-                                            <option value="Alpine Tent A-2 (2-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Tent A-2 (2-Person)</option>
-                                            <option value="Alpine Quad Q-1 (4-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Quad Q-1 (4-Person)</option>
-                                            <option value="Alpine Quad Q-2 (4-Person)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏕️ Alpine Quad Q-2 (4-Person)</option>
-                                            <option value="Cottage #1 (Cliffside Wooden)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏡 Cottage #1 (Cliffside Wooden)</option>
-                                            <option value="Cottage #2 (Honeymoon Suite)" style={{ background: '#08120A', color: '#FFFFFF' }}>🏡 Cottage #2 (Honeymoon Suite)</option>
-                                        </select>
+                                            options={tentOptions}
+                                            onChange={(val) => setAssignedTent(val)}
+                                        />
                                     </div>
 
                                     <div>
@@ -1902,7 +2161,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                             style={{
                                                 width: '100%',
                                                 padding: '10px 12px',
-                                                borderRadius: '10px',
+                                                borderRadius: '12px',
                                                 background: '#08120A',
                                                 border: '1px solid rgba(255, 255, 255, 0.12)',
                                                 color: '#FFFFFF',
@@ -1996,10 +2255,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     <CheckCircle2 size={18} />
                                     <span>
                                         {isSubmittingCheckin 
-                                            ? 'Saving Gate Pass...' 
+                                            ? 'Generating Gate Clearance Permit...' 
                                             : shortCount > 0 
-                                                ? `Confirm Partial Gate Check-In (${presentCount} Present, ${shortCount} Short)` 
-                                                : `Confirm Full Gate Entry (${presentCount}/${totalCount})`}
+                                                ? `Issue Partial Gate Permit (${presentCount} Present, ${shortCount} Short)` 
+                                                : `Issue Full Gate Clearance Permit (${presentCount}/${totalCount})`}
                                     </span>
                                 </button>
 
