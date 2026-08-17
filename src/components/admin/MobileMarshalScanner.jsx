@@ -50,7 +50,14 @@ import {
     ExternalLink,
     Printer,
     Share2,
-    Award
+    Award,
+    Lock,
+    Unlock,
+    KeyRound,
+    ShieldAlert,
+    LogIn,
+    Eye,
+    EyeOff
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -231,6 +238,91 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
     const [clearedGatePermit, setClearedGatePermit] = useState(null);
+
+    // ── HOST SECURITY & PASSCODE AUTHENTICATION ──
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+    const [hostPasscode, setHostPasscode] = useState('');
+    const [passcodeError, setPasscodeError] = useState('');
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const [showPasscodeText, setShowPasscodeText] = useState(false);
+
+    // Verify session on mount via HttpOnly cookie
+    useEffect(() => {
+        let isMounted = true;
+        const checkAuthSession = async () => {
+            try {
+                const res = await fetch('/api/admin/auth', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (isMounted) {
+                        setIsAuthenticated(Boolean(data.authenticated));
+                    }
+                } else {
+                    if (isMounted) setIsAuthenticated(false);
+                }
+            } catch (err) {
+                if (isMounted) setIsAuthenticated(false);
+            } finally {
+                if (isMounted) setIsCheckingAuth(false);
+            }
+        };
+
+        checkAuthSession();
+        return () => { isMounted = false; };
+    }, []);
+
+    const handleHostLogin = async (e) => {
+        e?.preventDefault();
+        if (!hostPasscode.trim()) return;
+
+        setIsLoggingIn(true);
+        setPasscodeError('');
+
+        try {
+            const res = await fetch('/api/admin/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ passcode: hostPasscode.trim() })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                playSuccessChime();
+                setIsAuthenticated(true);
+                setHostPasscode('');
+                setPasscodeError('');
+                showToast('✓ Host Access Granted · Basecamp Console Unlocked');
+            } else {
+                setPasscodeError(data.message || 'Invalid passcode. Access denied.');
+            }
+        } catch (err) {
+            setPasscodeError('Network error verifying credentials. Please try again.');
+        } finally {
+            setIsLoggingIn(false);
+        }
+    };
+
+    const handleHostLogout = async () => {
+        try {
+            await fetch('/api/admin/auth', {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+        } catch (err) {
+            // Ignored
+        }
+        setIsAuthenticated(false);
+        stopCamera();
+        setIsCameraEnabled(false);
+        setScannedBooking(null);
+        setClearedGatePermit(null);
+        showToast('🔒 Basecamp Host Console Locked');
+    };
 
     // ── TOAST NOTIFICATION HELPER ──
     const showToast = (msg) => {
@@ -731,6 +823,249 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         { value: 'departed', label: 'Departed Camp', icon: '🚶', color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
     ];
 
+    // ── CHECKING AUTH LOADING STATE ──
+    if (isCheckingAuth) {
+        return (
+            <div style={{
+                minHeight: '100dvh',
+                background: 'radial-gradient(circle at 50% 0%, #112015 0%, #071009 100%)',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-jakarta), sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: '16px'
+            }}>
+                <div style={{
+                    width: '44px',
+                    height: '44px',
+                    borderRadius: '50%',
+                    border: '3px solid rgba(213, 237, 85, 0.2)',
+                    borderTopColor: '#D5ED55',
+                    animation: 'spin 0.8s linear infinite'
+                }} />
+                <span style={{ fontSize: '12px', color: '#8E9B92', fontWeight: '800', letterSpacing: '0.8px' }}>
+                    VERIFYING HOST CREDENTIALS...
+                </span>
+                <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            </div>
+        );
+    }
+
+    // ── HOST PASSCODE SECURITY LOCK SCREEN ──
+    if (!isAuthenticated) {
+        return (
+            <div style={{
+                minHeight: '100dvh',
+                background: 'radial-gradient(circle at 50% 10%, #17321F 0%, #08120B 100%)',
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-jakarta), sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '24px 16px',
+                position: 'relative'
+            }}>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                    style={{
+                        width: '100%',
+                        maxWidth: '390px',
+                        background: 'rgba(13, 27, 18, 0.9)',
+                        backdropFilter: 'blur(24px)',
+                        WebkitBackdropFilter: 'blur(24px)',
+                        border: '1px solid rgba(229, 169, 59, 0.4)',
+                        borderRadius: '24px',
+                        padding: '28px 22px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.7), 0 0 30px rgba(229, 169, 59, 0.12)',
+                        textAlign: 'center'
+                    }}
+                >
+                    {/* Glowing Padlock Emblem */}
+                    <div style={{
+                        width: '60px',
+                        height: '60px',
+                        margin: '0 auto 16px',
+                        borderRadius: '18px',
+                        background: 'linear-gradient(135deg, rgba(229, 169, 59, 0.25) 0%, rgba(213, 237, 85, 0.15) 100%)',
+                        border: '1px solid rgba(229, 169, 59, 0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 0 24px rgba(229, 169, 59, 0.3)'
+                    }}>
+                        <Lock size={28} color="#E5A93B" />
+                    </div>
+
+                    <div style={{ fontSize: '11px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
+                        🔒 Security Restricted
+                    </div>
+
+                    <h1 style={{ fontSize: '22px', fontWeight: '900', color: '#FFFFFF', margin: '0 0 4px', letterSpacing: '-0.02em' }}>
+                        Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                    </h1>
+                    <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#E5A93B', marginBottom: '12px' }}>
+                        BASECAMP HOST CONSOLE
+                    </div>
+
+                    <p style={{ fontSize: '12px', color: '#94A3B8', lineHeight: 1.5, margin: '0 0 18px' }}>
+                        Enter your authorized Host or Coordinator passcode to unlock live scanner, camper roster, and gate controls.
+                    </p>
+
+                    {passcodeError && (
+                        <div style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            border: '1px solid rgba(239, 68, 68, 0.4)',
+                            borderRadius: '12px',
+                            padding: '10px 14px',
+                            color: '#FCA5A5',
+                            fontSize: '12px',
+                            fontWeight: '700',
+                            marginBottom: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            textAlign: 'left'
+                        }}>
+                            <ShieldAlert size={16} style={{ flexShrink: 0 }} />
+                            <span>{passcodeError}</span>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleHostLogin} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ position: 'relative' }}>
+                            <div style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: '#E5A93B' }}>
+                                <KeyRound size={17} />
+                            </div>
+                            <input
+                                type={showPasscodeText ? 'text' : 'password'}
+                                value={hostPasscode}
+                                onChange={(e) => { setHostPasscode(e.target.value); setPasscodeError(''); }}
+                                placeholder="Enter Host Passcode..."
+                                autoFocus
+                                style={{
+                                    width: '100%',
+                                    background: '#07120A',
+                                    border: `1.5px solid ${passcodeError ? '#EF4444' : 'rgba(229, 169, 59, 0.4)'}`,
+                                    borderRadius: '14px',
+                                    padding: '13px 44px 13px 40px',
+                                    color: '#FFFFFF',
+                                    fontSize: '15px',
+                                    fontWeight: '800',
+                                    letterSpacing: showPasscodeText ? '0.5px' : '2px',
+                                    outline: 'none',
+                                    boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.5)',
+                                    transition: 'border-color 0.2s ease'
+                                }}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPasscodeText(!showPasscodeText)}
+                                style={{
+                                    position: 'absolute',
+                                    right: '12px',
+                                    top: '50%',
+                                    transform: 'translateY(-50%)',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: '#8E9B92',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    padding: '4px'
+                                }}
+                            >
+                                {showPasscodeText ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
+
+                        {/* Quick numeric keypad for single-hand mobile gate access */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(3, 1fr)',
+                            gap: '7px',
+                            margin: '2px 0'
+                        }}>
+                            {['1', '2', '3', '4', '5', '6', '7', '8', '9', 'CLR', '0', '⌫'].map((k) => (
+                                <button
+                                    key={k}
+                                    type="button"
+                                    onClick={() => {
+                                        if (k === 'CLR') setHostPasscode('');
+                                        else if (k === '⌫') setHostPasscode(prev => prev.slice(0, -1));
+                                        else setHostPasscode(prev => prev + k);
+                                        setPasscodeError('');
+                                    }}
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.05)',
+                                        border: '1px solid rgba(255, 255, 255, 0.09)',
+                                        color: k === 'CLR' ? '#EF4444' : '#FFFFFF',
+                                        padding: '11px 0',
+                                        borderRadius: '12px',
+                                        fontSize: k === 'CLR' || k === '⌫' ? '12px' : '16px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        transition: 'background 0.15s ease'
+                                    }}
+                                >
+                                    {k}
+                                </button>
+                            ))}
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={isLoggingIn || !hostPasscode.trim()}
+                            style={{
+                                width: '100%',
+                                background: isLoggingIn || !hostPasscode.trim()
+                                    ? 'rgba(229, 169, 59, 0.3)'
+                                    : 'linear-gradient(135deg, #E5A93B 0%, #D5ED55 100%)',
+                                border: 'none',
+                                color: '#0B150E',
+                                padding: '13px',
+                                borderRadius: '14px',
+                                fontSize: '14px',
+                                fontWeight: '900',
+                                letterSpacing: '0.3px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                cursor: isLoggingIn || !hostPasscode.trim() ? 'not-allowed' : 'pointer',
+                                boxShadow: '0 8px 24px rgba(229, 169, 59, 0.25)',
+                                transition: 'all 0.2s ease'
+                            }}
+                        >
+                            <LogIn size={17} />
+                            <span>{isLoggingIn ? 'Authenticating...' : 'Unlock Host Console'}</span>
+                        </button>
+                    </form>
+
+                    <div style={{ marginTop: '18px' }}>
+                        <Link
+                            href="/"
+                            style={{
+                                color: '#8E9B92',
+                                fontSize: '11.5px',
+                                textDecoration: 'none',
+                                fontWeight: '700',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                            }}
+                        >
+                            ← Return to Aanandham Homepage
+                        </Link>
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
+
     return (
         <div style={{
             minHeight: '100dvh',
@@ -879,8 +1214,29 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     </div>
                 </div>
 
-                {/* Right: Actions (Sound Toggle & Quick Roster Jump) */}
+                {/* Right: Actions (Lock Console & Sound Toggle) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
+                    <button
+                        onClick={handleHostLogout}
+                        style={{
+                            background: 'rgba(239, 68, 68, 0.12)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                            color: '#FCA5A5',
+                            padding: '6px 10px',
+                            borderRadius: '10px',
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            cursor: 'pointer'
+                        }}
+                        title="Lock Basecamp Console"
+                    >
+                        <Lock size={12} />
+                        <span className="hidden sm:inline">Lock</span>
+                    </button>
+
                     <button
                         onClick={() => setSoundEnabled(!soundEnabled)}
                         style={{
