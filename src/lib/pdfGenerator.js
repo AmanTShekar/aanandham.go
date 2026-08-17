@@ -6,41 +6,36 @@ import { fileURLToPath } from 'url';
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const LOGO_PATH = path.resolve(__dir, '../../public/logo.png');
 
-// Brand palette
-const C = {
-    dark:    '#0B150E',
-    forest:  '#121F15',
-    card:    '#1A2E1E',
-    lime:    '#D5ED55',
-    amber:   '#E5A93B',
-    muted:   '#A2B6A6',
-    white:   '#FFFFFF',
-    border:  '#2A3E2E'
-};
+// ── Brand Palette ────────────────────────────────────────────
+const DARK   = [11, 21, 14];       // #0B150E
+const FOREST = [18, 31, 21];       // #121F15
+const CARD   = [22, 38, 26];       // #162619
+const LIME   = [213, 237, 85];     // #D5ED55
+const AMBER  = [229, 169, 59];     // #E5A93B
+const MUTED  = [162, 182, 166];    // #A2B6A6
+const WHITE  = [255, 255, 255];
+const BORDER = [42, 62, 46];       // #2A3E2E
+const GREEN  = [34, 197, 94];      // #22C55E
 
-function hexToRgb(hex) {
-    const r = parseInt(hex.slice(1, 3), 16);
-    const g = parseInt(hex.slice(3, 5), 16);
-    const b = parseInt(hex.slice(5, 7), 16);
-    return [r, g, b];
-}
+// ── Compact Custom Page Size (like an airline boarding pass) ──
+const W = 595;   // A4 width
+const H = 720;   // Compact height — not full A4
 
 /**
- * Generates a fully branded Aanandham Wilderness Permit PDF.
- * Returns a Buffer with the complete PDF content.
+ * Generates a compact, premium Aanandham Wilderness Pass PDF.
+ * Single-page, boarding-pass style — clean and minimal.
  */
 export async function generateBookingPassPdf(booking, qrBuffer) {
     return new Promise((resolve, reject) => {
         const chunks = [];
 
         const doc = new PDFDocument({
-            size: [595, 842], // A4
+            size: [W, H],
             margins: { top: 0, bottom: 0, left: 0, right: 0 },
             info: {
-                Title: `Aanandham Wilderness Permit — ${booking.id}`,
+                Title: `Aanandham Wilderness Pass — ${booking.id}`,
                 Author: 'Aanandham.go',
-                Subject: `Booking Confirmation for ${booking.name}`,
-                Keywords: 'aanandham, wilderness, camping, pass, permit'
+                Subject: `Booking Pass · ${booking.name || 'Guest'}`,
             }
         });
 
@@ -48,173 +43,153 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.on('end', () => resolve(Buffer.concat(chunks)));
         doc.on('error', reject);
 
-        const W = 595;
-        const H = 842;
-        let y = 0;
-
-        // ── FULL PAGE DARK BACKGROUND ──────────────────────────────
-        doc.rect(0, 0, W, H).fill(hexToRgb(C.dark));
-
-        // ── SUBTLE GRID TEXTURE ────────────────────────────────────
-        doc.save();
-        doc.opacity(0.04);
-        for (let gx = 0; gx < W; gx += 24) {
-            doc.moveTo(gx, 0).lineTo(gx, H).stroke([255, 255, 255]);
-        }
-        for (let gy = 0; gy < H; gy += 24) {
-            doc.moveTo(0, gy).lineTo(W, gy).stroke([255, 255, 255]);
-        }
-        doc.restore();
-
-        // ── TOP LIME ACCENT BAR ────────────────────────────────────
-        doc.rect(0, 0, W, 6).fill(hexToRgb(C.lime));
-
-        y = 32;
-
-        // ── LOGO + BRAND HEADER ────────────────────────────────────
-        if (fs.existsSync(LOGO_PATH)) {
-            try {
-                doc.image(LOGO_PATH, (W / 2) - 28, y, { width: 56, height: 56 });
-            } catch (e) { /* skip logo if unreadable */ }
-        }
-        y += 66;
-
-        // Brand name
-        doc.font('Helvetica-Bold')
-           .fontSize(18)
-           .fill(hexToRgb(C.white))
-           .text('Aanandham', 0, y, { align: 'center', continued: true })
-           .fill(hexToRgb(C.lime))
-           .text('.go')
-           .fill(hexToRgb(C.muted))
-           .font('Helvetica')
-           .fontSize(11)
-           .text('Wilderness Stays · Suryanelli, Munnar, Kerala', 0, y + 22, { align: 'center' });
-
-        y += 52;
-
-        // ── STATUS BADGE ──────────────────────────────────────────
         const isConfirmed = ['confirmed', 'Confirmed'].includes(booking.status);
-        const badgeColor = isConfirmed ? hexToRgb(C.lime) : hexToRgb(C.amber);
-        const badgeText = isConfirmed ? '✓  OFFICIAL WILDERNESS PERMIT · CONFIRMED' : '⏳  PENDING VERIFICATION';
-        const badgeTextColor = isConfirmed ? hexToRgb(C.dark) : hexToRgb(C.dark);
-        const badgeW = 280;
-        const badgeX = (W - badgeW) / 2;
-        doc.roundedRect(badgeX, y, badgeW, 22, 11).fill(badgeColor);
-        doc.font('Helvetica-Bold').fontSize(9).fill(badgeTextColor)
-           .text(badgeText, badgeX, y + 7, { width: badgeW, align: 'center' });
 
-        y += 34;
+        // ── BACKGROUND ───────────────────────────────────────────
+        doc.rect(0, 0, W, H).fill(DARK);
 
-        // ── PACKAGE TITLE ─────────────────────────────────────────
-        doc.font('Helvetica-Bold').fontSize(22).fill(hexToRgb(C.white))
-           .text(booking.package || 'Aanandham Mountain Camp', 40, y, { width: W - 80, align: 'center' });
-        y += 34;
+        // ── TOP LIME BAR ─────────────────────────────────────────
+        doc.rect(0, 0, W, 5).fill(LIME);
 
-        doc.font('Helvetica').fontSize(11).fill(hexToRgb(C.muted))
-           .text('Permit Reference', 0, y, { align: 'center' });
-        y += 14;
-        doc.font('Helvetica-Bold').fontSize(14).fill(hexToRgb(C.lime))
-           .text(booking.id, 0, y, { align: 'center', characterSpacing: 2 });
-        y += 28;
+        // ── HEADER SECTION ───────────────────────────────────────
+        const HDR_H = 110;
+        doc.rect(0, 5, W, HDR_H).fill(FOREST);
 
-        // ── SEPARATOR ─────────────────────────────────────────────
-        doc.moveTo(40, y).lineTo(W - 40, y).strokeColor(hexToRgb(C.border)).lineWidth(1).stroke();
-        y += 18;
-
-        // ── QR CODE SECTION ───────────────────────────────────────
-        if (qrBuffer) {
-            const qrSize = 160;
-            const qrX = (W - qrSize) / 2;
-            // QR card background
-            doc.roundedRect(qrX - 16, y - 12, qrSize + 32, qrSize + 50, 16).fill(hexToRgb(C.forest));
-            // Lime border
-            doc.roundedRect(qrX - 16, y - 12, qrSize + 32, qrSize + 50, 16)
-               .lineWidth(1.5).strokeColor(hexToRgb(C.lime)).fillOpacity(0).stroke();
-            doc.fillOpacity(1);
-
-            doc.font('Helvetica-Bold').fontSize(8).fill(hexToRgb(C.lime))
-               .text('★  OFFICIAL WILDERNESS PASS QR  ★', 0, y - 6, { align: 'center', characterSpacing: 1.5 });
-
-            try {
-                doc.image(qrBuffer, qrX, y + 8, { width: qrSize, height: qrSize });
-            } catch (e) { /* skip QR if error */ }
-
-            doc.font('Helvetica-Bold').fontSize(9.5).fill(hexToRgb(C.lime))
-               .text('MARSHAL CHECK-IN QR · SCAN TO VERIFY', 0, y + qrSize + 16, { align: 'center', characterSpacing: 1 });
-
-            y += qrSize + 52;
+        // Logo
+        if (fs.existsSync(LOGO_PATH)) {
+            try { doc.image(LOGO_PATH, 28, 18, { width: 50, height: 50 }); } catch (_) {}
         }
 
-        y += 8;
+        // Brand name + tagline
+        doc.font('Helvetica-Bold').fontSize(17).fill(WHITE)
+           .text('Aanandham', 88, 22, { continued: true })
+           .fill(LIME).text('.go')
+           .font('Helvetica').fontSize(9.5).fill(MUTED)
+           .text('Wilderness Stays · Suryanelli, Munnar, Kerala', 88, 44);
 
-        // ── GATE PIN BOX ──────────────────────────────────────────
-        if (isConfirmed && booking.gatePin) {
-            doc.roundedRect(80, y, W - 160, 62, 12).fill(hexToRgb(C.forest));
-            doc.roundedRect(80, y, W - 160, 62, 12)
-               .lineWidth(1.5).dash(4, { space: 3 }).strokeColor(hexToRgb(C.lime)).stroke();
-            doc.undash();
+        // Status badge (right side)
+        const badgeX = W - 168;
+        const badgeColor = isConfirmed ? LIME : AMBER;
+        const badgeLabel = isConfirmed ? '✓  CONFIRMED' : '⏳  PENDING';
+        doc.roundedRect(badgeX, 20, 140, 22, 11).fill(badgeColor);
+        doc.font('Helvetica-Bold').fontSize(9).fill(DARK)
+           .text(badgeLabel, badgeX, 27, { width: 140, align: 'center' });
 
-            doc.font('Helvetica-Bold').fontSize(9).fill(hexToRgb(C.muted))
-               .text('SMART GATE & KEYPAD PIN', 80, y + 10, { width: W - 160, align: 'center', characterSpacing: 1 });
-            doc.font('Helvetica-Bold').fontSize(28).fill(hexToRgb(C.lime))
-               .text(booking.gatePin, 80, y + 26, { width: W - 160, align: 'center', characterSpacing: 10 });
+        // Package title
+        doc.font('Helvetica-Bold').fontSize(14).fill(WHITE)
+           .text(booking.package || 'Aanandham Mountain Camp', 28, 72, { width: W - 56 });
 
-            y += 74;
-        }
+        // Reference
+        doc.font('Helvetica').fontSize(9).fill(MUTED)
+           .text('Permit Ref: ', 28, 92, { continued: true })
+           .font('Helvetica-Bold').fill(LIME)
+           .text(booking.id, { characterSpacing: 1 });
 
-        y += 8;
+        // ── SEPARATOR DOTS ───────────────────────────────────────
+        const sepY = 5 + HDR_H;
+        doc.rect(0, sepY, W, 1).fill(BORDER);
+        // Tear-line dashes
+        doc.save().dash(4, { space: 5 }).moveTo(0, sepY).lineTo(W, sepY)
+           .strokeColor(LIME).lineWidth(0.5).stroke().restore();
 
-        // ── DETAILS TABLE ─────────────────────────────────────────
-        doc.roundedRect(40, y, W - 80, 190, 14).fill(hexToRgb(C.forest));
-        y += 16;
+        // ── MAIN BODY: Two columns ────────────────────────────────
+        const BODY_Y = sepY + 16;
+        const COL1_X = 28;
+        const COL2_X = W / 2 + 10;
+        const COL_W  = W / 2 - 38;
 
-        doc.font('Helvetica-Bold').fontSize(9.5).fill(hexToRgb(C.lime))
-           .text('EXPEDITION DETAILS', 56, y, { characterSpacing: 1.5 });
-        y += 18;
-
-        const rows = [
-            ['Lead Camper', booking.name || '—'],
-            ['Stay Dates',  booking.dates || '—'],
-            ['Lodging',     booking.roomType || 'Alpine Tent'],
-            ['Campers',     `${booking.guests || 2} Persons`],
-            ['Kitchen',     booking.mealSummary || `${booking.vegCount || 0} Veg + ${booking.nonVegCount || 0} Non-Veg BBQ`],
-            ['Total Fare',  `\u20b9${Number(booking.total || 0).toLocaleString('en-IN')}`],
-            ['Balance Due', `\u20b9${Number(booking.balanceDue || 0).toLocaleString('en-IN')}`]
+        // LEFT COLUMN — Details table
+        const details = [
+            ['Lead Camper',  booking.name      || '—'],
+            ['Stay Dates',   booking.dates     || '—'],
+            ['Lodging',      booking.roomType  || 'Alpine Tent'],
+            ['Squad Size',   `${booking.guests || 2} Persons`],
+            ['Kitchen',      booking.mealSummary || `${booking.vegCount || 0}V + ${booking.nonVegCount || 0}NV BBQ`],
+            ['Balance Due',  `\u20b9${Number(booking.balanceDue || 0).toLocaleString('en-IN')}`],
         ];
 
-        for (const [label, value] of rows) {
-            doc.moveTo(56, y).lineTo(W - 56, y).strokeColor(hexToRgb(C.border)).lineWidth(0.5).stroke();
-            doc.font('Helvetica').fontSize(10).fill(hexToRgb(C.muted)).text(label, 56, y + 6);
-            doc.font('Helvetica-Bold').fontSize(10).fill(hexToRgb(C.white)).text(value, 240, y + 6, { width: W - 240 - 56 });
-            y += 22;
+        let rowY = BODY_Y;
+        doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
+           .text('EXPEDITION DETAILS', COL1_X, rowY, { characterSpacing: 1 });
+        rowY += 14;
+
+        for (const [label, value] of details) {
+            doc.roundedRect(COL1_X, rowY, COL_W, 26, 5).fill(CARD);
+            doc.font('Helvetica').fontSize(8).fill(MUTED)
+               .text(label, COL1_X + 8, rowY + 5);
+            doc.font('Helvetica-Bold').fontSize(9.5).fill(WHITE)
+               .text(value, COL1_X + 8, rowY + 14, { width: COL_W - 16 });
+            rowY += 30;
         }
 
-        y += 16;
+        // ── RIGHT COLUMN — QR + Gate PIN ─────────────────────────
+        let rightY = BODY_Y;
 
-        // ── SEPARATOR ─────────────────────────────────────────────
-        doc.moveTo(40, y).lineTo(W - 40, y).strokeColor(hexToRgb(C.border)).lineWidth(1).stroke();
-        y += 16;
+        // QR Code Card
+        const QR_SIZE = 130;
+        const QR_X = COL2_X + (COL_W - QR_SIZE) / 2;
+        doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
+           .text('MARSHAL CHECK-IN QR', COL2_X, rightY, { width: COL_W, align: 'center', characterSpacing: 1 });
+        rightY += 14;
 
-        // ── 4x4 CONVOY NOTE ───────────────────────────────────────
-        doc.roundedRect(40, y, W - 80, 60, 10).fill(hexToRgb(C.forest));
-        doc.font('Helvetica-Bold').fontSize(9).fill(hexToRgb(C.amber))
-           .text('4x4 CONVOY & BASECAMP ARRIVAL', 56, y + 10, { characterSpacing: 1 });
-        doc.font('Helvetica').fontSize(9.5).fill(hexToRgb(C.muted))
-           .text('Arrive at Suryanelli Hub by 1:30 PM for 4x4 convoy allocation. Safe parking available. Coordinate via WhatsApp 24/7.', 56, y + 24, { width: W - 112 });
-        y += 70;
+        doc.roundedRect(QR_X - 8, rightY - 6, QR_SIZE + 16, QR_SIZE + 16, 10).fill(FOREST);
+        doc.roundedRect(QR_X - 8, rightY - 6, QR_SIZE + 16, QR_SIZE + 16, 10)
+           .lineWidth(1).strokeColor(LIME).fillOpacity(0).stroke().fillOpacity(1);
 
-        // ── BOTTOM FOOTER ─────────────────────────────────────────
-        doc.rect(0, H - 52, W, 52).fill(hexToRgb(C.forest));
-        doc.moveTo(0, H - 52).lineTo(W, H - 52).strokeColor(hexToRgb(C.border)).lineWidth(1).stroke();
+        if (qrBuffer) {
+            try { doc.image(qrBuffer, QR_X, rightY, { width: QR_SIZE, height: QR_SIZE }); } catch (_) {}
+        }
+        rightY += QR_SIZE + 18;
 
-        doc.font('Helvetica-Bold').fontSize(10).fill(hexToRgb(C.white))
-           .text('Aanandham.go Wilderness Stays', 0, H - 40, { align: 'center' });
-        doc.font('Helvetica').fontSize(8.5).fill(hexToRgb(C.muted))
-           .text('+91 90748 58014  ·  bookings@aanandham.in  ·  aanandham.in', 0, H - 26, { align: 'center' });
+        // Gate PIN
+        if (isConfirmed && booking.gatePin) {
+            doc.font('Helvetica-Bold').fontSize(8).fill(MUTED)
+               .text('SMART GATE PIN', COL2_X, rightY, { width: COL_W, align: 'center', characterSpacing: 1 });
+            rightY += 12;
+            doc.roundedRect(COL2_X, rightY, COL_W, 36, 8).fill(CARD);
+            doc.roundedRect(COL2_X, rightY, COL_W, 36, 8)
+               .lineWidth(1).dash(3, { space: 3 }).strokeColor(LIME).fillOpacity(0).stroke().fillOpacity(1).undash();
+            doc.font('Helvetica-Bold').fontSize(24).fill(LIME)
+               .text(booking.gatePin, COL2_X, rightY + 8, { width: COL_W, align: 'center', characterSpacing: 8 });
+            rightY += 46;
+        }
 
-        // ── BOTTOM LIME ACCENT BAR ────────────────────────────────
-        doc.rect(0, H - 6, W, 6).fill(hexToRgb(C.lime));
+        // ── CONVOY NOTE — full width ──────────────────────────────
+        const convoyY = Math.max(rowY, rightY) + 14;
+        doc.rect(0, convoyY - 10, W, 1).fill(BORDER);
+        doc.roundedRect(28, convoyY + 4, W - 56, 44, 8).fill(CARD);
+        doc.font('Helvetica-Bold').fontSize(8).fill(AMBER)
+           .text('4x4 CONVOY & ARRIVAL', 42, convoyY + 10, { characterSpacing: 1 });
+        doc.font('Helvetica').fontSize(9).fill(MUTED)
+           .text(
+               'Arrive at Suryanelli Hub by 1:30 PM · Smart parking available · 24/7 WhatsApp: +91 90748 58014',
+               42, convoyY + 22, { width: W - 84 }
+           );
+
+        // ── PAYMENT STATUS BAR ────────────────────────────────────
+        const balY = convoyY + 56;
+        const balDue = Number(booking.balanceDue || 0);
+        const balColor = balDue > 0 ? AMBER : GREEN;
+        const balText  = balDue > 0
+            ? `\u20b9${balDue.toLocaleString('en-IN')} Due on Arrival`
+            : '100% Paid Online · No Balance Due';
+        doc.roundedRect(28, balY, W - 56, 28, 7)
+           .fill(balDue > 0 ? [40, 30, 10] : [10, 35, 20]);
+        doc.font('Helvetica-Bold').fontSize(10).fill(balColor)
+           .text(balText, 28, balY + 9, { width: W - 56, align: 'center' });
+
+        // ── FOOTER ────────────────────────────────────────────────
+        const footY = H - 42;
+        doc.rect(0, footY, W, 42).fill(FOREST);
+        doc.rect(0, footY, W, 1).fill(BORDER);
+
+        doc.font('Helvetica-Bold').fontSize(9.5).fill(WHITE)
+           .text('Aanandham.go Wilderness Stays', 0, footY + 8, { align: 'center' });
+        doc.font('Helvetica').fontSize(8).fill(MUTED)
+           .text('+91 90748 58014  ·  bookings@aanandham.in  ·  aanandham.in', 0, footY + 22, { align: 'center' });
+
+        // ── BOTTOM LIME BAR ───────────────────────────────────────
+        doc.rect(0, H - 5, W, 5).fill(LIME);
 
         doc.end();
     });
