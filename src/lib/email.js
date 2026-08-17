@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { Resend } from 'resend';
 import { generateGatePin, getCheckInLandmarkGuide, generatePassToken } from './accessControl.js';
-import { buildGoogleCalendarUrl } from './calendarLink.js';
+import { buildGoogleCalendarUrl, buildICalFileString } from './calendarLink.js';
 import { generateQrBuffer } from './qrGenerator.js';
 import { generateBookingPassPdf } from './pdfGenerator.js';
 
@@ -79,6 +79,19 @@ export async function sendBookingConfirmationEmail(booking) {
     ).catch(err => {
         console.warn('[EMAIL] PDF generation failed, skipping attachment:', err.message);
         return null;
+    });
+
+    // Generate .ics calendar file — iOS Mail auto-shows "Add to Calendar", Gmail renders inline
+    const now = new Date();
+    const calStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 14, 14, 0, 0);
+    const calEnd   = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 15, 11, 0, 0);
+    const icsContent = buildICalFileString({
+        title: booking.package || 'Aanandham Mountain Expedition',
+        location: `${landmarkGuide.hubName}, Suryanelli, Munnar, Kerala`,
+        description: `Aanandham Confirmed Wilderness Stay\\nBooking Reference: ${booking.id}\\nSmart Gate PIN: ${gatePin}\\nLead Camper: ${booking.name}\\nArrive by 1:30 PM for 4x4 convoy.`,
+        bookingId: booking.id,
+        startIso: calStart.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
+        endIso:   calEnd.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
     });
 
     // Production public URL for logo — works in all email clients (no attachment trick needed)
@@ -188,13 +201,10 @@ export async function sendBookingConfirmationEmail(booking) {
                     <a href="${passUrl}" class="btn-primary" style="display: block; text-align: center;">View &amp; Track Live Wilderness Pass →</a>
                 </div>
 
-                <!-- 1-CLICK ADD TO CALENDAR -->
+                <!-- PASS PORTAL LINK (calendar .ics is auto-attached to email) -->
                 <div style="text-align: center; margin: 18px 0; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 8px;">Add Stay to Your Calendar</div>
-                    <div class="cal-bar">
-                        <a href="${googleCalUrl}" target="_blank" class="cal-btn">📅 Add to Google Calendar</a>
-                        <a href="${icsUrl}" class="cal-btn">🍏 Apple / Outlook (.ics)</a>
-                    </div>
+                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
+                    <div style="font-size: 11.5px; color: #A2B6A6;">Open the <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> attachment to instantly add your stay to Google Calendar, Apple Calendar, or Outlook.</div>
                 </div>
 
                 <!-- ITINERARY & SQUAD SUMMARY -->
@@ -254,13 +264,20 @@ export async function sendBookingConfirmationEmail(booking) {
         try {
             const resend = new Resend(apiKey);
 
-            // Only PDF is a real attachment — logo and QR render via public URLs (no file attachments)
+            // Only PDF and .ics calendar are real attachments — logo and QR render via public URLs
             const attachments = [];
             if (pdfBuffer) {
                 attachments.push({
                     filename: `wilderness-pass-${booking.id}.pdf`,
                     content: pdfBuffer,
                     content_type: 'application/pdf'
+                });
+            }
+            if (icsContent) {
+                attachments.push({
+                    filename: `aanandham-stay-${booking.id}.ics`,
+                    content: Buffer.from(icsContent, 'utf-8'),
+                    content_type: 'text/calendar; method=PUBLISH'
                 });
             }
 
