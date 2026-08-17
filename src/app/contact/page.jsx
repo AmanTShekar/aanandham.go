@@ -93,6 +93,104 @@ const CONTACT_CHANNELS = [
     }
 ];
 
+// ── EXPEDITION TYPE TEMPLATES & MODAL CONFIGURATION ──
+const EXPEDITION_TEMPLATES = {
+    booking: {
+        id: 'booking',
+        title: '⛺ Dome Glamp',
+        tagline: 'Luxury Weatherproof Dome Stay & Mountain BBQ',
+        badge: 'GLAMPING SUITE',
+        accent: '#D5ED55',
+        defaultMessage: 'Interested in luxury weatherproof dome glamping overlooking the clouds. Please share package availability with campfire BBQ & western washroom setup.',
+        modalTitle: 'Customize Dome Glamping Details',
+        categories: [
+            {
+                key: 'campsite',
+                label: 'Preferred Mountain Sanctuary',
+                options: ['Suryanelli Cloud Bed (6,200 FT)', 'Phantom Head Ridge (6,500 FT)', 'Vagamon Pine Glamp (3,800 FT)', 'Flexible / Best View']
+            },
+            {
+                key: 'bbq',
+                label: 'Campfire BBQ Preference',
+                options: ['Veg Paneer & Grilled Corn Platter', 'Non-Veg Chicken & Spiced BBQ', 'Jain / Pure Vegetarian', 'Both Veg & Non-Veg Spread']
+            },
+            {
+                key: 'occasion',
+                label: 'Expedition Occasion',
+                options: ['Couple / Anniversary Romantic Sanctuary', 'Family Cloud Pod Vacation', 'Friends Squad Gathering', 'Solo Explorer Nature Retreat']
+            }
+        ]
+    },
+    kolukkumalai: {
+        id: 'kolukkumalai',
+        title: '🌅 4x4 Safari',
+        tagline: 'High-Altitude Peak Sunrise & Off-Road Convoy',
+        badge: 'KOLUKKUMALAI RIDGE',
+        accent: '#E5A93B',
+        defaultMessage: 'Looking for Kolukkumalai 7,900 FT Sunrise 4x4 Jeep Safari to Jagged Rock Point. Arriving at Suryanelli basecamp.',
+        modalTitle: 'Configure Kolukkumalai 4x4 Sunrise Safari',
+        categories: [
+            {
+                key: 'slot',
+                label: 'Preferred Safari Departure',
+                options: ['04:30 AM Peak Cloud-Bed Sunrise (Most Popular)', '03:00 PM Golden Hour Sunset Trail', 'Full Day Off-Road Wilderness Circuit']
+            },
+            {
+                key: 'jeep',
+                label: '4x4 Convoy Allocation',
+                options: ['Private Exclusive 4x4 Mahindra Thar (Up to 6 Pax)', 'Shared Convoy Safari Slot', 'Open-Top Wildlife Jeep']
+            },
+            {
+                key: 'pickup',
+                label: 'Pickup & Meeting Hub',
+                options: ['Suryanelli Base Hub (Safe Private Parking)', 'Munnar Town Center Pickup', 'Direct Camp Check-In']
+            }
+        ]
+    },
+    custom: {
+        id: 'custom',
+        title: '👥 Squad Offsite',
+        tagline: 'Corporate Retreats & Private Mountain Buyouts',
+        badge: 'GROUP EXPEDITION',
+        accent: '#60A5FA',
+        defaultMessage: 'Planning a corporate retreat / squad buyout. Require private campsite, bonfire setup, guided ridge treks, and custom catering.',
+        modalTitle: 'Configure Squad Buyout / Corporate Retreat',
+        categories: [
+            {
+                key: 'groupSize',
+                label: 'Squad / Team Size',
+                options: ['10 to 15 Members', '16 to 25 Members', '26 to 45+ Full Mountain Buyout']
+            },
+            {
+                key: 'activities',
+                label: 'Curated Offsite Activities',
+                options: ['Guided Forest & Peak Trek', 'Outdoor Team Leadership Drills', 'Live Acoustic Campfire & BBQ Night', 'Stargazing Astronomy Session']
+            },
+            {
+                key: 'catering',
+                label: 'Group Dining & Catering',
+                options: ['Authentic Kerala Sadya & Buffet', 'High-Altitude Live BBQ & Grills', 'Continental & Multi-Cuisine Spread']
+            }
+        ]
+    },
+    general: {
+        id: 'general',
+        title: '💬 General Query',
+        tagline: 'Route Directions, Road Status & Basecamp Rules',
+        badge: 'CONCIERGE DESK',
+        accent: '#A7F3D0',
+        defaultMessage: 'I have a few questions regarding road conditions, safe parking at Suryanelli basecamp, pet friendliness, and booking terms.',
+        modalTitle: 'General Basecamp Inquiry',
+        categories: [
+            {
+                key: 'topic',
+                label: 'Topic of Inquiry',
+                options: ['Road Conditions & Low Ground-Clearance Cars', 'Safe Parking & Overnight Security at Hub', 'Pet Policy & Family Safety', 'Weather Forecast & Best Visiting Months', 'Cancellation & Date Rescheduling']
+            }
+        ]
+    }
+};
+
 // ── 4-STEP TRAVEL GUIDE TO SURYANELLI BASECAMP (Vibrant Sticky Paper Notes) ──
 const TRAVEL_STEPS = [
     {
@@ -191,8 +289,11 @@ export default function ContactPage() {
 
     const [loading, setLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [submissionMode, setSubmissionMode] = useState('whatsapp');
     const [waUrl, setWaUrl] = useState('');
     const [copiedEmail, setCopiedEmail] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalSelections, setModalSelections] = useState({});
     const [activeFaq, setActiveFaq] = useState(0);
     const [lastSubmitTime, setLastSubmitTime] = useState(0);
     const { user: currentUser, logout: handleLogout } = useAuth();
@@ -204,7 +305,42 @@ export default function ContactPage() {
     });
     const ctaBgScale = useTransform(ctaScrollProgress, [0, 0.5, 1], [1.0, 1.16, 1.28]);
 
-    const handleSend = (e, mode = 'whatsapp') => {
+    const handleTypeSelect = (typeId) => {
+        const template = EXPEDITION_TEMPLATES[typeId];
+        const prevDefaultMessages = Object.values(EXPEDITION_TEMPLATES).map(t => t.defaultMessage);
+        
+        const shouldUpdateMsg = !formData.message || prevDefaultMessages.includes(formData.message) || formData.message.startsWith('Selected Package:');
+        
+        setFormData(prev => ({
+            ...prev,
+            inquiryType: typeId,
+            message: shouldUpdateMsg ? template.defaultMessage : prev.message,
+            guests: typeId === 'custom' ? '10+' : prev.guests
+        }));
+
+        const initialSelections = {};
+        template.categories.forEach(cat => {
+            initialSelections[cat.key] = cat.options[0];
+        });
+        setModalSelections(initialSelections);
+    };
+
+    const applyModalCustomization = () => {
+        const template = EXPEDITION_TEMPLATES[formData.inquiryType] || EXPEDITION_TEMPLATES.booking;
+        const lines = [
+            `Selected Package: ${template.title}`,
+            ...template.categories.map(cat => `• ${cat.label}: ${modalSelections[cat.key] || cat.options[0]}`),
+            '',
+            'Please confirm availability and share advance payment details.'
+        ];
+        setFormData(prev => ({
+            ...prev,
+            message: lines.join('\n')
+        }));
+        setIsModalOpen(false);
+    };
+
+    const handleSend = async (e, mode = 'whatsapp') => {
         if (e) e.preventDefault();
 
         if (!formData.name || !formData.email) {
@@ -221,11 +357,12 @@ export default function ContactPage() {
 
         // Rapid submission cooldown
         const now = Date.now();
-        if (now - lastSubmitTime < 3000) {
+        if (now - lastSubmitTime < 2500) {
             return;
         }
         setLastSubmitTime(now);
         setLoading(true);
+        setSubmissionMode(mode);
 
         const summaryText = `*New Expedition Inquiry via Aanandham.go*\n` +
             `Type: ${formData.inquiryType.toUpperCase()}\n` +
@@ -236,70 +373,69 @@ export default function ContactPage() {
             `Dates: ${formData.travelDates || 'Flexible'}\n` +
             `Message: ${formData.message || 'None'}`;
 
-        const newInquiryRecord = {
-            id: generateBookingId(),
-            name: formData.name.trim(),
-            email: formData.email.trim(),
-            phone: formData.phone ? formData.phone.trim() : 'N/A',
-            package: `[${formData.inquiryType.toUpperCase()}] ${formData.message ? formData.message.slice(0, 40) : 'General Inquiry'}...`,
-            region: 'Kerala Inquiry',
-            dates: formData.travelDates || 'Flexible',
-            guests: Number(formData.guests) || 2,
-            roomType: formData.inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
-            addons: [],
-            total: (Number(formData.guests) || 2) * 2499,
-            status: 'Pending',
-            source: 'Contact Form',
-            notes: formData.message.trim(),
-            createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
-            mode: mode
-        };
-
-        try {
-            fetch('/api/bookings', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newInquiryRecord)
-            }).catch(err => console.error('Error syncing inquiry to server:', err));
-
-            const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
-            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([newInquiryRecord, ...currentBookings]));
-            window.dispatchEvent(new Event('storage'));
-        } catch (e) {
-            console.error('Error persisting inquiry:', e);
-        }
-
         if (mode === 'whatsapp') {
+            const newInquiryRecord = {
+                id: generateBookingId(),
+                name: formData.name.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone ? formData.phone.trim() : 'N/A',
+                package: `[${formData.inquiryType.toUpperCase()}] ${formData.message ? formData.message.slice(0, 40) : 'General Inquiry'}...`,
+                region: 'Kerala Inquiry',
+                dates: formData.travelDates || 'Flexible',
+                guests: Number(formData.guests) || 2,
+                roomType: formData.inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
+                addons: [],
+                total: (Number(formData.guests) || 2) * 2499,
+                status: 'Pending',
+                source: 'Contact Form (WhatsApp Mode)',
+                notes: formData.message.trim(),
+                createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
+                mode: 'whatsapp'
+            };
+
+            try {
+                fetch('/api/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newInquiryRecord)
+                }).catch(err => console.error('Error syncing inquiry to server:', err));
+
+                const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
+                localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([newInquiryRecord, ...currentBookings]));
+                window.dispatchEvent(new Event('storage'));
+            } catch (e) {
+                console.error('Error persisting inquiry:', e);
+            }
+
             const link = waLink(summaryText);
             setWaUrl(link);
             try {
                 window.open(link, '_blank');
             } catch (err) {}
         } else {
-            const emailSubject = encodeURIComponent(`Expedition Inquiry: [${formData.inquiryType.toUpperCase()}] - ${formData.name}`);
-            const emailBody = encodeURIComponent(
-                `Hi Aanandham Reservations Desk,\n\n` +
-                `I would like to make an inquiry for Aanandham Wilderness Stays.\n\n` +
-                `Name: ${formData.name}\n` +
-                `Email: ${formData.email}\n` +
-                `Phone: ${formData.phone || 'N/A'}\n` +
-                `Inquiry Type: ${formData.inquiryType.toUpperCase()}\n` +
-                `Group Size: ${formData.guests} Campers\n` +
-                `Target Dates: ${formData.travelDates || 'Flexible'}\n` +
-                `Message: ${formData.message || 'Please share package details and availability.'}\n\n` +
-                `Thank you!`
-            );
-            const mailtoUrl = `mailto:bookings@aanandham.in?subject=${emailSubject}&body=${emailBody}`;
-            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=bookings@aanandham.in&su=${emailSubject}&body=${emailBody}`;
-
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(`To: bookings@aanandham.in\nSubject: ${decodeURIComponent(emailSubject)}\n\n${decodeURIComponent(emailBody)}`);
-            }
-
+            // ✉️ EMAIL MODE: Send directly through Resend backend API (Zero external redirect)
             try {
-                window.open(gmailUrl, '_blank');
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: formData.name.trim(),
+                        email: formData.email.trim(),
+                        phone: formData.phone ? formData.phone.trim() : 'N/A',
+                        inquiryType: formData.inquiryType,
+                        guests: Number(formData.guests) || 2,
+                        travelDates: formData.travelDates || 'Flexible',
+                        message: formData.message.trim(),
+                        honeypot: formData.honeypot
+                    })
+                });
+
+                const data = await res.json();
+                if (!data.success) {
+                    console.warn('[CONTACT RESEND API WARNING]', data.message);
+                }
             } catch (err) {
-                window.location.href = mailtoUrl;
+                console.error('[CONTACT DISPATCH ERROR]', err);
             }
         }
 
@@ -747,7 +883,7 @@ export default function ContactPage() {
                                             width: '56px',
                                             height: '56px',
                                             borderRadius: '50%',
-                                            background: '#E5A93B',
+                                            background: submissionMode === 'email' ? '#D5ED55' : '#E5A93B',
                                             color: '#121613',
                                             fontSize: '24px',
                                             display: 'flex',
@@ -755,16 +891,20 @@ export default function ContactPage() {
                                             justifyContent: 'center',
                                             margin: '0 auto 16px'
                                         }}>
-                                            ✓
+                                            {submissionMode === 'email' ? '✉' : '✓'}
                                         </div>
                                         <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '8px' }}>
-                                            Inquiry Received!
+                                            {submissionMode === 'email' ? 'Inquiry Sent via Email!' : 'Inquiry Received!'}
                                         </h4>
-                                        <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.6, maxWidth: '360px', margin: '0 auto 20px' }}>
-                                            Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our mountain marshals.
+                                        <p style={{ fontSize: '14px', color: '#59655D', lineHeight: 1.6, maxWidth: '380px', margin: '0 auto 20px' }}>
+                                            {submissionMode === 'email' ? (
+                                                <>Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. A confirmation has been dispatched to <strong style={{ color: '#121613' }}>{formData.email}</strong>. Our mountain team will reply within 2 to 4 hours.</>
+                                            ) : (
+                                                <>Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our mountain marshals.</>
+                                            )}
                                         </p>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
-                                            {waUrl && (
+                                            {submissionMode === 'whatsapp' && waUrl && (
                                                 <a
                                                     href={waUrl}
                                                     target="_blank"
@@ -818,9 +958,28 @@ export default function ContactPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                                                Expedition Type
-                                            </label>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                                <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                                    Expedition Type
+                                                </label>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsModalOpen(true)}
+                                                    style={{
+                                                        background: 'transparent',
+                                                        border: 'none',
+                                                        color: '#C86D14',
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        cursor: 'pointer',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px'
+                                                    }}
+                                                >
+                                                    <span>✨ Custom Options</span>
+                                                </button>
+                                            </div>
                                             <div className="contact-form-types">
                                                 {[
                                                     { id: 'booking', label: '⛺ Dome Glamp' },
@@ -833,7 +992,7 @@ export default function ContactPage() {
                                                         <button
                                                             type="button"
                                                             key={t.id}
-                                                            onClick={() => setFormData({ ...formData, inquiryType: t.id })}
+                                                            onClick={() => handleTypeSelect(t.id)}
                                                             style={{
                                                                 padding: '9px 6px',
                                                                 borderRadius: '10px',
@@ -852,6 +1011,45 @@ export default function ContactPage() {
                                                     );
                                                 })}
                                             </div>
+
+                                            {/* Dynamic Tagline & Modal Quick Trigger Banner */}
+                                            {EXPEDITION_TEMPLATES[formData.inquiryType] && (
+                                                <div style={{
+                                                    marginTop: '8px',
+                                                    padding: '8px 12px',
+                                                    borderRadius: '10px',
+                                                    background: 'rgba(18, 22, 19, 0.04)',
+                                                    border: '1px dashed rgba(18, 22, 19, 0.12)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '8px'
+                                                }}>
+                                                    <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
+                                                        <strong style={{ color: '#121613' }}>{EXPEDITION_TEMPLATES[formData.inquiryType].title}:</strong> {EXPEDITION_TEMPLATES[formData.inquiryType].tagline}
+                                                    </div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setIsModalOpen(true)}
+                                                        style={{
+                                                            background: '#121613',
+                                                            color: EXPEDITION_TEMPLATES[formData.inquiryType].accent,
+                                                            border: 'none',
+                                                            padding: '5px 10px',
+                                                            borderRadius: '8px',
+                                                            fontSize: '11px',
+                                                            fontWeight: '800',
+                                                            cursor: 'pointer',
+                                                            whiteSpace: 'nowrap',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px'
+                                                        }}
+                                                    >
+                                                        <span>Configure Options →</span>
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
 
                                         {/* Name & Phone */}
@@ -1510,6 +1708,169 @@ export default function ContactPage() {
                     </div>
                 </motion.section>
             </main>
+
+            {/* ── INTERACTIVE EXPEDITION CONFIGURATOR MODAL ── */}
+            <AnimatePresence>
+                {isModalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        style={{
+                            position: 'fixed',
+                            inset: 0,
+                            background: 'rgba(11, 21, 14, 0.8)',
+                            backdropFilter: 'blur(8px)',
+                            zIndex: 99999,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '20px',
+                            boxSizing: 'border-box'
+                        }}
+                        onClick={() => setIsModalOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.94, y: 15 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.94, y: 15 }}
+                            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                background: '#121F16',
+                                color: '#FFFFFF',
+                                borderRadius: '24px',
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                maxWidth: '560px',
+                                width: '100%',
+                                padding: 'clamp(24px, 4vw, 32px)',
+                                boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)',
+                                maxHeight: '90vh',
+                                overflowY: 'auto',
+                                boxSizing: 'border-box'
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {/* Modal Header */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+                                <div>
+                                    <div style={{
+                                        display: 'inline-block',
+                                        fontSize: '10.5px',
+                                        fontWeight: '800',
+                                        color: EXPEDITION_TEMPLATES[formData.inquiryType]?.accent || '#D5ED55',
+                                        letterSpacing: '1px',
+                                        textTransform: 'uppercase',
+                                        marginBottom: '4px'
+                                    }}>
+                                        {EXPEDITION_TEMPLATES[formData.inquiryType]?.badge || 'EXPEDITION'}
+                                    </div>
+                                    <h3 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '22px',
+                                        fontWeight: '800',
+                                        margin: 0,
+                                        color: '#FFFFFF'
+                                    }}>
+                                        {EXPEDITION_TEMPLATES[formData.inquiryType]?.modalTitle || 'Configure Expedition Details'}
+                                    </h3>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.08)',
+                                        border: 'none',
+                                        color: '#FFFFFF',
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        fontSize: '14px'
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            {/* Categories & Interactive Selectable Chips */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginBottom: '24px' }}>
+                                {EXPEDITION_TEMPLATES[formData.inquiryType]?.categories.map((cat) => (
+                                    <div key={cat.key}>
+                                        <label style={{ display: 'block', fontSize: '11.5px', fontWeight: '800', color: '#A2B6A6', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                            {cat.label}
+                                        </label>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                            {cat.options.map((opt) => {
+                                                const isSelected = modalSelections[cat.key] === opt;
+                                                return (
+                                                    <button
+                                                        key={opt}
+                                                        type="button"
+                                                        onClick={() => setModalSelections(prev => ({ ...prev, [cat.key]: opt }))}
+                                                        style={{
+                                                            padding: '8px 12px',
+                                                            borderRadius: '10px',
+                                                            fontSize: '12px',
+                                                            fontWeight: isSelected ? '800' : '600',
+                                                            border: isSelected ? `1.5px solid ${EXPEDITION_TEMPLATES[formData.inquiryType]?.accent || '#D5ED55'}` : '1px solid rgba(255,255,255,0.1)',
+                                                            background: isSelected ? 'rgba(213, 237, 85, 0.12)' : 'rgba(255,255,255,0.04)',
+                                                            color: isSelected ? (EXPEDITION_TEMPLATES[formData.inquiryType]?.accent || '#D5ED55') : '#E2E8F0',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.15s ease',
+                                                            textAlign: 'left'
+                                                        }}
+                                                    >
+                                                        {opt}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsModalOpen(false)}
+                                    style={{
+                                        padding: '11px 18px',
+                                        borderRadius: '12px',
+                                        background: 'transparent',
+                                        border: '1px solid rgba(255,255,255,0.15)',
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={applyModalCustomization}
+                                    className="btn-lime"
+                                    style={{
+                                        padding: '11px 22px',
+                                        borderRadius: '12px',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        border: 'none',
+                                        boxShadow: '0 8px 20px rgba(213, 237, 85, 0.3)'
+                                    }}
+                                >
+                                    Apply to Inquiry Form ✓
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* ── COMPLETE SITE FOOTER ── */}
             <Footer />

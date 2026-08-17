@@ -237,3 +237,147 @@ export async function sendBookingConfirmationEmail(booking) {
     console.info(`[EMAIL SIMULATION] 📧 Email ready for ${booking.email} (Booking #${booking.id}, Gate PIN: ${gatePin}). Set RESEND_API_KEY in .env.local to send live emails.`);
     return { success: true, simulated: true, gatePin };
 }
+
+/**
+ * Direct Contact Form Inquiry Email Dispatcher via Resend
+ * Sends inquiry notification to bookings@aanandham.in and auto-acknowledgment to guest
+ */
+export async function sendContactInquiryEmail(inquiry) {
+    if (!inquiry || !inquiry.email) {
+        console.warn('[CONTACT EMAIL] ⚠️ No recipient email provided');
+        return { success: false, reason: 'No recipient email' };
+    }
+
+    const apiKey = process.env.RESEND_API_KEY;
+    const fromEmail = process.env.EMAIL_FROM || 'Aanandham Wilderness <bookings@aanandham.in>';
+    const adminDestEmail = 'bookings@aanandham.in';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+    const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
+        ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
+        : `+${adminPhone}`;
+
+    const safeName = escapeHtml(inquiry.name || 'Explorer');
+    const safeEmail = escapeHtml(inquiry.email);
+    const safePhone = escapeHtml(inquiry.phone || 'N/A');
+    const safeType = escapeHtml((inquiry.inquiryType || 'General').toUpperCase());
+    const safeGuests = escapeHtml(String(inquiry.guests || '2'));
+    const safeDates = escapeHtml(inquiry.travelDates || 'Flexible');
+    const safeMessage = escapeHtml(inquiry.message || 'No additional message provided.');
+    const inquiryId = inquiry.id || `INQ-${Date.now().toString(36).toUpperCase()}`;
+
+    const typeKey = (inquiry.inquiryType || 'general').toLowerCase();
+    const typeMeta = {
+        booking: { label: '⛺ Dome Glamp Stay', color: '#D5ED55', bg: 'rgba(213, 237, 85, 0.15)' },
+        kolukkumalai: { label: '🌅 4x4 Sunrise Safari', color: '#E5A93B', bg: 'rgba(229, 169, 59, 0.15)' },
+        custom: { label: '👥 Squad Offsite & Buyout', color: '#60A5FA', bg: 'rgba(96, 165, 250, 0.15)' },
+        general: { label: '💬 General Basecamp Query', color: '#A7F3D0', bg: 'rgba(167, 243, 208, 0.15)' }
+    }[typeKey] || { label: `📌 ${safeType}`, color: '#D5ED55', bg: 'rgba(213, 237, 85, 0.15)' };
+
+    if (!apiKey) {
+        console.info(`[CONTACT EMAIL SIMULATED] Inbound inquiry from ${safeName} (${safeEmail}) - ${typeMeta.label}`);
+        return { success: true, simulated: true, inquiryId };
+    }
+
+    try {
+        const resend = new Resend(apiKey);
+
+        // 1. Dispatch Notification Email to Basecamp Desk (bookings@aanandham.in)
+        const adminHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8" /></head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0B150E; color: #FFFFFF; padding: 24px; margin: 0;">
+            <div style="max-width: 600px; margin: 0 auto; background: #121F16; border: 1px solid rgba(213, 237, 85, 0.3); border-radius: 16px; padding: 32px;">
+                <div style="display: inline-block; font-size: 11px; font-weight: 800; color: ${typeMeta.color}; background: ${typeMeta.bg}; border: 1px solid ${typeMeta.color}; padding: 4px 10px; border-radius: 999px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px;">
+                    ${typeMeta.label}
+                </div>
+                <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 0 0 20px;">${safeName}</h1>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Reference</td><td style="padding: 10px 0; color: #D5ED55; font-weight: 800; font-family: monospace;">${inquiryId}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Expedition Category</td><td style="padding: 10px 0; color: ${typeMeta.color}; font-weight: 800;">${typeMeta.label}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Guest Name</td><td style="padding: 10px 0; color: #FFFFFF; font-weight: 700;">${safeName}</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Email</td><td style="padding: 10px 0; color: #FFFFFF;"><a href="mailto:${safeEmail}" style="color: #D5ED55; text-decoration: none;">${safeEmail}</a></td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Phone</td><td style="padding: 10px 0; color: #FFFFFF;"><a href="tel:${safePhone}" style="color: #FFFFFF; text-decoration: none;">${safePhone}</a></td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Squad Size</td><td style="padding: 10px 0; color: #FFFFFF;">${safeGuests} Campers</td></tr>
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);"><td style="padding: 10px 0; color: #8E9B92; font-size: 13px;">Target Dates</td><td style="padding: 10px 0; color: #E5A93B; font-weight: 700;">${safeDates}</td></tr>
+                </table>
+
+                <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 18px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 11px; font-weight: 800; color: #8E9B92; text-transform: uppercase; margin-bottom: 8px;">Camper Notes & Requirements:</div>
+                    <div style="font-size: 14px; color: #E2E8F0; line-height: 1.6; white-space: pre-wrap;">${safeMessage}</div>
+                </div>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="mailto:${safeEmail}?subject=Re:%20Aanandham%20Wilderness%20Expedition%20Inquiry%20(${inquiryId})" style="background: #D5ED55; color: #0B150E; padding: 12px 24px; border-radius: 10px; font-weight: 800; text-decoration: none; display: inline-block;">Reply to Camper →</a>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;
+
+        // 2. Dispatch Confirmation Receipt to Guest
+        const guestHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head><meta charset="utf-8" /></head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0B150E; color: #FFFFFF; padding: 24px; margin: 0;">
+            <div style="max-width: 600px; margin: 0 auto; background: #121F16; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; letter-spacing: 2px; text-transform: uppercase;">AANANDHAM WILDERNESS BASECAMPS</div>
+                    <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 8px 0 0;">We Received Your Inquiry! 🏔️</h1>
+                </div>
+
+                <p style="font-size: 14.5px; color: #C8D8CB; line-height: 1.6;">
+                    Hi <strong>${safeName}</strong>, thank you for reaching out to Aanandham Wilderness Stays. Our mountain expedition coordinators have received your inquiry for <strong>${safeType}</strong>.
+                </p>
+
+                <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 18px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 12px; color: #8E9B92; margin-bottom: 4px;">Inquiry Reference: <strong style="color: #D5ED55; font-family: monospace;">${inquiryId}</strong></div>
+                    <div style="font-size: 12px; color: #8E9B92; margin-bottom: 4px;">Campers: <strong style="color: #FFFFFF;">${safeGuests}</strong> · Dates: <strong style="color: #FFFFFF;">${safeDates}</strong></div>
+                    <div style="font-size: 12px; color: #8E9B92;">Status: <strong style="color: #E5A93B;">Under Review by Ridge Marshals</strong></div>
+                </div>
+
+                <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.6;">
+                    Our team typically responds within <strong>2 to 4 hours</strong> with customized availability, tent allocations, and 4x4 sunrise convoy details.
+                </p>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 24px; text-align: center;">
+                    <p style="font-size: 12.5px; color: #8E9B92; margin: 0 0 6px;">Need urgent ridge assistance or same-day check-in?</p>
+                    <p style="font-size: 13px; color: #FFFFFF; font-weight: 700; margin: 0;">24/7 Mountain Dispatch: ${formattedPhone} · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        `;
+
+        // Send to admin desk and guest
+        const [adminResult, guestResult] = await Promise.allSettled([
+            resend.emails.send({
+                from: fromEmail,
+                to: [adminDestEmail],
+                replyTo: safeEmail,
+                subject: `[INQUIRY] ${safeType}: ${safeName} (${safeGuests} Campers)`,
+                html: adminHtml
+            }),
+            resend.emails.send({
+                from: fromEmail,
+                to: [inquiry.email],
+                replyTo: adminDestEmail,
+                subject: `🏔️ Aanandham Wilderness — We received your inquiry (Ref: ${inquiryId})`,
+                html: guestHtml
+            })
+        ]);
+
+        return {
+            success: true,
+            inquiryId,
+            adminMessageId: adminResult.status === 'fulfilled' ? adminResult.value?.data?.id : null,
+            guestMessageId: guestResult.status === 'fulfilled' ? guestResult.value?.data?.id : null
+        };
+    } catch (err) {
+        console.error('[CONTACT EMAIL ERROR]', err);
+        return { success: false, error: err.message };
+    }
+}
