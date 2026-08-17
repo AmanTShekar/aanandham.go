@@ -189,6 +189,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const canvasRef = useRef(null);
     const animFrameRef = useRef(null);
     const streamRef = useRef(null);
+    const facingModeRef = useRef('environment');
 
     const [isCameraEnabled, setIsCameraEnabled] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -380,35 +381,32 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const startCamera = useCallback(async () => {
         if (typeof window === 'undefined' || !navigator?.mediaDevices?.getUserMedia) {
             setHasCameraPermission(false);
-            setErrorMessage('Camera access is not supported on this browser/insecure connection.');
+            setErrorMessage('Camera access is not supported on this browser or connection is not secure (HTTPS required).');
             return;
         }
 
         try {
             setErrorMessage('');
 
-            // Stop any existing stream tracks first
+            // Stop any existing stream before starting a new one
             if (streamRef.current) {
                 streamRef.current.getTracks().forEach(t => t.stop());
                 streamRef.current = null;
             }
 
-            const constraints = {
-                video: {
-                    facingMode: facingMode === 'user' ? 'user' : { ideal: 'environment' },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                },
-                audio: false
-            };
+            const currentFacingMode = facingModeRef.current;
 
+            // Try with preferred constraints, fall back to simpler ones
             let stream;
             try {
-                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: { ideal: currentFacingMode }, width: { ideal: 1280 }, height: { ideal: 720 } },
+                    audio: false
+                });
             } catch {
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: facingMode },
+                        video: { facingMode: currentFacingMode },
                         audio: false
                     });
                 } catch {
@@ -417,45 +415,54 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             }
 
             streamRef.current = stream;
-            setIsCameraEnabled(true);
-            setHasCameraPermission(true);
-            setErrorMessage('');
 
+            // Bind stream to video element BEFORE setting state (avoids re-render detach)
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
-                videoRef.current.setAttribute('playsinline', 'true');
-                videoRef.current.setAttribute('autoplay', 'true');
-                videoRef.current.setAttribute('muted', 'true');
                 videoRef.current.muted = true;
-
+                // Play on metadata ready (required by mobile browsers)
                 videoRef.current.onloadedmetadata = () => {
-                    videoRef.current?.play().catch(e => console.warn('Play prevented:', e));
+                    videoRef.current?.play().catch(() => {});
                 };
-                try {
-                    await videoRef.current.play();
-                } catch {
-                    // Handled by onloadedmetadata
-                }
+                // Also try to play immediately (works on Android Chrome)
+                videoRef.current.play().catch(() => {});
             }
 
+            setHasCameraPermission(true);
+            setIsCameraEnabled(true);
+            setErrorMessage('');
+
             const track = stream.getVideoTracks()[0];
-            const capabilities = track?.getCapabilities ? track.getCapabilities() : {};
+            const capabilities = track?.getCapabilities?.() ?? {};
             setHasTorchSupport(Boolean(capabilities?.torch));
 
         } catch (err) {
-            console.error('Camera initialization error:', err);
+            console.error('Camera error:', err);
             setHasCameraPermission(false);
             setIsCameraEnabled(false);
             if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                setErrorMessage('Camera permission was denied. Please allow camera access in browser permissions.');
+                setErrorMessage('Camera permission denied. Please allow camera access in your browser settings.');
             } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-                setErrorMessage('No camera was detected on this device.');
+                setErrorMessage('No camera found on this device.');
             } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-                setErrorMessage('Camera is busy or in use by another application.');
+                setErrorMessage('Camera is already in use by another app.');
             } else {
-                setErrorMessage('Unable to start live camera. You can upload a photo or type the Booking ID.');
+                setErrorMessage('Camera could not start. Try manual Booking ID search instead.');
             }
         }
+    }, []);
+
+    // Keep facingModeRef in sync with facingMode state
+    useEffect(() => {
+        facingModeRef.current = facingMode;
+    }, [facingMode]);
+
+    // Restart camera when facingMode changes (flip camera)
+    useEffect(() => {
+        if (isCameraEnabled) {
+            startCamera();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [facingMode]);
 
     const toggleCameraPower = () => {
@@ -465,20 +472,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             startCamera();
         }
     };
-
-    // Ensure video element receives stream whenever camera is enabled
-    useEffect(() => {
-        if (isCameraEnabled && streamRef.current && videoRef.current) {
-            if (videoRef.current.srcObject !== streamRef.current) {
-                videoRef.current.srcObject = streamRef.current;
-                videoRef.current.setAttribute('playsinline', 'true');
-                videoRef.current.setAttribute('autoplay', 'true');
-                videoRef.current.setAttribute('muted', 'true');
-                videoRef.current.muted = true;
-                videoRef.current.play().catch(e => console.warn('Stream play:', e));
-            }
-        }
-    }, [isCameraEnabled]);
 
     const toggleTorch = async () => {
         if (!videoRef.current || !videoRef.current.srcObject) return;
