@@ -133,34 +133,95 @@ export async function sendBookingConfirmationEmail(booking) {
 
     const htmlContent = `
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
     <head>
         <meta charset="utf-8">
         <title>Booking Pass - ${safeId}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-            body { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08110A; color: #FFFFFF; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased; }
-            h1, h2, h3, .brand-title { font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; }
-            .container { max-width: 660px; margin: 0 auto; background: #0E1A11; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-            .header { background: #060E08; padding: 32px 28px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
-            .badge { font-size: 11px; font-weight: 800; padding: 5px 16px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; }
-            .content { padding: 28px; }
-            .table-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
-            .label { color: #A2B6A6; }
-            .val { color: #FFFFFF; font-weight: 700; text-align: right; }
-            .footer { background: #060E08; padding: 22px; text-align: center; font-size: 12px; color: #59655D; border-top: 1px solid rgba(255,255,255,0.08); }
+            :root {
+                color-scheme: light dark;
+                supported-color-schemes: light dark;
+            }
+            body { 
+                font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+                background-color: #08110A !important; 
+                color: #FFFFFF !important; 
+                margin: 0; 
+                padding: 20px; 
+                -webkit-font-smoothing: antialiased; 
+            }
+            h1, h2, h3, .brand-title { 
+                font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif; 
+            }
+            .container { 
+                max-width: 660px; 
+                margin: 0 auto; 
+                background-color: #0E1A11 !important; 
+                border-radius: 24px; 
+                overflow: hidden; 
+                border: 1px solid rgba(213, 237, 85, 0.25); 
+                box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+            }
+            .header { 
+                background-color: #060E08 !important; 
+                padding: 32px 28px; 
+                text-align: center; 
+                border-bottom: 1px solid rgba(255,255,255,0.08); 
+            }
+            .badge { 
+                font-size: 11px; 
+                font-weight: 800; 
+                padding: 5px 16px; 
+                border-radius: 999px; 
+                text-transform: uppercase; 
+                letter-spacing: 0.8px; 
+                display: inline-block; 
+            }
+            .content { 
+                padding: 28px; 
+                background-color: #0E1A11 !important;
+            }
+            .table-row { 
+                display: flex; 
+                justify-content: space-between; 
+                padding: 10px 0; 
+                border-bottom: 1px solid rgba(255,255,255,0.06); 
+                font-size: 13.5px; 
+            }
+            .label { color: #A2B6A6 !important; }
+            .val { color: #FFFFFF !important; font-weight: 700; text-align: right; }
+            .footer { 
+                background-color: #060E08 !important; 
+                padding: 22px; 
+                text-align: center; 
+                font-size: 12px; 
+                color: #59655D !important; 
+                border-top: 1px solid rgba(255,255,255,0.08); 
+            }
+            /* Dark mode anti-inversion overrides for Gmail/Outlook */
+            [data-ogsc] .container, [data-ogsb] .container { background-color: #0E1A11 !important; }
+            [data-ogsc] .header, [data-ogsb] .header { background-color: #060E08 !important; }
+            [data-ogsc] .footer, [data-ogsb] .footer { background-color: #060E08 !important; }
+            [data-ogsc] .val, [data-ogsb] .val { color: #FFFFFF !important; }
+            [data-ogsc] .label, [data-ogsb] .label { color: #A2B6A6 !important; }
         </style>
     </head>
-    <body>
-        <div class="container">
-            <div class="header">
+    <body class="body" style="background-color: #08110A !important; color: #FFFFFF !important; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="container" style="background-color: #0E1A11 !important; max-width: 660px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25);">
+            <div class="header" style="background-color: #060E08 !important; padding: 32px 28px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
                     <img src="${logoPublicUrl}" alt="Aanandham.go" width="76" height="76" style="display: block; margin: 0 auto 12px; border-radius: 18px; object-fit: contain;" />
-                    <div class="brand-title" style="font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
+                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF !important;">Aanandham</span><span style="color: #D5ED55 !important;">.go</span></div>
                 </a>
-                <h1 style="margin: 8px 0 0; font-size: 24px; color: #FFFFFF; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
-                <p style="margin: 8px 0 0; color: #A2B6A6; font-size: 13.5px;">Booking Ref: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
+                <h1 style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; margin: 8px 0 0; font-size: 24px; color: #FFFFFF !important; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
+                <p style="margin: 8px 0 0; color: #A2B6A6 !important; font-size: 13.5px;">Booking Ref: <strong style="color: #D5ED55 !important; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
             </div>
 
             <div class="content">
