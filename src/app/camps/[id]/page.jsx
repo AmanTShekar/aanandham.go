@@ -22,18 +22,20 @@ export async function generateMetadata({ params }) {
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
     const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : `${siteUrl}/images/hero-1.webp`;
+    const cleanTitle = `${camp.shortTitle || camp.title} (${camp.altitude || 'Kerala'}) | Aanandham.go`;
+    const cleanDesc = `Book ${camp.shortTitle || camp.title} at ${camp.altitude || 'Western Ghats'} in ${camp.location}. 4x4 jeep safari, campfire BBQ & tent stays with Aanandham.go.`;
 
     return {
-        title: `${camp.title} (${camp.altitude || 'Western Ghats'}) | Aanandham Wilderness`,
-        description: camp.description || `Experience ${camp.title} at ${camp.altitude} in ${camp.location}. Instant reservation with guided off-road transit, alpine tents, and Kerala dining.`,
+        title: cleanTitle,
+        description: cleanDesc,
         alternates: {
-            canonical: `/camps/${camp.id}`
+            canonical: `${siteUrl}/camps/${camp.id}`
         },
         openGraph: {
-            title: `${camp.title} — High-Altitude Wilderness Basecamp`,
-            description: camp.description || `Book your stay at ${camp.title} in ${camp.location}. Curated mountain glamping and campfire expeditions.`,
+            title: cleanTitle,
+            description: cleanDesc,
             url: `${siteUrl}/camps/${camp.id}`,
-            siteName: 'Aanandham Wilderness',
+            siteName: 'Aanandham.go',
             images: [
                 {
                     url: ogImage,
@@ -46,8 +48,8 @@ export async function generateMetadata({ params }) {
         },
         twitter: {
             card: 'summary_large_image',
-            title: `${camp.title} | Aanandham.go Campsites`,
-            description: camp.description,
+            title: cleanTitle,
+            description: cleanDesc,
             images: [ogImage]
         }
     };
@@ -57,81 +59,72 @@ export default async function CampPropertyDetailPage({ params }) {
     const { id } = await params;
     const camp = getCampById(id) || INITIAL_ALL_CAMPS.find(c => c.id === id);
     const allCamps = getAllCamps();
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
 
     const campJsonLd = camp ? {
         "@context": "https://schema.org",
-        "@type": ["Campground", "Product", "LodgingBusiness"],
-        "name": camp.title,
-        "description": camp.description,
-        "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `https://aanandham.in${camp.image}`) : undefined,
-        "sku": camp.id,
-        "brand": {
-            "@type": "Brand",
-            "name": "Aanandham.go"
-        },
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": camp.location || "Munnar",
-            "addressRegion": "Kerala",
-            "addressCountry": "IN"
-        },
-        "priceRange": `₹${camp.price || 1800}`,
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": camp.rating ? camp.rating.toString() : "4.95",
-            "reviewCount": camp.reviewsCount ? camp.reviewsCount.toString() : "120",
-            "bestRating": "5",
-            "worstRating": "1"
-        },
-        "offers": {
-            "@type": "Offer",
-            "price": camp.price || 1800,
-            "priceCurrency": "INR",
-            "priceValidUntil": "2027-12-31",
-            "availability": "https://schema.org/InStock",
-            "url": `https://aanandham.in/camps/${camp.id}`,
-            "validFrom": new Date().toISOString().split('T')[0],
-            "hasMerchantReturnPolicy": {
-                "@type": "MerchantReturnPolicy",
-                "applicableCountry": "IN",
-                "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                "merchantReturnDays": 2,
-                "returnMethod": "https://schema.org/ReturnByMail",
-                "returnFees": "https://schema.org/FreeReturn"
-            },
-            "shippingDetails": {
-                "@type": "OfferShippingDetails",
-                "shippingRate": {
-                    "@type": "MonetaryAmount",
-                    "value": 0,
-                    "currency": "INR"
-                },
-                "shippingDestination": {
-                    "@type": "DefinedRegion",
+        "@graph": [
+            {
+                "@type": "LodgingBusiness",
+                "@id": `${siteUrl}/camps/${camp.id}#lodging`,
+                "name": camp.title,
+                "description": camp.description,
+                "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : undefined,
+                "url": `${siteUrl}/camps/${camp.id}`,
+                "telephone": "+919074858014",
+                "priceRange": `₹${camp.price || 1800}`,
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": camp.region || "Munnar",
+                    "addressRegion": "Kerala",
                     "addressCountry": "IN"
                 },
-                "deliveryTime": {
-                    "@type": "ShippingDeliveryTime",
-                    "handlingTime": {
-                        "@type": "QuantitativeValue",
-                        "minValue": 0,
-                        "maxValue": 0,
-                        "unitCode": "DAY"
-                    },
-                    "transitTime": {
-                        "@type": "QuantitativeValue",
-                        "minValue": 0,
-                        "maxValue": 0,
-                        "unitCode": "DAY"
-                    }
+                "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": 10.0889,
+                    "longitude": 77.0595
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": (camp.rating || 4.95).toString(),
+                    "reviewCount": (camp.reviewsCount || 120).toString(),
+                    "bestRating": "5",
+                    "worstRating": "1"
+                },
+                "offers": {
+                    "@type": "Offer",
+                    "price": camp.price || 1800,
+                    "priceCurrency": "INR",
+                    "priceValidUntil": "2027-12-31",
+                    "availability": "https://schema.org/InStock",
+                    "url": `${siteUrl}/camps/${camp.id}`
                 }
+            },
+            {
+                "@type": "BreadcrumbList",
+                "@id": `${siteUrl}/camps/${camp.id}#breadcrumb`,
+                "itemListElement": [
+                    {
+                        "@type": "ListItem",
+                        "position": 1,
+                        "name": "Home",
+                        "item": siteUrl
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Camps",
+                        "item": `${siteUrl}/camps`
+                    },
+                    {
+                        "@type": "ListItem",
+                        "position": 3,
+                        "name": camp.shortTitle || camp.title,
+                        "item": `${siteUrl}/camps/${camp.id}`
+                    }
+                ]
             }
-        },
-        "amenityFeature": (camp.amenities || []).map(a => ({
-            "@type": "LocationFeatureSpecification",
-            "name": a.name || a,
-            "value": true
-        }))
+        ]
     } : null;
 
     return (

@@ -21,11 +21,17 @@ const SORT_OPTIONS = [
     { value: 'rating', label: 'Top Rated (4.9+)', icon: 'Star' }
 ];
 
-export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS }) {
+export default function CampsDirectoryClient({ 
+    initialCamps = INITIAL_ALL_CAMPS,
+    initialRegion = 'All',
+    heroBadge = '★ 11 VERIFIED SANCTUARIES',
+    heroTitle = null,
+    heroSubtitle = null
+}) {
     const router = useRouter();
     const [camps, setCamps] = useState(initialCamps);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedRegion, setSelectedRegion] = useState('All');
+    const [selectedRegion, setSelectedRegion] = useState(initialRegion);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sortBy, setSortBy] = useState('recommended'); // 'recommended' | 'price-asc' | 'price-desc' | 'altitude' | 'rating'
     const [onlyWishlisted, setOnlyWishlisted] = useState(false);
@@ -201,7 +207,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                     <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         <div style={{ maxWidth: '820px' }}>
                             <div className="star-badge" style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', marginBottom: '16px' }}>
-                                <span className="star-icon">★</span> 11 VERIFIED SANCTUARIES
+                                <span className="star-icon">★</span> {heroBadge}
                             </div>
                             
                             <h1 style={{
@@ -213,7 +219,9 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                 margin: '0 0 16px',
                                 color: '#FFFFFF'
                             }}>
-                                Kerala High-Altitude Camps & <span style={{ color: '#D5ED55' }}>Wilderness Basecamps</span>
+                                {heroTitle ? heroTitle : (
+                                    <>Kerala High-Altitude Camps & <span style={{ color: '#D5ED55' }}>Wilderness Basecamps</span></>
+                                )}
                             </h1>
 
                             <p style={{
@@ -222,7 +230,7 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                 lineHeight: 1.7,
                                 margin: '0 0 28px'
                             }}>
-                                Explore verified campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.
+                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.'}
                             </p>
 
                             {/* Wishlist Bar Pill (Only shown if wishlist has items) */}

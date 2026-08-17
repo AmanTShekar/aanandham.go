@@ -44,8 +44,11 @@ Aanandham.go is a premium wilderness camping and high-altitude glamping platform
   - < 48 Hours: Non-refundable (Free date reschedule in case of extreme weather or road blockades)
 - **Payment Methods:** 0% Fee Direct UPI (GPay, PhonePe, Paytm), Credit/Debit Cards, Netbanking via Razorpay.
 
-## Direct Links
-- Explore Campsites: https://aanandham.in/camps
+## Direct Regional Hubs & Booking Links
+- Munnar & Suryanelli Camps (7,900 FT): https://aanandham.in/camps/munnar
+- Vagamon Pine Glamping (3,800 FT): https://aanandham.in/camps/vagamon
+- Wayanad Forest Pods (4,200 FT): https://aanandham.in/camps/wayanad
+- Explore All Campsites: https://aanandham.in/camps
 - About & Ethos: https://aanandham.in/about
 - Concierge & Inquiries: https://aanandham.in/contact
 - Camper Pass Portal: https://aanandham.in/pass

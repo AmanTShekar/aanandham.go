@@ -19,6 +19,24 @@ export default function sitemap() {
       priority: 0.95,
     },
     {
+      url: `${siteUrl}/camps/munnar`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/camps/vagamon`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/camps/wayanad`,
+      lastModified: currentDate,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
       url: `${siteUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
