@@ -99,6 +99,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // Initialize Camera Stream
     const startCamera = useCallback(async () => {
+        if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            setHasCameraPermission(false);
+            setErrorMessage('Camera is not supported on this browser/device. Please use gallery upload or enter Booking ID.');
+            return;
+        }
+
         try {
             if (videoRef.current && videoRef.current.srcObject) {
                 const tracks = videoRef.current.srcObject.getTracks();
@@ -127,9 +133,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setHasTorchSupport(Boolean(capabilities.torch));
             }
         } catch (err) {
-            console.error('Camera access error:', err);
+            // Gracefully catch NotAllowedError / Permission Denied
             setHasCameraPermission(false);
-            setErrorMessage('Camera access was denied or not supported. You can upload an image or type the Booking ID below.');
+            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                setErrorMessage('Camera permission was blocked. Tap "Enable Camera" or allow camera in browser settings.');
+            } else {
+                setErrorMessage('Could not open camera stream. You can upload a pass image or enter Booking ID.');
+            }
         }
     }, [facingMode]);
 
@@ -601,6 +611,49 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#D5ED55' }}>
                                     Verifying Cryptographic Pass...
                                 </span>
+                            </div>
+                        )}
+
+                        {/* Permission Denied Recovery Card */}
+                        {hasCameraPermission === false && (
+                            <div style={{
+                                position: 'absolute',
+                                inset: 0,
+                                background: 'rgba(11, 21, 14, 0.96)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: '24px',
+                                textAlign: 'center',
+                                zIndex: 20
+                            }}>
+                                <Camera size={40} color="#D5ED55" style={{ marginBottom: '10px' }} />
+                                <h4 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: '800', color: '#FFFFFF' }}>
+                                    Camera Access Required
+                                </h4>
+                                <p style={{ margin: '0 0 16px', fontSize: '12px', color: '#A2B6A6', lineHeight: 1.45 }}>
+                                    Tap below to grant camera access or choose gallery upload below.
+                                </p>
+                                <button
+                                    onClick={() => startCamera()}
+                                    style={{
+                                        padding: '10px 20px',
+                                        borderRadius: '12px',
+                                        background: '#D5ED55',
+                                        color: '#0B150E',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <Camera size={15} />
+                                    <span>Enable Camera</span>
+                                </button>
                             </div>
                         )}
                     </div>
