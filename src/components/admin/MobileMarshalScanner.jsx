@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import jsQR from 'jsqr';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Camera, 
     Flashlight, 
@@ -30,12 +31,16 @@ import {
     SlidersHorizontal,
     ChevronRight,
     TrendingUp,
-    ListFilter
+    ListFilter,
+    Send,
+    Mail,
+    Flame,
+    Compass
 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function MobileMarshalScanner({ onBackToAdmin = null }) {
-    // ── NAVIGATION TAB: 'scanner' | 'roster' | 'kitchen' ──
+    // ── NAVIGATION: 'scanner' | 'roster' | 'kitchen' ──
     const [activeTab, setActiveTab] = useState('scanner');
 
     // ── CAMERA & SCANNER STATE ──
@@ -43,9 +48,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const canvasRef = useRef(null);
     const animFrameRef = useRef(null);
 
-    const [isCameraEnabled, setIsCameraEnabled] = useState(false); // Default off to save battery until user activates
+    const [isCameraEnabled, setIsCameraEnabled] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
-    const [facingMode, setFacingMode] = useState('environment'); // 'environment' | 'user'
+    const [facingMode, setFacingMode] = useState('environment');
     const [torchOn, setTorchOn] = useState(false);
     const [hasTorchSupport, setHasTorchSupport] = useState(false);
     const [soundEnabled, setSoundEnabled] = useState(true);
@@ -54,7 +59,16 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isManualModalOpen, setIsManualModalOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    // ── ROSTER & AGGREGATE STATS STATE ──
+    // ── SIMULATION / TEST PASS MODAL STATE ──
+    const [isTestEmailModalOpen, setIsTestEmailModalOpen] = useState(false);
+    const [testEmailInput, setTestEmailInput] = useState('aman.tshekar@gmail.com');
+    const [testNameInput, setTestNameInput] = useState('Aman Shekar');
+    const [testGuestsCount, setTestGuestsCount] = useState(4);
+    const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
+    const [isSeedingDemo, setIsSeedingDemo] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
+    // ── ROSTER & STATS ──
     const [rosterList, setRosterList] = useState([]);
     const [stats, setStats] = useState({
         totalExpectedCampers: 0,
@@ -68,9 +82,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     });
     const [isLoadingRoster, setIsLoadingRoster] = useState(false);
     const [rosterSearchQuery, setRosterSearchQuery] = useState('');
-    const [rosterFilterStatus, setRosterFilterStatus] = useState('all'); // 'all' | 'pending' | 'checked_in' | 'short'
+    const [rosterFilterStatus, setRosterFilterStatus] = useState('all');
 
-    // ── CURRENT SCANNED / SELECTED BOOKING STATE ──
+    // ── CURRENT SCANNED / SELECTED BOOKING ──
     const [scannedBooking, setScannedBooking] = useState(null);
     const [isValidating, setIsValidating] = useState(false);
     const [rosterChecklist, setRosterChecklist] = useState([]);
@@ -78,6 +92,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [marshalNotes, setMarshalNotes] = useState('');
     const [isSubmittingCheckin, setIsSubmittingCheckin] = useState(false);
     const [checkinSuccessMessage, setCheckinSuccessMessage] = useState('');
+
+    // ── SHOW TEMPORARY TOAST ──
+    const showToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(''), 4000);
+    };
 
     // ── AUDIO CHIME FEEDBACK ──
     const playSuccessChime = useCallback(() => {
@@ -89,7 +109,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const osc1 = ctx.createOscillator();
             const gain1 = ctx.createGain();
             osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(783.99, now); // G5
+            osc1.frequency.setValueAtTime(783.99, now);
             gain1.gain.setValueAtTime(0.3, now);
             gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
             osc1.connect(gain1);
@@ -100,7 +120,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const osc2 = ctx.createOscillator();
             const gain2 = ctx.createGain();
             osc2.type = 'sine';
-            osc2.frequency.setValueAtTime(1046.50, now + 0.12); // C6
+            osc2.frequency.setValueAtTime(1046.50, now + 0.12);
             gain2.gain.setValueAtTime(0.4, now + 0.12);
             gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
             osc2.connect(gain2);
@@ -116,7 +136,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }
     }, [soundEnabled]);
 
-    // ── FETCH ROSTER & HEADCOUNT DATA ──
+    // ── FETCH ROSTER ──
     const fetchRosterData = useCallback(async () => {
         setIsLoadingRoster(true);
         try {
@@ -153,7 +173,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const startCamera = useCallback(async () => {
         if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             setHasCameraPermission(false);
-            setErrorMessage('Camera is not supported on this browser. Please use gallery upload or manual ID search.');
+            setErrorMessage('Camera is not supported on this browser. Use gallery upload or manual search.');
             return;
         }
 
@@ -252,7 +272,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }
     }, [isValidating, playSuccessChime, stopCamera]);
 
-    // ── LIVE SCAN LOOP ──
+    // ── SCAN FRAME LOOP ──
     useEffect(() => {
         let isSubscribed = true;
 
@@ -296,7 +316,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         };
     }, [isCameraEnabled, activeTab, scannedBooking, handleScannedResult, stopCamera]);
 
-    // ── MANUAL SEARCH ──
+    // ── MANUAL LOOKUP ──
     const handleManualSearch = async (e) => {
         e?.preventDefault();
         if (!manualIdInput.trim()) return;
@@ -360,6 +380,63 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         reader.readAsDataURL(file);
     };
 
+    // ── TRIGGER DEMO EMAIL DISPATCH ──
+    const handleSendTestEmail = async (e) => {
+        e.preventDefault();
+        if (!testEmailInput.trim()) return;
+
+        setIsSendingTestEmail(true);
+        try {
+            const res = await fetch('/api/marshal/test-email', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: testEmailInput.trim(),
+                    name: testNameInput.trim() || 'Explorer Lead',
+                    guests: testGuestsCount
+                })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✓ Confirmation pass sent to ${testEmailInput}!`);
+                setIsTestEmailModalOpen(false);
+                fetchRosterData();
+                if (data.booking) {
+                    setScannedBooking(data.booking);
+                    setRosterChecklist(data.booking.attendanceRoster || []);
+                    setIsBalancePaid(false);
+                }
+            } else {
+                setErrorMessage(data.message || 'Failed to dispatch test pass');
+            }
+        } catch (err) {
+            setErrorMessage('Network error sending test email.');
+        } finally {
+            setIsSendingTestEmail(false);
+        }
+    };
+
+    // ── TRIGGER DEMO SEEDING ──
+    const handleSeedDemoCampers = async () => {
+        setIsSeedingDemo(true);
+        try {
+            const res = await fetch('/api/marshal/seed', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✓ Generated ${data.count} simulation campers!`);
+                await fetchRosterData();
+                setActiveTab('roster');
+            } else {
+                setErrorMessage(data.message || 'Failed to seed sample campers');
+            }
+        } catch (e) {
+            setErrorMessage('Network error generating demo campers.');
+        } finally {
+            setIsSeedingDemo(false);
+        }
+    };
+
     // ── SELECT GUEST FROM ROSTER LIST ──
     const selectGuestFromRoster = (guest) => {
         setScannedBooking(guest);
@@ -420,7 +497,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     isBalancePaid
                 }));
                 playSuccessChime();
-                fetchRosterData(); // Refresh list in background
+                fetchRosterData();
             } else {
                 setErrorMessage(data.message || 'Failed to complete check-in');
             }
@@ -431,7 +508,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }
     };
 
-    // ── RESET SCANNER ──
     const resetScanner = () => {
         setScannedBooking(null);
         setCheckinSuccessMessage('');
@@ -439,7 +515,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         setManualIdInput('');
     };
 
-    // ── FILTERED ROSTER LIST ──
+    // ── FILTERED ROSTER ──
     const filteredRoster = rosterList.filter(item => {
         const matchesQuery = 
             item.name.toLowerCase().includes(rosterSearchQuery.toLowerCase()) ||
@@ -459,7 +535,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     return (
         <div style={{
             minHeight: '100dvh',
-            background: '#08120A',
+            background: 'radial-gradient(circle at 50% 0%, #112015 0%, #071009 100%)',
             color: '#FFFFFF',
             fontFamily: 'var(--font-jakarta), sans-serif',
             display: 'flex',
@@ -469,10 +545,41 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         }}>
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
-            {/* ── TOP APP BAR ── */}
+            {/* ── TOAST NOTIFICATION ── */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        style={{
+                            position: 'fixed',
+                            top: '16px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            background: '#D5ED55',
+                            color: '#0B150E',
+                            padding: '10px 20px',
+                            borderRadius: '999px',
+                            fontWeight: '800',
+                            fontSize: '13px',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+                            zIndex: 1000,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px'
+                        }}
+                    >
+                        <Sparkles size={16} />
+                        <span>{toastMessage}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* ── TOP HEADER ── */}
             <header style={{
-                background: 'rgba(11, 21, 14, 0.95)',
-                backdropFilter: 'blur(16px)',
+                background: 'rgba(11, 21, 14, 0.85)',
+                backdropFilter: 'blur(20px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 padding: '14px 18px',
                 display: 'flex',
@@ -530,36 +637,58 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </span>
                         </div>
                         <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>
-                            Check-In & Headcount Command Center
+                            Live Check-In & Headcount Command
                         </span>
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* Quick Simulation & Audio Actions */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <button
+                        onClick={() => setIsTestEmailModalOpen(true)}
+                        style={{
+                            background: 'rgba(229, 169, 59, 0.15)',
+                            border: '1px solid rgba(229, 169, 59, 0.4)',
+                            color: '#E5A93B',
+                            padding: '6px 10px',
+                            borderRadius: '10px',
+                            fontSize: '11.5px',
+                            fontWeight: '800',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            cursor: 'pointer'
+                        }}
+                        title="Send Real Test Pass Email"
+                    >
+                        <Mail size={13} />
+                        <span>Email Pass</span>
+                    </button>
+
                     <button
                         onClick={() => setSoundEnabled(!soundEnabled)}
                         style={{
                             background: soundEnabled ? 'rgba(213, 237, 85, 0.15)' : 'rgba(255, 255, 255, 0.06)',
                             border: `1px solid ${soundEnabled ? 'rgba(213, 237, 85, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
                             color: soundEnabled ? '#D5ED55' : '#8E9B92',
-                            width: '36px',
-                            height: '36px',
+                            width: '34px',
+                            height: '34px',
                             borderRadius: '10px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             cursor: 'pointer'
                         }}
-                        title={soundEnabled ? 'Mute Chimes' : 'Enable Chimes'}
                     >
-                        {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                        {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
                     </button>
                 </div>
             </header>
 
             {/* ── 3-TAB SEGMENTED CONTROLLER ── */}
             <div style={{
-                background: '#0B150E',
+                background: 'rgba(11, 21, 14, 0.9)',
+                backdropFilter: 'blur(12px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
                 padding: '8px 16px',
                 display: 'flex',
@@ -638,7 +767,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 </button>
             </div>
 
-            {/* ── ERROR BANNER ── */}
+            {/* ── ERROR MESSAGE ── */}
             {errorMessage && (
                 <div style={{
                     background: '#DC2626',
@@ -675,20 +804,20 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '24px 20px 80px',
+                    padding: '20px 20px 80px',
                     maxWidth: '480px',
                     margin: '0 auto',
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
-                    {/* Camera Status & Power Bar */}
+                    {/* Camera Control Bar */}
                     <div style={{
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         marginBottom: '16px',
-                        background: '#101E13',
+                        background: 'rgba(16, 30, 19, 0.8)',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
                         padding: '10px 16px',
                         borderRadius: '16px'
@@ -702,7 +831,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 boxShadow: isCameraEnabled ? '0 0 8px #22C55E' : 'none'
                             }} />
                             <span style={{ fontSize: '12px', fontWeight: '700', color: isCameraEnabled ? '#4ADE80' : '#FCA5A5' }}>
-                                {isCameraEnabled ? 'Camera Live' : 'Camera Paused / Off'}
+                                {isCameraEnabled ? 'Camera Live' : 'Camera Paused'}
                             </span>
                         </div>
 
@@ -736,7 +865,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         overflow: 'hidden',
                         boxShadow: '0 0 50px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(213, 237, 85, 0.2)',
                         background: '#000000',
-                        marginBottom: '18px'
+                        marginBottom: '16px'
                     }}>
                         <video
                             ref={videoRef}
@@ -747,7 +876,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             }}
                         />
 
-                        {/* Scanner Laser Grid Overlay (Visible when camera is on) */}
                         {isCameraEnabled && (
                             <div style={{
                                 position: 'absolute',
@@ -772,7 +900,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </div>
                         )}
 
-                        {/* Camera Off Placeholder */}
                         {!isCameraEnabled && (
                             <div style={{
                                 position: 'absolute',
@@ -797,38 +924,36 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     marginBottom: '14px',
                                     border: '1px solid rgba(213, 237, 85, 0.3)'
                                 }}>
-                                    <Camera size={32} color="#D5ED55" />
+                                    <Camera size={30} color="#D5ED55" />
                                 </div>
-                                <h3 style={{ margin: '0 0 6px', fontSize: '17px', fontWeight: '800', color: '#FFFFFF' }}>
-                                    Camera is Paused
+                                <h3 style={{ margin: '0 0 6px', fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>
+                                    Live Camera Paused
                                 </h3>
-                                <p style={{ margin: '0 0 20px', fontSize: '12.5px', color: '#8E9B92', maxWidth: '280px', lineHeight: 1.5 }}>
-                                    Tap below to turn on live QR scanner or select a guest from the roster list.
+                                <p style={{ margin: '0 0 18px', fontSize: '12px', color: '#8E9B92', maxWidth: '260px', lineHeight: 1.45 }}>
+                                    Tap to activate live scanner or pick a guest from the roster.
                                 </p>
                                 <button
                                     onClick={startCamera}
                                     style={{
-                                        padding: '12px 24px',
-                                        borderRadius: '14px',
+                                        padding: '12px 22px',
+                                        borderRadius: '12px',
                                         background: '#D5ED55',
                                         color: '#0B150E',
-                                        fontSize: '13.5px',
+                                        fontSize: '13px',
                                         fontWeight: '800',
                                         border: 'none',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '8px',
-                                        boxShadow: '0 4px 16px rgba(213, 237, 85, 0.3)'
+                                        gap: '6px'
                                     }}
                                 >
-                                    <Power size={16} />
-                                    <span>Turn On Camera Scanner</span>
+                                    <Power size={15} />
+                                    <span>Turn On Camera</span>
                                 </button>
                             </div>
                         )}
 
-                        {/* Validating indicator */}
                         {isValidating && (
                             <div style={{
                                 position: 'absolute',
@@ -843,13 +968,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             }}>
                                 <div className="spinner-border" style={{ width: '40px', height: '40px', border: '3px solid rgba(213,237,85,0.2)', borderTopColor: '#D5ED55', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
                                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#D5ED55' }}>
-                                    Verifying Cryptographic Pass...
+                                    Verifying Pass...
                                 </span>
                             </div>
                         )}
                     </div>
 
-                    {/* Quick Tools: Flip, Torch, Gallery, Manual ID */}
+                    {/* Quick Tools */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
                         {isCameraEnabled && (
                             <>
@@ -914,7 +1039,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             cursor: 'pointer'
                         }}>
                             <Upload size={15} />
-                            <span>Upload QR Image</span>
+                            <span>Upload Pass</span>
                             <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
                         </label>
 
@@ -943,7 +1068,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             )}
 
             {/* ══════════════════════════════════════════════════════════
-                TAB 2: GUEST ROSTER & ATTENDANCE LIST
+                TAB 2: GUEST ROSTER & HEADCOUNT LIST
             ══════════════════════════════════════════════════════════ */}
             {activeTab === 'roster' && !scannedBooking && (
                 <main style={{
@@ -954,33 +1079,72 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
-                    {/* Headcount Quick Metric Pills */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
-                        <div style={{ background: '#101E13', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '10px 8px', textAlign: 'center' }}>
-                            <span style={{ fontSize: '10px', color: '#8E9B92', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Expected</span>
+                    {/* Headcount Stat Ribbon */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '14px' }}>
+                        <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '9.5px', color: '#8E9B92', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Expected</span>
                             <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF' }}>{stats.totalExpectedCampers}</span>
                         </div>
-                        <div style={{ background: '#101E13', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '14px', padding: '10px 8px', textAlign: 'center' }}>
-                            <span style={{ fontSize: '10px', color: '#4ADE80', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>At Camp</span>
+                        <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '9.5px', color: '#4ADE80', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>At Camp</span>
                             <span style={{ fontSize: '18px', fontWeight: '900', color: '#4ADE80' }}>{stats.totalCheckedInCampers}</span>
                         </div>
-                        <div style={{ background: '#101E13', border: '1px solid rgba(234, 179, 8, 0.3)', borderRadius: '14px', padding: '10px 8px', textAlign: 'center' }}>
-                            <span style={{ fontSize: '10px', color: '#FACC15', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>En Route</span>
+                        <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(234, 179, 8, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '9.5px', color: '#FACC15', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>En Route</span>
                             <span style={{ fontSize: '18px', fontWeight: '900', color: '#FACC15' }}>{stats.totalPendingCampers}</span>
                         </div>
-                        <div style={{ background: '#101E13', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '14px', padding: '10px 8px', textAlign: 'center' }}>
-                            <span style={{ fontSize: '10px', color: '#FCA5A5', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Short</span>
+                        <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
+                            <span style={{ fontSize: '9.5px', color: '#FCA5A5', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Short</span>
                             <span style={{ fontSize: '18px', fontWeight: '900', color: '#EF4444' }}>{stats.totalShortCampers}</span>
                         </div>
                     </div>
 
-                    {/* Search & Filter Bar */}
+                    {/* Simulation Generator Bar */}
+                    <div style={{
+                        background: 'linear-gradient(135deg, rgba(229, 169, 59, 0.1) 0%, rgba(213, 237, 85, 0.1) 100%)',
+                        border: '1px solid rgba(229, 169, 59, 0.3)',
+                        borderRadius: '16px',
+                        padding: '12px 16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        marginBottom: '14px',
+                        gap: '10px'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Sparkles size={16} color="#E5A93B" />
+                            <span style={{ fontSize: '12px', fontWeight: '800', color: '#FFFFFF' }}>
+                                Need realistic test data?
+                            </span>
+                        </div>
+                        <button
+                            onClick={handleSeedDemoCampers}
+                            disabled={isSeedingDemo}
+                            style={{
+                                padding: '6px 14px',
+                                borderRadius: '10px',
+                                background: '#E5A93B',
+                                color: '#0B150E',
+                                fontSize: '11.5px',
+                                fontWeight: '800',
+                                border: 'none',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                            }}
+                        >
+                            <span>{isSeedingDemo ? 'Seeding...' : '⚡ Seed 4 Demo Campers'}</span>
+                        </button>
+                    </div>
+
+                    {/* Search & Status Filter */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
                         <div style={{ position: 'relative' }}>
                             <Search size={16} color="#8E9B92" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                             <input
                                 type="text"
-                                placeholder="Search by name, booking ID, phone..."
+                                placeholder="Search by camper name, booking ID, phone..."
                                 value={rosterSearchQuery}
                                 onChange={e => setRosterSearchQuery(e.target.value)}
                                 style={{
@@ -997,7 +1161,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             />
                         </div>
 
-                        {/* Status Filter Chips */}
+                        {/* Filter Chips */}
                         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                             {[
                                 { id: 'all', label: `All (${rosterList.length})` },
@@ -1026,7 +1190,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     </div>
 
-                    {/* Guest Cards List */}
+                    {/* Guest Cards */}
                     {isLoadingRoster ? (
                         <div style={{ padding: '40px', textAlign: 'center', color: '#8E9B92' }}>
                             Loading guest roster...
@@ -1052,8 +1216,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                             display: 'flex',
                                             flexDirection: 'column',
                                             gap: '8px',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.15s ease'
+                                            cursor: 'pointer'
                                         }}
                                     >
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -1102,7 +1265,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             )}
 
             {/* ══════════════════════════════════════════════════════════
-                TAB 3: KITCHEN & TALLY OVERVIEW
+                TAB 3: KITCHEN & OCCUPANCY TALLY
             ══════════════════════════════════════════════════════════ */}
             {activeTab === 'kitchen' && !scannedBooking && (
                 <main style={{
@@ -1136,14 +1299,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </span>
                             </div>
                             <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '14px' }}>
-                                <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>En Route / Pending</span>
+                                <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>En Route / Expected</span>
                                 <span style={{ fontSize: '28px', fontWeight: '900', color: '#FACC15' }}>
                                     {stats.totalPendingCampers} <span style={{ fontSize: '14px', color: '#8E9B92' }}>Campers</span>
                                 </span>
                             </div>
                         </div>
 
-                        {/* Progress Bar */}
                         <div style={{ height: '8px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
                             <div style={{
                                 width: `${stats.totalExpectedCampers > 0 ? (stats.totalCheckedInCampers / stats.totalExpectedCampers) * 100 : 0}%`,
@@ -1154,7 +1316,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     </div>
 
-                    {/* Kitchen Catering Counter */}
+                    {/* Kitchen BBQ Portions */}
                     <div style={{
                         background: '#101E13',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1165,7 +1327,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                             <Utensils size={20} color="#D5ED55" />
                             <span style={{ fontSize: '15px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                Kitchen & BBQ Portions Required
+                                Kitchen & Catering Portions Required
                             </span>
                         </div>
 
@@ -1188,7 +1350,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     </div>
 
-                    {/* Front Desk Cash / Balance Pending */}
+                    {/* Front Desk Cash Collection */}
                     <div style={{
                         background: '#101E13',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1241,7 +1403,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             color: '#4ADE80',
                             fontSize: '13.5px',
                             fontWeight: '700',
-                            marginBottom: '20px',
+                            marginBottom: '16px',
                             display: 'flex',
                             alignItems: 'center',
                             gap: '10px'
@@ -1369,7 +1531,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     </div>
 
-                    {/* Headcount Checklist */}
+                    {/* Attendance Checklist */}
                     <div style={{
                         background: '#101E13',
                         border: '1px solid rgba(255, 255, 255, 0.08)',
@@ -1440,7 +1602,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             ))}
                         </div>
 
-                        {/* Meals counter */}
                         <div style={{ marginTop: '14px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', display: 'flex', justifyContent: 'space-around', fontSize: '12px' }}>
                             <span>🥗 Veg BBQ: <strong>{scannedBooking.vegCount}</strong></span>
                             <span>🍗 Non-Veg BBQ: <strong>{scannedBooking.nonVegCount}</strong></span>
@@ -1528,7 +1689,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         />
                     </div>
 
-                    {/* Action Buttons */}
+                    {/* Actions */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <button
                             onClick={handleConfirmCheckin}
@@ -1582,6 +1743,149 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </button>
                     </div>
                 </main>
+            )}
+
+            {/* ── EMAIL TEST PASS MODAL ── */}
+            {isTestEmailModalOpen && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: 'rgba(0, 0, 0, 0.85)',
+                    backdropFilter: 'blur(8px)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                    zIndex: 100
+                }}>
+                    <div style={{
+                        background: '#101E13',
+                        border: '1px solid rgba(229, 169, 59, 0.3)',
+                        borderRadius: '24px',
+                        padding: '24px',
+                        width: '100%',
+                        maxWidth: '420px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <Mail size={18} color="#E5A93B" />
+                                <span style={{ fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>
+                                    Dispatch Test Reservation Pass
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => setIsTestEmailModalOpen(false)}
+                                style={{ background: 'none', border: 'none', color: '#8E9B92', cursor: 'pointer' }}
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <p style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.45, margin: '0 0 16px' }}>
+                            Enter your email address to receive an official booking pass with live QR code, 4-digit gate PIN, and PDF voucher via Resend.
+                        </p>
+
+                        <form onSubmit={handleSendTestEmail} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                            <div>
+                                <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                    Recipient Email:
+                                </label>
+                                <input
+                                    type="email"
+                                    required
+                                    placeholder="yourname@gmail.com"
+                                    value={testEmailInput}
+                                    onChange={e => setTestEmailInput(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 14px',
+                                        borderRadius: '12px',
+                                        background: '#08120A',
+                                        border: '1px solid rgba(229, 169, 59, 0.4)',
+                                        color: '#FFFFFF',
+                                        fontSize: '14px',
+                                        fontWeight: '700',
+                                        outline: 'none',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '10px' }}>
+                                <div>
+                                    <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                        Lead Name:
+                                    </label>
+                                    <input
+                                        type="text"
+                                        placeholder="Aman Shekar"
+                                        value={testNameInput}
+                                        onChange={e => setTestNameInput(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            padding: '12px 14px',
+                                            borderRadius: '12px',
+                                            background: '#08120A',
+                                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                                            color: '#FFFFFF',
+                                            fontSize: '13px',
+                                            outline: 'none',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                        Guests:
+                                    </label>
+                                    <select
+                                        value={testGuestsCount}
+                                        onChange={e => setTestGuestsCount(Number(e.target.value))}
+                                        style={{
+                                            width: '100%',
+                                            padding: '12px 14px',
+                                            borderRadius: '12px',
+                                            background: '#08120A',
+                                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                                            color: '#FFFFFF',
+                                            fontSize: '13px',
+                                            outline: 'none',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    >
+                                        <option value={2}>2 Campers</option>
+                                        <option value={4}>4 Campers</option>
+                                        <option value={6}>6 Campers</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={isSendingTestEmail}
+                                style={{
+                                    width: '100%',
+                                    padding: '14px',
+                                    borderRadius: '14px',
+                                    background: '#E5A93B',
+                                    color: '#0B150E',
+                                    fontSize: '14px',
+                                    fontWeight: '800',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    marginTop: '8px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '6px'
+                                }}
+                            >
+                                <Send size={15} />
+                                <span>{isSendingTestEmail ? 'Sending via Resend...' : 'Send Live Pass Email →'}</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
             )}
 
             {/* ── MANUAL LOOKUP MODAL ── */}
