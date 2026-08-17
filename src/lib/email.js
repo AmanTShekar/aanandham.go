@@ -65,9 +65,8 @@ export async function sendBookingConfirmationEmail(booking) {
         bookingId: booking.id
     });
 
-    // QR as public URL for email HTML (api.qrserver.com — renders inline, no attachment needed)
-    // White dots on deep forest dark background
-    const qrEmailUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(passUrl)}&color=FFFFFF&bgcolor=0B150E&margin=12&ecc=H`;
+
+    // QR is ONLY in the PDF attachment (private) — never exposed via public URL in email
 
     // QR buffer still needed for the PDF attachment
     const qrBuffer = await generateQrBuffer(passUrl, 280);
@@ -188,17 +187,25 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pinBoxHtml}
 
-                <!-- SCANNABLE MARSHAL QR CODE — rendered via public api.qrserver.com (not attachment) -->
-                <div class="qr-card">
-                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass QR ★</div>
-                    <img src="${qrEmailUrl}" alt="Digital Pass QR Code — Scan to Check In" style="width:210px;height:210px;display:block;margin:0 auto;border-radius:10px;" />
-                    <div style="font-size: 12.5px; font-weight: 900; text-transform: uppercase; color: #D5ED55; margin-top: 10px; letter-spacing: 0.5px;">
-                        ${isConfirmed ? 'Marshal Check-In QR · Scan to Verify' : 'Pass Verification QR Code'}
+                <!-- DIGITAL PASS PORTAL — secure link, QR only in PDF attachment -->
+                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 20px 0;">
+                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass ★</div>
+                    <div style="font-size: 32px; margin-bottom: 8px;">🎫</div>
+                    <div style="font-size: 14px; font-weight: 900; color: #FFFFFF; margin-bottom: 4px;">
+                        ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
                     </div>
-                    <div style="font-size: 11px; color: #A2B6A6; margin: 4px 0 12px;">
-                        ${isConfirmed ? 'Present to Suryanelli Basecamp Marshal on arrival' : 'Scan to check live verification status'}
+                    <div style="font-size: 11.5px; color: #A2B6A6; margin-bottom: 16px;">
+                        ${isConfirmed
+                            ? 'Tap below to open your live digital pass with QR code for Marshal check-in'
+                            : 'Tap below to track your verification status and unlock your pass'
+                        }
                     </div>
-                    <a href="${passUrl}" class="btn-primary" style="display: block; text-align: center;">View &amp; Track Live Wilderness Pass →</a>
+                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 900; font-size: 15px; text-decoration: none; padding: 14px 32px; border-radius: 12px; letter-spacing: -0.2px;">
+                        🏳️&nbsp; View &amp; Track Live Wilderness Pass →
+                    </a>
+                    <div style="font-size: 10.5px; color: #59655D; margin-top: 12px;">
+                        Secure link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · QR code inside the PDF attachment
+                    </div>
                 </div>
 
                 <!-- PASS PORTAL LINK (calendar .ics is auto-attached to email) -->
