@@ -1,3 +1,4 @@
+import { Resend } from 'resend';
 import { generateGatePin, getCheckInLandmarkGuide, generatePassToken } from './accessControl';
 import { buildGoogleCalendarUrl } from './calendarLink';
 import { generateQrDataUri } from './qrGenerator';
@@ -208,32 +209,24 @@ export async function sendBookingConfirmationEmail(booking) {
     </html>
     `;
 
-    // 1. If Resend API Key is configured, dispatch real email
+    // 1. If Resend API Key is configured, dispatch real email via Resend SDK
     if (apiKey) {
         try {
-            const response = await fetch('https://api.resend.com/emails', {
-                method: 'POST',
-                signal: AbortSignal.timeout(6000),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${apiKey}`
-                },
-                body: JSON.stringify({
-                    from: fromEmail,
-                    to: [booking.email],
-                    subject: emailSubject,
-                    html: htmlContent
-                })
+            const resend = new Resend(apiKey);
+            const { data, error } = await resend.emails.send({
+                from: fromEmail,
+                to: [booking.email],
+                subject: emailSubject,
+                html: htmlContent
             });
 
-            const result = await response.json();
-            if (response.ok) {
-                console.info(`[EMAIL] ✅ Confirmation email sent to ${booking.email} (Message ID: ${result.id})`);
-                return { success: true, messageId: result.id };
-            } else {
-                console.error('[EMAIL] ❌ Resend API Error:', result);
-                return { success: false, error: result };
+            if (error) {
+                console.error('[EMAIL] ❌ Resend API Error:', error);
+                return { success: false, error };
             }
+
+            console.info(`[EMAIL] ✅ Confirmation email sent to ${booking.email} (Message ID: ${data?.id})`);
+            return { success: true, messageId: data?.id };
         } catch (err) {
             console.error('[EMAIL] ❌ Error sending email:', err);
             return { success: false, error: err.message };

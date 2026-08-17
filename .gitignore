@@ -17,6 +17,7 @@
 # misc
 .DS_Store
 *.pem
+.gitignore
 
 # debug
 npm-debug.log*
@@ -24,6 +25,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env*
+.env.example
 .env*.local
 
 # vercel
