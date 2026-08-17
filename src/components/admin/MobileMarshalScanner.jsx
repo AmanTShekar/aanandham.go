@@ -244,7 +244,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── HOST SECURITY & PASSCODE AUTHENTICATION ──
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+    const [isCheckingAuth, setIsCheckingAuth] = useState(false);
     const [hostPasscode, setHostPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -255,7 +255,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isBiometricEnrolled, setIsBiometricEnrolled] = useState(false);
     const [isBiometricPrompting, setIsBiometricPrompting] = useState(false);
 
-    // Verify session & detect WebAuthn biometrics on mount
+    // Detect WebAuthn hardware biometrics on mount (Always start in locked mode)
     useEffect(() => {
         let isMounted = true;
 
@@ -270,47 +270,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     if (isMounted) setHasBiometricSupport(false);
                 });
             }
-
-            // If console was explicitly locked or if freshly opened with biometric protection, require confirmation
-            const isExplicitlyLocked = sessionStorage.getItem('aanandham_host_locked') === 'true';
-            if (isExplicitlyLocked) {
-                setIsAuthenticated(false);
-                setIsCheckingAuth(false);
-                return;
-            }
         }
 
-        const checkAuthSession = async () => {
-            try {
-                // If biometric enrollment exists on this phone, always require biometric/PIN unlock first
-                if (typeof window !== 'undefined' && localStorage.getItem('aanandham_host_bio_enrolled') === 'true') {
-                    if (isMounted) {
-                        setIsAuthenticated(false);
-                        setIsCheckingAuth(false);
-                    }
-                    return;
-                }
+        // Always require explicit Biometric / PIN unlock on open
+        setIsAuthenticated(false);
+        setIsCheckingAuth(false);
 
-                const res = await fetch('/api/admin/auth', {
-                    method: 'GET',
-                    credentials: 'include'
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    if (isMounted) {
-                        setIsAuthenticated(Boolean(data.authenticated));
-                    }
-                } else {
-                    if (isMounted) setIsAuthenticated(false);
-                }
-            } catch (err) {
-                if (isMounted) setIsAuthenticated(false);
-            } finally {
-                if (isMounted) setIsCheckingAuth(false);
-            }
-        };
-
-        checkAuthSession();
         return () => { isMounted = false; };
     }, []);
 
