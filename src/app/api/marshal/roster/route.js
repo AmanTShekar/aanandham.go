@@ -1,0 +1,113 @@
+import { NextResponse } from 'next/server';
+import { getStoredBookings } from '@/lib/serverBookingStore';
+import { getClientIp } from '@/lib/authConfig';
+import { checkRateLimit } from '@/lib/redis';
+
+export async function GET(request) {
+    const ip = getClientIp(request);
+
+    // Rate limit roster requests
+    const rateLimit = await checkRateLimit(`ratelimit:marshal_roster:${ip}`, 60, 60);
+    if (!rateLimit.allowed) {
+        return NextResponse.json({ success: false, message: 'Rate limit exceeded' }, { status: 429 });
+    }
+
+    try {
+        const bookings = await getStoredBookings();
+
+        // Calculate aggregate headcount and operational metrics
+        let totalExpectedCampers = 0;
+        let totalCheckedInCampers = 0;
+        let totalShortCampers = 0;
+        let totalPendingCampers = 0;
+        let vegMealsCount = 0;
+        let nonVegMealsCount = 0;
+        let totalBalanceDue = 0;
+        let totalBalanceCollected = 0;
+
+        const rosterList = bookings.map(b => {
+            const totalGuests = Number(b.guests) || 2;
+            const checkedIn = Number(b.checkedInCount ?? (b.status === 'Checked In' ? totalGuests : 0));
+            const isCheckedIn = b.status === 'Checked In' || b.status === 'Partial Check-In';
+            const short = Number(b.shortCount ?? (isCheckedIn ? Math.max(0, totalGuests - checkedIn) : 0));
+            
+            const veg = Number(b.vegCount ?? Math.max(0, totalGuests - (b.nonVegCount ?? 0)));
+            const nonVeg = Number(b.nonVegCount ?? Math.max(0, totalGuests - veg));
+
+            const total = Number(b.total) || 2499;
+            const advance = Number(b.advancePaid || Math.round(total * 0.3));
+            const isBalancePaid = Boolean(b.isBalancePaid || b.balanceDue === 0 || b.status === 'Checked In');
+            const balanceDue = isBalancePaid ? 0 : Number(b.balanceDue !== undefined ? b.balanceDue : (total - advance));
+
+            if (b.status !== 'Cancelled' && b.status !== 'Expired') {
+                totalExpectedCampers += totalGuests;
+                if (isCheckedIn) {
+                    totalCheckedInCampers += checkedIn;
+                    totalShortCampers += short;
+                } else {
+                    totalPendingCampers += totalGuests;
+                }
+
+                vegMealsCount += veg;
+                nonVegMealsCount += nonVeg;
+
+                if (isBalancePaid) {
+                    totalBalanceCollected += (total - advance);
+                } else {
+                    totalBalanceDue += balanceDue;
+                }
+            }
+
+            return {
+                id: b.id,
+                name: b.name,
+                phone: b.phone,
+                email: b.email || 'camper@aanandham.in',
+                campsite: b.package || 'Kolukkumalai Ridge Glamp',
+                region: b.region || 'Munnar',
+                dates: b.dates || 'Upcoming Batch',
+                roomType: b.roomType || 'Alpine Pod',
+                totalGuests,
+                checkedInCount: checkedIn,
+                shortCount: short,
+                vegCount: veg,
+                nonVegCount: nonVeg,
+                totalPrice: total,
+                advancePaid: advance,
+                balanceDue,
+                isBalancePaid,
+                status: b.status || 'Confirmed',
+                checkInAt: b.checkInAt || null,
+                notes: b.marshalNotes || b.notes || '',
+                convoyTime: b.convoyTime || '02:30 PM Batch',
+                roster: Array.isArray(b.attendanceRoster) && b.attendanceRoster.length > 0
+                    ? b.attendanceRoster
+                    : Array.from({ length: totalGuests }, (_, idx) => ({
+                        id: idx + 1,
+                        name: idx === 0 ? `${b.name} (Lead)` : `Camper ${idx + 1}`,
+                        present: isCheckedIn ? (idx < checkedIn) : true
+                    }))
+            };
+        });
+
+        return NextResponse.json({
+            success: true,
+            stats: {
+                totalExpectedCampers,
+                totalCheckedInCampers,
+                totalPendingCampers,
+                totalShortCampers,
+                vegMealsCount,
+                nonVegMealsCount,
+                totalBalanceDue,
+                totalBalanceCollected,
+                totalBookings: rosterList.length
+            },
+            roster: rosterList
+        });
+
+    } catch (err) {
+        console.error('Error fetching marshal roster:', err);
+        return NextResponse.json({ success: false, message: 'Server error retrieving guest roster' }, { status: 500 });
+    }
+}
