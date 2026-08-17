@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Member Access & Tribe Login — Aanandham.go',
-  description: 'Log in to your Aanandham.go wilderness account to view upcoming expeditions, trail permits, and offline basecamp coordinates.',
+  title: 'Member Login | Aanandham.go',
+  description: 'Log in to your Aanandham.go account to view upcoming stays and booking passes.',
   robots: {
     index: false,
     follow: false,

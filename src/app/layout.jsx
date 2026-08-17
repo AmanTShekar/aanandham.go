@@ -30,10 +30,10 @@ export const viewport = {
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar, Vagamon & Wayanad, Kerala',
-    template: '%s | Aanandham.go Wilderness Camps'
+    default: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar',
+    template: '%s | Aanandham.go'
   },
-  description: 'Book verified high-altitude ridge camping, Suryanelli tent stays, and 4x4 Kolukkumalai sunrise treks. Safe, premium wilderness experiences across Kerala Western Ghats with Aanandham.go.',
+  description: 'Book verified high-altitude camping, Suryanelli tent stays & 4x4 Kolukkumalai sunrise treks in Munnar, Kerala with Aanandham.go.',
   keywords: [
     'Aanandham',
     'Aanandham.go',
@@ -53,11 +53,11 @@ export const metadata = {
   creator: 'Aanandham.go',
   publisher: 'Aanandham.go',
   alternates: {
-    canonical: '/',
+    canonical: 'https://aanandham.in',
   },
   openGraph: {
-    title: 'Aanandham.go — Luxury Camping & Peak Stays in Munnar, Kerala',
-    description: 'Experience 4x4 sunrise treks, starlit campfire nights, and verified high-altitude tent glamping at Suryanelli ridge.',
+    title: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar',
+    description: 'Book verified high-altitude camping, Suryanelli tent stays & 4x4 Kolukkumalai sunrise treks in Munnar with Aanandham.go.',
     url: siteUrl,
     siteName: 'Aanandham.go',
     images: [
@@ -76,12 +76,11 @@ export const metadata = {
     ],
     locale: 'en_IN',
     type: 'website',
-    override: true,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aanandham.go — Luxury Camping & Tent Stays in Kerala',
-    description: 'Book high-altitude ridge stays, 4x4 sunrise treks to Kolukkumalai, and verified campsites.',
+    title: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar',
+    description: 'Book verified high-altitude camping, Suryanelli tent stays & 4x4 Kolukkumalai sunrise treks with Aanandham.go.',
     creator: '@aanandham_go',
     images: [
       'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80',

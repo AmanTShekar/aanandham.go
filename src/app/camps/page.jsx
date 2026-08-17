@@ -3,9 +3,9 @@ import CampsDirectoryClient from './CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Verified Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+  title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
   description:
-    'Explore 11+ verified high-altitude campsites across Munnar, Suryanelli, Vagamon & Wayanad. High-altitude ridge tents, 4x4 sunrise treks, campfire BBQ & luxury dome glamping.',
+    'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ. Book with Aanandham.go.',
   keywords: [
     'Kerala Campsites',
     'Munnar Tent Stays',
@@ -17,12 +17,12 @@ export const metadata = {
     'Safe Campsites for Couples'
   ],
   alternates: {
-    canonical: '/camps',
+    canonical: 'https://aanandham.in/camps',
   },
   openGraph: {
-    title: 'Verified Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+    title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
     description:
-      'Explore verified high-altitude campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability.',
+      'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ.',
     url: 'https://aanandham.in/camps',
     siteName: 'Aanandham.go',
     images: [
@@ -38,7 +38,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Verified Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+    title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
     description: 'Explore verified high-altitude campgrounds in Munnar, Suryanelli, Vagamon and Wayanad.',
     images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],
   },

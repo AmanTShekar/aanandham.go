@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Join the Wilderness Tribe — Aanandham.go Signup',
-  description: 'Join the Aanandham.go explorer community for early access to meteor shower camps, cloud bed trek batches, and member discounts.',
+  title: 'Join Wilderness Tribe | Aanandham.go',
+  description: 'Join the Aanandham.go explorer tribe for early access to meteor shower camps and sunrise batches.',
   robots: {
     index: false,
     follow: false,
