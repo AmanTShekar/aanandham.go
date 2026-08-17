@@ -61,7 +61,7 @@ export async function sendBookingConfirmationEmail(booking) {
     const siteUrl = resolveSiteUrl();
 
     const gatePin = generateGatePin(booking.id, booking.dates);
-    const landmarkGuide = getCheckInLandmarkGuide(booking.campsiteId || booking.package);
+    const landmarkGuide = getCheckInLandmarkGuide(booking.campsiteId || booking.package, booking);
     const passToken = generatePassToken(booking.id);
     const passUrl = `${siteUrl}/pass/${booking.id}?token=${passToken}`;
     const icsUrl = `${siteUrl}/api/pass/${booking.id}/ics?token=${passToken}`;

@@ -60,39 +60,72 @@ export function verifyPassToken(bookingId, token, status = 'Confirmed') {
 
 /**
  * Get offline landmark navigation and self check-in guide for a campsite
- * @param {string} campsiteId
+ * Supports camp-specific landmarks and custom booking-level admin overrides
+ * @param {string} campsiteId - Camp slug, package name, or ID
+ * @param {object} bookingOverrides - Optional custom overrides from the booking
  * @returns {object} Landmark directions & marshal contact
  */
-export function getCheckInLandmarkGuide(campsiteId = '') {
-    const key = String(campsiteId).toLowerCase();
+export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) {
+    const key = String(campsiteId || '').toLowerCase();
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+    const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
+        ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
+        : `+${adminPhone}`;
 
-    if (key.includes('kolukkumalai') || key.includes('suryanelli')) {
-        return {
-            hubName: 'Suryanelli Town Basecamp Hub',
-            gpsCoordinates: '10.0889° N, 77.0595° E',
-            parkingArea: 'Designated 4x4 Private Parking Yard (Behind Suryanelli Tea Factory)',
-            steps: [
-                'Arrive at Suryanelli Town Hub by 1:30 PM (before 4x4 convoy departs).',
-                'Park your private vehicle in the reserved fenced parking zone.',
-                'Show your Aanandham digital permit pass to Marshal Suresh (+91 90748 58014).',
-                'Board your allocated 4x4 Mahindra Thar/Jeep for the 35-minute offroad ascent to the ridge.',
-                'Use Gate PIN at the summit barrier gate.'
-            ],
-            emergencyMarshalPhone: '+91 90748 58014',
-            offlineNote: 'Mobile data drops past Suryanelli factory. Please screenshot your pass & PIN before leaving Munnar town.'
-        };
+    let guide = {
+        hubName: 'Suryanelli Town Basecamp Hub',
+        gpsCoordinates: '10.0889° N, 77.0595° E',
+        parkingArea: 'Designated 4x4 Private Parking Yard (Behind Suryanelli Tea Factory)',
+        steps: [
+            'Arrive at Basecamp Hub by 1:30 PM before 4x4 convoy departs.',
+            'Park your vehicle in the reserved fenced parking zone.',
+            'Show your Aanandham digital permit pass to the camp marshal.',
+            'Board your allocated 4x4 Jeep for the mountain ridge ascent.',
+            'Use your Gate PIN at the summit barrier gate.'
+        ],
+        emergencyMarshalPhone: formattedPhone,
+        offlineNote: 'Mobile data drops past town limits. Please screenshot your pass & PIN before starting your ascent.'
+    };
+
+    if (key.includes('meesapulimala') || key.includes('silent-valley')) {
+        guide.hubName = 'KFDC Silent Valley Base Checkpost, Munnar';
+        guide.parkingArea = 'KFDC Base Station Reserved Camper Parking';
+        guide.offlineNote = 'Strict forest checkpost. Keep Forest ID proof and digital permit pass ready.';
+    } else if (key.includes('vattavada') || key.includes('top-station')) {
+        guide.hubName = 'Vattavada Village Basecamp Point, Munnar';
+        guide.parkingArea = 'Aanandham Vattavada Secure Farm Parking Yard';
+        guide.offlineNote = 'Dense mist expected after 4:00 PM. Follow orange trail markers.';
+    } else if (key.includes('anaerangal') || key.includes('cardamom') || key.includes('anaharan')) {
+        guide.hubName = 'Anaerangal Lake Viewpoint Basecamp Hub';
+        guide.parkingArea = 'Estate Private Shaded Camper Parking';
+        guide.offlineNote = 'Low network zone near the lake. Save pass & offline map beforehand.';
+    } else if (key.includes('vagamon')) {
+        guide.hubName = 'Vagamon Pine Valley Basecamp Hub';
+        guide.parkingArea = 'Aanandham Pine Valley Secured Lot';
+        guide.offlineNote = 'Mountain fog drops visibility in evenings. Drive with fog lamps.';
+    } else if (key.includes('wayanad')) {
+        guide.hubName = 'Meppadi 900 Kandi Foothill Hub, Wayanad';
+        guide.parkingArea = 'Designated 4x4 Offroad Parking Base';
+        guide.offlineNote = 'Rugged glass bridge offroad trail. 4x4 jeeps allocate on arrival.';
+    } else if (key.includes('kolukkumalai') || key.includes('suryanelli')) {
+        guide.hubName = 'Suryanelli Town Basecamp Hub';
+        guide.parkingArea = 'Designated 4x4 Private Parking Yard (Behind Suryanelli Tea Factory)';
+        guide.offlineNote = 'Mobile data drops past Suryanelli factory. Please screenshot your pass & PIN before leaving Munnar town.';
     }
 
-    return {
-        hubName: 'Aanandham Basecamp Reception',
-        gpsCoordinates: '10.0889° N, 77.0595° E',
-        parkingArea: 'Complimentary On-Site Secured Parking',
-        steps: [
-            'Follow the mountain signage to Aanandham Gate 1.',
-            'Enter your 4-digit PIN on the digital keypad.',
-            'Proceed to reception for key handover and welcome tea.'
-        ],
-        emergencyMarshalPhone: '+91 90748 58014',
-        offlineNote: 'Download offline Google Maps for Idukki district before ascent.'
-    };
+    // ── Custom Admin / Booking-level overrides ──
+    if (bookingOverrides.pickupLocation || bookingOverrides.meetingHub) {
+        guide.hubName = bookingOverrides.pickupLocation || bookingOverrides.meetingHub;
+    }
+    if (bookingOverrides.parkingArea) {
+        guide.parkingArea = bookingOverrides.parkingArea;
+    }
+    if (bookingOverrides.emergencyPhone || bookingOverrides.marshalPhone) {
+        guide.emergencyMarshalPhone = bookingOverrides.emergencyPhone || bookingOverrides.marshalPhone;
+    }
+    if (bookingOverrides.offlineNote) {
+        guide.offlineNote = bookingOverrides.offlineNote;
+    }
+
+    return guide;
 }

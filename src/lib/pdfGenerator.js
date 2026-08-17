@@ -2,6 +2,7 @@ import PDFDocument from 'pdfkit';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { getCheckInLandmarkGuide } from './accessControl.js';
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const LOGO_PATH = path.resolve(__dir, '../../public/logo.png');
@@ -268,6 +269,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         // ═════════════════════════════════════════════════════════════
         const CONVOY_Y = mY + 52;
         const CONVOY_H = 80;
+        const landmarkGuide = getCheckInLandmarkGuide(booking.campsiteId || booking.package, booking);
 
         doc.roundedRect(C_X + 16, CONVOY_Y, C_W - 32, CONVOY_H, 12).fill(CARD_INNER);
         doc.roundedRect(C_X + 16, CONVOY_Y, C_W - 32, CONVOY_H, 12).lineWidth(0.8).strokeColor(BORDER_DIM).stroke();
@@ -281,26 +283,24 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         // Col 1: Convoy Assembly
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
            .text('🚙 4x4 CONVOY PICKUP', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
-        doc.font('Helvetica').fontSize(8).fill(TEXT_WHITE)
-           .text('Suryanelli Hub @ 1:30 PM', c1X, CONVOY_Y + 26);
-        doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('Secure camper parking & jeep transit to mountain ridge.', c1X, CONVOY_Y + 40, { width: col3W });
+        doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_WHITE)
+           .text(landmarkGuide.hubName, c1X, CONVOY_Y + 24, { width: col3W, height: 20, ellipsis: true });
+        doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
+           .text(landmarkGuide.parkingArea, c1X, CONVOY_Y + 44, { width: col3W, height: 26, ellipsis: true });
 
         // Col 2: Wildlife & Forest Code
         doc.font('Helvetica-Bold').fontSize(8).fill(AMBER)
            .text('🌿 SANCTUARY PROTOCOL', c2X, CONVOY_Y + 12, { characterSpacing: 0.5 });
-        doc.font('Helvetica').fontSize(8).fill(TEXT_WHITE)
-           .text('Zero Litter · Silent Ridge', c2X, CONVOY_Y + 26);
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('Strict eco-reserve guidelines. Carry warm layers (8-14°C night).', c2X, CONVOY_Y + 40, { width: col3W });
+           .text(landmarkGuide.offlineNote || 'Zero Litter · Strict eco-reserve guidelines. Carry warm layers (8-14°C night).', c2X, CONVOY_Y + 24, { width: col3W });
 
         // Col 3: 24/7 Dispatch
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
            .text('📞 MOUNTAIN DISPATCH', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
-        doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_WHITE)
-           .text('+91 90748 58014', c3X, CONVOY_Y + 26);
-        doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('WhatsApp active 24/7 for convoy coordination & live route.', c3X, CONVOY_Y + 40, { width: col3W });
+        doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
+           .text(landmarkGuide.emergencyMarshalPhone || '+91 90748 58014', c3X, CONVOY_Y + 24);
+        doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
+           .text('WhatsApp active 24/7 for convoy coordination & live route.', c3X, CONVOY_Y + 38, { width: col3W });
 
         // ═════════════════════════════════════════════════════════════
         // 7. LUXURY FOOTER & AUTHENTICATION STAMP
