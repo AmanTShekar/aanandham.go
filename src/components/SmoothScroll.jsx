@@ -35,37 +35,32 @@ export default function SmoothScroll() {
 
         const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-        const attachObservers = () => {
-            const targets = document.querySelectorAll(
-                '.reveal-on-scroll, .reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-zoom'
-            );
-            targets.forEach(el => {
-                const rect = el.getBoundingClientRect();
-                // If element is already on screen on initial load, reveal immediately
-                if (rect.top < window.innerHeight - 30) {
-                    el.classList.add('is-revealed');
-                } else {
-                    observer.observe(el);
-                }
-            });
-        };
-
-        // Attach right after render and layout paint
-        const timer1 = setTimeout(attachObservers, 60);
-        const timer2 = setTimeout(attachObservers, 300);
+        const targets = document.querySelectorAll(
+            '.reveal-on-scroll, .reveal-fade-up, .reveal-fade-left, .reveal-fade-right, .reveal-zoom'
+        );
+        targets.forEach(el => observer.observe(el));
 
         return () => {
-            clearTimeout(timer1);
-            clearTimeout(timer2);
             observer.disconnect();
         };
     }, [pathname]);
 
     // ── 2. BUTTERY SMOOTH 60/120 FPS DESKTOP LENIS CONTROLLER ──
     useEffect(() => {
-        // On touch-capable devices, use 100% native GPU compositor scrolling for 0 lag and 0 stuck gestures
-        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window) || window.innerWidth < 1024;
-        if (isTouchDevice) {
+        // Skip SmoothScroll on admin control center and pass views (require 100% native scrolling)
+        const isExcludedRoute = pathname?.startsWith('/admin') || pathname?.startsWith('/pass');
+        if (isExcludedRoute) {
+            if (window.__lenis) {
+                window.__lenis.destroy();
+                window.__lenis = null;
+            }
+            return;
+        }
+
+        // Strictly initialize Lenis on desktop devices with precise pointer (pointer: fine) and no touch capability
+        const isFinePointer = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: fine)').matches;
+        const isTouchDevice = typeof window !== 'undefined' && (('ontouchstart' in window) || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || window.innerWidth < 1024);
+        if (!isFinePointer || isTouchDevice) {
             return;
         }
 

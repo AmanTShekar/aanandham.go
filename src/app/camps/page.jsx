@@ -23,7 +23,7 @@ export const metadata = {
     title: 'Verified Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
     description:
       'Explore verified high-altitude campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability.',
-    url: 'https://aanandhamgo.in/camps',
+    url: 'https://aanandham.in/camps',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -56,7 +56,7 @@ export default function CampsPage() {
       item: {
         '@type': 'Campground',
         name: camp.title,
-        url: `https://aanandhamgo.in/camps/${camp.id}`,
+        url: `https://aanandham.in/camps/${camp.id}`,
         image: camp.image,
         description: camp.description,
         address: {

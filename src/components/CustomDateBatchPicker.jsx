@@ -298,23 +298,25 @@ export default function CustomDateBatchPicker({
                                 </button>
                             </div>
 
-                            {/* View Switcher Tabs (Batches vs Calendar) */}
+                            {/* View Switcher Tabs (Batches vs Calendar) — Responsive & Centered */}
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between',
-                                padding: '12px 24px',
+                                justifyContent: 'center',
+                                flexWrap: 'wrap',
+                                gap: '10px',
+                                padding: '10px 16px',
                                 background: '#08100B',
                                 borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
                             }}>
-                                <div style={{ display: 'flex', gap: '8px' }}>
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                                     <button
                                         type="button"
                                         onClick={() => setActiveTab('batches')}
                                         style={{
-                                            padding: '7px 16px',
+                                            padding: '6px 14px',
                                             borderRadius: '999px',
-                                            fontSize: '12px',
+                                            fontSize: '11.5px',
                                             fontWeight: '800',
                                             border: 'none',
                                             cursor: 'pointer',
@@ -326,17 +328,17 @@ export default function CustomDateBatchPicker({
                                             transition: 'all 0.2s ease'
                                         }}
                                     >
-                                        <Sparkles size={13} />
-                                        <span>Upcoming Weekend Batches</span>
+                                        <Sparkles size={12} />
+                                        <span>Weekend Batches</span>
                                     </button>
 
                                     <button
                                         type="button"
                                         onClick={() => setActiveTab('calendar')}
                                         style={{
-                                            padding: '7px 16px',
+                                            padding: '6px 14px',
                                             borderRadius: '999px',
-                                            fontSize: '12px',
+                                            fontSize: '11.5px',
                                             fontWeight: '800',
                                             border: 'none',
                                             cursor: 'pointer',
@@ -348,8 +350,8 @@ export default function CustomDateBatchPicker({
                                             transition: 'all 0.2s ease'
                                         }}
                                     >
-                                        <CalendarDays size={13} />
-                                        <span>Full Month Calendar</span>
+                                        <CalendarDays size={12} />
+                                        <span>Full Calendar</span>
                                     </button>
                                 </div>
 
@@ -401,7 +403,15 @@ export default function CustomDateBatchPicker({
                                 gap: '16px'
                             }}>
                                 {activeTab === 'batches' ? (
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '14px' }}>
+                                    <div style={{
+                                        display: 'grid',
+                                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
+                                        gap: '12px',
+                                        width: '100%',
+                                        maxWidth: '720px',
+                                        margin: '0 auto',
+                                        justifyContent: 'center'
+                                    }}>
                                         {upcomingBatches.map((batch, idx) => {
                                             const isSelected = selectedDate === batch.title;
                                             const meta = BATCH_DETAILS_META[idx % 6];

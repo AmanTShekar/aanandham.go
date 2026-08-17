@@ -25,14 +25,22 @@ const securityHeaders = [
     value: 'camera=(), microphone=(), geolocation=()',
   },
   {
+    key: 'Cross-Origin-Opener-Policy',
+    value: 'same-origin',
+  },
+  {
+    key: 'Cross-Origin-Resource-Policy',
+    value: 'same-origin',
+  },
+  {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self';",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;",
-      "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com;",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://api.qrserver.com https://aanandham.in https://*.aanandham.in;",
-      "font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com;",
-      "connect-src 'self' https://images.unsplash.com;",
+      "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;",
+      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://aanandham.in https://*.aanandham.in;",
+      "font-src 'self' data: https://cdnjs.cloudflare.com;",
+      "connect-src 'self' https://*.supabase.co;",
       "frame-ancestors 'none';",
       "form-action 'self' https://wa.me https://api.whatsapp.com;",
       "base-uri 'self';",
@@ -43,14 +51,6 @@ const securityHeaders = [
 
 const nextConfig = {
   reactStrictMode: true,
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-    ],
-  },
   async headers() {
     return [
       {

@@ -7,22 +7,34 @@ import { prisma, isPrismaConfigured } from '@/lib/prisma';
 // In-memory override cache for admin-saved camps fallback
 let campsOverride = null;
 
-// ── GET: Public read of the camps catalog (Prisma DB if connected, fallback to cache/static) ──
-export async function GET() {
+// ── GET: Public read of the camps catalog (Edge-cached, rate-limited, DB fallback) ──
+export async function GET(request) {
+    const ip = getClientIp(request);
+    const rateLimit = await checkRateLimit(`ratelimit:camps_read:${ip}`, 60, 60);
+    if (!rateLimit.allowed) {
+        return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
+    }
+
+    const cacheHeaders = {
+        'Cache-Control': 'public, max-age=300, s-maxage=600, stale-while-revalidate=3600',
+        'CDN-Cache-Control': 'public, s-maxage=600',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=600'
+    };
+
     if (isPrismaConfigured && prisma) {
         try {
             const record = await prisma.campOverride.findUnique({
                 where: { id: 'camps_catalog_v1' }
             });
             if (record && Array.isArray(record.data) && record.data.length > 0) {
-                return NextResponse.json(record.data);
+                return NextResponse.json(record.data, { headers: cacheHeaders });
             }
         } catch (err) {
             console.error('Error reading camps from Prisma:', err);
         }
     }
     const camps = campsOverride || getAllCamps();
-    return NextResponse.json(camps);
+    return NextResponse.json(camps, { headers: cacheHeaders });
 }
 
 // ── POST: Bulk-sync camps catalog (admin only, validated, persists to DB) ──

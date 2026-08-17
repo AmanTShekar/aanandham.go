@@ -14,7 +14,7 @@ export default function NotFound() {
             title: "Handcrafted Packages",
             subtitle: "Summit treks & ridge glamping",
             icon: "fa-solid fa-mountain-sun",
-            href: "/#packages",
+            href: "/camps",
             badge: "Top Expeditions",
             accent: "#E5A93B"
         },
@@ -249,7 +249,7 @@ export default function NotFound() {
                         </Link>
 
                         <Link 
-                            href="/#packages" 
+                            href="/camps" 
                             className="action-arrow-btn"
                             style={{
                                 display: 'inline-flex',

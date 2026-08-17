@@ -19,6 +19,14 @@ model Booking {
   roomType        String
   addons          Json?
   total           Float
+  paidAmount      Float?
+  balanceDue      Float?
+  paymentMode     String?
+  utrNumber       String?
+  dietaryChoice   String?
+  vegCount        Int?
+  nonVegCount     Int?
+  mealSummary     String?
   status          String    @default("Pending")
   source          String    @default("Website Booking Engine")
   notes           String?

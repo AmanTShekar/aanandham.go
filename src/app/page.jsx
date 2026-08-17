@@ -740,34 +740,50 @@ export default function HomePage() {
         programMouseY.set(e.clientY - rect.top);
     };
 
-    // Mobile Horizontal Slider Scroll Tracker for Packages Preview
+    // Mobile Horizontal Slider Scroll Tracker for Packages Preview (RAF Throttled)
     const packagesSliderRef = useRef(null);
     const [activePackageSlideIdx, setActivePackageSlideIdx] = useState(0);
+    const activePackageSlideIdxRef = useRef(0);
+    const packageSliderRafRef = useRef(null);
+
     const handlePackageSliderScroll = () => {
-        if (!packagesSliderRef.current) return;
-        const scrollLeft = packagesSliderRef.current.scrollLeft;
-        const cardEl = packagesSliderRef.current.children[0];
-        const cardWidth = cardEl ? cardEl.offsetWidth : 300;
-        const cardStep = cardWidth + 18;
-        const newIdx = Math.round(scrollLeft / cardStep);
-        if (newIdx >= 0 && newIdx < filteredPackages.length && newIdx !== activePackageSlideIdx) {
-            setActivePackageSlideIdx(newIdx);
-        }
+        if (packageSliderRafRef.current) return;
+        packageSliderRafRef.current = requestAnimationFrame(() => {
+            packageSliderRafRef.current = null;
+            if (!packagesSliderRef.current) return;
+            const scrollLeft = packagesSliderRef.current.scrollLeft;
+            const cardEl = packagesSliderRef.current.children[0];
+            const cardWidth = cardEl ? cardEl.offsetWidth : 300;
+            const cardStep = cardWidth + 18;
+            const newIdx = Math.round(scrollLeft / cardStep);
+            if (newIdx >= 0 && newIdx < filteredPackages.length && newIdx !== activePackageSlideIdxRef.current) {
+                activePackageSlideIdxRef.current = newIdx;
+                setActivePackageSlideIdx(newIdx);
+            }
+        });
     };
 
-    // Mobile Horizontal Slider Scroll Tracker for Kerala Wilderness Grid
+    // Mobile Horizontal Slider Scroll Tracker for Kerala Wilderness Grid (RAF Throttled)
     const wildernessSliderRef = useRef(null);
     const [activeWildernessIdx, setActiveWildernessIdx] = useState(0);
+    const activeWildernessIdxRef = useRef(0);
+    const wildernessSliderRafRef = useRef(null);
+
     const handleWildernessSliderScroll = () => {
-        if (!wildernessSliderRef.current) return;
-        const scrollLeft = wildernessSliderRef.current.scrollLeft;
-        const cardEl = wildernessSliderRef.current.children[0];
-        const cardWidth = cardEl ? cardEl.offsetWidth : 300;
-        const cardStep = cardWidth + 18;
-        const newIdx = Math.round(scrollLeft / cardStep);
-        if (newIdx >= 0 && newIdx < KERALA_WILDERNESS_GALLERY.length && newIdx !== activeWildernessIdx) {
-            setActiveWildernessIdx(newIdx);
-        }
+        if (wildernessSliderRafRef.current) return;
+        wildernessSliderRafRef.current = requestAnimationFrame(() => {
+            wildernessSliderRafRef.current = null;
+            if (!wildernessSliderRef.current) return;
+            const scrollLeft = wildernessSliderRef.current.scrollLeft;
+            const cardEl = wildernessSliderRef.current.children[0];
+            const cardWidth = cardEl ? cardEl.offsetWidth : 300;
+            const cardStep = cardWidth + 18;
+            const newIdx = Math.round(scrollLeft / cardStep);
+            if (newIdx >= 0 && newIdx < KERALA_WILDERNESS_GALLERY.length && newIdx !== activeWildernessIdxRef.current) {
+                activeWildernessIdxRef.current = newIdx;
+                setActiveWildernessIdx(newIdx);
+            }
+        });
     };
 
     // Read logged-in user profile from localStorage
@@ -801,14 +817,15 @@ export default function HomePage() {
         setIsBookingModalOpen(true);
     };
 
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
     const schemaData = {
         '@context': 'https://schema.org',
         '@graph': [
             {
                 '@type': 'Campground',
-                '@id': 'https://aanandham.in/#campground',
+                '@id': `${siteUrl}/#campground`,
                 'name': 'Aanandham.go Wilderness Camps',
-                'url': 'https://aanandham.in',
+                'url': siteUrl,
                 'aggregateRating': {
                     '@type': 'AggregateRating',
                     'ratingValue': '4.98',
@@ -839,7 +856,7 @@ export default function HomePage() {
                             'priceCurrency': 'INR',
                             'priceValidUntil': '2027-12-31',
                             'availability': 'https://schema.org/InStock',
-                            'url': `https://aanandham.in/camps/${pkg.id}`,
+                            'url': `${siteUrl}/camps/${pkg.id}`,
                             'hasMerchantReturnPolicy': {
                                 '@type': 'MerchantReturnPolicy',
                                 'applicableCountry': 'IN',
@@ -936,7 +953,7 @@ export default function HomePage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     textAlign: 'center',
-                    padding: 'clamp(90px, 12vh, 130px) 24px clamp(40px, 6vh, 70px)',
+                    padding: 'clamp(90px, 12dvh, 130px) 24px clamp(40px, 6dvh, 70px)',
                     backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2000&q=85")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -969,12 +986,12 @@ export default function HomePage() {
                             lineHeight: 1.04,
                             letterSpacing: '-0.04em',
                             color: '#FFFFFF',
-                            marginBottom: 'clamp(18px, 3vh, 32px)'
+                            marginBottom: 'clamp(18px, 3dvh, 32px)'
                         }}
                     >
                         <span className="text-hover-marker text-hover-marker-dark" style={{ cursor: 'pointer', display: 'inline-block' }}>
                             <span className="marker-text">
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                Aanandham<span className="brand-accent-go">.go</span>
                             </span>
                         </span>
                         <br />Wilderness Camp
@@ -991,12 +1008,12 @@ export default function HomePage() {
                             alignItems: 'center',
                             flexWrap: 'wrap',
                             gap: '14px',
-                            marginBottom: 'clamp(24px, 5vh, 50px)'
+                            marginBottom: 'clamp(24px, 5dvh, 50px)'
                         }}
                     >
                         {/* Primary Explore Stays Button */}
-                        <a
-                            href="#packages"
+                        <Link
+                            href="/camps"
                             className="btn-lime"
                             style={{
                                 padding: '14px 34px',
@@ -1006,7 +1023,7 @@ export default function HomePage() {
                             }}
                         >
                             ⛺ Explore Stays & Camps →
-                        </a>
+                        </Link>
 
                         {/* Translucent Learn More Button */}
                         <a
@@ -1114,7 +1131,7 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, margin: "0px 0px -40px 0px" }}
                 variants={staggerContainer}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: 'clamp(64px, 7vw, 92px) clamp(20px, 4vw, 48px) clamp(50px, 5vw, 68px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div className="overview-3col-grid">
@@ -1181,26 +1198,31 @@ export default function HomePage() {
                             className="card-img-zoom reveal-zoom"
                             style={{ 
                                 position: 'relative', 
-                                height: 'clamp(360px, 48vh, 500px)', 
+                                height: 'clamp(360px, 48dvh, 500px)', 
                                 width: '100%',
                                 borderRadius: '32px', 
                                 overflow: 'hidden', 
                                 boxShadow: '0 20px 45px rgba(0, 0, 0, 0.08)' 
                             }}
                         >
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={highlightIdx}
-                                    src={OVERVIEW_HIGHLIGHTS[highlightIdx].img}
-                                    alt={OVERVIEW_HIGHLIGHTS[highlightIdx].title}
-                                    initial={{ opacity: 0, scale: 1.06 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                            </AnimatePresence>
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.9) 0%, transparent 60%)' }} />
+                            <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+                                <AnimatePresence initial={false}>
+                                    <motion.img
+                                        key={highlightIdx}
+                                        src={OVERVIEW_HIGHLIGHTS[highlightIdx].img}
+                                        alt={OVERVIEW_HIGHLIGHTS[highlightIdx].title}
+                                        width="600"
+                                        height="500"
+                                        decoding="async"
+                                        initial={{ opacity: 0, scale: 1.04, filter: 'blur(4px)' }}
+                                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                                        exit={{ opacity: 0, scale: 0.98, filter: 'blur(2px)' }}
+                                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </AnimatePresence>
+                            </div>
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.9) 0%, transparent 60%)', pointerEvents: 'none' }} />
                             
                             <div style={{ position: 'absolute', top: '20px', left: '20px', right: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <span style={{ background: 'rgba(0,0,0,0.5)', color: '#FFFFFF', fontSize: '12px', fontWeight: '600', padding: '6px 14px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
@@ -1247,36 +1269,34 @@ export default function HomePage() {
                             {/* Metadata list */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '10px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(18,22,19,0.08)', paddingBottom: '12px', fontSize: '14px' }}>
-                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>Where</span>
-                                    <span style={{ color: '#121613', fontWeight: '800' }}>Munnar, Suryanelli</span>
+                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>Location</span>
+                                    <span style={{ color: '#121613', fontWeight: '800' }}>Suryanelli, Munnar</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(18,22,19,0.08)', paddingBottom: '12px', fontSize: '14px' }}>
-                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>When</span>
-                                    <span style={{ color: '#121613', fontWeight: '800' }}>Open Year-Round</span>
+                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>Season</span>
+                                    <span style={{ color: '#121613', fontWeight: '800' }}>Year-Round</span>
                                 </div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
-                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>For whom</span>
-                                    <span style={{ color: '#121613', fontWeight: '800' }}>All Skill Levels</span>
+                                    <span style={{ color: '#8E9B92', fontWeight: '600' }}>For Whom</span>
+                                    <span style={{ color: '#121613', fontWeight: '800' }}>Couples, Families & Squads</span>
                                 </div>
                             </div>
 
                             {/* Quote Card */}
                             <div className="hover-lift" style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '28px', boxShadow: '0 8px 30px rgba(0,0,0,0.03)' }}>
-                                <img
-                                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
-                                    alt="Founder"
-                                    style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'cover', marginBottom: '18px' }}
-                                />
-                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.6, marginBottom: '20px', fontWeight: '500' }}>
+                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '1.2px', marginBottom: '12px' }}>
+                                    Founder's Ethos
+                                </div>
+                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.65, marginBottom: '20px', fontWeight: '500' }}>
                                     It started as a trek.<br />
                                     It became a movement. Now we're building a community of adventurers who choose authentic experiences over everything else.
                                 </p>
-                                <a href="#stories" className="action-arrow-btn" style={{ width: '100%', justifyContent: 'space-between' }}>
+                                <Link href="/about" className="action-arrow-btn" style={{ width: '100%', justifyContent: 'space-between', textDecoration: 'none' }}>
                                     <span>Read Our Story</span>
                                     <div className="btn-arrow-circle">
                                         →
                                     </div>
-                                </a>
+                                </Link>
                             </div>
                         </motion.div>
 
@@ -1293,7 +1313,7 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: 'clamp(50px, 5vw, 68px) clamp(20px, 4vw, 48px) clamp(70px, 7vw, 96px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div className="why-aanandham-grid">
@@ -1306,21 +1326,26 @@ export default function HomePage() {
                             variants={fadeInLeft}
                             className="why-showcase-col reveal-fade-left"
                         >
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={activeWhyIdx}
-                                    src={WHY_AANANDHAM_PILLARS[activeWhyIdx].image}
-                                    alt={WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
-                                    initial={{ opacity: 0, scale: 1.05 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
-                            </AnimatePresence>
+                            <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+                                <AnimatePresence initial={false}>
+                                    <motion.img
+                                        key={activeWhyIdx}
+                                        src={WHY_AANANDHAM_PILLARS[activeWhyIdx].image}
+                                        alt={WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
+                                        width="800"
+                                        height="590"
+                                        decoding="async"
+                                        initial={{ opacity: 0, scale: 1.04, filter: 'blur(4px)' }}
+                                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                                        exit={{ opacity: 0, scale: 0.98, filter: 'blur(2px)' }}
+                                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                </AnimatePresence>
+                            </div>
 
                             {/* Dark Gradient Overlay */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.35) 50%, rgba(14, 24, 17, 0.65) 100%)' }} />
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.35) 50%, rgba(14, 24, 17, 0.65) 100%)', pointerEvents: 'none' }} />
 
                             {/* Top Left Pillar Badge */}
                             <div style={{
@@ -1427,7 +1452,7 @@ export default function HomePage() {
                             className="why-content-col reveal-fade-right"
                         >
                             <div className="star-badge">
-                                <span className="star-icon">★</span> WHY AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
+                                <span className="star-icon">★</span> WHY AANANDHAM.GO
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -1442,7 +1467,7 @@ export default function HomePage() {
                             </h2>
 
                             <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '22px' }}>
-                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 15,000+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham<span style={{ color: '#E5A93B', fontWeight: '800' }}>.go</span></span></span>.
+                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 15,000+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham.go</span></span>.
                             </p>
 
                             {/* 4 Interactive Expedition Tag Note Cards (2x2 Grid on Desktop / Smooth Swipe Track on Mobile) */}
@@ -2004,9 +2029,13 @@ export default function HomePage() {
                                     exit={{ opacity: 0, scale: 0.88, y: 10 }}
                                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                                     style={{
-                                        left: smoothProgramX,
-                                        top: smoothProgramY,
-                                        transform: 'translate(28px, -50%)'
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        x: smoothProgramX,
+                                        y: smoothProgramY,
+                                        translateX: 28,
+                                        translateY: '-50%'
                                     }}
                                     className="program-floating-preview"
                                 >
@@ -2116,7 +2145,7 @@ export default function HomePage() {
                                                     <div 
                                                         className="program-day-inline-img"
                                                         style={{ 
-                                                            height: 'clamp(190px, 28vh, 250px)', 
+                                                            height: 'clamp(190px, 28dvh, 250px)', 
                                                             borderRadius: '18px', 
                                                             overflow: 'hidden', 
                                                             marginTop: '16px',
@@ -3431,8 +3460,7 @@ export default function HomePage() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 9999,
-                            background: 'rgba(0, 0, 0, 0.92)',
-                            backdropFilter: 'blur(16px)',
+                            background: 'rgba(0, 0, 0, 0.94)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -3503,8 +3531,7 @@ export default function HomePage() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 9999,
-                            background: 'rgba(0, 0, 0, 0.94)',
-                            backdropFilter: 'blur(16px)',
+                            background: 'rgba(0, 0, 0, 0.95)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',

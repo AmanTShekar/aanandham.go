@@ -20,10 +20,11 @@ export async function generateMetadata({ params }) {
         };
     }
 
-    const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `https://aanandhamgo.com${camp.image}`) : 'https://aanandhamgo.com/images/hero-1.webp';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+    const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : `${siteUrl}/images/hero-1.webp`;
 
     return {
-        title: `${camp.title} (${camp.altitude || 'Western Ghats'}) | Aanandham.go`,
+        title: `${camp.title} (${camp.altitude || 'Western Ghats'}) | Aanandham Wilderness`,
         description: camp.description || `Experience ${camp.title} at ${camp.altitude} in ${camp.location}. Instant reservation with guided off-road transit, alpine tents, and Kerala dining.`,
         alternates: {
             canonical: `/camps/${camp.id}`
@@ -31,8 +32,8 @@ export async function generateMetadata({ params }) {
         openGraph: {
             title: `${camp.title} — High-Altitude Wilderness Basecamp`,
             description: camp.description || `Book your stay at ${camp.title} in ${camp.location}. Curated mountain glamping and campfire expeditions.`,
-            url: `https://aanandhamgo.com/camps/${camp.id}`,
-            siteName: 'Aanandham.go',
+            url: `${siteUrl}/camps/${camp.id}`,
+            siteName: 'Aanandham Wilderness',
             images: [
                 {
                     url: ogImage,

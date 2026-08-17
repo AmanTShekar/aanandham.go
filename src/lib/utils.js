@@ -1,5 +1,12 @@
 // ── CORE UTILITIES ──
 
+const inrFormatter = new Intl.NumberFormat('en-IN');
+const dateFormatter = new Intl.DateTimeFormat('en-IN', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric'
+});
+
 /**
  * Format a number or numeric string as Indian Rupee currency (₹)
  * @param {number|string} amount
@@ -7,7 +14,7 @@
  */
 export const inr = (amount) => {
   const num = typeof amount === 'number' ? amount : Number(amount) || 0;
-  return '₹' + num.toLocaleString('en-IN');
+  return '₹' + inrFormatter.format(num);
 };
 
 /**
@@ -19,11 +26,7 @@ export const formatDate = (date) => {
   if (!date) return '';
   const d = new Date(date);
   if (isNaN(d.getTime())) return String(date);
-  return d.toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  });
+  return dateFormatter.format(d);
 };
 
 /**
@@ -43,12 +46,24 @@ export const safeJsonParse = (str, fallback = null) => {
 };
 
 /**
- * Generate collision-free, human-readable booking ID (N6)
+ * Generate collision-free, human-readable booking ID with cryptographic entropy
  */
 export const generateBookingId = () => {
   const timePart = Date.now().toString(36).toUpperCase();
-  const randPart = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `BK-${timePart}-${randPart}`;
+  let randPart = '';
+  try {
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+      const arr = new Uint8Array(3);
+      window.crypto.getRandomValues(arr);
+      randPart = Array.from(arr, b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+    } else {
+      const crypto = require('crypto');
+      randPart = crypto.randomBytes(3).toString('hex').toUpperCase();
+    }
+  } catch {
+    randPart = Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+  return `BK-${timePart}-${randPart || 'A1B2'}`;
 };
 
 /**

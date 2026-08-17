@@ -1,0 +1,113 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.2185, 10.0934]
+      },
+      "properties": {
+        "id": "pkg-kolukkumalai",
+        "title": "Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp",
+        "region": "Munnar",
+        "altitude": "7,900 FT",
+        "startingPrice": 2499,
+        "rating": 4.98,
+        "reviewsCount": 342,
+        "badge": "Bestseller ⭐",
+        "slug": "/camps/pkg-kolukkumalai"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1384, 10.0231]
+      },
+      "properties": {
+        "id": "pkg-suryanelli",
+        "title": "Suryanelli Cloud Bed Glamping & Anayirangal Lake View",
+        "region": "Munnar",
+        "altitude": "6,200 FT",
+        "startingPrice": 2199,
+        "rating": 4.95,
+        "reviewsCount": 289,
+        "badge": "Lake View 🌅",
+        "slug": "/camps/pkg-suryanelli"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.2023, 10.0978]
+      },
+      "properties": {
+        "id": "pkg-meesapulimala",
+        "title": "Meesapulimala Basecamp & Rhodotrek High Ridge Camp",
+        "region": "Munnar",
+        "altitude": "7,200 FT",
+        "startingPrice": 2899,
+        "rating": 4.92,
+        "reviewsCount": 215,
+        "badge": "Peak Trek 🏔️",
+        "slug": "/camps/pkg-meesapulimala"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1456, 10.0389]
+      },
+      "properties": {
+        "id": "pkg-phantom",
+        "title": "Phantom Head Cliff-Edge Glamping & Starlit Amphitheatre",
+        "region": "Munnar",
+        "altitude": "6,500 FT",
+        "startingPrice": 2399,
+        "rating": 4.89,
+        "reviewsCount": 178,
+        "badge": "Cliff Glamp ⛺",
+        "slug": "/camps/pkg-phantom"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [76.9056, 9.6852]
+      },
+      "properties": {
+        "id": "pkg-vagamon",
+        "title": "Vagamon Pine Valley Safari & Offroad Buggy Camp",
+        "region": "Vagamon",
+        "altitude": "3,800 FT",
+        "startingPrice": 1999,
+        "rating": 4.86,
+        "reviewsCount": 164,
+        "badge": "Pine Forest 🌲",
+        "slug": "/camps/pkg-vagamon"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [76.0844, 11.5367]
+      },
+      "properties": {
+        "id": "pkg-wayanad",
+        "title": "Wayanad Chembra Mist Pods & Secret Stream Glamp",
+        "region": "Wayanad",
+        "altitude": "4,200 FT",
+        "startingPrice": 2299,
+        "rating": 4.91,
+        "reviewsCount": 196,
+        "badge": "Cloud Pods ☁️",
+        "slug": "/camps/pkg-wayanad"
+      }
+    }
+  ]
+}

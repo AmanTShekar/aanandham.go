@@ -3,7 +3,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { safeJsonParse } from '../lib/utils';
 
-const STORAGE_KEY = 'aanandham_user';
+const STORAGE_KEY = 'aanandham_camper_profile';
+
+function sanitizeCamperProfile(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  return {
+    name: String(raw.name || 'Camper').slice(0, 80),
+    email: String(raw.email || '').slice(0, 100),
+    phone: String(raw.phone || '').slice(0, 20),
+    level: String(raw.level || 'beginner').slice(0, 30),
+    role: 'camper', // Strictly immutable client-side role; server never trusts client storage for privileges
+    loggedIn: Boolean(raw.loggedIn)
+  };
+}
 
 export function useAuth() {
   const [user, setUser] = useState(null);
@@ -15,7 +27,7 @@ export function useAuth() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
       const parsed = safeJsonParse(stored, null);
-      setUser(parsed);
+      setUser(sanitizeCamperProfile(parsed));
     } catch (e) {
       setUser(null);
     } finally {

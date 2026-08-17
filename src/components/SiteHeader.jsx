@@ -86,43 +86,21 @@ export default function SiteHeader({
         }
     }, [isAccountMenuOpen]);
 
-    // High-performance RAF-scheduled scroll listener with directional auto-hide
+    // High-performance RAF scroll listener to toggle transparent/solid states
     useEffect(() => {
         let rafId = null;
-        let isVisibleLocal = true;
 
         const onScroll = () => {
             if (rafId) return;
 
             rafId = requestAnimationFrame(() => {
                 const currentScrollY = Math.max(0, window.scrollY);
-                const isPast = currentScrollY > 40;
+                const isPast = currentScrollY > 30;
 
                 if (isPast !== scrolledRef.current) {
                     scrolledRef.current = isPast;
                     setScrolled(isPast);
                 }
-
-                if (isMobileMenuOpen || currentScrollY <= 70) {
-                    if (!isVisibleLocal) {
-                        isVisibleLocal = true;
-                        setIsHeaderVisible(true);
-                    }
-                } else if (currentScrollY > lastScrollY.current + 12) {
-                    // Scrolling down past threshold -> hide
-                    if (isVisibleLocal) {
-                        isVisibleLocal = false;
-                        setIsHeaderVisible(false);
-                    }
-                } else if (currentScrollY < lastScrollY.current - 12) {
-                    // Scrolling up past threshold -> show
-                    if (!isVisibleLocal) {
-                        isVisibleLocal = true;
-                        setIsHeaderVisible(true);
-                    }
-                }
-
-                lastScrollY.current = currentScrollY;
                 rafId = null;
             });
         };
@@ -132,7 +110,7 @@ export default function SiteHeader({
             window.removeEventListener('scroll', onScroll);
             if (rafId) cancelAnimationFrame(rafId);
         };
-    }, [transparentOnTop, isMobileMenuOpen]);
+    }, []);
 
     // Scroll Lock when mobile drawer is open
     useEffect(() => {
@@ -151,15 +129,12 @@ export default function SiteHeader({
 
     return (
         <>
-            {/* ── TOP NAVBAR ── */}
+            {/* ── TOP NAVBAR: PERMANENTLY FIXED & TRANSPARENT ON TOP ── */}
             <motion.header
                 className="site-header"
                 initial={{ y: -20, opacity: 0 }}
-                animate={{ 
-                    y: isHeaderVisible || isMobileMenuOpen ? 0 : -100, 
-                    opacity: isHeaderVisible || isMobileMenuOpen ? 1 : 0 
-                }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                     position: 'fixed',
                     top: 0,
@@ -167,12 +142,10 @@ export default function SiteHeader({
                     right: 0,
                     zIndex: 100000,
                     padding: '14px clamp(20px, 4vw, 48px)',
-                    backgroundColor: 'rgba(11, 21, 14, 0.94)',
-                    backdropFilter: 'blur(20px)',
-                    WebkitBackdropFilter: 'blur(20px)',
-                    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
-                    transition: 'background-color 0.3s ease, border-color 0.3s ease'
+                    backgroundColor: isHeaderSolid ? 'rgba(11, 21, 14, 0.97)' : 'transparent',
+                    borderBottom: isHeaderSolid ? '1px solid rgba(255, 255, 255, 0.08)' : 'none',
+                    boxShadow: isHeaderSolid ? '0 8px 24px rgba(0, 0, 0, 0.35)' : 'none',
+                    transition: 'background-color 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease'
                 }}
             >
                 <div style={{
@@ -211,7 +184,7 @@ export default function SiteHeader({
                                 color: '#FFFFFF',
                                 fontFamily: 'var(--font-heading)'
                             }}>
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                Aanandham<span className="brand-accent-go">.go</span>
                             </span>
                         </Link>
                     </div>
@@ -314,7 +287,7 @@ export default function SiteHeader({
                         {/* Direct Frictionless Booking CTA Button */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <Link
-                                href="/#packages"
+                                href="/camps"
                                 className="btn-lime"
                                 style={{
                                     padding: '9px 22px',
@@ -483,7 +456,7 @@ export default function SiteHeader({
                             {/* Bottom Direct Frictionless Booking CTA */}
                             <motion.div variants={drawerItemVariants} style={{ marginTop: 'auto', paddingTop: '20px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                 <Link
-                                    href="/#packages"
+                                    href="/camps"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="btn-lime"
                                     style={{

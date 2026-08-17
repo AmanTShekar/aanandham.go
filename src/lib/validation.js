@@ -68,11 +68,21 @@ export function validateBookingPayload(body) {
             region: (body.region || 'Munnar').trim(),
             dates,
             guests,
-            roomType: (body.roomType || 'Standard Glamping').trim(),
-            addons: Array.isArray(body.addons) ? body.addons.filter(a => typeof a === 'string') : [],
+            roomType: (body.roomType || 'Standard Glamping').trim().slice(0, 100),
+            addons: Array.isArray(body.addons) ? body.addons.filter(a => typeof a === 'string').slice(0, 10).map(s => s.slice(0, 80)) : [],
             total,
+            paidAmount: Number(body.paidAmount) || 0,
+            balanceDue: Number(body.balanceDue) || 0,
+            paymentMode: (body.paymentMode || '').trim().slice(0, 80),
+            utrNumber: (body.utrNumber || '').trim().slice(0, 80),
+            dietaryChoice: (body.dietaryChoice || 'Standard Campfire BBQ').trim().slice(0, 80),
+            vegCount: Number(body.vegCount) || 0,
+            nonVegCount: Number(body.nonVegCount) || 0,
+            mealSummary: (body.mealSummary || '').trim().slice(0, 150),
             notes: (body.notes || '').slice(0, 500).trim(),
-            source: (body.source || 'Website Engine').trim()
+            source: (body.source || 'Website Engine').trim().slice(0, 80),
+            waiverAccepted: Boolean(body.waiverAccepted),
+            waiverTimestamp: body.waiverAccepted ? new Date().toISOString() : null
         }
     };
 }

@@ -1,7 +1,6 @@
 import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import SmoothScroll from '@/components/SmoothScroll';
-import AanandhamBot from '@/components/AanandhamBot';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
@@ -17,6 +16,8 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -27,7 +28,7 @@ export const viewport = {
 };
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar, Vagamon & Wayanad, Kerala',
     template: '%s | Aanandham.go Wilderness Camps'
@@ -57,7 +58,7 @@ export const metadata = {
   openGraph: {
     title: 'Aanandham.go — Luxury Camping & Peak Stays in Munnar, Kerala',
     description: 'Experience 4x4 sunrise treks, starlit campfire nights, and verified high-altitude tent glamping at Suryanelli ridge.',
-    url: 'https://aanandham.in',
+    url: siteUrl,
     siteName: 'Aanandham.go',
     images: [
       {
@@ -66,6 +67,12 @@ export const metadata = {
         height: 630,
         alt: 'Aanandham.go Luxury Wilderness Camping in Munnar',
       },
+      {
+        url: `${siteUrl}/logo.png`,
+        width: 512,
+        height: 512,
+        alt: 'Aanandham.go Wilderness Camps Logo',
+      }
     ],
     locale: 'en_IN',
     type: 'website',
@@ -76,7 +83,10 @@ export const metadata = {
     title: 'Aanandham.go — Luxury Camping & Tent Stays in Kerala',
     description: 'Book high-altitude ridge stays, 4x4 sunrise treks to Kolukkumalai, and verified campsites.',
     creator: '@aanandham_go',
-    images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],
+    images: [
+      'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80',
+      `${siteUrl}/logo.png`
+    ],
   },
   robots: {
     index: true,
@@ -104,9 +114,11 @@ export const metadata = {
     ],
   },
   manifest: '/site.webmanifest?v=2',
-  verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || 'JGDIH7jk1TNyNCKm6PRveZc5VIoWPCuj4ShHzpEwn1U',
-  },
+  ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ? {
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
+  } : {}),
 };
 
 const jsonLd = {
@@ -114,11 +126,11 @@ const jsonLd = {
   '@type': 'Campground',
   name: 'Aanandham.go Wilderness Camps',
   image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-  logo: 'https://aanandhamgo.in/logo.png',
-  '@id': 'https://aanandhamgo.in',
-  url: 'https://aanandhamgo.in',
+  logo: `${siteUrl}/logo.png`,
+  '@id': siteUrl,
+  url: siteUrl,
   telephone: '+919400987654',
-  email: 'bookings@aanandhamgo.in',
+  email: 'bookings@aanandham.in',
   priceRange: '₹₹',
   address: {
     '@type': 'PostalAddress',
@@ -145,8 +157,8 @@ const jsonLd = {
         'Saturday',
         'Sunday'
       ],
-      opens: '00:00',
-      closes: '23:59'
+      opens: '06:00',
+      closes: '22:00'
     }
   ],
   sameAs: [
@@ -156,39 +168,18 @@ const jsonLd = {
     'https://www.linkedin.com/company/aanandhamgo'
   ],
   amenityFeature: [
-    {
-      '@type': 'LocationFeatureSpecification',
-      name: 'High-Altitude Ridge Pods',
-      value: true
-    },
-    {
-      '@type': 'LocationFeatureSpecification',
-      name: '4x4 Sunrise Jeep Safari',
-      value: true
-    },
-    {
-      '@type': 'LocationFeatureSpecification',
-      name: 'Campfire & Barbecue',
-      value: true
-    },
-    {
-      '@type': 'LocationFeatureSpecification',
-      name: '24/7 Security & Restrooms',
-      value: true
-    }
+    { '@type': 'LocationFeatureSpecification', name: '4x4 Offroad Mountain Jeep Transfers', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Private Campfire & Live BBQ Platter', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Weatherproof Alpine Dome Tents', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Kolukkumalai Sunrise Guided Ridge Hike', value: true },
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Forest Marshal & First-Aid Support', value: true }
   ]
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-IN" className={`${bricolage.variable} ${plusJakarta.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${plusJakarta.variable}`}>
       <head>
-        <meta name="color-scheme" content="light dark" />
-        <meta name="supported-color-schemes" content="light dark" />
-        <meta name="darkreader-lock" content="true" />
-        <meta name="theme-color" content="#F8F9F5" />
-        <meta name="msapplication-navbutton-color" content="#F8F9F5" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
@@ -212,7 +203,6 @@ export default function RootLayout({ children }) {
       <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#F8F9F5', color: '#121613' }}>
         <SmoothScroll />
         {children}
-        <AanandhamBot />
         <Analytics />
         <SpeedInsights />
       </body>

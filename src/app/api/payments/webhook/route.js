@@ -1,9 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { verifyWebhookSignature, triggerAutoRefund, isRazorpayIp } from '@/lib/razorpay';
 import { getStoredBookings, updateServerBooking } from '@/lib/serverBookingStore';
 import { isWebhookProcessed, markWebhookProcessed } from '@/lib/redis';
 import { getClientIp } from '@/lib/authConfig';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
+import { sendBookingConfirmationEmail } from '@/lib/email';
 
 export async function POST(request) {
     try {
@@ -50,26 +51,65 @@ export async function POST(request) {
             }
         }
 
-        // Mark event as processed across layers
-        await markWebhookProcessed(eventId);
-        if (isPrismaConfigured && prisma) {
-            try {
-                await prisma.webhookEvent.create({
-                    data: {
-                        id: eventId,
-                        event: payload.event || 'unknown',
-                        payload: payload
-                    }
-                });
-            } catch (e) {
-                // Ignore unique constraint race errors
-            }
-        }
-
         const event = payload.event;
         const paymentEntity = payload.payload?.payment?.entity;
-        const orderId = paymentEntity?.order_id || payload.payload?.order?.entity?.id;
+        const refundEntity = payload.payload?.refund?.entity;
+        const orderId = paymentEntity?.order_id || payload.payload?.order?.entity?.id || refundEntity?.notes?.order_id;
+        const paymentId = paymentEntity?.id || refundEntity?.payment_id;
 
+        // ── A. Handle Refund Webhook Events ──
+        if (event === 'payment.refunded' || event === 'refund.processed' || event === 'refund.created') {
+            const bookings = await getStoredBookings();
+            const booking = bookings.find(b => 
+                (paymentId && b.paymentId === paymentId) ||
+                (orderId && b.razorpayOrderId === orderId) ||
+                (paymentEntity?.notes?.receipt && b.id === paymentEntity.notes.receipt) ||
+                (refundEntity?.notes?.receipt && b.id === refundEntity.notes.receipt)
+            );
+
+            if (booking) {
+                await updateServerBooking(booking.id, {
+                    status: 'Refunded',
+                    refundReason: refundEntity?.notes?.reason || 'Refund processed via Razorpay gateway',
+                    refundedAt: new Date().toISOString()
+                });
+                console.log(`↩️ Booking ${booking.id} updated to Refunded via webhook (${event}).`);
+            }
+
+            await markWebhookProcessed(eventId);
+            if (isPrismaConfigured && prisma) {
+                try {
+                    await prisma.webhookEvent.create({
+                        data: { id: eventId, event: event || 'refund', payload }
+                    });
+                } catch (e) {}
+            }
+
+            return NextResponse.json({ success: true, message: 'Refund event processed' });
+        }
+
+        // ── B. Handle Payment Failed Events ──
+        if (event === 'payment.failed') {
+            const bookings = await getStoredBookings();
+            const booking = bookings.find(b => 
+                (paymentId && b.paymentId === paymentId) ||
+                (orderId && b.razorpayOrderId === orderId) ||
+                (paymentEntity?.notes?.receipt && b.id === paymentEntity.notes.receipt)
+            );
+
+            if (booking && booking.status !== 'Confirmed') {
+                await updateServerBooking(booking.id, {
+                    status: 'Failed',
+                    notes: `Payment failed: ${paymentEntity?.error_description || 'Customer payment declined or cancelled'}`
+                });
+                console.log(`❌ Booking ${booking.id} updated to Failed via webhook.`);
+            }
+
+            await markWebhookProcessed(eventId);
+            return NextResponse.json({ success: true, message: 'Payment failed event processed' });
+        }
+
+        // ── C. Handle Payment Capture / Order Paid Events ──
         if (event === 'payment.captured' || event === 'order.paid') {
             const bookings = await getStoredBookings();
             const booking = bookings.find(b => b.razorpayOrderId === orderId || b.id === paymentEntity?.notes?.receipt);
@@ -79,11 +119,13 @@ export async function POST(request) {
                 if (paymentEntity?.id) {
                     await triggerAutoRefund(paymentEntity.id, (paymentEntity.amount || 0) / 100, 'Unmatched booking order');
                 }
+                await markWebhookProcessed(eventId);
                 return NextResponse.json({ success: true, message: 'Unmatched booking refunded' });
             }
 
-            // If already confirmed by a previous concurrent event, return cleanly
+            // If already confirmed by a previous concurrent event, mark and return cleanly
             if (booking.status === 'Confirmed') {
+                await markWebhookProcessed(eventId);
                 return NextResponse.json({ success: true, message: 'Booking already confirmed' });
             }
 
@@ -98,39 +140,71 @@ export async function POST(request) {
             const amountMismatch = !paidPaise || paidPaise !== expectedPaise || paidCurrency !== 'INR';
 
             if (amountMismatch) {
-                console.warn(`⚠️ Payment amount mismatch for booking ${booking.id}: paid ₹${paidPaise / 100} ${paidCurrency} vs expected ₹${expectedPaise / 100} INR. Auto-refunding.`);
-                await triggerAutoRefund(paymentEntity.id, (paidPaise || 0) / 100, 'Payment amount/currency mismatch');
+                console.warn(`⚠️ Payment amount mismatch for booking ${booking.id}: paid ₹${paidPaise / 100} ${paidCurrency} vs expected ₹${expectedPaise / 100} INR.`);
+                if (paymentEntity?.id) {
+                    await triggerAutoRefund(paymentEntity.id, (paidPaise || 0) / 100, 'Payment amount/currency mismatch');
+                }
                 await updateServerBooking(booking.id, {
                     status: 'Refunded',
                     refundReason: 'Payment amount/currency mismatch',
-                    paymentId: paymentEntity.id
+                    paymentId: paymentEntity?.id || null
                 });
+                await markWebhookProcessed(eventId);
                 return NextResponse.json({ success: true, message: 'Mismatched payment refunded' });
             }
 
             // 5. First-Paid-Wins Verification: If slot expired before payment arrived
             if (isHoldExpired && booking.status !== 'Confirmed') {
                 console.warn(`Booking ${booking.id} TTL expired before payment capture. Triggering instant refund.`);
-                await triggerAutoRefund(paymentEntity.id, (paymentEntity.amount || 0) / 100, '10-minute hold expired');
+                if (paymentEntity?.id) {
+                    await triggerAutoRefund(paymentEntity.id, (paymentEntity.amount || 0) / 100, '10-minute hold expired');
+                }
                 await updateServerBooking(booking.id, {
                     status: 'Refunded',
                     refundReason: 'Payment captured after 10-minute hold expired',
-                    paymentId: paymentEntity.id
+                    paymentId: paymentEntity?.id || null
                 });
+                await markWebhookProcessed(eventId);
                 return NextResponse.json({ success: true, message: 'Expired booking refunded' });
             }
 
-            // 6. Confirm Booking
+            // 6. Confirm Booking (State write happens BEFORE mark-processed)
             await updateServerBooking(booking.id, {
                 status: 'Confirmed',
                 paymentId: paymentEntity?.id || `pay_${Date.now()}`,
                 paidAt: new Date().toISOString()
             });
 
+            // Mark processed ONLY after state write succeeds
+            await markWebhookProcessed(eventId);
+            if (isPrismaConfigured && prisma) {
+                try {
+                    await prisma.webhookEvent.create({
+                        data: { id: eventId, event: event || 'payment.captured', payload }
+                    });
+                } catch (e) {}
+            }
+
             console.log(`✅ Booking ${booking.id} successfully confirmed via Razorpay webhook.`);
+            
+            // Dispatch verified confirmation email safely post-response
+            after(async () => {
+                try {
+                    await sendBookingConfirmationEmail({
+                        ...booking,
+                        status: 'Confirmed',
+                        paymentId: paymentEntity?.id
+                    });
+                } catch (e) {
+                    console.error('Error sending confirmation email on webhook capture:', e);
+                }
+            });
+
             return NextResponse.json({ success: true, message: 'Booking confirmed' });
         }
 
+        // Mark unhandled non-critical events as processed
+        await markWebhookProcessed(eventId);
         return NextResponse.json({ success: true, message: 'Event processed' });
     } catch (err) {
         console.error('Error handling Razorpay webhook:', err);

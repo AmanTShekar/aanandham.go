@@ -9,6 +9,7 @@ import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsDat
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 import { getPaymentSettings, savePaymentSettings } from '../../lib/paymentSettings';
+import { uploadCampsitePhoto } from '../../lib/mediaUpload';
 
 // Helper to safely validate, downscale and compress images before storing as Base64 (UP1, Item 9)
 function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
@@ -251,51 +252,44 @@ export default function AdminPortal() {
             try { setEvents(JSON.parse(savedEvents)); } catch(e){}
         }
 
-        // Bookings sync (Server first, then local fallback)
+        // Bookings sync from secure server (Memory state only — zero localStorage persistence of guest PII)
         try {
-            const authToken = localStorage.getItem('aanandham_admin_auth');
             const bookingsRes = await fetch('/api/admin/bookings', {
-                headers: authToken ? { 'Authorization': `Bearer ${authToken}` } : {}
+                credentials: 'include'
             });
             if (bookingsRes.ok) {
                 const serverData = await bookingsRes.json();
                 const serverBookings = Array.isArray(serverData) ? serverData : (Array.isArray(serverData?.bookings) ? serverData.bookings : null);
                 if (serverBookings) {
                     setBookings(serverBookings);
-                    localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(serverBookings));
                     return;
                 }
             }
         } catch (e) {}
 
-        const savedBookings = localStorage.getItem('aanandham_admin_bookings_v2');
-        if (savedBookings) {
-            try { setBookings(JSON.parse(savedBookings)); } catch(e){}
-        } else {
-            setBookings([]);
-        }
+        setBookings([]);
     };
 
     useEffect(() => {
-        // Authenticate Session
+        // Authenticate Session via HttpOnly Secure Cookie
         const restoreSession = async () => {
-            const savedAuth = localStorage.getItem('aanandham_admin_auth');
-            if (savedAuth) {
-                try {
-                    const res = await fetch('/api/admin/auth', {
-                        method: 'GET',
-                        headers: { 'Authorization': `Bearer ${savedAuth}` }
-                    });
+            try {
+                const res = await fetch('/api/admin/auth', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                if (res.ok) {
                     const data = await res.json();
                     if (data.authenticated) {
                         setIsAuthenticated(true);
                     } else {
-                        localStorage.removeItem('aanandham_admin_auth');
                         setIsAuthenticated(false);
                     }
-                } catch {
+                } else {
                     setIsAuthenticated(false);
                 }
+            } catch {
+                setIsAuthenticated(false);
             }
         };
 
@@ -332,13 +326,13 @@ export default function AdminPortal() {
             const res = await fetch('/api/admin/auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ passcode: passcode.trim() })
             });
             const data = await res.json();
-            if (data.success && data.token) {
+            if (data.success) {
                 setIsAuthenticated(true);
                 setPasscodeError(false);
-                localStorage.setItem('aanandham_admin_auth', data.token);
             } else {
                 setPasscodeError(true);
             }
@@ -349,14 +343,12 @@ export default function AdminPortal() {
 
     const handleLogout = async () => {
         try {
-            const savedAuth = localStorage.getItem('aanandham_admin_auth');
             await fetch('/api/admin/auth', {
                 method: 'DELETE',
-                headers: savedAuth ? { 'Authorization': `Bearer ${savedAuth}` } : {}
+                credentials: 'include'
             });
         } catch {}
         setIsAuthenticated(false);
-        localStorage.removeItem('aanandham_admin_auth');
         showToast('✓ Logged out securely');
     };
 
@@ -364,10 +356,9 @@ export default function AdminPortal() {
     const fetchAuditLogs = async () => {
         setIsLoadingAudit(true);
         try {
-            const savedAuth = localStorage.getItem('aanandham_admin_auth');
             const res = await fetch('/api/admin/auth?audit=true', {
                 method: 'GET',
-                headers: savedAuth ? { 'Authorization': `Bearer ${savedAuth}` } : {}
+                credentials: 'include'
             });
             const data = await res.json();
             if (data.auditLogs) {
@@ -452,9 +443,9 @@ export default function AdminPortal() {
         fetch('/api/admin/camps', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                ...(localStorage.getItem('aanandham_admin_auth') ? { 'Authorization': `Bearer ${localStorage.getItem('aanandham_admin_auth')}` } : {})
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(updated)
         }).catch(e => console.error('Error syncing camps to server:', e));
 
@@ -475,18 +466,12 @@ export default function AdminPortal() {
 
     const saveBookings = (updated) => {
         setBookings(updated);
-        try {
-            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify(updated));
-        } catch (err) {
-            console.error('Error saving bookings to storage:', err);
-            showToast('⚠️ Storage quota reached.');
-        }
         fetch('/api/admin/bookings', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                ...(localStorage.getItem('aanandham_admin_auth') ? { 'Authorization': `Bearer ${localStorage.getItem('aanandham_admin_auth')}` } : {})
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(updated)
         }).catch(e => console.error('Error syncing bookings to server:', e));
 
@@ -540,16 +525,25 @@ export default function AdminPortal() {
         showToast('✓ Room availability updated');
     };
 
-    // Room Image File Upload from Computer / Mobile with Validation & Compression (UP1)
+    // Room Image File Upload — Supabase Storage first, Base64 fallback (UP1)
     const handleRoomImageUpload = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
         try {
-            const compressedBase64 = await compressImageFile(file, 1200, 800, 0.82);
-            setRoomForm(prev => ({ ...prev, image: compressedBase64 }));
-            showToast('✓ Room photo optimized & uploaded');
-        } catch (err) {
-            showToast(`⚠️ ${err.message || 'Error uploading room image'}`);
+            // Try Supabase Storage upload first
+            const campId = currentDetailProperty?.id || 'general';
+            const result = await uploadCampsitePhoto(file, `camps/${campId}/rooms`);
+            setRoomForm(prev => ({ ...prev, image: result.url }));
+            showToast(`✓ Room photo uploaded to CDN (${result.sizeKB} KB)`);
+        } catch (supabaseErr) {
+            // Fallback: compress to base64 for local/dev use
+            try {
+                const compressedBase64 = await compressImageFile(file, 1200, 800, 0.82);
+                setRoomForm(prev => ({ ...prev, image: compressedBase64 }));
+                showToast('✓ Room photo compressed locally (connect Supabase for CDN storage)');
+            } catch (err) {
+                showToast(`⚠️ ${err.message || 'Error uploading room image'}`);
+            }
         }
         e.target.value = '';
     };
@@ -699,35 +693,45 @@ export default function AdminPortal() {
         setIsPropertyModalOpen(true);
     };
 
-    // Handle File Upload for Gallery with Compression & Validation (UP1)
+    // Handle File Upload for Gallery — Supabase Storage first, Base64 fallback (UP1)
     const handleFileUpload = async (e) => {
         const files = Array.from(e.target.files || []);
         if (files.length === 0) return;
 
-        let processedCount = 0;
-        const compressedResults = [];
+        const campId = editingProperty?.id || `new-${Date.now()}`;
+        const folder = `camps/${campId}/gallery`;
+        let successCount = 0;
+        const uploadedUrls = [];
 
         for (const file of files) {
             try {
-                const compressed = await compressImageFile(file, 1600, 1060, 0.82);
-                compressedResults.push(compressed);
-                processedCount++;
-            } catch (err) {
-                console.warn('Skipping file due to compression error:', file.name, err);
+                // Attempt Supabase Storage upload
+                const result = await uploadCampsitePhoto(file, folder);
+                uploadedUrls.push(result.url);
+                successCount++;
+            } catch {
+                // Fallback: compress to base64
+                try {
+                    const compressed = await compressImageFile(file, 1600, 1060, 0.82);
+                    uploadedUrls.push(compressed);
+                    successCount++;
+                } catch (err) {
+                    console.warn('Skipping file due to error:', file.name, err);
+                }
             }
         }
 
-        if (compressedResults.length > 0) {
+        if (uploadedUrls.length > 0) {
             setPropertyForm(prev => {
                 const currentGallery = prev.gallery || [];
-                const newGallery = [...currentGallery, ...compressedResults];
+                const newGallery = [...currentGallery, ...uploadedUrls];
                 return {
                     ...prev,
                     gallery: newGallery,
-                    image: prev.image || compressedResults[0]
+                    image: prev.image || uploadedUrls[0]
                 };
             });
-            showToast(`✓ Uploaded & compressed ${processedCount} photo(s)`);
+            showToast(`✓ Uploaded ${successCount} photo(s) to CDN`);
         } else {
             showToast('⚠️ No valid images were uploaded');
         }
@@ -996,7 +1000,11 @@ export default function AdminPortal() {
     // Filter properties by region
     const filteredProperties = propertyFilterRegion === 'All' ? properties : properties.filter(p => (p.region || 'Munnar') === propertyFilterRegion);
 
-    // Filter bookings with search
+    // Track pending UTR verification queue
+    const pendingUtrBookings = bookings.filter(b => b.status === 'Pending' || (b.utrNumber && b.status !== 'Confirmed' && b.status !== 'Cancelled'));
+    const pendingUtrCount = pendingUtrBookings.length;
+
+    // Filter bookings with search and UTR filter
     const filteredBookings = bookings.filter(b => {
         const cleanSearch = bookingSearch.replace(/\D/g, '');
         const cleanPhone = (b.phone || '').replace(/\D/g, '');
@@ -1005,8 +1013,12 @@ export default function AdminPortal() {
             (cleanSearch && cleanPhone.includes(cleanSearch)) || 
             (b.phone || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
             (b.package || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
+            (b.utrNumber || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
             (b.id || '').toLowerCase().includes(bookingSearch.toLowerCase());
-        const matchStatus = bookingFilterStatus === 'All' || b.status === bookingFilterStatus;
+        const matchStatus = 
+            bookingFilterStatus === 'All' ? true :
+            bookingFilterStatus === 'Pending UTRs' ? (b.status === 'Pending' || Boolean(b.utrNumber && b.status !== 'Confirmed')) :
+            b.status === bookingFilterStatus;
         return matchSearch && matchStatus;
     });
 
@@ -2207,17 +2219,60 @@ export default function AdminPortal() {
                                 style={{ flex: 1, minWidth: '240px', padding: '12px 18px', borderRadius: '14px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', outline: 'none' }}
                             />
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                {['All', 'Pending', 'Confirmed', 'Checked In', 'Cancelled'].map(st => (
+                                {[
+                                    { id: 'All', label: 'All Bookings' },
+                                    { id: 'Pending UTRs', label: `Pending UTRs ${pendingUtrCount > 0 ? `(${pendingUtrCount})` : ''}`, isAlert: pendingUtrCount > 0 },
+                                    { id: 'Confirmed', label: 'Confirmed 🟢' },
+                                    { id: 'Checked In', label: 'Checked In 🔵' },
+                                    { id: 'Cancelled', label: 'Cancelled 🔴' }
+                                ].map(st => (
                                     <button
-                                        key={st}
-                                        onClick={() => setBookingFilterStatus(st)}
-                                        style={{ padding: '8px 16px', borderRadius: '999px', border: bookingFilterStatus === st ? '1px solid #121613' : '1px solid rgba(18,22,19,0.1)', background: bookingFilterStatus === st ? '#121613' : '#FFFFFF', color: bookingFilterStatus === st ? '#FFFFFF' : '#59655D', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}
+                                        key={st.id}
+                                        onClick={() => setBookingFilterStatus(st.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            borderRadius: '999px',
+                                            border: bookingFilterStatus === st.id ? '1px solid #121613' : st.isAlert ? '1px solid #F59E0B' : '1px solid rgba(18,22,19,0.1)',
+                                            background: bookingFilterStatus === st.id ? '#121613' : st.isAlert ? '#FEF3C7' : '#FFFFFF',
+                                            color: bookingFilterStatus === st.id ? '#FFFFFF' : st.isAlert ? '#B45309' : '#59655D',
+                                            fontSize: '12.5px',
+                                            fontWeight: '800',
+                                            cursor: 'pointer',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '6px'
+                                        }}
                                     >
-                                        {st}
+                                        <span>{st.label}</span>
+                                        {st.isAlert && <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />}
                                     </button>
                                 ))}
                             </div>
                         </div>
+
+                        {/* UTR Verification Triage Notice */}
+                        {pendingUtrCount > 0 && bookingFilterStatus !== 'Confirmed' && (
+                            <div style={{ background: '#FFFBEB', border: '1.5px solid #F59E0B', borderRadius: '16px', padding: '16px 20px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                    <div style={{ fontSize: '24px' }}>🔔</div>
+                                    <div>
+                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#92400E' }}>
+                                            {pendingUtrCount} Direct UPI Payment{pendingUtrCount > 1 ? 's' : ''} Awaiting Bank Credit Verification
+                                        </div>
+                                        <div style={{ fontSize: '12px', color: '#B45309', marginTop: '2px' }}>
+                                            Cross-check the customer's 12-digit UTR against your UPI/bank SMS and click "✓ Confirm" to lock permit and issue boarding pass.
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setBookingFilterStatus('Pending UTRs')}
+                                    className="btn-lime"
+                                    style={{ padding: '8px 16px', fontSize: '12px', fontWeight: '900', borderRadius: '10px' }}
+                                >
+                                    Filter Pending UTRs ({pendingUtrCount}) →
+                                </button>
+                            </div>
+                        )}
 
                         {/* Bookings Cards */}
                         {filteredBookings.length === 0 ? (
@@ -2233,45 +2288,76 @@ export default function AdminPortal() {
                             </div>
                         ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                                {filteredBookings.map(b => (
-                                    <div key={b.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '16px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                {filteredBookings.map(b => {
+                                    const formattedCreated = b.createdAt 
+                                        ? (isNaN(new Date(b.createdAt).getTime()) ? b.createdAt : new Date(b.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }))
+                                        : 'Recent';
+
+                                    return (
+                                    <div key={b.id} style={{ background: '#FFFFFF', border: b.status === 'Pending' ? '1.5px solid #F59E0B' : '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                                         <div>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
                                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 7px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
-                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>{b.createdAt}</span>
+                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>{formattedCreated}</span>
                                             </div>
                                             <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
                                             <div style={{ fontSize: '12.5px', color: '#59655D' }}>{b.phone}</div>
+                                            {b.utrNumber && (
+                                                <div style={{ marginTop: '6px', fontSize: '11px', fontWeight: '800', color: '#166534', background: 'rgba(22, 101, 52, 0.08)', padding: '3px 8px', borderRadius: '6px', display: 'inline-block' }}>
+                                                    🔑 UTR / Ref: {b.utrNumber}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
                                             <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
                                             <div style={{ fontSize: '12px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
                                             {b.roomType && <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>Room: {b.roomType}</div>}
+                                            {b.mealSummary && <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>🍽️ {b.mealSummary}</div>}
                                         </div>
 
                                         <div>
-                                            <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Est. Total</div>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Total Fare</div>
                                             <div style={{ fontSize: '19px', fontWeight: '800', color: '#121613' }}>
                                                 ₹{(b.total || 0).toLocaleString('en-IN')}
                                             </div>
+                                            {b.paidAmount != null && (
+                                                <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>
+                                                    Paid: ₹{b.paidAmount.toLocaleString('en-IN')} · Due: ₹{(b.balanceDue || 0).toLocaleString('en-IN')}
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div>
                                             <label style={{ fontSize: '10px', color: '#7D8880', display: 'block', marginBottom: '4px', fontWeight: '700', textTransform: 'uppercase' }}>Status</label>
-                                            <select
-                                                value={b.status}
-                                                onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
-                                                style={{ padding: '7px 11px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
-                                            >
-                                                <option value="Pending">Pending 🟡</option>
-                                                <option value="Confirmed">Confirmed 🟢</option>
-                                                <option value="Checked In">Checked In 🔵</option>
-                                                <option value="Cancelled">Cancelled 🔴</option>
-                                            </select>
+                                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                                <select
+                                                    value={b.status}
+                                                    onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
+                                                    style={{ padding: '7px 11px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
+                                                >
+                                                    <option value="Pending">Pending 🟡</option>
+                                                    <option value="Confirmed">Confirmed 🟢</option>
+                                                    <option value="Checked In">Checked In 🔵</option>
+                                                    <option value="Cancelled">Cancelled 🔴</option>
+                                                </select>
+                                                {b.status === 'Pending' && (
+                                                    <button
+                                                        onClick={() => handleUpdateBookingStatus(b.id, 'Confirmed')}
+                                                        className="btn-lime"
+                                                        style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '900', borderRadius: '8px', cursor: 'pointer' }}
+                                                        title="Verify UTR and Confirm Reservation"
+                                                    >
+                                                        ✓ Confirm
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
 
-                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
+                                            <a href={`/pass/${b.id}`} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 12px', borderRadius: '8px', background: '#F1F3EC', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                <span>Pass 🎫</span>
+                                            </a>
                                             <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
                                                 <span>WhatsApp</span>
                                                 <span>→</span>
@@ -2281,7 +2367,8 @@ export default function AdminPortal() {
                                             </button>
                                         </div>
                                     </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

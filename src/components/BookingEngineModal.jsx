@@ -250,11 +250,6 @@ export default function BookingEngineModal({
     const payableNow = paymentMode === 'advance' ? advanceAmount : grandTotal;
     const balanceOnArrival = grandTotal - payableNow;
 
-    // Dynamic UPI Link & QR URL
-    const activeBookingRef = useMemo(() => generateBookingId(), [isOpen, selectedPkgId]);
-    const upiPayLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&am=${payableNow}&tn=${encodeURIComponent(`Aanandham ${activeBookingRef}`)}&cu=INR`;
-    const qrCodeImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(upiPayLink)}`;
-
     // Auto-sync Veg / Non-Veg meal participant split with totalGuests
     useEffect(() => {
         if (vegCount + nonVegCount !== totalGuests) {
@@ -330,6 +325,10 @@ export default function BookingEngineModal({
             setValidationError('Please enter a valid 10-digit mobile or WhatsApp number.');
             return;
         }
+        if (customerEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail.trim())) {
+            setValidationError('Please enter a valid email address or leave blank.');
+            return;
+        }
         setValidationError('');
         setStep(4);
     };
@@ -357,7 +356,7 @@ export default function BookingEngineModal({
             id: bookingId,
             name: customerName.trim(),
             phone: customerPhone.trim(),
-            email: customerEmail.trim() || 'explorer@aanandhamgo.com',
+            email: customerEmail.trim() || undefined,
             package: currentPkg.title,
             region: currentPkg.region || (currentPkg.location ? currentPkg.location.split(',')[0].trim() : 'Munnar'),
             location: currentPkg.location || 'Suryanelli, Munnar, Kerala',
@@ -379,29 +378,34 @@ export default function BookingEngineModal({
             mealSummary: `${vegCount} Veg + ${nonVegCount} Non-Veg BBQ (${dietaryChoice})`,
             notes: specialNotes.trim(),
             status: 'Confirmed',
-            source: 'Website 0-Fee Booking Engine',
+            source: 'Direct Website Reservation',
             createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
         };
 
-        // 1. Sync with Server API
+        // 1. Sync with Server API (Authoritative ID Assignment)
+        let finalBookingId = bookingId;
         try {
-            await fetch('/api/bookings', {
+            const res = await fetch('/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(passData)
             });
+            if (res.ok) {
+                const resData = await res.json();
+                if (resData.bookingId) {
+                    finalBookingId = resData.bookingId;
+                }
+            }
         } catch (err) {
             console.error('Server sync notice:', err);
         }
 
-        // 2. Persist in local storage for instant offline recall
-        try {
-            const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
-            localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([passData, ...currentBookings]));
-            window.dispatchEvent(new Event('storage'));
-        } catch (err) {}
+        const finalPass = {
+            ...passData,
+            id: finalBookingId
+        };
 
-        setConfirmedPass(passData);
+        setConfirmedPass(finalPass);
         setIsSubmitting(false);
         setStep(5); // Show Official Boarding Pass Voucher
     };
@@ -466,17 +470,17 @@ export default function BookingEngineModal({
                                 textTransform: 'uppercase',
                                 letterSpacing: '0.6px'
                             }}>
-                                {step === 5 ? 'Confirmed Permit' : 'Direct Booking Engine'}
+                                {step === 5 ? 'Confirmed Permit' : 'Direct Campsite Reservation'}
                             </span>
                             <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '700' }}>
-                                {step === 5 ? 'Official Wilderness Pass' : '0% Fee · Direct Bank Settlement'}
+                                {step === 5 ? 'Official Wilderness Pass' : 'Verified Stays · Best Rate Guaranteed'}
                             </span>
                         </div>
                         <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 3.2vw, 24px)', fontWeight: '800', margin: 0, color: '#121613' }}>
-                            {step === 1 && '1. Choose Campsite, Lodging & Dates'}
-                            {step === 2 && '2. Custom Experiences & Add-Ons'}
-                            {step === 3 && '3. Lead Explorer & Squad Details'}
-                            {step === 4 && '4. 0-Fee Dynamic UPI Checkout'}
+                            {step === 1 && '1. Select Campsite, Lodging & Dates'}
+                            {step === 2 && '2. Choose Experiences & Add-Ons'}
+                            {step === 3 && '3. Camper & Contact Information'}
+                            {step === 4 && '4. Payment & Reservation Details'}
                             {step === 5 && '🎉 Expedition Boarding Pass Issued'}
                         </h2>
                     </div>
@@ -515,7 +519,7 @@ export default function BookingEngineModal({
                             { num: 1, label: 'Stay & Dates', shortLabel: 'Stays' },
                             { num: 2, label: 'Add-Ons', shortLabel: 'Add-Ons' },
                             { num: 3, label: 'Explorer Info', shortLabel: 'Details' },
-                            { num: 4, label: paymentSettings.mode === 'coming_soon' ? 'Voucher Pass' : '0% Payment', shortLabel: 'Payment' }
+                            { num: 4, label: paymentSettings.mode === 'coming_soon' ? 'Voucher Pass' : 'Payment', shortLabel: 'Payment' }
                         ].map((s, idx) => {
                             const isActive = step === s.num;
                             const isCompleted = step > s.num;
@@ -1364,10 +1368,10 @@ export default function BookingEngineModal({
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
                                                         <ShieldCheck size={13} color="#D5ED55" />
-                                                        <span>0% Processing Fees</span>
+                                                        <span>Direct Campsite Fare</span>
                                                     </div>
                                                     <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF' }}>
-                                                        Instant UPI Settlement
+                                                        Instant UPI Payment
                                                     </h3>
                                                     
                                                     {/* Copy UPI ID */}
@@ -1424,31 +1428,77 @@ export default function BookingEngineModal({
                                     )}
 
                                     {/* Actions */}
-                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                                         <button
                                             type="button"
                                             onClick={() => setStep(3)}
                                             className="btn-secondary"
-                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '8px 14px', borderRadius: '10px' }}
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px', borderRadius: '10px' }}
                                         >
                                             ← Back
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={handleConfirmBookingAndIssuePass}
-                                            disabled={isSubmitting}
-                                            className="btn-lime"
-                                            style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
-                                        >
-                                            <span>
-                                                {isSubmitting 
-                                                    ? 'Generating Pass...' 
-                                                    : paymentSettings.mode === 'coming_soon'
-                                                        ? 'Confirm Reservation (₹0 Advance) →'
+
+                                        {paymentSettings.mode === 'coming_soon' ? (
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                                                {/* Disabled Online Booking Button */}
+                                                <button
+                                                    type="button"
+                                                    disabled={true}
+                                                    style={{
+                                                        padding: '12px 22px',
+                                                        fontSize: '13px',
+                                                        fontWeight: '800',
+                                                        borderRadius: '12px',
+                                                        background: '#F3F4F6',
+                                                        color: '#6B7280',
+                                                        border: '1.5px dashed #9CA3AF',
+                                                        cursor: 'not-allowed',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        opacity: 0.85
+                                                    }}
+                                                    title="Online instant checkout is upcoming. Direct concierge inquiries are open."
+                                                >
+                                                    <span>🔒 Online Booking Upcoming · Disabled</span>
+                                                </button>
+
+                                                {/* WhatsApp Concierge Desk Inquiry */}
+                                                <a
+                                                    href={waLink(`Hi Aanandham team! I'm planning an expedition to *${currentPkg.title}* on *${travelDate || 'upcoming weekend'}* for *${totalGuests} campers*. Room: *${currentRoom?.name || 'Alpine Tent'}*. Total: *₹${grandTotal.toLocaleString('en-IN')}*. Could you help me reserve?`)}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="btn-lime"
+                                                    style={{
+                                                        padding: '12px 20px',
+                                                        fontSize: '13px',
+                                                        fontWeight: '900',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        textDecoration: 'none',
+                                                        borderRadius: '12px'
+                                                    }}
+                                                >
+                                                    <span>Inquire on WhatsApp 💬 →</span>
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={handleConfirmBookingAndIssuePass}
+                                                disabled={isSubmitting}
+                                                className="btn-lime"
+                                                style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
+                                            >
+                                                <span>
+                                                    {isSubmitting 
+                                                        ? 'Generating Pass...' 
                                                         : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) →`}
-                                            </span>
-                                            <Check size={16} />
-                                        </button>
+                                                </span>
+                                                <Check size={16} />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             )}

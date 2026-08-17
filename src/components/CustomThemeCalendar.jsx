@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Dynamic Wilderness Event Batches & Calendar Annotations (N5)
+// Dynamic Wilderness Event Batches & Calendar Annotations
 export function getSpecialBatchesForMonth(year, month) {
     const batches = {};
     const daysCount = new Date(year, month + 1, 0).getDate();
@@ -27,6 +27,15 @@ export function getSpecialBatchesForMonth(year, month) {
         }
     }
     return batches;
+}
+
+export function getSpecialBatchForDate(dateStr) {
+    if (!dateStr) return null;
+    const parts = dateStr.split('-').map(Number);
+    if (parts.length < 3 || isNaN(parts[0]) || isNaN(parts[1]) || isNaN(parts[2])) return null;
+    const [y, m] = parts;
+    const monthBatches = getSpecialBatchesForMonth(y, m - 1);
+    return monthBatches[dateStr] || null;
 }
 
 const MONTH_NAMES = [
@@ -90,12 +99,12 @@ export default function CustomThemeCalendar({
         return new Date(currentYear, currentMonth, 1).getDay();
     }, [currentYear, currentMonth]);
 
-    // Special batches for currently viewed month (N5)
+    // Special batches for currently viewed month
     const specialBatches = useMemo(() => {
         return getSpecialBatchesForMonth(currentYear, currentMonth);
     }, [currentYear, currentMonth]);
 
-    // Navigation limits: Cannot go before current month, max 6 months forward (E1)
+    // Navigation limits: Cannot go before current month, max 6 months forward
     const canGoPrev = useMemo(() => {
         return !(currentYear < today.getFullYear() || (currentYear === today.getFullYear() && currentMonth <= today.getMonth()));
     }, [currentYear, currentMonth, today]);
@@ -182,7 +191,7 @@ export default function CustomThemeCalendar({
         const dateObj = new Date(y, m - 1, d);
         const dayName = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
         const monthName = MONTH_NAMES[dateObj.getMonth()];
-        const special = SPECIAL_BATCHES[selectedDate];
+        const special = getSpecialBatchForDate(selectedDate);
         return `${dayName}, ${monthName} ${d}, ${y} (${durationDays}D/${durationDays - 1}N) ${special ? `· ${special.badge}` : ''}`;
     }, [selectedDate, durationDays]);
 
@@ -196,13 +205,12 @@ export default function CustomThemeCalendar({
         return {
             startFormatted: `${startObj.toLocaleDateString('en-US', { weekday: 'short' })}, ${MONTH_NAMES[startObj.getMonth()]} ${startObj.getDate()}`,
             endFormatted: `${endObj.toLocaleDateString('en-US', { weekday: 'short' })}, ${MONTH_NAMES[endObj.getMonth()]} ${endObj.getDate()}`,
-            special: SPECIAL_BATCHES[stagedDate]
+            special: getSpecialBatchForDate(stagedDate)
         };
     }, [stagedDate, durationDays]);
 
     const isDark = theme === 'dark';
-    const isGold = theme === 'gold';
-    const accentColor = '#E5A93B'; // Figma Secondary Base: Sunrise Amber Gold
+    const accentColor = '#E5A93B'; // Sunrise Amber Gold
 
     // Inner Calendar UI Content (reused for both inline and modal view)
     const calendarContent = (
@@ -213,95 +221,107 @@ export default function CustomThemeCalendar({
             onWheel={(e) => e.stopPropagation()}
             style={{
                 background: isDark ? '#0B150E' : '#FFFFFF',
-                borderRadius: '28px',
-                padding: '24px',
+                borderRadius: '24px',
+                padding: 'clamp(14px, 3.5vw, 22px)',
                 color: isDark ? '#FFFFFF' : '#0B150E',
                 width: '100%',
-                maxWidth: '460px',
-                border: isDark ? '1px solid rgba(229, 169, 59, 0.35)' : '1px solid rgba(11, 21, 14, 0.12)',
-                boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7)' : '0 20px 60px rgba(0, 0, 0, 0.14)',
-                overscrollBehavior: 'contain'
+                maxWidth: '440px',
+                margin: '0 auto',
+                border: isDark ? '1.5px solid rgba(229, 169, 59, 0.4)' : '1px solid rgba(11, 21, 14, 0.12)',
+                boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 169, 59, 0.12)' : '0 20px 60px rgba(0, 0, 0, 0.12)',
+                boxSizing: 'border-box'
             }}
         >
-            {/* Modal / Card Header */}
+            {/* Modal / Card Header — Centered & Balanced */}
             <div style={{
                 display: 'flex',
-                justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '14px',
-                paddingBottom: '12px',
+                justifyContent: 'space-between',
+                marginBottom: '12px',
+                paddingBottom: '10px',
                 borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(18, 22, 19, 0.08)'
             }}>
-                <div>
-                    <div style={{ fontSize: '10.5px', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', color: accentColor }}>
+                {/* Previous Month Button */}
+                <button
+                    type="button"
+                    onClick={handlePrevMonth}
+                    disabled={!canGoPrev}
+                    aria-label="Previous Month"
+                    style={{
+                        width: '36px',
+                        height: '36px',
+                        borderRadius: '50%',
+                        background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: isDark ? '#FFFFFF' : '#121613',
+                        cursor: canGoPrev ? 'pointer' : 'not-allowed',
+                        opacity: canGoPrev ? 1 : 0.25,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '12px',
+                        transition: 'all 0.2s ease',
+                        flexShrink: 0
+                    }}
+                >
+                    ◀
+                </button>
+
+                {/* Centered Month / Year Title */}
+                <div style={{ textAlign: 'center', flex: 1, padding: '0 8px' }}>
+                    <div style={{ fontSize: '10px', fontWeight: '900', letterSpacing: '1.2px', textTransform: 'uppercase', color: accentColor }}>
                         EXPEDITION BATCH SELECTOR
                     </div>
-                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '2px 0 0', color: isDark ? '#FFFFFF' : '#121613' }}>
+                    <div style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '2px 0 0', color: isDark ? '#FFFFFF' : '#121613' }}>
                         {MONTH_NAMES[currentMonth]} {currentYear}
                     </div>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Prev / Next Month Buttons with Navigation Limit Guards (E1) */}
-                    <button
-                        type="button"
-                        onClick={handlePrevMonth}
-                        disabled={!canGoPrev}
-                        aria-label="Previous Month"
-                        style={{
-                            width: '34px',
-                            height: '34px',
-                            borderRadius: '50%',
-                            background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
-                            border: 'none',
-                            color: isDark ? '#FFFFFF' : '#121613',
-                            cursor: canGoPrev ? 'pointer' : 'not-allowed',
-                            opacity: canGoPrev ? 1 : 0.28,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '11px',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        ◀
-                    </button>
+                {/* Right Controls: Next Month & Close */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                     <button
                         type="button"
                         onClick={handleNextMonth}
                         disabled={!canGoNext}
                         aria-label="Next Month"
                         style={{
-                            width: '34px',
-                            height: '34px',
+                            width: '36px',
+                            height: '36px',
                             borderRadius: '50%',
                             background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
-                            border: 'none',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
                             color: isDark ? '#FFFFFF' : '#121613',
                             cursor: canGoNext ? 'pointer' : 'not-allowed',
-                            opacity: canGoNext ? 1 : 0.28,
+                            opacity: canGoNext ? 1 : 0.25,
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '11px',
+                            fontSize: '12px',
                             transition: 'all 0.2s ease'
                         }}
                     >
                         ▶
                     </button>
 
-                    {/* Dedicated Close Button (✕) with Theme Hover Rotation */}
                     {!inline && (
                         <button
                             type="button"
                             onClick={() => setIsOpen(false)}
                             aria-label="Close calendar"
-                            className={isDark ? 'modal-close-btn' : 'modal-close-btn-light'}
                             style={{
-                                width: '34px',
-                                height: '34px',
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '50%',
+                                background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                color: isDark ? '#FFFFFF' : '#121613',
                                 fontSize: '14px',
-                                marginLeft: '4px'
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease'
                             }}
                         >
                             ✕
@@ -310,28 +330,30 @@ export default function CustomThemeCalendar({
                 </div>
             </div>
 
-            {/* Trip Duration Selector (2 Days vs 3 Days) */}
+            {/* Trip Duration Selector (2 Days vs 3 Days) — Centered & Balanced */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                justifyContent: 'center',
+                gap: '8px',
                 background: isDark ? 'rgba(255, 255, 255, 0.05)' : '#F5F7EF',
-                padding: '6px 10px',
+                padding: '6px 8px',
                 borderRadius: '14px',
-                marginBottom: '14px'
+                marginBottom: '12px',
+                flexWrap: 'wrap'
             }}>
-                <span style={{ fontSize: '11px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                    Trip Duration:
+                <span style={{ fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                    Duration:
                 </span>
                 <div style={{ display: 'flex', gap: '6px' }}>
                     <button
                         type="button"
                         onClick={() => setDurationDays(2)}
                         style={{
-                            padding: '4px 10px',
+                            padding: '5px 12px',
                             borderRadius: '8px',
                             border: durationDays === 2 ? `1.5px solid ${accentColor}` : '1px solid transparent',
-                            background: durationDays === 2 ? (isDark ? 'rgba(213, 237, 85, 0.2)' : '#FFFFFF') : 'transparent',
+                            background: durationDays === 2 ? (isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF') : 'transparent',
                             color: durationDays === 2 ? (isDark ? accentColor : '#121613') : (isDark ? '#A2B6A6' : '#8E9B92'),
                             fontSize: '11px',
                             fontWeight: '800',
@@ -339,16 +361,16 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        2 Days / 1 Night ⛺
+                        2D / 1N ⛺
                     </button>
                     <button
                         type="button"
                         onClick={() => setDurationDays(3)}
                         style={{
-                            padding: '4px 10px',
+                            padding: '5px 12px',
                             borderRadius: '8px',
                             border: durationDays === 3 ? `1.5px solid ${accentColor}` : '1px solid transparent',
-                            background: durationDays === 3 ? (isDark ? 'rgba(229, 169, 59, 0.2)' : '#FFFFFF') : 'transparent',
+                            background: durationDays === 3 ? (isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF') : 'transparent',
                             color: durationDays === 3 ? (isDark ? accentColor : '#121613') : (isDark ? '#A2B6A6' : '#8E9B92'),
                             fontSize: '11px',
                             fontWeight: '800',
@@ -356,25 +378,48 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        3 Days / 2 Nights 🏔️
+                        3D / 2N 🏔️
                     </button>
                 </div>
             </div>
 
-            {/* Days of Week Header */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', textAlign: 'center', marginBottom: '6px' }}>
+            {/* Days of Week Header — Centered & Equal Width */}
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(7, 1fr)',
+                gap: 'clamp(2px, 1vw, 4px)',
+                textAlign: 'center',
+                marginBottom: '6px',
+                width: '100%'
+            }}>
                 {DAYS_OF_WEEK.map((d, idx) => (
-                    <div key={idx} style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', padding: '3px 0' }}>
+                    <div
+                        key={idx}
+                        style={{
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            color: idx === 0 || idx === 6 ? accentColor : (isDark ? '#A2B6A6' : '#8E9B92'),
+                            padding: '4px 0',
+                            textAlign: 'center'
+                        }}
+                    >
                         {d}
                     </div>
                 ))}
             </div>
 
-            {/* Calendar Day Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', textAlign: 'center' }}>
+            {/* Calendar Day Grid — Centered & Responsive Cells */}
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(7, 1fr)',
+                gap: 'clamp(2px, 1vw, 5px)',
+                width: '100%',
+                justifyItems: 'center',
+                alignItems: 'center'
+            }}>
                 {/* Empty offset slots for first day */}
                 {Array.from({ length: firstDayIndex }).map((_, idx) => (
-                    <div key={`empty-${idx}`} style={{ height: '36px' }} />
+                    <div key={`empty-${idx}`} style={{ width: '100%', aspectRatio: '1', minHeight: '34px' }} />
                 ))}
 
                 {/* Month Days */}
@@ -395,30 +440,33 @@ export default function CustomThemeCalendar({
                             disabled={isPast}
                             onClick={() => handleDayClick(day)}
                             style={{
-                                height: '36px',
-                                borderRadius: isStart ? '10px 4px 4px 10px' : isEnd ? '4px 10px 10px 4px' : isInRange ? '4px' : '10px',
+                                width: '100%',
+                                aspectRatio: '1',
+                                minHeight: '34px',
+                                maxHeight: '44px',
+                                borderRadius: isStart ? '12px 4px 4px 12px' : isEnd ? '4px 12px 12px 4px' : isInRange ? '4px' : '10px',
                                 border: isStart
-                                    ? `1.5px solid ${accentColor}`
+                                    ? `2px solid ${accentColor}`
                                     : 'none',
                                 background: isStart
                                     ? accentColor
                                     : isInRange
-                                        ? (isDark ? 'rgba(229, 169, 59, 0.25)' : 'rgba(229, 169, 59, 0.45)')
+                                        ? (isDark ? 'rgba(229, 169, 59, 0.28)' : 'rgba(229, 169, 59, 0.45)')
                                         : special
-                                            ? (isDark ? 'rgba(229, 169, 59, 0.12)' : 'rgba(229, 169, 59, 0.25)')
+                                            ? (isDark ? 'rgba(229, 169, 59, 0.14)' : 'rgba(229, 169, 59, 0.25)')
                                             : isWeekend
-                                                ? (isDark ? 'rgba(255, 255, 255, 0.04)' : '#F5F7EF')
+                                                ? (isDark ? 'rgba(255, 255, 255, 0.05)' : '#F5F7EF')
                                                 : 'transparent',
                                 color: isStart
                                     ? '#121613'
                                     : isInRange
-                                        ? (isDark ? accentColor : '#121613')
+                                        ? (isDark ? '#FFFFFF' : '#121613')
                                         : isPast
                                             ? (isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(18, 22, 19, 0.25)')
                                             : special
                                                 ? (isDark ? accentColor : '#2A4B1A')
                                                 : (isDark ? '#FFFFFF' : '#121613'),
-                                fontSize: '13px',
+                                fontSize: 'clamp(12px, 2.8vw, 13.5px)',
                                 fontWeight: isStart || isInRange || special ? '800' : '600',
                                 cursor: isPast ? 'not-allowed' : 'pointer',
                                 display: 'flex',
@@ -426,7 +474,8 @@ export default function CustomThemeCalendar({
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 position: 'relative',
-                                transition: 'all 0.15s ease'
+                                transition: 'all 0.15s ease',
+                                padding: 0
                             }}
                         >
                             <span>{day}</span>
@@ -445,13 +494,19 @@ export default function CustomThemeCalendar({
                 })}
             </div>
 
-            {/* Quick Presets */}
-            <div style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+            {/* Quick Presets — Centered */}
+            <div style={{
+                marginTop: '12px',
+                display: 'flex',
+                justifyContent: 'center',
+                flexWrap: 'wrap',
+                gap: '6px'
+            }}>
                 <button
                     type="button"
                     onClick={() => handleSelectPreset(1)}
                     style={{
-                        padding: '4px 10px',
+                        padding: '5px 12px',
                         borderRadius: '8px',
                         background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
                         border: 'none',
@@ -467,9 +522,9 @@ export default function CustomThemeCalendar({
                     type="button"
                     onClick={() => handleSelectPreset((6 - today.getDay() + 7) % 7 || 7)}
                     style={{
-                        padding: '4px 10px',
+                        padding: '5px 12px',
                         borderRadius: '8px',
-                        background: isDark ? 'rgba(229, 169, 59, 0.15)' : 'rgba(229, 169, 59, 0.35)',
+                        background: isDark ? 'rgba(229, 169, 59, 0.18)' : 'rgba(229, 169, 59, 0.35)',
                         border: 'none',
                         color: isDark ? accentColor : '#121613',
                         fontSize: '11px',
@@ -483,7 +538,7 @@ export default function CustomThemeCalendar({
                     type="button"
                     onClick={() => handleSelectPreset(14)}
                     style={{
-                        padding: '4px 10px',
+                        padding: '5px 12px',
                         borderRadius: '8px',
                         background: isDark ? 'rgba(255, 255, 255, 0.08)' : '#F1F3EC',
                         border: 'none',
@@ -497,35 +552,36 @@ export default function CustomThemeCalendar({
                 </button>
             </div>
 
-            {/* ── EXPEDITION TRIP WINDOW NOTIFICATION & CONFIRMATION CARD ── */}
+            {/* Expedition Trip Window Notification & Confirmation Card */}
             {stagedDetails && (
                 <motion.div
-                    initial={{ opacity: 0, y: 8 }}
+                    initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     style={{
-                        marginTop: '16px',
-                        padding: '14px 16px',
-                        borderRadius: '18px',
-                        background: isDark ? 'rgba(213, 237, 85, 0.08)' : '#F0F4E8',
-                        border: isDark ? '1px solid rgba(213, 237, 85, 0.25)' : '1px solid rgba(18, 22, 19, 0.1)'
+                        marginTop: '14px',
+                        padding: '12px 14px',
+                        borderRadius: '16px',
+                        background: isDark ? 'rgba(229, 169, 59, 0.08)' : '#F0F4E8',
+                        border: isDark ? '1px solid rgba(229, 169, 59, 0.25)' : '1px solid rgba(18, 22, 19, 0.1)',
+                        textAlign: 'center'
                     }}
                 >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '11px', fontWeight: '800', color: isDark ? accentColor : '#2A4B1A', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                            🏕️ SELECTED TRIP WINDOW ({durationDays}D / {durationDays - 1}N)
+                            🏕️ {durationDays}D / {durationDays - 1}N EXPEDITION WINDOW
                         </span>
                         {stagedDetails.special && (
-                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: accentColor }}>
+                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: accentColor, background: 'rgba(229, 169, 59, 0.15)', padding: '2px 8px', borderRadius: '999px' }}>
                                 {stagedDetails.special.badge}
                             </span>
                         )}
                     </div>
 
-                    <div style={{ fontSize: '13.5px', fontWeight: '800', color: isDark ? '#FFFFFF' : '#121613', marginBottom: '4px' }}>
+                    <div style={{ fontSize: '13.5px', fontWeight: '800', color: isDark ? '#FFFFFF' : '#121613', marginBottom: '3px' }}>
                         {stagedDetails.startFormatted} ➔ {stagedDetails.endFormatted}
                     </div>
-                    <div style={{ fontSize: '11px', color: isDark ? '#A2B6A6' : '#59655D', marginBottom: '12px', lineHeight: 1.4 }}>
-                        Check-in 11:00 AM Basecamp · Guided 4x4 Trail · Return Day {durationDays} at 03:00 PM
+                    <div style={{ fontSize: '11px', color: isDark ? '#A2B6A6' : '#59655D', marginBottom: '10px', lineHeight: 1.35 }}>
+                        Check-in 2:00 PM Basecamp · 4x4 Mountain Trail · Check-out 11:00 AM
                     </div>
 
                     <button
@@ -533,12 +589,12 @@ export default function CustomThemeCalendar({
                         onClick={handleConfirmWindow}
                         style={{
                             width: '100%',
-                            padding: '12px 20px',
+                            padding: '11px 18px',
                             borderRadius: '999px',
                             background: accentColor,
                             color: '#121613',
                             border: 'none',
-                            fontSize: '13.5px',
+                            fontSize: '13px',
                             fontWeight: '800',
                             cursor: 'pointer',
                             display: 'flex',
@@ -549,7 +605,7 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        <span>Confirm This Expedition Window ({durationDays} Days) →</span>
+                        <span>Confirm Selected Dates ({durationDays} Days) →</span>
                     </button>
                 </motion.div>
             )}
@@ -557,9 +613,11 @@ export default function CustomThemeCalendar({
     );
 
     return (
-        <div style={{ position: 'relative', width: '100%' }}>
+        <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {label && (
                 <div style={{
+                    width: '100%',
+                    maxWidth: '440px',
                     fontSize: '11.5px',
                     fontWeight: '800',
                     letterSpacing: '1px',
@@ -571,16 +629,16 @@ export default function CustomThemeCalendar({
                     justifyContent: 'space-between'
                 }}>
                     <span>{label}</span>
-                    {selectedDate && SPECIAL_BATCHES[selectedDate] && (
+                    {selectedDate && getSpecialBatchForDate(selectedDate) && (
                         <span style={{
-                            background: isDark ? 'rgba(213, 237, 85, 0.2)' : 'rgba(213, 237, 85, 0.5)',
+                            background: isDark ? 'rgba(229, 169, 59, 0.2)' : 'rgba(229, 169, 59, 0.35)',
                             color: isDark ? accentColor : '#121613',
                             fontSize: '10px',
                             fontWeight: '800',
                             padding: '2px 8px',
                             borderRadius: '999px'
                         }}>
-                            {SPECIAL_BATCHES[selectedDate].badge}
+                            {getSpecialBatchForDate(selectedDate).badge}
                         </span>
                     )}
                 </div>
@@ -593,6 +651,7 @@ export default function CustomThemeCalendar({
                     onClick={() => setIsOpen(true)}
                     style={{
                         width: '100%',
+                        maxWidth: '440px',
                         padding: '13px 18px',
                         borderRadius: '16px',
                         border: isDark ? '1px solid rgba(255, 255, 255, 0.15)' : '1px solid rgba(18, 22, 19, 0.15)',
@@ -604,7 +663,8 @@ export default function CustomThemeCalendar({
                         fontSize: '14px',
                         fontWeight: '600',
                         cursor: 'pointer',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        boxSizing: 'border-box'
                     }}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -617,10 +677,14 @@ export default function CustomThemeCalendar({
                 </button>
             )}
 
-            {/* Inline Render Mode */}
-            {inline && calendarContent}
+            {/* Inline Render Mode — Centered */}
+            {inline && (
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', margin: '0 auto' }}>
+                    {calendarContent}
+                </div>
+            )}
 
-            {/* Fixed Backdrop Modal Dialog Mode (When not inline, opens cleanly outside modal clipping) */}
+            {/* Fixed Backdrop Modal Dialog Mode — Centered Horizontally & Vertically */}
             {!inline && (
                 <AnimatePresence>
                     {isOpen && (
@@ -633,20 +697,22 @@ export default function CustomThemeCalendar({
                                 position: 'fixed',
                                 inset: 0,
                                 zIndex: 100000,
-                                background: 'rgba(0, 0, 0, 0.75)',
+                                background: 'rgba(0, 0, 0, 0.78)',
                                 backdropFilter: 'blur(12px)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                padding: '20px'
+                                padding: '16px',
+                                boxSizing: 'border-box'
                             }}
                         >
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.95, y: 15 }}
+                                initial={{ opacity: 0, scale: 0.94, y: 15 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95, y: 15 }}
-                                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                exit={{ opacity: 0, scale: 0.94, y: 15 }}
+                                transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                                 onClick={(e) => e.stopPropagation()}
+                                style={{ width: '100%', maxWidth: '440px', margin: '0 auto' }}
                             >
                                 {calendarContent}
                             </motion.div>

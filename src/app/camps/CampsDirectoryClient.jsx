@@ -33,15 +33,16 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
     // Load camps & wishlist from localStorage on mount + listen for admin updates
     useEffect(() => {
         const refreshCamps = async () => {
-            const loadedCamps = getAllCamps();
-            setCamps(loadedCamps);
-
             try {
                 const res = await fetch('/api/admin/camps');
                 if (res.ok) {
                     const serverCamps = await res.json();
                     if (Array.isArray(serverCamps) && serverCamps.length > 0) {
-                        setCamps(serverCamps);
+                        setCamps(prev => {
+                            // Only update state if length or items actually changed to avoid layout re-render
+                            if (JSON.stringify(prev) === JSON.stringify(serverCamps)) return prev;
+                            return serverCamps;
+                        });
                     }
                 }
             } catch (e) {}
@@ -488,6 +489,8 @@ export default function CampsDirectoryClient({ initialCamps = INITIAL_ALL_CAMPS 
                                             <img
                                                 src={camp.image || galleryList[0]}
                                                 alt={camp.title}
+                                                width="400"
+                                                height="270"
                                                 loading="lazy"
                                                 decoding="async"
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}

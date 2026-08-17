@@ -3,6 +3,8 @@ import { getAdminPayload, getClientIp } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { validateBookingPayload, sanitizePhone } from '@/lib/validation';
 import { getStoredBookings, saveStoredBookings, addServerBooking, updateServerBooking, deleteServerBooking } from '@/lib/serverBookingStore';
+import { sanitizeBookingsForRole } from '@/lib/rbac';
+import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
 
 // Unique, collision-free human readable booking ID generator
 export function generateBookingId() {
@@ -59,25 +61,36 @@ function normalizeRecord(body) {
     };
 }
 
-// ── GET: Full booking list (admin only) ──
+// ── GET: Read all bookings with optional pagination (auth required) ──
 export async function GET(request) {
     const ip = getClientIp(request);
 
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_get:${ip}`, 30, 60);
+    // 1. Rate Limit
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_get:${ip}`, 60, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
 
-    if (!getAdminPayload(request)) {
+    // 2. Auth Check
+    const adminPayload = getAdminPayload(request);
+    if (!adminPayload) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
     try {
-        const bookings = await getStoredBookings();
-        return NextResponse.json({ success: true, bookings });
+        const { searchParams } = new URL(request.url);
+        const limitParam = searchParams.get('limit');
+        const offsetParam = searchParams.get('offset');
+        const limit = limitParam ? Math.min(500, Math.max(1, parseInt(limitParam, 10))) : undefined;
+        const offset = offsetParam ? Math.max(0, parseInt(offsetParam, 10)) : undefined;
+
+        const bookings = await getStoredBookings({ limit, offset });
+        const role = adminPayload?.role || 'owner';
+        const roleSanitized = sanitizeBookingsForRole(bookings, role);
+        return NextResponse.json({ success: true, bookings: roleSanitized });
     } catch (err) {
-        console.error('Error fetching bookings:', err);
-        return NextResponse.json({ success: false, message: 'Failed to fetch bookings' }, { status: 500 });
+        console.error(sanitizeLogOutput(`[ADMIN BOOKINGS GET ERROR] ${err.message}`));
+        return NextResponse.json({ success: false, message: 'Failed to retrieve bookings' }, { status: 500 });
     }
 }
 
@@ -89,7 +102,7 @@ export async function POST(request) {
         return NextResponse.json({ success: false, message: 'Access temporarily restricted.' }, { status: 403 });
     }
 
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 10, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 20, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
@@ -123,8 +136,8 @@ export async function POST(request) {
         if (!rec) {
             return NextResponse.json({ success: false, message: 'Invalid booking details.' }, { status: 400 });
         }
-        const updatedList = await addServerBooking(rec);
-        return NextResponse.json({ success: true, booking: rec, totalCount: updatedList.length });
+        const created = await addServerBooking(rec);
+        return NextResponse.json({ success: true, booking: created });
     } catch (err) {
         console.error('Error creating booking:', err);
         return NextResponse.json({ success: false, message: 'Internal server error while recording booking' }, { status: 500 });
@@ -135,7 +148,7 @@ export async function POST(request) {
 export async function PATCH(request) {
     const ip = getClientIp(request);
 
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 10, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 20, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
@@ -174,8 +187,8 @@ export async function PATCH(request) {
             return NextResponse.json({ success: false, message: 'No valid fields to update.' }, { status: 400 });
         }
 
-        const updatedList = await updateServerBooking(id, cleanUpdates);
-        return NextResponse.json({ success: true, bookings: updatedList });
+        const updated = await updateServerBooking(id, cleanUpdates);
+        return NextResponse.json({ success: true, booking: updated });
     } catch (err) {
         console.error('Error updating booking:', err);
         return NextResponse.json({ success: false, message: 'Internal server error while updating booking' }, { status: 500 });
@@ -186,7 +199,7 @@ export async function PATCH(request) {
 export async function DELETE(request) {
     const ip = getClientIp(request);
 
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 10, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 20, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
@@ -203,8 +216,8 @@ export async function DELETE(request) {
             return NextResponse.json({ success: false, message: 'Missing booking ID' }, { status: 400 });
         }
 
-        const updatedList = await deleteServerBooking(id);
-        return NextResponse.json({ success: true, bookings: updatedList });
+        const result = await deleteServerBooking(id);
+        return NextResponse.json({ success: true, ...result });
     } catch (err) {
         console.error('Error deleting booking:', err);
         return NextResponse.json({ success: false, message: 'Internal server error while deleting booking' }, { status: 500 });

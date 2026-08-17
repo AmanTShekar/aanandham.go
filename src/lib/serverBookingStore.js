@@ -5,56 +5,10 @@ import { prisma, isPrismaConfigured } from './prisma';
 const DATA_DIR = path.join(process.cwd(), '.data');
 const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
 
-const INITIAL_SERVER_BOOKINGS = [
-    {
-        id: 'BK-M98X4K-A1',
-        name: 'Arjun Menon',
-        phone: '+91 98471 23456',
-        package: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
-        region: 'Munnar',
-        dates: 'Next Saturday – Sunday',
-        guests: 4,
-        roomType: '1 × Weatherproof Alpine 4-Person Tent',
-        addons: ['Campfire Live Barbecue Platter', 'Private 4x4 Off-Road Jeep Upgrade'],
-        total: 8846,
-        status: 'Confirmed',
-        source: 'Website Booking Engine',
-        createdAt: '14 Aug, 10:30 AM'
-    },
-    {
-        id: 'BK-M98X4K-B2',
-        name: 'Pooja & Vikram',
-        phone: '+91 94470 56789',
-        package: 'Suryanelli Valley Ridge Geodesic Glamping',
-        region: 'Munnar',
-        dates: 'Upcoming Weekend',
-        guests: 2,
-        roomType: '1 × Geodesic Luxury Dome Pod',
-        addons: ['4K Drone Mountain Video Reel Shoot'],
-        total: 6498,
-        status: 'Pending',
-        source: 'Instant Reservation',
-        createdAt: '15 Aug, 02:15 PM'
-    },
-    {
-        id: 'BK-M98X4K-C3',
-        name: 'Dr. Siddharth & Squad',
-        phone: '+91 97455 89012',
-        package: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
-        region: 'Silent Valley',
-        dates: 'Sep 05 – 06, 2026',
-        guests: 6,
-        roomType: '2 × Weatherproof Alpine 4-Person Tent',
-        addons: ['Campfire Live Barbecue Platter'],
-        total: 21894,
-        status: 'Confirmed',
-        source: 'Contact Form',
-        createdAt: '15 Aug, 04:45 PM'
-    }
-];
+const INITIAL_SERVER_BOOKINGS = [];
 
 // In-memory fallback if disk write is not available
-let memoryStore = [...INITIAL_SERVER_BOOKINGS];
+let memoryStore = [];
 
 // Helper: Ensure directory exists on local disk
 function ensureDataDir() {
@@ -74,27 +28,31 @@ function readLocalBookings() {
         if (fs.existsSync(BOOKINGS_FILE)) {
             const raw = fs.readFileSync(BOOKINGS_FILE, 'utf-8');
             const data = JSON.parse(raw);
-            if (Array.isArray(data) && data.length > 0) {
+            if (Array.isArray(data)) {
                 memoryStore = data;
                 return data;
             }
         }
-        fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(INITIAL_SERVER_BOOKINGS, null, 2), 'utf-8');
-        return INITIAL_SERVER_BOOKINGS;
+        fs.writeFileSync(BOOKINGS_FILE, JSON.stringify([], null, 2), 'utf-8');
+        return [];
     } catch (err) {
         return memoryStore;
     }
 }
 
-// Helper: Write local disk fallback
+// Helper: Write local disk fallback (only used in pure local / non-Prisma development mode)
 function writeLocalBookings(bookings) {
+    memoryStore = bookings;
+    // On production or when PostgreSQL/Prisma is configured, skip doomed disk writes on read-only serverless filesystems
+    if (isPrismaConfigured) {
+        return { success: true, inMemoryOnly: true };
+    }
     try {
-        memoryStore = bookings;
         ensureDataDir();
         fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(bookings, null, 2), 'utf-8');
-        return true;
+        return { success: true, persistedToDisk: true };
     } catch (err) {
-        return true;
+        return { success: false, persistedToDisk: false, inMemoryOnly: true, error: err.message };
     }
 }
 
@@ -106,7 +64,15 @@ function mapFromPrisma(record) {
         holdExpiresAt: record.holdExpiresAt != null ? Number(record.holdExpiresAt) : null,
         paidAt: record.paidAt ? record.paidAt.toISOString() : null,
         createdAt: typeof record.createdAt === 'string' ? record.createdAt : record.createdAt?.toISOString?.() || String(record.createdAt),
-        addons: Array.isArray(record.addons) ? record.addons : (typeof record.addons === 'string' ? JSON.parse(record.addons || '[]') : [])
+        addons: Array.isArray(record.addons) ? record.addons : (typeof record.addons === 'string' ? JSON.parse(record.addons || '[]') : []),
+        utrNumber: record.utrNumber || null,
+        paidAmount: record.paidAmount != null ? Number(record.paidAmount) : null,
+        balanceDue: record.balanceDue != null ? Number(record.balanceDue) : null,
+        paymentMode: record.paymentMode || null,
+        mealSummary: record.mealSummary || null,
+        dietaryChoice: record.dietaryChoice || null,
+        vegCount: record.vegCount != null ? Number(record.vegCount) : null,
+        nonVegCount: record.nonVegCount != null ? Number(record.nonVegCount) : null
     };
 }
 
@@ -129,50 +95,61 @@ function mapToPrisma(data) {
     if (payload.total !== undefined) {
         payload.total = Number(payload.total) || 0;
     }
+    if (payload.paidAmount !== undefined) {
+        payload.paidAmount = payload.paidAmount != null ? Number(payload.paidAmount) : null;
+    }
+    if (payload.balanceDue !== undefined) {
+        payload.balanceDue = payload.balanceDue != null ? Number(payload.balanceDue) : null;
+    }
     if (payload.guests !== undefined) {
         payload.guests = Number(payload.guests) || 1;
+    }
+    if (payload.vegCount !== undefined) {
+        payload.vegCount = payload.vegCount != null ? Number(payload.vegCount) : null;
+    }
+    if (payload.nonVegCount !== undefined) {
+        payload.nonVegCount = payload.nonVegCount != null ? Number(payload.nonVegCount) : null;
     }
     return payload;
 }
 
 /**
- * Retrieve all bookings (Postgres/Neon if configured, otherwise local JSON/memory fallback)
+ * Retrieve bookings with optional pagination (Postgres/Neon if configured, otherwise local JSON/memory fallback)
  */
-export async function getStoredBookings() {
+export async function getStoredBookings({ limit, offset } = {}) {
     if (isPrismaConfigured && prisma) {
         try {
-            const records = await prisma.booking.findMany({
+            const query = {
                 orderBy: { createdAt: 'desc' }
-            });
-            if (records && records.length > 0) {
-                return records.map(mapFromPrisma);
+            };
+            if (typeof limit === 'number' && limit > 0) {
+                query.take = limit;
             }
-            // Seed defaults if database is completely empty
-            for (const item of INITIAL_SERVER_BOOKINGS) {
-                try {
-                    await prisma.booking.upsert({
-                        where: { id: item.id },
-                        create: mapToPrisma(item),
-                        update: {}
-                    });
-                } catch {}
+            if (typeof offset === 'number' && offset >= 0) {
+                query.skip = offset;
             }
-            const seeded = await prisma.booking.findMany({
-                orderBy: { createdAt: 'desc' }
-            });
-            return seeded.map(mapFromPrisma);
+            const records = await prisma.booking.findMany(query);
+            return (records || []).map(mapFromPrisma);
         } catch (err) {
             console.error('Prisma query error, falling back to local store:', err);
         }
     }
-    return readLocalBookings();
+    const all = readLocalBookings();
+    if (typeof offset === 'number' || typeof limit === 'number') {
+        const start = typeof offset === 'number' ? offset : 0;
+        const end = typeof limit === 'number' ? start + limit : undefined;
+        return all.slice(start, end);
+    }
+    return all;
 }
 
 /**
  * Persist / Bulk-sync bookings list
  */
 export async function saveStoredBookings(bookings) {
-    writeLocalBookings(bookings);
+    if (!isPrismaConfigured) {
+        writeLocalBookings(bookings);
+    }
     if (isPrismaConfigured && prisma && Array.isArray(bookings)) {
         try {
             for (const b of bookings) {
@@ -192,7 +169,7 @@ export async function saveStoredBookings(bookings) {
 }
 
 /**
- * Add a new booking record
+ * Add a new booking record (returns single created record, avoiding full-table findMany)
  */
 export async function addServerBooking(newBooking) {
     if (isPrismaConfigured && prisma) {
@@ -201,10 +178,9 @@ export async function addServerBooking(newBooking) {
             const created = await prisma.booking.create({
                 data: mapped
             });
-            // Update local memory sync as well
-            memoryStore = [mapFromPrisma(created), ...memoryStore.filter(b => b.id !== newBooking.id)];
-            writeLocalBookings(memoryStore);
-            return await getStoredBookings();
+            const result = mapFromPrisma(created);
+            memoryStore = [result, ...memoryStore.filter(b => b.id !== newBooking.id)];
+            return result;
         } catch (err) {
             console.error('Prisma addServerBooking error, saving locally:', err);
         }
@@ -213,11 +189,11 @@ export async function addServerBooking(newBooking) {
     const list = readLocalBookings();
     const updated = [newBooking, ...list.filter(b => b.id !== newBooking.id)];
     writeLocalBookings(updated);
-    return updated;
+    return newBooking;
 }
 
 /**
- * Update an existing booking record by ID
+ * Update an existing booking record by ID (returns single updated record, avoiding full-table findMany)
  */
 export async function updateServerBooking(id, updates) {
     if (isPrismaConfigured && prisma) {
@@ -227,18 +203,25 @@ export async function updateServerBooking(id, updates) {
                 where: { id },
                 data: mapped
             });
-            memoryStore = memoryStore.map(b => b.id === id ? { ...b, ...mapFromPrisma(updated) } : b);
-            writeLocalBookings(memoryStore);
-            return await getStoredBookings();
+            const result = mapFromPrisma(updated);
+            memoryStore = memoryStore.map(b => b.id === id ? { ...b, ...result } : b);
+            return result;
         } catch (err) {
             console.error('Prisma updateServerBooking error, updating locally:', err);
         }
     }
 
     const list = readLocalBookings();
-    const updated = list.map(b => b.id === id ? { ...b, ...updates } : b);
+    let updatedRecord = null;
+    const updated = list.map(b => {
+        if (b.id === id) {
+            updatedRecord = { ...b, ...updates };
+            return updatedRecord;
+        }
+        return b;
+    });
     writeLocalBookings(updated);
-    return updated;
+    return updatedRecord || { id, ...updates };
 }
 
 /**
@@ -251,8 +234,7 @@ export async function deleteServerBooking(id) {
                 where: { id }
             });
             memoryStore = memoryStore.filter(b => b.id !== id);
-            writeLocalBookings(memoryStore);
-            return await getStoredBookings();
+            return { success: true, id };
         } catch (err) {
             console.error('Prisma deleteServerBooking error, deleting locally:', err);
         }
@@ -261,5 +243,5 @@ export async function deleteServerBooking(id) {
     const list = readLocalBookings();
     const updated = list.filter(b => b.id !== id);
     writeLocalBookings(updated);
-    return updated;
+    return { success: true, id };
 }

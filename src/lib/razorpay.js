@@ -138,6 +138,15 @@ export function isRazorpayIp(ip) {
 
     const cleanIp = ip.trim().replace(/^::ffff:/, ''); // normalize IPv4-mapped IPv6
 
+    // Configurable via environment variables (comma-separated IP list or CIDRs)
+    if (process.env.RAZORPAY_WEBHOOK_IPS) {
+        const envIps = process.env.RAZORPAY_WEBHOOK_IPS.split(',').map(s => s.trim()).filter(Boolean);
+        if (envIps.includes(cleanIp)) return true;
+        for (const envPrefix of envIps) {
+            if (cleanIp.startsWith(envPrefix)) return true;
+        }
+    }
+
     // Official Razorpay Webhook IP ranges (AWS Mumbai regions & Razorpay edge)
     const RAZORPAY_IPS = [
         '52.66.195.100', '52.66.195.101', '52.66.195.102', '52.66.195.103',

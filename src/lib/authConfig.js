@@ -5,17 +5,59 @@ import crypto from 'crypto';
 
 export const IS_PROD = process.env.NODE_ENV === 'production';
 
-// Dynamic ephemeral secret fallback if none configured (prevents offline token forgery)
+// Dynamic ephemeral secret fallback in development if none configured (prevents offline token forgery)
 const EPHEMERAL_DEV_SECRET = crypto.randomBytes(32).toString('hex');
-export const AUTH_SECRET = process.env.ADMIN_AUTH_SECRET || (IS_PROD ? null : EPHEMERAL_DEV_SECRET);
 
-const ENV_PASSCODES = process.env.ADMIN_PASSCODES
-    ? process.env.ADMIN_PASSCODES.split(',').map(s => s.trim().toLowerCase()).filter(Boolean)
-    : [];
+const DISALLOWED_PROD_SECRETS = [
+    'aanandham_high_entropy_secure_auth_secret_2026_munnar_kerala_wild',
+    'your_custom_random_32_char_hex_secret_key_here',
+    'aanandham2026',
+    'secret',
+    'changeme'
+];
 
-// Safe dev fallbacks only active in non-production development environments
-const DEV_FALLBACK_PASSCODES = ['aanandham2026', 'wildadmin2026'];
-export const VALID_PASSCODES = ENV_PASSCODES.length > 0 ? ENV_PASSCODES : (IS_PROD ? [] : DEV_FALLBACK_PASSCODES);
+const DISALLOWED_PROD_PASSCODES = [
+    'aanandham2026',
+    'wildadmin2026',
+    'admin',
+    'password',
+    '12345678',
+    'your_secure_random_admin_passcode_min_16_chars'
+];
+
+function resolveAuthSecret() {
+    const configured = process.env.ADMIN_AUTH_SECRET;
+    if (IS_PROD) {
+        if (!configured || configured.length < 32 || DISALLOWED_PROD_SECRETS.includes(configured.toLowerCase())) {
+            console.error('🚨 [SECURITY WARNING] ADMIN_AUTH_SECRET in production is missing, too short (<32 chars), or matches a known public default. Admin login is disabled until a secure secret is configured in environment.');
+            return null;
+        }
+        return configured;
+    }
+    return configured || EPHEMERAL_DEV_SECRET;
+}
+
+export const AUTH_SECRET = resolveAuthSecret();
+
+function resolvePasscodes() {
+    const raw = process.env.ADMIN_PASSCODES || process.env.ADMIN_PASSCODE;
+    const parsed = raw ? raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean) : [];
+
+    if (IS_PROD) {
+        const safeCodes = parsed.filter(code => code.length >= 12 && !DISALLOWED_PROD_PASSCODES.includes(code));
+        if (safeCodes.length === 0) {
+            console.error('🚨 [SECURITY WARNING] ADMIN_PASSCODE in production is missing or uses a disallowed default. Admin login is disabled.');
+        }
+        return safeCodes;
+    }
+
+    if (parsed.length === 0) {
+        console.warn('⚠️ [DEV WARNING] No ADMIN_PASSCODE is set in .env.local. Configure ADMIN_PASSCODE to log into /admin.');
+    }
+    return parsed;
+}
+
+export const VALID_PASSCODES = resolvePasscodes();
 
 // In-memory revocation blacklist for logged-out tokens (bounded, 2000 entries)
 const revokedTokens = new Set();
@@ -106,17 +148,10 @@ export function getClientIp(request) {
     return 'unknown';
 }
 
-// Verify an incoming request carries a valid admin session (Bearer header or HttpOnly cookie)
+// Verify an incoming request carries a valid admin session (Strictly via HttpOnly cookie)
 export function getAdminPayload(request) {
-    const authHeader = request.headers.get('authorization');
-    let token = null;
-
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
-    } else {
-        const cookieToken = request.cookies.get('aanandham_admin_token');
-        if (cookieToken) token = cookieToken.value;
-    }
+    const cookieToken = request.cookies.get('aanandham_admin_token');
+    const token = cookieToken ? cookieToken.value : null;
 
     if (!token) return null;
 

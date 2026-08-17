@@ -50,7 +50,7 @@ export default function Footer() {
                                 margin: 0,
                                 letterSpacing: '-0.8px'
                             }}>
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                Aanandham<span className="brand-accent-go">.go</span>
                             </h3>
                         </Link>
                         <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.65, marginBottom: '24px' }}>
@@ -161,7 +161,7 @@ export default function Footer() {
                     {/* Column 3: AANANDHAM.GO SUB-PAGES */}
                     <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
+                            AANANDHAM.GO
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[

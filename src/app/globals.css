@@ -1,7 +1,7 @@
 html {
   background-color: #F8F9F5 !important;
   color: #121613;
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   min-height: 100%;
   -webkit-text-size-adjust: 100%;
@@ -9,7 +9,6 @@ html {
 }
 
 body {
-  overflow-x: hidden;
   width: 100%;
   min-height: 100%;
   position: relative;
@@ -48,30 +47,26 @@ main, section, header, footer {
 .reveal-on-scroll,
 .reveal-fade-up {
   opacity: 0;
-  transform: translate3d(0, 36px, 0);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-fade-left {
   opacity: 0;
-  transform: translate3d(-36px, 0, 0);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translate3d(-24px, 0, 0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-fade-right {
   opacity: 0;
-  transform: translate3d(36px, 0, 0);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: translate3d(24px, 0, 0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-zoom {
   opacity: 0;
-  transform: scale(0.92) translate3d(0, 20px, 0);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transform: scale(0.96) translate3d(0, 14px, 0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reveal-on-scroll.is-revealed,
@@ -87,10 +82,23 @@ main, section, header, footer {
   transform: scale(1) translate3d(0, 0, 0) !important;
 }
 
-.reveal-delay-1 { transition-delay: 0.08s !important; }
-.reveal-delay-2 { transition-delay: 0.16s !important; }
-.reveal-delay-3 { transition-delay: 0.24s !important; }
-.reveal-delay-4 { transition-delay: 0.32s !important; }
+.reveal-delay-1 { transition-delay: 0.04s !important; }
+.reveal-delay-2 { transition-delay: 0.08s !important; }
+.reveal-delay-3 { transition-delay: 0.12s !important; }
+.reveal-delay-4 { transition-delay: 0.16s !important; }
+
+/* On mobile/touch, show content instantly to prevent blank flash during rapid scrolling */
+@media (max-width: 1024px) {
+  .reveal-on-scroll,
+  .reveal-fade-up,
+  .reveal-fade-left,
+  .reveal-fade-right,
+  .reveal-zoom {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
 
 /* ─────────────────────────────────────────────────────────────
    CUSTOM REAL BROWSER SCROLLBAR (Thick Luxury Sunrise Gold & Deep Obsidian)
@@ -270,8 +278,22 @@ body::-webkit-scrollbar-thumb:active,
 
 @media (min-width: 1024px) {
   .camp-detail-layout {
-    grid-template-columns: 1fr 350px;
-    gap: 36px;
+    grid-template-columns: 1fr 420px;
+    gap: 40px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .camp-detail-layout {
+    grid-template-columns: 1fr 480px;
+    gap: 48px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .camp-detail-layout {
+    grid-template-columns: 1fr 520px;
+    gap: 56px;
   }
 }
 
@@ -388,7 +410,6 @@ body::-webkit-scrollbar-thumb:active,
     overflow-x: auto !important;
     overflow-y: visible !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 16px !important;
     padding: 16px 4px 28px 4px !important;
@@ -440,39 +461,31 @@ body::-webkit-scrollbar-thumb:active,
   padding: 42px 34px 30px 34px;
   border-radius: 4px 16px 6px 20px;
   box-shadow: 
-    0 16px 36px -4px rgba(0, 0, 0, 0.1),
-    0 4px 14px rgba(0, 0, 0, 0.05),
-    inset 0 0 50px rgba(0, 0, 0, 0.02);
+    0 12px 28px -4px rgba(0, 0, 0, 0.08),
+    0 4px 10px rgba(0, 0, 0, 0.04);
   border: 1.5px solid rgba(18, 22, 19, 0.12);
   display: flex;
   flex-direction: column;
   min-height: 440px;
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
   overflow: visible;
 }
 
 .roughed-paper-scrap:hover {
-  transform: translateY(-14px) rotate(0deg) scale(1.025) !important;
+  transform: translateY(-10px) scale(1.02);
   box-shadow: 
-    0 32px 70px -8px rgba(0, 0, 0, 0.18),
-    0 12px 28px rgba(0, 0, 0, 0.08) !important;
+    0 24px 50px -8px rgba(0, 0, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
-/* Realistic Crumpled Paper Crease & Fold Shadow Shading */
+/* Lightweight Crumpled Paper Crease Shading (Zero GPU blend-mode overhead) */
 .crumpled-crease-overlay {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background-image: 
-    linear-gradient(132deg, rgba(0,0,0,0.04) 0%, transparent 35%, rgba(255,255,255,0.7) 37%, rgba(0,0,0,0.045) 40%, transparent 68%),
-    linear-gradient(38deg, transparent 45%, rgba(255,255,255,0.6) 47%, rgba(0,0,0,0.035) 50%, transparent 75%),
-    radial-gradient(circle at 80% 20%, rgba(0,0,0,0.03) 0%, transparent 45%),
-    linear-gradient(rgba(18, 22, 19, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 22, 19, 0.03) 1px, transparent 1px);
-  background-size: auto, auto, auto, 16px 16px, 16px 16px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 40%, rgba(0,0,0,0.03) 100%);
   pointer-events: none;
-  mix-blend-mode: multiply;
   z-index: 1;
 }
 
@@ -484,13 +497,11 @@ body::-webkit-scrollbar-thumb:active,
   transform: translateX(-50%) rotate(-2deg);
   width: 120px;
   height: 32px;
-  background: rgba(228, 192, 126, 0.75);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(228, 192, 126, 0.85);
   border: 1px solid rgba(195, 150, 75, 0.7);
   border-left: 2px dashed rgba(160, 115, 45, 0.8);
   border-right: 2px dashed rgba(160, 115, 45, 0.8);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
   z-index: 10;
   pointer-events: none;
 }
@@ -503,7 +514,7 @@ body::-webkit-scrollbar-thumb:active,
   transform: rotate(18deg);
   width: 64px;
   height: 24px;
-  background: rgba(228, 192, 126, 0.72);
+  background: rgba(228, 192, 126, 0.85);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border: 1px solid rgba(195, 150, 75, 0.65);
@@ -863,7 +874,6 @@ body::-webkit-scrollbar-thumb:active,
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 18px !important;
     padding: 24px calc((100vw - min(86vw, 360px)) / 2) 32px !important;
@@ -985,7 +995,6 @@ body::-webkit-scrollbar-thumb:active,
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     padding: 12px 0 22px 0 !important;
     gap: 16px !important;
@@ -1034,7 +1043,6 @@ body::-webkit-scrollbar-thumb:active,
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     padding: 12px calc((100vw - min(86vw, 360px)) / 2) 28px !important;
     scroll-padding: 0 calc((100vw - min(86vw, 360px)) / 2) !important;
@@ -2091,7 +2099,7 @@ button:focus-visible, a:focus-visible {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35), 0 8px 20px rgba(0,0,0,0.15);
   border: 3px solid #FFFFFF;
   background-color: #070E08;
-  will-change: transform, left, top;
+  will-change: transform;
 }
 
 /* Hide inline accordion image on desktop so image is on cursor only */
@@ -2761,7 +2769,6 @@ button:focus-visible, a:focus-visible {
   border-radius: 3px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 .text-hover-marker:hover .marker-text::before,
@@ -2774,7 +2781,6 @@ button:focus-visible, a:focus-visible {
 /* For dark backgrounds (Navbar & Footer) */
 .text-hover-marker-dark .marker-text::before {
   background: rgba(255, 238, 75, 0.88);
-  mix-blend-mode: normal;
   box-shadow: 0 0 16px rgba(255, 238, 75, 0.45);
 }
 
@@ -2783,6 +2789,20 @@ button:focus-visible, a:focus-visible {
 .text-hover-marker-dark.is-active .marker-text {
   color: #121613 !important;
   transition: color 0.18s ease;
+}
+
+/* Brand .go Accent (Yellow by default, transitions to Pure White on hover) */
+.brand-accent-go {
+  color: #E5A93B;
+  transition: color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.text-hover-marker:hover .brand-accent-go,
+.text-hover-marker-dark:hover .brand-accent-go,
+a:hover .brand-accent-go,
+button:hover .brand-accent-go,
+.brand-accent-go:hover {
+  color: #FFFFFF !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -2812,13 +2832,12 @@ button:focus-visible, a:focus-visible {
   right: -6px;
   top: 4%;
   bottom: -4%;
-  background: rgba(255, 230, 50, 0.62);
+  background: rgba(255, 230, 50, 0.48);
   clip-path: polygon(0% 4%, 100% 0%, 98% 96%, 2% 100%);
   transform: skewX(-14deg) rotate(-0.7deg);
   border-radius: 3px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 /* Variation 2: Upward angled chisel swipe */
@@ -2829,13 +2848,12 @@ button:focus-visible, a:focus-visible {
   right: -6px;
   top: 4%;
   bottom: -4%;
-  background: rgba(255, 232, 55, 0.62);
+  background: rgba(255, 232, 55, 0.48);
   clip-path: polygon(1% 0%, 100% 4%, 97% 100%, 0% 96%);
   transform: skewX(-12deg) rotate(0.6deg);
   border-radius: 3px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 /* Variation 3: Deep steep hand angle cut */
@@ -2846,13 +2864,12 @@ button:focus-visible, a:focus-visible {
   right: -6px;
   top: 4%;
   bottom: -4%;
-  background: rgba(255, 228, 48, 0.62);
+  background: rgba(255, 228, 48, 0.48);
   clip-path: polygon(0% 6%, 98% 1%, 100% 95%, 2% 99%);
   transform: skewX(-15deg) rotate(-1deg);
   border-radius: 3px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 /* Variation 4: Wide steady stroke */
@@ -2863,13 +2880,12 @@ button:focus-visible, a:focus-visible {
   right: -6px;
   top: 4%;
   bottom: -4%;
-  background: rgba(255, 235, 60, 0.62);
+  background: rgba(255, 235, 60, 0.48);
   clip-path: polygon(1% 2%, 100% 0%, 99% 98%, 0% 97%);
   transform: skewX(-10deg) rotate(0.4deg);
   border-radius: 3px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 .text-highlight-subtle {
@@ -2888,13 +2904,12 @@ button:focus-visible, a:focus-visible {
   right: -4px;
   top: 20%;
   bottom: 12%;
-  background-color: rgba(255, 230, 50, 0.38);
+  background-color: rgba(255, 230, 50, 0.32);
   clip-path: polygon(0% 3%, 100% 0%, 99% 97%, 1% 100%);
   transform: skewX(-12deg) rotate(-0.5deg);
   border-radius: 1px;
   z-index: -1;
   pointer-events: none;
-  mix-blend-mode: multiply;
 }
 
 /* Authentic Marker Highlight on Dark Backgrounds */
@@ -3123,18 +3138,20 @@ button, a, input, select, textarea {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(32px, 4vw, 56px);
-  align-items: stretch;
+  align-items: center;
   width: 100%;
 }
 
 .why-showcase-col {
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 560px;
-  border-radius: 28px;
+  height: 590px;
+  max-height: 590px;
+  border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+  background: #121613;
+  align-self: center;
 }
 
 @media (max-width: 900px) {
@@ -3150,7 +3167,8 @@ button, a, input, select, textarea {
   .why-showcase-col {
     order: 2 !important;
     width: 100% !important;
-    height: clamp(380px, 52vh, 460px) !important;
+    height: 460px !important;
+    max-height: 460px !important;
     min-height: unset !important;
     border-radius: 24px !important;
   }
@@ -3500,7 +3518,6 @@ input, textarea, select, button {
     overflow-x: auto !important;
     overflow-y: visible !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 18px !important;
     padding: 36px calc((100vw - min(84vw, 330px)) / 2) 44px !important;
@@ -3531,7 +3548,6 @@ input, textarea, select, button {
   overflow-x: auto !important;
   overflow-y: visible !important;
   scroll-snap-type: x mandatory !important;
-  scroll-behavior: smooth !important;
   -webkit-overflow-scrolling: touch !important;
   gap: 20px !important;
   padding: 32px 0 38px 0 !important;
@@ -3830,7 +3846,6 @@ input, textarea, select, button {
     display: flex !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
-    scroll-behavior: smooth !important;
     -webkit-overflow-scrolling: touch !important;
     gap: 16px !important;
     padding: 12px calc((100vw - min(80vw, 290px)) / 2) 24px !important;

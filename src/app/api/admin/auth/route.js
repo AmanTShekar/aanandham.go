@@ -14,11 +14,16 @@ function logAuthEvent(event) {
     }
 }
 
-// ── BOUNDED RATE LIMITING (Memory Leak Prevention & TTL Sweeper) ──
+// ── BOUNDED RATE LIMITING (Per-IP and Global Distributed Brute-Force Shield) ──
 const MAX_RATE_LIMIT_ENTRIES = 5000;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const MAX_FAILED_ATTEMPTS = 5;
+const MAX_FAILED_ATTEMPTS_PER_IP = 5;
+const MAX_GLOBAL_FAILED_ATTEMPTS = 15;
 const loginAttempts = new Map();
+
+let globalFailedAttempts = 0;
+let globalLockoutUntil = 0;
+let globalWindowStart = Date.now();
 
 // Periodic sweep to evict stale rate-limit records and prevent memory growth
 function sweepStaleRateLimits() {
@@ -28,11 +33,21 @@ function sweepStaleRateLimits() {
             loginAttempts.delete(ip);
         }
     }
+    if (now - globalWindowStart > RATE_LIMIT_WINDOW_MS) {
+        globalFailedAttempts = 0;
+        globalWindowStart = now;
+    }
 }
 
 function isRateLimited(ip) {
     sweepStaleRateLimits();
     const now = Date.now();
+
+    // Check global lockout (stops botnets using rotating IPs)
+    if (now < globalLockoutUntil) {
+        return true;
+    }
+
     const record = loginAttempts.get(ip);
     if (!record) return false;
 
@@ -41,7 +56,7 @@ function isRateLimited(ip) {
         return false;
     }
 
-    return record.count >= MAX_FAILED_ATTEMPTS;
+    return record.count >= MAX_FAILED_ATTEMPTS_PER_IP;
 }
 
 function recordFailedAttempt(ip) {
@@ -52,6 +67,12 @@ function recordFailedAttempt(ip) {
     const record = loginAttempts.get(ip) || { count: 0, firstAttempt: now };
     record.count += 1;
     loginAttempts.set(ip, record);
+
+    globalFailedAttempts += 1;
+    if (globalFailedAttempts >= MAX_GLOBAL_FAILED_ATTEMPTS) {
+        globalLockoutUntil = now + (5 * 60 * 1000); // 5-minute global cooldown
+        console.warn(`🚨 [AUTH ALERT] Global admin brute-force threshold reached (${globalFailedAttempts} failures). Global lockout active for 5 mins.`);
+    }
 }
 
 function clearAttempts(ip) {
@@ -65,7 +86,7 @@ export async function POST(request) {
     if (isRateLimited(ip)) {
         logAuthEvent({ ip, action: 'LOGIN_BLOCKED_RATE_LIMIT', success: false });
         return NextResponse.json(
-            { success: false, message: 'Too many failed login attempts. Rate limit active. Please wait 15 minutes.' },
+            { success: false, message: 'Too many failed login attempts. Rate limit active. Please wait.' },
             { status: 429 }
         );
     }
@@ -96,59 +117,57 @@ export async function POST(request) {
             }
         }
 
-        if (isValid) {
-            clearAttempts(ip);
-            
-            // Issue 24-hour expiration token with unique session ID
-            const sessionId = crypto.randomBytes(16).toString('hex');
-            const token = createSignedToken({
-                role: 'admin_coordinator',
-                sessionId,
-                issuedAt: Date.now(),
-                exp: Date.now() + 24 * 60 * 60 * 1000
-            });
-
-            logAuthEvent({ ip, action: 'LOGIN_SUCCESS', success: true });
-
-            // Return response and attach secure HttpOnly cookie
-            const response = NextResponse.json({ success: true, token, message: 'Authentication successful.' });
-            response.cookies.set({
-                name: 'aanandham_admin_token',
-                value: token,
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
-                path: '/',
-                maxAge: 24 * 60 * 60 // 24 hours
-            });
-
-            return response;
-        } else {
+        if (!isValid) {
             recordFailedAttempt(ip);
-            logAuthEvent({ ip, action: 'LOGIN_FAILED', success: false });
-            return NextResponse.json({ success: false, message: 'Invalid coordinator access key.' }, { status: 401 });
+            logAuthEvent({ ip, action: 'LOGIN_FAILED_INVALID_PASSCODE', success: false });
+            // Artificial delay to mitigate high-speed automated brute-forcing
+            await new Promise(r => setTimeout(r, 450 + Math.random() * 150));
+            return NextResponse.json({ success: false, message: 'Invalid administrative passcode.' }, { status: 401 });
         }
-    } catch {
-        return NextResponse.json({ success: false, message: 'Server error processing authentication.' }, { status: 500 });
+
+        // Authentication successful: clear attempt counter for this IP
+        clearAttempts(ip);
+
+        // Generate signed, tamper-proof session token (expires in 24 hours)
+        const token = createSignedToken({
+            role: 'admin_coordinator',
+            issuedAt: Date.now()
+        }, 24 * 60 * 60);
+
+        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', success: true });
+
+        // Set HttpOnly, Secure, SameSite=Strict cookie (NEVER exposed to client JavaScript)
+        const response = NextResponse.json({
+            success: true,
+            message: 'Administrative session authenticated successfully.'
+        });
+
+        response.cookies.set({
+            name: 'aanandham_admin_token',
+            value: token,
+            httpOnly: true,
+            secure: IS_PROD,
+            sameSite: 'strict',
+            path: '/',
+            maxAge: 24 * 60 * 60
+        });
+
+        return response;
+
+    } catch (err) {
+        console.error('Admin authentication error:', err);
+        return NextResponse.json({ success: false, message: 'Internal authentication error.' }, { status: 500 });
     }
 }
 
-// ── GET: Validate session token from Cookie or Authorization header ──
+// ── GET: Validate session token strictly from HttpOnly Cookie ──
 export async function GET(request) {
     try {
-        // Check for token from Authorization header or HttpOnly Cookie
-        const authHeader = request.headers.get('authorization');
-        let token = null;
-
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            token = authHeader.split(' ')[1];
-        } else {
-            const cookieToken = request.cookies.get('aanandham_admin_token');
-            if (cookieToken) token = cookieToken.value;
-        }
+        const cookieToken = request.cookies.get('aanandham_admin_token');
+        const token = cookieToken ? cookieToken.value : null;
 
         if (!token) {
-            return NextResponse.json({ authenticated: false, message: 'No authorization token provided.' }, { status: 401 });
+            return NextResponse.json({ authenticated: false, message: 'No authorization cookie provided.' }, { status: 401 });
         }
 
         const payload = verifySignedToken(token);
@@ -179,15 +198,8 @@ export async function GET(request) {
 // ── DELETE: Revoke session token and clear HttpOnly cookie ──
 export async function DELETE(request) {
     try {
-        const authHeader = request.headers.get('authorization');
-        let token = null;
-
-        if (authHeader && authHeader.startsWith('Bearer ')) {
-            token = authHeader.split(' ')[1];
-        } else {
-            const cookieToken = request.cookies.get('aanandham_admin_token');
-            if (cookieToken) token = cookieToken.value;
-        }
+        const cookieToken = request.cookies.get('aanandham_admin_token');
+        const token = cookieToken ? cookieToken.value : null;
 
         if (token) {
             revokeToken(token);
