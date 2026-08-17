@@ -7,27 +7,24 @@ import { getCheckInLandmarkGuide } from './accessControl.js';
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const LOGO_PATH = path.resolve(__dir, '../../public/logo.png');
 
-// ── Luxury Wilderness Color Palette (Matching aanandham.in) ──
-const BG_DARK    = [8, 16, 11];        // #08100B Deepest obsidian forest
-const CARD_BG    = [15, 28, 19];       // #0F1C13 Rich dark card
-const CARD_INNER = [21, 38, 26];       // #15261A Card cell background
-const CARD_LIGHT = [28, 48, 34];       // #1C3022 Highlight card
+// ── Clean Luxury Palette (Matching aanandham.in) ──
+const BG_DARK    = [10, 19, 13];       // #0A130D Deep forest canvas
+const CARD_BG    = [16, 29, 20];       // #101D14 Crisp card surface
+const CARD_INNER = [22, 38, 26];       // #16261A Detail row cell
 const LIME       = [213, 237, 85];     // #D5ED55 Signature Aanandham lime
-const AMBER      = [245, 158, 11];     // #F59E0B Warm sunset amber
-const GREEN      = [34, 197, 94];      // #22C55E Emerald verified green
-const TEXT_WHITE = [255, 255, 255];    // #FFFFFF Pure white
-const TEXT_MUTED = [162, 182, 166];    // #A2B6A6 Muted sage gray
-const TEXT_DIM   = [110, 130, 115];    // #6E8273 Dim label gray
-const BORDER_DIM = [38, 62, 45];       // #263E2D Subtle border
-const BORDER_LIME= [213, 237, 85];     // Lime border
+const AMBER      = [245, 158, 11];     // #F59E0B Warm amber
+const GREEN      = [34, 197, 94];      // #22C55E Verified green
+const TEXT_WHITE = [255, 255, 255];    // #FFFFFF Crisp white
+const TEXT_MUTED = [168, 190, 172];    // #A8BEAC Soft sage
+const TEXT_DIM   = [120, 142, 126];    // #788E7E Dim label
+const BORDER_DIM = [42, 68, 48];       // #2A4430 Subtle border
 
 // Standard A4 Dimensions in Points (72 dpi)
 const PAGE_W = 595.28;
 const PAGE_H = 841.89;
 
 /**
- * Generates an ultra-premium, luxury wilderness expedition pass PDF.
- * Designed to look like a high-end mountain sanctuary boarding permit.
+ * Generates a clean, minimalist, luxury Aanandham booking pass PDF.
  */
 export async function generateBookingPassPdf(booking, qrBuffer) {
     return new Promise((resolve, reject) => {
@@ -37,10 +34,10 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
             size: [PAGE_W, PAGE_H],
             margins: { top: 0, bottom: 0, left: 0, right: 0 },
             info: {
-                Title: `Aanandham Wilderness Permit — ${booking.id}`,
-                Author: 'Aanandham.go Wilderness Stays',
-                Subject: `Official Mountain Expedition Permit for ${booking.name || 'Explorer'}`,
-                Keywords: 'Aanandham, Munnar, Glamping, Pass, Permit, Wilderness'
+                Title: `Aanandham Pass — ${booking.id}`,
+                Author: 'Aanandham.go',
+                Subject: `Booking Pass for ${booking.name || 'Guest'}`,
+                Keywords: 'Aanandham, Munnar, Glamping, Pass, Booking'
             }
         });
 
@@ -49,78 +46,77 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.on('error', reject);
 
         const isConfirmed = ['confirmed', 'Confirmed'].includes(booking.status);
-        const passRef = String(booking.id || 'BK-EXPEDITION').toUpperCase();
+        const passRef = String(booking.id || 'BK-STAY').toUpperCase();
 
         // ═════════════════════════════════════════════════════════════
-        // 1. BACKGROUND & OUTER PASSPORT FRAME
+        // 1. BACKGROUND & MAIN CANVAS
         // ═════════════════════════════════════════════════════════════
         doc.rect(0, 0, PAGE_W, PAGE_H).fill(BG_DARK);
 
         // Top Signature Lime Accent Bar
         doc.rect(0, 0, PAGE_W, 6).fill(LIME);
 
-        // Main Pass Canvas Container (with margins)
+        // Main Pass Container Card
         const C_X = 24;
         const C_Y = 24;
         const C_W = PAGE_W - 48; // 547.28 pt
         const C_H = PAGE_H - 48; // 793.89 pt
 
-        // Pass Outer Card Background
         doc.roundedRect(C_X, C_Y, C_W, C_H, 20).fill(CARD_BG);
         doc.roundedRect(C_X, C_Y, C_W, C_H, 20)
            .lineWidth(1).strokeColor(BORDER_DIM).stroke();
 
         // ═════════════════════════════════════════════════════════════
-        // 2. HEADER BRANDING & PERMIT CLASSIFICATION
+        // 2. HEADER BRANDING & STATUS
         // ═════════════════════════════════════════════════════════════
         const HDR_Y = C_Y + 16;
 
-        // Logo — Proportional 1:1, larger, perfectly centered
+        // Logo — Proportional 1:1, crisp
         if (fs.existsSync(LOGO_PATH)) {
             try {
                 doc.image(LOGO_PATH, C_X + 20, HDR_Y, { fit: [54, 54], align: 'center', valign: 'center' });
             } catch (_) {}
         }
 
-        // Clean, Bold Brand Title: Aanandham.go
+        // Clean Bold Brand Title: Aanandham.go
         doc.font('Helvetica-Bold').fontSize(22).fill(TEXT_WHITE)
            .text('Aanandham', C_X + 86, HDR_Y + 14, { continued: true })
            .fill(LIME).text('.go');
 
         // Status Badge (Right aligned)
-        const badgeW = 144;
+        const badgeW = 138;
         const badgeH = 26;
         const badgeX = C_X + C_W - badgeW - 20;
         const badgeY = HDR_Y + 14;
         const badgeBg = isConfirmed ? LIME : AMBER;
-        const badgeText = isConfirmed ? '✓  PERMIT ACTIVE' : '⏳  PENDING APPROVAL';
+        const badgeText = isConfirmed ? '✓  CONFIRMED' : '⏳  PENDING';
 
         doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 13).fill(badgeBg);
         doc.font('Helvetica-Bold').fontSize(9).fill(BG_DARK)
            .text(badgeText, badgeX, badgeY + 8, { width: badgeW, align: 'center', characterSpacing: 0.5 });
 
         // ═════════════════════════════════════════════════════════════
-        // 3. EXPEDITION BANNER CARD
+        // 3. STAY TITLE & REFERENCE BANNER
         // ═════════════════════════════════════════════════════════════
         const EXP_Y = HDR_Y + 54;
         const EXP_H = 74;
 
         doc.roundedRect(C_X + 16, EXP_Y, C_W - 32, EXP_H, 14).fill(CARD_INNER);
         doc.roundedRect(C_X + 16, EXP_Y, C_W - 32, EXP_H, 14)
-           .lineWidth(1).strokeColor(isConfirmed ? [45, 80, 55] : [80, 60, 30]).stroke();
+           .lineWidth(1).strokeColor(BORDER_DIM).stroke();
 
-        // Subtitle: Permit Reference
+        // Subtitle
         doc.font('Helvetica-Bold').fontSize(8.5).fill(LIME)
-           .text('OFFICIAL EXPEDITION VOUCHER & DIGITAL PASS', C_X + 32, EXP_Y + 14, { characterSpacing: 1.2 });
+           .text('OFFICIAL BOOKING PASS', C_X + 32, EXP_Y + 14, { characterSpacing: 1 });
 
-        // Expedition Package Title
-        const pkgTitle = booking.package || 'Kolukkumalai Mountain Sunrise Expedition';
+        // Package / Sanctuary Title
+        const pkgTitle = booking.package || 'Aanandham Mountain Stay';
         doc.font('Helvetica-Bold').fontSize(16).fill(TEXT_WHITE)
            .text(pkgTitle, C_X + 32, EXP_Y + 28, { width: C_W - 190, ellipsis: true });
 
         // Location
         doc.font('Helvetica').fontSize(9).fill(TEXT_MUTED)
-           .text('📍 Suryanelli Basecamp · Munnar, Kerala · 7,900 FT Ridge', C_X + 32, EXP_Y + 50);
+           .text('📍 Suryanelli, Munnar, Kerala · 7,900 FT Ridge', C_X + 32, EXP_Y + 50);
 
         // Reference Box (Right side of banner)
         const refBoxW = 120;
@@ -129,26 +125,26 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.roundedRect(refBoxX, EXP_Y + 12, refBoxW, 50, 10).lineWidth(0.8).strokeColor(BORDER_DIM).stroke();
 
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_DIM)
-           .text('PASS REFERENCE', refBoxX, EXP_Y + 18, { width: refBoxW, align: 'center', characterSpacing: 0.8 });
+           .text('BOOKING REF', refBoxX, EXP_Y + 18, { width: refBoxW, align: 'center', characterSpacing: 0.8 });
         doc.font('Helvetica-Bold').fontSize(11).fill(LIME)
            .text(passRef, refBoxX, EXP_Y + 30, { width: refBoxW, align: 'center', characterSpacing: 1 });
 
         // ═════════════════════════════════════════════════════════════
-        // 4. PERFORATED BOARDING DIVIDER
+        // 4. PERFORATED DIVIDER
         // ═════════════════════════════════════════════════════════════
         const DIV_Y = EXP_Y + EXP_H + 16;
 
-        // Cutout notches on left and right edge
+        // Cutout notches
         doc.circle(C_X, DIV_Y, 8).fill(BG_DARK);
         doc.circle(C_X + C_W, DIV_Y, 8).fill(BG_DARK);
 
-        // Dashed tear line
+        // Dashed line
         doc.save().dash(5, { space: 6 })
            .moveTo(C_X + 16, DIV_Y).lineTo(C_X + C_W - 16, DIV_Y)
            .lineWidth(1).strokeColor(BORDER_DIM).stroke().restore();
 
         // ═════════════════════════════════════════════════════════════
-        // 5. TWO-COLUMN MAIN BODY (Details Left / Access Pass Right)
+        // 5. TWO-COLUMN MAIN BODY (Details Left / Check-In QR Right)
         // ═════════════════════════════════════════════════════════════
         const BODY_Y = DIV_Y + 16;
         const COL_PAD = 16;
@@ -157,17 +153,17 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const LEFT_X  = C_X + 16;
         const RIGHT_X = LEFT_X + LEFT_W + COL_PAD;
 
-        // ── LEFT COLUMN: EXPEDITION MANIFEST ─────────────────────────
+        // ── LEFT COLUMN: STAY DETAILS ───────────────────────────────
         doc.font('Helvetica-Bold').fontSize(9).fill(LIME)
-           .text('EXPEDITION MANIFEST', LEFT_X + 4, BODY_Y, { characterSpacing: 1 });
+           .text('STAY DETAILS', LEFT_X + 4, BODY_Y, { characterSpacing: 1 });
 
         const manifestRows = [
-            { label: 'LEAD EXPLORER', val: booking.name || 'Verified Explorer' },
-            { label: 'STAY DATES', val: booking.dates || 'Scheduled Stay' },
-            { label: 'LODGING SANCTUARY', val: booking.roomType || 'Alpine Glamping Dome Tent' },
-            { label: 'SQUAD ROSTER', val: `${booking.guests || 2} Campers (${booking.adults || booking.guests || 2} Adults${booking.children ? `, ${booking.children} Kids` : ''})` },
-            { label: 'KITCHEN PROVISIONS', val: booking.mealSummary || `${booking.vegCount || 0} Veg + ${booking.nonVegCount || 0} Non-Veg BBQ Dinner & Breakfast` },
-            { label: 'TOTAL EXPEDITION FARE', val: `₹${Number(booking.total || 0).toLocaleString('en-IN')}` },
+            { label: 'LEAD GUEST', val: booking.name || 'Guest' },
+            { label: 'DATES', val: booking.dates || 'Scheduled Stay' },
+            { label: 'LODGING', val: booking.roomType || 'Alpine Glamping Dome Tent' },
+            { label: 'GUESTS', val: `${booking.guests || 2} Campers (${booking.adults || booking.guests || 2} Adults${booking.children ? `, ${booking.children} Kids` : ''})` },
+            { label: 'MEAL PLAN', val: booking.mealSummary || `${booking.vegCount || 0} Veg + ${booking.nonVegCount || 0} Non-Veg BBQ Dinner & Breakfast` },
+            { label: 'TOTAL FARE', val: `₹${Number(booking.total || 0).toLocaleString('en-IN')}` },
         ];
 
         let mY = BODY_Y + 16;
@@ -190,7 +186,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const balTitle = balDue > 0 ? 'BALANCE PAYABLE AT CHECK-IN' : 'PAYMENT STATUS';
         const balText = balDue > 0 
             ? `₹${balDue.toLocaleString('en-IN')} (Cash / UPI · Carry cash from Munnar)`
-            : '✓ 100% Fully Settled Online';
+            : '✓ 100% Fully Paid Online';
 
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).fill(balBg);
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).lineWidth(1).strokeColor(balBorder).stroke();
@@ -200,23 +196,23 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.font('Helvetica-Bold').fontSize(10).fill(balBorder)
            .text(balText, LEFT_X + 12, mY + 22);
 
-        // ── RIGHT COLUMN: SMART ACCESS CONTROL & QR ─────────────────
+        // ── RIGHT COLUMN: CLEAN UNOBSTRUCTED QR CODE ────────────────
         doc.font('Helvetica-Bold').fontSize(9).fill(LIME)
            .text('CHECK-IN PASS', RIGHT_X + 4, BODY_Y, { characterSpacing: 1 });
 
-        // QR Code Card Container (Full matching height with left manifest)
+        // QR Code Card Container (Matching height with left column)
         const QR_BOX_Y = BODY_Y + 16;
-        const QR_BOX_H = (mY + 42) - QR_BOX_Y; // Exact matching height: ~288 pt
+        const QR_BOX_H = (mY + 42) - QR_BOX_Y; // ~288 pt
 
         doc.roundedRect(RIGHT_X, QR_BOX_Y, RIGHT_W, QR_BOX_H, 12).fill(CARD_INNER);
         doc.roundedRect(RIGHT_X, QR_BOX_Y, RIGHT_W, QR_BOX_H, 12)
-           .lineWidth(1).strokeColor(isConfirmed ? [45, 80, 55] : BORDER_DIM).stroke();
+           .lineWidth(1).strokeColor(BORDER_DIM).stroke();
 
         doc.font('Helvetica-Bold').fontSize(7.5).fill(LIME)
-           .text('MARSHAL SCAN & VERIFY', RIGHT_X, QR_BOX_Y + 12, { width: RIGHT_W, align: 'center', characterSpacing: 1 });
+           .text('SCAN TO CHECK IN', RIGHT_X, QR_BOX_Y + 12, { width: RIGHT_W, align: 'center', characterSpacing: 1 });
 
-        // QR Code Image
-        const QR_IMG_SIZE = 136;
+        // Clean, High-Contrast QR Code Image (No logo sticker in center for instant, flawless scanning)
+        const QR_IMG_SIZE = 140;
         const QR_IMG_X = RIGHT_X + (RIGHT_W - QR_IMG_SIZE) / 2;
         const QR_IMG_Y = QR_BOX_Y + 28;
 
@@ -229,23 +225,12 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
             } catch (_) {}
         }
 
-        // Small centered logo badge on the QR code
-        if (fs.existsSync(LOGO_PATH)) {
-            try {
-                const BADGE_SZ = 20;
-                const bX = QR_IMG_X + QR_IMG_SIZE / 2 - BADGE_SZ / 2;
-                const bY = QR_IMG_Y + QR_IMG_SIZE / 2 - BADGE_SZ / 2;
-                doc.circle(bX + BADGE_SZ / 2, bY + BADGE_SZ / 2, BADGE_SZ / 2 + 2).fill(BG_DARK);
-                doc.image(LOGO_PATH, bX, bY, { width: BADGE_SZ, height: BADGE_SZ });
-            } catch (_) {}
-        }
-
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
-           .text('PRESENT UPON ARRIVAL', RIGHT_X, QR_BOX_Y + 178, { width: RIGHT_W, align: 'center', characterSpacing: 0.5 });
+           .text('PRESENT ON ARRIVAL', RIGHT_X, QR_BOX_Y + 180, { width: RIGHT_W, align: 'center', characterSpacing: 0.5 });
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('Scanned to retrieve roster & meal allocations', RIGHT_X, QR_BOX_Y + 192, { width: RIGHT_W, align: 'center' });
+           .text('Scanned to retrieve booking & meals', RIGHT_X, QR_BOX_Y + 194, { width: RIGHT_W, align: 'center' });
 
-        // Bottom Reference Mini Card
+        // Bottom Reference Mini Box
         const refMiniY = QR_BOX_Y + 214;
         const refMiniW = RIGHT_W - 24;
         const refMiniX = RIGHT_X + 12;
@@ -253,12 +238,12 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.roundedRect(refMiniX, refMiniY, refMiniW, 46, 8).lineWidth(0.6).strokeColor(BORDER_DIM).stroke();
 
         doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
-           .text('OFFICIAL PASS CODE', refMiniX, refMiniY + 8, { width: refMiniW, align: 'center', characterSpacing: 0.8 });
+           .text('PASS CODE', refMiniX, refMiniY + 8, { width: refMiniW, align: 'center', characterSpacing: 0.8 });
         doc.font('Helvetica-Bold').fontSize(12).fill(LIME)
            .text(passRef, refMiniX, refMiniY + 20, { width: refMiniW, align: 'center', characterSpacing: 1 });
 
         // ═════════════════════════════════════════════════════════════
-        // 6. 4X4 MOUNTAIN CONVOY & EXPEDITION GUIDELINES
+        // 6. PICKUP & ARRIVAL GUIDELINES
         // ═════════════════════════════════════════════════════════════
         const CONVOY_Y = mY + 52;
         const CONVOY_H = 80;
@@ -267,49 +252,49 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.roundedRect(C_X + 16, CONVOY_Y, C_W - 32, CONVOY_H, 12).fill(CARD_INNER);
         doc.roundedRect(C_X + 16, CONVOY_Y, C_W - 32, CONVOY_H, 12).lineWidth(0.8).strokeColor(BORDER_DIM).stroke();
 
-        // 3 Feature Columns inside Convoy Card
+        // 3 Feature Columns
         const col3W = (C_W - 32 - 32) / 3;
         const c1X = C_X + 24;
         const c2X = c1X + col3W + 8;
         const c3X = c2X + col3W + 8;
 
-        // Col 1: Convoy Assembly
+        // Col 1: Pickup Point
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
-           .text('🚙 4x4 CONVOY PICKUP', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('🚙 PICKUP POINT', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_WHITE)
            .text(landmarkGuide.hubName, c1X, CONVOY_Y + 24, { width: col3W, height: 20, ellipsis: true });
         doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
            .text(landmarkGuide.parkingArea, c1X, CONVOY_Y + 44, { width: col3W, height: 26, ellipsis: true });
 
-        // Col 2: Wildlife & Forest Code
+        // Col 2: Important Note
         doc.font('Helvetica-Bold').fontSize(8).fill(AMBER)
-           .text('🌿 SANCTUARY PROTOCOL', c2X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('ℹ️ IMPORTANT NOTE', c2X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text(landmarkGuide.offlineNote || 'Zero Litter · Strict eco-reserve guidelines. Carry warm layers (8-14°C night).', c2X, CONVOY_Y + 24, { width: col3W });
+           .text(landmarkGuide.offlineNote || 'Zero Litter · Carry warm layers (8-14°C at night).', c2X, CONVOY_Y + 24, { width: col3W });
 
-        // Col 3: 24/7 Dispatch
+        // Col 3: Camp Support
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
-           .text('📞 MOUNTAIN DISPATCH', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('📞 CAMP SUPPORT', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
            .text(landmarkGuide.emergencyMarshalPhone || '+91 90748 58014', c3X, CONVOY_Y + 24);
         doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
-           .text('WhatsApp active 24/7 for convoy coordination & live route.', c3X, CONVOY_Y + 38, { width: col3W });
+           .text('WhatsApp active 24/7 for route & pickup help.', c3X, CONVOY_Y + 38, { width: col3W });
 
         // ═════════════════════════════════════════════════════════════
-        // 7. LUXURY FOOTER & AUTHENTICATION STAMP
+        // 7. FOOTER
         // ═════════════════════════════════════════════════════════════
         const FOOT_Y = C_Y + C_H - 50;
 
         doc.rect(C_X + 16, FOOT_Y, C_W - 32, 1).fill(BORDER_DIM);
 
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
-           .text('Aanandham Wilderness Stays', C_X + 24, FOOT_Y + 12);
+           .text('Aanandham.go', C_X + 24, FOOT_Y + 12);
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
            .text('Suryanelli · Kolukkumalai · Meesapulimala · Munnar, Kerala · aanandham.in', C_X + 24, FOOT_Y + 24);
 
-        // Security Stamp (Right aligned)
+        // Stamp (Right aligned)
         doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
-           .text('CRYPTOGRAPHICALLY SIGNED VOUCHER · VALID AT MOUNTAIN GATES ONLY', C_X + 200, FOOT_Y + 18, { width: C_W - 224, align: 'right', characterSpacing: 0.4 });
+           .text('OFFICIAL DIGITAL PASS VOUCHER', C_X + 200, FOOT_Y + 18, { width: C_W - 224, align: 'right', characterSpacing: 0.4 });
 
         // Bottom Accent Lime Bar
         doc.rect(0, PAGE_H - 6, PAGE_W, 6).fill(LIME);
