@@ -120,10 +120,6 @@ export async function sendBookingConfirmationEmail(booking) {
         ? `🏕️ Confirmed Wilderness Pass #${booking.id} - ${booking.package}`
         : `⏳ Booking Received (Pending Verification) #${booking.id} - ${booking.package}`;
 
-    const badgeHtml = isConfirmed
-        ? `<span class="badge" style="background: #D5ED55; color: #121613;">Official Wilderness Permit · Confirmed</span>`
-        : `<span class="badge" style="background: #E5A93B; color: #121613;">⚠️ Pending Verification · In Progress</span>`;
-
     const headerTitle = isConfirmed
         ? `You're Headed to ${safePackage}!`
         : `Booking Received for ${safePackage}`;
@@ -169,12 +165,11 @@ export async function sendBookingConfirmationEmail(booking) {
         <div class="container">
             <div class="header">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
-                    <img src="${logoPublicUrl}" alt="Aanandham.go" width="70" height="70" style="display: block; margin: 0 auto 10px; border-radius: 16px; object-fit: contain;" />
-                    <div style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
+                    <img src="${logoPublicUrl}" alt="Aanandham.go" width="76" height="76" style="display: block; margin: 0 auto 12px; border-radius: 18px; object-fit: contain;" />
+                    <div style="font-size: 26px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
                 </a>
-                ${badgeHtml}
-                <h1 style="margin: 12px 0 0; font-size: 24px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
-                <p style="margin: 6px 0 0; color: #A2B6A6; font-size: 13px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.5px;">${safeId}</strong></p>
+                <h1 style="margin: 8px 0 0; font-size: 24px; color: #FFFFFF; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
+                <p style="margin: 8px 0 0; color: #A2B6A6; font-size: 13.5px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
             </div>
 
             <div class="content">
