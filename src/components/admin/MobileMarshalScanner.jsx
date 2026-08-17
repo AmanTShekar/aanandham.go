@@ -832,21 +832,24 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </Link>
                     )}
 
-                    {/* Official Aanandham Logo & Title */}
+                    {/* Sleek Golden Host Brand Badge & Title */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                        <img 
-                            src="/logo.png" 
-                            alt="Aanandham Logo" 
+                        <div 
                             style={{ 
-                                width: '28px', 
-                                height: '28px', 
-                                borderRadius: '8px', 
-                                objectFit: 'contain',
-                                background: 'rgba(255,255,255,0.06)',
-                                padding: '2px',
+                                width: '32px', 
+                                height: '32px', 
+                                borderRadius: '10px', 
+                                background: 'linear-gradient(135deg, rgba(229, 169, 59, 0.22) 0%, rgba(213, 237, 85, 0.15) 100%)',
+                                border: '1px solid rgba(229, 169, 59, 0.45)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 0 16px rgba(229, 169, 59, 0.25)',
                                 flexShrink: 0
-                            }} 
-                        />
+                            }}
+                        >
+                            <Flame size={17} color="#E5A93B" />
+                        </div>
                         <div style={{ minWidth: 0 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
                                 <span style={{ fontSize: '15px', fontWeight: '900', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
@@ -863,9 +866,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     letterSpacing: '0.4px',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '3px'
+                                    gap: '4px'
                                 }}>
-                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
+                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
                                     HOST
                                 </span>
                             </div>
