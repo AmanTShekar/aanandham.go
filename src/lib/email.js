@@ -153,22 +153,16 @@ export async function sendBookingConfirmationEmail(booking) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
             body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #08110A; color: #FFFFFF; margin: 0; padding: 20px; -webkit-font-smoothing: antialiased; }
-            .container { max-width: 600px; margin: 0 auto; background: #0E1A11; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
-            .header { background: #060E08; padding: 28px 24px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
-            .badge { font-size: 11px; font-weight: 900; padding: 4px 14px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; }
-            .content { padding: 24px; }
+            .container { max-width: 660px; margin: 0 auto; background: #0E1A11; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+            .header { background: #060E08; padding: 32px 28px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08); }
+            .badge { font-size: 11px; font-weight: 900; padding: 5px 16px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.8px; display: inline-block; }
+            .content { padding: 28px; }
             .pin-box { background: #14261A; border: 2px dashed #D5ED55; border-radius: 18px; padding: 20px; text-align: center; margin: 20px 0; }
             .pin-code { font-family: monospace; font-size: 36px; font-weight: 900; color: #D5ED55; letter-spacing: 8px; margin: 6px 0; }
-            .balance-box { background: ${Number(booking.balanceDue) > 0 ? 'rgba(229, 169, 59, 0.15)' : 'rgba(34, 197, 94, 0.15)'}; border: 1px solid ${Number(booking.balanceDue) > 0 ? 'rgba(229, 169, 59, 0.4)' : 'rgba(34, 197, 94, 0.4)'}; border-radius: 16px; padding: 14px 18px; margin-bottom: 20px; }
-            .table-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
+            .table-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
             .label { color: #A2B6A6; }
             .val { color: #FFFFFF; font-weight: 700; text-align: right; }
-            .qr-card { background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.35); border-radius: 18px; padding: 20px; text-align: center; margin: 20px 0; }
-            .qr-card img { width: 200px; height: 200px; display: block; margin: 0 auto; border-radius: 10px; }
-            .cal-bar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 20px 0 10px; }
-            .cal-btn { background: #1C2D20; color: #D5ED55; font-size: 12px; font-weight: 800; text-decoration: none; padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(213, 237, 85, 0.3); display: inline-block; }
-            .footer { background: #060E08; padding: 20px; text-align: center; font-size: 12px; color: #59655D; border-top: 1px solid rgba(255,255,255,0.08); }
-            .btn-primary { background: #D5ED55; color: #121613; font-weight: 900; font-size: 14px; text-decoration: none; padding: 14px 28px; border-radius: 12px; display: inline-block; margin-top: 10px; }
+            .footer { background: #060E08; padding: 22px; text-align: center; font-size: 12px; color: #59655D; border-top: 1px solid rgba(255,255,255,0.08); }
         </style>
     </head>
     <body>
@@ -179,44 +173,15 @@ export async function sendBookingConfirmationEmail(booking) {
                     <div style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
                 </a>
                 ${badgeHtml}
-                <h1 style="margin: 12px 0 0; font-size: 22px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
-                <p style="margin: 6px 0 0; color: #A2B6A6; font-size: 13px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace;">${safeId}</strong></p>
+                <h1 style="margin: 12px 0 0; font-size: 24px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
+                <p style="margin: 6px 0 0; color: #A2B6A6; font-size: 13px;">Permit Reference: <strong style="color: #D5ED55; font-family: monospace; letter-spacing: 0.5px;">${safeId}</strong></p>
             </div>
 
             <div class="content">
                 
-                ${pinBoxHtml}
-
-                <!-- DIGITAL PASS PORTAL — secure link, QR only in PDF attachment -->
-                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
-                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass ★</div>
-                    <div style="font-size: 32px; margin-bottom: 8px;">🎫</div>
-                    <div style="font-size: 14px; font-weight: 900; color: #FFFFFF; margin-bottom: 4px;">
-                        ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
-                    </div>
-                    <div style="font-size: 11.5px; color: #A2B6A6; margin-bottom: 16px;">
-                        ${isConfirmed
-                            ? 'Tap below to open your live digital pass with QR code for Marshal check-in'
-                            : 'Tap below to track your verification status and unlock your pass'
-                        }
-                    </div>
-                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 900; font-size: 15px; text-decoration: none; padding: 14px 32px; border-radius: 12px; letter-spacing: -0.2px;">
-                        🏳️&nbsp; View &amp; Track Live Wilderness Pass →
-                    </a>
-                    <div style="font-size: 10.5px; color: #59655D; margin-top: 12px;">
-                        Secure link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · QR code inside the PDF attachment
-                    </div>
-                </div>
-
-                <!-- PASS PORTAL LINK (calendar .ics is auto-attached to email) -->
-                <div style="text-align: center; margin: 0 0 20px; background: rgba(255,255,255,0.03); padding: 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
-                    <div style="font-size: 11.5px; color: #A2B6A6;">Open the <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> attachment to instantly add your stay to Google Calendar, Apple Calendar, or Outlook.</div>
-                </div>
-
-                <!-- ITINERARY & PAYMENT SUMMARY -->
-                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Expedition &amp; Payment Summary</div>
+                <!-- 1. MAIN EXPEDITION & PAYMENT DETAILS (HERO) -->
+                <div style="background: rgba(255,255,255,0.04); border-radius: 18px; padding: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.08);">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px;">Expedition &amp; Stay Summary</div>
                     <div class="table-row">
                         <span class="label">Lead Explorer:</span>
                         <span class="val">${safeName}</span>
@@ -226,41 +191,71 @@ export async function sendBookingConfirmationEmail(booking) {
                         <span class="val">${safeDates}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Stay Units:</span>
+                        <span class="label">Lodging Sanctuary:</span>
                         <span class="val">${safeRoom}</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Squad Count:</span>
+                        <span class="label">Squad Roster:</span>
                         <span class="val">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</span>
                     </div>
                     <div class="table-row">
-                        <span class="label">Kitchen Allocation:</span>
+                        <span class="label">Kitchen Provisions:</span>
                         <span class="val">${safeMeal}</span>
                     </div>
                     <div class="table-row">
                         <span class="label">Total Fare:</span>
                         <span class="val">₹${Number(booking.total || 0).toLocaleString('en-IN')}</span>
                     </div>
-                    <div class="table-row" style="border: none; padding-top: 10px;">
-                        <span class="label" style="font-weight: 700; color: #FFFFFF;">Balance Due on Check-In:</span>
-                        <span class="val" style="color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; font-size: 16px; font-weight: 900;">
+                    <div class="table-row" style="border: none; padding-top: 12px;">
+                        <span class="label" style="font-weight: 700; color: #FFFFFF; font-size: 14px;">Balance Payable at Check-In:</span>
+                        <span class="val" style="color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; font-size: 17px; font-weight: 900;">
                             ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
                         </span>
                     </div>
                     ${Number(booking.balanceDue) > 0 ? `
-                    <div style="margin-top: 12px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.3); border-radius: 10px; padding: 10px 12px; font-size: 11.5px; color: #A2B6A6; line-height: 1.5;">
-                        💳 <strong style="color: #FFFFFF;">Arrival Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> can be settled at the Suryanelli basecamp hub via UPI (GPay / PhonePe) or cash during check-in.
+                    <div style="margin-top: 12px; background: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 10px; padding: 12px 14px; font-size: 12px; color: #C8D8CB; line-height: 1.5;">
+                        💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> can be settled at the Suryanelli basecamp hub via UPI (GPay / PhonePe) or cash upon arrival.
                     </div>
                     ` : ''}
                 </div>
 
-                <!-- OFFLINE 4x4 CONVOY DIRECTIONS -->
-                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 16px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 8px;">4x4 Convoy &amp; Landmark Guide</div>
-                    <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 6px;"><strong>Meeting Hub:</strong> ${safeHub}</p>
-                    <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
-                    <p style="font-size: 12.5px; color: #A2B6A6; margin: 0 0 8px;"><strong>Basecamp Marshal Hotline:</strong> ${safePhone}</p>
-                    <p style="font-size: 11.5px; color: #E5A93B; margin: 0;">⚠️ <em>${safeOfflineNote}</em></p>
+                <!-- 2. SMART GATE PIN ACCESS -->
+                ${pinBoxHtml}
+
+                <!-- 3. DIGITAL PASS PORTAL CTA -->
+                <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
+                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Official Wilderness Pass ★</div>
+                    <div style="font-size: 30px; margin-bottom: 6px;">🎫</div>
+                    <div style="font-size: 15px; font-weight: 900; color: #FFFFFF; margin-bottom: 4px;">
+                        ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
+                    </div>
+                    <div style="font-size: 12px; color: #A2B6A6; margin-bottom: 16px;">
+                        ${isConfirmed
+                            ? 'Tap below to open your live digital pass with scannable QR code for check-in'
+                            : 'Tap below to track your verification status and unlock your pass'
+                        }
+                    </div>
+                    <a href="${passUrl}" style="display: inline-block; background: #D5ED55; color: #121613; font-weight: 900; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px;">
+                        🏳️&nbsp; View &amp; Track Live Wilderness Pass →
+                    </a>
+                    <div style="font-size: 11px; color: #59655D; margin-top: 12px;">
+                        Secure signed link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · QR code inside the PDF attachment
+                    </div>
+                </div>
+
+                <!-- 4. 4x4 CONVOY DIRECTIONS -->
+                <div style="background: rgba(255,255,255,0.04); border-radius: 16px; padding: 18px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 11.5px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 10px;">🚙 4x4 Convoy &amp; Arrival Guide</div>
+                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Meeting Hub:</strong> ${safeHub}</p>
+                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 6px;"><strong>Parking:</strong> ${safeParking}</p>
+                    <p style="font-size: 13px; color: #C8D8CB; margin: 0 0 8px;"><strong>Basecamp Marshal Hotline:</strong> ${safePhone}</p>
+                    <p style="font-size: 12px; color: #E5A93B; margin: 0;">⚠️ <em>${safeOfflineNote}</em></p>
+                </div>
+
+                <!-- 5. CALENDAR INVITE ATTACHMENT CARD (AT END) -->
+                <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
+                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
+                    <div style="font-size: 12px; color: #A2B6A6;">Open the attached <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> file to sync your stay with Google Calendar, Apple Calendar, or Outlook.</div>
                 </div>
             </div>
 
