@@ -48,7 +48,7 @@ export async function sendBookingConfirmationEmail(booking) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.EMAIL_FROM || 'Aanandham Wilderness <bookings@aanandham.in>';
+    const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
 
     const gatePin = generateGatePin(booking.id, booking.dates);
@@ -295,7 +295,7 @@ export async function sendContactInquiryEmail(inquiry) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.EMAIL_FROM || 'Aanandham Wilderness <bookings@aanandham.in>';
+    const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
     const adminDestEmail = 'bookings@aanandham.in';
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
