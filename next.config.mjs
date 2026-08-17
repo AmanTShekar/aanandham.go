@@ -36,11 +36,11 @@ const securityHeaders = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self';",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com;",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com;",
       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://aanandham.in https://*.aanandham.in;",
+      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://aanandham.in https://*.aanandham.in https://www.google-analytics.com https://www.googletagmanager.com;",
       "font-src 'self' data: https://cdnjs.cloudflare.com;",
-      "connect-src 'self' https://*.supabase.co;",
+      "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;",
       "frame-ancestors 'none';",
       "form-action 'self' https://wa.me https://api.whatsapp.com;",
       "base-uri 'self';",
@@ -56,6 +56,16 @@ const nextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 days
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+    ],
   },
   async redirects() {
     return [
