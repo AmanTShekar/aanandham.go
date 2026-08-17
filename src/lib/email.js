@@ -138,21 +138,17 @@ export async function sendBookingConfirmationEmail(booking) {
         <meta charset="utf-8">
         <title>Booking Pass - ${safeId}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="color-scheme" content="light dark">
-        <meta name="supported-color-schemes" content="light dark">
+        <meta name="color-scheme" content="light">
+        <meta name="supported-color-schemes" content="light">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800;12..96,900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
-            :root {
-                color-scheme: light dark;
-                supported-color-schemes: light dark;
-            }
             body { 
                 font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-                background-color: #08110A !important; 
-                color: #FFFFFF !important; 
+                background-color: #F8F9F5 !important; 
+                color: #121613 !important; 
                 margin: 0; 
                 padding: 20px; 
                 -webkit-font-smoothing: antialiased; 
@@ -163,108 +159,84 @@ export async function sendBookingConfirmationEmail(booking) {
             .container { 
                 max-width: 660px; 
                 margin: 0 auto; 
-                background-color: #0E1A11 !important; 
+                background-color: #FFFFFF !important; 
                 border-radius: 24px; 
                 overflow: hidden; 
-                border: 1px solid rgba(213, 237, 85, 0.25); 
-                box-shadow: 0 20px 50px rgba(0,0,0,0.6); 
+                border: 1px solid #E2E8F0; 
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
             }
             .header { 
-                background-color: #060E08 !important; 
+                background-color: #F8FAF7 !important; 
                 padding: 32px 28px; 
                 text-align: center; 
-                border-bottom: 1px solid rgba(255,255,255,0.08); 
-            }
-            .badge { 
-                font-size: 11px; 
-                font-weight: 800; 
-                padding: 5px 16px; 
-                border-radius: 999px; 
-                text-transform: uppercase; 
-                letter-spacing: 0.8px; 
-                display: inline-block; 
+                border-bottom: 1px solid #E2E8F0; 
             }
             .content { 
                 padding: 28px; 
-                background-color: #0E1A11 !important;
+                background-color: #FFFFFF !important;
             }
-            .table-row { 
-                display: flex; 
-                justify-content: space-between; 
-                padding: 10px 0; 
-                border-bottom: 1px solid rgba(255,255,255,0.06); 
-                font-size: 13.5px; 
-            }
-            .label { color: #A2B6A6 !important; }
-            .val { color: #FFFFFF !important; font-weight: 700; text-align: right; }
             .footer { 
-                background-color: #060E08 !important; 
+                background-color: #F8FAF7 !important; 
                 padding: 22px; 
                 text-align: center; 
                 font-size: 12px; 
-                color: #59655D !important; 
-                border-top: 1px solid rgba(255,255,255,0.08); 
+                color: #64748B !important; 
+                border-top: 1px solid #E2E8F0; 
             }
-            /* Dark mode anti-inversion overrides for Gmail/Outlook */
-            [data-ogsc] .container, [data-ogsb] .container { background-color: #0E1A11 !important; }
-            [data-ogsc] .header, [data-ogsb] .header { background-color: #060E08 !important; }
-            [data-ogsc] .footer, [data-ogsb] .footer { background-color: #060E08 !important; }
-            [data-ogsc] .val, [data-ogsb] .val { color: #FFFFFF !important; }
-            [data-ogsc] .label, [data-ogsb] .label { color: #A2B6A6 !important; }
         </style>
     </head>
-    <body class="body" style="background-color: #08110A !important; color: #FFFFFF !important; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-        <div class="container" style="background-color: #0E1A11 !important; max-width: 660px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid rgba(213, 237, 85, 0.25);">
-            <div class="header" style="background-color: #060E08 !important; padding: 32px 28px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <body class="body" style="background-color: #F8F9F5 !important; color: #121613 !important; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+        <div class="container" style="background-color: #FFFFFF !important; max-width: 660px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid #E2E8F0; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <div class="header" style="background-color: #F8FAF7 !important; padding: 32px 28px; text-align: center; border-bottom: 1px solid #E2E8F0;">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
                     <img src="${logoPublicUrl}" alt="Aanandham.go" width="76" height="76" style="display: block; margin: 0 auto 12px; border-radius: 18px; object-fit: contain;" />
-                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #FFFFFF !important;">Aanandham</span><span style="color: #D5ED55 !important;">.go</span></div>
+                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 27px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px;"><span style="color: #121613 !important;">Aanandham</span><span style="color: #121613 !important; background-color: #D5ED55; padding: 2px 8px; border-radius: 8px; margin-left: 2px;">.go</span></div>
                 </a>
-                <h1 style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; margin: 8px 0 0; font-size: 24px; color: #FFFFFF !important; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
-                <p style="margin: 8px 0 0; color: #A2B6A6 !important; font-size: 13.5px;">Booking Ref: <strong style="color: #D5ED55 !important; font-family: monospace; letter-spacing: 0.8px; font-size: 14px;">${safeId}</strong></p>
+                <h1 style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; margin: 8px 0 0; font-size: 24px; color: #121613 !important; font-weight: 800; line-height: 1.3;">${headerTitle}</h1>
+                <p style="margin: 8px 0 0; color: #59655D !important; font-size: 13.5px;">Booking Ref: <strong style="color: #166534 !important; font-family: monospace; letter-spacing: 0.8px; font-size: 14px; background: #F1F4EE; padding: 2px 8px; border-radius: 6px;">${safeId}</strong></p>
             </div>
 
-            <div class="content">
+            <div class="content" style="padding: 28px; background-color: #FFFFFF !important;">
                 
                 <!-- 1. MAIN STAY & PAYMENT DETAILS (HERO) -->
-                <div style="background-color: rgba(255,255,255,0.04); border-radius: 18px; padding: 24px; margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.08);">
-                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Stay Details</div>
+                <div style="background-color: #F8FAF7; border-radius: 18px; padding: 24px; margin-bottom: 22px; border: 1px solid #E2E8F0;">
+                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px;">Stay Details</div>
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Lead Guest:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeName}</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lead Guest:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeName}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Dates:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeDates}</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Dates:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeDates}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Lodging:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeRoom}</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Lodging:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeRoom}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Guests:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Guests:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${Number(booking.guests || 2)} Campers (${Number(booking.adults || booking.guests || 2)} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Meal Plan:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">${safeMeal}</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Meal Plan:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">${safeMeal}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #A2B6A6; vertical-align: middle;">Total Amount:</td>
-                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #FFFFFF; text-align: right; vertical-align: middle;">₹${Number(booking.total || 0).toLocaleString('en-IN')}</td>
+                            <td style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: #59655D; vertical-align: middle;">Total Amount:</td>
+                            <td align="right" style="padding: 11px 0; border-bottom: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 15px; font-weight: 700; color: #121613; text-align: right; vertical-align: middle;">₹${Number(booking.total || 0).toLocaleString('en-IN')}</td>
                         </tr>
                         <tr>
-                            <td style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #FFFFFF; vertical-align: middle;">Balance Payable at Check-In:</td>
-                            <td align="right" style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#D5ED55' : '#22C55E'}; text-align: right; vertical-align: middle;">
+                            <td style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14.5px; font-weight: 700; color: #121613; vertical-align: middle;">Balance Payable at Check-In:</td>
+                            <td align="right" style="padding: 14px 0 4px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 18px; font-weight: 900; color: ${Number(booking.balanceDue) > 0 ? '#B45309' : '#15803D'}; text-align: right; vertical-align: middle;">
                                 ${Number(booking.balanceDue) > 0 ? `₹${Number(booking.balanceDue).toLocaleString('en-IN')}` : '✓ 100% Fully Paid Online'}
                             </td>
                         </tr>
                     </table>
                     ${Number(booking.balanceDue) > 0 ? `
-                    <div style="margin-top: 16px; background-color: rgba(213, 237, 85, 0.08); border: 1px dashed rgba(213, 237, 85, 0.35); border-radius: 12px; padding: 14px 16px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; color: #C8D8CB; line-height: 1.55;">
-                        <div style="margin-bottom: 5px;">💳 <strong style="color: #FFFFFF;">Check-In Payment:</strong> The remaining balance of <strong style="color: #D5ED55;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> is payable upon arrival at <strong style="color: #FFFFFF;">${safeHub}</strong>.</div>
-                        <div style="color: #E5A93B; font-size: 12px; margin-top: 6px; line-height: 1.45;">
+                    <div style="margin-top: 16px; background-color: #FEF9C3; border: 1px dashed #EAB308; border-radius: 12px; padding: 14px 16px; font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 12.5px; color: #713F12; line-height: 1.55;">
+                        <div style="margin-bottom: 5px;">💳 <strong style="color: #121613;">Check-In Payment:</strong> The remaining balance of <strong style="color: #B45309;">₹${Number(booking.balanceDue).toLocaleString('en-IN')}</strong> is payable upon arrival at <strong style="color: #121613;">${safeHub}</strong>.</div>
+                        <div style="color: #9A3412; font-size: 12px; margin-top: 6px; line-height: 1.45;">
                             ⚠️ <strong>Mountain Network &amp; Cash Note:</strong> Mobile internet and UPI (GPay / PhonePe) can be erratic due to low mountain coverage, and ATMs past Munnar town are often unavailable. <em>We strongly advise carrying sufficient liquid cash or withdrawing from Munnar town before ascending.</em>
                         </div>
                     </div>
@@ -274,7 +246,7 @@ export async function sendBookingConfirmationEmail(booking) {
                 ${pendingNoticeHtml}
 
                 <!-- 2. DIGITAL PASS PORTAL CTA -->
-                <div style="background-color: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
+                <div style="background-color: #121613; border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
                     <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
                     <div style="font-size: 32px; margin-bottom: 6px;">🎫</div>
                     <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 18px; font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">
@@ -289,48 +261,48 @@ export async function sendBookingConfirmationEmail(booking) {
                     <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
                         🏳️&nbsp; View Live Pass &amp; Check-In QR →
                     </a>
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; color: #59655D; margin-top: 12px;">
-                        Secure signed link · Ref: <strong style="color: #A2B6A6; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; color: #8F9E93; margin-top: 12px;">
+                        Secure signed link · Ref: <strong style="color: #FFFFFF; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
                     </div>
                 </div>
 
                 <!-- 3. PICKUP & ARRIVAL GUIDE -->
-                <div style="background-color: rgba(255,255,255,0.04); border-radius: 16px; padding: 20px; margin-bottom: 22px; border: 1px solid rgba(255,255,255,0.06); font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
-                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #D5ED55; text-transform: uppercase; margin-bottom: 12px;">🚙 Pickup &amp; Arrival Details</div>
-                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #FFFFFF;">Pickup Point:</strong> ${safeHub}</p>
-                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #FFFFFF;">Parking:</strong> ${safeParking}</p>
-                    <p style="font-size: 13.5px; color: #C8D8CB; margin: 0 0 10px; line-height: 1.5;"><strong style="color: #FFFFFF;">Camp Support Hotline:</strong> ${safePhone}</p>
-                    <p style="font-size: 12px; color: #E5A93B; margin: 0; line-height: 1.45;">⚠️ <em>${safeOfflineNote}</em></p>
+                <div style="background-color: #F8FAF7; border-radius: 16px; padding: 20px; margin-bottom: 22px; border: 1px solid #E2E8F0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;">
+                    <div style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 12px; font-weight: 800; color: #166534; text-transform: uppercase; margin-bottom: 12px;">🚙 Pickup &amp; Arrival Details</div>
+                    <p style="font-size: 13.5px; color: #334155; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #121613;">Pickup Point:</strong> ${safeHub}</p>
+                    <p style="font-size: 13.5px; color: #334155; margin: 0 0 8px; line-height: 1.5;"><strong style="color: #121613;">Parking:</strong> ${safeParking}</p>
+                    <p style="font-size: 13.5px; color: #334155; margin: 0 0 10px; line-height: 1.5;"><strong style="color: #121613;">Camp Support Hotline:</strong> ${safePhone}</p>
+                    <p style="font-size: 12px; color: #B45309; margin: 0; line-height: 1.45;">⚠️ <em>${safeOfflineNote}</em></p>
                 </div>
 
                 <!-- 4. CALENDAR INVITE ATTACHMENT CARD (AT END) -->
-                <div style="text-align: center; background: rgba(255,255,255,0.03); padding: 14px 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.06);">
-                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
-                    <div style="font-size: 12px; color: #A2B6A6;">Open the attached <strong style="color:#FFFFFF;">aanandham-stay.ics</strong> file to sync your stay with Google Calendar, Apple Calendar, or Outlook.</div>
+                <div style="text-align: center; background-color: #F1F4EE; padding: 14px 18px; border-radius: 14px; border: 1px solid #E2E8F0;">
+                    <div style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">📅 Calendar Invite Attached</div>
+                    <div style="font-size: 12.5px; color: #59655D;">Open the attached <strong style="color: #121613;">aanandham-stay.ics</strong> file to sync your stay with Google Calendar, Apple Calendar, or Outlook.</div>
                 </div>
             </div>
 
             <!-- WARM CLOSING MESSAGE -->
-            <div style="background: linear-gradient(135deg, #121F16 0%, #0E1A11 100%); border-top: 1px solid rgba(213,237,85,0.15); padding: 28px 24px; text-align: center;">
+            <div style="background-color: #F8FAF7; border-top: 1px solid #E2E8F0; padding: 28px 24px; text-align: center;">
                 <div style="font-size: 22px; margin-bottom: 10px;">🏔️ 🌿 ✨</div>
-                <h2 style="font-size: 20px; font-weight: 800; color: #FFFFFF; margin: 0 0 8px;">Enjoy Your <span style="color: #D5ED55;">Wilderness Escape!</span></h2>
-                <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.7; margin: 0 0 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
+                <h2 style="font-size: 20px; font-weight: 800; color: #121613; margin: 0 0 8px;">Enjoy Your <span style="color: #166534;">Wilderness Escape!</span></h2>
+                <p style="font-size: 13.5px; color: #59655D; line-height: 1.7; margin: 0 0 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
                     The mountains are waiting. Breathe in the fresh Munnar air, watch the sunrise from Kolukkumalai,
                     and let the forest reset your soul. We're getting everything ready for your stay.
                 </p>
-                <div style="display: inline-block; background: rgba(213,237,85,0.08); border: 1px solid rgba(213,237,85,0.25); border-radius: 14px; padding: 14px 22px; margin-bottom: 16px;">
-                    <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">🏕️ Need anything before you arrive?</div>
-                    <div style="font-size: 13px; color: #FFFFFF;">WhatsApp us anytime — <strong style="color: #D5ED55;">+91 90748 58014</strong></div>
-                    <div style="font-size: 11.5px; color: #A2B6A6; margin-top: 4px;">Have questions about routes, weather, or meals? We're here for you.</div>
+                <div style="display: inline-block; background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 14px; padding: 14px 22px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                    <div style="font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">🏕️ Need anything before you arrive?</div>
+                    <div style="font-size: 13px; color: #121613;">WhatsApp us anytime — <strong style="color: #166534;">+91 90748 58014</strong></div>
+                    <div style="font-size: 11.5px; color: #59655D; margin-top: 4px;">Have questions about routes, weather, or meals? We're here for you.</div>
                 </div>
-                <div style="font-size: 12px; color: #59655D;">
-                    📎 Your <strong style="color: #A2B6A6;">Booking Pass PDF</strong> and <strong style="color: #A2B6A6;">Calendar Invite (.ics)</strong> are attached below
+                <div style="font-size: 12px; color: #64748B;">
+                    📎 Your <strong style="color: #121613;">Booking Pass PDF</strong> and <strong style="color: #121613;">Calendar Invite (.ics)</strong> are attached below
                 </div>
             </div>
 
-            <div class="footer">
+            <div class="footer" style="background-color: #F8FAF7 !important; padding: 22px; text-align: center; font-size: 12px; color: #64748B !important; border-top: 1px solid #E2E8F0;">
                 <p style="margin: 0 0 4px;">Aanandham.go · Suryanelli, Munnar, Kerala</p>
-                <p style="margin: 0;">Camp Hotline: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
+                <p style="margin: 0;">Camp Hotline: +91 90748 58014 · <a href="${siteUrl}" style="color: #166534; text-decoration: none; font-weight: 700;">aanandham.in</a></p>
             </div>
         </div>
     </body>

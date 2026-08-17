@@ -50,18 +50,18 @@ export async function generateQrDataUri(text, size = 220) {
  * image in transactional emails (Resend, Nodemailer, etc.)
  * Email clients (Gmail, Outlook) block data: URIs but correctly render CID attachments.
  */
-export async function generateQrBuffer(text, size = 260) {
+export async function generateQrBuffer(text, size = 300) {
     if (!text) return null;
     try {
         const buffer = await QRCode.toBuffer(text, {
             width: size,
-            margin: 3,
+            margin: 2,
             type: 'png',
             color: {
-                dark: '#FFFFFF',   // White dots — clean on dark backgrounds
-                light: '#0B150E'   // Deep forest dark — matches Aanandham brand
+                dark: '#121613',   // Deep obsidian forest dots
+                light: '#FFFFFF'   // Pure white background
             },
-            errorCorrectionLevel: 'H'  // High error correction — needed for center logo overlay
+            errorCorrectionLevel: 'M'
         });
         return buffer;
     } catch (e) {
