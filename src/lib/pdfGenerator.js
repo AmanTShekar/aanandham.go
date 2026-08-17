@@ -72,33 +72,31 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         // ═════════════════════════════════════════════════════════════
         // 2. HEADER BRANDING & PERMIT CLASSIFICATION
         // ═════════════════════════════════════════════════════════════
-        const HDR_Y = C_Y + 18;
+        const HDR_Y = C_Y + 16;
 
-        // Logo
+        // Logo — Proportional 1:1, larger, perfectly centered
         if (fs.existsSync(LOGO_PATH)) {
             try {
-                doc.image(LOGO_PATH, C_X + 20, HDR_Y, { width: 44, height: 44 });
+                doc.image(LOGO_PATH, C_X + 20, HDR_Y, { fit: [54, 54], align: 'center', valign: 'center' });
             } catch (_) {}
         }
 
-        // Brand Title
-        doc.font('Helvetica-Bold').fontSize(16).fill(TEXT_WHITE)
-           .text('Aanandham', C_X + 74, HDR_Y + 4, { continued: true })
-           .fill(LIME).text('.go')
-           .font('Helvetica').fontSize(9).fill(TEXT_MUTED)
-           .text('WILDERNESS SANCTUARIES · SURYANELLI, MUNNAR', C_X + 74, HDR_Y + 24, { characterSpacing: 0.8 });
+        // Clean, Bold Brand Title: Aanandham.go
+        doc.font('Helvetica-Bold').fontSize(22).fill(TEXT_WHITE)
+           .text('Aanandham', C_X + 86, HDR_Y + 14, { continued: true })
+           .fill(LIME).text('.go');
 
         // Status Badge (Right aligned)
-        const badgeW = 148;
-        const badgeH = 24;
+        const badgeW = 144;
+        const badgeH = 26;
         const badgeX = C_X + C_W - badgeW - 20;
-        const badgeY = HDR_Y + 8;
+        const badgeY = HDR_Y + 14;
         const badgeBg = isConfirmed ? LIME : AMBER;
         const badgeText = isConfirmed ? '✓  PERMIT ACTIVE' : '⏳  PENDING APPROVAL';
 
-        doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 12).fill(badgeBg);
-        doc.font('Helvetica-Bold').fontSize(8.5).fill(BG_DARK)
-           .text(badgeText, badgeX, badgeY + 7.5, { width: badgeW, align: 'center', characterSpacing: 0.5 });
+        doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 13).fill(badgeBg);
+        doc.font('Helvetica-Bold').fontSize(9).fill(BG_DARK)
+           .text(badgeText, badgeX, badgeY + 8, { width: badgeW, align: 'center', characterSpacing: 0.5 });
 
         // ═════════════════════════════════════════════════════════════
         // 3. EXPEDITION BANNER CARD

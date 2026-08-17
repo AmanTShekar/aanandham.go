@@ -175,8 +175,8 @@ export async function sendBookingConfirmationEmail(booking) {
         <div class="container">
             <div class="header">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
-                    <img src="${logoPublicUrl}" alt="Aanandham Wilderness Stays" width="64" height="64" style="display: block; margin: 0 auto 8px; border-radius: 14px; object-fit: contain;" />
-                    <div style="font-size: 16px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span> <span style="color: #A2B6A6;">Wilderness Stays</span></div>
+                    <img src="${logoPublicUrl}" alt="Aanandham.go" width="70" height="70" style="display: block; margin: 0 auto 10px; border-radius: 16px; object-fit: contain;" />
+                    <div style="font-size: 20px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span></div>
                 </a>
                 ${badgeHtml}
                 <h1 style="margin: 12px 0 0; font-size: 22px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
@@ -271,12 +271,12 @@ export async function sendBookingConfirmationEmail(booking) {
                 <h2 style="font-size: 18px; font-weight: 900; color: #FFFFFF; margin: 0 0 8px;">Enjoy Your <span style="color: #D5ED55;">Wilderness Escape!</span></h2>
                 <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.7; margin: 0 0 16px; max-width: 480px; margin-left: auto; margin-right: auto;">
                     The mountains are waiting. Breathe in the fresh Munnar air, watch the sunrise from Kolukkumalai,
-                    and let the forest reset your soul. This is your time — we've taken care of everything else.
+                    and let the forest reset your soul. We're getting everything ready for your stay.
                 </p>
                 <div style="display: inline-block; background: rgba(213,237,85,0.08); border: 1px solid rgba(213,237,85,0.25); border-radius: 14px; padding: 14px 22px; margin-bottom: 16px;">
                     <div style="font-size: 11px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">🏕️ Need anything before you arrive?</div>
                     <div style="font-size: 13px; color: #FFFFFF;">WhatsApp us anytime — <strong style="color: #D5ED55;">+91 90748 58014</strong></div>
-                    <div style="font-size: 11.5px; color: #A2B6A6; margin-top: 4px;">Our basecamp marshal team is active 24/7 for you</div>
+                    <div style="font-size: 11.5px; color: #A2B6A6; margin-top: 4px;">Have questions about routes, weather, or meals? We're here for you.</div>
                 </div>
                 <div style="font-size: 12px; color: #59655D;">
                     📎 Your <strong style="color: #A2B6A6;">Wilderness Pass PDF</strong> and <strong style="color: #A2B6A6;">Calendar Invite (.ics)</strong> are attached below
@@ -284,8 +284,8 @@ export async function sendBookingConfirmationEmail(booking) {
             </div>
 
             <div class="footer">
-                <p style="margin: 0 0 4px;">Aanandham Wilderness Stays · Suryanelli, Munnar, Kerala</p>
-                <p style="margin: 0;">24/7 Mountain Dispatch: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
+                <p style="margin: 0 0 4px;">Aanandham.go · Suryanelli, Munnar, Kerala</p>
+                <p style="margin: 0;">Mountain Dispatch: +91 90748 58014 · <a href="${siteUrl}" style="color: #D5ED55; text-decoration: none;">aanandham.in</a></p>
             </div>
         </div>
     </body>
