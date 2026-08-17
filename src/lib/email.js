@@ -126,8 +126,8 @@ export async function sendBookingConfirmationEmail(booking) {
             .table-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 13.5px; }
             .label { color: #A2B6A6; }
             .val { color: #FFFFFF; font-weight: 700; text-align: right; }
-            .qr-card { background: #FFFFFF; border-radius: 18px; padding: 18px; text-align: center; margin: 20px 0; color: #121613; }
-            .qr-card img { width: 180px; height: 180px; display: block; margin: 0 auto; }
+            .qr-card { background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.35); border-radius: 18px; padding: 20px; text-align: center; margin: 20px 0; }
+            .qr-card img { width: 200px; height: 200px; display: block; margin: 0 auto; border-radius: 10px; }
             .cal-bar { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 20px 0 10px; }
             .cal-btn { background: #1C2D20; color: #D5ED55; font-size: 12px; font-weight: 800; text-decoration: none; padding: 8px 14px; border-radius: 10px; border: 1px solid rgba(213, 237, 85, 0.3); display: inline-block; }
             .footer { background: #060E08; padding: 20px; text-align: center; font-size: 12px; color: #59655D; border-top: 1px solid rgba(255,255,255,0.08); }
@@ -139,7 +139,7 @@ export async function sendBookingConfirmationEmail(booking) {
             <div class="header">
                 <a href="${siteUrl}" style="text-decoration: none; display: inline-block;">
                     <img src="cid:aanandham-logo" alt="Aanandham Wilderness Stays" width="64" height="64" style="display: block; margin: 0 auto 8px; border-radius: 14px; object-fit: contain;" />
-                    <div style="font-size: 15px; font-weight: 900; color: #FFFFFF; letter-spacing: -0.5px; margin-bottom: 12px;">Aanandham<span style="color: #D5ED55;">.go</span> Wilderness Stays</div>
+                    <div style="font-size: 16px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 12px;"><span style="color: #FFFFFF;">Aanandham</span><span style="color: #D5ED55;">.go</span> <span style="color: #A2B6A6;">Wilderness Stays</span></div>
                 </a>
                 ${badgeHtml}
                 <h1 style="margin: 12px 0 0; font-size: 22px; color: #FFFFFF; font-weight: 800;">${headerTitle}</h1>
@@ -158,16 +158,17 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pinBoxHtml}
 
-                <!-- SCANNABLE MARSHAL QR CODE (CID inline attachment) -->
+                <!-- SCANNABLE MARSHAL QR CODE (CID inline attachment, yellow on dark = brand colors) -->
                 <div class="qr-card">
-                    <img src="cid:qr-pass" alt="Digital Pass QR Code — Scan to Check In" style="width:200px;height:200px;display:block;margin:0 auto;" />
-                    <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; color: ${isConfirmed ? '#166534' : '#D97706'}; margin-top: 8px;">
-                        ${isConfirmed ? 'Marshal Check-In QR Code' : 'Pass Verification QR Code'}
+                    <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px;">★ Official Wilderness Pass QR ★</div>
+                    <img src="cid:qr-pass" alt="Digital Pass QR Code — Scan to Check In" style="width:200px;height:200px;display:block;margin:0 auto;border-radius:10px;" />
+                    <div style="font-size: 12.5px; font-weight: 900; text-transform: uppercase; color: #D5ED55; margin-top: 10px; letter-spacing: 0.5px;">
+                        ${isConfirmed ? 'Marshal Check-In QR · Scan to Verify' : 'Pass Verification QR Code'}
                     </div>
-                    <div style="font-size: 11.5px; color: #59655D; margin-bottom: 8px;">
-                        ${isConfirmed ? 'Present this QR code or screenshot to the Suryanelli Basecamp Marshal' : 'Scan to check live verification status on your digital pass portal'}
+                    <div style="font-size: 11px; color: #A2B6A6; margin: 4px 0 12px;">
+                        ${isConfirmed ? 'Present to Suryanelli Basecamp Marshal on arrival' : 'Scan to check live verification status'}
                     </div>
-                    <a href="${passUrl}" class="btn-primary" style="display: block; text-align: center;">View & Track Live Wilderness Pass →</a>
+                    <a href="${passUrl}" class="btn-primary" style="display: block; text-align: center;">View &amp; Track Live Wilderness Pass →</a>
                 </div>
 
                 <!-- 1-CLICK ADD TO CALENDAR -->

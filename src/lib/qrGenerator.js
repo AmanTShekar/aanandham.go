@@ -55,11 +55,11 @@ export async function generateQrBuffer(text, size = 260) {
     try {
         const buffer = await QRCode.toBuffer(text, {
             width: size,
-            margin: 2,
+            margin: 3,
             type: 'png',
             color: {
-                dark: '#121613',
-                light: '#FFFFFF'
+                dark: '#D5ED55',   // Aanandham signature lime-yellow
+                light: '#0B150E'   // Deep forest dark — matches website bg
             },
             errorCorrectionLevel: 'M'
         });
