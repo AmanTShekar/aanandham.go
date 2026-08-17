@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { prisma, isPrismaConfigured } from './prisma';
+import { prisma, isPrismaConfigured } from './prisma.js';
 
 const DATA_DIR = path.join(process.cwd(), '.data');
 const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
@@ -110,6 +110,21 @@ function mapToPrisma(data) {
     if (payload.nonVegCount !== undefined) {
         payload.nonVegCount = payload.nonVegCount != null ? Number(payload.nonVegCount) : null;
     }
+
+    // Strip in-memory extra fields that are not defined in the Prisma PostgreSQL schema
+    delete payload.email;
+    delete payload.campsiteId;
+    delete payload.advancePaid;
+    delete payload.isBalancePaid;
+    delete payload.attendanceRoster;
+    delete payload.checkedInCount;
+    delete payload.shortCount;
+    delete payload.checkInAt;
+    delete payload.marshalName;
+    delete payload.marshalNotes;
+    delete payload.convoyTime;
+    delete payload.lastUpdated;
+
     return payload;
 }
 
