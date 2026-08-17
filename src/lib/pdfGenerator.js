@@ -12,14 +12,14 @@ const BG_CANVAS   = [248, 249, 245];    // #F8F9F5 Website light stone canvas
 const CARD_BG     = [255, 255, 255];    // #FFFFFF Crisp white card
 const CARD_INNER  = [243, 246, 240];    // #F3F6F0 Soft stone cell background
 const CARD_PLATE  = [234, 240, 230];    // #EAF0E6 Detail container
-const LIME_BAR    = [213, 237, 85];     // #D5ED55 Signature Aanandham lime
+const BRAND_YELLOW= [229, 169, 59];     // #E5A93B Signature Aanandham website golden yellow
 const TEXT_BLACK  = [18, 22, 19];       // #121613 Deep rich charcoal black
 const TEXT_MUTED  = [89, 101, 93];      // #59655D Slate forest secondary
 const TEXT_DIM    = [120, 135, 125];    // #78877D Dim label
 const BORDER_LIGHT= [224, 230, 220];    // #E0E6DC Subtle light border
 const GREEN_PAID  = [22, 101, 52];      // #166534 Forest green paid
 const AMBER_DUE   = [180, 83, 9];       // #B45309 Warm amber due
-const OLIVE_DARK  = [55, 80, 20];       // #375014 Olive accent header
+const FOREST_DARK = [22, 101, 52];      // #166534 Forest green accent
 
 // Standard A4 Dimensions in Points (72 dpi)
 const PAGE_W = 595.28;
@@ -55,8 +55,8 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         // ═════════════════════════════════════════════════════════════
         doc.rect(0, 0, PAGE_W, PAGE_H).fill(BG_CANVAS);
 
-        // Top Signature Lime Accent Bar
-        doc.rect(0, 0, PAGE_W, 6).fill(LIME_BAR);
+        // Top Signature Golden Yellow Accent Bar
+        doc.rect(0, 0, PAGE_W, 6).fill(BRAND_YELLOW);
 
         // Main Pass Container Card
         const C_X = 24;
@@ -82,12 +82,12 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
             } catch (_) {}
         }
 
-        // Centered Bold Brand Title: Aanandham.go
+        // Centered Bold Brand Title: Aanandham.go (.go in website golden yellow)
         doc.font('Helvetica-Bold').fontSize(22);
         const titleW = doc.widthOfString('Aanandham.go');
         const titleX = (PAGE_W - titleW) / 2;
         doc.fill(TEXT_BLACK).text('Aanandham', titleX, HDR_Y + 50, { continued: true })
-           .fill(OLIVE_DARK).text('.go');
+           .fill(BRAND_YELLOW).text('.go');
 
         // ═════════════════════════════════════════════════════════════
         // 3. STAY TITLE & REFERENCE BANNER
@@ -100,7 +100,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
            .lineWidth(1).strokeColor(BORDER_LIGHT).stroke();
 
         // Subtitle
-        doc.font('Helvetica-Bold').fontSize(8).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(8).fill(BRAND_YELLOW)
            .text('OFFICIAL BOOKING PASS', C_X + 32, EXP_Y + 12, { characterSpacing: 1 });
 
         // Package Title
@@ -148,7 +148,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const RIGHT_X = LEFT_X + LEFT_W + COL_PAD;
 
         // ── LEFT COLUMN: STAY DETAILS ───────────────────────────────
-        doc.font('Helvetica-Bold').fontSize(9).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(9).fill(FOREST_DARK)
            .text('STAY DETAILS', LEFT_X + 4, BODY_Y, { characterSpacing: 1 });
 
         const manifestRows = [
@@ -192,7 +192,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
            .text(balText, LEFT_X + 12, mY + 22);
 
         // ── RIGHT COLUMN: CLEAN UNOBSTRUCTED QR CODE ────────────────
-        doc.font('Helvetica-Bold').fontSize(9).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(9).fill(FOREST_DARK)
            .text('CHECK-IN PASS', RIGHT_X + 4, BODY_Y, { characterSpacing: 1 });
 
         // QR Code Card Container (Matching height with left column)
@@ -203,7 +203,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.roundedRect(RIGHT_X, QR_BOX_Y, RIGHT_W, QR_BOX_H, 12)
            .lineWidth(1).strokeColor(BORDER_LIGHT).stroke();
 
-        doc.font('Helvetica-Bold').fontSize(7.5).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(7.5).fill(FOREST_DARK)
            .text('SCAN TO CHECK IN', RIGHT_X, QR_BOX_Y + 12, { width: RIGHT_W, align: 'center', characterSpacing: 1 });
 
         // Clean, High-Contrast QR Code Image (Dark QR on White Plate)
@@ -255,7 +255,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const c3X = c2X + col3W + 8;
 
         // Col 1: Pickup Point
-        doc.font('Helvetica-Bold').fontSize(8).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(8).fill(FOREST_DARK)
            .text('PICKUP POINT', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_BLACK)
            .text(landmarkGuide.hubName, c1X, CONVOY_Y + 24, { width: col3W, height: 20, ellipsis: true });
@@ -269,7 +269,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
            .text(landmarkGuide.offlineNote || 'Zero Litter. Carry warm layers (8-14 C at night).', c2X, CONVOY_Y + 24, { width: col3W });
 
         // Col 3: Camp Support
-        doc.font('Helvetica-Bold').fontSize(8).fill(OLIVE_DARK)
+        doc.font('Helvetica-Bold').fontSize(8).fill(FOREST_DARK)
            .text('CAMP SUPPORT', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_BLACK)
            .text(landmarkGuide.emergencyMarshalPhone || '+91 90748 58014', c3X, CONVOY_Y + 24);
@@ -284,7 +284,8 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.rect(C_X + 16, FOOT_Y, C_W - 32, 1).fill(BORDER_LIGHT);
 
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_BLACK)
-           .text('Aanandham.go', C_X + 24, FOOT_Y + 12);
+           .text('Aanandham', C_X + 24, FOOT_Y + 12, { continued: true })
+           .fill(BRAND_YELLOW).text('.go');
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
            .text('Suryanelli | Kolukkumalai | Meesapulimala | Munnar, Kerala | aanandham.in', C_X + 24, FOOT_Y + 24);
 
@@ -292,8 +293,8 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
            .text('OFFICIAL DIGITAL PASS VOUCHER', C_X + 200, FOOT_Y + 18, { width: C_W - 224, align: 'right', characterSpacing: 0.4 });
 
-        // Bottom Accent Lime Bar
-        doc.rect(0, PAGE_H - 6, PAGE_W, 6).fill(LIME_BAR);
+        // Bottom Accent Golden Yellow Bar
+        doc.rect(0, PAGE_H - 6, PAGE_W, 6).fill(BRAND_YELLOW);
 
         doc.end();
     });
