@@ -474,40 +474,63 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const startCamera = useCallback(async () => {
         if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             setHasCameraPermission(false);
-            setErrorMessage('Camera not supported. Use gallery upload or manual search.');
+            setErrorMessage('Camera not supported by browser. Use image upload or manual search.');
             return;
         }
 
         try {
             stopCamera();
 
-            const constraints = {
-                video: {
-                    facingMode: { ideal: facingMode },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
+            // Try ideal mobile camera constraints with fallback
+            let stream = null;
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: { ideal: facingMode },
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    },
+                    audio: false
+                });
+            } catch {
+                // Lenient fallback if 1280x720 / ideal facingMode is rejected
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: facingMode },
+                        audio: false
+                    });
+                } catch {
+                    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
                 }
-            };
+            }
 
-            const stream = await navigator.mediaDevices.getUserMedia(constraints);
-            if (videoRef.current) {
+            if (videoRef.current && stream) {
                 videoRef.current.srcObject = stream;
                 videoRef.current.setAttribute('playsinline', 'true');
-                await videoRef.current.play();
+                videoRef.current.setAttribute('autoplay', 'true');
+                videoRef.current.setAttribute('muted', 'true');
+                videoRef.current.muted = true;
+
+                // Play on metadata load and catch autoplay restrictions
+                videoRef.current.onloadedmetadata = () => {
+                    videoRef.current?.play().catch(e => console.warn('Camera stream play prevented:', e));
+                };
+                await videoRef.current.play().catch(() => {});
+
                 setHasCameraPermission(true);
                 setIsCameraEnabled(true);
                 setErrorMessage('');
 
                 const track = stream.getVideoTracks()[0];
-                const capabilities = track.getCapabilities ? track.getCapabilities() : {};
-                setHasTorchSupport(Boolean(capabilities.torch));
+                const capabilities = track?.getCapabilities ? track.getCapabilities() : {};
+                setHasTorchSupport(Boolean(capabilities?.torch));
             }
         } catch (err) {
             setHasCameraPermission(false);
             if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                setErrorMessage('Camera permission blocked. Tap "Enable Camera" or allow in browser settings.');
+                setErrorMessage('Camera permission blocked. Tap "Turn On Camera" or allow camera access in browser settings.');
             } else {
-                setErrorMessage('Could not initialize camera. You can upload an image or type the Booking ID.');
+                setErrorMessage('Could not initialize camera feed. Tap "Turn On Camera" or search by Booking ID.');
             }
         }
     }, [facingMode, stopCamera]);
@@ -1319,7 +1342,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     </div>
                 </div>
 
-                {/* Right: Actions (Lock Console & Sound Toggle) */}
+                {/* Right: Actions (Lock Console) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                     <button
                         onClick={handleHostLogout}
@@ -1327,7 +1350,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             background: 'rgba(239, 68, 68, 0.12)',
                             border: '1px solid rgba(239, 68, 68, 0.3)',
                             color: '#FCA5A5',
-                            padding: '6px 10px',
+                            padding: '6px 12px',
                             borderRadius: '10px',
                             fontSize: '11px',
                             fontWeight: '800',
@@ -1339,25 +1362,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         title="Lock Basecamp Console"
                     >
                         <Lock size={12} />
-                        <span className="hidden sm:inline">Lock</span>
-                    </button>
-
-                    <button
-                        onClick={() => setSoundEnabled(!soundEnabled)}
-                        style={{
-                            background: soundEnabled ? 'rgba(213, 237, 85, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-                            border: `1px solid ${soundEnabled ? 'rgba(213, 237, 85, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
-                            color: soundEnabled ? '#D5ED55' : '#8E9B92',
-                            width: '32px',
-                            height: '32px',
-                            borderRadius: '10px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        {soundEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+                        <span>Lock</span>
                     </button>
                 </div>
             </header>
@@ -1722,6 +1727,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     }}>
                         <video
                             ref={videoRef}
+                            autoPlay
+                            playsInline
+                            muted
                             style={{
                                 width: '100%',
                                 height: '100%',
