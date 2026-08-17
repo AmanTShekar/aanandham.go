@@ -67,47 +67,39 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
            .lineWidth(1).strokeColor(BORDER_DIM).stroke();
 
         // ═════════════════════════════════════════════════════════════
-        // 2. HEADER BRANDING & STATUS
+        // 2. CENTERED HEADER BRANDING
         // ═════════════════════════════════════════════════════════════
-        const HDR_Y = C_Y + 16;
+        const HDR_Y = C_Y + 14;
+        const LOGO_SZ = 44;
+        const LOGO_X = (PAGE_W - LOGO_SZ) / 2;
 
-        // Logo — Proportional 1:1, crisp
+        // Centered Logo
         if (fs.existsSync(LOGO_PATH)) {
             try {
-                doc.image(LOGO_PATH, C_X + 20, HDR_Y, { fit: [54, 54], align: 'center', valign: 'center' });
+                doc.image(LOGO_PATH, LOGO_X, HDR_Y, { fit: [LOGO_SZ, LOGO_SZ], align: 'center', valign: 'center' });
             } catch (_) {}
         }
 
-        // Clean Bold Brand Title: Aanandham.go
-        doc.font('Helvetica-Bold').fontSize(22).fill(TEXT_WHITE)
-           .text('Aanandham', C_X + 86, HDR_Y + 14, { continued: true })
+        // Centered Bold Brand Title: Aanandham.go
+        doc.font('Helvetica-Bold').fontSize(21);
+        const titleW = doc.widthOfString('Aanandham.go');
+        const titleX = (PAGE_W - titleW) / 2;
+        doc.fill(TEXT_WHITE).text('Aanandham', titleX, HDR_Y + 48, { continued: true })
            .fill(LIME).text('.go');
-
-        // Status Badge (Right aligned)
-        const badgeW = 138;
-        const badgeH = 26;
-        const badgeX = C_X + C_W - badgeW - 20;
-        const badgeY = HDR_Y + 14;
-        const badgeBg = isConfirmed ? LIME : AMBER;
-        const badgeText = isConfirmed ? 'CONFIRMED' : 'PENDING';
-
-        doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 13).fill(badgeBg);
-        doc.font('Helvetica-Bold').fontSize(9).fill(BG_DARK)
-           .text(badgeText, badgeX, badgeY + 8, { width: badgeW, align: 'center', characterSpacing: 0.8 });
 
         // ═════════════════════════════════════════════════════════════
         // 3. STAY TITLE & REFERENCE BANNER
         // ═════════════════════════════════════════════════════════════
-        const EXP_Y = HDR_Y + 54;
-        const EXP_H = 74;
+        const EXP_Y = HDR_Y + 78;
+        const EXP_H = 68;
 
         doc.roundedRect(C_X + 16, EXP_Y, C_W - 32, EXP_H, 14).fill(CARD_INNER);
         doc.roundedRect(C_X + 16, EXP_Y, C_W - 32, EXP_H, 14)
            .lineWidth(1).strokeColor(BORDER_DIM).stroke();
 
         // Subtitle
-        doc.font('Helvetica-Bold').fontSize(8.5).fill(LIME)
-           .text('OFFICIAL BOOKING PASS', C_X + 32, EXP_Y + 14, { characterSpacing: 1 });
+        doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
+           .text('OFFICIAL BOOKING PASS', C_X + 32, EXP_Y + 12, { characterSpacing: 1 });
 
         // Package / Sanctuary Title
         const pkgTitle = booking.package || 'Aanandham Mountain Stay';
