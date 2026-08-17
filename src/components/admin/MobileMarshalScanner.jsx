@@ -777,72 +777,107 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
             {/* ── TOP APP BAR ── */}
             <header style={{
-                background: 'rgba(11, 21, 14, 0.85)',
+                background: 'rgba(9, 18, 11, 0.92)',
                 backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                padding: '14px 18px',
+                padding: '10px 16px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 position: 'sticky',
                 top: 0,
-                zIndex: 40
+                zIndex: 40,
+                gap: '8px'
             }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Left: Back & Brand Logo */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                     {onBackToAdmin ? (
                         <button
                             onClick={onBackToAdmin}
                             style={{
-                                background: 'rgba(255, 255, 255, 0.08)',
-                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                background: 'rgba(255, 255, 255, 0.06)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
                                 color: '#FFFFFF',
-                                borderRadius: '50%',
-                                width: '36px',
-                                height: '36px',
+                                borderRadius: '10px',
+                                width: '34px',
+                                height: '34px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                flexShrink: 0
                             }}
                         >
-                            <ArrowLeft size={18} />
+                            <ArrowLeft size={16} />
                         </button>
                     ) : (
                         <Link
                             href="/admin"
                             style={{
-                                background: 'rgba(255, 255, 255, 0.08)',
-                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                background: 'rgba(255, 255, 255, 0.06)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
                                 color: '#FFFFFF',
-                                borderRadius: '50%',
-                                width: '36px',
-                                height: '36px',
+                                borderRadius: '10px',
+                                width: '34px',
+                                height: '34px',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                textDecoration: 'none'
+                                textDecoration: 'none',
+                                flexShrink: 0
                             }}
                         >
-                            <ArrowLeft size={18} />
+                            <ArrowLeft size={16} />
                         </Link>
                     )}
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '15px', fontWeight: '800', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                            </span>
-                            <span style={{ fontSize: '10px', background: '#D5ED55', color: '#0B150E', padding: '2px 6px', borderRadius: '4px', fontWeight: '900', letterSpacing: '0.5px' }}>
-                                BASECAMP HOST
+
+                    {/* Official Aanandham Logo & Title */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                        <img 
+                            src="/logo.png" 
+                            alt="Aanandham Logo" 
+                            style={{ 
+                                width: '28px', 
+                                height: '28px', 
+                                borderRadius: '8px', 
+                                objectFit: 'contain',
+                                background: 'rgba(255,255,255,0.06)',
+                                padding: '2px',
+                                flexShrink: 0
+                            }} 
+                        />
+                        <div style={{ minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+                                <span style={{ fontSize: '15px', fontWeight: '900', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                                    Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                </span>
+                                <span style={{ 
+                                    fontSize: '9px', 
+                                    background: 'rgba(213, 237, 85, 0.15)', 
+                                    border: '1px solid rgba(213, 237, 85, 0.35)', 
+                                    color: '#D5ED55', 
+                                    padding: '2px 6px', 
+                                    borderRadius: '6px', 
+                                    fontWeight: '900', 
+                                    letterSpacing: '0.4px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px'
+                                }}>
+                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block' }} />
+                                    HOST
+                                </span>
+                            </div>
+                            <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                Gate & Attendance Console
                             </span>
                         </div>
-                        <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>
-                            Gate Pass, Headcount & Attendance Console
-                        </span>
                     </div>
                 </div>
 
-                {/* Quick Simulation & Audio Actions */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {/* Right: Actions (Dispatch Test Pass & Sound Toggle) */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                     <button
                         onClick={() => setIsTestEmailModalOpen(true)}
                         style={{
@@ -855,13 +890,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             fontWeight: '800',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '4px',
-                            cursor: 'pointer'
+                            gap: '5px',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap'
                         }}
                         title="Send Real Test Pass Email"
                     >
                         <Mail size={13} />
-                        <span>Email Pass</span>
+                        <span className="hidden sm:inline">Email Pass</span>
                     </button>
 
                     <button
@@ -870,8 +906,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             background: soundEnabled ? 'rgba(213, 237, 85, 0.15)' : 'rgba(255, 255, 255, 0.06)',
                             border: `1px solid ${soundEnabled ? 'rgba(213, 237, 85, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
                             color: soundEnabled ? '#D5ED55' : '#8E9B92',
-                            width: '34px',
-                            height: '34px',
+                            width: '32px',
+                            height: '32px',
                             borderRadius: '10px',
                             display: 'flex',
                             alignItems: 'center',
