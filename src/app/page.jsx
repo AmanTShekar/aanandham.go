@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring, MotionConfig } from 'framer-motion';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import Footer from '../components/Footer';
@@ -404,79 +404,68 @@ const FAQ_DATA = [
     }
 ];
 
-// ── REUSABLE FRAMER MOTION ULTRA-CLEAN VARIANTS (Fast Eager Paint) ──
+// ── LUXURY HIGH-PERFORMANCE CLEAR REVEAL VARIANTS (Visible & Silky 60FPS) ──
 const sectionReveal = {
-    hidden: { opacity: 1, y: 0 },
-    visible: { opacity: 1, y: 0 }
-};
-
-const fadeInUp = {
-    hidden: { opacity: 0.85, y: 12 },
+    hidden: { opacity: 0, y: 36 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+    }
+};
+
+const fadeInUp = {
+    hidden: { opacity: 0, y: 32 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const staggerContainer = {
-    hidden: { opacity: 1 },
+    hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.05,
-            delayChildren: 0.02
+            staggerChildren: 0.12,
+            delayChildren: 0.05
         }
     }
 };
 
 const cardReveal = {
-    hidden: { opacity: 0.85, y: 12 },
+    hidden: { opacity: 0, y: 32, scale: 0.96 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        scale: 1,
+        transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const fadeInLeft = {
-    hidden: { opacity: 0.85, x: -12 },
+    hidden: { opacity: 0, x: -36 },
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
 const fadeInRight = {
-    hidden: { opacity: 0.85, x: 12 },
+    hidden: { opacity: 0, x: 36 },
     visible: {
         opacity: 1,
         x: 0,
-        transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
     }
 };
 
-// ── CTA PARALLAX BANNER WITH SCROLL-DRIVEN ZOOM & DEPTH ACTION ──
+// ── HIGH-PERFORMANCE INSTANT CTA BANNER ──
 function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
-    const bannerRef = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: bannerRef,
-        offset: ["start end", "end start"]
-    });
-    
-    // Smooth scroll-driven zoom (from 1.0 to 1.25) & vertical shift (-5% to +5%)
-    const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.0, 1.14, 1.28]);
-    const bgY = useTransform(scrollYProgress, [0, 1], ['-6%', '6%']);
-    const contentY = useTransform(scrollYProgress, [0, 1], [18, -18]);
-
     return (
-        <motion.section 
-            ref={bannerRef}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={sectionReveal}
+        <section 
             id="cta"
             style={{ position: 'relative', padding: '80px clamp(20px, 4vw, 48px) 110px', background: '#F8F9F5' }}
         >
@@ -492,16 +481,13 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                         cursor: 'default'
                     }}
                 >
-                    {/* Parallax Zooming & Scrolling Action Background */}
-                    <motion.div
+                    {/* Background */}
+                    <div
                         style={{
                             position: 'absolute',
-                            inset: '-15%',
-                            width: '130%',
-                            height: '130%',
-                            scale: bgScale,
-                            y: bgY,
-                            willChange: 'transform'
+                            inset: 0,
+                            width: '100%',
+                            height: '100%'
                         }}
                     >
                         <img
@@ -514,14 +500,14 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 filter: 'brightness(0.68) contrast(1.15)'
                             }}
                         />
-                    </motion.div>
+                    </div>
 
                     {/* Radial & Edge Vignette Gradients */}
                     <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.3) 0%, rgba(14, 24, 17, 0.75) 100%)' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.85) 0%, transparent 60%)' }} />
 
-                    {/* Animated Content Layer */}
-                    <motion.div style={{ position: 'relative', zIndex: 2, maxWidth: '760px', margin: '0 auto', y: contentY }}>
+                    {/* Content Layer */}
+                    <div style={{ position: 'relative', zIndex: 2, maxWidth: '760px', margin: '0 auto' }}>
                         <div style={{
                             fontSize: '12px',
                             fontWeight: '900',
@@ -552,9 +538,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             Reserve your spot and <span className="text-marker-dark-2">join the adventure</span> today
                         </h2>
                         <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
-                            <motion.button
-                                whileHover={{ scale: 1.06, boxShadow: '0 12px 35px rgba(213, 237, 85, 0.4)' }}
-                                whileTap={{ scale: 0.96 }}
+                            <button
                                 onClick={() => onOpenBooking(defaultPackage)}
                                 style={{
                                     background: '#E5A93B',
@@ -572,7 +556,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 }}
                             >
                                 <span>Instant Reserve Spot →</span>
-                            </motion.button>
+                            </button>
                             <a
                                 href={waLink('Hi Aanandham Team! I want to reserve a spot for the upcoming wilderness camp.')}
                                 target="_blank"
@@ -583,10 +567,10 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 <span>WhatsApp Helpdesk</span>
                             </a>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
-        </motion.section>
+        </section>
     );
 }
 
@@ -915,7 +899,8 @@ export default function HomePage() {
     };
 
     return (
-        <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100%', position: 'relative' }}>
+        <MotionConfig reducedMotion="never">
+            <div style={{ backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100%', position: 'relative' }}>
             
             {/* ── GOOGLE RICH RESULTS STRUCTURED DATA ── */}
             <script
@@ -1123,15 +1108,26 @@ export default function HomePage() {
             {/* ─────────────────────────────────────────────────────────────
                 1. OVERVIEW SECTION (Ref Screenshot 3 Batch 2 - media_1786655246018.png)
             ───────────────────────────────────────────────────────────── */}
-            <section 
+            <motion.section 
                 id="overview" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+                variants={staggerContainer}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     <div className="overview-3col-grid">
                         
                         {/* Left Column */}
-                        <motion.div variants={fadeInLeft} style={{ width: '100%' }}>
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInLeft} 
+                            className="reveal-fade-left"
+                            style={{ width: '100%' }}
+                        >
                             <div className="star-badge">
                                 <span className="star-icon">★</span> OVERVIEW
                             </div>
@@ -1178,8 +1174,11 @@ export default function HomePage() {
 
                         {/* Center Highlight Image */}
                         <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
                             variants={cardReveal}
-                            className="card-img-zoom"
+                            className="card-img-zoom reveal-zoom"
                             style={{ 
                                 position: 'relative', 
                                 height: 'clamp(360px, 48vh, 500px)', 
@@ -1217,7 +1216,7 @@ export default function HomePage() {
                                     </button>
                                     <button 
                                         onClick={nextHighlight} 
-                                        aria-label="Next trip highlight"
+                                        aria-label="Next highlight"
                                         style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                     >
                                         <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
@@ -1236,7 +1235,14 @@ export default function HomePage() {
                         </motion.div>
 
                         {/* Right Column: Metadata + Quote Card */}
-                        <motion.div variants={fadeInRight} style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInRight} 
+                            className="reveal-fade-right"
+                            style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}
+                        >
                             
                             {/* Metadata list */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingBottom: '10px' }}>
@@ -1276,7 +1282,7 @@ export default function HomePage() {
 
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
                 2. WHY AANANDHAM.GO SECTION (Flagship Value & Trust Pillars)
@@ -1285,7 +1291,7 @@ export default function HomePage() {
                 id="why-aanandham" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
@@ -1294,8 +1300,11 @@ export default function HomePage() {
                         
                         {/* Interactive Cinematic Showcase Card (Desktop: Left, Mobile: Below Header/Tabs) */}
                         <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
                             variants={fadeInLeft}
-                            className="why-showcase-col"
+                            className="why-showcase-col reveal-fade-left"
                         >
                             <AnimatePresence mode="wait">
                                 <motion.img
@@ -1410,7 +1419,13 @@ export default function HomePage() {
                         </motion.div>
 
                         {/* Content & Interactive Feature Pillars (Desktop: Right, Mobile: Top) */}
-                        <motion.div variants={fadeInRight} className="why-content-col">
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInRight} 
+                            className="why-content-col reveal-fade-right"
+                        >
                             <div className="star-badge">
                                 <span className="star-icon">★</span> WHY AANANDHAM<span style={{ color: '#E5A93B' }}>.GO</span>
                             </div>
@@ -1600,7 +1615,7 @@ export default function HomePage() {
                 id="packages" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 className="packages-section-container"
             >
@@ -1927,7 +1942,7 @@ export default function HomePage() {
                 id="program" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
@@ -2142,7 +2157,7 @@ export default function HomePage() {
                 id="experience" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
@@ -2150,7 +2165,14 @@ export default function HomePage() {
                     <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
-                        <div className="sticky-pinned-col" style={{ position: 'sticky', top: '100px' }}>
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInLeft}
+                            className="sticky-pinned-col reveal-fade-left" 
+                            style={{ position: 'sticky', top: '100px' }}
+                        >
                             <div className="star-badge" style={{ marginBottom: '14px' }}>
                                 <span className="star-icon">★</span> EXPERIENCE
                             </div>
@@ -2168,18 +2190,18 @@ export default function HomePage() {
                             <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.65, margin: 0, maxWidth: '420px' }}>
                                 This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
                             </p>
-                        </div>
+                        </motion.div>
 
                         {/* Scrolling Right Cards (Icon Above, Straight in Sight) */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
                             {EXPERIENCE_ITEMS.map((exp, idx) => (
                                 <motion.div
                                     key={idx}
-                                    variants={cardReveal}
                                     initial="hidden"
                                     whileInView="visible"
-                                    viewport={{ once: true, margin: "-30px" }}
-                                    className="hover-lift"
+                                    viewport={{ once: true, amount: 0.15 }}
+                                    variants={cardReveal}
+                                    className={`hover-lift reveal-fade-up reveal-delay-${(idx % 4) + 1}`}
                                     style={{
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -2236,7 +2258,7 @@ export default function HomePage() {
                 id="arrangements" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '70px 0', background: '#F8F9F5', width: '100%' }}
             >
@@ -2580,7 +2602,7 @@ export default function HomePage() {
                 id="steps" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
@@ -2588,7 +2610,14 @@ export default function HomePage() {
                     <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
-                        <div className="sticky-pinned-col" style={{ position: 'sticky', top: '100px' }}>
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInLeft}
+                            className="sticky-pinned-col reveal-fade-left" 
+                            style={{ position: 'sticky', top: '100px' }}
+                        >
                             <div className="star-badge" style={{ marginBottom: '14px' }}>
                                 <span className="star-icon">★</span> STEPS
                             </div>
@@ -2606,7 +2635,7 @@ export default function HomePage() {
                             <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.7, marginBottom: '32px', maxWidth: '420px' }}>
                                 We’ve made the entire process smooth and hassle-free. Our team guides you through every step from booking to arrival — just show up ready for waves & peaks.
                             </p>
-                        </div>
+                        </motion.div>
 
                         {/* Scrolling Right Steps List */}
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -2616,8 +2645,8 @@ export default function HomePage() {
                                     variants={cardReveal}
                                     initial="hidden"
                                     whileInView="visible"
-                                    viewport={{ once: true, margin: "-40px" }}
-                                    className="hover-lift"
+                                    viewport={{ once: true, amount: 0.15 }}
+                                    className={`hover-lift reveal-fade-up reveal-delay-${idx + 1}`}
                                     style={{ 
                                         display: 'flex', 
                                         gap: '24px', 
@@ -2782,12 +2811,11 @@ export default function HomePage() {
                 id="stories" 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: "-60px" }}
+                viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
-                    
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
                         <div>
                             <div className="star-badge">
@@ -2829,10 +2857,10 @@ export default function HomePage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 330px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
                         
-                        {/* Authentic Real Polaroid Photo Card (Sharp Edges, Deep Bottom Chin, Tape Top) */}
+                        {/* Authentic Real Polaroid Photo Card */}
                         <div 
                             onClick={() => setIsVideoModalOpen(true)} 
-                            className="vintage-polaroid-frame"
+                            className="vintage-polaroid-frame reveal-zoom"
                             role="button"
                             tabIndex={0}
                             aria-label="Play Kolukkumalai Sunrise Camper Video"
@@ -2905,7 +2933,7 @@ export default function HomePage() {
                             </div>
                         </div>
 
-                        {/* Real Notebook Paper Review Sheets (Sharp Non-Rounded Edges, Ruled Lines, Red Margin) */}
+                        {/* Real Notebook Paper Review Sheets */}
                         {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
                             <motion.div 
                                 key={`testimonial-card-${t.id}-${testimonialIdx}-${idx}`} 
@@ -2913,7 +2941,7 @@ export default function HomePage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -16 }}
                                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                                className="notebook-review-card"
+                                className={`notebook-review-card reveal-fade-up reveal-delay-${idx + 1}`}
                                 style={{
                                     transform: idx === 0 ? 'rotate(-0.8deg)' : 'rotate(0.8deg)'
                                 }}
@@ -3001,8 +3029,12 @@ export default function HomePage() {
                 12. FREQUENTLY ASKED QUESTIONS (Ref Screenshot 2 - media_1786656749472.png)
                    - Pinned sticky left contact card while right FAQ questions scroll until section end
             ───────────────────────────────────────────────────────────── */}
-            <section 
+            <motion.section 
                 id="faq" 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+                variants={sectionReveal}
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
@@ -3025,8 +3057,12 @@ export default function HomePage() {
                     <div className="sticky-split-grid">
                         
                         {/* Sticky Pinned Left Floating Card */}
-                        <div 
-                            className="hover-lift sticky-pinned-col faq-help-card" 
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInLeft}
+                            className="hover-lift sticky-pinned-col faq-help-card reveal-fade-left" 
                             style={{ 
                                 background: '#FFFFFF', 
                                 border: '1px solid rgba(18, 22, 19, 0.08)', 
@@ -3040,7 +3076,7 @@ export default function HomePage() {
                                 height: '48px', 
                                 borderRadius: '14px', 
                                 background: 'rgba(213, 237, 85, 0.25)', 
-                                border: '1px solid rgba(18, 22, 19, 0.06)',
+                                border: '1px solid rgba(18, 22, 19, 0.06)', 
                                 display: 'flex', 
                                 alignItems: 'center', 
                                 justifyContent: 'center', 
@@ -3065,10 +3101,17 @@ export default function HomePage() {
                                     →
                                 </div>
                             </Link>
-                        </div>
+                        </motion.div>
 
                         {/* Scrolling Right Accordions 01-06 */}
-                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <motion.div 
+                            initial="hidden"
+                            whileInView="visible"
+                            viewport={{ once: true, amount: 0.15 }}
+                            variants={fadeInRight}
+                            className="reveal-fade-right"
+                            style={{ display: 'flex', flexDirection: 'column' }}
+                        >
                             {FAQ_DATA.map((faq, index) => {
                                 const isOpen = activeFaq === index;
                                 return (
@@ -3100,10 +3143,10 @@ export default function HomePage() {
                                     </div>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
                 INSTAGRAM WILDERNESS DIARIES SHOWCASE (@aanandham.go)
@@ -3608,6 +3651,7 @@ export default function HomePage() {
                 )}
             </AnimatePresence>
 
-        </div>
+            </div>
+        </MotionConfig>
     );
 }

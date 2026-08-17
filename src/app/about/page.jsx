@@ -8,44 +8,43 @@ import { useAuth } from '../../hooks/useAuth';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 
-// ── REUSABLE FRAMER MOTION ULTRA-CLEAN REVEAL VARIANTS ──
+// ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
 const sectionReveal = {
-    hidden: { opacity: 0, y: 35 },
+    hidden: { opacity: 0, y: 18 },
     visible: {
         opacity: 1,
         y: 0,
-        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.45, ease: [0.25, 1, 0.5, 1] }
     }
 };
 
 const staggerContainer = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 1 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.12,
-            delayChildren: 0.06
+            staggerChildren: 0.08,
+            delayChildren: 0.03
         }
     }
 };
 
 const cardReveal = {
-    hidden: { opacity: 0, y: 32, scale: 0.96 },
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
     visible: {
         opacity: 1,
         y: 0,
         scale: 1,
-        transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.4, ease: [0.25, 1, 0.5, 1] }
     }
 };
 
 const stickyReveal = {
-    hidden: { opacity: 0, y: 40, scale: 0.94 },
+    hidden: { opacity: 0, y: 18 },
     visible: {
         opacity: 1,
         y: 0,
-        scale: 1,
-        transition: { duration: 0.65, ease: [0.16, 1, 0.3, 1] }
+        transition: { duration: 0.45, ease: [0.25, 1, 0.5, 1] }
     }
 };
 
@@ -624,7 +623,7 @@ export default function AboutPage() {
                     id="ethos" 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-80px" }}
+                    viewport={{ once: true, amount: 0.1 }}
                     variants={sectionReveal}
                     style={{
                         padding: '110px 24px',
@@ -640,7 +639,12 @@ export default function AboutPage() {
                             alignItems: 'center'
                         }}>
                             {/* Left: Editorial Narrative */}
-                            <motion.div variants={cardReveal}>
+                            <motion.div 
+                                initial="hidden"
+                                whileInView="visible"
+                                viewport={{ once: true, amount: 0.15 }}
+                                variants={cardReveal}
+                            >
                                 <div className="star-badge" style={{ marginBottom: '16px' }}>
                                     <span className="star-icon">★</span> OUR FOUNDING ETHOS
                                 </div>
@@ -2193,7 +2197,7 @@ export default function AboutPage() {
                 <motion.section 
                     initial="hidden"
                     whileInView="visible"
-                    viewport={{ once: true, margin: "-60px" }}
+                    viewport={{ once: true, amount: 0.1 }}
                     variants={sectionReveal}
                     style={{
                         padding: '120px clamp(20px, 4vw, 48px)',
