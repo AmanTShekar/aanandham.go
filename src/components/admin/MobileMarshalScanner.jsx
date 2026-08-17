@@ -188,6 +188,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const animFrameRef = useRef(null);
+    const streamRef = useRef(null);
 
     const [isCameraEnabled, setIsCameraEnabled] = useState(false);
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -272,7 +273,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             } else {
                 setPasscodeError(data.message || 'Invalid passcode. Access denied.');
             }
-        } catch (err) {
+        } catch {
             setPasscodeError('Network error verifying credentials. Please try again.');
         } finally {
             setIsLoggingIn(false);
@@ -285,12 +286,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 method: 'DELETE',
                 credentials: 'include'
             });
-        } catch (err) {
+        } catch {
             // Ignored
         }
-        setIsAuthenticated(false);
         stopCamera();
-        setIsCameraEnabled(false);
+        setIsAuthenticated(false);
         setScannedBooking(null);
         setClearedGatePermit(null);
         showToast('🔒 Basecamp Host Console Locked');
@@ -362,40 +362,50 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── CAMERA CONTROLS ──
     const stopCamera = useCallback(() => {
-        if (videoRef.current && videoRef.current.srcObject) {
-            const tracks = videoRef.current.srcObject.getTracks();
-            tracks.forEach(track => track.stop());
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+        }
+        if (videoRef.current) {
             videoRef.current.srcObject = null;
         }
         if (animFrameRef.current) {
             cancelAnimationFrame(animFrameRef.current);
+            animFrameRef.current = null;
         }
+        setIsCameraEnabled(false);
         setTorchOn(false);
     }, []);
 
     const startCamera = useCallback(async () => {
-        if (typeof window === 'undefined' || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (typeof window === 'undefined' || !navigator?.mediaDevices?.getUserMedia) {
             setHasCameraPermission(false);
-            setErrorMessage('Camera not supported by browser. Use image upload or manual search.');
+            setErrorMessage('Camera access is not supported on this browser/insecure connection.');
             return;
         }
 
         try {
-            stopCamera();
+            setErrorMessage('');
 
-            // Try ideal mobile camera constraints with fallback
-            let stream = null;
+            // Stop any existing stream tracks first
+            if (streamRef.current) {
+                streamRef.current.getTracks().forEach(t => t.stop());
+                streamRef.current = null;
+            }
+
+            const constraints = {
+                video: {
+                    facingMode: facingMode === 'user' ? 'user' : { ideal: 'environment' },
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                },
+                audio: false
+            };
+
+            let stream;
             try {
-                stream = await navigator.mediaDevices.getUserMedia({
-                    video: {
-                        facingMode: { ideal: facingMode },
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 }
-                    },
-                    audio: false
-                });
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
             } catch {
-                // Lenient fallback if 1280x720 / ideal facingMode is rejected
                 try {
                     stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: facingMode },
@@ -406,45 +416,69 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 }
             }
 
-            if (videoRef.current && stream) {
+            streamRef.current = stream;
+            setIsCameraEnabled(true);
+            setHasCameraPermission(true);
+            setErrorMessage('');
+
+            if (videoRef.current) {
                 videoRef.current.srcObject = stream;
                 videoRef.current.setAttribute('playsinline', 'true');
                 videoRef.current.setAttribute('autoplay', 'true');
                 videoRef.current.setAttribute('muted', 'true');
                 videoRef.current.muted = true;
 
-                // Play on metadata load and catch autoplay restrictions
                 videoRef.current.onloadedmetadata = () => {
-                    videoRef.current?.play().catch(e => console.warn('Camera stream play prevented:', e));
+                    videoRef.current?.play().catch(e => console.warn('Play prevented:', e));
                 };
-                await videoRef.current.play().catch(() => {});
-
-                setHasCameraPermission(true);
-                setIsCameraEnabled(true);
-                setErrorMessage('');
-
-                const track = stream.getVideoTracks()[0];
-                const capabilities = track?.getCapabilities ? track.getCapabilities() : {};
-                setHasTorchSupport(Boolean(capabilities?.torch));
+                try {
+                    await videoRef.current.play();
+                } catch {
+                    // Handled by onloadedmetadata
+                }
             }
+
+            const track = stream.getVideoTracks()[0];
+            const capabilities = track?.getCapabilities ? track.getCapabilities() : {};
+            setHasTorchSupport(Boolean(capabilities?.torch));
+
         } catch (err) {
+            console.error('Camera initialization error:', err);
             setHasCameraPermission(false);
+            setIsCameraEnabled(false);
             if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                setErrorMessage('Camera permission blocked. Tap "Turn On Camera" or allow camera access in browser settings.');
+                setErrorMessage('Camera permission was denied. Please allow camera access in browser permissions.');
+            } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                setErrorMessage('No camera was detected on this device.');
+            } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                setErrorMessage('Camera is busy or in use by another application.');
             } else {
-                setErrorMessage('Could not initialize camera feed. Tap "Turn On Camera" or search by Booking ID.');
+                setErrorMessage('Unable to start live camera. You can upload a photo or type the Booking ID.');
             }
         }
-    }, [facingMode, stopCamera]);
+    }, [facingMode]);
 
     const toggleCameraPower = () => {
         if (isCameraEnabled) {
             stopCamera();
-            setIsCameraEnabled(false);
         } else {
             startCamera();
         }
     };
+
+    // Ensure video element receives stream whenever camera is enabled
+    useEffect(() => {
+        if (isCameraEnabled && streamRef.current && videoRef.current) {
+            if (videoRef.current.srcObject !== streamRef.current) {
+                videoRef.current.srcObject = streamRef.current;
+                videoRef.current.setAttribute('playsinline', 'true');
+                videoRef.current.setAttribute('autoplay', 'true');
+                videoRef.current.setAttribute('muted', 'true');
+                videoRef.current.muted = true;
+                videoRef.current.play().catch(e => console.warn('Stream play:', e));
+            }
+        }
+    }, [isCameraEnabled]);
 
     const toggleTorch = async () => {
         if (!videoRef.current || !videoRef.current.srcObject) return;
