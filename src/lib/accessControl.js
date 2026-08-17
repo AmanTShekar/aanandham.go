@@ -79,12 +79,12 @@ export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) 
         steps: [
             'Arrive at Basecamp Hub by 1:30 PM before 4x4 convoy departs.',
             'Park your vehicle in the reserved fenced parking zone.',
-            'Show your Aanandham digital permit pass to the camp marshal.',
+            'Show your digital pass or QR to the camp marshal.',
             'Board your allocated 4x4 Jeep for the mountain ridge ascent.',
-            'Use your Gate PIN at the summit barrier gate.'
+            'Check-in and tent handover with welcome tea on arrival.'
         ],
         emergencyMarshalPhone: formattedPhone,
-        offlineNote: 'Mobile data drops past town limits. Please screenshot your pass & PIN before starting your ascent.'
+        offlineNote: 'Mobile data drops past town limits. Please save your offline pass voucher before starting your ascent.'
     };
 
     if (key.includes('meesapulimala') || key.includes('silent-valley')) {

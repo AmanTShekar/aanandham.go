@@ -202,23 +202,23 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
 
         // ── RIGHT COLUMN: SMART ACCESS CONTROL & QR ─────────────────
         doc.font('Helvetica-Bold').fontSize(9).fill(LIME)
-           .text('ACCESS CONTROL', RIGHT_X + 4, BODY_Y, { characterSpacing: 1 });
+           .text('CHECK-IN PASS', RIGHT_X + 4, BODY_Y, { characterSpacing: 1 });
 
-        // QR Code Card Container
+        // QR Code Card Container (Full matching height with left manifest)
         const QR_BOX_Y = BODY_Y + 16;
-        const QR_BOX_H = 196;
+        const QR_BOX_H = (mY + 42) - QR_BOX_Y; // Exact matching height: ~288 pt
 
         doc.roundedRect(RIGHT_X, QR_BOX_Y, RIGHT_W, QR_BOX_H, 12).fill(CARD_INNER);
         doc.roundedRect(RIGHT_X, QR_BOX_Y, RIGHT_W, QR_BOX_H, 12)
            .lineWidth(1).strokeColor(isConfirmed ? [45, 80, 55] : BORDER_DIM).stroke();
 
         doc.font('Helvetica-Bold').fontSize(7.5).fill(LIME)
-           .text('MARSHAL VERIFICATION', RIGHT_X, QR_BOX_Y + 10, { width: RIGHT_W, align: 'center', characterSpacing: 1 });
+           .text('MARSHAL SCAN & VERIFY', RIGHT_X, QR_BOX_Y + 12, { width: RIGHT_W, align: 'center', characterSpacing: 1 });
 
         // QR Code Image
-        const QR_IMG_SIZE = 120;
+        const QR_IMG_SIZE = 136;
         const QR_IMG_X = RIGHT_X + (RIGHT_W - QR_IMG_SIZE) / 2;
-        const QR_IMG_Y = QR_BOX_Y + 26;
+        const QR_IMG_Y = QR_BOX_Y + 28;
 
         // Dark background plate for the QR
         doc.roundedRect(QR_IMG_X - 4, QR_IMG_Y - 4, QR_IMG_SIZE + 8, QR_IMG_SIZE + 8, 8).fill(BG_DARK);
@@ -232,7 +232,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         // Small centered logo badge on the QR code
         if (fs.existsSync(LOGO_PATH)) {
             try {
-                const BADGE_SZ = 18;
+                const BADGE_SZ = 20;
                 const bX = QR_IMG_X + QR_IMG_SIZE / 2 - BADGE_SZ / 2;
                 const bY = QR_IMG_Y + QR_IMG_SIZE / 2 - BADGE_SZ / 2;
                 doc.circle(bX + BADGE_SZ / 2, bY + BADGE_SZ / 2, BADGE_SZ / 2 + 2).fill(BG_DARK);
@@ -240,29 +240,22 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
             } catch (_) {}
         }
 
-        doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_WHITE)
-           .text('SCAN FOR INSTANT CHECK-IN', RIGHT_X, QR_BOX_Y + 158, { width: RIGHT_W, align: 'center' });
-        doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
-           .text('Present to Suryanelli Marshal', RIGHT_X, QR_BOX_Y + 172, { width: RIGHT_W, align: 'center' });
+        doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
+           .text('PRESENT UPON ARRIVAL', RIGHT_X, QR_BOX_Y + 178, { width: RIGHT_W, align: 'center', characterSpacing: 0.5 });
+        doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
+           .text('Scanned to retrieve roster & meal allocations', RIGHT_X, QR_BOX_Y + 192, { width: RIGHT_W, align: 'center' });
 
-        // Gate PIN Box (Below QR)
-        const PIN_BOX_Y = QR_BOX_Y + QR_BOX_H + 12;
-        const PIN_BOX_H = 80;
-        const pinCode = (isConfirmed && booking.gatePin) ? String(booking.gatePin) : '••••';
-
-        doc.roundedRect(RIGHT_X, PIN_BOX_Y, RIGHT_W, PIN_BOX_H, 12).fill(CARD_INNER);
-        doc.roundedRect(RIGHT_X, PIN_BOX_Y, RIGHT_W, PIN_BOX_H, 12)
-           .lineWidth(1.2).dash(3, { space: 3 })
-           .strokeColor(isConfirmed ? LIME : AMBER).stroke().undash();
-
-        doc.font('Helvetica-Bold').fontSize(7.5).fill(TEXT_MUTED)
-           .text('SMART GATE & BARRIER PIN', RIGHT_X, PIN_BOX_Y + 10, { width: RIGHT_W, align: 'center', characterSpacing: 0.8 });
-
-        doc.font('Helvetica-Bold').fontSize(22).fill(isConfirmed ? LIME : AMBER)
-           .text(pinCode, RIGHT_X, PIN_BOX_Y + 26, { width: RIGHT_W, align: 'center', characterSpacing: 6 });
+        // Bottom Reference Mini Card
+        const refMiniY = QR_BOX_Y + 214;
+        const refMiniW = RIGHT_W - 24;
+        const refMiniX = RIGHT_X + 12;
+        doc.roundedRect(refMiniX, refMiniY, refMiniW, 46, 8).fill(BG_DARK);
+        doc.roundedRect(refMiniX, refMiniY, refMiniW, 46, 8).lineWidth(0.6).strokeColor(BORDER_DIM).stroke();
 
         doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
-           .text('Enter on summit barrier keypad', RIGHT_X, PIN_BOX_Y + 58, { width: RIGHT_W, align: 'center' });
+           .text('OFFICIAL PASS CODE', refMiniX, refMiniY + 8, { width: refMiniW, align: 'center', characterSpacing: 0.8 });
+        doc.font('Helvetica-Bold').fontSize(12).fill(LIME)
+           .text(passRef, refMiniX, refMiniY + 20, { width: refMiniW, align: 'center', characterSpacing: 1 });
 
         // ═════════════════════════════════════════════════════════════
         // 6. 4X4 MOUNTAIN CONVOY & EXPEDITION GUIDELINES

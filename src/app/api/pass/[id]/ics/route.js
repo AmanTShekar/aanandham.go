@@ -1,6 +1,6 @@
 import { getStoredBookings } from '@/lib/serverBookingStore';
 import { buildICalFileString } from '@/lib/calendarLink';
-import { generateGatePin, verifyPassToken } from '@/lib/accessControl';
+import { verifyPassToken, getCheckInLandmarkGuide } from '@/lib/accessControl';
 
 function sanitizeIcalText(str) {
     if (!str) return '';
@@ -27,21 +27,20 @@ export async function GET(request, { params }) {
     }
 
     const data = booking;
-    const gatePin = generateGatePin(data.id, data.dates);
+    const landmarkGuide = getCheckInLandmarkGuide(data.campsiteId || data.package, data);
 
     const safeId = sanitizeIcalText(data.id);
     const safeName = sanitizeIcalText(data.name || 'Explorer');
     const safeRoom = sanitizeIcalText(data.roomType || 'Alpine Glamping Tent');
     const safePackage = sanitizeIcalText(data.package || 'Aanandham Mountain Expedition');
-    const safeLocation = sanitizeIcalText(data.location || 'Suryanelli Basecamp, Munnar, Kerala');
+    const safeLocation = sanitizeIcalText(landmarkGuide.hubName || data.location || 'Suryanelli Basecamp, Munnar, Kerala');
 
-    const description = `Aanandham Confirmed Wilderness Stay\\n` +
+    const description = `Aanandham Wilderness Stay\\n` +
         `Booking Reference: ${safeId}\\n` +
-        `Smart Gate PIN: ${gatePin}\\n` +
         `Lead Explorer: ${safeName}\\n` +
         `Stay Units: ${safeRoom}\\n` +
-        `Meeting Hub: Suryanelli Basecamp Hub (+${process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014'})\\n` +
-        `Please arrive by 1:30 PM for 4x4 Jeep convoy pickup.`;
+        `Meeting Hub: ${sanitizeIcalText(landmarkGuide.hubName)} (${landmarkGuide.emergencyMarshalPhone})\\n` +
+        `Please arrive by 1:30 PM for 4x4 convoy pickup. Present digital pass QR on arrival.`;
 
     const now = new Date();
     const startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 14, 14, 0, 0);

@@ -60,7 +60,6 @@ export async function sendBookingConfirmationEmail(booking) {
     const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
     const siteUrl = resolveSiteUrl();
 
-    const gatePin = generateGatePin(booking.id, booking.dates);
     const landmarkGuide = getCheckInLandmarkGuide(booking.campsiteId || booking.package, booking);
     const passToken = generatePassToken(booking.id);
     const passUrl = `${siteUrl}/pass/${booking.id}?token=${passToken}`;
@@ -69,7 +68,7 @@ export async function sendBookingConfirmationEmail(booking) {
         title: booking.package || 'Aanandham Mountain Expedition',
         dates: booking.dates,
         location: `${landmarkGuide.hubName}, Suryanelli, Munnar`,
-        description: `Official Aanandham Wilderness Booking (Ref: ${booking.id}). Smart Gate PIN: ${gatePin}. Arrive at Suryanelli Hub by 1:30 PM for 4x4 convoy.`,
+        description: `Official Aanandham Wilderness Booking (Ref: ${booking.id}). Present your digital pass or QR upon arrival at ${landmarkGuide.hubName} by 1:30 PM for 4x4 convoy.`,
         bookingId: booking.id
     });
 
@@ -81,7 +80,7 @@ export async function sendBookingConfirmationEmail(booking) {
 
     // Generate branded PDF pass attachment
     const pdfBuffer = await generateBookingPassPdf(
-        { ...booking, gatePin, id: booking.id },
+        { ...booking, id: booking.id },
         qrBuffer
     ).catch(err => {
         console.warn('[EMAIL] PDF generation failed, skipping attachment:', err.message);
@@ -95,7 +94,7 @@ export async function sendBookingConfirmationEmail(booking) {
     const icsContent = buildICalFileString({
         title: booking.package || 'Aanandham Mountain Expedition',
         location: `${landmarkGuide.hubName}, Suryanelli, Munnar, Kerala`,
-        description: `Aanandham Confirmed Wilderness Stay\\nBooking Reference: ${booking.id}\\nSmart Gate PIN: ${gatePin}\\nLead Camper: ${booking.name}\\nArrive by 1:30 PM for 4x4 convoy.`,
+        description: `Aanandham Wilderness Stay\\nBooking Reference: ${booking.id}\\nLead Camper: ${booking.name}\\nPresent your digital pass QR at ${landmarkGuide.hubName} by 1:30 PM for 4x4 convoy.`,
         bookingId: booking.id,
         startIso: calStart.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z',
         endIso:   calEnd.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
@@ -124,19 +123,11 @@ export async function sendBookingConfirmationEmail(booking) {
         ? `You're Headed to ${safePackage}!`
         : `Booking Received for ${safePackage}`;
 
-    const pinBoxHtml = isConfirmed ? `
-        <!-- GATE ACCESS PIN BOX -->
-        <div class="pin-box">
-            <div style="font-size: 11px; font-weight: 800; color: #A2B6A6; text-transform: uppercase; letter-spacing: 0.6px;">Smart Gate & Keypad PIN</div>
-            <div class="pin-code">${gatePin}</div>
-            <div style="font-size: 12px; color: #A2B6A6;">Active from 2:00 PM on your arrival date. Enter on barrier keypad.</div>
-        </div>
-    ` : `
+    const pendingNoticeHtml = isConfirmed ? '' : `
         <!-- PENDING VERIFICATION NOTICE -->
-        <div style="background: rgba(229, 169, 59, 0.12); border: 2px dashed #E5A93B; border-radius: 18px; padding: 20px; text-align: center; margin: 20px 0;">
+        <div style="background: rgba(229, 169, 59, 0.12); border: 2px dashed #E5A93B; border-radius: 18px; padding: 20px; text-align: center; margin-bottom: 20px;">
             <div style="font-size: 11px; font-weight: 800; color: #E5A93B; text-transform: uppercase; letter-spacing: 0.6px;">⏳ Payment Verification In Progress</div>
-            <div style="font-family: monospace; font-size: 28px; font-weight: 900; color: #E5A93B; letter-spacing: 6px; margin: 8px 0;">•••• (LOCKED)</div>
-            <div style="font-size: 12px; color: #E2E8F0; line-height: 1.5;">Our camp coordinator is verifying your payment. Your official gate PIN and check-in pass will unlock automatically once approved.</div>
+            <div style="font-size: 13px; color: #E2E8F0; line-height: 1.5; margin-top: 8px;">Our camp coordinator is verifying your payment. Your official check-in pass will be activated and confirmed shortly.</div>
         </div>
     `;
 
@@ -217,10 +208,9 @@ export async function sendBookingConfirmationEmail(booking) {
                     ` : ''}
                 </div>
 
-                <!-- 2. SMART GATE PIN ACCESS -->
-                ${pinBoxHtml}
+                ${pendingNoticeHtml}
 
-                <!-- 3. DIGITAL PASS PORTAL CTA -->
+                <!-- 2. DIGITAL PASS PORTAL CTA -->
                 <div style="background: #0B150E; border: 2px solid rgba(213, 237, 85, 0.3); border-radius: 18px; padding: 24px 20px; text-align: center; margin: 0 0 20px;">
                     <div style="font-size: 10px; font-weight: 800; color: #D5ED55; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Official Wilderness Pass ★</div>
                     <div style="font-size: 30px; margin-bottom: 6px;">🎫</div>

@@ -54,8 +54,7 @@ export default async function PassDetailPage({ params, searchParams }) {
     const isCancelled = data.status === 'Cancelled' || data.status === 'cancelled';
     const isPending = !isConfirmed && !isCancelled;
 
-    const gatePin = (isTokenVerified && isConfirmed) ? generateGatePin(data.id, data.dates) : '••••';
-    const landmarkGuide = getCheckInLandmarkGuide(data.campsiteId || data.package);
+    const landmarkGuide = getCheckInLandmarkGuide(data.campsiteId || data.package, data);
     const refundInfo = calculateRefundAmount(data.rawDate || data.dates || data.createdAt, Number(data.paidAmount || data.total || 0));
     const passToken = generatePassToken(data.id);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://aanandham.in';
@@ -65,22 +64,21 @@ export default async function PassDetailPage({ params, searchParams }) {
         title: data.package,
         dates: data.dates,
         location: `${landmarkGuide.hubName}, Suryanelli, Munnar`,
-        description: `Official Aanandham Wilderness Booking (Ref: ${data.id}). Smart Gate PIN: ${gatePin}. Arrive at Suryanelli Hub by 1:30 PM for 4x4 convoy.`,
+        description: `Official Aanandham Wilderness Booking (Ref: ${data.id}). Present your digital pass or QR upon arrival at ${landmarkGuide.hubName} by 1:30 PM for 4x4 convoy.`,
         bookingId: data.id
     });
 
     const qrImageUrl = await generateQrDataUri(passUrl, 260);
 
-    const marshalWaMsg = `🏕️ *AANANDHAM CAMPER SELF CHECK-IN PING*\n\n` +
+    const marshalWaMsg = `🏕️ *AANANDHAM CAMPER CHECK-IN PING*\n\n` +
         `🔖 *Pass Reference:* ${data.id}\n` +
         `👤 *Lead Camper:* ${data.name}\n` +
-        `🔑 *Gate PIN:* ${isConfirmed && isTokenVerified ? gatePin : 'Pending Approval'}\n` +
         `📍 *Destination:* ${data.package}\n` +
         `👥 *Squad:* ${data.guests} Campers\n` +
         `🍽️ *Food Allocation:* ${data.mealSummary || `${data.vegCount || 0} Veg + ${data.nonVegCount || 0} Non-Veg BBQ`}\n` +
         `💰 *Balance on Arrival:* ₹${Number(data.balanceDue || 0).toLocaleString('en-IN')}\n` +
         `📅 *Dates:* ${data.dates}\n\n` +
-        `We are arriving at Suryanelli Hub. Please allocate our 4x4 convoy! 🏔️✨`;
+        `We are arriving at ${landmarkGuide.hubName}. Please verify our check-in pass! 🏔️✨`;
 
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
     const formattedAdminPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
@@ -212,22 +210,6 @@ export default async function PassDetailPage({ params, searchParams }) {
                             </div>
                         </div>
 
-                        {/* ── GATE ACCESS PIN BOX ── */}
-                        <div className="pin-box-print" style={{ background: '#172B1E', border: isConfirmed ? '2px dashed #D5ED55' : '2px dashed #D97706', borderRadius: '18px', padding: '20px', textAlign: 'center', marginBottom: '24px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', color: '#A2B6A6', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                <KeyRound size={15} color={isConfirmed ? '#D5ED55' : '#D97706'} />
-                                <span>Smart Gate & Barrier Keypad PIN</span>
-                            </div>
-                            <div className="pin-code-print" style={{ fontFamily: 'monospace', fontSize: isConfirmed ? '38px' : '26px', fontWeight: '900', color: isConfirmed ? '#D5ED55' : '#FBBF24', letterSpacing: isConfirmed ? '8px' : '4px', margin: '8px 0' }}>
-                                {isConfirmed ? gatePin : '•••• (LOCKED)'}
-                            </div>
-                            <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                {isConfirmed 
-                                    ? 'Active from 2:00 PM on arrival date. Enter on the digital keypad at the summit barrier gate.'
-                                    : 'PIN unlocks automatically once payment is verified and approved by camp coordinator.'}
-                            </div>
-                        </div>
-
                         {/* ── SCANNABLE QR CODE FOR BASECAMP MARSHALS ── */}
                         <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '20px', textAlign: 'center', color: '#121613', marginBottom: '24px' }}>
                             {isConfirmed ? (
@@ -243,11 +225,11 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 </div>
                             )}
                             <div style={{ fontSize: '13px', fontWeight: '900', color: isConfirmed ? '#166534' : '#D97706', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                {isConfirmed ? 'Marshal Scan & Verification QR' : 'Verification In Progress'}
+                                {isConfirmed ? 'Official Check-In QR' : 'Verification In Progress'}
                             </div>
                             <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
                                 {isConfirmed 
-                                    ? 'Scan with any phone camera to verify camper roster & meal requirements'
+                                    ? 'Present this QR code to the camp marshals upon arrival to verify your stay & squad roster'
                                     : 'Official check-in QR code will activate immediately once transaction is approved.'}
                             </div>
                         </div>
