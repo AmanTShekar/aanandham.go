@@ -879,30 +879,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     </div>
                 </div>
 
-                {/* Right: Actions (Dispatch Test Pass & Sound Toggle) */}
+                {/* Right: Actions (Sound Toggle & Quick Roster Jump) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                    <button
-                        onClick={() => setIsTestEmailModalOpen(true)}
-                        style={{
-                            background: 'rgba(229, 169, 59, 0.15)',
-                            border: '1px solid rgba(229, 169, 59, 0.4)',
-                            color: '#E5A93B',
-                            padding: '6px 10px',
-                            borderRadius: '10px',
-                            fontSize: '11.5px',
-                            fontWeight: '800',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            cursor: 'pointer',
-                            whiteSpace: 'nowrap'
-                        }}
-                        title="Send Real Test Pass Email"
-                    >
-                        <Mail size={13} />
-                        <span className="hidden sm:inline">Email Pass</span>
-                    </button>
-
                     <button
                         onClick={() => setSoundEnabled(!soundEnabled)}
                         style={{

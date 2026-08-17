@@ -245,24 +245,26 @@ export async function sendBookingConfirmationEmail(booking) {
 
                 ${pendingNoticeHtml}
 
-                <!-- 2. DIGITAL PASS PORTAL CTA (CLEAN LIGHT CARD) -->
+                <!-- 2. DIGITAL PASS PORTAL WITH EMBEDDED SCANNABLE QR PASS -->
                 <div style="background-color: #F8FAF7; border: 1.5px solid #E2E8F0; border-radius: 18px; padding: 26px 20px; text-align: center; margin: 0 0 22px;">
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px;">★ Digital Pass Voucher ★</div>
-                    <div style="font-size: 32px; margin-bottom: 6px;">🎫</div>
-                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 19px; font-weight: 800; color: #121613; margin-bottom: 6px;">
-                        ${isConfirmed ? 'Your Pass is Confirmed &amp; Ready' : 'Pass Issued · Pending Verification'}
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px;">★ Official Digital Pass &amp; Gate Entry QR ★</div>
+                    
+                    <!-- EMBEDDED SCANNABLE QR CODE -->
+                    <div style="background: #FFFFFF; display: inline-block; padding: 14px; border-radius: 18px; border: 2px solid #E2E8F0; box-shadow: 0 6px 20px rgba(0,0,0,0.07); margin-bottom: 14px;">
+                        <img src="cid:passqr" alt="Scannable Digital Pass QR" width="160" height="160" style="display: block; width: 160px; height: 160px; border-radius: 8px; margin: 0 auto;" />
                     </div>
-                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 13px; color: #59655D; margin-bottom: 18px;">
-                        ${isConfirmed
-                            ? 'Tap below to open your live digital pass with scannable QR code for check-in'
-                            : 'Tap below to track your verification status and unlock your pass'
-                        }
+
+                    <div class="brand-title" style="font-family: 'Bricolage Grotesque', 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 19px; font-weight: 800; color: #121613; margin-bottom: 4px;">
+                        ${isConfirmed ? 'Present This QR at Gate Check-In' : 'Pass Issued · Pending Verification'}
                     </div>
-                    <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 15px; text-decoration: none; padding: 14px 34px; border-radius: 12px; letter-spacing: -0.2px; border: 1px solid #C3DE32; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
-                        🏳️&nbsp; View Live Pass &amp; Check-In QR →
+                    <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 13px; color: #59655D; margin-bottom: 16px;">
+                        Show this scannable QR pass to the basecamp coordinator or open your live digital wallet pass:
+                    </div>
+                    <a href="${passUrl}" style="display: inline-block; background-color: #D5ED55; color: #121613 !important; font-weight: 800; font-size: 14.5px; text-decoration: none; padding: 12px 30px; border-radius: 12px; letter-spacing: -0.2px; border: 1px solid #C3DE32; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+                        Open Live Digital Pass &amp; Guide →
                     </a>
                     <div style="font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; font-size: 11.5px; color: #64748B; margin-top: 12px;">
-                        Secure signed link · Ref: <strong style="color: #121613; font-family: monospace;">${safeId}</strong> · Scannable QR also inside the attached PDF
+                        Pass Reference: <strong style="color: #121613; font-family: monospace;">${safeId}</strong> • Scannable offline &amp; attached as PDF
                     </div>
                 </div>
 
@@ -314,8 +316,15 @@ export async function sendBookingConfirmationEmail(booking) {
         try {
             const resend = new Resend(apiKey);
 
-            // Only PDF and .ics calendar are real attachments — logo and QR render via public URLs
+            // Attach inline QR image, PDF pass, and .ics calendar
             const attachments = [];
+            if (qrBuffer) {
+                attachments.push({
+                    filename: 'digital-pass-qr.png',
+                    content: qrBuffer,
+                    content_type: 'image/png'
+                });
+            }
             if (pdfBuffer) {
                 attachments.push({
                     filename: `wilderness-pass-${booking.id}.pdf`,
