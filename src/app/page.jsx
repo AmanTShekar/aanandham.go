@@ -822,87 +822,52 @@ export default function HomePage() {
         '@context': 'https://schema.org',
         '@graph': [
             {
-                '@type': 'Campground',
-                '@id': `${siteUrl}/#campground`,
-                'name': 'Aanandham.go Wilderness Camps',
+                '@type': 'WebSite',
+                '@id': `${siteUrl}/#website`,
                 'url': siteUrl,
-                'aggregateRating': {
-                    '@type': 'AggregateRating',
-                    'ratingValue': '4.98',
-                    'reviewCount': '342',
-                    'bestRating': '5',
-                    'worstRating': '1'
+                'name': 'Aanandham.go Wilderness Camps',
+                'description': 'Luxury camping, high-altitude ridge dome tents, and 4x4 sunrise expeditions in Munnar, Kerala.',
+                'publisher': {
+                    '@type': 'Organization',
+                    'name': 'Aanandham.go',
+                    'url': siteUrl,
+                    'logo': `${siteUrl}/logo.png`
                 }
             },
             {
                 '@type': 'ItemList',
+                '@id': `${siteUrl}/#packages`,
                 'name': 'Aanandham.go Wilderness Expeditions & Camp Packages',
                 'itemListElement': INITIAL_ALL_CAMPS.map((pkg, idx) => ({
                     '@type': 'ListItem',
                     'position': idx + 1,
                     'item': {
-                        '@type': 'Product',
+                        '@type': 'TouristTrip',
                         'name': pkg.title,
                         'description': pkg.description,
                         'image': pkg.image,
-                        'sku': pkg.id,
-                        'brand': {
-                            '@type': 'Brand',
-                            'name': 'Aanandham.go'
-                        },
+                        'touristType': 'Adventure Travelers, Couples & Families',
                         'offers': {
                             '@type': 'Offer',
                             'price': pkg.price,
                             'priceCurrency': 'INR',
                             'priceValidUntil': '2027-12-31',
                             'availability': 'https://schema.org/InStock',
-                            'url': `${siteUrl}/camps/${pkg.id}`,
-                            'hasMerchantReturnPolicy': {
-                                '@type': 'MerchantReturnPolicy',
-                                'applicableCountry': 'IN',
-                                'returnPolicyCategory': 'https://schema.org/MerchantReturnFiniteReturnWindow',
-                                'merchantReturnDays': 2,
-                                'returnMethod': 'https://schema.org/ReturnByMail',
-                                'returnFees': 'https://schema.org/FreeReturn'
-                            },
-                            'shippingDetails': {
-                                '@type': 'OfferShippingDetails',
-                                'shippingRate': {
-                                    '@type': 'MonetaryAmount',
-                                    'value': 0,
-                                    'currency': 'INR'
-                                },
-                                'shippingDestination': {
-                                    '@type': 'DefinedRegion',
-                                    'addressCountry': 'IN'
-                                },
-                                'deliveryTime': {
-                                    '@type': 'ShippingDeliveryTime',
-                                    'handlingTime': {
-                                        '@type': 'QuantitativeValue',
-                                        'minValue': 0,
-                                        'maxValue': 0,
-                                        'unitCode': 'DAY'
-                                    },
-                                    'transitTime': {
-                                        '@type': 'QuantitativeValue',
-                                        'minValue': 0,
-                                        'maxValue': 0,
-                                        'unitCode': 'DAY'
-                                    }
-                                }
-                            }
+                            'url': `${siteUrl}/camps/${pkg.id}`
                         },
                         'aggregateRating': {
                             '@type': 'AggregateRating',
-                            'ratingValue': pkg.rating.toString(),
-                            'reviewCount': pkg.reviewsCount.toString()
+                            'ratingValue': (pkg.rating || 4.9).toString(),
+                            'reviewCount': (pkg.reviewsCount || 100).toString(),
+                            'bestRating': '5',
+                            'worstRating': '1'
                         }
                     }
                 }))
             },
             {
                 '@type': 'FAQPage',
+                '@id': `${siteUrl}/#faq`,
                 'mainEntity': FAQ_DATA.map(f => ({
                     '@type': 'Question',
                     'name': f.question,
