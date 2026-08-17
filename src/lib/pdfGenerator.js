@@ -89,11 +89,11 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const badgeX = C_X + C_W - badgeW - 20;
         const badgeY = HDR_Y + 14;
         const badgeBg = isConfirmed ? LIME : AMBER;
-        const badgeText = isConfirmed ? '✓  CONFIRMED' : '⏳  PENDING';
+        const badgeText = isConfirmed ? 'CONFIRMED' : 'PENDING';
 
         doc.roundedRect(badgeX, badgeY, badgeW, badgeH, 13).fill(badgeBg);
         doc.font('Helvetica-Bold').fontSize(9).fill(BG_DARK)
-           .text(badgeText, badgeX, badgeY + 8, { width: badgeW, align: 'center', characterSpacing: 0.5 });
+           .text(badgeText, badgeX, badgeY + 8, { width: badgeW, align: 'center', characterSpacing: 0.8 });
 
         // ═════════════════════════════════════════════════════════════
         // 3. STAY TITLE & REFERENCE BANNER
@@ -116,7 +116,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
 
         // Location
         doc.font('Helvetica').fontSize(9).fill(TEXT_MUTED)
-           .text('📍 Suryanelli, Munnar, Kerala · 7,900 FT Ridge', C_X + 32, EXP_Y + 50);
+           .text('Suryanelli, Munnar, Kerala  |  7,900 FT Ridge', C_X + 32, EXP_Y + 50);
 
         // Reference Box (Right side of banner)
         const refBoxW = 120;
@@ -161,9 +161,9 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
             { label: 'LEAD GUEST', val: booking.name || 'Guest' },
             { label: 'DATES', val: booking.dates || 'Scheduled Stay' },
             { label: 'LODGING', val: booking.roomType || 'Alpine Glamping Dome Tent' },
-            { label: 'GUESTS', val: `${booking.guests || 2} Campers (${booking.adults || booking.guests || 2} Adults${booking.children ? `, ${booking.children} Kids` : ''})` },
+            { label: 'GUESTS', val: `${booking.guests || 2} Campers (${booking.adults || booking.guests || 2} Adults${booking.children ? `, ${Number(booking.children)} Kids` : ''})` },
             { label: 'MEAL PLAN', val: booking.mealSummary || `${booking.vegCount || 0} Veg + ${booking.nonVegCount || 0} Non-Veg BBQ Dinner & Breakfast` },
-            { label: 'TOTAL FARE', val: `₹${Number(booking.total || 0).toLocaleString('en-IN')}` },
+            { label: 'TOTAL FARE', val: `Rs. ${Number(booking.total || 0).toLocaleString('en-IN')}` },
         ];
 
         let mY = BODY_Y + 16;
@@ -185,8 +185,8 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const balBorder = balDue > 0 ? AMBER : GREEN;
         const balTitle = balDue > 0 ? 'BALANCE PAYABLE AT CHECK-IN' : 'PAYMENT STATUS';
         const balText = balDue > 0 
-            ? `₹${balDue.toLocaleString('en-IN')} (Cash / UPI · Carry cash from Munnar)`
-            : '✓ 100% Fully Paid Online';
+            ? `Rs. ${balDue.toLocaleString('en-IN')} (Cash / UPI · Carry cash from Munnar)`
+            : '100% Fully Paid Online';
 
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).fill(balBg);
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).lineWidth(1).strokeColor(balBorder).stroke();
@@ -237,7 +237,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.roundedRect(refMiniX, refMiniY, refMiniW, 46, 8).fill(BG_DARK);
         doc.roundedRect(refMiniX, refMiniY, refMiniW, 46, 8).lineWidth(0.6).strokeColor(BORDER_DIM).stroke();
 
-        doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
+        doc.font('Helvetica').fontSize(7.5).fill(TEXT_DIM)
            .text('PASS CODE', refMiniX, refMiniY + 8, { width: refMiniW, align: 'center', characterSpacing: 0.8 });
         doc.font('Helvetica-Bold').fontSize(12).fill(LIME)
            .text(passRef, refMiniX, refMiniY + 20, { width: refMiniW, align: 'center', characterSpacing: 1 });
@@ -260,7 +260,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
 
         // Col 1: Pickup Point
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
-           .text('🚙 PICKUP POINT', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('PICKUP POINT', c1X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8).fill(TEXT_WHITE)
            .text(landmarkGuide.hubName, c1X, CONVOY_Y + 24, { width: col3W, height: 20, ellipsis: true });
         doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
@@ -268,13 +268,13 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
 
         // Col 2: Important Note
         doc.font('Helvetica-Bold').fontSize(8).fill(AMBER)
-           .text('ℹ️ IMPORTANT NOTE', c2X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('IMPORTANT NOTE', c2X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text(landmarkGuide.offlineNote || 'Zero Litter · Carry warm layers (8-14°C at night).', c2X, CONVOY_Y + 24, { width: col3W });
+           .text(landmarkGuide.offlineNote || 'Zero Litter. Carry warm layers (8-14 C at night).', c2X, CONVOY_Y + 24, { width: col3W });
 
         // Col 3: Camp Support
         doc.font('Helvetica-Bold').fontSize(8).fill(LIME)
-           .text('📞 CAMP SUPPORT', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
+           .text('CAMP SUPPORT', c3X, CONVOY_Y + 12, { characterSpacing: 0.5 });
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
            .text(landmarkGuide.emergencyMarshalPhone || '+91 90748 58014', c3X, CONVOY_Y + 24);
         doc.font('Helvetica').fontSize(7).fill(TEXT_MUTED)
@@ -290,7 +290,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         doc.font('Helvetica-Bold').fontSize(8.5).fill(TEXT_WHITE)
            .text('Aanandham.go', C_X + 24, FOOT_Y + 12);
         doc.font('Helvetica').fontSize(7.5).fill(TEXT_MUTED)
-           .text('Suryanelli · Kolukkumalai · Meesapulimala · Munnar, Kerala · aanandham.in', C_X + 24, FOOT_Y + 24);
+           .text('Suryanelli | Kolukkumalai | Meesapulimala | Munnar, Kerala | aanandham.in', C_X + 24, FOOT_Y + 24);
 
         // Stamp (Right aligned)
         doc.font('Helvetica').fontSize(7).fill(TEXT_DIM)
