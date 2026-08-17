@@ -10,6 +10,7 @@ import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 import { getPaymentSettings, savePaymentSettings } from '../../lib/paymentSettings';
 import { uploadCampsitePhoto } from '../../lib/mediaUpload';
+import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
 
 // Helper to safely validate, downscale and compress images before storing as Base64 (UP1, Item 9)
 function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
@@ -1665,8 +1666,9 @@ export default function AdminPortal() {
     // ─────────────────────────────────────────────────────────────
     const navSections = [
         {
-            category: 'EXPEDITIONS & GUESTS',
+            category: 'BASECAMP OPERATIONS',
             items: [
+                { id: 'scanner', name: 'Marshal QR Scanner', icon: '📱', desc: 'Live Headcount & Attendance', count: 'LIVE ⚡', badgeColor: '#D5ED55' },
                 { id: 'overview', name: 'Dashboard Overview', icon: '📊', desc: 'Live KPIs & ops' },
                 { id: 'bookings', name: 'Camper Reservations', icon: '📋', count: bookings.length, badgeColor: '#E5A93B' },
                 { id: 'properties', name: 'Campsites & Pods', icon: '⛺', count: properties.length, badgeColor: '#22C55E' },
@@ -2017,6 +2019,15 @@ export default function AdminPortal() {
                 <main className="admin-main-workspace" style={{ flex: 1, minHeight: '100vh', padding: '36px clamp(20px, 3.5vw, 56px)', boxSizing: 'border-box', overflowY: 'auto' }}>
                 
                 {/* ─────────────────────────────────────────────────────────────
+                    TAB: MARSHAL QR SCANNER & HEADCOUNT TOOL
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'scanner' && (
+                    <div style={{ maxWidth: '720px', margin: '0 auto' }}>
+                        <MobileMarshalScanner onBackToAdmin={() => setActiveTab('bookings')} />
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
                     TAB 1: EXECUTIVE OVERVIEW
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'overview' && (
@@ -2032,7 +2043,10 @@ export default function AdminPortal() {
                                     Mission Control & Operations
                                 </h1>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                <button onClick={() => setActiveTab('scanner')} style={{ padding: '9px 18px', borderRadius: '999px', background: '#D5ED55', border: '1px solid #D5ED55', color: '#0B150E', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 14px rgba(213, 237, 85, 0.3)' }}>
+                                    <span>📱 Open Marshal Scanner</span>
+                                </button>
                                 <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
                                     <span>📥 Export CSV</span>
                                 </button>
