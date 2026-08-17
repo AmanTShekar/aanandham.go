@@ -30,15 +30,27 @@ export default async function PassDetailPage({ params, searchParams }) {
     const sParams = await searchParams;
     const token = sParams?.token;
 
-    const cleanId = String(id || '').replace(/^#+/, '').replace(/\s+/g, '').toUpperCase();
+    const rawParam = decodeURIComponent(String(id || '')).trim();
+    const cleanId = rawParam
+        .replace(/^(booking|pass|reservation|ticket|ref|id|reference)\s*[:#\s-]*/i, '')
+        .replace(/^#+/, '')
+        .replace(/\s+/g, '')
+        .toUpperCase();
+    
+    const alphanumericId = cleanId.replace(/[^A-Z0-9]/g, '');
+
     const allBookings = await getStoredBookings();
     let booking = allBookings.find(b => {
-        const bClean = String(b.id || '').replace(/^#+/, '').replace(/\s+/g, '').toUpperCase();
-        return bClean === cleanId || bClean.replace(/[^A-Z0-9]/g, '') === cleanId.replace(/[^A-Z0-9]/g, '');
+        const bRaw = String(b.id || '').toUpperCase().trim();
+        const bClean = bRaw.replace(/^#+/, '').replace(/\s+/g, '');
+        const bAlpha = bRaw.replace(/[^A-Z0-9]/g, '');
+        return bClean === cleanId || 
+               bAlpha === alphanumericId ||
+               (alphanumericId.length >= 6 && bAlpha.includes(alphanumericId));
     });
 
     // If test/demo booking not in store, auto-reconstruct
-    if (!booking && (cleanId.startsWith('BK-TEST') || cleanId.startsWith('BK-DEMO') || cleanId.startsWith('BK-SIM') || cleanId.startsWith('BK-'))) {
+    if (!booking && (cleanId.startsWith('BK-TEST') || cleanId.startsWith('BK-DEMO') || cleanId.startsWith('BK-SIM') || cleanId.startsWith('BK-') || alphanumericId.startsWith('BKTEST') || alphanumericId.startsWith('BKDEMO') || alphanumericId.startsWith('BKSIM') || alphanumericId.startsWith('BK'))) {
         const { addServerBooking } = await import('@/lib/serverBookingStore');
         booking = {
             id: cleanId,

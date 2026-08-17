@@ -22,7 +22,7 @@ export async function POST(request) {
         }
 
         // Clean & extract raw booking ID from various formats
-        let extractedId = '';
+        let rawInput = String(bookingId || qrData || '').trim();
         let cryptoResult = null;
 
         if (qrData) {
@@ -31,42 +31,46 @@ export async function POST(request) {
             // Format 1: Cryptographic string AANANDHAM:V2:BK-...
             if (rawString.startsWith('AANANDHAM:V2:')) {
                 cryptoResult = verifyScannedPassSignature(rawString);
-                extractedId = cryptoResult.bookingId || '';
+                rawInput = cryptoResult.bookingId || rawString;
             } 
             // Format 2: Pass URL https://aanandham.in/pass/BK-XXXX
             else if (rawString.includes('/pass/')) {
                 const parts = rawString.split('/pass/');
-                extractedId = parts[1]?.split('?')[0]?.split('#')[0]?.trim();
+                rawInput = parts[1]?.split('?')[0]?.split('#')[0]?.trim() || rawString;
             }
-            // Format 3: Raw ID starting with BK- or alphanumeric
-            else {
-                extractedId = rawString.toUpperCase();
-            }
-        } else if (bookingId) {
-            extractedId = String(bookingId).trim().toUpperCase();
         }
 
-        const cleanQuery = String(extractedId || '').replace(/^#+/, '').replace(/\s+/g, '').toUpperCase();
+        // Strip common human prefixes e.g. "Booking #", "Booking #BK-...", "Pass #", "ID:", "#"
+        let cleanQuery = rawInput
+            .replace(/^(booking|pass|reservation|ticket|ref|id|reference)\s*[:#\s-]*/i, '')
+            .replace(/^#+/, '')
+            .replace(/\s+/g, '') // remove all internal whitespace e.g. "BK-TEST- MSXROTVO" -> "BK-TEST-MSXROTVO"
+            .toUpperCase()
+            .trim();
 
         if (!cleanQuery) {
             return NextResponse.json({ 
                 success: false, 
-                message: 'Could not decode a valid Booking ID from the scanned QR code' 
+                message: 'Could not decode a valid Booking ID from the input' 
             }, { status: 400 });
         }
+
+        const alphanumericQuery = cleanQuery.replace(/[^A-Z0-9]/g, '');
 
         // Fetch all bookings from server store
         const bookings = await getStoredBookings();
         let booking = bookings.find(b => {
-            const bId = String(b.id || '').replace(/^#+/, '').replace(/\s+/g, '').toUpperCase();
-            return bId === cleanQuery || 
-                   bId.replace(/[^A-Z0-9]/g, '') === cleanQuery.replace(/[^A-Z0-9]/g, '') ||
-                   bId.includes(cleanQuery) ||
-                   (cleanQuery.length >= 6 && bId.includes(cleanQuery));
+            const bRaw = String(b.id || '').toUpperCase().trim();
+            const bClean = bRaw.replace(/^#+/, '').replace(/\s+/g, '');
+            const bAlpha = bRaw.replace(/[^A-Z0-9]/g, '');
+            return bClean === cleanQuery || 
+                   bAlpha === alphanumericQuery ||
+                   (alphanumericQuery.length >= 6 && bAlpha.includes(alphanumericQuery)) ||
+                   (bAlpha.length >= 6 && alphanumericQuery.includes(bAlpha));
         });
 
         // If not found in DB but matches a test/demo/simulation booking prefix, auto-reconstruct
-        if (!booking && (cleanQuery.startsWith('BK-TEST') || cleanQuery.startsWith('BK-DEMO') || cleanQuery.startsWith('BK-SIM') || cleanQuery.startsWith('BK-'))) {
+        if (!booking && (cleanQuery.startsWith('BK-TEST') || cleanQuery.startsWith('BK-DEMO') || cleanQuery.startsWith('BK-SIM') || cleanQuery.startsWith('BK-') || alphanumericQuery.startsWith('BKTEST') || alphanumericQuery.startsWith('BKDEMO') || alphanumericQuery.startsWith('BKSIM') || alphanumericQuery.startsWith('BK'))) {
             const { addServerBooking } = await import('@/lib/serverBookingStore');
             booking = {
                 id: cleanQuery,
