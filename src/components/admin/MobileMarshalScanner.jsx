@@ -651,8 +651,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                setAssignedTent(data.booking.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
-                setWristbandRange(data.booking.wristbandRange || '#101 - #104');
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                setAssignedTent(preassigned);
+                setIsChangingTent(false);
+                setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
                 setExtraGuestsCount(0);
                 setIsManualModalOpen(false);
                 stopCamera();

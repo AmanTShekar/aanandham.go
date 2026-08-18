@@ -46,22 +46,20 @@ export async function POST() {
                 advancePaid: 3598,
                 balanceDue: 8396,
                 isBalancePaid: false,
-                status: 'Partial Check-In',
-                checkedInCount: 4,
-                shortCount: 2,
+                status: 'Confirmed',
                 convoyTime: '03:15 PM Trek Base Departure',
-                notes: '4 members arrived on first jeep; 2 members joining on 5:30 PM backup 4x4.',
+                notes: '6 members squad with acoustic guitars and warm clothing.',
                 attendanceRoster: [
-                    { id: 1, name: 'Rohan Mehta (Lead)', present: true },
-                    { id: 2, name: 'Rahul Joshi', present: true },
-                    { id: 3, name: 'Varun Nair', present: true },
-                    { id: 4, name: 'Siddharth Roy', present: true },
-                    { id: 5, name: 'Nikhil Menon', present: false },
-                    { id: 6, name: 'Aditya Pillai', present: false }
+                    { id: 1, name: 'Rohan Mehta (Lead)', present: true, status: 'present', mealType: 'Veg' },
+                    { id: 2, name: 'Rahul Joshi', present: true, status: 'present', mealType: 'Veg' },
+                    { id: 3, name: 'Varun Nair', present: true, status: 'present', mealType: 'Non-Veg' },
+                    { id: 4, name: 'Siddharth Roy', present: true, status: 'present', mealType: 'Non-Veg' },
+                    { id: 5, name: 'Nikhil Menon', present: true, status: 'present', mealType: 'Non-Veg' },
+                    { id: 6, name: 'Aditya Pillai', present: true, status: 'present', mealType: 'Non-Veg' }
                 ]
             },
             {
-                name: 'Ananya Iyer',
+                name: 'Ananya Iyer & Partner',
                 email: 'vismayaanilkumar1101@gmail.com',
                 phone: '+91 94470 88990',
                 package: 'Suryanelli Tea Valley Cloud Camp',
@@ -73,18 +71,15 @@ export async function POST() {
                 vegCount: 2,
                 nonVegCount: 0,
                 total: 6998,
-                advancePaid: 6998,
-                balanceDue: 0,
-                isBalancePaid: true,
-                status: 'Checked In',
-                checkedInCount: 2,
-                shortCount: 0,
-                checkInAt: new Date().toISOString(),
+                advancePaid: 2099,
+                balanceDue: 4899,
+                isBalancePaid: false,
+                status: 'Confirmed',
                 convoyTime: '01:30 PM Early Batch',
-                notes: 'Honeymoon couple, pure vegetarian BBQ requested. Pod #2 assigned.',
+                notes: 'Couple stay, pure vegetarian BBQ requested. Pod #2 pre-assigned.',
                 attendanceRoster: [
-                    { id: 1, name: 'Ananya Iyer (Lead)', present: true },
-                    { id: 2, name: 'Gautam Ram', present: true }
+                    { id: 1, name: 'Ananya Iyer (Lead)', present: true, status: 'present', mealType: 'Veg' },
+                    { id: 2, name: 'Gautam Ram', present: true, status: 'present', mealType: 'Veg' }
                 ]
             },
             {
