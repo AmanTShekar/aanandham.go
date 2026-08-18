@@ -65,12 +65,105 @@ function resolveHostPasscodes() {
     return parsed;
 }
 
+// ── SANCTUARY & GROUP-BASED PASSCODE ACCESS REGISTRY ──
+export const CAMP_PASSCODE_REGISTRY = [
+    {
+        campId: 'all',
+        campName: 'All Sanctuaries (Enterprise Master HQ)',
+        shortName: 'Master HQ Scope',
+        passcodes: [
+            ...(process.env.ADMIN_PASSCODES ? parsePasscodeList(process.env.ADMIN_PASSCODES) : []),
+            'aanandham2026',
+            'master777',
+            'admin2026',
+            'hq2026',
+            'wildadmin2026',
+            '9074858014'
+        ],
+        isMasterAdmin: true,
+        role: 'admin_coordinator',
+        icon: '⛺'
+    },
+    {
+        campId: 'pkg-kolukkumalai',
+        campName: 'Kolukkumalai Sunrise 4x4 Station',
+        shortName: 'Kolukkumalai Station',
+        passcodes: [
+            ...(process.env.KOLUKKUMALAI_PASSCODES ? parsePasscodeList(process.env.KOLUKKUMALAI_PASSCODES) : []),
+            'kolu7900',
+            'kolukkumalai2026',
+            'kolu2026',
+            'kolukku2026'
+        ],
+        isMasterAdmin: false,
+        role: 'basecamp_host',
+        icon: '🌄'
+    },
+    {
+        campId: 'pkg-meesapulimala',
+        campName: 'Meesapulimala High Altitude Basecamp',
+        shortName: 'Meesapulimala Basecamp',
+        passcodes: [
+            ...(process.env.MEESAPULIMALA_PASSCODES ? parsePasscodeList(process.env.MEESAPULIMALA_PASSCODES) : []),
+            'meesa8600',
+            'meesapulimala2026',
+            'meesa2026'
+        ],
+        isMasterAdmin: false,
+        role: 'basecamp_host',
+        icon: '⛰️'
+    },
+    {
+        campId: 'pkg-suryanelli',
+        campName: 'Suryanelli Valley Glamp Gate',
+        shortName: 'Suryanelli Valley Gate',
+        passcodes: [
+            ...(process.env.SURYANELLI_PASSCODES ? parsePasscodeList(process.env.SURYANELLI_PASSCODES) : []),
+            'surya2026',
+            'suryanelli2026',
+            'surya777'
+        ],
+        isMasterAdmin: false,
+        role: 'basecamp_host',
+        icon: '🏕️'
+    },
+    {
+        campId: 'pkg-vagamon-pine',
+        campName: 'Vagamon Pine Forest Post',
+        shortName: 'Vagamon Pine Post',
+        passcodes: [
+            ...(process.env.VAGAMON_PASSCODES ? parsePasscodeList(process.env.VAGAMON_PASSCODES) : []),
+            'vaga2026',
+            'vagamon2026',
+            'pine2026'
+        ],
+        isMasterAdmin: false,
+        role: 'basecamp_host',
+        icon: '🌲'
+    },
+    {
+        campId: 'pkg-wayanad',
+        campName: 'Wayanad 900 Kandi Rainforest Post',
+        shortName: 'Wayanad Rainforest Post',
+        passcodes: [
+            ...(process.env.WAYANAD_PASSCODES ? parsePasscodeList(process.env.WAYANAD_PASSCODES) : []),
+            'waya2026',
+            'wayanad2026',
+            'kandi2026'
+        ],
+        isMasterAdmin: false,
+        role: 'basecamp_host',
+        icon: '🌿'
+    }
+];
+
 export const ADMIN_PASSCODES = resolveAdminPasscodes();
 export const HOST_PASSCODES = resolveHostPasscodes();
-export const VALID_PASSCODES = [...new Set([...ADMIN_PASSCODES, ...HOST_PASSCODES])];
+export const ALL_REGISTRY_PASSCODES = CAMP_PASSCODE_REGISTRY.flatMap(c => c.passcodes);
+export const VALID_PASSCODES = [...new Set([...ADMIN_PASSCODES, ...HOST_PASSCODES, ...ALL_REGISTRY_PASSCODES])];
 
 /**
- * Validates a submitted passcode and identifies its authorized role
+ * Validates a submitted passcode and identifies its authorized role, campsite scope & privileges
  */
 export function authenticatePasscodeRole(inputPasscode) {
     if (!inputPasscode || typeof inputPasscode !== 'string') {
@@ -78,24 +171,50 @@ export function authenticatePasscodeRole(inputPasscode) {
     }
     const normalized = inputPasscode.trim().toLowerCase();
 
-    // Check Master Admin passcodes first
+    // 1. Check against Sanctuary Group Passcodes Registry
+    for (const entry of CAMP_PASSCODE_REGISTRY) {
+        for (const code of entry.passcodes) {
+            if (constantTimeCompare(normalized, code.toLowerCase())) {
+                return {
+                    valid: true,
+                    role: entry.role,
+                    isMasterAdmin: entry.isMasterAdmin,
+                    campId: entry.campId,
+                    campName: entry.campName,
+                    shortName: entry.shortName,
+                    icon: entry.icon
+                };
+            }
+        }
+    }
+
+    // 2. Check Master Admin passcodes configured via ENV
     for (const code of ADMIN_PASSCODES) {
         if (constantTimeCompare(normalized, code)) {
-            return { valid: true, role: 'admin_coordinator', isMasterAdmin: true };
+            return {
+                valid: true,
+                role: 'admin_coordinator',
+                isMasterAdmin: true,
+                campId: 'all',
+                campName: 'All Sanctuaries (Enterprise Master HQ)',
+                shortName: 'Master HQ Scope',
+                icon: '⛺'
+            };
         }
     }
 
-    // Check Basecamp Host / Gate PINs
+    // 3. Check Basecamp Host / Gate PINs configured via ENV
     for (const code of HOST_PASSCODES) {
         if (constantTimeCompare(normalized, code)) {
-            return { valid: true, role: 'basecamp_host', isMasterAdmin: false };
-        }
-    }
-
-    // If no distinct host passcodes are configured, fallback to valid passcodes
-    for (const code of VALID_PASSCODES) {
-        if (constantTimeCompare(normalized, code)) {
-            return { valid: true, role: 'admin_coordinator', isMasterAdmin: true };
+            return {
+                valid: true,
+                role: 'basecamp_host',
+                isMasterAdmin: false,
+                campId: 'all',
+                campName: 'All Sanctuaries (Basecamp Host)',
+                shortName: 'Host Scope',
+                icon: '⛺'
+            };
         }
     }
 

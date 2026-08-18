@@ -304,8 +304,15 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
     const [clearedGatePermit, setClearedGatePermit] = useState(null);
 
-    // ── HOST SECURITY & PASSCODE AUTHENTICATION ──
+    // ── HOST SECURITY, PASSCODE AUTHENTICATION & STATION SCOPE ──
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authStation, setAuthStation] = useState({
+        campId: 'all',
+        campName: 'All Sanctuaries (Enterprise Master HQ)',
+        shortName: 'Master HQ Scope',
+        isMasterAdmin: true,
+        icon: '⛺'
+    });
     const [hostPasscode, setHostPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -320,7 +327,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 const session = JSON.parse(stored);
                 if (session?.expires && Date.now() < session.expires) {
                     setIsAuthenticated(true);
-                    showToast('✓ Welcome back · Session restored');
+                    if (session.station) {
+                        setAuthStation(session.station);
+                        if (session.station.campId !== 'all') {
+                            setSelectedCampground(session.station.campId);
+                        }
+                    }
+                    showToast(`✓ Session Restored · ${session.station?.shortName || 'Host Console'}`);
                 } else {
                     localStorage.removeItem('hostSession_aanandham');
                 }
@@ -350,18 +363,35 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
             if (data.success) {
                 playSuccessChime();
+                const station = {
+                    campId: data.campId || 'all',
+                    campName: data.campName || 'All Sanctuaries (Enterprise Master HQ)',
+                    shortName: data.shortName || 'Master HQ Scope',
+                    isMasterAdmin: data.isMasterAdmin !== false,
+                    icon: data.icon || '⛺'
+                };
+                setAuthStation(station);
+
+                // Auto-scope to assigned camp if not master HQ
+                if (station.campId !== 'all') {
+                    setSelectedCampground(station.campId);
+                    try { localStorage.setItem('marshal_active_campsite', station.campId); } catch { /* ignore */ }
+                }
+
                 // Store remembered session (24h) if requested
                 if (rememberMe) {
                     try {
                         localStorage.setItem('hostSession_aanandham', JSON.stringify({
-                            expires: Date.now() + 24 * 60 * 60 * 1000
+                            expires: Date.now() + 24 * 60 * 60 * 1000,
+                            station
                         }));
                     } catch { /* ignore */ }
                 }
+
                 setIsAuthenticated(true);
                 setHostPasscode('');
                 setPasscodeError('');
-                showToast('✓ Host Access Granted · Console Unlocked');
+                showToast(`✓ ${station.icon} Station Authenticated: ${station.shortName || station.campName}`);
             } else {
                 setPasscodeError(data.message || 'Invalid passcode. Access denied.');
             }
@@ -384,6 +414,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         try { localStorage.removeItem('hostSession_aanandham'); } catch { /* ignore */ }
         stopCamera();
         setIsAuthenticated(false);
+        setAuthStation({
+            campId: 'all',
+            campName: 'All Sanctuaries (Enterprise Master HQ)',
+            shortName: 'Master HQ Scope',
+            isMasterAdmin: true,
+            icon: '⛺'
+        });
         setScannedBooking(null);
         setClearedGatePermit(null);
         showToast('🔒 Basecamp Host Console Locked');
@@ -1199,7 +1236,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 type={showPasscodeText ? 'text' : 'password'}
                                 value={hostPasscode}
                                 onChange={(e) => { setHostPasscode(e.target.value); setPasscodeError(''); }}
-                                placeholder="Enter Host Passcode..."
+                                placeholder="Enter Host or Station Passcode..."
                                 autoFocus
                                 style={{
                                     width: '100%',
@@ -1235,6 +1272,61 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             >
                                 {showPasscodeText ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
+                        </div>
+
+                        {/* ── STATION / GROUP PASSCODES HELPER & QUICK-FILL ── */}
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                            borderRadius: '16px',
+                            padding: '10px 12px',
+                            textAlign: 'left'
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    🏕️ Station & Group Passcodes:
+                                </span>
+                                <span style={{ fontSize: '9.5px', color: '#8E9B92' }}>Tap to select</span>
+                            </div>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
+                                {[
+                                    { id: 'all', name: 'HQ Master (All)', code: 'AANANDHAM2026', icon: '⛺' },
+                                    { id: 'pkg-kolukkumalai', name: 'Kolukkumalai', code: 'KOLU7900', icon: '🌄' },
+                                    { id: 'pkg-meesapulimala', name: 'Meesapulimala', code: 'MEESA8600', icon: '⛰️' },
+                                    { id: 'pkg-suryanelli', name: 'Suryanelli', code: 'SURYA2026', icon: '🏕️' },
+                                    { id: 'pkg-vagamon-pine', name: 'Vagamon Pines', code: 'VAGA2026', icon: '🌲' },
+                                    { id: 'pkg-wayanad', name: 'Wayanad 900K', code: 'WAYA2026', icon: '🌿' }
+                                ].map(st => {
+                                    const isCurrent = hostPasscode.trim().toUpperCase() === st.code;
+                                    return (
+                                        <button
+                                            key={st.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setHostPasscode(st.code);
+                                                setPasscodeError('');
+                                            }}
+                                            style={{
+                                                background: isCurrent ? 'rgba(213,237,85,0.2)' : 'rgba(255, 255, 255, 0.04)',
+                                                border: `1px solid ${isCurrent ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
+                                                padding: '6px 8px',
+                                                borderRadius: '10px',
+                                                color: isCurrent ? '#D5ED55' : '#C8D8CB',
+                                                fontSize: '10.5px',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.icon} {st.name}</span>
+                                            <span style={{ fontSize: '8.5px', opacity: 0.75, fontFamily: 'monospace', marginLeft: '4px' }}>{st.code}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
                         </div>
 
                         {/* Quick numeric keypad for single-hand mobile gate access */}
@@ -1296,7 +1388,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             }}
                         >
                             <LogIn size={17} />
-                            <span>{isLoggingIn ? 'Authenticating...' : 'Unlock Host Console'}</span>
+                            <span>{isLoggingIn ? 'Authenticating Station...' : 'Unlock Station Console'}</span>
                         </button>
 
                         {/* Remember Me toggle */}
@@ -1332,7 +1424,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             }}>
                                 {rememberMe && <Check size={11} color="#D5ED55" strokeWidth={3} />}
                             </div>
-                            Remember me for 24 hours
+                            Remember station session for 24 hours
                         </button>
                     </form>
 
@@ -1482,24 +1574,24 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                                 </span>
                                 <span style={{ 
-                                    fontSize: '9px', 
-                                    background: 'rgba(213, 237, 85, 0.15)', 
-                                    border: '1px solid rgba(213, 237, 85, 0.35)', 
-                                    color: '#D5ED55', 
-                                    padding: '2px 6px', 
+                                    fontSize: '9.5px', 
+                                    background: authStation.isMasterAdmin ? 'rgba(213, 237, 85, 0.15)' : 'rgba(96, 165, 250, 0.15)', 
+                                    border: `1px solid ${authStation.isMasterAdmin ? 'rgba(213, 237, 85, 0.35)' : 'rgba(96, 165, 250, 0.35)'}`, 
+                                    color: authStation.isMasterAdmin ? '#D5ED55' : '#60A5FA', 
+                                    padding: '2px 7px', 
                                     borderRadius: '6px', 
                                     fontWeight: '900', 
-                                    letterSpacing: '0.4px',
+                                    letterSpacing: '0.3px',
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '4px'
                                 }}>
-                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
-                                    HOST
+                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: authStation.isMasterAdmin ? '#22C55E' : '#60A5FA', display: 'inline-block', boxShadow: `0 0 6px ${authStation.isMasterAdmin ? '#22C55E' : '#60A5FA'}` }} />
+                                    {authStation.isMasterAdmin ? '👑 HQ MASTER' : `${authStation.icon} ${authStation.shortName || 'STATION'}`}
                                 </span>
                             </div>
-                            <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                Gate & Attendance Console
+                            <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {authStation.isMasterAdmin ? 'Enterprise Multi-Sanctuary Access' : `${authStation.campName} · Station Locked`}
                             </span>
                         </div>
                     </div>
@@ -2114,11 +2206,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         flexDirection: 'column',
                         gap: '8px'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <MapPin size={14} color="#D5ED55" />
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    Camp Sanctuary Property:
+                                    {authStation.isMasterAdmin ? 'Sanctuary Property Scope (Master):' : `Station Scope: ${authStation.shortName}:`}
                                 </span>
                             </div>
                             <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
@@ -2126,46 +2218,82 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </span>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
-                            {AANANDHAM_CAMPS.map(camp => {
-                                const isSelected = selectedCampground === camp.id;
-                                const count = rosterList.filter(g => isGuestMatchingCamp(g, camp.id)).length;
-                                return (
-                                    <button
-                                        key={camp.id}
-                                        type="button"
-                                        onClick={() => handleSelectCampground(camp.id)}
-                                        style={{
-                                            padding: '6px 12px',
-                                            borderRadius: '10px',
-                                            background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
-                                            color: isSelected ? '#0B150E' : '#C8D8CB',
-                                            border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
-                                            fontSize: '11.5px',
-                                            fontWeight: '800',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '5px',
-                                            whiteSpace: 'nowrap',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.15s ease'
-                                        }}
-                                    >
-                                        <span>{camp.icon}</span>
-                                        <span>{camp.name}</span>
-                                        <span style={{
-                                            fontSize: '9.5px',
-                                            padding: '1px 5px',
-                                            borderRadius: '999px',
-                                            background: isSelected ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
-                                            color: isSelected ? '#0B150E' : '#8E9B92'
-                                        }}>
-                                            {count}
+                        {!authStation.isMasterAdmin && authStation.campId !== 'all' ? (
+                            <div style={{
+                                background: 'rgba(96, 165, 250, 0.1)',
+                                border: '1px solid rgba(96, 165, 250, 0.3)',
+                                borderRadius: '12px',
+                                padding: '10px 14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '8px'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span style={{ fontSize: '16px' }}>{authStation.icon}</span>
+                                    <div>
+                                        <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
+                                            {authStation.campName}
                                         </span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                                        <span style={{ fontSize: '10.5px', color: '#93C5FD' }}>
+                                            Station Passcode Activated · Filter locked to your campsite
+                                        </span>
+                                    </div>
+                                </div>
+                                <span style={{ 
+                                    fontSize: '10px', 
+                                    color: '#60A5FA', 
+                                    fontWeight: '800',
+                                    background: 'rgba(96, 165, 250, 0.15)',
+                                    padding: '3px 8px',
+                                    borderRadius: '6px',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    🔒 STATION LOCKED
+                                </span>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                                {AANANDHAM_CAMPS.map(camp => {
+                                    const isSelected = selectedCampground === camp.id;
+                                    const count = rosterList.filter(g => isGuestMatchingCamp(g, camp.id)).length;
+                                    return (
+                                        <button
+                                            key={camp.id}
+                                            type="button"
+                                            onClick={() => handleSelectCampground(camp.id)}
+                                            style={{
+                                                padding: '6px 12px',
+                                                borderRadius: '10px',
+                                                background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                                                color: isSelected ? '#0B150E' : '#C8D8CB',
+                                                border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
+                                                fontSize: '11.5px',
+                                                fontWeight: '800',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px',
+                                                whiteSpace: 'nowrap',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span>{camp.icon}</span>
+                                            <span>{camp.name}</span>
+                                            <span style={{
+                                                fontSize: '9.5px',
+                                                padding: '1px 5px',
+                                                borderRadius: '999px',
+                                                background: isSelected ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
+                                                color: isSelected ? '#0B150E' : '#8E9B92'
+                                            }}>
+                                                {count}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
 
                     {/* Headcount Stat Ribbon */}
@@ -2475,11 +2603,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         flexDirection: 'column',
                         gap: '8px'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                 <Utensils size={14} color="#D5ED55" />
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    Kitchen Prep Sanctuary:
+                                    {authStation.isMasterAdmin ? 'Kitchen Prep Sanctuary (Master):' : `Kitchen Scope: ${authStation.shortName}:`}
                                 </span>
                             </div>
                             <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
@@ -2487,36 +2615,72 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </span>
                         </div>
 
-                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
-                            {AANANDHAM_CAMPS.map(camp => {
-                                const isSelected = selectedCampground === camp.id;
-                                return (
-                                    <button
-                                        key={camp.id}
-                                        type="button"
-                                        onClick={() => handleSelectCampground(camp.id)}
-                                        style={{
-                                            padding: '6px 12px',
-                                            borderRadius: '10px',
-                                            background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
-                                            color: isSelected ? '#0B150E' : '#C8D8CB',
-                                            border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
-                                            fontSize: '11.5px',
-                                            fontWeight: '800',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '5px',
-                                            whiteSpace: 'nowrap',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.15s ease'
-                                        }}
-                                    >
-                                        <span>{camp.icon}</span>
-                                        <span>{camp.name}</span>
-                                    </button>
-                                );
-                            })}
-                        </div>
+                        {!authStation.isMasterAdmin && authStation.campId !== 'all' ? (
+                            <div style={{
+                                background: 'rgba(96, 165, 250, 0.1)',
+                                border: '1px solid rgba(96, 165, 250, 0.3)',
+                                borderRadius: '12px',
+                                padding: '10px 14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '8px'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span style={{ fontSize: '16px' }}>{authStation.icon}</span>
+                                    <div>
+                                        <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
+                                            {authStation.campName}
+                                        </span>
+                                        <span style={{ fontSize: '10.5px', color: '#93C5FD' }}>
+                                            Portions calculated specifically for this station
+                                        </span>
+                                    </div>
+                                </div>
+                                <span style={{ 
+                                    fontSize: '10px', 
+                                    color: '#60A5FA', 
+                                    fontWeight: '800',
+                                    background: 'rgba(96, 165, 250, 0.15)',
+                                    padding: '3px 8px',
+                                    borderRadius: '6px',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    🔒 STATION LOCKED
+                                </span>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                                {AANANDHAM_CAMPS.map(camp => {
+                                    const isSelected = selectedCampground === camp.id;
+                                    return (
+                                        <button
+                                            key={camp.id}
+                                            type="button"
+                                            onClick={() => handleSelectCampground(camp.id)}
+                                            style={{
+                                                padding: '6px 12px',
+                                                borderRadius: '10px',
+                                                background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                                                color: isSelected ? '#0B150E' : '#C8D8CB',
+                                                border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
+                                                fontSize: '11.5px',
+                                                fontWeight: '800',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px',
+                                                whiteSpace: 'nowrap',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span>{camp.icon}</span>
+                                            <span>{camp.name}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
 
                     {/* WhatsApp Kitchen Dispatch Banner */}
@@ -2684,6 +2848,30 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
+                    {/* Cross-Sanctuary Warning Banner */}
+                    {!authStation.isMasterAdmin && authStation.campId !== 'all' && !isGuestMatchingCamp(scannedBooking, authStation.campId) && (
+                        <div style={{
+                            background: 'rgba(234, 179, 8, 0.15)',
+                            border: '1px solid rgba(234, 179, 8, 0.4)',
+                            borderRadius: '16px',
+                            padding: '12px 16px',
+                            marginBottom: '16px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }}>
+                            <AlertCircle size={22} color="#FACC15" style={{ flexShrink: 0 }} />
+                            <div>
+                                <strong style={{ fontSize: '13px', color: '#FACC15', display: 'block' }}>
+                                    ⚠️ Cross-Sanctuary Pass Notice
+                                </strong>
+                                <span style={{ fontSize: '11.5px', color: '#E2E8F0' }}>
+                                    This reservation is for <strong>{scannedBooking.campsite}</strong>, but this console is currently stationed at <strong>{authStation.campName}</strong>. Please confirm if the camper was transferred or rerouted.
+                                </span>
+                            </div>
+                        </div>
+                    )}
+
                     {/* ── RESPONSIVE GRID LAYOUT ── */}
                     <div style={{
                         display: 'grid',

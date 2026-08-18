@@ -123,17 +123,25 @@ export async function POST(request) {
         const token = createSignedToken({
             role: authResult.role,
             isMasterAdmin: authResult.isMasterAdmin,
+            campId: authResult.campId || 'all',
+            campName: authResult.campName || 'All Sanctuaries (Enterprise Master HQ)',
+            shortName: authResult.shortName || 'Master HQ Scope',
+            icon: authResult.icon || '⛺',
             issuedAt: Date.now()
         }, 24 * 60 * 60);
 
-        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', role: authResult.role, success: true });
+        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', role: authResult.role, campId: authResult.campId, success: true });
 
         // Set HttpOnly, Secure, SameSite=Strict cookie (NEVER exposed to client JavaScript)
         const response = NextResponse.json({
             success: true,
             role: authResult.role,
             isMasterAdmin: authResult.isMasterAdmin,
-            message: 'Session authenticated successfully.'
+            campId: authResult.campId || 'all',
+            campName: authResult.campName || 'All Sanctuaries (Enterprise Master HQ)',
+            shortName: authResult.shortName || 'Master HQ Scope',
+            icon: authResult.icon || '⛺',
+            message: `Authenticated as ${authResult.campName || 'Authorized Host'}.`
         });
 
         response.cookies.set({
@@ -166,7 +174,7 @@ export async function GET(request) {
 
         const payload = verifySignedToken(token);
 
-        if (payload && (payload.role === 'admin_coordinator' || payload.role === 'basecamp_host')) {
+        if (payload && (payload.role === 'admin_coordinator' || payload.role === 'basecamp_host' || payload.role === 'camp_marshal')) {
             const url = new URL(request.url);
             // If requested audit logs
             if (url.searchParams.get('audit') === 'true') {
@@ -174,7 +182,11 @@ export async function GET(request) {
                     authenticated: true,
                     role: payload.role,
                     isMasterAdmin: payload.isMasterAdmin !== false,
-                    user: { role: payload.role, exp: payload.exp },
+                    campId: payload.campId || 'all',
+                    campName: payload.campName || 'All Sanctuaries',
+                    shortName: payload.shortName || 'Master HQ Scope',
+                    icon: payload.icon || '⛺',
+                    user: { role: payload.role, exp: payload.exp, campId: payload.campId, campName: payload.campName },
                     auditLogs: authAuditLog
                 });
             }
@@ -183,7 +195,11 @@ export async function GET(request) {
                 authenticated: true,
                 role: payload.role,
                 isMasterAdmin: payload.isMasterAdmin !== false,
-                user: { role: payload.role, exp: payload.exp }
+                campId: payload.campId || 'all',
+                campName: payload.campName || 'All Sanctuaries',
+                shortName: payload.shortName || 'Master HQ Scope',
+                icon: payload.icon || '⛺',
+                user: { role: payload.role, exp: payload.exp, campId: payload.campId, campName: payload.campName }
             });
         } else {
             return NextResponse.json({ authenticated: false, message: 'Invalid or expired session token.' }, { status: 401 });
