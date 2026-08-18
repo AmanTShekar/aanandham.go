@@ -283,11 +283,8 @@ export default function AdminPortal() {
                     const data = await res.json();
                     if (data.authenticated && data.isMasterAdmin === true && data.role === 'admin_coordinator') {
                         setIsAuthenticated(true);
-                    } else if (data.authenticated && (!data.isMasterAdmin || data.role !== 'admin_coordinator')) {
-                        // Unauthorized station host/marshal attempting to access Master HQ Dashboard -> Redirect to scanner
-                        window.location.replace('/admin/scanner');
-                        return;
                     } else {
+                        // If not Master HQ session, show the Passcode Gate on /admin
                         setIsAuthenticated(false);
                     }
                 } else {

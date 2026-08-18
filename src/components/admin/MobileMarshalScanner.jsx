@@ -1656,22 +1656,47 @@ _Sent by Aanandham Organizers_`
                                 <span style={{ fontSize: '15px', fontWeight: '900', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
                                     Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                                 </span>
-                                <span style={{ 
-                                    fontSize: '9.5px', 
-                                    background: authStation.isMasterAdmin ? 'rgba(213, 237, 85, 0.15)' : 'rgba(96, 165, 250, 0.15)', 
-                                    border: `1px solid ${authStation.isMasterAdmin ? 'rgba(213, 237, 85, 0.35)' : 'rgba(96, 165, 250, 0.35)'}`, 
-                                    color: authStation.isMasterAdmin ? '#D5ED55' : '#60A5FA', 
-                                    padding: '2px 7px', 
-                                    borderRadius: '6px', 
-                                    fontWeight: '900', 
-                                    letterSpacing: '0.3px',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '4px'
-                                }}>
-                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: authStation.isMasterAdmin ? '#22C55E' : '#60A5FA', display: 'inline-block', boxShadow: `0 0 6px ${authStation.isMasterAdmin ? '#22C55E' : '#60A5FA'}` }} />
-                                    {authStation.isMasterAdmin ? '👑 HQ MASTER' : `${authStation.icon} ${authStation.shortName || 'STATION'}`}
-                                </span>
+                                {authStation.isMasterAdmin ? (
+                                    <Link
+                                        href="/admin"
+                                        title="Open Master HQ Admin Dashboard"
+                                        style={{ 
+                                            fontSize: '9.5px', 
+                                            background: 'rgba(213, 237, 85, 0.15)', 
+                                            border: '1px solid rgba(213, 237, 85, 0.35)', 
+                                            color: '#D5ED55', 
+                                            padding: '2px 7px', 
+                                            borderRadius: '6px', 
+                                            fontWeight: '900', 
+                                            letterSpacing: '0.3px',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '4px',
+                                            textDecoration: 'none',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
+                                        👑 HQ MASTER ↗
+                                    </Link>
+                                ) : (
+                                    <span style={{ 
+                                        fontSize: '9.5px', 
+                                        background: 'rgba(96, 165, 250, 0.15)', 
+                                        border: '1px solid rgba(96, 165, 250, 0.35)', 
+                                        color: '#60A5FA', 
+                                        padding: '2px 7px', 
+                                        borderRadius: '6px', 
+                                        fontWeight: '900', 
+                                        letterSpacing: '0.3px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '4px'
+                                    }}>
+                                        <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#60A5FA', display: 'inline-block', boxShadow: '0 0 6px #60A5FA' }} />
+                                        {`${authStation.icon} ${authStation.shortName || 'STATION'}`}
+                                    </span>
+                                )}
                             </div>
                             <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {authStation.isMasterAdmin ? 'Enterprise Multi-Sanctuary Access' : `${authStation.campName} · Station Locked`}
