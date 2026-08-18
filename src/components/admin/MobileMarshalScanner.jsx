@@ -3251,7 +3251,8 @@ _Sent by Aanandham Organizers_`
 
                                 {/* Prominent Lead WhatsApp & Call Buttons directly on Top Pass Header */}
                                 {(() => {
-                                    const leadPhone = scannedBooking.phone || scannedBooking.rawPhone || scannedBooking.customerPhone || '';
+                                    const rawPhone = scannedBooking.phone || scannedBooking.rawPhone || scannedBooking.customerPhone || '';
+                                    const leadPhone = (rawPhone && !rawPhone.includes('9074858014')) ? rawPhone : '+91 91886 85831';
                                     if (!leadPhone) {
                                         return (
                                             <div style={{ marginTop: '12px', fontSize: '11.5px', color: '#8E9B92', display: 'flex', alignItems: 'center', gap: '5px' }}>
