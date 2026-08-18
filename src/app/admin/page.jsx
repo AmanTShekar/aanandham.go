@@ -192,6 +192,34 @@ export default function AdminPortal() {
     const [bookingFilterCamp, setBookingFilterCamp] = useState('All');
     const [bookingSortBy, setBookingSortBy] = useState('newest');
 
+    // Custom Themed Deletion Confirmation Dialog State
+    const [deleteConfirmDialog, setDeleteConfirmDialog] = useState({
+        isOpen: false,
+        title: '',
+        subtitle: '',
+        itemDetails: null,
+        confirmText: 'Delete Permanently',
+        confirmAction: null
+    });
+
+    const openDeleteConfirm = ({ title, subtitle, itemDetails, confirmText = 'Delete Record', onConfirm }) => {
+        setDeleteConfirmDialog({
+            isOpen: true,
+            title,
+            subtitle,
+            itemDetails,
+            confirmText,
+            confirmAction: () => {
+                if (onConfirm) onConfirm();
+                setDeleteConfirmDialog(prev => ({ ...prev, isOpen: false }));
+            }
+        });
+    };
+
+    const closeDeleteConfirm = () => {
+        setDeleteConfirmDialog(prev => ({ ...prev, isOpen: false }));
+    };
+
     // Admin Notification Settings
     const [adminPhone, setAdminPhone] = useState('+91 9400 987 654');
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
@@ -439,7 +467,7 @@ export default function AdminPortal() {
                 }
                 showToast('✓ System backup restored successfully');
             } catch {
-                alert('Invalid JSON backup file format.');
+                showToast('⚠️ Invalid JSON backup file format');
             }
         };
         reader.readAsText(file);
@@ -590,16 +618,30 @@ export default function AdminPortal() {
 
     // Delete Room
     const handleDeleteRoom = (propId, roomId) => {
-        if (window.confirm('Are you sure you want to delete this room/pod type?')) {
-            const updated = properties.map(p => {
-                if (p.id === propId && p.rooms) {
-                    return { ...p, rooms: p.rooms.filter(r => r.id !== roomId) };
-                }
-                return p;
-            });
-            saveProperties(updated);
-            showToast('✓ Room type deleted');
-        }
+        const prop = properties.find(p => p.id === propId);
+        const room = prop?.rooms?.find(r => r.id === roomId);
+        openDeleteConfirm({
+            title: 'Delete Room / Pod Type?',
+            subtitle: 'This will permanently remove this accommodation tier and its associated features from this campsite listing.',
+            itemDetails: {
+                badge: 'Room / Pod',
+                label: room ? room.name : 'Accommodation Tier',
+                subtext: prop ? prop.title : 'Campsite',
+                amount: room?.price ? `₹${room.price.toLocaleString('en-IN')} / Night` : null,
+                status: `${room?.totalUnits || 0} Units Total`
+            },
+            confirmText: '🗑️ Delete Room Type',
+            onConfirm: () => {
+                const updated = properties.map(p => {
+                    if (p.id === propId && p.rooms) {
+                        return { ...p, rooms: p.rooms.filter(r => r.id !== roomId) };
+                    }
+                    return p;
+                });
+                saveProperties(updated);
+                showToast('✓ Room type deleted');
+            }
+        });
     };
 
     // Add or Edit Room in Active Property
@@ -907,11 +949,24 @@ export default function AdminPortal() {
 
     // Delete Event
     const handleDeleteEvent = (id) => {
-        if (window.confirm('Are you sure you want to remove this event batch?')) {
-            const updated = events.filter(e => e.id !== id);
-            saveEvents(updated);
-            showToast('✓ Event batch removed');
-        }
+        const eventToDelete = events.find(e => e.id === id);
+        openDeleteConfirm({
+            title: 'Remove Scheduled Trek Batch?',
+            subtitle: 'This will remove the scheduled expedition batch from live inventory and active booking rosters.',
+            itemDetails: {
+                badge: 'Batch ID: ' + id,
+                label: eventToDelete ? eventToDelete.title : 'Scheduled Batch',
+                subtext: eventToDelete ? `${eventToDelete.campsite} · ${eventToDelete.dates}` : 'Expedition Batch',
+                amount: eventToDelete?.price ? `₹${eventToDelete.price.toLocaleString('en-IN')} / Pax` : null,
+                status: eventToDelete ? `${eventToDelete.spotsLeft} spots left (${eventToDelete.booked}/${eventToDelete.capacity})` : 'Active'
+            },
+            confirmText: '🗑️ Remove Batch',
+            onConfirm: () => {
+                const updated = events.filter(e => e.id !== id);
+                saveEvents(updated);
+                showToast('✓ Event batch removed');
+            }
+        });
     };
 
     // Save Manual Booking from Coordinator
@@ -958,11 +1013,24 @@ export default function AdminPortal() {
 
     // Delete Booking
     const handleDeleteBooking = (id) => {
-        if (window.confirm(`Are you sure you want to delete reservation ${id}?`)) {
-            const updated = bookings.filter(b => b.id !== id);
-            saveBookings(updated);
-            showToast(`✓ Booking ${id} deleted`);
-        }
+        const bookingToDelete = bookings.find(b => b.id === id);
+        openDeleteConfirm({
+            title: `Delete Reservation?`,
+            subtitle: `Are you sure you want to permanently delete reservation ${id}? This will remove the camper record from the live database roster and invalidate their gate pass.`,
+            itemDetails: {
+                badge: id,
+                label: bookingToDelete ? `${bookingToDelete.name} (${bookingToDelete.guests || 2} Campers)` : `Reservation ${id}`,
+                subtext: bookingToDelete ? `${bookingToDelete.package} · ${bookingToDelete.dates}` : 'Camper Reservation',
+                amount: bookingToDelete?.total ? `₹${Number(bookingToDelete.total).toLocaleString('en-IN')}` : null,
+                status: bookingToDelete?.status || 'Pending'
+            },
+            confirmText: '🗑️ Delete Reservation',
+            onConfirm: () => {
+                const updated = bookings.filter(b => b.id !== id);
+                saveBookings(updated);
+                showToast(`✓ Reservation ${id} deleted`);
+            }
+        });
     };
 
     // Update Booking Status
@@ -3873,6 +3941,213 @@ export default function AdminPortal() {
                                     {editingEvent ? 'Save Batch Changes' : '+ Schedule Batch'}
                                 </button>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* ── CUSTOM THEMED DELETION CONFIRMATION MODAL ── */}
+            <AnimatePresence>
+                {deleteConfirmDialog.isOpen && (
+                    <div style={{
+                        position: 'fixed',
+                        inset: 0,
+                        zIndex: 10000,
+                        background: 'rgba(0, 0, 0, 0.65)',
+                        backdropFilter: 'blur(8px)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '20px'
+                    }}>
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.94, y: 16 }}
+                            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                borderRadius: '24px',
+                                padding: '32px',
+                                maxWidth: '480px',
+                                width: '100%',
+                                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
+                                color: '#121613'
+                            }}
+                        >
+                            {/* Modal Top Warning Header */}
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '20px' }}>
+                                <div style={{
+                                    width: '48px',
+                                    height: '48px',
+                                    borderRadius: '16px',
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    border: '1px solid rgba(239, 68, 68, 0.25)',
+                                    color: '#DC2626',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '22px',
+                                    flexShrink: 0
+                                }}>
+                                    🗑️
+                                </div>
+                                <div style={{ flex: 1, minWidth: 0 }}>
+                                    <div style={{
+                                        fontSize: '11px',
+                                        fontWeight: '800',
+                                        color: '#DC2626',
+                                        letterSpacing: '1px',
+                                        textTransform: 'uppercase',
+                                        marginBottom: '4px'
+                                    }}>
+                                        CONFIRM DELETION
+                                    </div>
+                                    <h3 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: '20px',
+                                        fontWeight: '800',
+                                        margin: 0,
+                                        color: '#121613',
+                                        lineHeight: 1.25
+                                    }}>
+                                        {deleteConfirmDialog.title}
+                                    </h3>
+                                </div>
+                                <button
+                                    onClick={closeDeleteConfirm}
+                                    style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '50%',
+                                        background: '#F8F9F5',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        color: '#59655D',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '14px',
+                                        fontWeight: '800'
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+
+                            {/* Subtitle Description */}
+                            <p style={{
+                                fontSize: '13.5px',
+                                color: '#59655D',
+                                lineHeight: 1.55,
+                                margin: '0 0 20px'
+                            }}>
+                                {deleteConfirmDialog.subtitle}
+                            </p>
+
+                            {/* Snapshot Card of Item Being Deleted */}
+                            {deleteConfirmDialog.itemDetails && (
+                                <div style={{
+                                    background: '#F8F9F5',
+                                    border: '1px solid rgba(18, 22, 19, 0.08)',
+                                    borderRadius: '16px',
+                                    padding: '16px 18px',
+                                    marginBottom: '24px'
+                                }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                        <span style={{
+                                            fontSize: '11px',
+                                            fontWeight: '800',
+                                            color: '#121613',
+                                            background: '#FFFFFF',
+                                            border: '1px solid rgba(18, 22, 19, 0.1)',
+                                            padding: '2px 8px',
+                                            borderRadius: '6px'
+                                        }}>
+                                            {deleteConfirmDialog.itemDetails.badge}
+                                        </span>
+                                        {deleteConfirmDialog.itemDetails.status && (
+                                            <span style={{
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                color: deleteConfirmDialog.itemDetails.status === 'Confirmed' ? '#166534' : '#B45309'
+                                            }}>
+                                                {deleteConfirmDialog.itemDetails.status}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div style={{
+                                        fontSize: '15px',
+                                        fontWeight: '800',
+                                        color: '#121613',
+                                        marginBottom: '4px',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
+                                    }}>
+                                        {deleteConfirmDialog.itemDetails.label}
+                                    </div>
+                                    <div style={{
+                                        fontSize: '12.5px',
+                                        color: '#59655D',
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center'
+                                    }}>
+                                        <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                            {deleteConfirmDialog.itemDetails.subtext}
+                                        </span>
+                                        {deleteConfirmDialog.itemDetails.amount && (
+                                            <span style={{ fontWeight: '800', color: '#121613', fontSize: '14px', marginLeft: '10px' }}>
+                                                {deleteConfirmDialog.itemDetails.amount}
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Modal Action Buttons */}
+                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                                <button
+                                    type="button"
+                                    onClick={closeDeleteConfirm}
+                                    style={{
+                                        padding: '11px 20px',
+                                        borderRadius: '12px',
+                                        background: '#F1F3EC',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        color: '#121613',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={deleteConfirmDialog.confirmAction}
+                                    style={{
+                                        padding: '11px 22px',
+                                        borderRadius: '12px',
+                                        background: '#DC2626',
+                                        border: '1px solid #B91C1C',
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
+                                        boxShadow: '0 4px 14px rgba(220, 38, 38, 0.3)',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    <span>{deleteConfirmDialog.confirmText}</span>
+                                </button>
+                            </div>
                         </motion.div>
                     </div>
                 )}
