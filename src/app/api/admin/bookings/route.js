@@ -66,7 +66,7 @@ export async function GET(request) {
     const ip = getClientIp(request);
 
     // 1. Rate Limit
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_get:${ip}`, 60, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_get:${ip}`, 120, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }

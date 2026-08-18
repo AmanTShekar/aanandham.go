@@ -243,7 +243,6 @@ export default function AdminPortal() {
                 const serverCamps = await campsRes.json();
                 if (Array.isArray(serverCamps) && serverCamps.length > 0) {
                     setProperties(serverCamps);
-                    saveAllCamps(serverCamps);
                 }
             }
         } catch (e) {}
@@ -283,6 +282,7 @@ export default function AdminPortal() {
                     const data = await res.json();
                     if (data.authenticated && data.isMasterAdmin === true && data.role === 'admin_coordinator') {
                         setIsAuthenticated(true);
+                        reloadDataFromStorage();
                     } else {
                         // If not Master HQ session, show the Passcode Gate on /admin
                         setIsAuthenticated(false);
@@ -296,11 +296,12 @@ export default function AdminPortal() {
         };
 
         restoreSession();
-        reloadDataFromStorage();
 
         // Listen for live public booking events
-        const handleStorageUpdate = () => {
-            reloadDataFromStorage();
+        const handleStorageUpdate = (e) => {
+            if (e.key && e.key.startsWith('aanandham_booking_event')) {
+                reloadDataFromStorage();
+            }
         };
 
         window.addEventListener('storage', handleStorageUpdate);
@@ -336,6 +337,7 @@ export default function AdminPortal() {
                 if (data.isMasterAdmin === true && data.role === 'admin_coordinator') {
                     setIsAuthenticated(true);
                     setPasscodeError('');
+                    reloadDataFromStorage();
                 } else {
                     // Station code entered on Master portal -> keep user here and ask for Master HQ code
                     setPasscodeError('Station code entered. Please enter your Master HQ Admin passcode.');
