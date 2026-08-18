@@ -3747,11 +3747,12 @@ input, textarea, select, button {
   width: var(--admin-sidebar-width, 270px) !important;
   height: 100vh !important;
   z-index: 1000 !important;
-  background: #08110B !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: #FFFFFF !important;
+  border-right: 1px solid rgba(18, 22, 19, 0.08) !important;
   overflow-y: auto !important;
   box-sizing: border-box !important;
   transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02) !important;
 }
 
 .admin-main-workspace {

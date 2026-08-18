@@ -1206,7 +1206,7 @@ export default function AdminPortal() {
             <div style={{ minHeight: '100vh', width: '100%', background: '#F8F9F5', color: '#121613', paddingBottom: '90px' }}>
                 
                 {/* Clean Sticky Header */}
-                <header style={{ position: 'sticky', top: 0, zIndex: 100, background: '#0B150E', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', padding: '16px clamp(24px, 4vw, 56px)' }}>
+                <header style={{ position: 'sticky', top: 0, zIndex: 100, background: '#FFFFFF', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', padding: '16px clamp(24px, 4vw, 56px)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     <div style={{ maxWidth: '1440px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                             <button
@@ -1217,21 +1217,21 @@ export default function AdminPortal() {
                                     gap: '6px',
                                     padding: '8px 16px',
                                     borderRadius: '999px',
-                                    background: 'rgba(255, 255, 255, 0.08)',
-                                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                                    color: '#FFFFFF',
+                                    background: '#F1F3EC',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
                                     fontSize: '13px',
-                                    fontWeight: '700',
+                                    fontWeight: '800',
                                     cursor: 'pointer'
                                 }}
                             >
                                 ← Back to Campsites
                             </button>
                             <div>
-                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
+                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
                                     CAMPSITE INVENTORY & GALLERY
                                 </span>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#FFFFFF' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     {currentDetailProperty.title}
                                 </h2>
                             </div>
@@ -1245,9 +1245,9 @@ export default function AdminPortal() {
                                 style={{
                                     padding: '8px 16px',
                                     borderRadius: '999px',
-                                    background: 'rgba(255, 255, 255, 0.08)',
-                                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                                    color: '#FFFFFF',
+                                    background: '#F8F9F5',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
                                     fontSize: '12.5px',
                                     fontWeight: '700',
                                     textDecoration: 'none'
@@ -1260,9 +1260,9 @@ export default function AdminPortal() {
                                 style={{
                                     padding: '8px 16px',
                                     borderRadius: '999px',
-                                    background: currentDetailProperty.isAvailable ? 'rgba(229, 169, 59, 0.18)' : 'rgba(239, 68, 68, 0.18)',
-                                    border: currentDetailProperty.isAvailable ? '1px solid #E5A93B' : '1px solid #EF4444',
-                                    color: currentDetailProperty.isAvailable ? '#E5A93B' : '#EF4444',
+                                    background: currentDetailProperty.isAvailable ? '#DCFCE7' : 'rgba(239, 68, 68, 0.08)',
+                                    border: currentDetailProperty.isAvailable ? '1px solid rgba(22, 101, 52, 0.25)' : '1px solid rgba(239, 68, 68, 0.25)',
+                                    color: currentDetailProperty.isAvailable ? '#166534' : '#DC2626',
                                     fontSize: '12.5px',
                                     fontWeight: '800',
                                     cursor: 'pointer'
@@ -1757,18 +1757,18 @@ export default function AdminPortal() {
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: isCollapsed ? '16px 8px' : '24px 18px', boxSizing: 'border-box' }}>
                 <div>
                     {/* Brand Header */}
-                    <div style={{ marginBottom: isCollapsed ? '16px' : '20px', paddingBottom: isCollapsed ? '14px' : '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    <div style={{ marginBottom: isCollapsed ? '16px' : '20px', paddingBottom: isCollapsed ? '14px' : '16px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', marginBottom: isCollapsed ? '0' : '10px' }}>
                             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
                                 <img
                                     src="/logo.png"
                                     alt="Aanandham.go Official Logo"
-                                    style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }}
+                                    style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
                                 />
                                 {!isCollapsed && (
                                     <div style={{ minWidth: 0 }}>
-                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
-                                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+                                            Aanandham<span style={{ color: '#166534' }}>.go</span>
                                         </span>
                                         <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
                                             BASECAMP HQ
@@ -1780,7 +1780,7 @@ export default function AdminPortal() {
                             {isMobile ? (
                                 <button
                                     onClick={() => setIsMobileSidebarOpen(false)}
-                                    style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                    style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F1F3EC', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', fontWeight: '800' }}
                                 >
                                     ✕
                                 </button>
@@ -1793,9 +1793,9 @@ export default function AdminPortal() {
                                             width: '28px',
                                             height: '28px',
                                             borderRadius: '8px',
-                                            background: 'rgba(255, 255, 255, 0.06)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            color: '#94A3B8',
+                                            background: '#F1F3EC',
+                                            border: '1px solid rgba(18, 22, 19, 0.1)',
+                                            color: '#121613',
                                             display: 'flex',
                                             alignItems: 'center',
                                             justifyContent: 'center',
@@ -1810,9 +1810,9 @@ export default function AdminPortal() {
                         </div>
 
                         {!isCollapsed && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.25)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
                                 <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
-                                <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#4ADE80', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                                     Enterprise HQ Live
                                 </span>
                             </div>
@@ -1827,9 +1827,9 @@ export default function AdminPortal() {
                                         width: '28px',
                                         height: '28px',
                                         borderRadius: '8px',
-                                        background: 'rgba(255, 255, 255, 0.08)',
-                                        border: '1px solid rgba(255, 255, 255, 0.15)',
-                                        color: '#E5A93B',
+                                        background: '#F1F3EC',
+                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        color: '#121613',
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
@@ -1862,7 +1862,8 @@ export default function AdminPortal() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '4px',
-                                whiteSpace: 'nowrap'
+                                whiteSpace: 'nowrap',
+                                boxShadow: '0 2px 8px rgba(213, 237, 85, 0.28)'
                             }}
                         >
                             <span>+</span>
@@ -1880,9 +1881,9 @@ export default function AdminPortal() {
                                 fontSize: isCollapsed ? '13px' : '11.5px',
                                 fontWeight: '800',
                                 cursor: 'pointer',
-                                background: 'rgba(255, 255, 255, 0.08)',
-                                border: '1px solid rgba(255, 255, 255, 0.14)',
-                                color: '#FFFFFF',
+                                background: '#F8F9F5',
+                                border: '1px solid rgba(18, 22, 19, 0.12)',
+                                color: '#121613',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -1900,7 +1901,7 @@ export default function AdminPortal() {
                         {navSections.map((sec, sIdx) => (
                             <div key={sIdx}>
                                 {!isCollapsed && (
-                                    <div style={{ fontSize: '9px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px', paddingLeft: '8px' }}>
+                                    <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px', paddingLeft: '8px' }}>
                                         {sec.category}
                                     </div>
                                 )}
@@ -1919,9 +1920,9 @@ export default function AdminPortal() {
                                                     width: '100%',
                                                     padding: isCollapsed ? '10px 0' : '9px 12px',
                                                     borderRadius: '12px',
-                                                    background: isActive ? '#E5A93B' : 'transparent',
-                                                    color: isActive ? '#0B150E' : '#C8D8CB',
-                                                    border: isActive ? '1px solid rgba(229, 169, 59, 0.6)' : '1px solid transparent',
+                                                    background: isActive ? '#D5ED55' : 'transparent',
+                                                    color: isActive ? '#0B150E' : '#3A443E',
+                                                    border: isActive ? '1px solid rgba(180, 210, 60, 0.8)' : '1px solid transparent',
                                                     fontSize: '13px',
                                                     fontWeight: isActive ? '800' : '600',
                                                     cursor: 'pointer',
@@ -1929,6 +1930,7 @@ export default function AdminPortal() {
                                                     alignItems: 'center',
                                                     justifyContent: isCollapsed ? 'center' : 'space-between',
                                                     textAlign: 'left',
+                                                    boxShadow: isActive ? '0 3px 10px rgba(213, 237, 85, 0.3)' : 'none',
                                                     transition: 'all 0.18s ease'
                                                 }}
                                             >
@@ -1938,8 +1940,8 @@ export default function AdminPortal() {
                                                 </div>
                                                 {!isCollapsed && item.count !== undefined && (
                                                     <span style={{
-                                                        background: isActive ? '#0B150E' : 'rgba(255, 255, 255, 0.12)',
-                                                        color: isActive ? '#E5A93B' : (item.badgeColor || '#FFFFFF'),
+                                                        background: isActive ? '#0B150E' : 'rgba(18, 22, 19, 0.08)',
+                                                        color: isActive ? '#D5ED55' : '#121613',
                                                         fontSize: '11px',
                                                         fontWeight: '800',
                                                         padding: '2px 7px',
@@ -1951,7 +1953,7 @@ export default function AdminPortal() {
                                                 {!isCollapsed && item.desc && !item.count && (
                                                     <span style={{
                                                         fontSize: '10.5px',
-                                                        color: isActive ? '#4A3B18' : '#7D8880',
+                                                        color: isActive ? '#166534' : '#7D8880',
                                                         fontWeight: '700'
                                                     }}>
                                                         {item.desc}
@@ -1967,14 +1969,14 @@ export default function AdminPortal() {
                 </div>
 
                 {/* Bottom Coordinator Profile & System Controls */}
-                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '6px 8px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0 }}>
+                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '8px 10px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: '#F8F9F5', borderRadius: '12px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#D5ED55', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0, boxShadow: '0 2px 6px rgba(213, 237, 85, 0.4)' }}>
                             👑
                         </div>
                         {!isCollapsed && (
                             <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: '12px', fontWeight: '800', color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                <div style={{ fontSize: '12px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     Enterprise Master HQ
                                 </div>
                                 <div style={{ fontSize: '9.5px', color: '#7D8880', fontWeight: '600' }}>
@@ -1994,9 +1996,9 @@ export default function AdminPortal() {
                                     flex: 1,
                                     padding: '7px 8px',
                                     borderRadius: '8px',
-                                    background: 'rgba(255, 255, 255, 0.06)',
-                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                    color: '#C8D8CB',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
                                     textDecoration: 'none',
                                     fontSize: '11px',
                                     fontWeight: '700',
@@ -2016,9 +2018,9 @@ export default function AdminPortal() {
                                 flex: isCollapsed ? undefined : 1,
                                 padding: '7px 8px',
                                 borderRadius: '8px',
-                                background: 'rgba(239, 68, 68, 0.12)',
-                                border: '1px solid rgba(239, 68, 68, 0.25)',
-                                color: '#EF4444',
+                                background: 'rgba(239, 68, 68, 0.08)',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                color: '#DC2626',
                                 fontSize: '11px',
                                 fontWeight: '800',
                                 cursor: 'pointer',
@@ -2045,12 +2047,12 @@ export default function AdminPortal() {
                 position: 'sticky',
                 top: 0,
                 zIndex: 900,
-                background: '#08110B',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                background: '#FFFFFF',
+                borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                 padding: '12px 18px',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                color: '#FFFFFF'
+                color: '#121613'
             }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <button
@@ -2060,9 +2062,9 @@ export default function AdminPortal() {
                             width: '38px',
                             height: '38px',
                             borderRadius: '10px',
-                            background: 'rgba(255, 255, 255, 0.08)',
-                            border: '1px solid rgba(255, 255, 255, 0.15)',
-                            color: '#FFFFFF',
+                            background: '#F8F9F5',
+                            border: '1px solid rgba(18, 22, 19, 0.12)',
+                            color: '#121613',
                             fontSize: '18px',
                             display: 'flex',
                             alignItems: 'center',
@@ -2079,8 +2081,8 @@ export default function AdminPortal() {
                             style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
                         />
                         <div>
-                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#FFFFFF', display: 'block', lineHeight: 1.1 }}>
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613', display: 'block', lineHeight: 1.1 }}>
+                                Aanandham<span style={{ color: '#166534' }}>.go</span>
                             </span>
                             <div style={{ fontSize: '9px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>
                                 {activeTab.toUpperCase()}
@@ -2090,6 +2092,23 @@ export default function AdminPortal() {
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Link
+                        href="/checkin"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                            padding: '7px 11px',
+                            borderRadius: '8px',
+                            background: '#0B150E',
+                            border: '1px solid #D5ED55',
+                            color: '#D5ED55',
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            textDecoration: 'none'
+                        }}
+                    >
+                        📱 Check-In
+                    </Link>
                     <button
                         onClick={() => setIsAddBookingModalOpen(true)}
                         className="btn-lime"
@@ -2112,7 +2131,7 @@ export default function AdminPortal() {
                             position: 'fixed',
                             inset: 0,
                             zIndex: 9999,
-                            background: 'rgba(0, 0, 0, 0.7)',
+                            background: 'rgba(0, 0, 0, 0.5)',
                             backdropFilter: 'blur(8px)',
                             display: 'flex'
                         }}
@@ -2127,11 +2146,11 @@ export default function AdminPortal() {
                                 width: '280px',
                                 maxWidth: '85vw',
                                 height: '100%',
-                                background: '#08110B',
-                                borderRight: '1px solid rgba(255, 255, 255, 0.1)',
+                                background: '#FFFFFF',
+                                borderRight: '1px solid rgba(18, 22, 19, 0.1)',
                                 padding: '24px 18px',
                                 boxSizing: 'border-box',
-                                color: '#FFFFFF',
+                                color: '#121613',
                                 overflowY: 'auto'
                             }}
                         >
