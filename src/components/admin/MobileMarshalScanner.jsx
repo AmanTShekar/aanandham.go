@@ -1145,6 +1145,56 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         { value: 'departed', label: 'Departed Camp', icon: '🚶', color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
     ];
 
+    // ── CENTERED FLOATING TOAST NOTIFICATION RENDERER ──
+    const renderToast = () => (
+        <AnimatePresence>
+            {toastMessage && (
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    left: 0,
+                    right: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    pointerEvents: 'none',
+                    zIndex: 999999,
+                    padding: '0 16px'
+                }}>
+                    <motion.div
+                        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                        transition={{ type: 'spring', stiffness: 450, damping: 28 }}
+                        style={{
+                            pointerEvents: 'auto',
+                            background: 'linear-gradient(135deg, rgba(16, 36, 22, 0.96) 0%, rgba(9, 21, 13, 0.96) 100%)',
+                            border: '1.5px solid #D5ED55',
+                            boxShadow: '0 16px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(213, 237, 85, 0.35)',
+                            backdropFilter: 'blur(20px)',
+                            WebkitBackdropFilter: 'blur(20px)',
+                            color: '#FFFFFF',
+                            padding: '11px 24px',
+                            borderRadius: '999px',
+                            fontWeight: '800',
+                            fontSize: '13.5px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '10px',
+                            maxWidth: '92vw',
+                            textAlign: 'center',
+                            letterSpacing: '0.2px'
+                        }}
+                    >
+                        <Sparkles size={17} color="#D5ED55" style={{ flexShrink: 0 }} />
+                        <span style={{ color: '#FFFFFF', fontWeight: '800' }}>{toastMessage}</span>
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
+    );
+
     // ── HOST PASSCODE SECURITY LOCK SCREEN ──
     if (!isAuthenticated) {
         return (
@@ -1159,6 +1209,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 padding: '24px 16px',
                 position: 'relative'
             }}>
+                {/* Centered Floating Toast on Lock Screen */}
+                {renderToast()}
+
                 <motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 15 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -1463,35 +1516,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             <canvas ref={canvasRef} style={{ display: 'none' }} />
 
             {/* ── TOAST NOTIFICATION ── */}
-            <AnimatePresence>
-                {toastMessage && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        style={{
-                            position: 'fixed',
-                            top: '16px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            background: '#D5ED55',
-                            color: '#0B150E',
-                            padding: '10px 22px',
-                            borderRadius: '999px',
-                            fontWeight: '800',
-                            fontSize: '13px',
-                            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                            zIndex: 1000,
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}
-                    >
-                        <Sparkles size={16} />
-                        <span>{toastMessage}</span>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {renderToast()}
 
             {/* ── TOP APP BAR ── */}
             <header style={{

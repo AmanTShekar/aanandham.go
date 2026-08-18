@@ -3614,32 +3614,41 @@ export default function HomePage() {
             {/* Floating Toast Notification */}
             <AnimatePresence>
                 {toastMessage && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        transition={{ duration: 0.22 }}
-                        style={{
-                            position: 'fixed',
-                            bottom: '32px',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            zIndex: 10000,
-                            background: '#121613',
-                            color: '#FFFFFF',
-                            padding: '12px 24px',
-                            borderRadius: '999px',
-                            boxShadow: '0 12px 36px rgba(0,0,0,0.3)',
-                            fontSize: '13.5px',
-                            fontWeight: '700',
-                            border: '1px solid rgba(213, 237, 85, 0.3)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px'
-                        }}
-                    >
-                        <span>{toastMessage}</span>
-                    </motion.div>
+                    <div style={{
+                        position: 'fixed',
+                        bottom: '32px',
+                        left: 0,
+                        right: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        pointerEvents: 'none',
+                        zIndex: 100000,
+                        padding: '0 16px'
+                    }}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                            transition={{ duration: 0.22 }}
+                            style={{
+                                pointerEvents: 'auto',
+                                background: '#121613',
+                                color: '#FFFFFF',
+                                padding: '12px 24px',
+                                borderRadius: '999px',
+                                boxShadow: '0 12px 36px rgba(0,0,0,0.5)',
+                                fontSize: '13.5px',
+                                fontWeight: '700',
+                                border: '1px solid rgba(213, 237, 85, 0.4)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '10px'
+                            }}
+                        >
+                            <span>{toastMessage}</span>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
 

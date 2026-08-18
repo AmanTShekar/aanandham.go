@@ -3520,29 +3520,40 @@ export default function AdminPortal() {
             {/* FLOATING TOAST */}
             <AnimatePresence>
                 {toastMessage && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        style={{
-                            position: 'fixed',
-                            bottom: '28px',
-                            right: '28px',
-                            zIndex: 100000,
-                            background: '#121613',
-                            color: '#FFFFFF',
-                            padding: '14px 22px',
-                            borderRadius: '14px',
-                            fontSize: '13.5px',
-                            fontWeight: '700',
-                            boxShadow: '0 8px 30px rgba(0,0,0,0.18)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}
-                    >
-                        <span>{toastMessage}</span>
-                    </motion.div>
+                    <div style={{
+                        position: 'fixed',
+                        top: '24px',
+                        left: 0,
+                        right: 0,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        pointerEvents: 'none',
+                        zIndex: 100000,
+                        padding: '0 16px'
+                    }}>
+                        <motion.div
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -15, scale: 0.95 }}
+                            style={{
+                                pointerEvents: 'auto',
+                                background: '#121613',
+                                color: '#FFFFFF',
+                                padding: '12px 24px',
+                                borderRadius: '999px',
+                                fontSize: '13.5px',
+                                fontWeight: '700',
+                                border: '1.5px solid #D5ED55',
+                                boxShadow: '0 16px 40px rgba(0,0,0,0.7), 0 0 24px rgba(213, 237, 85, 0.25)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '8px'
+                            }}
+                        >
+                            <span>{toastMessage}</span>
+                        </motion.div>
+                    </div>
                 )}
             </AnimatePresence>
 
