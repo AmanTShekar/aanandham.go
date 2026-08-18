@@ -272,7 +272,7 @@ export default function AdminPortal() {
     };
 
     useEffect(() => {
-        // Authenticate Session via HttpOnly Secure Cookie
+        // Authenticate Session via HttpOnly Secure Cookie strictly for Master HQ Admin
         const restoreSession = async () => {
             try {
                 const res = await fetch('/api/admin/auth', {
@@ -281,8 +281,12 @@ export default function AdminPortal() {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.authenticated) {
+                    if (data.authenticated && data.isMasterAdmin === true && data.role === 'admin_coordinator') {
                         setIsAuthenticated(true);
+                    } else if (data.authenticated && (!data.isMasterAdmin || data.role !== 'admin_coordinator')) {
+                        // Unauthorized station host/marshal attempting to access Master HQ Dashboard -> Redirect to scanner
+                        window.location.replace('/admin/scanner');
+                        return;
                     } else {
                         setIsAuthenticated(false);
                     }
@@ -332,8 +336,13 @@ export default function AdminPortal() {
             });
             const data = await res.json();
             if (data.success) {
-                setIsAuthenticated(true);
-                setPasscodeError(false);
+                if (data.isMasterAdmin === true && data.role === 'admin_coordinator') {
+                    setIsAuthenticated(true);
+                    setPasscodeError(false);
+                } else {
+                    // Camp marshal passcode entered on Master Admin portal: send them to scanner console
+                    window.location.replace('/admin/scanner');
+                }
             } else {
                 setPasscodeError(true);
             }

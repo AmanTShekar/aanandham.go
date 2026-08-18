@@ -177,11 +177,13 @@ export async function GET(request) {
         if (payload && (payload.role === 'admin_coordinator' || payload.role === 'basecamp_host' || payload.role === 'camp_marshal')) {
             const url = new URL(request.url);
             // If requested audit logs
+            const isMaster = Boolean(payload.isMasterAdmin === true && payload.role === 'admin_coordinator');
+
             if (url.searchParams.get('audit') === 'true') {
                 return NextResponse.json({
                     authenticated: true,
                     role: payload.role,
-                    isMasterAdmin: payload.isMasterAdmin !== false,
+                    isMasterAdmin: isMaster,
                     campId: payload.campId || 'all',
                     campName: payload.campName || 'All Sanctuaries',
                     shortName: payload.shortName || 'Master HQ Scope',
@@ -194,7 +196,7 @@ export async function GET(request) {
             return NextResponse.json({
                 authenticated: true,
                 role: payload.role,
-                isMasterAdmin: payload.isMasterAdmin !== false,
+                isMasterAdmin: isMaster,
                 campId: payload.campId || 'all',
                 campName: payload.campName || 'All Sanctuaries',
                 shortName: payload.shortName || 'Master HQ Scope',

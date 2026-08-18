@@ -345,7 +345,7 @@ export function getAdminPayload(request) {
     if (!token) return null;
 
     const payload = verifySignedToken(token);
-    if (!payload || payload.role !== 'admin_coordinator') return null;
+    if (!payload || payload.role !== 'admin_coordinator' || payload.isMasterAdmin !== true) return null;
 
     return payload;
 }
