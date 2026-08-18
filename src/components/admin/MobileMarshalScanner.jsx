@@ -68,6 +68,19 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
+// ── HELPER: FORMAT DIRECT WHATSAPP PHONE NUMBER (ENSURES 91 COUNTRY CODE) ──
+function getCleanWhatsAppPhone(phone) {
+    if (!phone) return '';
+    let digits = String(phone).replace(/\D/g, '');
+    if (digits.startsWith('0') && digits.length === 11) {
+        digits = digits.slice(1);
+    }
+    if (digits.length === 10) {
+        digits = `91${digits}`;
+    }
+    return digits;
+}
+
 // ── CUSTOM LUXURY ANIMATED DROPDOWN COMPONENT (RESPONSIVE & MOBILE-FIRST) ──
 function CustomDropdown({ label, value, options, onChange, placeholder = "Select...", width = "100%", style = {} }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -2200,7 +2213,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                 {guest.phone && (
                                                     <>
                                                         <a
-                                                            href={`https://wa.me/${guest.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(guest.name)}%2C%20welcome%20to%20Aanandham!%20Your%20campsite%20is%20ready.`}
+                                                            href={`https://wa.me/${getCleanWhatsAppPhone(guest.phone)}?text=Hi%20${encodeURIComponent(guest.name)}%2C%20welcome%20to%20Aanandham!%20Your%20campsite%20is%20ready.`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             style={{
@@ -2221,7 +2234,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                                             <span>WhatsApp</span>
                                                         </a>
                                                         <a
-                                                            href={`tel:${guest.phone}`}
+                                                            href={`tel:${guest.phone.replace(/[^\d+]/g, '')}`}
                                                             style={{
                                                                 display: 'inline-flex',
                                                                 alignItems: 'center',
@@ -2477,7 +2490,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 <div style={{ position: 'absolute', left: '-12px', bottom: '-12px', width: '24px', height: '24px', borderRadius: '50%', background: '#071009', zIndex: 5 }} />
                                 <div style={{ position: 'absolute', right: '-12px', bottom: '-12px', width: '24px', height: '24px', borderRadius: '50%', background: '#071009', zIndex: 5 }} />
 
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
                                     <div>
                                         <span style={{ fontSize: '10.5px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase' }}>
                                             EXPEDITION BOARDING PASS
@@ -2496,7 +2509,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         borderRadius: '999px',
                                         background: scannedBooking.status === 'Checked In' 
                                             ? '#22C55E' 
-                                            : scannedBooking.status === 'Partial Check-In' 
+                                            : (scannedBooking.status === 'Partial Check-In' && shortCount > 0)
                                                 ? '#F59E0B' 
                                                 : '#D5ED55',
                                         color: '#0B150E',
@@ -2505,9 +2518,65 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         letterSpacing: '0.5px',
                                         textTransform: 'uppercase'
                                     }}>
-                                        {scannedBooking.status === 'Checked In' ? '✓ Checked In' : scannedBooking.status === 'Partial Check-In' ? '⚠️ Partial In' : 'Confirmed'}
+                                        {scannedBooking.status === 'Checked In' 
+                                            ? '✓ Checked In' 
+                                            : (scannedBooking.status === 'Partial Check-In' && shortCount > 0)
+                                                ? '⚠️ Partial In' 
+                                                : 'Confirmed'}
                                     </span>
                                 </div>
+
+                                {/* Prominent Lead WhatsApp & Call Buttons directly on Top Pass Header */}
+                                {(() => {
+                                    const leadPhone = scannedBooking.phone || scannedBooking.rawPhone || '+91 90748 58014';
+                                    return (
+                                        <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
+                                            <a
+                                                href={`https://wa.me/${getCleanWhatsAppPhone(leadPhone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham!%20Your%20campsite%20is%20ready.`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px 14px',
+                                                    borderRadius: '12px',
+                                                    background: 'rgba(37, 211, 102, 0.2)',
+                                                    border: '1px solid rgba(37, 211, 102, 0.4)',
+                                                    color: '#25D366',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '800',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                <MessageCircle size={15} />
+                                                <span>WhatsApp ({leadPhone})</span>
+                                            </a>
+                                            <a
+                                                href={`tel:${leadPhone.replace(/[^\d+]/g, '')}`}
+                                                style={{
+                                                    padding: '10px 16px',
+                                                    borderRadius: '12px',
+                                                    background: 'rgba(255, 255, 255, 0.08)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                                                    color: '#FFFFFF',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '800',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                <Phone size={14} />
+                                                <span>Call Lead</span>
+                                            </a>
+                                        </div>
+                                    );
+                                })()}
                             </div>
 
                             {/* Ticket Details Body */}
@@ -2550,52 +2619,54 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
                                 </div>
 
-                                {/* Lead Contact & WhatsApp */}
-                                <div style={{ display: 'flex', gap: '8px' }}>
-                                    <a
-                                        href={`tel:${scannedBooking.phone}`}
-                                        style={{
-                                            flex: 1,
-                                            padding: '10px',
-                                            borderRadius: '12px',
-                                            background: 'rgba(255, 255, 255, 0.06)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            color: '#FFFFFF',
-                                            fontSize: '12.5px',
-                                            fontWeight: '700',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '6px',
-                                            textDecoration: 'none'
-                                        }}
-                                    >
-                                        <Phone size={14} />
-                                        <span>Call ({scannedBooking.phone})</span>
-                                    </a>
-                                    <a
-                                        href={`https://wa.me/${scannedBooking.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{
-                                            padding: '10px 16px',
-                                            borderRadius: '12px',
-                                            background: 'rgba(37, 211, 102, 0.15)',
-                                            border: '1px solid rgba(37, 211, 102, 0.3)',
-                                            color: '#25D366',
-                                            fontSize: '12.5px',
-                                            fontWeight: '800',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '6px',
-                                            textDecoration: 'none'
-                                        }}
-                                    >
-                                        <MessageCircle size={15} />
-                                        <span>WhatsApp</span>
-                                    </a>
-                                </div>
+                                {/* Primary Lead Contact & WhatsApp (Only Lead provided phone number) */}
+                                {scannedBooking.phone && (
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <a
+                                            href={`tel:${scannedBooking.phone.replace(/[^\d+]/g, '')}`}
+                                            style={{
+                                                flex: 1,
+                                                padding: '10px',
+                                                borderRadius: '12px',
+                                                background: 'rgba(255, 255, 255, 0.06)',
+                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                color: '#FFFFFF',
+                                                fontSize: '12.5px',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px',
+                                                textDecoration: 'none'
+                                            }}
+                                        >
+                                            <Phone size={14} />
+                                            <span>Call Lead ({scannedBooking.phone})</span>
+                                        </a>
+                                        <a
+                                            href={`https://wa.me/${getCleanWhatsAppPhone(scannedBooking.phone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!%20Your%20campsite%20is%20ready.`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                padding: '10px 16px',
+                                                borderRadius: '12px',
+                                                background: 'rgba(37, 211, 102, 0.15)',
+                                                border: '1px solid rgba(37, 211, 102, 0.3)',
+                                                color: '#25D366',
+                                                fontSize: '12.5px',
+                                                fontWeight: '800',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px',
+                                                textDecoration: 'none'
+                                            }}
+                                        >
+                                            <MessageCircle size={15} />
+                                            <span>WhatsApp Lead</span>
+                                        </a>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -2626,7 +2697,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         </div>
                                     </div>
                                 </div>
-                            ) : scannedBooking.status === 'Partial Check-In' ? (
+                            ) : (scannedBooking.status === 'Partial Check-In' && shortCount > 0) ? (
                                 <div style={{
                                     background: 'rgba(234, 179, 8, 0.12)',
                                     border: '1px solid rgba(234, 179, 8, 0.35)',
@@ -3420,7 +3491,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                             Guest can settle remaining balance via debit/credit card, netbanking, or UPI link.
                                         </p>
                                         <a
-                                            href={`https://wa.me/${scannedBooking.phone.replace(/\D/g, '')}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20here%20is%20your%20Aanandham%20Gate%20Pass%20settlement%20link%20for%20balance%20%E2%82%B9${dynamicBalanceDue}%3A%20https%3A%2F%2Faanandham.in%2Fpass%2F${scannedBooking.id}`}
+                                            href={`https://wa.me/${getCleanWhatsAppPhone(scannedBooking.phone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20here%20is%20your%20Aanandham%20Gate%20Pass%20settlement%20link%20for%20balance%20%E2%82%B9${dynamicBalanceDue}%3A%20https%3A%2F%2Faanandham.in%2Fpass%2F${scannedBooking.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             style={{
