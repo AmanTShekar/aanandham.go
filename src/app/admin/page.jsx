@@ -335,16 +335,16 @@ export default function AdminPortal() {
             if (data.success) {
                 if (data.isMasterAdmin === true && data.role === 'admin_coordinator') {
                     setIsAuthenticated(true);
-                    setPasscodeError(false);
+                    setPasscodeError('');
                 } else {
-                    // Camp marshal passcode entered on Master Admin portal: send them to scanner console
-                    window.location.replace('/admin/scanner');
+                    // Station code entered on Master portal -> keep user here and ask for Master HQ code
+                    setPasscodeError('Station code entered. Please enter your Master HQ Admin passcode.');
                 }
             } else {
-                setPasscodeError(true);
+                setPasscodeError(data.message || 'Invalid Passcode. Please enter your Master Admin code.');
             }
         } catch (err) {
-            setPasscodeError(true);
+            setPasscodeError('Network error. Please try again.');
         }
     };
 
@@ -1104,8 +1104,8 @@ export default function AdminPortal() {
                             }}
                         />
                         {passcodeError && (
-                            <div style={{ fontSize: '12.5px', color: '#DC2626', fontWeight: '700' }}>
-                                Invalid Passcode. Try <code>2026</code> or <code>aanandham</code>.
+                            <div style={{ fontSize: '12.5px', color: '#DC2626', fontWeight: '700', lineHeight: 1.4 }}>
+                                {typeof passcodeError === 'string' ? passcodeError : 'Invalid Passcode. Please enter your Master Admin code.'}
                             </div>
                         )}
                         <button 
