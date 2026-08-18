@@ -42,7 +42,7 @@ export async function POST(request) {
         const existing = bookingIndex !== -1 ? bookings[bookingIndex] : {
             id: bookingId,
             name: body.name || 'Explorer Lead',
-            phone: body.phone || '+91 90748 58014',
+            phone: body.phone || '+91 98471 23456',
             email: body.email || 'camper@aanandham.in',
             package: body.campsite || 'Kolukkumalai Sunrise Ridge Glamp',
             dates: 'Upcoming Weekend (2D / 1N)',

@@ -243,6 +243,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isTestEmailModalOpen, setIsTestEmailModalOpen] = useState(false);
     const [testEmailInput, setTestEmailInput] = useState('aman.tshekar@gmail.com');
     const [testNameInput, setTestNameInput] = useState('Aman Shekar');
+    const [testPhoneInput, setTestPhoneInput] = useState('+91 98471 23456');
     const [testGuestsCount, setTestGuestsCount] = useState(4);
     const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
     const [isSeedingDemo, setIsSeedingDemo] = useState(false);
@@ -788,6 +789,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 body: JSON.stringify({
                     email: testEmailInput.trim(),
                     name: testNameInput.trim() || 'Explorer Lead',
+                    phone: testPhoneInput.trim() || '+91 98471 23456',
                     guests: testGuestsCount
                 })
             });
@@ -918,24 +920,40 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         showToast(`✓ Auto-generated wristbands: ${rangeStr}`);
     };
 
-    // ── COPY KITCHEN HEADCOUNT DISPATCH FOR CHEF (WHATSAPP) ──
-    const handleCopyKitchenHeadcount = () => {
+    // ── CLEAR & SIMPLE KITCHEN FOOD COUNT FOR CHEF / CATERING STAFF (WHATSAPP) ──
+    const getKitchenDispatchText = () => {
         const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
         const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
         const activeCampName = AANANDHAM_CAMPS.find(c => c.id === selectedCampground)?.name || 'All Sanctuaries';
-        const msg = `🏕️ *AANANDHAM MOUNTAIN SANCTUARY — KITCHEN HEADCOUNT*\n` +
-            `📍 *Sanctuary:* ${activeCampName}\n` +
-            `📅 *Date:* ${dateStr} • ${timeStr}\n\n` +
-            `🥗 *Veg BBQ Meals:* ${activeStats.vegMealsCount} Portions\n` +
-            `🍗 *Chicken BBQ Meals:* ${activeStats.nonVegMealsCount} Portions\n` +
-            `👥 *Campers On Ridge:* ${activeStats.totalCheckedInCampers} Present\n` +
-            `⏳ *Campers En Route:* ${activeStats.totalPendingCampers} Expected\n` +
-            `⚠️ *Short / No-Show:* ${activeStats.totalShortCampers}\n\n` +
-            `_Dispatched from Basecamp Marshal Console._`;
-        
+        const totalMeals = Number(activeStats.vegMealsCount || 0) + Number(activeStats.nonVegMealsCount || 0);
+
+        return (
+`👨‍🍳 *AANANDHAM CAMP — KITCHEN FOOD COUNT*
+📍 *Campsite:* ${activeCampName}
+📅 *Date & Time:* ${dateStr} • ${timeStr}
+━━━━━━━━━━━━━━━━━━━
+🔥 *TOTAL DINNER TO PREP: ${totalMeals} MEALS*
+
+🥗 *VEG (Paneer / Veg BBQ):*  *${activeStats.vegMealsCount} PLATES*
+🍗 *CHICKEN (Chicken BBQ):*   *${activeStats.nonVegMealsCount} PLATES*
+━━━━━━━━━━━━━━━━━━━
+👥 *GUEST ARRIVAL STATUS:*
+✅ *Already In Camp (Ready to eat):* ${activeStats.totalCheckedInCampers} Campers
+⏳ *Coming in Next Jeeps:* ${activeStats.totalPendingCampers} Campers
+━━━━━━━━━━━━━━━━━━━
+🍲 *CHEF INSTRUCTIONS:*
+• Keep ${activeStats.vegMealsCount} Veg BBQ & ${activeStats.nonVegMealsCount} Chicken BBQ sets hot for 07:30 PM campfire.
+• Welcome hot Black Tea / Chukku Kaappi ready for arriving jeeps.
+━━━━━━━━━━━━━━━━━━━
+_Sent from Basecamp Marshal Console_`
+        );
+    };
+
+    const handleCopyKitchenHeadcount = () => {
+        const msg = getKitchenDispatchText();
         if (navigator.clipboard) {
             navigator.clipboard.writeText(msg);
-            showToast('✓ Copied kitchen headcount for WhatsApp dispatch!');
+            showToast('✓ Kitchen Food Count copied for WhatsApp!');
         }
     };
 
@@ -2681,26 +2699,48 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </span>
                             </div>
                         </div>
-                        <button
-                            type="button"
-                            onClick={handleCopyKitchenHeadcount}
-                            style={{
-                                padding: '8px 14px',
-                                borderRadius: '10px',
-                                background: '#25D366',
-                                color: '#0B150E',
-                                fontSize: '12px',
-                                fontWeight: '900',
-                                border: 'none',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '6px'
-                            }}
-                        >
-                            <Copy size={13} />
-                            <span>📋 Copy for WhatsApp</span>
-                        </button>
+                        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                            <button
+                                type="button"
+                                onClick={handleCopyKitchenHeadcount}
+                                style={{
+                                    padding: '8px 14px',
+                                    borderRadius: '10px',
+                                    background: 'rgba(255, 255, 255, 0.08)',
+                                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                                    color: '#FFFFFF',
+                                    fontSize: '12px',
+                                    fontWeight: '800',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                }}
+                            >
+                                <Copy size={13} />
+                                <span>Copy Text</span>
+                            </button>
+                            <a
+                                href={`https://wa.me/?text=${encodeURIComponent(getKitchenDispatchText())}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    padding: '8px 14px',
+                                    borderRadius: '10px',
+                                    background: '#25D366',
+                                    color: '#0B150E',
+                                    fontSize: '12px',
+                                    fontWeight: '900',
+                                    textDecoration: 'none',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                }}
+                            >
+                                <MessageCircle size={14} />
+                                <span>Send to Chef →</span>
+                            </a>
+                        </div>
                     </div>
 
                     {/* Headcount Gauge */}
@@ -2919,7 +2959,14 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
                                 {/* Prominent Lead WhatsApp & Call Buttons directly on Top Pass Header */}
                                 {(() => {
-                                    const leadPhone = scannedBooking.phone || scannedBooking.rawPhone || '+91 90748 58014';
+                                    const leadPhone = scannedBooking.phone || scannedBooking.rawPhone || scannedBooking.customerPhone || '';
+                                    if (!leadPhone) {
+                                        return (
+                                            <div style={{ marginTop: '12px', fontSize: '11.5px', color: '#8E9B92', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                                <span>📱 No customer phone number attached to this reservation.</span>
+                                            </div>
+                                        );
+                                    }
                                     return (
                                         <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
                                             <a
@@ -4090,6 +4137,29 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         color: '#FFFFFF',
                                         fontSize: '14px',
                                         fontWeight: '700',
+                                        outline: 'none',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            <div>
+                                <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '4px' }}>
+                                    Camper Phone (for WhatsApp / Call):
+                                </label>
+                                <input
+                                    type="tel"
+                                    placeholder="+91 98471 23456"
+                                    value={testPhoneInput}
+                                    onChange={e => setTestPhoneInput(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '12px 14px',
+                                        borderRadius: '12px',
+                                        background: '#08120A',
+                                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                                        color: '#FFFFFF',
+                                        fontSize: '13px',
                                         outline: 'none',
                                         boxSizing: 'border-box'
                                     }}

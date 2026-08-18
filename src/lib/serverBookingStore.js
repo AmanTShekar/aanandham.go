@@ -238,7 +238,7 @@ export async function updateServerBooking(id, updates) {
                 create: {
                     id,
                     name: updates.name || 'Explorer Lead',
-                    phone: updates.phone || '+91 90748 58014',
+                    phone: updates.phone || '+91 98471 23456',
                     package: updates.package || 'Kolukkumalai Sunrise Ridge Glamp',
                     dates: updates.dates || 'Upcoming Weekend',
                     guests: Number(updates.guests) || 2,

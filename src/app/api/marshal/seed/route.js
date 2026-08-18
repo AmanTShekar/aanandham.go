@@ -7,7 +7,7 @@ export async function POST() {
             {
                 name: 'Aarav Sharma',
                 email: 'aman.tshekar@gmail.com',
-                phone: '+91 90748 58014',
+                phone: '+91 94471 55667',
                 package: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
                 campsiteId: 'pkg-kolukkumalai',
                 region: 'Munnar',

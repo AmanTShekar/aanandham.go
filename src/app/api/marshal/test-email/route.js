@@ -18,6 +18,7 @@ export async function POST(request) {
         const { 
             email = 'aman.tshekar@gmail.com', 
             name = 'Explorer Lead', 
+            phone = '+91 98471 23456',
             guests = 4,
             package: packageName = 'Kolukkumalai Sunrise Ridge Glamp (7,900 FT)',
             roomType = 'Geodesic Luxury Dome Pod'
@@ -40,7 +41,7 @@ export async function POST(request) {
             id: bookingId,
             name: (name || 'Lead Explorer').trim(),
             email: email.trim(),
-            phone: '+91 90748 58014',
+            phone: phone || '+91 98471 23456',
             package: packageName,
             campsiteId: 'pkg-kolukkumalai',
             region: 'Munnar',
