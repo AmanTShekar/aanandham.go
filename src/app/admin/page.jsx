@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
@@ -183,9 +183,14 @@ export default function AdminPortal() {
         status: 'Confirmed'
     });
 
-    // Booking Search & Filter
+    // Sidebar Collapse State
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+    // Booking Search, Camp Divider & Filter
     const [bookingSearch, setBookingSearch] = useState('');
     const [bookingFilterStatus, setBookingFilterStatus] = useState('All');
+    const [bookingFilterCamp, setBookingFilterCamp] = useState('All');
+    const [bookingSortBy, setBookingSortBy] = useState('newest');
 
     // Admin Notification Settings
     const [adminPhone, setAdminPhone] = useState('+91 9400 987 654');
@@ -1013,23 +1018,76 @@ export default function AdminPortal() {
     const pendingUtrBookings = bookings.filter(b => b.status === 'Pending' || (b.utrNumber && b.status !== 'Confirmed' && b.status !== 'Cancelled'));
     const pendingUtrCount = pendingUtrBookings.length;
 
-    // Filter bookings with search and UTR filter
-    const filteredBookings = bookings.filter(b => {
-        const cleanSearch = bookingSearch.replace(/\D/g, '');
-        const cleanPhone = (b.phone || '').replace(/\D/g, '');
-        const matchSearch = 
-            (b.name || '').toLowerCase().includes(bookingSearch.toLowerCase()) || 
-            (cleanSearch && cleanPhone.includes(cleanSearch)) || 
-            (b.phone || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
-            (b.package || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
-            (b.utrNumber || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
-            (b.id || '').toLowerCase().includes(bookingSearch.toLowerCase());
-        const matchStatus = 
-            bookingFilterStatus === 'All' ? true :
-            bookingFilterStatus === 'Pending UTRs' ? (b.status === 'Pending' || Boolean(b.utrNumber && b.status !== 'Confirmed')) :
-            b.status === bookingFilterStatus;
-        return matchSearch && matchStatus;
-    });
+    // Campsite Matching Helper for Bookings
+    const isBookingMatchingCamp = (b, campId) => {
+        if (!campId || campId === 'All') return true;
+        const bPkg = String(b.package || '').toLowerCase();
+        const bRegion = String(b.region || '').toLowerCase();
+        const bCampId = String(b.campsiteId || '').toLowerCase();
+
+        if (campId === 'pkg-kolukkumalai' || campId === 'Kolukkumalai') {
+            return bCampId === 'pkg-kolukkumalai' || bPkg.includes('kolukkumalai') || bRegion.includes('kolukkumalai');
+        }
+        if (campId === 'pkg-meesapulimala' || campId === 'Meesapulimala') {
+            return bCampId === 'pkg-meesapulimala' || bPkg.includes('meesapulimala') || bRegion.includes('meesapulimala') || bRegion.includes('silent valley');
+        }
+        if (campId === 'pkg-suryanelli' || campId === 'Suryanelli') {
+            return bCampId === 'pkg-suryanelli' || bPkg.includes('suryanelli') || (bRegion.includes('suryanelli') && !bPkg.includes('kolukkumalai'));
+        }
+        if (campId === 'pkg-vagamon-pine' || campId === 'Vagamon') {
+            return bCampId.includes('vagamon') || bPkg.includes('vagamon') || bRegion.includes('vagamon');
+        }
+        if (campId === 'pkg-wayanad' || campId === 'Wayanad') {
+            return bCampId.includes('wayanad') || bPkg.includes('wayanad') || bRegion.includes('wayanad');
+        }
+        return true;
+    };
+
+    // Live Campsite-Specific Booking Counts
+    const koluBookingsCount = bookings.filter(b => isBookingMatchingCamp(b, 'pkg-kolukkumalai')).length;
+    const meesaBookingsCount = bookings.filter(b => isBookingMatchingCamp(b, 'pkg-meesapulimala')).length;
+    const suryaBookingsCount = bookings.filter(b => isBookingMatchingCamp(b, 'pkg-suryanelli')).length;
+    const vagaBookingsCount = bookings.filter(b => isBookingMatchingCamp(b, 'pkg-vagamon-pine')).length;
+    const wayaBookingsCount = bookings.filter(b => isBookingMatchingCamp(b, 'pkg-wayanad')).length;
+
+    // Filter & Sort Bookings with Search, Campsite Divider, Status, and Sort Order
+    const filteredBookings = useMemo(() => {
+        let result = bookings.filter(b => {
+            const cleanSearch = bookingSearch.replace(/\D/g, '');
+            const cleanPhone = (b.phone || '').replace(/\D/g, '');
+            const matchSearch = 
+                !bookingSearch.trim() ||
+                (b.name || '').toLowerCase().includes(bookingSearch.toLowerCase()) || 
+                (cleanSearch && cleanPhone.includes(cleanSearch)) || 
+                (b.phone || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
+                (b.package || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
+                (b.utrNumber || '').toLowerCase().includes(bookingSearch.toLowerCase()) ||
+                (b.id || '').toLowerCase().includes(bookingSearch.toLowerCase());
+
+            const matchStatus = 
+                bookingFilterStatus === 'All' ? true :
+                bookingFilterStatus === 'Pending UTRs' ? (b.status === 'Pending' || Boolean(b.utrNumber && b.status !== 'Confirmed')) :
+                b.status === bookingFilterStatus;
+
+            const matchCamp = isBookingMatchingCamp(b, bookingFilterCamp);
+
+            return matchSearch && matchStatus && matchCamp;
+        });
+
+        return result.sort((a, b) => {
+            if (bookingSortBy === 'highest_amount') {
+                return (Number(b.total) || 0) - (Number(a.total) || 0);
+            }
+            if (bookingSortBy === 'guests_desc') {
+                return (Number(b.guests) || 0) - (Number(a.guests) || 0);
+            }
+            if (bookingSortBy === 'oldest') {
+                return (new Date(a.createdAt || 0).getTime() || 0) - (new Date(b.createdAt || 0).getTime() || 0);
+            }
+            // Default: newest
+            return (new Date(b.createdAt || 0).getTime() || 0) - (new Date(a.createdAt || 0).getTime() || 0);
+        });
+    }, [bookings, bookingSearch, bookingFilterStatus, bookingFilterCamp, bookingSortBy]);
 
     // Dynamic KPI & Financial Calculations strictly derived from real data
     const paidBookings = bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In');
@@ -1670,13 +1728,12 @@ export default function AdminPortal() {
     }
 
     // ─────────────────────────────────────────────────────────────
-    // MAIN ADMIN DASHBOARD WITH SLEEK RESPONSIVE SIDEBAR
+    // MAIN ADMIN DASHBOARD WITH SLEEK COLLAPSIBLE SIDEBAR
     // ─────────────────────────────────────────────────────────────
     const navSections = [
         {
-            category: 'BASECAMP OPERATIONS',
+            category: 'COMMAND & ROSTER',
             items: [
-                { id: 'scanner', name: 'Camp Check-In & Scanner', icon: '📱', desc: 'Live Headcount & Attendance', count: 'LIVE ⚡', badgeColor: '#D5ED55' },
                 { id: 'overview', name: 'Dashboard Overview', icon: '📊', desc: 'Live KPIs & ops' },
                 { id: 'bookings', name: 'Camper Reservations', icon: '📋', count: bookings.length, badgeColor: '#E5A93B' },
                 { id: 'properties', name: 'Campsites & Pods', icon: '⛺', count: properties.length, badgeColor: '#22C55E' },
@@ -1684,7 +1741,7 @@ export default function AdminPortal() {
             ]
         },
         {
-            category: 'FINANCE & CONTROL',
+            category: 'FINANCE & SETTINGS',
             items: [
                 { id: 'financials', name: 'Revenue & Margin', icon: '💰', desc: `₹${totalRevenue.toLocaleString('en-IN')}` },
                 { id: 'payment', name: 'Payment & QR Gateway', icon: '💳', desc: paymentSettings.mode === 'coming_soon' ? '⏳ Coming Soon' : '⚡ Live UPI' },
@@ -1693,223 +1750,291 @@ export default function AdminPortal() {
         }
     ];
 
-    const renderSidebarContent = (isMobile = false) => (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-            <div>
-                {/* Brand Header */}
-                <div style={{ marginBottom: '24px', paddingBottom: '20px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-                            <img
-                                src="/logo.png"
-                                alt="Aanandham.go Official Logo"
-                                style={{ height: '36px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }}
-                            />
-                            <div>
-                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1 }}>
-                                    Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                                </span>
-                                <span style={{ fontSize: '10px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                                    BASECAMP COMMAND
+    const renderSidebarContent = (isMobile = false) => {
+        const isCollapsed = !isMobile && isSidebarCollapsed;
+
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: isCollapsed ? '16px 8px' : '24px 18px', boxSizing: 'border-box' }}>
+                <div>
+                    {/* Brand Header */}
+                    <div style={{ marginBottom: isCollapsed ? '16px' : '20px', paddingBottom: isCollapsed ? '14px' : '16px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', marginBottom: isCollapsed ? '0' : '10px' }}>
+                            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
+                                <img
+                                    src="/logo.png"
+                                    alt="Aanandham.go Official Logo"
+                                    style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))' }}
+                                />
+                                {!isCollapsed && (
+                                    <div style={{ minWidth: 0 }}>
+                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+                                            Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                        </span>
+                                        <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                            BASECAMP HQ
+                                        </span>
+                                    </div>
+                                )}
+                            </Link>
+
+                            {isMobile ? (
+                                <button
+                                    onClick={() => setIsMobileSidebarOpen(false)}
+                                    style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                >
+                                    ✕
+                                </button>
+                            ) : (
+                                !isCollapsed && (
+                                    <button
+                                        onClick={() => setIsSidebarCollapsed(true)}
+                                        title="Collapse Sidebar"
+                                        style={{
+                                            width: '28px',
+                                            height: '28px',
+                                            borderRadius: '8px',
+                                            background: 'rgba(255, 255, 255, 0.06)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            color: '#94A3B8',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            cursor: 'pointer',
+                                            fontSize: '12px'
+                                        }}
+                                    >
+                                        ◀
+                                    </button>
+                                )
+                            )}
+                        </div>
+
+                        {!isCollapsed && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.25)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
+                                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
+                                <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#4ADE80', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                    Enterprise HQ Live
                                 </span>
                             </div>
-                        </Link>
-                        {isMobile && (
-                            <button
-                                onClick={() => setIsMobileSidebarOpen(false)}
-                                style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: 'none', color: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
-                            >
-                                ✕
-                            </button>
+                        )}
+
+                        {isCollapsed && (
+                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                                <button
+                                    onClick={() => setIsSidebarCollapsed(false)}
+                                    title="Expand Sidebar"
+                                    style={{
+                                        width: '28px',
+                                        height: '28px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(255, 255, 255, 0.08)',
+                                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                                        color: '#E5A93B',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        fontSize: '12px'
+                                    }}
+                                >
+                                    ▶
+                                </button>
+                            </div>
                         )}
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.25)', padding: '5px 10px', borderRadius: '999px', width: 'fit-content' }}>
-                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
-                        <span style={{ fontSize: '10px', fontWeight: '800', color: '#4ADE80', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                            Kerala Basecamp Live
-                        </span>
+                    {/* Dual Quick Action Buttons */}
+                    <div style={{ display: isCollapsed ? 'flex' : 'grid', flexDirection: isCollapsed ? 'column' : undefined, gridTemplateColumns: isCollapsed ? undefined : '1fr 1fr', gap: '6px', marginBottom: isCollapsed ? '16px' : '22px' }}>
+                        <button
+                            onClick={() => {
+                                setIsAddBookingModalOpen(true);
+                                if (isMobile) setIsMobileSidebarOpen(false);
+                            }}
+                            className="btn-lime"
+                            title="Add New Manual Booking"
+                            style={{
+                                padding: isCollapsed ? '8px 0' : '9px 8px',
+                                borderRadius: '10px',
+                                fontSize: isCollapsed ? '13px' : '11.5px',
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '4px',
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            <span>+</span>
+                            {!isCollapsed && <span>Booking</span>}
+                        </button>
+                        <button
+                            onClick={() => {
+                                handleOpenPropertyModal();
+                                if (isMobile) setIsMobileSidebarOpen(false);
+                            }}
+                            title="Create Campsite"
+                            style={{
+                                padding: isCollapsed ? '8px 0' : '9px 8px',
+                                borderRadius: '10px',
+                                fontSize: isCollapsed ? '13px' : '11.5px',
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                background: 'rgba(255, 255, 255, 0.08)',
+                                border: '1px solid rgba(255, 255, 255, 0.14)',
+                                color: '#FFFFFF',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '4px',
+                                whiteSpace: 'nowrap'
+                            }}
+                        >
+                            <span>⛺</span>
+                            {!isCollapsed && <span>Campsite</span>}
+                        </button>
                     </div>
-                </div>
 
-                {/* Dual Quick Action Buttons */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '24px' }}>
-                    <button
-                        onClick={() => {
-                            setIsAddBookingModalOpen(true);
-                            if (isMobile) setIsMobileSidebarOpen(false);
-                        }}
-                        className="btn-lime"
-                        style={{
-                            padding: '10px 8px',
-                            borderRadius: '10px',
-                            fontSize: '11.5px',
-                            fontWeight: '800',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        <span>+ Booking</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            handleOpenPropertyModal();
-                            if (isMobile) setIsMobileSidebarOpen(false);
-                        }}
-                        style={{
-                            padding: '10px 8px',
-                            borderRadius: '10px',
-                            fontSize: '11.5px',
-                            fontWeight: '800',
-                            cursor: 'pointer',
-                            background: 'rgba(255, 255, 255, 0.08)',
-                            border: '1px solid rgba(255, 255, 255, 0.14)',
-                            color: '#FFFFFF',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                            whiteSpace: 'nowrap'
-                        }}
-                    >
-                        <span>+ Campsite</span>
-                    </button>
-                </div>
-
-                {/* Categorized Navigation Menu */}
-                <nav style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    {navSections.map((sec, sIdx) => (
-                        <div key={sIdx}>
-                            <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px', paddingLeft: '8px' }}>
-                                {sec.category}
+                    {/* Categorized Navigation Menu */}
+                    <nav style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '12px' : '18px' }}>
+                        {navSections.map((sec, sIdx) => (
+                            <div key={sIdx}>
+                                {!isCollapsed && (
+                                    <div style={{ fontSize: '9px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px', paddingLeft: '8px' }}>
+                                        {sec.category}
+                                    </div>
+                                )}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                    {sec.items.map(item => {
+                                        const isActive = activeTab === item.id;
+                                        return (
+                                            <button
+                                                key={item.id}
+                                                onClick={() => {
+                                                    setActiveTab(item.id);
+                                                    if (isMobile) setIsMobileSidebarOpen(false);
+                                                }}
+                                                title={isCollapsed ? item.name : undefined}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: isCollapsed ? '10px 0' : '9px 12px',
+                                                    borderRadius: '12px',
+                                                    background: isActive ? '#E5A93B' : 'transparent',
+                                                    color: isActive ? '#0B150E' : '#C8D8CB',
+                                                    border: isActive ? '1px solid rgba(229, 169, 59, 0.6)' : '1px solid transparent',
+                                                    fontSize: '13px',
+                                                    fontWeight: isActive ? '800' : '600',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: isCollapsed ? 'center' : 'space-between',
+                                                    textAlign: 'left',
+                                                    transition: 'all 0.18s ease'
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: isCollapsed ? '0' : '10px' }}>
+                                                    <span style={{ fontSize: '16px' }}>{item.icon}</span>
+                                                    {!isCollapsed && <span>{item.name}</span>}
+                                                </div>
+                                                {!isCollapsed && item.count !== undefined && (
+                                                    <span style={{
+                                                        background: isActive ? '#0B150E' : 'rgba(255, 255, 255, 0.12)',
+                                                        color: isActive ? '#E5A93B' : (item.badgeColor || '#FFFFFF'),
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        padding: '2px 7px',
+                                                        borderRadius: '999px'
+                                                    }}>
+                                                        {item.count}
+                                                    </span>
+                                                )}
+                                                {!isCollapsed && item.desc && !item.count && (
+                                                    <span style={{
+                                                        fontSize: '10.5px',
+                                                        color: isActive ? '#4A3B18' : '#7D8880',
+                                                        fontWeight: '700'
+                                                    }}>
+                                                        {item.desc}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                {sec.items.map(item => {
-                                    const isActive = activeTab === item.id;
-                                    return (
-                                        <button
-                                            key={item.id}
-                                            onClick={() => {
-                                                setActiveTab(item.id);
-                                                if (isMobile) setIsMobileSidebarOpen(false);
-                                            }}
-                                            style={{
-                                                width: '100%',
-                                                padding: '10px 14px',
-                                                borderRadius: '12px',
-                                                background: isActive ? '#E5A93B' : 'transparent',
-                                                color: isActive ? '#0B150E' : '#C8D8CB',
-                                                border: isActive ? '1px solid rgba(229, 169, 59, 0.6)' : '1px solid transparent',
-                                                fontSize: '13px',
-                                                fontWeight: isActive ? '800' : '600',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                textAlign: 'left',
-                                                transition: 'all 0.18s ease'
-                                            }}
-                                        >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <span style={{ fontSize: '15px' }}>{item.icon}</span>
-                                                <span>{item.name}</span>
-                                            </div>
-                                            {item.count !== undefined && (
-                                                <span style={{
-                                                    background: isActive ? '#0B150E' : 'rgba(255, 255, 255, 0.12)',
-                                                    color: isActive ? '#E5A93B' : (item.badgeColor || '#FFFFFF'),
-                                                    fontSize: '11px',
-                                                    fontWeight: '800',
-                                                    padding: '2px 8px',
-                                                    borderRadius: '999px'
-                                                }}>
-                                                    {item.count}
-                                                </span>
-                                            )}
-                                            {item.desc && !item.count && (
-                                                <span style={{
-                                                    fontSize: '10.5px',
-                                                    color: isActive ? '#4A3B18' : '#7D8880',
-                                                    fontWeight: '700'
-                                                }}>
-                                                    {item.desc}
-                                                </span>
-                                            )}
-                                        </button>
-                                    );
-                                })}
+                        ))}
+                    </nav>
+                </div>
+
+                {/* Bottom Coordinator Profile & System Controls */}
+                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '6px 8px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0 }}>
+                            👑
+                        </div>
+                        {!isCollapsed && (
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ fontSize: '12px', fontWeight: '800', color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    Enterprise Master HQ
+                                </div>
+                                <div style={{ fontSize: '9.5px', color: '#7D8880', fontWeight: '600' }}>
+                                    All Kerala Sanctuaries
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </nav>
-            </div>
-
-            {/* Bottom Coordinator Profile & System Controls */}
-            <div style={{ paddingTop: '18px', borderTop: '1px solid rgba(255, 255, 255, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 8px', background: 'rgba(255,255,255,0.04)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#E5A93B', color: '#121613', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900' }}>
-                        A
+                        )}
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '12px', fontWeight: '800', color: '#FFFFFF', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            Basecamp Admin
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#7D8880', fontWeight: '600' }}>
-                            Super Coordinator
-                        </div>
+
+                    <div style={{ display: 'flex', flexDirection: isCollapsed ? 'column' : 'row', gap: '6px' }}>
+                        {!isCollapsed && (
+                            <Link
+                                href="/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    flex: 1,
+                                    padding: '7px 8px',
+                                    borderRadius: '8px',
+                                    background: 'rgba(255, 255, 255, 0.06)',
+                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                    color: '#C8D8CB',
+                                    textDecoration: 'none',
+                                    fontSize: '11px',
+                                    fontWeight: '700',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '4px'
+                                }}
+                            >
+                                <span>Website ↗</span>
+                            </Link>
+                        )}
+                        <button
+                            onClick={handleLogout}
+                            title="Sign Out from Master HQ"
+                            style={{
+                                flex: isCollapsed ? undefined : 1,
+                                padding: '7px 8px',
+                                borderRadius: '8px',
+                                background: 'rgba(239, 68, 68, 0.12)',
+                                border: '1px solid rgba(239, 68, 68, 0.25)',
+                                color: '#EF4444',
+                                fontSize: '11px',
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '4px'
+                            }}
+                        >
+                            <span>Sign Out</span>
+                        </button>
                     </div>
                 </div>
-
-                <div style={{ display: 'flex', gap: '6px' }}>
-                    <Link
-                        href="/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            flex: 1,
-                            padding: '8px',
-                            borderRadius: '8px',
-                            background: 'rgba(255, 255, 255, 0.06)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            color: '#C8D8CB',
-                            textDecoration: 'none',
-                            fontSize: '11.5px',
-                            fontWeight: '700',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px'
-                        }}
-                    >
-                        <span>Website →</span>
-                    </Link>
-                    <button
-                        onClick={handleLogout}
-                        style={{
-                            padding: '8px 12px',
-                            borderRadius: '8px',
-                            background: 'rgba(239, 68, 68, 0.12)',
-                            border: '1px solid rgba(239, 68, 68, 0.25)',
-                            color: '#EF4444',
-                            fontSize: '11.5px',
-                            fontWeight: '800',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px'
-                        }}
-                    >
-                        <span>Sign Out</span>
-                    </button>
-                </div>
             </div>
-        </div>
-    );
+        );
+    };
 
     return (
         <div style={{ minHeight: '100vh', width: '100%', background: '#F8F9F5', color: '#121613', display: 'flex', flexDirection: 'column' }}>
@@ -2016,24 +2141,134 @@ export default function AdminPortal() {
                 )}
             </AnimatePresence>
 
-            <div style={{ display: 'flex', flex: 1, minHeight: '100vh' }}>
+            <div style={{ display: 'flex', flex: 1, minHeight: '100vh', '--admin-sidebar-width': isSidebarCollapsed ? '76px' : '270px' }}>
                 
                 {/* ── DESKTOP LEFT SIDEBAR (Fixed Static, Full Viewport Height) ── */}
-                <aside className="admin-desktop-sidebar">
+                <aside className="admin-desktop-sidebar" style={{ width: isSidebarCollapsed ? '76px' : '270px' }}>
                     {renderSidebarContent(false)}
                 </aside>
 
                 {/* ── MAIN CONTENT WORKSPACE (Scrolls independently next to static sidebar) ── */}
-                <main className="admin-main-workspace" style={{ flex: 1, minHeight: '100vh', padding: '36px clamp(20px, 3.5vw, 56px)', boxSizing: 'border-box', overflowY: 'auto' }}>
+                <main className="admin-main-workspace" style={{ flex: 1, minHeight: '100vh', marginLeft: isSidebarCollapsed ? '76px' : '270px', width: `calc(100% - ${isSidebarCollapsed ? '76px' : '270px'})`, padding: '28px clamp(18px, 3vw, 48px)', boxSizing: 'border-box', overflowY: 'auto' }}>
                 
-                {/* ─────────────────────────────────────────────────────────────
-                    TAB: MARSHAL QR SCANNER & HEADCOUNT TOOL
-                ───────────────────────────────────────────────────────────── */}
-                {activeTab === 'scanner' && (
-                    <div style={{ maxWidth: '720px', margin: '0 auto' }}>
-                        <MobileMarshalScanner onBackToAdmin={() => setActiveTab('bookings')} />
+                {/* ── TOP EXECUTIVE COMMAND BAR ── */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    paddingBottom: '20px',
+                    marginBottom: '28px',
+                    borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
+                    flexWrap: 'wrap',
+                    gap: '14px'
+                }}>
+                    {/* Left: Breadcrumbs & Live Pulse */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button
+                            onClick={() => setIsSidebarCollapsed(prev => !prev)}
+                            title={isSidebarCollapsed ? "Expand Sidebar (270px)" : "Collapse Sidebar (76px)"}
+                            style={{
+                                width: '36px',
+                                height: '36px',
+                                borderRadius: '10px',
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.12)',
+                                color: '#121613',
+                                fontSize: '13px',
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
+                            }}
+                        >
+                            {isSidebarCollapsed ? '▶' : '◀'}
+                        </button>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                <span style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                    Aanandham Enterprise HQ
+                                </span>
+                                <span style={{ color: '#CBD5E1', fontSize: '10px' }}>/</span>
+                                <span style={{ fontSize: '10.5px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                    {activeTab.toUpperCase()}
+                                </span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
+                                    {activeTab === 'overview' ? 'Mission Control & Operations' :
+                                     activeTab === 'bookings' ? 'Camper Reservations Roster' :
+                                     activeTab === 'properties' ? 'Campsites & Pod Inventory' :
+                                     activeTab === 'events' ? 'Scheduled Batches' :
+                                     activeTab === 'financials' ? 'Revenue & Margins' :
+                                     activeTab === 'payment' ? 'Payment Gateway & Live QR' :
+                                     'Alerts & Dispatch Settings'}
+                                </h1>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#DCFCE7', color: '#166534', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '3px 9px', borderRadius: '999px', fontSize: '10.5px', fontWeight: '800' }}>
+                                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
+                                    Live DB · {bookings.length} Bookings
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                )}
+
+                    {/* Right: Quick Action Controls */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <Link
+                            href="/checkin"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title="Open Live QR Pass Scanner & Basecamp Host Gate Attendance"
+                            style={{
+                                padding: '9px 18px',
+                                borderRadius: '12px',
+                                background: '#0B150E',
+                                border: '1.5px solid #D5ED55',
+                                color: '#D5ED55',
+                                fontSize: '13px',
+                                fontWeight: '800',
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '7px',
+                                boxShadow: '0 4px 14px rgba(11, 21, 14, 0.25)',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <span style={{ fontSize: '16px' }}>📱</span>
+                            <span>QR Scanner / Check-In ↗</span>
+                        </Link>
+                        <button
+                            onClick={() => { reloadDataFromStorage(); showToast('✓ Live data refreshed from database'); }}
+                            title="Force sync data directly from PostgreSQL / server store"
+                            style={{
+                                padding: '9px 14px',
+                                borderRadius: '12px',
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.12)',
+                                color: '#121613',
+                                fontSize: '12.5px',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                            }}
+                        >
+                            <span>↻</span>
+                            <span>Sync DB</span>
+                        </button>
+                        <button
+                            onClick={() => setIsAddBookingModalOpen(true)}
+                            className="btn-lime"
+                            style={{ padding: '9px 18px', fontSize: '13px', fontWeight: '800', borderRadius: '12px' }}
+                        >
+                            + Add Booking
+                        </button>
+                    </div>
+                </div>
 
                 {/* ─────────────────────────────────────────────────────────────
                     TAB 1: EXECUTIVE OVERVIEW
@@ -2042,19 +2277,16 @@ export default function AdminPortal() {
                     <div style={{ maxWidth: '1300px' }}>
                         
                         {/* Header Intro */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '32px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
                             <div>
-                                <div className="star-badge" style={{ marginBottom: '6px' }}>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
                                     <span className="star-icon">★</span> EXECUTIVE DASHBOARD
                                 </div>
-                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '30px', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
-                                    Mission Control & Operations
-                                </h1>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    Real-Time Operations & KPIs
+                                </h2>
                             </div>
                             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                <button onClick={() => setActiveTab('scanner')} style={{ padding: '9px 18px', borderRadius: '999px', background: '#D5ED55', border: '1px solid #D5ED55', color: '#0B150E', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 4px 14px rgba(213, 237, 85, 0.3)' }}>
-                                    <span>📱 Open Camp Check-In</span>
-                                </button>
                                 <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
                                     <span>📥 Export CSV</span>
                                 </button>
@@ -2212,37 +2444,94 @@ export default function AdminPortal() {
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'bookings' && (
                     <div style={{ maxWidth: '1300px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
-                            <div>
-                                <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> RESERVATIONS ROSTER
-                                </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                    Live Bookings & Leads ({filteredBookings.length})
-                                </h2>
+                        
+                        {/* 1. CAMPSITE DIVIDER BAR */}
+                        <div style={{ marginBottom: '22px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                    🌲 Filter By Sanctuary Location
+                                </span>
+                                <span style={{ fontSize: '12px', fontWeight: '700', color: '#166534' }}>
+                                    ● {filteredBookings.length} of {bookings.length} Bookings Shown
+                                </span>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                                <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                    <span>📥 Export CSV</span>
-                                </button>
-                                <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '9px 20px', fontSize: '13px', fontWeight: '800' }}>
-                                    + Add Booking
-                                </button>
+                            
+                            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
+                                {[
+                                    { id: 'All', label: 'All Sanctuaries', icon: '🏕️', count: bookings.length },
+                                    { id: 'pkg-kolukkumalai', label: 'Kolukkumalai (7,900 FT)', icon: '🌄', count: koluBookingsCount },
+                                    { id: 'pkg-meesapulimala', label: 'Meesapulimala Ridge', icon: '⛰️', count: meesaBookingsCount },
+                                    { id: 'pkg-suryanelli', label: 'Suryanelli Valley', icon: '⛺', count: suryaBookingsCount },
+                                    { id: 'pkg-vagamon-pine', label: 'Vagamon Pine Forest', icon: '🌲', count: vagaBookingsCount },
+                                    { id: 'pkg-wayanad', label: 'Wayanad 900 Kandi', icon: '🌿', count: wayaBookingsCount }
+                                ].map(c => {
+                                    const isSelected = bookingFilterCamp === c.id;
+                                    return (
+                                        <button
+                                            key={c.id}
+                                            onClick={() => setBookingFilterCamp(c.id)}
+                                            style={{
+                                                padding: '9px 16px',
+                                                borderRadius: '14px',
+                                                border: isSelected ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                                background: isSelected ? '#121613' : '#FFFFFF',
+                                                color: isSelected ? '#FFFFFF' : '#3A443E',
+                                                fontSize: '12.5px',
+                                                fontWeight: isSelected ? '800' : '700',
+                                                cursor: 'pointer',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                whiteSpace: 'nowrap',
+                                                boxShadow: isSelected ? '0 4px 12px rgba(18, 22, 19, 0.15)' : '0 2px 4px rgba(0,0,0,0.02)',
+                                                transition: 'all 0.15s ease'
+                                            }}
+                                        >
+                                            <span>{c.icon}</span>
+                                            <span>{c.label}</span>
+                                            <span style={{
+                                                background: isSelected ? '#E5A93B' : 'rgba(18, 22, 19, 0.08)',
+                                                color: isSelected ? '#121613' : '#59655D',
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                padding: '1px 7px',
+                                                borderRadius: '999px'
+                                            }}>
+                                                {c.count}
+                                            </span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
 
-                        {/* Search & Filter Bar */}
-                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '22px' }}>
-                            <input
-                                type="text"
-                                placeholder="Search by name, phone, or package..."
-                                value={bookingSearch}
-                                onChange={(e) => setBookingSearch(e.target.value)}
-                                style={{ flex: 1, minWidth: '240px', padding: '12px 18px', borderRadius: '14px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', outline: 'none' }}
-                            />
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {/* 2. SEARCH, STATUS FILTER & SORT CONTROLS */}
+                        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '22px' }}>
+                            <div style={{ position: 'relative', flex: 1, minWidth: '260px' }}>
+                                <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '14px', color: '#7D8880' }}>🔍</span>
+                                <input
+                                    type="text"
+                                    placeholder="Search by camper name, phone, UTR or booking ID..."
+                                    value={bookingSearch}
+                                    onChange={(e) => setBookingSearch(e.target.value)}
+                                    style={{
+                                        width: '100%',
+                                        padding: '11px 16px 11px 38px',
+                                        borderRadius: '14px',
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        color: '#121613',
+                                        fontSize: '13.5px',
+                                        outline: 'none',
+                                        boxSizing: 'border-box'
+                                    }}
+                                />
+                            </div>
+
+                            {/* Status Pills */}
+                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                 {[
-                                    { id: 'All', label: 'All Bookings' },
+                                    { id: 'All', label: 'All Status' },
                                     { id: 'Pending UTRs', label: `Pending UTRs ${pendingUtrCount > 0 ? `(${pendingUtrCount})` : ''}`, isAlert: pendingUtrCount > 0 },
                                     { id: 'Confirmed', label: 'Confirmed 🟢' },
                                     { id: 'Checked In', label: 'Checked In 🔵' },
@@ -2252,36 +2541,81 @@ export default function AdminPortal() {
                                         key={st.id}
                                         onClick={() => setBookingFilterStatus(st.id)}
                                         style={{
-                                            padding: '8px 16px',
+                                            padding: '8px 14px',
                                             borderRadius: '999px',
                                             border: bookingFilterStatus === st.id ? '1px solid #121613' : st.isAlert ? '1px solid #F59E0B' : '1px solid rgba(18,22,19,0.1)',
                                             background: bookingFilterStatus === st.id ? '#121613' : st.isAlert ? '#FEF3C7' : '#FFFFFF',
                                             color: bookingFilterStatus === st.id ? '#FFFFFF' : st.isAlert ? '#B45309' : '#59655D',
-                                            fontSize: '12.5px',
+                                            fontSize: '12px',
                                             fontWeight: '800',
                                             cursor: 'pointer',
                                             display: 'inline-flex',
                                             alignItems: 'center',
-                                            gap: '6px'
+                                            gap: '5px'
                                         }}
                                     >
                                         <span>{st.label}</span>
-                                        {st.isAlert && <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />}
+                                        {st.isAlert && <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />}
                                     </button>
                                 ))}
                             </div>
+
+                            {/* Sort Selector */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '700' }}>Sort:</span>
+                                <select
+                                    value={bookingSortBy}
+                                    onChange={(e) => setBookingSortBy(e.target.value)}
+                                    style={{
+                                        padding: '8px 12px',
+                                        borderRadius: '12px',
+                                        background: '#FFFFFF',
+                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        color: '#121613',
+                                        fontSize: '12.5px',
+                                        fontWeight: '700',
+                                        cursor: 'pointer',
+                                        outline: 'none'
+                                    }}
+                                >
+                                    <option value="newest">⏱️ Newest First</option>
+                                    <option value="highest_amount">💰 Highest Total (₹)</option>
+                                    <option value="guests_desc">👥 Most Campers</option>
+                                    <option value="oldest">⏳ Oldest First</option>
+                                </select>
+                            </div>
+
+                            <button
+                                onClick={handleExportCSV}
+                                title="Export current roster to CSV"
+                                style={{
+                                    padding: '8px 14px',
+                                    borderRadius: '12px',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
+                                    fontSize: '12.5px',
+                                    fontWeight: '800',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '5px'
+                                }}
+                            >
+                                <span>📥 CSV</span>
+                            </button>
                         </div>
 
-                        {/* UTR Verification Triage Notice */}
+                        {/* 3. UTR VERIFICATION TRIAGE NOTICE */}
                         {pendingUtrCount > 0 && bookingFilterStatus !== 'Confirmed' && (
-                            <div style={{ background: '#FFFBEB', border: '1.5px solid #F59E0B', borderRadius: '16px', padding: '16px 20px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <div style={{ fontSize: '24px' }}>🔔</div>
+                            <div style={{ background: '#FFFBEB', border: '1.5px solid #F59E0B', borderRadius: '16px', padding: '14px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={{ fontSize: '22px' }}>🔔</div>
                                     <div>
-                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#92400E' }}>
+                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#92400E' }}>
                                             {pendingUtrCount} Direct UPI Payment{pendingUtrCount > 1 ? 's' : ''} Awaiting Bank Credit Verification
                                         </div>
-                                        <div style={{ fontSize: '12px', color: '#B45309', marginTop: '2px' }}>
+                                        <div style={{ fontSize: '11.5px', color: '#B45309', marginTop: '2px' }}>
                                             Cross-check the customer's 12-digit UTR against your UPI/bank SMS and click "✓ Confirm" to lock permit and issue boarding pass.
                                         </div>
                                     </div>
@@ -2289,20 +2623,20 @@ export default function AdminPortal() {
                                 <button
                                     onClick={() => setBookingFilterStatus('Pending UTRs')}
                                     className="btn-lime"
-                                    style={{ padding: '8px 16px', fontSize: '12px', fontWeight: '900', borderRadius: '10px' }}
+                                    style={{ padding: '7px 14px', fontSize: '11.5px', fontWeight: '900', borderRadius: '10px' }}
                                 >
                                     Filter Pending UTRs ({pendingUtrCount}) →
                                 </button>
                             </div>
                         )}
 
-                        {/* Bookings Cards */}
+                        {/* 4. BOOKINGS CARDS LIST */}
                         {filteredBookings.length === 0 ? (
                             <div style={{ padding: '60px 20px', textAlign: 'center', background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18,22,19,0.08)' }}>
                                 <div style={{ fontSize: '36px', marginBottom: '12px' }}>📋</div>
                                 <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>No Reservations Found</div>
                                 <div style={{ fontSize: '13px', color: '#59655D', marginTop: '6px', maxWidth: '400px', margin: '6px auto 16px' }}>
-                                    No records match your search. You can create a new booking using the button below.
+                                    No records match your selected campsite or search filter.
                                 </div>
                                 <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '800' }}>
                                     + Add Manual Booking
