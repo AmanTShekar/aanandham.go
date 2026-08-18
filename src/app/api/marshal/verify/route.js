@@ -112,27 +112,35 @@ export async function POST(request) {
             }, { status: 404 });
         }
 
-        const totalGuests = Number(booking.guests) || 2;
-        const vegCount = Number(booking.vegCount ?? Math.max(0, totalGuests - (booking.nonVegCount ?? 0)));
+        const totalGuests = Number(booking.guests || (Array.isArray(booking.attendanceRoster) ? booking.attendanceRoster.length : 0)) || 2;
+        const vegCount = Number(booking.vegCount ?? Math.ceil(totalGuests / 2));
         const nonVegCount = Number(booking.nonVegCount ?? Math.max(0, totalGuests - vegCount));
         
         // Calculate payment breakdown
-        const totalPrice = Number(booking.total) || 2499;
+        const totalPrice = Number(booking.total) || (totalGuests * 2499);
         const advancePaid = Number(booking.advancePaid || Math.round(totalPrice * 0.3));
         const balanceDue = Number(booking.balanceDue !== undefined ? booking.balanceDue : (totalPrice - advancePaid));
 
         // Generate or format camper roster slots
-        let roster = Array.isArray(booking.attendanceRoster) && booking.attendanceRoster.length > 0 
-            ? booking.attendanceRoster 
+        let roster = (Array.isArray(booking.attendanceRoster) && booking.attendanceRoster.length > 0)
+            ? booking.attendanceRoster.map((c, idx) => ({
+                id: c.id || idx + 1,
+                name: c.name || (idx === 0 ? `${booking.name} (Lead)` : `Squad Camper #${idx + 1}`),
+                status: c.status || (c.present !== false ? 'present' : 'absent'),
+                present: c.present !== false,
+                mealType: c.mealType || (idx < vegCount ? 'Veg' : 'Non-Veg')
+            }))
             : Array.from({ length: totalGuests }, (_, idx) => ({
                 id: idx + 1,
-                name: idx === 0 ? `${booking.name} (Lead)` : `Camper ${idx + 1}`,
-                present: booking.status === 'Checked In' ? true : true, // Default present
-                notes: ''
+                name: idx === 0 ? `${booking.name} (Lead)` : `Squad Camper #${idx + 1}`,
+                status: booking.status === 'Checked In' ? 'present' : 'present',
+                present: true,
+                mealType: idx < vegCount ? 'Veg' : 'Non-Veg'
             }));
 
         const checkedInCount = booking.checkedInCount !== undefined ? Number(booking.checkedInCount) : totalGuests;
         const shortCount = booking.shortCount !== undefined ? Number(booking.shortCount) : 0;
+        const preassignedRoom = booking.assignedTent || booking.roomType || booking.package || 'Geodesic Luxury Dome Pod';
 
         return NextResponse.json({
             success: true,
@@ -144,7 +152,9 @@ export async function POST(request) {
                 campsite: booking.package || 'Kolukkumalai Sunrise Ridge Glamp',
                 region: booking.region || 'Munnar',
                 dates: booking.dates || 'Upcoming Batch',
-                roomType: booking.roomType || 'Alpine Weatherproof Pod',
+                roomType: booking.roomType || preassignedRoom,
+                assignedTent: preassignedRoom,
+                wristbandRange: booking.wristbandRange || `#101 - #${100 + totalGuests}`,
                 totalGuests,
                 vegCount,
                 nonVegCount,

@@ -26,18 +26,19 @@ export async function GET(request) {
         let totalBalanceCollected = 0;
 
         const rosterList = bookings.map(b => {
-            const totalGuests = Number(b.guests) || 2;
+            const totalGuests = Number(b.guests || (Array.isArray(b.attendanceRoster) ? b.attendanceRoster.length : 0)) || 2;
             const checkedIn = Number(b.checkedInCount ?? (b.status === 'Checked In' ? totalGuests : 0));
             const isCheckedIn = b.status === 'Checked In' || b.status === 'Partial Check-In';
             const short = Number(b.shortCount ?? (isCheckedIn ? Math.max(0, totalGuests - checkedIn) : 0));
             
-            const veg = Number(b.vegCount ?? Math.max(0, totalGuests - (b.nonVegCount ?? 0)));
+            const veg = Number(b.vegCount ?? Math.ceil(totalGuests / 2));
             const nonVeg = Number(b.nonVegCount ?? Math.max(0, totalGuests - veg));
 
-            const total = Number(b.total) || 2499;
+            const total = Number(b.total) || (totalGuests * 2499);
             const advance = Number(b.advancePaid || Math.round(total * 0.3));
             const isBalancePaid = Boolean(b.isBalancePaid || b.balanceDue === 0 || b.status === 'Checked In');
             const balanceDue = isBalancePaid ? 0 : Number(b.balanceDue !== undefined ? b.balanceDue : (total - advance));
+            const preassignedRoom = b.assignedTent || b.roomType || b.package || 'Geodesic Luxury Dome Pod';
 
             if (b.status !== 'Cancelled' && b.status !== 'Expired') {
                 totalExpectedCampers += totalGuests;
@@ -66,7 +67,9 @@ export async function GET(request) {
                 campsite: b.package || 'Kolukkumalai Ridge Glamp',
                 region: b.region || 'Munnar',
                 dates: b.dates || 'Upcoming Batch',
-                roomType: b.roomType || 'Alpine Pod',
+                roomType: b.roomType || preassignedRoom,
+                assignedTent: preassignedRoom,
+                wristbandRange: b.wristbandRange || `#101 - #${100 + totalGuests}`,
                 totalGuests,
                 checkedInCount: checkedIn,
                 shortCount: short,
@@ -80,12 +83,20 @@ export async function GET(request) {
                 checkInAt: b.checkInAt || null,
                 notes: b.marshalNotes || b.notes || '',
                 convoyTime: b.convoyTime || '02:30 PM Batch',
-                roster: Array.isArray(b.attendanceRoster) && b.attendanceRoster.length > 0
-                    ? b.attendanceRoster
+                roster: (Array.isArray(b.attendanceRoster) && b.attendanceRoster.length > 0)
+                    ? b.attendanceRoster.map((c, idx) => ({
+                        id: c.id || idx + 1,
+                        name: c.name || (idx === 0 ? `${b.name} (Lead)` : `Squad Camper #${idx + 1}`),
+                        status: c.status || (c.present !== false ? 'present' : 'absent'),
+                        present: c.present !== false,
+                        mealType: c.mealType || (idx < veg ? 'Veg' : 'Non-Veg')
+                    }))
                     : Array.from({ length: totalGuests }, (_, idx) => ({
                         id: idx + 1,
-                        name: idx === 0 ? `${b.name} (Lead)` : `Camper ${idx + 1}`,
-                        present: isCheckedIn ? (idx < checkedIn) : true
+                        name: idx === 0 ? `${b.name} (Lead)` : `Squad Camper #${idx + 1}`,
+                        status: isCheckedIn ? (idx < checkedIn ? 'present' : 'absent') : 'present',
+                        present: isCheckedIn ? (idx < checkedIn) : true,
+                        mealType: idx < veg ? 'Veg' : 'Non-Veg'
                     }))
             };
         });

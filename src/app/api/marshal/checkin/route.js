@@ -43,21 +43,24 @@ export async function POST(request) {
         const existing = bookings[bookingIndex];
         const numPresent = Number(checkedInCount) || 0;
         const numShort = Number(shortCount) || 0;
+        const updatedRoster = Array.isArray(roster) ? roster : [];
+        const updatedTotalGuests = Math.max(numPresent + numShort, updatedRoster.length, Number(existing.guests) || 1);
 
         const newStatus = numShort > 0 ? 'Partial Check-In' : 'Checked In';
 
         const updatedRecord = {
             ...existing,
             status: newStatus,
+            guests: updatedTotalGuests,
             checkedInCount: numPresent,
             shortCount: numShort,
-            attendanceRoster: Array.isArray(roster) ? roster : [],
+            attendanceRoster: updatedRoster,
             isBalancePaid: Boolean(isBalancePaid),
             balanceDue: isBalancePaid ? 0 : (existing.balanceDue || 0),
             paymentMode: isBalancePaid ? (paymentMode || existing.paymentMode || 'Cash / UPI at Gate') : existing.paymentMode,
             settlementMethod: isBalancePaid ? settlementMethod : (existing.settlementMethod || null),
             balanceCollected: isBalancePaid ? (Number(balanceCollected) || existing.balanceDue || 0) : 0,
-            assignedTent: String(assignedTent || existing.assignedTent || '').slice(0, 100),
+            assignedTent: String(assignedTent || existing.assignedTent || existing.roomType || existing.package || '').slice(0, 100),
             wristbandRange: String(wristbandRange || existing.wristbandRange || '').slice(0, 100),
             checkInAt: existing.checkInAt || new Date().toISOString(),
             marshalName: String(marshalName).slice(0, 80),

@@ -246,7 +246,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isValidating, setIsValidating] = useState(false);
     const [rosterChecklist, setRosterChecklist] = useState([]);
     const [isBalancePaid, setIsBalancePaid] = useState(false);
-    const [assignedTent, setAssignedTent] = useState('Pod #1 (Sunset Ridge Deck)');
+    const [assignedTent, setAssignedTent] = useState('Geodesic Luxury Dome Pod');
+    const [isChangingTent, setIsChangingTent] = useState(false);
     const [wristbandRange, setWristbandRange] = useState('#101 - #104');
     const [marshalNotes, setMarshalNotes] = useState('');
     const [isSubmittingCheckin, setIsSubmittingCheckin] = useState(false);
@@ -562,8 +563,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                setAssignedTent(data.booking.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
-                setWristbandRange(data.booking.wristbandRange || '#101 - #104');
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                setAssignedTent(preassigned);
+                setIsChangingTent(false);
+                setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
                 setExtraGuestsCount(0);
                 stopCamera();
                 setIsCameraEnabled(false);
@@ -716,7 +719,20 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 fetchRosterData();
                 if (data.booking) {
                     setScannedBooking(data.booking);
-                    setRosterChecklist(data.booking.attendanceRoster || []);
+                    const roster = (Array.isArray(data.booking.attendanceRoster) && data.booking.attendanceRoster.length > 0)
+                        ? data.booking.attendanceRoster
+                        : Array.from({ length: Number(data.booking.guests || testGuestsCount || 2) }, (_, idx) => ({
+                            id: idx + 1,
+                            name: idx === 0 ? `${data.booking.name} (Lead)` : `Squad Camper #${idx + 1}`,
+                            present: true,
+                            status: 'present',
+                            mealType: idx < Math.ceil(testGuestsCount / 2) ? 'Veg' : 'Non-Veg'
+                        }));
+                    setRosterChecklist(roster);
+                    const preassigned = data.booking.roomType || data.booking.assignedTent || data.booking.package || 'Geodesic Luxury Dome Pod';
+                    setAssignedTent(preassigned);
+                    setIsChangingTent(false);
+                    setWristbandRange(`#101 - #${100 + roster.length}`);
                     setIsBalancePaid(false);
                     setExtraGuestsCount(0);
                 }
@@ -753,11 +769,32 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     // ── SELECT GUEST FROM ROSTER ──
     const selectGuestFromRoster = (guest) => {
         setScannedBooking(guest);
-        setRosterChecklist(guest.roster || []);
+        const guestTotal = Number(guest.totalGuests || guest.guests || (Array.isArray(guest.roster) ? guest.roster.length : 0)) || 2;
+        const vegCount = Number(guest.vegCount ?? Math.ceil(guestTotal / 2));
+
+        const initialRoster = (Array.isArray(guest.roster) && guest.roster.length > 0)
+            ? guest.roster.map((c, idx) => ({
+                id: c.id || idx + 1,
+                name: c.name || (idx === 0 ? `${guest.name} (Lead)` : `Squad Camper #${idx + 1}`),
+                status: c.status || (c.present !== false ? 'present' : 'absent'),
+                present: c.present !== false,
+                mealType: c.mealType || (idx < vegCount ? 'Veg' : 'Non-Veg')
+            }))
+            : Array.from({ length: guestTotal }, (_, idx) => ({
+                id: idx + 1,
+                name: idx === 0 ? `${guest.name} (Lead)` : `Squad Camper #${idx + 1}`,
+                present: true,
+                status: 'present',
+                mealType: idx < vegCount ? 'Veg' : 'Non-Veg'
+            }));
+
+        setRosterChecklist(initialRoster);
         setIsBalancePaid(Boolean(guest.isBalancePaid));
         setMarshalNotes(guest.notes || '');
-        setAssignedTent(guest.assignedTent || 'Pod #1 (Sunset Ridge Deck)');
-        setWristbandRange(guest.wristbandRange || '#101 - #104');
+        const preassigned = guest.assignedTent || guest.roomType || guest.campsite || 'Geodesic Luxury Dome Pod';
+        setAssignedTent(preassigned);
+        setIsChangingTent(false);
+        setWristbandRange(guest.wristbandRange || `#101 - #${100 + initialRoster.length}`);
         setExtraGuestsCount(0);
         setClearedGatePermit(null);
         setErrorMessage('');
@@ -774,7 +811,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         const nextId = rosterChecklist.length + 1;
         setRosterChecklist(prev => [
             ...prev,
-            { id: nextId, name: `Extra Camper #${nextId} (Walk-In)`, present: true, status: 'present', isExtra: true }
+            { id: nextId, name: `Extra Camper #${nextId} (Walk-In)`, present: true, status: 'present', isExtra: true, mealType: 'Non-Veg' }
         ]);
         setExtraGuestsCount(prev => prev + 1);
         showToast('✓ Added 1 extra walk-in camper (+₹2,499 added to balance)');
@@ -2889,120 +2926,158 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 </div>
                             </div>
 
-                            {/* ── TENT & WRISTBAND ALLOCATION (RESPONSIVE GRID + 1-TAP QUICK PRESETS) ── */}
+                            {/* ── PRE-ASSIGNED ACCOMMODATION & WRISTBAND ALLOCATION ── */}
                             <div style={{
                                 background: '#101E13',
                                 border: '1px solid rgba(255, 255, 255, 0.08)',
                                 borderRadius: '20px',
                                 padding: '20px'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <Tent size={18} color="#D5ED55" />
-                                        <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
-                                            Tent & Wristband Assignment
-                                        </span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <div style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '12px',
+                                            background: 'rgba(213, 237, 85, 0.15)',
+                                            border: '1px solid rgba(213, 237, 85, 0.3)',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            color: '#D5ED55',
+                                            flexShrink: 0
+                                        }}>
+                                            <Tent size={20} />
+                                        </div>
+                                        <div>
+                                            <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>
+                                                Reserved Accommodation (Pre-Assigned from Booking):
+                                            </span>
+                                            <div style={{ fontSize: '15.5px', fontWeight: '900', color: '#FFFFFF', marginTop: '2px' }}>
+                                                ⛺ {assignedTent || scannedBooking.roomType || scannedBooking.campsite}
+                                            </div>
+                                            <span style={{ fontSize: '11px', color: '#D5ED55', display: 'block', marginTop: '2px' }}>
+                                                ✓ Confirmed for Pass #{scannedBooking.id}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <span style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800' }}>
-                                        ⛺ {assignedTent.split('(')[0].trim()}
-                                    </span>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsChangingTent(!isChangingTent)}
+                                        style={{
+                                            padding: '7px 12px',
+                                            borderRadius: '10px',
+                                            background: isChangingTent ? '#D5ED55' : 'rgba(255, 255, 255, 0.06)',
+                                            border: `1px solid ${isChangingTent ? '#D5ED55' : 'rgba(255, 255, 255, 0.12)'}`,
+                                            color: isChangingTent ? '#0B150E' : '#C8D8CB',
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '4px'
+                                        }}
+                                    >
+                                        <Edit2 size={12} />
+                                        <span>{isChangingTent ? '✕ Keep Pre-Assigned' : 'Change / Upgrade Room'}</span>
+                                    </button>
                                 </div>
 
-                                {/* Quick Tent Preset Chips */}
-                                <div style={{ marginBottom: '12px' }}>
-                                    <label style={{ fontSize: '10.5px', fontWeight: '700', color: '#8E9B92', display: 'block', marginBottom: '6px', textTransform: 'uppercase' }}>
-                                        ⚡ 1-Tap Quick Pod / Tent Presets:
-                                    </label>
-                                    <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
-                                        {[
-                                            'Pod #1 (Sunset Ridge Deck)',
-                                            'Pod #2 (Panoramic Glass Dome)',
-                                            'Pod #3 (Sunrise Cliff Edge)',
-                                            'Pod #4 (Valley View Dome)',
-                                            'Pod #5 (Cloud View Pod)',
-                                            'Alpine Tent A-1 (2-Person)',
-                                            'Alpine Tent A-2 (2-Person)',
-                                            'Alpine Quad Q-1 (4-Person)',
-                                            'Cottage #1 (Cliffside Wooden)'
-                                        ].map(t => {
-                                            const shortLabel = t.split('(')[0].trim();
-                                            const isSelected = assignedTent === t;
-                                            return (
-                                                <button
-                                                    key={t}
-                                                    type="button"
-                                                    onClick={() => { setAssignedTent(t); showToast(`✓ Assigned ${shortLabel}`); }}
-                                                    style={{
-                                                        padding: '6px 10px',
-                                                        borderRadius: '999px',
-                                                        background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.06)',
-                                                        color: isSelected ? '#0B150E' : '#C8D8CB',
-                                                        border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255,255,255,0.1)'}`,
-                                                        fontSize: '11px',
-                                                        fontWeight: '800',
-                                                        whiteSpace: 'nowrap',
-                                                        cursor: 'pointer',
-                                                        flexShrink: 0
-                                                    }}
-                                                >
-                                                    {isSelected ? '✓ ' : ''}{shortLabel}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
+                                {/* Optional Reassignment Panel (Only opens when host clicks Change / Upgrade) */}
+                                {isChangingTent && (
+                                    <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                                        <label style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
+                                            ⚡ Select New Pod / Tent To Reassign:
+                                        </label>
+                                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '10px' }}>
+                                            {[
+                                                'Pod #1 (Sunset Ridge Deck)',
+                                                'Pod #2 (Panoramic Glass Dome)',
+                                                'Pod #3 (Sunrise Cliff Edge)',
+                                                'Pod #4 (Valley View Dome)',
+                                                'Pod #5 (Cloud View Pod)',
+                                                'Alpine Tent A-1 (2-Person)',
+                                                'Alpine Tent A-2 (2-Person)',
+                                                'Alpine Quad Q-1 (4-Person)',
+                                                'Cottage #1 (Cliffside Wooden)'
+                                            ].map(t => {
+                                                const shortLabel = t.split('(')[0].trim();
+                                                const isSelected = assignedTent === t;
+                                                return (
+                                                    <button
+                                                        key={t}
+                                                        type="button"
+                                                        onClick={() => { setAssignedTent(t); showToast(`✓ Reassigned to ${shortLabel}`); }}
+                                                        style={{
+                                                            padding: '6px 10px',
+                                                            borderRadius: '999px',
+                                                            background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.06)',
+                                                            color: isSelected ? '#0B150E' : '#C8D8CB',
+                                                            border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255,255,255,0.1)'}`,
+                                                            fontSize: '11px',
+                                                            fontWeight: '800',
+                                                            whiteSpace: 'nowrap',
+                                                            cursor: 'pointer',
+                                                            flexShrink: 0
+                                                        }}
+                                                    >
+                                                        {isSelected ? '✓ ' : ''}{shortLabel}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
-                                    <div>
                                         <CustomDropdown
-                                            label="Or Search All Accommodations:"
+                                            label="Or Search All Campsite Pods & Tents:"
                                             value={assignedTent}
                                             options={tentOptions}
                                             onChange={(val) => setAssignedTent(val)}
                                         />
                                     </div>
+                                )}
 
-                                    <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                                            <label style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92' }}>
-                                                Wristband Tag # Range:
-                                            </label>
-                                            <button
-                                                type="button"
-                                                onClick={handleAutoGenerateWristbands}
-                                                style={{
-                                                    background: 'rgba(213, 237, 85, 0.15)',
-                                                    border: '1px solid rgba(213, 237, 85, 0.3)',
-                                                    color: '#D5ED55',
-                                                    fontSize: '10.5px',
-                                                    fontWeight: '800',
-                                                    padding: '2px 8px',
-                                                    borderRadius: '6px',
-                                                    cursor: 'pointer'
-                                                }}
-                                            >
-                                                ⚡ Auto-Fill
-                                            </button>
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="e.g. #101 - #104"
-                                            value={wristbandRange}
-                                            onChange={e => setWristbandRange(e.target.value)}
+                                {/* Wristband Tag Range Sequencer */}
+                                <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#8E9B92' }}>
+                                            🏷️ Wristband Tag # Range:
+                                        </label>
+                                        <button
+                                            type="button"
+                                            onClick={handleAutoGenerateWristbands}
                                             style={{
-                                                width: '100%',
-                                                minHeight: '42px',
-                                                padding: '10px 14px',
-                                                borderRadius: '12px',
-                                                background: '#08120A',
-                                                border: '1px solid rgba(255, 255, 255, 0.14)',
-                                                color: '#FFFFFF',
-                                                fontSize: '13px',
-                                                outline: 'none',
-                                                boxSizing: 'border-box'
+                                                background: 'rgba(213, 237, 85, 0.15)',
+                                                border: '1px solid rgba(213, 237, 85, 0.3)',
+                                                color: '#D5ED55',
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                padding: '3px 9px',
+                                                borderRadius: '6px',
+                                                cursor: 'pointer'
                                             }}
-                                        />
+                                        >
+                                            ⚡ Auto-Sequence Tags
+                                        </button>
                                     </div>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. #101 - #104"
+                                        value={wristbandRange}
+                                        onChange={e => setWristbandRange(e.target.value)}
+                                        style={{
+                                            width: '100%',
+                                            minHeight: '42px',
+                                            padding: '10px 14px',
+                                            borderRadius: '12px',
+                                            background: '#08120A',
+                                            border: '1px solid rgba(255, 255, 255, 0.14)',
+                                            color: '#FFFFFF',
+                                            fontSize: '13px',
+                                            outline: 'none',
+                                            boxSizing: 'border-box'
+                                        }}
+                                    />
                                 </div>
                             </div>
 
