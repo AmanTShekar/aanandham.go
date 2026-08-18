@@ -3350,53 +3350,59 @@ _Sent by Aanandham Organizers_`
                                 </div>
 
                                 {/* Primary Lead Contact & WhatsApp (Only Lead provided phone number) */}
-                                {scannedBooking.phone && (
-                                    <div style={{ display: 'flex', gap: '8px' }}>
-                                        <a
-                                            href={`tel:${scannedBooking.phone.replace(/[^\d+]/g, '')}`}
-                                            style={{
-                                                flex: 1,
-                                                padding: '10px',
-                                                borderRadius: '12px',
-                                                background: 'rgba(255, 255, 255, 0.06)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                color: '#FFFFFF',
-                                                fontSize: '12.5px',
-                                                fontWeight: '700',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '6px',
-                                                textDecoration: 'none'
-                                            }}
-                                        >
-                                            <Phone size={14} />
-                                            <span>Call Lead ({scannedBooking.phone})</span>
-                                        </a>
-                                        <a
-                                            href={`https://wa.me/${getCleanWhatsAppPhone(scannedBooking.phone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!%20Your%20campsite%20is%20ready.`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            style={{
-                                                padding: '10px 16px',
-                                                borderRadius: '12px',
-                                                background: 'rgba(37, 211, 102, 0.15)',
-                                                border: '1px solid rgba(37, 211, 102, 0.3)',
-                                                color: '#25D366',
-                                                fontSize: '12.5px',
-                                                fontWeight: '800',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '6px',
-                                                textDecoration: 'none'
-                                            }}
-                                        >
-                                            <MessageCircle size={15} />
-                                            <span>WhatsApp Lead</span>
-                                        </a>
-                                    </div>
-                                )}
+                                {(() => {
+                                    const guestContactPhone = (scannedBooking.phone && !scannedBooking.phone.includes('9074858014')) 
+                                        ? scannedBooking.phone 
+                                        : '+91 91886 85831';
+
+                                    return (
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <a
+                                                href={`tel:${guestContactPhone.replace(/[^\d+]/g, '')}`}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '10px',
+                                                    borderRadius: '12px',
+                                                    background: 'rgba(255, 255, 255, 0.06)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                    color: '#FFFFFF',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '700',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                <Phone size={14} />
+                                                <span>Call Lead ({guestContactPhone})</span>
+                                            </a>
+                                            <a
+                                                href={`https://wa.me/${getCleanWhatsAppPhone(guestContactPhone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!%20Your%20campsite%20is%20ready.`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                style={{
+                                                    padding: '10px 16px',
+                                                    borderRadius: '12px',
+                                                    background: 'rgba(37, 211, 102, 0.15)',
+                                                    border: '1px solid rgba(37, 211, 102, 0.3)',
+                                                    color: '#25D366',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '800',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                <MessageCircle size={15} />
+                                                <span>WhatsApp Lead</span>
+                                            </a>
+                                        </div>
+                                    );
+                                })()}
                             </div>
                         </div>
 

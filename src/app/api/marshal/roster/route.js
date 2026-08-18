@@ -62,10 +62,12 @@ export async function GET(request) {
                 }
             }
 
+            const camperPhone = (b.phone && !b.phone.includes('9074858014')) ? b.phone : '+91 91886 85831';
+
             return {
                 id: b.id,
                 name: b.name,
-                phone: b.phone,
+                phone: camperPhone,
                 email: b.email || 'camper@aanandham.in',
                 campsite: b.package || 'Kolukkumalai Ridge Glamp',
                 campsiteId: b.campsiteId || '',

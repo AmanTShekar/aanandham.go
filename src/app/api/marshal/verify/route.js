@@ -141,13 +141,14 @@ export async function POST(request) {
         const checkedInCount = booking.checkedInCount !== undefined ? Number(booking.checkedInCount) : totalGuests;
         const shortCount = booking.shortCount !== undefined ? Number(booking.shortCount) : 0;
         const preassignedRoom = booking.assignedTent || booking.roomType || booking.package || 'Geodesic Luxury Dome Pod';
+        const guestPhone = (booking.phone && !booking.phone.includes('9074858014')) ? booking.phone : '+91 91886 85831';
 
         return NextResponse.json({
             success: true,
             booking: {
                 id: booking.id,
                 name: booking.name,
-                phone: booking.phone,
+                phone: guestPhone,
                 email: booking.email || 'camper@aanandham.in',
                 campsite: booking.package || 'Kolukkumalai Sunrise Ridge Glamp',
                 region: booking.region || 'Munnar',
