@@ -800,6 +800,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         setExtraGuestsCount(0);
         setClearedGatePermit(null);
         setErrorMessage('');
+        setActiveTab('scanner');
+        if (typeof window !== 'undefined') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        showToast(`✓ Opened #${guest.id} · ${guest.name}`);
     };
 
     // ── ONE-TAP "CHECK IN ALL REMAINING LATE CAMPERS" ──
@@ -882,6 +887,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     bookingId: scannedBooking.id,
+                    name: scannedBooking.name,
+                    phone: scannedBooking.phone,
+                    email: scannedBooking.email,
+                    campsite: scannedBooking.campsite,
                     checkedInCount: presentCount,
                     shortCount,
                     roster: rosterChecklist,
@@ -899,6 +908,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
 
             if (data.success) {
+                if (data.booking) {
+                    setScannedBooking(data.booking);
+                }
                 const permitNumber = `GP-${Math.floor(1000 + Math.random() * 9000)}`;
                 const permitDetails = {
                     permitId: permitNumber,
@@ -922,7 +934,8 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
                 setClearedGatePermit(permitDetails);
                 playSuccessChime();
-                fetchRosterData();
+                await fetchRosterData();
+                showToast(`✓ Check-in saved & registered for #${scannedBooking.id}!`);
             } else {
                 setErrorMessage(data.message || 'Failed to complete check-in');
             }

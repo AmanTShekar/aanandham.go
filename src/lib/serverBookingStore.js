@@ -162,9 +162,7 @@ export async function getStoredBookings({ limit, offset } = {}) {
  * Persist / Bulk-sync bookings list
  */
 export async function saveStoredBookings(bookings) {
-    if (!isPrismaConfigured) {
-        writeLocalBookings(bookings);
-    }
+    writeLocalBookings(bookings);
     if (isPrismaConfigured && prisma && Array.isArray(bookings)) {
         try {
             for (const b of bookings) {
@@ -187,23 +185,26 @@ export async function saveStoredBookings(bookings) {
  * Add a new booking record (returns single created record, avoiding full-table findMany)
  */
 export async function addServerBooking(newBooking) {
+    const list = readLocalBookings();
+    const updated = [newBooking, ...list.filter(b => b.id !== newBooking.id)];
+    writeLocalBookings(updated);
+
     if (isPrismaConfigured && prisma) {
         try {
             const mapped = mapToPrisma(newBooking);
-            const created = await prisma.booking.create({
-                data: mapped
+            const created = await prisma.booking.upsert({
+                where: { id: newBooking.id },
+                create: mapped,
+                update: mapped
             });
             const result = mapFromPrisma(created);
             memoryStore = [result, ...memoryStore.filter(b => b.id !== newBooking.id)];
             return result;
         } catch (err) {
-            console.error('Prisma addServerBooking error, saving locally:', err);
+            console.error('Prisma addServerBooking error, saved locally:', err);
         }
     }
 
-    const list = readLocalBookings();
-    const updated = [newBooking, ...list.filter(b => b.id !== newBooking.id)];
-    writeLocalBookings(updated);
     return newBooking;
 }
 
@@ -211,31 +212,50 @@ export async function addServerBooking(newBooking) {
  * Update an existing booking record by ID (returns single updated record, avoiding full-table findMany)
  */
 export async function updateServerBooking(id, updates) {
-    if (isPrismaConfigured && prisma) {
-        try {
-            const mapped = mapToPrisma(updates);
-            const updated = await prisma.booking.update({
-                where: { id },
-                data: mapped
-            });
-            const result = mapFromPrisma(updated);
-            memoryStore = memoryStore.map(b => b.id === id ? { ...b, ...result } : b);
-            return result;
-        } catch (err) {
-            console.error('Prisma updateServerBooking error, updating locally:', err);
-        }
-    }
-
     const list = readLocalBookings();
     let updatedRecord = null;
+    let found = false;
     const updated = list.map(b => {
-        if (b.id === id) {
+        if (b.id.toUpperCase() === id.toUpperCase()) {
+            found = true;
             updatedRecord = { ...b, ...updates };
             return updatedRecord;
         }
         return b;
     });
+
+    if (!found) {
+        updatedRecord = { id, ...updates };
+        updated.unshift(updatedRecord);
+    }
     writeLocalBookings(updated);
+
+    if (isPrismaConfigured && prisma) {
+        try {
+            const mapped = mapToPrisma({ id, ...updates });
+            const updatedPrisma = await prisma.booking.upsert({
+                where: { id },
+                create: {
+                    id,
+                    name: updates.name || 'Explorer Lead',
+                    phone: updates.phone || '+91 90748 58014',
+                    package: updates.package || 'Kolukkumalai Sunrise Ridge Glamp',
+                    dates: updates.dates || 'Upcoming Weekend',
+                    guests: Number(updates.guests) || 2,
+                    roomType: updates.roomType || 'Geodesic Luxury Dome Pod',
+                    total: Number(updates.total) || 4998,
+                    ...mapped
+                },
+                update: mapped
+            });
+            const result = mapFromPrisma(updatedPrisma);
+            memoryStore = memoryStore.map(b => b.id === id ? { ...b, ...result } : b);
+            return result;
+        } catch (err) {
+            console.error('Prisma updateServerBooking error, saved locally:', err);
+        }
+    }
+
     return updatedRecord || { id, ...updates };
 }
 

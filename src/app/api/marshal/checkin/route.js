@@ -36,16 +36,25 @@ export async function POST(request) {
         const bookings = await getStoredBookings();
         const bookingIndex = bookings.findIndex(b => b.id.toUpperCase() === bookingId.toUpperCase());
 
-        if (bookingIndex === -1) {
-            return NextResponse.json({ success: false, message: 'Booking not found' }, { status: 404 });
-        }
-
-        const existing = bookings[bookingIndex];
         const numPresent = Number(checkedInCount) || 0;
         const numShort = Number(shortCount) || 0;
         const updatedRoster = Array.isArray(roster) ? roster : [];
-        const updatedTotalGuests = Math.max(numPresent + numShort, updatedRoster.length, Number(existing.guests) || 1);
+        const existing = bookingIndex !== -1 ? bookings[bookingIndex] : {
+            id: bookingId,
+            name: body.name || 'Explorer Lead',
+            phone: body.phone || '+91 90748 58014',
+            email: body.email || 'camper@aanandham.in',
+            package: body.campsite || 'Kolukkumalai Sunrise Ridge Glamp',
+            dates: 'Upcoming Weekend (2D / 1N)',
+            roomType: assignedTent || 'Geodesic Luxury Dome Pod',
+            guests: Math.max(numPresent + numShort, updatedRoster.length, 1),
+            total: Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499,
+            advancePaid: Math.round(Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499 * 0.3),
+            balanceDue: Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499 * 0.7,
+            createdAt: new Date().toISOString()
+        };
 
+        const updatedTotalGuests = Math.max(numPresent + numShort, updatedRoster.length, Number(existing.guests) || 1);
         const newStatus = numShort > 0 ? 'Partial Check-In' : 'Checked In';
 
         const updatedRecord = {
@@ -68,18 +77,25 @@ export async function POST(request) {
             lastUpdated: new Date().toISOString()
         };
 
-        bookings[bookingIndex] = updatedRecord;
+        if (bookingIndex !== -1) {
+            bookings[bookingIndex] = updatedRecord;
+        } else {
+            bookings.unshift(updatedRecord);
+        }
+
         await saveStoredBookings(bookings);
 
-        // Try updating Supabase database in background
+        // Also update Prisma / local store via unified updateServerBooking
         try {
             await updateServerBooking(bookingId, {
+                ...updatedRecord,
                 status: newStatus,
+                guests: updatedTotalGuests,
                 paymentMode: updatedRecord.paymentMode,
                 notes: `[Checked-In by ${marshalName} on ${new Date().toLocaleTimeString('en-IN')}: ${numPresent} Present, ${numShort} Short. Balance Paid: ${isBalancePaid ? `YES (${paymentMode || 'Settled'})` : 'NO'}] ${marshalNotes || ''}`
             });
         } catch (e) {
-            console.warn('Supabase sync skipped, stored locally:', e.message);
+            console.warn('DB update sync notice:', e.message);
         }
 
         return NextResponse.json({
