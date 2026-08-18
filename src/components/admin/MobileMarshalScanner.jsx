@@ -318,30 +318,58 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [passcodeError, setPasscodeError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [showPasscodeText, setShowPasscodeText] = useState(false);
-    const [rememberMe, setRememberMe] = useState(false);
+    const [rememberMe, setRememberMe] = useState(true);
 
-    // Check for remembered session on mount
+    // Check for remembered session on mount (Permanent 30-day field session)
     useEffect(() => {
-        try {
-            const stored = localStorage.getItem('hostSession_aanandham');
-            if (stored) {
-                const session = JSON.parse(stored);
-                if (session?.expires && Date.now() < session.expires) {
-                    setIsAuthenticated(true);
-                    if (session.station) {
-                        setAuthStation(session.station);
-                        if (session.station.campId !== 'all') {
-                            setSelectedCampground(session.station.campId);
+        const restoreSession = async () => {
+            try {
+                // 1. Instant Zero-Flicker Local Storage Restore
+                const stored = localStorage.getItem('hostSession_aanandham');
+                if (stored) {
+                    const session = JSON.parse(stored);
+                    if (session?.expires && Date.now() < session.expires) {
+                        setIsAuthenticated(true);
+                        if (session.station) {
+                            setAuthStation(session.station);
+                            if (session.station.campId !== 'all') {
+                                setSelectedCampground(session.station.campId);
+                            }
                         }
+                    } else {
+                        localStorage.removeItem('hostSession_aanandham');
                     }
-                    showToast(`✓ Session Restored · ${session.station?.shortName || 'Host Console'}`);
-                } else {
-                    localStorage.removeItem('hostSession_aanandham');
                 }
+
+                // 2. Background Server Cookie Verification
+                const res = await fetch('/api/admin/auth');
+                const data = await res.json();
+                if (data.authenticated && data.role) {
+                    const station = {
+                        campId: data.campId || 'all',
+                        campName: data.campName || 'All Sanctuaries (Enterprise Master HQ)',
+                        shortName: data.shortName || 'Master HQ Scope',
+                        isMasterAdmin: data.isMasterAdmin !== false,
+                        icon: data.icon || '⛺'
+                    };
+                    setIsAuthenticated(true);
+                    setAuthStation(station);
+                    if (station.campId !== 'all') {
+                        setSelectedCampground(station.campId);
+                    }
+                    try {
+                        localStorage.setItem('hostSession_aanandham', JSON.stringify({
+                            expires: Date.now() + 30 * 24 * 60 * 60 * 1000,
+                            station
+                        }));
+                    } catch { /* ignore */ }
+                }
+            } catch {
+                // Network or localStorage not available
             }
-        } catch {
-            // localStorage not available
-        }
+        };
+
+        restoreSession();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -379,15 +407,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     try { localStorage.setItem('marshal_active_campsite', station.campId); } catch { /* ignore */ }
                 }
 
-                // Store remembered session (24h) if requested
-                if (rememberMe) {
-                    try {
-                        localStorage.setItem('hostSession_aanandham', JSON.stringify({
-                            expires: Date.now() + 24 * 60 * 60 * 1000,
-                            station
-                        }));
-                    } catch { /* ignore */ }
-                }
+                // Always persist session (30 days) so reloads never log the host out
+                try {
+                    localStorage.setItem('hostSession_aanandham', JSON.stringify({
+                        expires: Date.now() + 30 * 24 * 60 * 60 * 1000,
+                        station
+                    }));
+                } catch { /* ignore */ }
 
                 setIsAuthenticated(true);
                 setHostPasscode('');
