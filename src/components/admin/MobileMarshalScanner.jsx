@@ -20,6 +20,7 @@ import {
     Utensils, 
     Tent, 
     MapPin, 
+    Home,
     ArrowLeft,
     ArrowRight,
     Volume2, 
@@ -1566,11 +1567,34 @@ _Sent by Aanandham Organizers_`
                 zIndex: 40,
                 gap: '8px'
             }}>
-                {/* Left: Back & Brand Logo */}
+                {/* Left: Back / Home & Brand Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                     {onBackToAdmin ? (
                         <button
+                            type="button"
                             onClick={onBackToAdmin}
+                            title="Return to Coordinator Dashboard"
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.06)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                color: '#FFFFFF',
+                                borderRadius: '10px',
+                                width: '34px',
+                                height: '34px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                                flexShrink: 0
+                            }}
+                        >
+                            <ArrowLeft size={16} />
+                        </button>
+                    ) : (scannedBooking || clearedGatePermit) ? (
+                        <button
+                            type="button"
+                            onClick={resetScanner}
+                            title="Close Ticket & Return to Scanner"
                             style={{
                                 background: 'rgba(255, 255, 255, 0.06)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -1589,8 +1613,8 @@ _Sent by Aanandham Organizers_`
                         </button>
                     ) : (
                         <Link
-                            href={authStation.isMasterAdmin ? "/admin" : "/"}
-                            title={authStation.isMasterAdmin ? "Return to Master Admin" : "Return to Home"}
+                            href="/"
+                            title="Return to Aanandham Homepage"
                             style={{
                                 background: 'rgba(255, 255, 255, 0.06)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
@@ -1605,7 +1629,7 @@ _Sent by Aanandham Organizers_`
                                 flexShrink: 0
                             }}
                         >
-                            <ArrowLeft size={16} />
+                            <Home size={15} />
                         </Link>
                     )}
 
