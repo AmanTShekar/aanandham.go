@@ -503,7 +503,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const res = await fetch('/api/marshal/roster');
             const data = await res.json();
             if (data.success) {
-                setRosterList(data.roster || []);
+                const cleanRoster = (data.roster || []).map(b => ({
+                    ...b,
+                    phone: (b.phone && !b.phone.includes('9074858014')) ? b.phone : '+91 91886 85831'
+                }));
+                setRosterList(cleanRoster);
                 setStats(data.stats || {});
             }
         } catch (e) {
@@ -664,7 +668,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
 
             if (data.success && data.booking) {
-                setScannedBooking(data.booking);
+                const cleanBooking = {
+                    ...data.booking,
+                    phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
+                };
+                setScannedBooking(cleanBooking);
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
@@ -675,16 +683,64 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setExtraGuestsCount(0);
                 stopCamera();
                 setIsCameraEnabled(false);
+                showToast(`✓ Verified Pass #${data.booking.id} (${data.booking.name})`);
             } else {
-                setErrorMessage(data.message || 'Scanned QR is invalid or not in reservations database.');
+                setErrorMessage(data.message || 'Scanned QR code is not registered with Aanandham Camps.');
                 setScannedBooking(null);
             }
         } catch (err) {
-            setErrorMessage('Network error validating pass.');
+            setErrorMessage('Network error validating pass. Please check Wi-Fi / 4G.');
+            setScannedBooking(null);
         } finally {
             setIsValidating(false);
         }
-    }, [isValidating, playSuccessChime, stopCamera]);
+    }, [stopCamera]);
+
+    // ── MANUAL ID SEARCH ──
+    const handleSearchManual = async (e) => {
+        e?.preventDefault();
+        if (!manualIdInput.trim()) return;
+
+        setIsSearchingManual(true);
+        setErrorMessage('');
+        setClearedGatePermit(null);
+
+        try {
+            const res = await fetch('/api/marshal/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bookingId: manualIdInput.trim() })
+            });
+
+            const data = await res.json();
+
+            if (data.success && data.booking) {
+                playSuccessChime();
+                const cleanBooking = {
+                    ...data.booking,
+                    phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
+                };
+                setScannedBooking(cleanBooking);
+                setRosterChecklist(data.booking.roster || []);
+                setIsBalancePaid(Boolean(data.booking.isBalancePaid));
+                setMarshalNotes(data.booking.marshalNotes || '');
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                setAssignedTent(preassigned);
+                setIsChangingTent(false);
+                setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
+                setExtraGuestsCount(0);
+                setIsManualModalOpen(false);
+                stopCamera();
+                setIsCameraEnabled(false);
+            } else {
+                setErrorMessage(data.message || `No reservation found for #${manualIdInput}`);
+            }
+        } catch (err) {
+            setErrorMessage('Failed to search reservation ID.');
+        } finally {
+            setIsSearchingManual(false);
+        }
+    };
 
     // ── SCAN FRAME LOOP ──
     useEffect(() => {
@@ -815,7 +871,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 body: JSON.stringify({
                     email: testEmailInput.trim(),
                     name: testNameInput.trim() || 'Explorer Lead',
-                    phone: testPhoneInput.trim() || '+91 98471 23456',
+                    phone: testPhoneInput.trim() || '+91 91886 85831',
                     guests: testGuestsCount
                 })
             });
@@ -826,7 +882,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setIsTestEmailModalOpen(false);
                 fetchRosterData();
                 if (data.booking) {
-                    setScannedBooking(data.booking);
+                    const cleanBooking = {
+                        ...data.booking,
+                        phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
+                    };
+                    setScannedBooking(cleanBooking);
                     const roster = (Array.isArray(data.booking.attendanceRoster) && data.booking.attendanceRoster.length > 0)
                         ? data.booking.attendanceRoster
                         : Array.from({ length: Number(data.booking.guests || testGuestsCount || 2) }, (_, idx) => ({
@@ -876,7 +936,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── SELECT GUEST FROM ROSTER ──
     const selectGuestFromRoster = (guest) => {
-        setScannedBooking(guest);
+        const cleanGuest = {
+            ...guest,
+            phone: (guest.phone && !guest.phone.includes('9074858014')) ? guest.phone : '+91 91886 85831'
+        };
+        setScannedBooking(cleanGuest);
         const guestTotal = Number(guest.totalGuests || guest.guests || (Array.isArray(guest.roster) ? guest.roster.length : 0)) || 2;
         const vegCount = Number(guest.vegCount ?? Math.ceil(guestTotal / 2));
 
