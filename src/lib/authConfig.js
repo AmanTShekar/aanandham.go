@@ -73,12 +73,16 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Master HQ Scope',
         passcodes: [
             ...(process.env.ADMIN_PASSCODES ? parsePasscodeList(process.env.ADMIN_PASSCODES) : []),
+            '907485',
+            '9074858014',
+            '777777',
+            '202600',
+            '123456',
             'aanandham2026',
             'master777',
             'admin2026',
             'hq2026',
-            'wildadmin2026',
-            '9074858014'
+            'wildadmin2026'
         ],
         isMasterAdmin: true,
         role: 'admin_coordinator',
@@ -90,6 +94,11 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Kolukkumalai Station',
         passcodes: [
             ...(process.env.KOLUKKUMALAI_PASSCODES ? parsePasscodeList(process.env.KOLUKKUMALAI_PASSCODES) : []),
+            '790001',
+            '790079',
+            '7900',
+            '100101',
+            '111111',
             'kolu7900',
             'kolukkumalai2026',
             'kolu2026',
@@ -105,6 +114,11 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Meesapulimala Basecamp',
         passcodes: [
             ...(process.env.MEESAPULIMALA_PASSCODES ? parsePasscodeList(process.env.MEESAPULIMALA_PASSCODES) : []),
+            '860002',
+            '860086',
+            '8600',
+            '200202',
+            '222222',
             'meesa8600',
             'meesapulimala2026',
             'meesa2026'
@@ -119,6 +133,10 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Suryanelli Valley Gate',
         passcodes: [
             ...(process.env.SURYANELLI_PASSCODES ? parsePasscodeList(process.env.SURYANELLI_PASSCODES) : []),
+            '300303',
+            '303030',
+            '3001',
+            '333333',
             'surya2026',
             'suryanelli2026',
             'surya777'
@@ -133,6 +151,10 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Vagamon Pine Post',
         passcodes: [
             ...(process.env.VAGAMON_PASSCODES ? parsePasscodeList(process.env.VAGAMON_PASSCODES) : []),
+            '400404',
+            '404040',
+            '4001',
+            '444444',
             'vaga2026',
             'vagamon2026',
             'pine2026'
@@ -147,6 +169,11 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Wayanad Rainforest Post',
         passcodes: [
             ...(process.env.WAYANAD_PASSCODES ? parsePasscodeList(process.env.WAYANAD_PASSCODES) : []),
+            '900900',
+            '900500',
+            '9001',
+            '500505',
+            '555555',
             'waya2026',
             'wayanad2026',
             'kandi2026'

@@ -1287,9 +1287,11 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </div>
                             <input
                                 type={showPasscodeText ? 'text' : 'password'}
+                                inputMode="numeric"
+                                pattern="[0-9]*"
                                 value={hostPasscode}
                                 onChange={(e) => { setHostPasscode(e.target.value); setPasscodeError(''); }}
-                                placeholder="Enter Host or Station Passcode..."
+                                placeholder="Enter Station PIN (e.g. 790001)..."
                                 autoFocus
                                 style={{
                                     width: '100%',
@@ -1300,7 +1302,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     color: '#FFFFFF',
                                     fontSize: '15px',
                                     fontWeight: '800',
-                                    letterSpacing: showPasscodeText ? '0.5px' : '2px',
+                                    letterSpacing: showPasscodeText ? '0.5px' : '3px',
                                     outline: 'none',
                                     boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.5)',
                                     transition: 'border-color 0.2s ease'
