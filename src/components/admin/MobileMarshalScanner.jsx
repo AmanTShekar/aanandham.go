@@ -503,11 +503,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const res = await fetch('/api/marshal/roster');
             const data = await res.json();
             if (data.success) {
-                const cleanRoster = (data.roster || []).map(b => ({
-                    ...b,
-                    phone: (b.phone && !b.phone.includes('9074858014')) ? b.phone : '+91 91886 85831'
-                }));
-                setRosterList(cleanRoster);
+                setRosterList(data.roster || []);
                 setStats(data.stats || {});
             }
         } catch (e) {
@@ -668,11 +664,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
             const data = await res.json();
 
             if (data.success && data.booking) {
-                const cleanBooking = {
-                    ...data.booking,
-                    phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
-                };
-                setScannedBooking(cleanBooking);
+                setScannedBooking(data.booking);
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
@@ -716,11 +708,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
             if (data.success && data.booking) {
                 playSuccessChime();
-                const cleanBooking = {
-                    ...data.booking,
-                    phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
-                };
-                setScannedBooking(cleanBooking);
+                setScannedBooking(data.booking);
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
@@ -882,11 +870,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setIsTestEmailModalOpen(false);
                 fetchRosterData();
                 if (data.booking) {
-                    const cleanBooking = {
-                        ...data.booking,
-                        phone: (data.booking.phone && !data.booking.phone.includes('9074858014')) ? data.booking.phone : '+91 91886 85831'
-                    };
-                    setScannedBooking(cleanBooking);
+                    setScannedBooking(data.booking);
                     const roster = (Array.isArray(data.booking.attendanceRoster) && data.booking.attendanceRoster.length > 0)
                         ? data.booking.attendanceRoster
                         : Array.from({ length: Number(data.booking.guests || testGuestsCount || 2) }, (_, idx) => ({
@@ -936,11 +920,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── SELECT GUEST FROM ROSTER ──
     const selectGuestFromRoster = (guest) => {
-        const cleanGuest = {
-            ...guest,
-            phone: (guest.phone && !guest.phone.includes('9074858014')) ? guest.phone : '+91 91886 85831'
-        };
-        setScannedBooking(cleanGuest);
+        setScannedBooking(guest);
         const guestTotal = Number(guest.totalGuests || guest.guests || (Array.isArray(guest.roster) ? guest.roster.length : 0)) || 2;
         const vegCount = Number(guest.vegCount ?? Math.ceil(guestTotal / 2));
 
@@ -3341,8 +3321,7 @@ _Sent by Aanandham Organizers_`
 
                                 {/* Prominent Lead WhatsApp & Call Buttons directly on Top Pass Header */}
                                 {(() => {
-                                    const rawPhone = scannedBooking.phone || scannedBooking.rawPhone || scannedBooking.customerPhone || '';
-                                    const leadPhone = (rawPhone && !rawPhone.includes('9074858014')) ? rawPhone : '+91 91886 85831';
+                                    const leadPhone = scannedBooking.phone || '';
                                     if (!leadPhone) {
                                         return (
                                             <div style={{ marginTop: '12px', fontSize: '11.5px', color: '#8E9B92', display: 'flex', alignItems: 'center', gap: '5px' }}>
@@ -3423,7 +3402,7 @@ _Sent by Aanandham Organizers_`
                                 </div>
 
                                 {/* Catering & BBQ Tokens */}
-                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 14px', borderRadius: '14px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 14px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <Utensils size={15} color="#D5ED55" />
                                         <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
@@ -3439,61 +3418,6 @@ _Sent by Aanandham Organizers_`
                                         </span>
                                     </div>
                                 </div>
-
-                                {/* Primary Lead Contact & WhatsApp (Only Lead provided phone number) */}
-                                {(() => {
-                                    const guestContactPhone = (scannedBooking.phone && !scannedBooking.phone.includes('9074858014')) 
-                                        ? scannedBooking.phone 
-                                        : '+91 91886 85831';
-
-                                    return (
-                                        <div style={{ display: 'flex', gap: '8px' }}>
-                                            <a
-                                                href={`tel:${guestContactPhone.replace(/[^\d+]/g, '')}`}
-                                                style={{
-                                                    flex: 1,
-                                                    padding: '10px',
-                                                    borderRadius: '12px',
-                                                    background: 'rgba(255, 255, 255, 0.06)',
-                                                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                    color: '#FFFFFF',
-                                                    fontSize: '12.5px',
-                                                    fontWeight: '700',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '6px',
-                                                    textDecoration: 'none'
-                                                }}
-                                            >
-                                                <Phone size={14} />
-                                                <span>Call Lead ({guestContactPhone})</span>
-                                            </a>
-                                            <a
-                                                href={`https://wa.me/${getCleanWhatsAppPhone(guestContactPhone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20welcome%20to%20Aanandham%20Wilderness!%20Your%20campsite%20is%20ready.`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                style={{
-                                                    padding: '10px 16px',
-                                                    borderRadius: '12px',
-                                                    background: 'rgba(37, 211, 102, 0.15)',
-                                                    border: '1px solid rgba(37, 211, 102, 0.3)',
-                                                    color: '#25D366',
-                                                    fontSize: '12.5px',
-                                                    fontWeight: '800',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '6px',
-                                                    textDecoration: 'none'
-                                                }}
-                                            >
-                                                <MessageCircle size={15} />
-                                                <span>WhatsApp Lead</span>
-                                            </a>
-                                        </div>
-                                    );
-                                })()}
                             </div>
                         </div>
 
