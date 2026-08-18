@@ -297,9 +297,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
 
     // ── GATE SETTLEMENT & MULTI-OPTION PAYMENT STATE ──
     const [settlementMethod, setSettlementMethod] = useState('upi_direct'); // 'upi_direct' | 'cash' | 'gateway'
-    const [hostUpiId, setHostUpiId] = useState('9074858014@upi');
+    const [hostUpiId, setHostUpiId] = useState('9188685831@upi');
     const [isEditingUpi, setIsEditingUpi] = useState(false);
-    const [tempUpiInput, setTempUpiInput] = useState('9074858014@upi');
+    const [tempUpiInput, setTempUpiInput] = useState('9188685831@upi');
     const [copiedUpi, setCopiedUpi] = useState(false);
 
     // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
@@ -4026,154 +4026,158 @@ _Sent by Aanandham Organizers_`
                                     </button>
                                 </div>
 
-                                {/* TAB 1: INSTANT DIRECT UPI QR */}
+                                {/* TAB 1: INSTANT DIRECT UPI (NO QR) */}
                                 {settlementMethod === 'upi_direct' && (
                                     <div style={{
-                                        background: 'rgba(213, 237, 85, 0.05)',
-                                        border: '1px solid rgba(213, 237, 85, 0.2)',
+                                        background: 'rgba(213, 237, 85, 0.06)',
+                                        border: '1px solid rgba(213, 237, 85, 0.25)',
                                         borderRadius: '16px',
                                         padding: '16px',
                                         marginBottom: '16px',
-                                        textAlign: 'center'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '12px'
                                     }}>
-                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
-                                            📲 Scan with GPay / PhonePe / Paytm / BHIM
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                                ⚡ Instant UPI Transfer (No QR Needed)
+                                            </div>
+                                            <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
+                                                GPay • PhonePe • Paytm • BHIM
+                                            </span>
                                         </div>
 
-                                        {/* Dynamic UPI QR Code for exact balance amount */}
-                                        {dynamicBalanceDue > 0 ? (
-                                            <div style={{
-                                                background: '#FFFFFF',
-                                                padding: '12px',
-                                                borderRadius: '16px',
-                                                display: 'inline-block',
-                                                boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
-                                                margin: '4px auto 12px'
-                                            }}>
-                                                <img 
-                                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9074858014@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`)}`}
-                                                    alt="UPI QR Code for Balance Due"
-                                                    style={{ width: '180px', height: '180px', display: 'block', borderRadius: '8px' }}
-                                                />
-                                                <span style={{ fontSize: '12px', fontWeight: '900', color: '#0B150E', display: 'block', marginTop: '6px' }}>
-                                                    Pay ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+                                        {/* Amount Banner */}
+                                        <div style={{
+                                            background: '#08120A',
+                                            border: '1px solid rgba(213, 237, 85, 0.2)',
+                                            borderRadius: '14px',
+                                            padding: '14px 16px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div>
+                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '800' }}>
+                                                    Amount to Transfer:
+                                                </span>
+                                                <span style={{ fontSize: '24px', fontWeight: '900', color: '#D5ED55', lineHeight: 1.1 }}>
+                                                    ₹{dynamicBalanceDue.toLocaleString('en-IN')}
                                                 </span>
                                             </div>
-                                        ) : (
-                                            <div style={{ padding: '16px', color: '#4ADE80', fontWeight: '800', fontSize: '13px' }}>
-                                                ✓ Zero balance remaining (Full advance was paid online)
+                                            <div style={{ textAlign: 'right' }}>
+                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '800' }}>
+                                                    Receiving UPI ID:
+                                                </span>
+                                                <span style={{ fontSize: '13px', fontWeight: '900', color: '#FFFFFF', wordBreak: 'break-all' }}>
+                                                    {hostUpiId}
+                                                </span>
                                             </div>
-                                        )}
+                                        </div>
 
-                                        {/* UPI ID & Host Customization */}
+                                        {/* UPI ID Quick Copy & Edit Bar */}
                                         <div style={{
                                             display: 'flex',
-                                            flexDirection: 'column',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            flexWrap: 'wrap',
                                             gap: '8px',
-                                            background: '#08120A',
-                                            padding: '12px',
+                                            background: 'rgba(255, 255, 255, 0.03)',
+                                            padding: '10px 12px',
                                             borderRadius: '12px',
-                                            border: '1px solid rgba(255,255,255,0.08)',
-                                            margin: '8px 0'
+                                            border: '1px solid rgba(255, 255, 255, 0.06)'
                                         }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                                                <div style={{ textAlign: 'left' }}>
-                                                    <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block' }}>Receiving UPI ID:</span>
-                                                    {isEditingUpi ? (
-                                                        <input
-                                                            type="text"
-                                                            value={tempUpiInput}
-                                                            onChange={e => setTempUpiInput(e.target.value)}
-                                                            placeholder="e.g. yourname@upi"
-                                                            style={{
-                                                                background: '#101E13',
-                                                                border: '1px solid #D5ED55',
-                                                                color: '#FFFFFF',
-                                                                fontSize: '13px',
-                                                                padding: '6px 8px',
-                                                                borderRadius: '6px',
-                                                                outline: 'none',
-                                                                marginTop: '2px'
-                                                            }}
-                                                        />
-                                                    ) : (
-                                                        <strong style={{ fontSize: '13px', color: '#D5ED55', wordBreak: 'break-all' }}>
-                                                            {hostUpiId}
-                                                        </strong>
-                                                    )}
+                                            {isEditingUpi ? (
+                                                <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
+                                                    <input
+                                                        type="text"
+                                                        value={tempUpiInput}
+                                                        onChange={e => setTempUpiInput(e.target.value)}
+                                                        placeholder="e.g. yourname@upi"
+                                                        style={{
+                                                            flex: 1,
+                                                            background: '#08120A',
+                                                            border: '1px solid #D5ED55',
+                                                            color: '#FFFFFF',
+                                                            fontSize: '12.5px',
+                                                            padding: '8px 10px',
+                                                            borderRadius: '8px',
+                                                            outline: 'none'
+                                                        }}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setHostUpiId(tempUpiInput.trim() || '9188685831@upi');
+                                                            setIsEditingUpi(false);
+                                                            showToast('✓ Updated receiving UPI ID');
+                                                        }}
+                                                        style={{ padding: '8px 12px', borderRadius: '8px', background: '#D5ED55', color: '#0B150E', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                    >
+                                                        <Save size={12} />
+                                                        <span>Save</span>
+                                                    </button>
                                                 </div>
-
-                                                <div style={{ display: 'flex', gap: '6px' }}>
-                                                    {isEditingUpi ? (
+                                            ) : (
+                                                <>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                        <span style={{ fontSize: '11.5px', color: '#C8D8CB' }}>ID:</span>
+                                                        <strong style={{ fontSize: '12.5px', color: '#D5ED55' }}>{hostUpiId}</strong>
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: '6px' }}>
                                                         <button
                                                             type="button"
                                                             onClick={() => {
-                                                                setHostUpiId(tempUpiInput.trim() || '9074858014@upi');
-                                                                setIsEditingUpi(false);
-                                                                showToast('✓ Updated receiving UPI ID');
+                                                                if (navigator.clipboard) {
+                                                                    navigator.clipboard.writeText(hostUpiId);
+                                                                    setCopiedUpi(true);
+                                                                    showToast(`✓ Copied UPI ID: ${hostUpiId}`);
+                                                                    setTimeout(() => setCopiedUpi(false), 2500);
+                                                                }
                                                             }}
-                                                            style={{ padding: '6px 10px', borderRadius: '8px', background: '#D5ED55', color: '#0B150E', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                            style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                                                         >
-                                                            <Save size={12} />
-                                                            <span>Save</span>
+                                                            <Copy size={12} />
+                                                            <span>{copiedUpi ? 'Copied!' : 'Copy UPI ID'}</span>
                                                         </button>
-                                                    ) : (
-                                                        <>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    if (navigator.clipboard) {
-                                                                        navigator.clipboard.writeText(hostUpiId);
-                                                                        setCopiedUpi(true);
-                                                                        showToast(`✓ Copied UPI ID: ${hostUpiId}`);
-                                                                        setTimeout(() => setCopiedUpi(false), 2500);
-                                                                    }
-                                                                }}
-                                                                style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', color: '#FFFFFF', border: '1px solid rgba(255,255,255,0.12)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                            >
-                                                                <Copy size={12} />
-                                                                <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
-                                                            </button>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    setTempUpiInput(hostUpiId);
-                                                                    setIsEditingUpi(true);
-                                                                }}
-                                                                style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(229,169,59,0.15)', color: '#E5A93B', border: '1px solid rgba(229,169,59,0.3)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                            >
-                                                                <Edit2 size={12} />
-                                                                <span>Host UPI</span>
-                                                            </button>
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setTempUpiInput(hostUpiId);
+                                                                setIsEditingUpi(true);
+                                                            }}
+                                                            style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.08)', color: '#FFFFFF', border: '1px solid rgba(255, 255, 255, 0.12)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                                                        >
+                                                            <Edit2 size={12} />
+                                                            <span>Edit</span>
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
 
-                                        {/* Direct Open in UPI App button (for mobile test/host phone) */}
+                                        {/* Direct Launch in UPI App */}
                                         {dynamicBalanceDue > 0 && (
                                             <a
-                                                href={`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9074858014@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`}
+                                                href={`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9188685831@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`}
                                                 style={{
                                                     display: 'inline-flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     gap: '6px',
                                                     width: '100%',
-                                                    padding: '10px',
-                                                    borderRadius: '10px',
-                                                    background: 'rgba(213, 237, 85, 0.15)',
-                                                    border: '1px solid rgba(213, 237, 85, 0.3)',
-                                                    color: '#D5ED55',
-                                                    fontSize: '12px',
-                                                    fontWeight: '800',
+                                                    padding: '11px',
+                                                    borderRadius: '12px',
+                                                    background: '#D5ED55',
+                                                    color: '#0B150E',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '900',
                                                     textDecoration: 'none',
                                                     boxSizing: 'border-box'
                                                 }}
                                             >
-                                                <ExternalLink size={13} />
-                                                <span>Open in UPI App (GPay / PhonePe / Paytm)</span>
+                                                <ExternalLink size={14} />
+                                                <span>Pay ₹{dynamicBalanceDue.toLocaleString('en-IN')} via UPI App</span>
                                             </a>
                                         )}
                                     </div>
@@ -4190,18 +4194,18 @@ _Sent by Aanandham Organizers_`
                                         textAlign: 'center'
                                     }}>
                                         <div style={{ fontSize: '11px', fontWeight: '800', color: '#4ADE80', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
-                                            💵 Physical Cash Handover at Basecamp
+                                            💵 Physical Cash Handover at Basecamp Gate
                                         </div>
-                                        <div style={{ fontSize: '28px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0' }}>
+                                        <div style={{ fontSize: '32px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0' }}>
                                             ₹{dynamicBalanceDue.toLocaleString('en-IN')}
                                         </div>
                                         <p style={{ fontSize: '12px', color: '#8E9B92', margin: '0 0 10px' }}>
-                                            Collect physical cash from {scannedBooking.name} at the gate counter and issue receipt.
+                                            Collect cash from <strong>{scannedBooking.name}</strong> at counter and tap "Mark Balance Settled" below.
                                         </p>
                                     </div>
                                 )}
 
-                                {/* TAB 3: ONLINE PAYMENT GATEWAY LINK */}
+                                {/* TAB 3: ONLINE RAZORPAY LINK (TEMPLATE - ACCOUNT ON HOLD) */}
                                 {settlementMethod === 'gateway' && (
                                     <div style={{
                                         background: 'rgba(96, 165, 250, 0.06)',
@@ -4209,17 +4213,53 @@ _Sent by Aanandham Organizers_`
                                         borderRadius: '16px',
                                         padding: '16px',
                                         marginBottom: '16px',
-                                        textAlign: 'center'
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '12px'
                                     }}>
-                                        <div style={{ fontSize: '11px', fontWeight: '800', color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
-                                            💳 Card, NetBanking & Razorpay Link
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div style={{ fontSize: '11px', fontWeight: '800', color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                                💳 Razorpay Payment Link
+                                            </div>
+                                            <span style={{
+                                                fontSize: '9.5px',
+                                                color: '#FACC15',
+                                                background: 'rgba(250, 204, 21, 0.12)',
+                                                border: '1px solid rgba(250, 204, 21, 0.3)',
+                                                padding: '2px 7px',
+                                                borderRadius: '6px',
+                                                fontWeight: '800'
+                                            }}>
+                                                ON HOLD (Template Ready)
+                                            </span>
                                         </div>
-                                        <div style={{ fontSize: '22px', fontWeight: '900', color: '#FFFFFF', margin: '4px 0' }}>
-                                            ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+
+                                        <div style={{
+                                            background: '#08120A',
+                                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                                            borderRadius: '12px',
+                                            padding: '12px 14px',
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center'
+                                        }}>
+                                            <div>
+                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '800' }}>
+                                                    Online Due Balance:
+                                                </span>
+                                                <span style={{ fontSize: '22px', fontWeight: '900', color: '#FFFFFF' }}>
+                                                    ₹{dynamicBalanceDue.toLocaleString('en-IN')}
+                                                </span>
+                                            </div>
+                                            <span style={{ fontSize: '11px', color: '#93C5FD', textAlign: 'right' }}>
+                                                Cards • NetBanking • UPI
+                                            </span>
                                         </div>
-                                        <p style={{ fontSize: '12px', color: '#8E9B92', margin: '0 0 12px' }}>
-                                            Guest can settle remaining balance via debit/credit card, netbanking, or UPI link.
+
+                                        <p style={{ fontSize: '11.5px', color: '#8E9B92', margin: '0' }}>
+                                            Send the digital payment checkout link directly to the guest's WhatsApp:
                                         </p>
+
                                         <a
                                             href={`https://wa.me/${getCleanWhatsAppPhone(scannedBooking.phone)}?text=Hi%20${encodeURIComponent(scannedBooking.name)}%2C%20here%20is%20your%20Aanandham%20Gate%20Pass%20settlement%20link%20for%20balance%20%E2%82%B9${dynamicBalanceDue}%3A%20https%3A%2F%2Faanandham.in%2Fpass%2F${scannedBooking.id}`}
                                             target="_blank"
@@ -4230,19 +4270,19 @@ _Sent by Aanandham Organizers_`
                                                 justifyContent: 'center',
                                                 gap: '6px',
                                                 width: '100%',
-                                                padding: '10px',
-                                                borderRadius: '10px',
-                                                background: 'rgba(37, 211, 102, 0.15)',
-                                                border: '1px solid rgba(37, 211, 102, 0.3)',
-                                                color: '#25D366',
-                                                fontSize: '12px',
-                                                fontWeight: '800',
+                                                padding: '11px',
+                                                borderRadius: '12px',
+                                                background: '#25D366',
+                                                color: '#0B150E',
+                                                fontSize: '12.5px',
+                                                fontWeight: '900',
                                                 textDecoration: 'none',
-                                                boxSizing: 'border-box'
+                                                boxSizing: 'border-box',
+                                                boxShadow: '0 4px 14px rgba(37, 211, 102, 0.3)'
                                             }}
                                         >
-                                            <MessageCircle size={14} />
-                                            <span>Send Payment Link via WhatsApp</span>
+                                            <MessageCircle size={15} />
+                                            <span>Send Settlement Link to Guest on WhatsApp</span>
                                         </a>
                                     </div>
                                 )}
