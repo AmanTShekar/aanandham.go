@@ -3750,9 +3750,17 @@ input, textarea, select, button {
   background: #FFFFFF !important;
   border-right: 1px solid rgba(18, 22, 19, 0.08) !important;
   overflow-y: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   box-sizing: border-box !important;
   transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.02) !important;
+}
+
+.admin-desktop-sidebar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .admin-main-workspace {

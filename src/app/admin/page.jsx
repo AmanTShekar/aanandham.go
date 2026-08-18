@@ -2090,81 +2090,53 @@ export default function AdminPortal() {
         const isCollapsed = !isMobile && isSidebarCollapsed;
 
         return (
-            <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: isCollapsed ? '16px 8px' : '24px 18px', boxSizing: 'border-box' }}>
-                <div>
-                    {/* Brand Header */}
-                    <div style={{ marginBottom: isCollapsed ? '16px' : '20px', paddingBottom: isCollapsed ? '14px' : '16px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', marginBottom: isCollapsed ? '0' : '10px' }}>
-                            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
-                                <img
-                                    src="/logo.png"
-                                    alt="Aanandham.go Official Logo"
-                                    style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
-                                />
-                                {!isCollapsed && (
-                                    <div style={{ minWidth: 0 }}>
-                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
-                                            Aanandham<span style={{ color: '#166534' }}>.go</span>
-                                        </span>
-                                        <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                                            BASECAMP HQ
-                                        </span>
-                                    </div>
-                                )}
-                            </Link>
-
-                            {isMobile ? (
-                                <button
-                                    onClick={() => setIsMobileSidebarOpen(false)}
-                                    style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F1F3EC', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', fontWeight: '800' }}
-                                >
-                                    ✕
-                                </button>
-                            ) : (
-                                !isCollapsed && (
-                                    <button
-                                        onClick={() => setIsSidebarCollapsed(true)}
-                                        title="Collapse Sidebar"
-                                        style={{
-                                            width: '28px',
-                                            height: '28px',
-                                            borderRadius: '8px',
-                                            background: '#F1F3EC',
-                                            border: '1px solid rgba(18, 22, 19, 0.1)',
-                                            color: '#121613',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            cursor: 'pointer',
-                                            fontSize: '12px'
-                                        }}
-                                    >
-                                        ◀
-                                    </button>
-                                )
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '100%',
+                padding: isCollapsed ? '16px 8px' : '20px 16px',
+                boxSizing: 'border-box',
+                gap: '14px'
+            }}>
+                {/* Brand Header */}
+                <div style={{ paddingBottom: isCollapsed ? '12px' : '14px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', marginBottom: isCollapsed ? '0' : '10px' }}>
+                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham.go Official Logo"
+                                style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
+                            />
+                            {!isCollapsed && (
+                                <div style={{ minWidth: 0 }}>
+                                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+                                        Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                    </span>
+                                    <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                        BASECAMP HQ
+                                    </span>
+                                </div>
                             )}
-                        </div>
+                        </Link>
 
-                        {!isCollapsed && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
-                                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
-                                <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                    Aanandham Admin Live
-                                </span>
-                            </div>
-                        )}
-
-                        {isCollapsed && (
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                        {isMobile ? (
+                            <button
+                                onClick={() => setIsMobileSidebarOpen(false)}
+                                style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F1F3EC', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', fontWeight: '800' }}
+                            >
+                                ✕
+                            </button>
+                        ) : (
+                            !isCollapsed && (
                                 <button
-                                    onClick={() => setIsSidebarCollapsed(false)}
-                                    title="Expand Sidebar"
+                                    onClick={() => setIsSidebarCollapsed(true)}
+                                    title="Collapse Sidebar"
                                     style={{
                                         width: '28px',
                                         height: '28px',
                                         borderRadius: '8px',
                                         background: '#F1F3EC',
-                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
                                         color: '#121613',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -2173,139 +2145,172 @@ export default function AdminPortal() {
                                         fontSize: '12px'
                                     }}
                                 >
-                                    ▶
+                                    ◀
                                 </button>
-                            </div>
+                            )
                         )}
                     </div>
 
-                    {/* Dual Quick Action Buttons */}
-                    <div style={{ display: isCollapsed ? 'flex' : 'grid', flexDirection: isCollapsed ? 'column' : undefined, gridTemplateColumns: isCollapsed ? undefined : '1fr 1fr', gap: '6px', marginBottom: isCollapsed ? '16px' : '22px' }}>
-                        <button
-                            onClick={() => {
-                                setIsAddBookingModalOpen(true);
-                                if (isMobile) setIsMobileSidebarOpen(false);
-                            }}
-                            className="btn-lime"
-                            title="Add New Manual Booking"
-                            style={{
-                                padding: isCollapsed ? '8px 0' : '9px 8px',
-                                borderRadius: '10px',
-                                fontSize: isCollapsed ? '13px' : '11.5px',
-                                fontWeight: '800',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '4px',
-                                whiteSpace: 'nowrap',
-                                boxShadow: '0 2px 8px rgba(213, 237, 85, 0.28)'
-                            }}
-                        >
-                            <span>+</span>
-                            {!isCollapsed && <span>Booking</span>}
-                        </button>
-                        <button
-                            onClick={() => {
-                                handleOpenPropertyModal();
-                                if (isMobile) setIsMobileSidebarOpen(false);
-                            }}
-                            title="Create Campsite"
-                            style={{
-                                padding: isCollapsed ? '8px 0' : '9px 8px',
-                                borderRadius: '10px',
-                                fontSize: isCollapsed ? '13px' : '11.5px',
-                                fontWeight: '800',
-                                cursor: 'pointer',
-                                background: '#F8F9F5',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '4px',
-                                whiteSpace: 'nowrap'
-                            }}
-                        >
-                            <span>⛺</span>
-                            {!isCollapsed && <span>Campsite</span>}
-                        </button>
-                    </div>
+                    {!isCollapsed && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
+                            <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                Aanandham Admin Live
+                            </span>
+                        </div>
+                    )}
 
-                    {/* Categorized Navigation Menu */}
-                    <nav style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '12px' : '18px' }}>
-                        {navSections.map((sec, sIdx) => (
-                            <div key={sIdx}>
-                                {!isCollapsed && (
-                                    <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px', paddingLeft: '8px' }}>
-                                        {sec.category}
-                                    </div>
-                                )}
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                                    {sec.items.map(item => {
-                                        const isActive = activeTab === item.id;
-                                        return (
-                                            <button
-                                                key={item.id}
-                                                onClick={() => {
-                                                    setActiveTab(item.id);
-                                                    if (isMobile) setIsMobileSidebarOpen(false);
-                                                }}
-                                                title={isCollapsed ? item.name : undefined}
-                                                style={{
-                                                    width: '100%',
-                                                    padding: isCollapsed ? '10px 0' : '9px 12px',
-                                                    borderRadius: '12px',
-                                                    background: isActive ? '#D5ED55' : 'transparent',
-                                                    color: isActive ? '#0B150E' : '#3A443E',
-                                                    border: isActive ? '1px solid rgba(180, 210, 60, 0.8)' : '1px solid transparent',
-                                                    fontSize: '13px',
-                                                    fontWeight: isActive ? '800' : '600',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: isCollapsed ? 'center' : 'space-between',
-                                                    textAlign: 'left',
-                                                    boxShadow: isActive ? '0 3px 10px rgba(213, 237, 85, 0.3)' : 'none',
-                                                    transition: 'all 0.18s ease'
-                                                }}
-                                            >
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: isCollapsed ? '0' : '10px' }}>
-                                                    <span style={{ fontSize: '16px' }}>{item.icon}</span>
-                                                    {!isCollapsed && <span>{item.name}</span>}
-                                                </div>
-                                                {!isCollapsed && item.count !== undefined && (
-                                                    <span style={{
-                                                        background: isActive ? '#0B150E' : 'rgba(18, 22, 19, 0.08)',
-                                                        color: isActive ? '#D5ED55' : '#121613',
-                                                        fontSize: '11px',
-                                                        fontWeight: '800',
-                                                        padding: '2px 7px',
-                                                        borderRadius: '999px'
-                                                    }}>
-                                                        {item.count}
-                                                    </span>
-                                                )}
-                                                {!isCollapsed && item.desc && !item.count && (
-                                                    <span style={{
-                                                        fontSize: '10.5px',
-                                                        color: isActive ? '#166534' : '#7D8880',
-                                                        fontWeight: '700'
-                                                    }}>
-                                                        {item.desc}
-                                                    </span>
-                                                )}
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        ))}
-                    </nav>
+                    {isCollapsed && (
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                            <button
+                                onClick={() => setIsSidebarCollapsed(false)}
+                                title="Expand Sidebar"
+                                style={{
+                                    width: '28px',
+                                    height: '28px',
+                                    borderRadius: '8px',
+                                    background: '#F1F3EC',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    fontSize: '12px'
+                                }}
+                            >
+                                ▶
+                            </button>
+                        </div>
+                    )}
                 </div>
 
+                {/* Dual Quick Action Buttons */}
+                <div style={{ display: isCollapsed ? 'flex' : 'grid', flexDirection: isCollapsed ? 'column' : undefined, gridTemplateColumns: isCollapsed ? undefined : '1fr 1fr', gap: '6px' }}>
+                    <button
+                        onClick={() => {
+                            setIsAddBookingModalOpen(true);
+                            if (isMobile) setIsMobileSidebarOpen(false);
+                        }}
+                        className="btn-lime"
+                        title="Add New Manual Booking"
+                        style={{
+                            padding: isCollapsed ? '8px 0' : '9px 8px',
+                            borderRadius: '10px',
+                            fontSize: isCollapsed ? '13px' : '11.5px',
+                            fontWeight: '800',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                            whiteSpace: 'nowrap',
+                            boxShadow: '0 2px 8px rgba(213, 237, 85, 0.28)'
+                        }}
+                    >
+                        <span>+</span>
+                        {!isCollapsed && <span>Booking</span>}
+                    </button>
+                    <button
+                        onClick={() => {
+                            handleOpenPropertyModal();
+                            if (isMobile) setIsMobileSidebarOpen(false);
+                        }}
+                        title="Create Campsite"
+                        style={{
+                            padding: isCollapsed ? '8px 0' : '9px 8px',
+                            borderRadius: '10px',
+                            fontSize: isCollapsed ? '13px' : '11.5px',
+                            fontWeight: '800',
+                            cursor: 'pointer',
+                            background: '#F8F9F5',
+                            border: '1px solid rgba(18, 22, 19, 0.12)',
+                            color: '#121613',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        <span>⛺</span>
+                        {!isCollapsed && <span>Campsite</span>}
+                    </button>
+                </div>
+
+                {/* Categorized Navigation Menu */}
+                <nav style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '10px' : '14px' }}>
+                    {navSections.map((sec, sIdx) => (
+                        <div key={sIdx}>
+                            {!isCollapsed && (
+                                <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '5px', paddingLeft: '8px' }}>
+                                    {sec.category}
+                                </div>
+                            )}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                {sec.items.map(item => {
+                                    const isActive = activeTab === item.id;
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => {
+                                                setActiveTab(item.id);
+                                                if (isMobile) setIsMobileSidebarOpen(false);
+                                            }}
+                                            title={isCollapsed ? item.name : undefined}
+                                            style={{
+                                                width: '100%',
+                                                padding: isCollapsed ? '9px 0' : '8px 12px',
+                                                borderRadius: '12px',
+                                                background: isActive ? '#D5ED55' : 'transparent',
+                                                color: isActive ? '#0B150E' : '#3A443E',
+                                                border: isActive ? '1px solid rgba(180, 210, 60, 0.8)' : '1px solid transparent',
+                                                fontSize: '13px',
+                                                fontWeight: isActive ? '800' : '600',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: isCollapsed ? 'center' : 'space-between',
+                                                textAlign: 'left',
+                                                boxShadow: isActive ? '0 3px 10px rgba(213, 237, 85, 0.3)' : 'none',
+                                                transition: 'all 0.18s ease'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: isCollapsed ? '0' : '10px' }}>
+                                                <span style={{ fontSize: '16px' }}>{item.icon}</span>
+                                                {!isCollapsed && <span>{item.name}</span>}
+                                            </div>
+                                            {!isCollapsed && item.count !== undefined && (
+                                                <span style={{
+                                                    background: isActive ? '#0B150E' : 'rgba(18, 22, 19, 0.08)',
+                                                    color: isActive ? '#D5ED55' : '#121613',
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 7px',
+                                                    borderRadius: '999px'
+                                                }}>
+                                                    {item.count}
+                                                </span>
+                                            )}
+                                            {!isCollapsed && item.desc && !item.count && (
+                                                <span style={{
+                                                    fontSize: '10.5px',
+                                                    color: isActive ? '#166534' : '#7D8880',
+                                                    fontWeight: '700'
+                                                }}>
+                                                    {item.desc}
+                                                </span>
+                                            )}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </nav>
+
                 {/* Bottom Coordinator Profile & System Controls */}
-                <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '8px 10px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: '#F8F9F5', borderRadius: '12px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
                         <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#D5ED55', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0, boxShadow: '0 2px 6px rgba(213, 237, 85, 0.4)', overflow: 'hidden' }}>
                             <img src="/logo.png" alt="Aanandham" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
@@ -2418,7 +2423,7 @@ export default function AdminPortal() {
                         />
                         <div>
                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613', display: 'block', lineHeight: 1.1 }}>
-                                Aanandham<span style={{ color: '#166534' }}>.go</span>
+                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </span>
                             <div style={{ fontSize: '9px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>
                                 {activeTab.toUpperCase()}
