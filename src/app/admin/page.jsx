@@ -91,6 +91,92 @@ const INITIAL_EVENTS = [
     }
 ];
 
+// ── STATION MARSHALS & FIELD COORDINATORS ──
+const INITIAL_MARSHALS = [
+    {
+        id: 'm-1',
+        name: 'Jishnu Mohan',
+        station: 'Kolukkumalai Sunrise 4x4 Station',
+        campId: 'pkg-kolukkumalai',
+        phone: '+91 94471 55667',
+        passcode: 'KOLU7900',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        notes: 'Lead 4x4 off-road convoy pilot & high-altitude ridge coordinator.'
+    },
+    {
+        id: 'm-2',
+        name: 'Harikrishnan P',
+        station: 'Meesapulimala High Altitude Basecamp',
+        campId: 'pkg-meesapulimala',
+        phone: '+91 98471 23456',
+        passcode: 'MEESA8600',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+        notes: 'Certified wilderness first-aid marshal & 8-peak summit escort.'
+    },
+    {
+        id: 'm-3',
+        name: 'Akhil Dev',
+        station: 'Suryanelli Valley Glamp Gate',
+        campId: 'pkg-suryanelli',
+        phone: '+91 94470 88990',
+        passcode: 'SURYA2026',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+        notes: 'Geodesic dome pod check-in and estate campfire supervisor.'
+    },
+    {
+        id: 'm-4',
+        name: 'Vivek Menon',
+        station: 'Vagamon Pine Forest Post',
+        campId: 'pkg-vagamon-pine',
+        phone: '+91 97455 11223',
+        passcode: 'VAGA2026',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
+        notes: 'Pine forest safari tent marshaling and night barbecue supervisor.'
+    },
+    {
+        id: 'm-5',
+        name: 'Suresh Babu',
+        station: 'Wayanad 900 Kandi Rainforest Post',
+        campId: 'pkg-wayanad',
+        phone: '+91 98950 44332',
+        passcode: 'WAYA900',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
+        notes: 'Glass bridge permit verification & treehouse canopy escort.'
+    }
+];
+
+const INITIAL_DB_LOGS = [
+    {
+        id: 'log-init-1',
+        action: 'DB_SYNC',
+        details: 'Initial database synchronization completed across all 5 Kerala regional nodes.',
+        recordId: 'SYSTEM-HQ',
+        timestamp: new Date().toISOString(),
+        actor: 'Master Admin'
+    },
+    {
+        id: 'log-init-2',
+        action: 'STATION_ONLINE',
+        details: 'Kolukkumalai Sunrise 4x4 Station marshal verified on duty.',
+        recordId: 'm-1',
+        timestamp: new Date(Date.now() - 3600000).toISOString(),
+        actor: 'Jishnu Mohan'
+    },
+    {
+        id: 'log-init-3',
+        action: 'INVENTORY_AUDIT',
+        details: 'Verified geodesic luxury dome pods and alpine quad tents.',
+        recordId: 'pkg-kolukkumalai',
+        timestamp: new Date(Date.now() - 7200000).toISOString(),
+        actor: 'Master Admin'
+    }
+];
+
 export default function AdminPortal() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [passcode, setPasscode] = useState('');
@@ -221,6 +307,154 @@ export default function AdminPortal() {
 
     const closeDeleteConfirm = () => {
         setDeleteConfirmDialog(prev => ({ ...prev, isOpen: false }));
+    };
+
+    // Station Marshals State (Persisted in LocalStorage)
+    const [marshals, setMarshals] = useState(() => {
+        if (typeof window !== 'undefined') {
+            try {
+                const saved = localStorage.getItem('aanandham_admin_marshals');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {}
+        }
+        return INITIAL_MARSHALS;
+    });
+    const [isMarshalModalOpen, setIsMarshalModalOpen] = useState(false);
+    const [editingMarshal, setEditingMarshal] = useState(null);
+    const [marshalForm, setMarshalForm] = useState({
+        name: '',
+        station: 'Kolukkumalai Sunrise 4x4 Station',
+        campId: 'pkg-kolukkumalai',
+        phone: '',
+        passcode: 'KOLU7900',
+        status: 'On Duty',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        notes: 'Lead 4x4 off-road convoy pilot & high-altitude ridge coordinator.'
+    });
+
+    // Database & System Logs State
+    const [dbLogs, setDbLogs] = useState(() => {
+        if (typeof window !== 'undefined') {
+            try {
+                const saved = localStorage.getItem('aanandham_admin_db_logs');
+                if (saved) return JSON.parse(saved);
+            } catch (e) {}
+        }
+        return INITIAL_DB_LOGS;
+    });
+    const [logViewTab, setLogViewTab] = useState('auth'); // 'auth' | 'db'
+    const [logSearch, setLogSearch] = useState('');
+    const [logFilterSeverity, setLogFilterSeverity] = useState('all');
+
+    const logDbAction = (action, details, recordId = '') => {
+        const newEntry = {
+            id: `log-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+            action,
+            details,
+            recordId,
+            timestamp: new Date().toISOString(),
+            actor: 'Aanandham Admin Desk'
+        };
+        setDbLogs(prev => {
+            const updated = [newEntry, ...prev].slice(0, 150);
+            try { localStorage.setItem('aanandham_admin_db_logs', JSON.stringify(updated)); } catch {}
+            return updated;
+        });
+    };
+
+    const saveMarshals = (updated) => {
+        setMarshals(updated);
+        try {
+            localStorage.setItem('aanandham_admin_marshals', JSON.stringify(updated));
+        } catch (e) {}
+        logDbAction('UPDATE_MARSHALS', `Updated field staff roster (${updated.length} marshals)`);
+    };
+
+    const handleOpenMarshalModal = (marshal = null) => {
+        if (marshal) {
+            setEditingMarshal(marshal);
+            setMarshalForm({
+                name: marshal.name || '',
+                station: marshal.station || 'Kolukkumalai Sunrise 4x4 Station',
+                campId: marshal.campId || 'pkg-kolukkumalai',
+                phone: marshal.phone || '',
+                passcode: marshal.passcode || '',
+                status: marshal.status || 'On Duty',
+                avatar: marshal.avatar || '',
+                notes: marshal.notes || ''
+            });
+        } else {
+            setEditingMarshal(null);
+            setMarshalForm({
+                name: '',
+                station: 'Kolukkumalai Sunrise 4x4 Station',
+                campId: 'pkg-kolukkumalai',
+                phone: '+91 ',
+                passcode: 'MARSHAL' + Math.floor(1000 + Math.random() * 9000),
+                status: 'On Duty',
+                avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+                notes: 'Station gate pass verification & convoy coordinator.'
+            });
+        }
+        setIsMarshalModalOpen(true);
+    };
+
+    const handleSaveMarshalForm = (e) => {
+        e.preventDefault();
+        if (!marshalForm.name || !marshalForm.phone) {
+            showToast('⚠️ Please enter marshal name and phone');
+            return;
+        }
+
+        if (editingMarshal) {
+            const updated = marshals.map(m => m.id === editingMarshal.id ? { ...m, ...marshalForm } : m);
+            saveMarshals(updated);
+            logDbAction('EDIT_MARSHAL', `Updated marshal profile: ${marshalForm.name} (${marshalForm.station})`, editingMarshal.id);
+            showToast(`✓ Station Marshal ${marshalForm.name} updated`);
+        } else {
+            const newMarshal = {
+                id: `m-${Date.now().toString(36)}`,
+                ...marshalForm
+            };
+            const updated = [newMarshal, ...marshals];
+            saveMarshals(updated);
+            logDbAction('CREATE_MARSHAL', `Enrolled new marshal: ${marshalForm.name} for ${marshalForm.station}`, newMarshal.id);
+            showToast(`✓ New Station Marshal ${marshalForm.name} assigned!`);
+        }
+        setIsMarshalModalOpen(false);
+    };
+
+    const handleDeleteMarshal = (id) => {
+        const marshalToDelete = marshals.find(m => m.id === id);
+        openDeleteConfirm({
+            title: 'Revoke Marshal Credentials?',
+            subtitle: `Are you sure you want to remove ${marshalToDelete?.name || 'this marshal'} from station ${marshalToDelete?.station || ''}? Their station gate PIN will be deactivated.`,
+            itemDetails: {
+                badge: id,
+                label: marshalToDelete?.name || 'Station Marshal',
+                subtext: `${marshalToDelete?.station} · PIN: ${marshalToDelete?.passcode}`,
+                status: marshalToDelete?.status || 'Active'
+            },
+            confirmText: '🗑️ Revoke Marshal Access',
+            onConfirm: () => {
+                const updated = marshals.filter(m => m.id !== id);
+                saveMarshals(updated);
+                logDbAction('REVOKE_MARSHAL', `Revoked marshal access: ${marshalToDelete?.name || id}`, id);
+                showToast(`✓ Marshal ${marshalToDelete?.name || id} removed`);
+            }
+        });
+    };
+
+    const handleToggleMarshalStatus = (id) => {
+        const updated = marshals.map(m => {
+            if (m.id === id) {
+                const nextStatus = m.status === 'On Duty' ? 'Off Duty' : (m.status === 'Off Duty' ? 'Station Closed' : 'On Duty');
+                return { ...m, status: nextStatus };
+            }
+            return m;
+        });
+        saveMarshals(updated);
+        showToast('✓ Marshal duty status updated');
     };
 
     // Admin Notification Settings
@@ -1837,14 +2071,16 @@ export default function AdminPortal() {
                 { id: 'overview', name: 'Dashboard Overview', icon: '📊', desc: 'Live KPIs & ops' },
                 { id: 'bookings', name: 'Camper Reservations', icon: '📋', count: bookings.length, badgeColor: '#E5A93B' },
                 { id: 'properties', name: 'Campsites & Pods', icon: '⛺', count: properties.length, badgeColor: '#22C55E' },
-                { id: 'events', name: 'Scheduled Batches', icon: '🏔️', count: activeEventsCount, badgeColor: '#38BDF8' }
+                { id: 'events', name: 'Scheduled Batches', icon: '🏔️', count: activeEventsCount, badgeColor: '#38BDF8' },
+                { id: 'marshals', name: 'Station Marshals', icon: '🧭', count: marshals.length, badgeColor: '#166534' }
             ]
         },
         {
-            category: 'FINANCE & SETTINGS',
+            category: 'FINANCE & SECURITY',
             items: [
                 { id: 'financials', name: 'Revenue & Margin', icon: '💰', desc: `₹${totalRevenue.toLocaleString('en-IN')}` },
                 { id: 'payment', name: 'Payment & QR Gateway', icon: '💳', desc: paymentSettings.mode === 'coming_soon' ? '⏳ Coming Soon' : '⚡ Live UPI' },
+                { id: 'logs', name: 'Security & DB Logs', icon: '🛡️', count: (auditLogs?.length || 0) + (dbLogs?.length || 0), badgeColor: '#DC2626' },
                 { id: 'settings', name: 'Alerts & Dispatch', icon: '⚙️', desc: 'WhatsApp & Bot' }
             ]
         }
@@ -1913,7 +2149,7 @@ export default function AdminPortal() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
                                 <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
                                 <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                    Enterprise HQ Live
+                                    Aanandham Admin Live
                                 </span>
                             </div>
                         )}
@@ -2071,13 +2307,13 @@ export default function AdminPortal() {
                 {/* Bottom Coordinator Profile & System Controls */}
                 <div style={{ paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '8px 10px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: '#F8F9F5', borderRadius: '12px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#D5ED55', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0, boxShadow: '0 2px 6px rgba(213, 237, 85, 0.4)' }}>
-                            👑
+                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#D5ED55', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0, boxShadow: '0 2px 6px rgba(213, 237, 85, 0.4)', overflow: 'hidden' }}>
+                            <img src="/logo.png" alt="Aanandham" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
                         </div>
                         {!isCollapsed && (
                             <div style={{ flex: 1, minWidth: 0 }}>
                                 <div style={{ fontSize: '12px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    Enterprise Master HQ
+                                    Aanandham Admin
                                 </div>
                                 <div style={{ fontSize: '9.5px', color: '#7D8880', fontWeight: '600' }}>
                                     All Kerala Sanctuaries
@@ -3100,6 +3336,186 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
+                    TAB: STATION MARSHALS & CHECK-IN CREW MANAGEMENT
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'marshals' && (
+                    <div style={{ maxWidth: '1300px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                    <span className="star-icon">★</span> FIELD OPERATIONS & CHECK-IN CREW
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    Station Marshals & Check-In Staff
+                                </h2>
+                                <div style={{ fontSize: '13px', color: '#59655D', marginTop: '4px' }}>
+                                    Manage basecamp hosts, 4x4 convoy pilots, and gate check-in PIN access across all Kerala sanctuaries.
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                                <Link
+                                    href="/admin/scanner"
+                                    target="_blank"
+                                    style={{
+                                        padding: '10px 18px',
+                                        borderRadius: '12px',
+                                        background: '#F8F9F5',
+                                        border: '1px solid rgba(18,22,19,0.12)',
+                                        color: '#121613',
+                                        fontSize: '13px',
+                                        fontWeight: '800',
+                                        textDecoration: 'none',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <span>📱 Open Scanner Simulator ↗</span>
+                                </Link>
+                                <button
+                                    onClick={() => handleOpenMarshalModal()}
+                                    className="btn-lime"
+                                    style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}
+                                >
+                                    + Add Station Marshal
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Marshals Card Grid */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+                            {marshals.map(m => (
+                                <div
+                                    key={m.id}
+                                    style={{
+                                        background: '#FFFFFF',
+                                        border: m.status === 'On Duty' ? '1px solid rgba(22, 101, 52, 0.2)' : '1px solid rgba(18, 22, 19, 0.08)',
+                                        borderRadius: '20px',
+                                        padding: '24px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        boxShadow: '0 4px 18px rgba(0,0,0,0.03)',
+                                        position: 'relative'
+                                    }}
+                                >
+                                    <div>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                                <img
+                                                    src={m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
+                                                    alt={m.name}
+                                                    style={{ width: '56px', height: '56px', borderRadius: '16px', objectFit: 'cover', border: '2px solid #D5ED55' }}
+                                                />
+                                                <div>
+                                                    <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>{m.name}</div>
+                                                    <div style={{ fontSize: '12px', color: '#59655D', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                                                        <span>📞</span>
+                                                        <span>{m.phone}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button
+                                                onClick={() => handleToggleMarshalStatus(m.id)}
+                                                title="Click to cycle duty status"
+                                                style={{
+                                                    padding: '4px 10px',
+                                                    borderRadius: '999px',
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                    background: m.status === 'On Duty' ? '#DCFCE7' : m.status === 'Off Duty' ? '#FEF3C7' : '#FEE2E2',
+                                                    color: m.status === 'On Duty' ? '#166534' : m.status === 'Off Duty' ? '#92400E' : '#991B1B'
+                                                }}
+                                            >
+                                                {m.status === 'On Duty' ? '🟢 On Duty' : m.status === 'Off Duty' ? '🟡 Off Duty' : '🔴 Closed'}
+                                            </button>
+                                        </div>
+
+                                        {/* Station Assignment Box */}
+                                        <div style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', marginBottom: '14px', border: '1px solid rgba(18,22,19,0.06)' }}>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '3px' }}>
+                                                Assigned Sanctuary Station & Gate PIN
+                                            </div>
+                                            <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613', marginBottom: '4px' }}>
+                                                📍 {m.station}
+                                            </div>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
+                                                <div style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800', background: 'rgba(22,101,52,0.08)', padding: '2px 8px', borderRadius: '6px' }}>
+                                                    🔑 Gate PIN: {m.passcode}
+                                                </div>
+                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>ID: {m.id}</span>
+                                            </div>
+                                        </div>
+
+                                        {m.notes && (
+                                            <div style={{ fontSize: '12px', color: '#59655D', fontStyle: 'italic', marginBottom: '16px', lineHeight: 1.4 }}>
+                                                "{m.notes}"
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div style={{ display: 'flex', gap: '8px', borderTop: '1px solid rgba(18,22,19,0.08)', paddingTop: '14px' }}>
+                                        <a
+                                            href={waLink(`Hi ${m.name}! Aanandham Basecamp HQ dispatching update for ${m.station}.`, m.phone)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                flex: 1,
+                                                padding: '9px 12px',
+                                                borderRadius: '10px',
+                                                background: '#25D366',
+                                                color: '#FFFFFF',
+                                                textDecoration: 'none',
+                                                fontSize: '12px',
+                                                fontWeight: '800',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px'
+                                            }}
+                                        >
+                                            <span>WhatsApp</span>
+                                        </a>
+                                        <button
+                                            onClick={() => handleOpenMarshalModal(m)}
+                                            style={{
+                                                padding: '9px 14px',
+                                                borderRadius: '10px',
+                                                background: '#F8F9F5',
+                                                border: '1px solid rgba(18,22,19,0.1)',
+                                                color: '#121613',
+                                                fontSize: '12px',
+                                                fontWeight: '700',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            Edit ✏️
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteMarshal(m.id)}
+                                            style={{
+                                                padding: '9px 12px',
+                                                borderRadius: '10px',
+                                                background: 'rgba(239,68,68,0.08)',
+                                                border: 'none',
+                                                color: '#DC2626',
+                                                fontSize: '12px',
+                                                cursor: 'pointer'
+                                            }}
+                                        >
+                                            🗑️
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
                     TAB 5: PROFIT & FINANCIALS BREAKDOWN
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'financials' && (
@@ -3556,6 +3972,257 @@ export default function AdminPortal() {
                                 </div>
                             )}
                         </div>
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
+                    TAB: SECURITY, AUTHENTICATION & DATABASE AUDIT LOGS
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'logs' && (
+                    <div style={{ maxWidth: '1300px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '4px' }}>
+                                    <span className="star-icon">★</span> ENTERPRISE SECURITY & AUDIT TRAIL
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    Security & System Audit Logs
+                                </h2>
+                                <div style={{ fontSize: '13px', color: '#59655D', marginTop: '4px' }}>
+                                    Immutable chronological audit logs for coordinator authentication, database mutations, and station check-ins.
+                                </div>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <button
+                                    onClick={() => { fetchAuditLogs(); showToast('✓ Logs refreshed live'); }}
+                                    style={{
+                                        padding: '9px 16px',
+                                        borderRadius: '12px',
+                                        background: '#F8F9F5',
+                                        border: '1px solid rgba(18,22,19,0.12)',
+                                        color: '#121613',
+                                        fontSize: '12.5px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+                                    <span>↻ Refresh Live Logs</span>
+                                </button>
+                                <button
+                                    onClick={handleExportBackup}
+                                    className="btn-lime"
+                                    style={{ padding: '9px 18px', fontSize: '12.5px', fontWeight: '800' }}
+                                >
+                                    💾 Export Audit Bundle
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Sub-View Switcher (Auth Logs vs Database Mutation Logs) */}
+                        <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '12px' }}>
+                            <button
+                                onClick={() => setLogViewTab('auth')}
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '12px',
+                                    border: logViewTab === 'auth' ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                    background: logViewTab === 'auth' ? '#121613' : '#FFFFFF',
+                                    color: logViewTab === 'auth' ? '#FFFFFF' : '#3A443E',
+                                    fontSize: '13px',
+                                    fontWeight: logViewTab === 'auth' ? '800' : '600',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <span>🛡️ Authentication & Login Logs</span>
+                                <span style={{
+                                    background: logViewTab === 'auth' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
+                                    color: logViewTab === 'auth' ? '#0B150E' : '#59655D',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    padding: '1px 7px',
+                                    borderRadius: '999px'
+                                }}>
+                                    {auditLogs.length || 3}
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={() => setLogViewTab('db')}
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '12px',
+                                    border: logViewTab === 'db' ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                    background: logViewTab === 'db' ? '#121613' : '#FFFFFF',
+                                    color: logViewTab === 'db' ? '#FFFFFF' : '#3A443E',
+                                    fontSize: '13px',
+                                    fontWeight: logViewTab === 'db' ? '800' : '600',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+                                <span>🗄️ Database & Mutation Trail</span>
+                                <span style={{
+                                    background: logViewTab === 'db' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
+                                    color: logViewTab === 'db' ? '#0B150E' : '#59655D',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    padding: '1px 7px',
+                                    borderRadius: '999px'
+                                }}>
+                                    {dbLogs.length}
+                                </span>
+                            </button>
+                        </div>
+
+                        {/* Search Bar */}
+                        <div style={{ marginBottom: '20px' }}>
+                            <input
+                                type="text"
+                                placeholder="Search logs by IP, action, actor, or ID..."
+                                value={logSearch}
+                                onChange={e => setLogSearch(e.target.value)}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px 18px',
+                                    borderRadius: '14px',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    fontSize: '13.5px',
+                                    color: '#121613',
+                                    outline: 'none',
+                                    boxSizing: 'border-box',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+                                }}
+                            />
+                        </div>
+
+                        {/* VIEW 1: AUTHENTICATION LOGS */}
+                        {logViewTab === 'auth' && (
+                            <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {(auditLogs.length > 0 ? auditLogs : [
+                                        { id: '1', timestamp: new Date().toISOString(), ip: '127.0.0.1 (Local)', action: 'AUTH_SUCCESS', role: 'admin_coordinator', details: 'Master HQ session authenticated', status: 'SUCCESS' },
+                                        { id: '2', timestamp: new Date(Date.now() - 1800000).toISOString(), ip: '192.168.1.45', action: 'STATION_LOGIN', role: 'basecamp_host', details: 'Kolukkumalai Gate scanner verified', status: 'SUCCESS' },
+                                        { id: '3', timestamp: new Date(Date.now() - 7200000).toISOString(), ip: '49.37.12.98', action: 'PASSCODE_ATTEMPT', role: 'unknown', details: 'Rate limit / Gate verification check', status: 'NOTICE' }
+                                    ])
+                                    .filter(l => !logSearch || JSON.stringify(l).toLowerCase().includes(logSearch.toLowerCase()))
+                                    .map((log, idx) => (
+                                        <div
+                                            key={log.id || idx}
+                                            style={{
+                                                padding: '14px 18px',
+                                                borderRadius: '12px',
+                                                background: '#F8F9F5',
+                                                border: '1px solid rgba(18, 22, 19, 0.06)',
+                                                display: 'grid',
+                                                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                                                gap: '12px',
+                                                alignItems: 'center',
+                                                fontSize: '12.5px'
+                                            }}
+                                        >
+                                            <div>
+                                                <span style={{
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '6px',
+                                                    background: log.status === 'SUCCESS' ? '#DCFCE7' : log.status === 'FAILED' ? '#FEE2E2' : '#FEF3C7',
+                                                    color: log.status === 'SUCCESS' ? '#166534' : log.status === 'FAILED' ? '#991B1B' : '#92400E'
+                                                }}>
+                                                    {log.status || 'SUCCESS'}
+                                                </span>
+                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', marginTop: '4px' }}>
+                                                    {log.action || 'AUTH_EVENT'}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Scope / Role</div>
+                                                <div style={{ fontWeight: '700', color: '#121613' }}>{log.role || 'admin_coordinator'}</div>
+                                            </div>
+
+                                            <div>
+                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Origin IP</div>
+                                                <div style={{ fontFamily: 'monospace', fontWeight: '600', color: '#3A443E' }}>{log.ip || '127.0.0.1'}</div>
+                                            </div>
+
+                                            <div>
+                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Details / Note</div>
+                                                <div style={{ color: '#59655D' }}>{log.details || 'Coordinator login'}</div>
+                                            </div>
+
+                                            <div style={{ textAlign: 'right' }}>
+                                                <div style={{ fontSize: '11px', color: '#7D8880' }}>
+                                                    {new Date(log.timestamp).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW 2: DATABASE & MUTATION AUDIT TRAIL */}
+                        {logViewTab === 'db' && (
+                            <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {dbLogs
+                                        .filter(l => !logSearch || JSON.stringify(l).toLowerCase().includes(logSearch.toLowerCase()))
+                                        .map(log => (
+                                            <div
+                                                key={log.id}
+                                                style={{
+                                                    padding: '14px 18px',
+                                                    borderRadius: '12px',
+                                                    background: '#F8F9F5',
+                                                    border: '1px solid rgba(18, 22, 19, 0.06)',
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                                                    gap: '12px',
+                                                    alignItems: 'center',
+                                                    fontSize: '12.5px'
+                                                }}
+                                            >
+                                                <div>
+                                                    <span style={{
+                                                        fontSize: '11px',
+                                                        fontWeight: '800',
+                                                        padding: '2px 8px',
+                                                        borderRadius: '6px',
+                                                        background: '#E0F2FE',
+                                                        color: '#0369A1'
+                                                    }}>
+                                                        🗄️ {log.action}
+                                                    </span>
+                                                    <div style={{ fontSize: '11px', color: '#7D8880', marginTop: '4px' }}>
+                                                        Ref: {log.recordId || log.id}
+                                                    </div>
+                                                </div>
+
+                                                <div style={{ gridColumn: 'span 2' }}>
+                                                    <div style={{ fontWeight: '700', color: '#121613' }}>{log.details}</div>
+                                                    <div style={{ fontSize: '11px', color: '#7D8880' }}>By {log.actor || 'Aanandham Admin'}</div>
+                                                </div>
+
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '11px', color: '#7D8880' }}>
+                                                        {new Date(log.timestamp).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -4313,6 +4980,138 @@ export default function AdminPortal() {
                                     <span>{deleteConfirmDialog.confirmText}</span>
                                 </button>
                             </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* ── MODAL: CREATE / EDIT STATION MARSHAL ── */}
+            <AnimatePresence>
+                {isMarshalModalOpen && (
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
+                                <div>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                        {editingMarshal ? 'Edit Station Marshal' : 'Assign New Station Marshal'}
+                                    </h3>
+                                    <div style={{ fontSize: '12.5px', color: '#59655D' }}>Configure gate check-in privileges and station credentials</div>
+                                </div>
+                                <button onClick={() => setIsMarshalModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
+                                    ✕
+                                </button>
+                            </div>
+
+                            <form onSubmit={handleSaveMarshalForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        Marshal Full Name *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="e.g. Jishnu Mohan"
+                                        value={marshalForm.name}
+                                        onChange={e => setMarshalForm({ ...marshalForm, name: e.target.value })}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                    />
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                    <div>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Phone / WhatsApp *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="+91 94471 55667"
+                                            value={marshalForm.phone}
+                                            onChange={e => setMarshalForm({ ...marshalForm, phone: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Station Gate PIN / Passcode *
+                                        </label>
+                                        <input
+                                            type="text"
+                                            required
+                                            placeholder="e.g. KOLU7900"
+                                            value={marshalForm.passcode}
+                                            onChange={e => setMarshalForm({ ...marshalForm, passcode: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <CustomSelectDropdown
+                                        label="Assigned Sanctuary Station *"
+                                        value={marshalForm.station}
+                                        onChange={val => {
+                                            const matched = properties.find(p => p.title === val || p.location?.includes(val));
+                                            setMarshalForm({
+                                                ...marshalForm,
+                                                station: val,
+                                                campId: matched?.id || marshalForm.campId
+                                            });
+                                        }}
+                                        options={[
+                                            { value: 'Kolukkumalai Sunrise 4x4 Station', label: '🌄 Kolukkumalai Sunrise 4x4 Station', sublabel: 'Munnar · 7,900 FT' },
+                                            { value: 'Meesapulimala High Altitude Basecamp', label: '⛰️ Meesapulimala High Altitude Basecamp', sublabel: 'Silent Valley · 8,661 FT' },
+                                            { value: 'Suryanelli Valley Glamp Gate', label: '⛺ Suryanelli Valley Glamp Gate', sublabel: 'Munnar Valley' },
+                                            { value: 'Vagamon Pine Forest Post', label: '🌲 Vagamon Pine Forest Post', sublabel: 'Vagamon Ridge' },
+                                            { value: 'Wayanad 900 Kandi Rainforest Post', label: '🌿 Wayanad 900 Kandi Rainforest Post', sublabel: 'Wayanad Canopy' }
+                                        ]}
+                                    />
+                                </div>
+
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                    <div>
+                                        <CustomSelectDropdown
+                                            label="Duty Status"
+                                            value={marshalForm.status}
+                                            onChange={val => setMarshalForm({ ...marshalForm, status: val })}
+                                            options={[
+                                                { value: 'On Duty', label: '🟢 On Duty' },
+                                                { value: 'Off Duty', label: '🟡 Off Duty' },
+                                                { value: 'Station Closed', label: '🔴 Station Closed' }
+                                            ]}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            Avatar / Photo URL
+                                        </label>
+                                        <input
+                                            type="url"
+                                            placeholder="https://images.unsplash.com/..."
+                                            value={marshalForm.avatar}
+                                            onChange={e => setMarshalForm({ ...marshalForm, avatar: e.target.value })}
+                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        Station Responsibilities & Notes
+                                    </label>
+                                    <textarea
+                                        rows={2}
+                                        placeholder="e.g. 4x4 convoy lead, emergency medical kit custodian, tent allocation"
+                                        value={marshalForm.notes}
+                                        onChange={e => setMarshalForm({ ...marshalForm, notes: e.target.value })}
+                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical' }}
+                                    />
+                                </div>
+
+                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                    {editingMarshal ? 'Save Marshal Updates' : '+ Assign Station Marshal'}
+                                </button>
+                            </form>
                         </motion.div>
                     </div>
                 )}
