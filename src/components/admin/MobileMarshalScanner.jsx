@@ -243,7 +243,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isTestEmailModalOpen, setIsTestEmailModalOpen] = useState(false);
     const [testEmailInput, setTestEmailInput] = useState('aman.tshekar@gmail.com');
     const [testNameInput, setTestNameInput] = useState('Aman Shekar');
-    const [testPhoneInput, setTestPhoneInput] = useState('+91 98471 23456');
+    const [testPhoneInput, setTestPhoneInput] = useState('+91 91886 85831');
     const [testGuestsCount, setTestGuestsCount] = useState(4);
     const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
     const [isSeedingDemo, setIsSeedingDemo] = useState(false);
@@ -928,24 +928,20 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         const totalMeals = Number(activeStats.vegMealsCount || 0) + Number(activeStats.nonVegMealsCount || 0);
 
         return (
-`👨‍🍳 *AANANDHAM CAMP — KITCHEN FOOD COUNT*
+`🏕️ *AANANDHAM — KITCHEN FOOD COUNT*
 📍 *Campsite:* ${activeCampName}
-📅 *Date & Time:* ${dateStr} • ${timeStr}
+📅 *Date:* ${dateStr} • ${timeStr}
 ━━━━━━━━━━━━━━━━━━━
-🔥 *TOTAL DINNER TO PREP: ${totalMeals} MEALS*
+🍽️ *TOTAL DINNER: ${totalMeals} PEOPLE*
 
-🥗 *VEG (Paneer / Veg BBQ):*  *${activeStats.vegMealsCount} PLATES*
-🍗 *CHICKEN (Chicken BBQ):*   *${activeStats.nonVegMealsCount} PLATES*
+🥗 *VEG:*  *${activeStats.vegMealsCount} Meals*
+🍗 *NON-VEG:*  *${activeStats.nonVegMealsCount} Meals*
 ━━━━━━━━━━━━━━━━━━━
-👥 *GUEST ARRIVAL STATUS:*
-✅ *Already In Camp (Ready to eat):* ${activeStats.totalCheckedInCampers} Campers
-⏳ *Coming in Next Jeeps:* ${activeStats.totalPendingCampers} Campers
+👥 *ARRIVAL STATUS:*
+✅ *In Camp Now:* ${activeStats.totalCheckedInCampers} People
+⏳ *Expected / En Route:* ${activeStats.totalPendingCampers} People
 ━━━━━━━━━━━━━━━━━━━
-🍲 *CHEF INSTRUCTIONS:*
-• Keep ${activeStats.vegMealsCount} Veg BBQ & ${activeStats.nonVegMealsCount} Chicken BBQ sets hot for 07:30 PM campfire.
-• Welcome hot Black Tea / Chukku Kaappi ready for arriving jeeps.
-━━━━━━━━━━━━━━━━━━━
-_Sent from Basecamp Marshal Console_`
+_Sent by Aanandham Organizers_`
         );
     };
 

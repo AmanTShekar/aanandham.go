@@ -56,7 +56,7 @@ export default async function PassDetailPage({ params, searchParams }) {
             id: cleanId,
             name: 'Aman Shekar (Test Lead)',
             email: 'aman.tshekar@gmail.com',
-            phone: '+91 98471 23456',
+            phone: '+91 91886 85831',
             package: 'Kolukkumalai Sunrise Ridge Glamp (7,900 FT)',
             campsiteId: 'pkg-kolukkumalai',
             region: 'Munnar',
