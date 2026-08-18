@@ -1327,60 +1327,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             </button>
                         </div>
 
-                        {/* ── STATION / GROUP PASSCODES HELPER & QUICK-FILL ── */}
-                        <div style={{
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.08)',
-                            borderRadius: '16px',
-                            padding: '10px 12px',
-                            textAlign: 'left'
-                        }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                    🏕️ Station & Group Passcodes:
-                                </span>
-                                <span style={{ fontSize: '9.5px', color: '#8E9B92' }}>Tap to select</span>
-                            </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
-                                {[
-                                    { id: 'all', name: 'HQ Master (All)', code: 'AANANDHAM2026', icon: '⛺' },
-                                    { id: 'pkg-kolukkumalai', name: 'Kolukkumalai', code: 'KOLU7900', icon: '🌄' },
-                                    { id: 'pkg-meesapulimala', name: 'Meesapulimala', code: 'MEESA8600', icon: '⛰️' },
-                                    { id: 'pkg-suryanelli', name: 'Suryanelli', code: 'SURYA2026', icon: '🏕️' },
-                                    { id: 'pkg-vagamon-pine', name: 'Vagamon Pines', code: 'VAGA2026', icon: '🌲' },
-                                    { id: 'pkg-wayanad', name: 'Wayanad 900K', code: 'WAYA2026', icon: '🌿' }
-                                ].map(st => {
-                                    const isCurrent = hostPasscode.trim().toUpperCase() === st.code;
-                                    return (
-                                        <button
-                                            key={st.id}
-                                            type="button"
-                                            onClick={() => {
-                                                setHostPasscode(st.code);
-                                                setPasscodeError('');
-                                            }}
-                                            style={{
-                                                background: isCurrent ? 'rgba(213,237,85,0.2)' : 'rgba(255, 255, 255, 0.04)',
-                                                border: `1px solid ${isCurrent ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
-                                                padding: '6px 8px',
-                                                borderRadius: '10px',
-                                                color: isCurrent ? '#D5ED55' : '#C8D8CB',
-                                                fontSize: '10.5px',
-                                                fontWeight: '700',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.15s ease'
-                                            }}
-                                        >
-                                            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.icon} {st.name}</span>
-                                            <span style={{ fontSize: '8.5px', opacity: 0.75, fontFamily: 'monospace', marginLeft: '4px' }}>{st.code}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
+
 
                         {/* Quick numeric keypad for single-hand mobile gate access */}
                         <div style={{
