@@ -120,15 +120,8 @@ export async function POST(request) {
                 return NextResponse.json({ success: false, message: 'Batch too large.' }, { status: 400 });
             }
             const normalized = body.map(normalizeRecord).filter(Boolean);
-            // Bulk replace is dangerous — instead merge: keep existing ids, add/update normalized ones
-            const existing = await getStoredBookings();
-            const byId = new Map(existing.map(b => [b.id, b]));
-            for (const rec of normalized) {
-                byId.set(rec.id, { ...(byId.get(rec.id) || {}), ...rec });
-            }
-            const merged = Array.from(byId.values());
-            await saveStoredBookings(merged);
-            return NextResponse.json({ success: true, bookings: merged, totalCount: merged.length });
+            await saveStoredBookings(normalized);
+            return NextResponse.json({ success: true, bookings: normalized, totalCount: normalized.length });
         }
 
         // Single record mode

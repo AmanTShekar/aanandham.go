@@ -162,9 +162,22 @@ export async function getStoredBookings({ limit, offset } = {}) {
  * Persist / Bulk-sync bookings list
  */
 export async function saveStoredBookings(bookings) {
+    if (!Array.isArray(bookings)) return false;
     writeLocalBookings(bookings);
-    if (isPrismaConfigured && prisma && Array.isArray(bookings)) {
+    memoryStore = bookings;
+
+    if (isPrismaConfigured && prisma) {
         try {
+            const incomingIds = bookings.map(b => b.id).filter(Boolean);
+            if (incomingIds.length > 0) {
+                await prisma.booking.deleteMany({
+                    where: {
+                        id: { notIn: incomingIds }
+                    }
+                });
+            } else {
+                await prisma.booking.deleteMany({});
+            }
             for (const b of bookings) {
                 const mapped = mapToPrisma(b);
                 await prisma.booking.upsert({
@@ -260,23 +273,27 @@ export async function updateServerBooking(id, updates) {
 }
 
 /**
- * Delete a booking record by ID
+ * Delete a booking record by ID (permanently removes from PostgreSQL and local stores)
  */
 export async function deleteServerBooking(id) {
+    if (!id) return { success: false, message: 'No ID provided' };
+    const cleanId = String(id).trim();
+
     if (isPrismaConfigured && prisma) {
         try {
-            await prisma.booking.delete({
-                where: { id }
+            await prisma.booking.deleteMany({
+                where: { 
+                    id: { equals: cleanId, mode: 'insensitive' }
+                }
             });
-            memoryStore = memoryStore.filter(b => b.id !== id);
-            return { success: true, id };
         } catch (err) {
-            console.error('Prisma deleteServerBooking error, deleting locally:', err);
+            console.error('Prisma deleteServerBooking error:', err);
         }
     }
 
+    memoryStore = memoryStore.filter(b => b.id && b.id.toUpperCase() !== cleanId.toUpperCase());
     const list = readLocalBookings();
-    const updated = list.filter(b => b.id !== id);
+    const updated = list.filter(b => b.id && b.id.toUpperCase() !== cleanId.toUpperCase());
     writeLocalBookings(updated);
-    return { success: true, id };
+    return { success: true, id: cleanId };
 }

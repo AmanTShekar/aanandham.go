@@ -1048,10 +1048,19 @@ export default function AdminPortal() {
                 status: bookingToDelete?.status || 'Pending'
             },
             confirmText: '🗑️ Delete Reservation',
-            onConfirm: () => {
+            onConfirm: async () => {
                 const updated = bookings.filter(b => b.id !== id);
+                setBookings(updated);
+                try {
+                    await fetch(`/api/admin/bookings?id=${encodeURIComponent(id)}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+                } catch (err) {
+                    console.error('Failed to call DELETE /api/admin/bookings:', err);
+                }
                 saveBookings(updated);
-                showToast(`✓ Reservation ${id} deleted`);
+                showToast(`✓ Reservation ${id} permanently deleted`);
             }
         });
     };
