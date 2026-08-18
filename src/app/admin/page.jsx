@@ -178,9 +178,12 @@ export default function AdminPortal() {
         region: 'Munnar',
         dates: '',
         guests: 2,
+        groupType: 'Family', // 'Family' | 'Friends Squad' | 'Couple' | 'Corporate' | 'Solo'
+        allocatedUnit: 'Tent #01',
         roomType: 'Geodesic Luxury Dome Pod',
         pricePerGuest: 2499,
-        status: 'Confirmed'
+        status: 'Confirmed',
+        notes: ''
     });
 
     // Sidebar Collapse State
@@ -985,6 +988,9 @@ export default function AdminPortal() {
             region: newBookingForm.region,
             dates: newBookingForm.dates || 'Upcoming Weekend',
             guests: guestsNum,
+            groupType: newBookingForm.groupType || 'Family',
+            allocatedUnit: newBookingForm.allocatedUnit ? newBookingForm.allocatedUnit.trim() : 'Tent #01',
+            notes: newBookingForm.notes ? newBookingForm.notes.trim() : '',
             roomType: newBookingForm.roomType,
             addons: [],
             total: totalCalc,
@@ -1004,11 +1010,28 @@ export default function AdminPortal() {
             region: 'Munnar',
             dates: '',
             guests: 2,
+            groupType: 'Family',
+            allocatedUnit: 'Tent #01',
             roomType: 'Geodesic Luxury Dome Pod',
             pricePerGuest: 2499,
-            status: 'Confirmed'
+            status: 'Confirmed',
+            notes: ''
         });
-        showToast(`✓ Booking ${newBooking.id} created successfully`);
+        showToast(`✓ Booking ${newBooking.id} created successfully (${newBooking.groupType} · ${newBooking.allocatedUnit})`);
+    };
+
+    // Quick Update Allocated Unit (Tent / Pod #)
+    const handleUpdateAllocatedUnit = (id, newUnit) => {
+        const updated = bookings.map(b => b.id === id ? { ...b, allocatedUnit: newUnit } : b);
+        saveBookings(updated);
+        showToast(`✓ Booking ${id} unit allocated: ${newUnit}`);
+    };
+
+    // Quick Update Squad / Group Type
+    const handleUpdateGroupType = (id, newGroupType) => {
+        const updated = bookings.map(b => b.id === id ? { ...b, groupType: newGroupType } : b);
+        saveBookings(updated);
+        showToast(`✓ Booking ${id} squad category set: ${newGroupType}`);
     };
 
     // Delete Booking
@@ -2543,7 +2566,7 @@ export default function AdminPortal() {
                                 </span>
                             </div>
                             
-                            <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '6px' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                                 {[
                                     { id: 'All', label: 'All Sanctuaries', icon: '🏕️', count: bookings.length },
                                     { id: 'pkg-kolukkumalai', label: 'Kolukkumalai (7,900 FT)', icon: '🌄', count: koluBookingsCount },
@@ -2577,8 +2600,8 @@ export default function AdminPortal() {
                                             <span>{c.icon}</span>
                                             <span>{c.label}</span>
                                             <span style={{
-                                                background: isSelected ? '#E5A93B' : 'rgba(18, 22, 19, 0.08)',
-                                                color: isSelected ? '#121613' : '#59655D',
+                                                background: isSelected ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
+                                                color: isSelected ? '#0B150E' : '#59655D',
                                                 fontSize: '11px',
                                                 fontWeight: '800',
                                                 padding: '1px 7px',
@@ -2739,8 +2762,20 @@ export default function AdminPortal() {
                                     return (
                                     <div key={b.id} style={{ background: '#FFFFFF', border: b.status === 'Pending' ? '1.5px solid #F59E0B' : '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                                         <div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '3px' }}>
                                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 7px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
+                                                {/* Group / Squad Category Badge */}
+                                                <span style={{
+                                                    fontSize: '10.5px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '6px',
+                                                    background: b.groupType === 'Family' ? '#FEF3C7' : b.groupType === 'Couple' ? '#FCE7F3' : b.groupType === 'Corporate' ? '#EDE9FE' : b.groupType === 'Solo' ? '#E0F2FE' : '#DCFCE7',
+                                                    color: b.groupType === 'Family' ? '#92400E' : b.groupType === 'Couple' ? '#9D174D' : b.groupType === 'Corporate' ? '#5B21B6' : b.groupType === 'Solo' ? '#0369A1' : '#166534',
+                                                    border: '1px solid rgba(0,0,0,0.06)'
+                                                }}>
+                                                    {b.groupType === 'Family' ? '👨‍👩‍👧‍👦 Family' : b.groupType === 'Couple' ? '💑 Couple' : b.groupType === 'Corporate' ? '💼 Corporate' : b.groupType === 'Solo' ? '🧗‍♂️ Solo' : '👥 Friends Squad'}
+                                                </span>
                                                 <span style={{ fontSize: '11px', color: '#7D8880' }}>{formattedCreated}</span>
                                             </div>
                                             <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
@@ -2755,7 +2790,32 @@ export default function AdminPortal() {
                                         <div>
                                             <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
                                             <div style={{ fontSize: '12px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
-                                            {b.roomType && <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>Room: {b.roomType}</div>}
+                                            
+                                            {/* Unit / Tent Allocation Badge */}
+                                            <div style={{ marginTop: '5px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                <span style={{
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    background: '#F1F5F9',
+                                                    color: '#0F172A',
+                                                    border: '1px solid rgba(15, 23, 42, 0.12)',
+                                                    padding: '2px 8px',
+                                                    borderRadius: '6px',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '4px'
+                                                }}>
+                                                    <span>⛺ Unit:</span>
+                                                    <span style={{ color: '#166534' }}>{b.allocatedUnit || 'Tent #01'}</span>
+                                                </span>
+                                                {b.roomType && <span style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>· {b.roomType}</span>}
+                                            </div>
+
+                                            {b.notes && (
+                                                <div style={{ marginTop: '4px', fontSize: '11px', color: '#59655D', fontStyle: 'italic', background: '#F8F9F5', padding: '3px 8px', borderRadius: '6px' }}>
+                                                    📝 {b.notes}
+                                                </div>
+                                            )}
                                             {b.mealSummary && <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>🍽️ {b.mealSummary}</div>}
                                         </div>
 
@@ -3582,6 +3642,102 @@ export default function AdminPortal() {
                                             style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
                                         />
                                     </div>
+                                </div>
+
+                                {/* Squad / Group Category Selector */}
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '8px' }}>
+                                        Squad / Group Category *
+                                    </label>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(95px, 1fr))', gap: '8px' }}>
+                                        {[
+                                            { id: 'Family', label: 'Family', icon: '👨‍👩‍👧‍👦' },
+                                            { id: 'Friends Squad', label: 'Friends', icon: '👥' },
+                                            { id: 'Couple', label: 'Couple', icon: '💑' },
+                                            { id: 'Corporate', label: 'Corporate', icon: '💼' },
+                                            { id: 'Solo', label: 'Solo', icon: '🧗‍♂️' }
+                                        ].map(gt => {
+                                            const isSelected = newBookingForm.groupType === gt.id;
+                                            return (
+                                                <button
+                                                    key={gt.id}
+                                                    type="button"
+                                                    onClick={() => setNewBookingForm(prev => ({ ...prev, groupType: gt.id }))}
+                                                    style={{
+                                                        padding: '9px 8px',
+                                                        borderRadius: '12px',
+                                                        border: isSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
+                                                        background: isSelected ? '#DCFCE7' : '#F8F9F5',
+                                                        color: isSelected ? '#166534' : '#121613',
+                                                        fontSize: '12px',
+                                                        fontWeight: isSelected ? '800' : '600',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        gap: '3px',
+                                                        transition: 'all 0.15s ease'
+                                                    }}
+                                                >
+                                                    <span style={{ fontSize: '18px' }}>{gt.icon}</span>
+                                                    <span>{gt.label}</span>
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Tent / Pod Unit Allocation & Quick Assign Chips */}
+                                <div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>
+                                            ⛺ Tent / Pod Unit Assignment (For Marshals & Basecamp)
+                                        </label>
+                                        <span style={{ fontSize: '11px', color: '#7D8880' }}>Required for Gate Check-In</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Tent #03 (Family Zone) or Dome Pod 2"
+                                        value={newBookingForm.allocatedUnit}
+                                        onChange={e => setNewBookingForm({ ...newBookingForm, allocatedUnit: e.target.value })}
+                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box', marginBottom: '8px' }}
+                                    />
+                                    {/* Quick-Click Unit Suggestions */}
+                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                        {['Tent 01', 'Tent 02', 'Tent 03', 'Dome Pod A', 'Dome Pod B', 'Alpine Hut 01', 'Family Suite'].map(unit => (
+                                            <button
+                                                key={unit}
+                                                type="button"
+                                                onClick={() => setNewBookingForm(prev => ({ ...prev, allocatedUnit: unit }))}
+                                                style={{
+                                                    padding: '4px 9px',
+                                                    borderRadius: '8px',
+                                                    border: newBookingForm.allocatedUnit === unit ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
+                                                    background: newBookingForm.allocatedUnit === unit ? '#DCFCE7' : '#FFFFFF',
+                                                    color: newBookingForm.allocatedUnit === unit ? '#166534' : '#59655D',
+                                                    fontSize: '11px',
+                                                    fontWeight: '700',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                + {unit}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Special Squad Requests & Dietary Notes */}
+                                <div>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        Special Squad Requirements & Dietary Notes (Optional)
+                                    </label>
+                                    <textarea
+                                        rows={2}
+                                        placeholder="e.g. Family with kids, requested adjacent tents with campfire setup, vegetarian food only"
+                                        value={newBookingForm.notes}
+                                        onChange={e => setNewBookingForm({ ...newBookingForm, notes: e.target.value })}
+                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.4 }}
+                                    />
                                 </div>
 
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
