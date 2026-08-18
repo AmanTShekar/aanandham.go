@@ -27,16 +27,19 @@ export async function GET(request) {
 
         const rosterList = bookings.map(b => {
             const totalGuests = Number(b.guests || (Array.isArray(b.attendanceRoster) ? b.attendanceRoster.length : 0)) || 2;
-            const checkedIn = Number(b.checkedInCount ?? (b.status === 'Checked In' ? totalGuests : 0));
-            const isCheckedIn = b.status === 'Checked In' || b.status === 'Partial Check-In';
-            const short = Number(b.shortCount ?? (isCheckedIn ? Math.max(0, totalGuests - checkedIn) : 0));
+            const isFullyCheckedIn = b.status === 'Checked In';
+            const isPartiallyCheckedIn = b.status === 'Partial Check-In' && Number(b.checkedInCount) > 0;
+            const isCheckedIn = isFullyCheckedIn || isPartiallyCheckedIn;
+
+            const checkedIn = isFullyCheckedIn ? totalGuests : (isPartiallyCheckedIn ? Number(b.checkedInCount || 0) : 0);
+            const short = isPartiallyCheckedIn ? Number(b.shortCount || Math.max(0, totalGuests - checkedIn)) : 0;
             
             const veg = Number(b.vegCount ?? Math.ceil(totalGuests / 2));
             const nonVeg = Number(b.nonVegCount ?? Math.max(0, totalGuests - veg));
 
             const total = Number(b.total) || (totalGuests * 2499);
             const advance = Number(b.advancePaid || Math.round(total * 0.3));
-            const isBalancePaid = Boolean(b.isBalancePaid || b.balanceDue === 0 || b.status === 'Checked In');
+            const isBalancePaid = Boolean(b.isBalancePaid || b.balanceDue === 0 || isFullyCheckedIn);
             const balanceDue = isBalancePaid ? 0 : Number(b.balanceDue !== undefined ? b.balanceDue : (total - advance));
             const preassignedRoom = b.assignedTent || b.roomType || b.package || 'Geodesic Luxury Dome Pod';
 
@@ -65,6 +68,7 @@ export async function GET(request) {
                 phone: b.phone,
                 email: b.email || 'camper@aanandham.in',
                 campsite: b.package || 'Kolukkumalai Ridge Glamp',
+                campsiteId: b.campsiteId || '',
                 region: b.region || 'Munnar',
                 dates: b.dates || 'Upcoming Batch',
                 roomType: b.roomType || preassignedRoom,

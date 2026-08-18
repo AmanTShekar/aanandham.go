@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import jsQR from 'jsqr';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -67,6 +67,16 @@ import {
     Wallet
 } from 'lucide-react';
 import Link from 'next/link';
+
+// ── AANANDHAM SANCTUARY CAMPSITES (PROPERTY-LEVEL ACCESS & ISOLATION) ──
+const AANANDHAM_CAMPS = [
+    { id: 'all', name: 'All Camp Sanctuaries', region: 'Enterprise Overview', icon: '⛺' },
+    { id: 'pkg-kolukkumalai', name: 'Kolukkumalai Sunrise 4x4', region: 'Munnar (7,900 FT)', icon: '🌄' },
+    { id: 'pkg-meesapulimala', name: 'Meesapulimala High Altitude', region: 'Silent Valley (8,600 FT)', icon: '⛰️' },
+    { id: 'pkg-suryanelli', name: 'Suryanelli Valley Glamp', region: 'Munnar', icon: '🏕️' },
+    { id: 'pkg-vagamon-pine', name: 'Vagamon Pine Forest', region: 'Vagamon', icon: '🌲' },
+    { id: 'pkg-wayanad', name: 'Wayanad 900 Kandi Rainforest', region: 'Wayanad', icon: '🌿' }
+];
 
 // ── HELPER: FORMAT DIRECT WHATSAPP PHONE NUMBER (ENSURES 91 COUNTRY CODE) ──
 function getCleanWhatsAppPhone(phone) {
@@ -238,8 +248,9 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isSeedingDemo, setIsSeedingDemo] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-    // ── ROSTER & STATS ──
+    // ── ROSTER, STATS & SANCTUARY PROPERTY SELECTION ──
     const [rosterList, setRosterList] = useState([]);
+    const [selectedCampground, setSelectedCampground] = useState('all');
     const [stats, setStats] = useState({
         totalExpectedCampers: 0,
         totalCheckedInCampers: 0,
@@ -253,6 +264,23 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [isLoadingRoster, setIsLoadingRoster] = useState(false);
     const [rosterSearchQuery, setRosterSearchQuery] = useState('');
     const [rosterFilterStatus, setRosterFilterStatus] = useState('all');
+
+    // Load active sanctuary preference
+    useEffect(() => {
+        try {
+            const savedCamp = localStorage.getItem('marshal_active_campsite');
+            if (savedCamp) setSelectedCampground(savedCamp);
+        } catch { /* ignore */ }
+    }, []);
+
+    const handleSelectCampground = (campId) => {
+        setSelectedCampground(campId);
+        try {
+            localStorage.setItem('marshal_active_campsite', campId);
+        } catch { /* ignore */ }
+        const campObj = AANANDHAM_CAMPS.find(c => c.id === campId);
+        showToast(`📍 Active Sanctuary: ${campObj ? campObj.name : 'All Sanctuaries'}`);
+    };
 
     // ── CURRENT SCANNED / SELECTED BOOKING ──
     const [scannedBooking, setScannedBooking] = useState(null);
@@ -857,13 +885,15 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const handleCopyKitchenHeadcount = () => {
         const dateStr = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
         const timeStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        const activeCampName = AANANDHAM_CAMPS.find(c => c.id === selectedCampground)?.name || 'All Sanctuaries';
         const msg = `🏕️ *AANANDHAM MOUNTAIN SANCTUARY — KITCHEN HEADCOUNT*\n` +
+            `📍 *Sanctuary:* ${activeCampName}\n` +
             `📅 *Date:* ${dateStr} • ${timeStr}\n\n` +
-            `🥗 *Veg BBQ Meals:* ${stats.vegMealsCount} Portions\n` +
-            `🍗 *Chicken BBQ Meals:* ${stats.nonVegMealsCount} Portions\n` +
-            `👥 *Campers On Ridge:* ${stats.totalCheckedInCampers} Present\n` +
-            `⏳ *Campers En Route:* ${stats.totalPendingCampers} Expected\n` +
-            `⚠️ *Short / No-Show:* ${stats.totalShortCampers}\n\n` +
+            `🥗 *Veg BBQ Meals:* ${activeStats.vegMealsCount} Portions\n` +
+            `🍗 *Chicken BBQ Meals:* ${activeStats.nonVegMealsCount} Portions\n` +
+            `👥 *Campers On Ridge:* ${activeStats.totalCheckedInCampers} Present\n` +
+            `⏳ *Campers En Route:* ${activeStats.totalPendingCampers} Expected\n` +
+            `⚠️ *Short / No-Show:* ${activeStats.totalShortCampers}\n\n` +
             `_Dispatched from Basecamp Marshal Console._`;
         
         if (navigator.clipboard) {
@@ -966,22 +996,94 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
         setManualIdInput('');
     };
 
-    // ── FILTERED ROSTER ──
-    const filteredRoster = rosterList.filter(item => {
-        const matchesQuery = 
-            item.name.toLowerCase().includes(rosterSearchQuery.toLowerCase()) ||
-            item.id.toLowerCase().includes(rosterSearchQuery.toLowerCase()) ||
-            item.phone.includes(rosterSearchQuery) ||
-            item.campsite.toLowerCase().includes(rosterSearchQuery.toLowerCase());
-
-        if (!matchesQuery) return false;
-
-        if (rosterFilterStatus === 'checked_in') return item.status === 'Checked In';
-        if (rosterFilterStatus === 'short') return item.status === 'Partial Check-In' || item.shortCount > 0;
-        if (rosterFilterStatus === 'pending') return item.status !== 'Checked In' && item.status !== 'Partial Check-In';
-
+    // ── MULTI-CAMP ISOLATED ROSTER & DYNAMIC STATS ──
+    const isGuestMatchingCamp = (guest, campId) => {
+        if (!campId || campId === 'all') return true;
+        const gCampsite = String(guest.campsite || guest.package || '').toLowerCase();
+        const gId = String(guest.campsiteId || '').toLowerCase();
+        
+        if (campId === 'pkg-kolukkumalai') return gId === 'pkg-kolukkumalai' || gCampsite.includes('kolukkumalai');
+        if (campId === 'pkg-meesapulimala') return gId === 'pkg-meesapulimala' || gCampsite.includes('meesapulimala');
+        if (campId === 'pkg-suryanelli') return gId === 'pkg-suryanelli' || gCampsite.includes('suryanelli');
+        if (campId === 'pkg-vagamon-pine') return gId.includes('vagamon') || gCampsite.includes('vagamon');
+        if (campId === 'pkg-wayanad') return gId.includes('wayanad') || gCampsite.includes('wayanad');
         return true;
-    });
+    };
+
+    const campIsolatedRoster = useMemo(() => {
+        return rosterList.filter(guest => isGuestMatchingCamp(guest, selectedCampground));
+    }, [rosterList, selectedCampground]);
+
+    const activeStats = useMemo(() => {
+        let expected = 0;
+        let checkedIn = 0;
+        let short = 0;
+        let pending = 0;
+        let veg = 0;
+        let nonVeg = 0;
+        let balanceDue = 0;
+        let balanceSettled = 0;
+
+        for (const b of campIsolatedRoster) {
+            if (b.status === 'Cancelled' || b.status === 'Expired') continue;
+            const totalGuests = Number(b.totalGuests || b.guests) || 2;
+            const isFullyIn = b.status === 'Checked In';
+            const isPartialIn = b.status === 'Partial Check-In' && Number(b.checkedInCount) > 0 && Number(b.shortCount) > 0;
+            
+            expected += totalGuests;
+            if (isFullyIn) {
+                checkedIn += totalGuests;
+            } else if (isPartialIn) {
+                checkedIn += Number(b.checkedInCount || 0);
+                short += Number(b.shortCount || 0);
+            } else {
+                pending += totalGuests;
+            }
+
+            veg += Number(b.vegCount || 0);
+            nonVeg += Number(b.nonVegCount || 0);
+
+            if (b.isBalancePaid || isFullyIn) {
+                balanceSettled += Number(b.totalPrice ? (b.totalPrice - (b.advancePaid || 0)) : (b.balanceCollected || 0));
+            } else {
+                balanceDue += Number(b.balanceDue || 0);
+            }
+        }
+
+        return {
+            totalExpectedCampers: expected,
+            totalCheckedInCampers: checkedIn,
+            totalPendingCampers: pending,
+            totalShortCampers: short,
+            vegMealsCount: veg,
+            nonVegMealsCount: nonVeg,
+            totalBalanceDue: balanceDue,
+            totalBalanceCollected: balanceSettled,
+            totalBookings: campIsolatedRoster.length
+        };
+    }, [campIsolatedRoster]);
+
+    // ── FILTERED ROSTER LIST (SEARCH + STATUS CHIPS) ──
+    const filteredRoster = useMemo(() => {
+        return campIsolatedRoster.filter(item => {
+            const matchesQuery = 
+                item.name.toLowerCase().includes(rosterSearchQuery.toLowerCase()) ||
+                item.id.toLowerCase().includes(rosterSearchQuery.toLowerCase()) ||
+                (item.phone && item.phone.includes(rosterSearchQuery)) ||
+                (item.campsite && item.campsite.toLowerCase().includes(rosterSearchQuery.toLowerCase()));
+
+            if (!matchesQuery) return false;
+
+            const isFullyIn = item.status === 'Checked In';
+            const isPartialIn = item.status === 'Partial Check-In' && Number(item.shortCount) > 0 && Number(item.checkedInCount) > 0;
+
+            if (rosterFilterStatus === 'checked_in') return isFullyIn;
+            if (rosterFilterStatus === 'short') return isPartialIn;
+            if (rosterFilterStatus === 'pending') return !isFullyIn && !isPartialIn;
+
+            return true;
+        });
+    }, [campIsolatedRoster, rosterSearchQuery, rosterFilterStatus]);
 
     // ── TENT / POD DROPDOWN OPTIONS ──
     const tentOptions = [
@@ -2001,23 +2103,88 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
+                    {/* ── ACTIVE SANCTUARY PROPERTY SELECTOR BAR ── */}
+                    <div style={{
+                        background: 'rgba(16, 30, 19, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '18px',
+                        padding: '12px 14px',
+                        marginBottom: '14px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <MapPin size={14} color="#D5ED55" />
+                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    Camp Sanctuary Property:
+                                </span>
+                            </div>
+                            <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
+                                {campIsolatedRoster.length} Bookings in Scope
+                            </span>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                            {AANANDHAM_CAMPS.map(camp => {
+                                const isSelected = selectedCampground === camp.id;
+                                const count = rosterList.filter(g => isGuestMatchingCamp(g, camp.id)).length;
+                                return (
+                                    <button
+                                        key={camp.id}
+                                        type="button"
+                                        onClick={() => handleSelectCampground(camp.id)}
+                                        style={{
+                                            padding: '6px 12px',
+                                            borderRadius: '10px',
+                                            background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                                            color: isSelected ? '#0B150E' : '#C8D8CB',
+                                            border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '5px',
+                                            whiteSpace: 'nowrap',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <span>{camp.icon}</span>
+                                        <span>{camp.name}</span>
+                                        <span style={{
+                                            fontSize: '9.5px',
+                                            padding: '1px 5px',
+                                            borderRadius: '999px',
+                                            background: isSelected ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.1)',
+                                            color: isSelected ? '#0B150E' : '#8E9B92'
+                                        }}>
+                                            {count}
+                                        </span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     {/* Headcount Stat Ribbon */}
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '14px' }}>
                         <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
                             <span style={{ fontSize: '9.5px', color: '#8E9B92', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Expected</span>
-                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF' }}>{stats.totalExpectedCampers}</span>
+                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#FFFFFF' }}>{activeStats.totalExpectedCampers}</span>
                         </div>
                         <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(34, 197, 94, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
                             <span style={{ fontSize: '9.5px', color: '#4ADE80', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>At Camp</span>
-                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#4ADE80' }}>{stats.totalCheckedInCampers}</span>
+                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#4ADE80' }}>{activeStats.totalCheckedInCampers}</span>
                         </div>
                         <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(234, 179, 8, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
                             <span style={{ fontSize: '9.5px', color: '#FACC15', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>En Route</span>
-                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#FACC15' }}>{stats.totalPendingCampers}</span>
+                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#FACC15' }}>{activeStats.totalPendingCampers}</span>
                         </div>
                         <div style={{ background: 'rgba(16, 30, 19, 0.8)', border: '1px solid rgba(239, 68, 68, 0.3)', borderRadius: '14px', padding: '10px 6px', textAlign: 'center' }}>
                             <span style={{ fontSize: '9.5px', color: '#FCA5A5', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Short</span>
-                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#EF4444' }}>{stats.totalShortCampers}</span>
+                            <span style={{ fontSize: '18px', fontWeight: '900', color: '#EF4444' }}>{activeStats.totalShortCampers}</span>
                         </div>
                     </div>
 
@@ -2056,7 +2223,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                 gap: '4px'
                             }}
                         >
-                            <span>{isSeedingDemo ? 'Seeding...' : '⚡ Seed 4 Demo Campers'}</span>
+                            <span>{isSeedingDemo ? 'Seeding...' : '⚡ Seed 5-Camp Demo Data'}</span>
                         </button>
                     </div>
 
@@ -2066,7 +2233,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <Search size={16} color="#8E9B92" style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} />
                             <input
                                 type="text"
-                                placeholder="Search by camper name, booking ID, phone..."
+                                placeholder="Search by camper name, booking ID, phone, campsite..."
                                 value={rosterSearchQuery}
                                 onChange={e => setRosterSearchQuery(e.target.value)}
                                 style={{
@@ -2086,10 +2253,10 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         {/* Filter Chips */}
                         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                             {[
-                                { id: 'all', label: `All (${rosterList.length})` },
-                                { id: 'pending', label: `⏳ Expected (${rosterList.filter(r => r.status !== 'Checked In' && r.status !== 'Partial Check-In').length})` },
-                                { id: 'checked_in', label: `🟢 Checked In (${rosterList.filter(r => r.status === 'Checked In').length})` },
-                                { id: 'short', label: `⚠️ Short Arrival (${rosterList.filter(r => r.status === 'Partial Check-In' || r.shortCount > 0).length})` }
+                                { id: 'all', label: `All (${campIsolatedRoster.length})` },
+                                { id: 'pending', label: `⏳ Expected (${campIsolatedRoster.filter(r => r.status !== 'Checked In' && r.status !== 'Partial Check-In').length})` },
+                                { id: 'checked_in', label: `🟢 Checked In (${campIsolatedRoster.filter(r => r.status === 'Checked In').length})` },
+                                { id: 'short', label: `⚠️ Short Arrival (${campIsolatedRoster.filter(r => r.status === 'Partial Check-In' && Number(r.shortCount) > 0 && Number(r.checkedInCount) > 0).length})` }
                             ].map(filter => (
                                 <button
                                     key={filter.id}
@@ -2119,13 +2286,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                         </div>
                     ) : filteredRoster.length === 0 ? (
                         <div style={{ padding: '40px 20px', textAlign: 'center', background: '#101E13', borderRadius: '16px', border: '1px dashed rgba(255,255,255,0.1)' }}>
-                            <p style={{ color: '#8E9B92', margin: 0, fontSize: '13px' }}>No reservations match your filter.</p>
+                            <p style={{ color: '#8E9B92', margin: 0, fontSize: '13px' }}>No reservations match your sanctuary and filter selection.</p>
                         </div>
                     ) : (
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                             {filteredRoster.map((guest, gIdx) => {
                                 const isCheckedIn = guest.status === 'Checked In';
-                                const isPartial = guest.status === 'Partial Check-In' || guest.shortCount > 0;
+                                const isPartial = guest.status === 'Partial Check-In' && Number(guest.shortCount) > 0 && Number(guest.checkedInCount) > 0;
                                 const guestInitials = guest.name 
                                     ? guest.name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
                                     : 'EX';
@@ -2189,12 +2356,12 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                             <span style={{
                                                 padding: '4px 10px',
                                                 borderRadius: '999px',
-                                                background: isCheckedIn ? 'rgba(34,197,94,0.2)' : isPartial ? 'rgba(234,179,8,0.2)' : 'rgba(255,255,255,0.08)',
-                                                color: isCheckedIn ? '#4ADE80' : isPartial ? '#FACC15' : '#C8D8CB',
+                                                background: isCheckedIn ? 'rgba(34,197,94,0.2)' : isPartial ? 'rgba(234,179,8,0.2)' : 'rgba(213,237,85,0.12)',
+                                                color: isCheckedIn ? '#4ADE80' : isPartial ? '#FACC15' : '#D5ED55',
                                                 fontSize: '11.5px',
                                                 fontWeight: '800'
                                             }}>
-                                                {isCheckedIn ? '✓ Checked In' : isPartial ? `⚠️ ${guest.checkedInCount}/${guest.totalGuests} Present` : '⏳ Expected'}
+                                                {isCheckedIn ? '✓ Checked In' : isPartial ? `⚠️ ${guest.checkedInCount || (guest.totalGuests - guest.shortCount)}/${guest.totalGuests} Present (${guest.shortCount} Late)` : '⏳ Expected · Not Arrived'}
                                             </span>
                                         </div>
 
@@ -2297,6 +2464,61 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     width: '100%',
                     boxSizing: 'border-box'
                 }}>
+                    {/* ── ACTIVE SANCTUARY PROPERTY SELECTOR BAR (KITCHEN SCOPE) ── */}
+                    <div style={{
+                        background: 'rgba(16, 30, 19, 0.95)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '18px',
+                        padding: '12px 14px',
+                        marginBottom: '14px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '8px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <Utensils size={14} color="#D5ED55" />
+                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                    Kitchen Prep Sanctuary:
+                                </span>
+                            </div>
+                            <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
+                                {activeStats.totalExpectedCampers} Campers in Scope
+                            </span>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                            {AANANDHAM_CAMPS.map(camp => {
+                                const isSelected = selectedCampground === camp.id;
+                                return (
+                                    <button
+                                        key={camp.id}
+                                        type="button"
+                                        onClick={() => handleSelectCampground(camp.id)}
+                                        style={{
+                                            padding: '6px 12px',
+                                            borderRadius: '10px',
+                                            background: isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.05)',
+                                            color: isSelected ? '#0B150E' : '#C8D8CB',
+                                            border: `1px solid ${isSelected ? '#D5ED55' : 'rgba(255, 255, 255, 0.08)'}`,
+                                            fontSize: '11.5px',
+                                            fontWeight: '800',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '5px',
+                                            whiteSpace: 'nowrap',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }}
+                                    >
+                                        <span>{camp.icon}</span>
+                                        <span>{camp.name}</span>
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                     {/* WhatsApp Kitchen Dispatch Banner */}
                     <div style={{
                         background: 'linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(213, 237, 85, 0.1) 100%)',
@@ -2317,7 +2539,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     Kitchen Staff Headcount Sync
                                 </span>
                                 <span style={{ fontSize: '11px', color: '#A2B6A6' }}>
-                                    {stats.vegMealsCount} Veg BBQ • {stats.nonVegMealsCount} Chicken BBQ • {stats.totalCheckedInCampers} In Camp
+                                    {activeStats.vegMealsCount} Veg BBQ • {activeStats.nonVegMealsCount} Chicken BBQ • {activeStats.totalCheckedInCampers} In Camp
                                 </span>
                             </div>
                         </div>
@@ -2362,20 +2584,20 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>Physically Present</span>
                                 <span style={{ fontSize: '28px', fontWeight: '900', color: '#4ADE80' }}>
-                                    {stats.totalCheckedInCampers} <span style={{ fontSize: '14px', color: '#8E9B92' }}>/ {stats.totalExpectedCampers}</span>
+                                    {activeStats.totalCheckedInCampers} <span style={{ fontSize: '14px', color: '#8E9B92' }}>/ {activeStats.totalExpectedCampers}</span>
                                 </span>
                             </div>
                             <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>En Route / Expected</span>
                                 <span style={{ fontSize: '28px', fontWeight: '900', color: '#FACC15' }}>
-                                    {stats.totalPendingCampers} <span style={{ fontSize: '14px', color: '#8E9B92' }}>Campers</span>
+                                    {activeStats.totalPendingCampers} <span style={{ fontSize: '14px', color: '#8E9B92' }}>Campers</span>
                                 </span>
                             </div>
                         </div>
 
                         <div style={{ height: '8px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
                             <div style={{
-                                width: `${stats.totalExpectedCampers > 0 ? (stats.totalCheckedInCampers / stats.totalExpectedCampers) * 100 : 0}%`,
+                                width: `${activeStats.totalExpectedCampers > 0 ? (activeStats.totalCheckedInCampers / activeStats.totalExpectedCampers) * 100 : 0}%`,
                                 height: '100%',
                                 background: '#D5ED55',
                                 borderRadius: '999px'
@@ -2402,7 +2624,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <div style={{ background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '16px', borderRadius: '16px' }}>
                                 <span style={{ fontSize: '12px', color: '#4ADE80', fontWeight: '700', display: 'block' }}>🥗 Veg BBQ Meals</span>
                                 <span style={{ fontSize: '32px', fontWeight: '900', color: '#4ADE80' }}>
-                                    {stats.vegMealsCount}
+                                    {activeStats.vegMealsCount}
                                 </span>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block', marginTop: '4px' }}>Portions to Prep</span>
                             </div>
@@ -2410,7 +2632,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <div style={{ background: 'rgba(249, 115, 22, 0.1)', border: '1px solid rgba(249, 115, 22, 0.3)', padding: '16px', borderRadius: '16px' }}>
                                 <span style={{ fontSize: '12px', color: '#FB923C', fontWeight: '700', display: 'block' }}>🍗 Chicken BBQ Meals</span>
                                 <span style={{ fontSize: '32px', fontWeight: '900', color: '#FB923C' }}>
-                                    {stats.nonVegMealsCount}
+                                    {activeStats.nonVegMealsCount}
                                 </span>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block', marginTop: '4px' }}>Portions to Prep</span>
                             </div>
@@ -2435,13 +2657,13 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                             <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>Balance To Collect</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#EF4444' }}>
-                                    ₹{stats.totalBalanceDue.toLocaleString('en-IN')}
+                                    ₹{activeStats.totalBalanceDue.toLocaleString('en-IN')}
                                 </span>
                             </div>
                             <div style={{ background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#8E9B92', display: 'block' }}>Balance Settled</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#4ADE80' }}>
-                                    ₹{stats.totalBalanceCollected.toLocaleString('en-IN')}
+                                    ₹{activeStats.totalBalanceCollected.toLocaleString('en-IN')}
                                 </span>
                             </div>
                         </div>
@@ -2504,26 +2726,33 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                     </div>
 
                                     {/* Status Pill */}
-                                    <span style={{
-                                        padding: '5px 12px',
-                                        borderRadius: '999px',
-                                        background: scannedBooking.status === 'Checked In' 
-                                            ? '#22C55E' 
-                                            : (scannedBooking.status === 'Partial Check-In' && shortCount > 0)
-                                                ? '#F59E0B' 
-                                                : '#D5ED55',
-                                        color: '#0B150E',
-                                        fontSize: '11px',
-                                        fontWeight: '900',
-                                        letterSpacing: '0.5px',
-                                        textTransform: 'uppercase'
-                                    }}>
-                                        {scannedBooking.status === 'Checked In' 
-                                            ? '✓ Checked In' 
-                                            : (scannedBooking.status === 'Partial Check-In' && shortCount > 0)
-                                                ? '⚠️ Partial In' 
-                                                : 'Confirmed'}
-                                    </span>
+                                    {(() => {
+                                        const isCheckedIn = scannedBooking.status === 'Checked In';
+                                        const isPartialIn = scannedBooking.status === 'Partial Check-In' && Number(scannedBooking.shortCount) > 0 && Number(scannedBooking.checkedInCount) > 0;
+                                        return (
+                                            <span style={{
+                                                padding: '5px 12px',
+                                                borderRadius: '999px',
+                                                background: isCheckedIn 
+                                                    ? 'rgba(34, 197, 94, 0.25)' 
+                                                    : isPartialIn 
+                                                        ? 'rgba(234, 179, 8, 0.25)' 
+                                                        : 'rgba(213, 237, 85, 0.2)',
+                                                color: isCheckedIn ? '#4ADE80' : isPartialIn ? '#FACC15' : '#D5ED55',
+                                                border: `1px solid ${isCheckedIn ? 'rgba(34, 197, 94, 0.4)' : isPartialIn ? 'rgba(234, 179, 8, 0.4)' : 'rgba(213, 237, 85, 0.3)'}`,
+                                                fontSize: '11px',
+                                                fontWeight: '900',
+                                                letterSpacing: '0.5px',
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                {isCheckedIn 
+                                                    ? '✓ Checked In' 
+                                                    : isPartialIn 
+                                                        ? `⚠️ ${scannedBooking.checkedInCount || 1}/${scannedBooking.totalGuests || scannedBooking.guests || 2} Present` 
+                                                        : '⏳ Expected · Confirmed'}
+                                            </span>
+                                        );
+                                    })()}
                                 </div>
 
                                 {/* Prominent Lead WhatsApp & Call Buttons directly on Top Pass Header */}
@@ -2697,7 +2926,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                                         </div>
                                     </div>
                                 </div>
-                            ) : (scannedBooking.status === 'Partial Check-In' && shortCount > 0) ? (
+                            ) : (scannedBooking.status === 'Partial Check-In' && Number(scannedBooking.shortCount) > 0 && Number(scannedBooking.checkedInCount) > 0) ? (
                                 <div style={{
                                     background: 'rgba(234, 179, 8, 0.12)',
                                     border: '1px solid rgba(234, 179, 8, 0.35)',
