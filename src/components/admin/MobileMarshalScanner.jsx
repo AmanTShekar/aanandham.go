@@ -49,7 +49,6 @@ import {
     History,
     Check,
     FileText,
-    ExternalLink,
     Printer,
     Share2,
     Award,
@@ -62,9 +61,7 @@ import {
     EyeOff,
     Copy,
     CreditCard,
-    Smartphone,
     Edit2,
-    Save,
     Wallet
 } from 'lucide-react';
 import Link from 'next/link';
@@ -218,7 +215,7 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
     );
 }
 
-export default function MobileMarshalScanner({ onBackToAdmin = null }) {
+export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = false }) {
     // ── NAVIGATION TABS: 'scanner' | 'roster' | 'kitchen' ──
     const [activeTab, setActiveTab] = useState('scanner');
 
@@ -297,11 +294,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
     const [extraGuestsCount, setExtraGuestsCount] = useState(0);
 
     // ── GATE SETTLEMENT & MULTI-OPTION PAYMENT STATE ──
-    const [settlementMethod, setSettlementMethod] = useState('upi_direct'); // 'upi_direct' | 'cash' | 'gateway'
-    const [hostUpiId, setHostUpiId] = useState('9188685831@upi');
-    const [isEditingUpi, setIsEditingUpi] = useState(false);
-    const [tempUpiInput, setTempUpiInput] = useState('9188685831@upi');
-    const [copiedUpi, setCopiedUpi] = useState(false);
+    const [settlementMethod, setSettlementMethod] = useState('cash'); // 'cash' | 'gateway'
 
     // ── NEW SCREEN: FULL-SCREEN GATE PERMIT CONFIRMATION SCREEN ──
     const [clearedGatePermit, setClearedGatePermit] = useState(null);
@@ -360,7 +353,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     }
                     try {
                         localStorage.setItem('hostSession_aanandham', JSON.stringify({
-                            expires: Date.now() + 30 * 24 * 60 * 60 * 1000,
+                            expires: Date.now() + 24 * 60 * 60 * 1000,
                             station
                         }));
                     } catch { /* ignore */ }
@@ -387,7 +380,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ passcode: trimmed })
+                body: JSON.stringify({ passcode: trimmed, rememberMe })
             });
 
             const data = await res.json();
@@ -408,13 +401,18 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                     try { localStorage.setItem('marshal_active_campsite', station.campId); } catch { /* ignore */ }
                 }
 
-                // Always persist session (30 days) so reloads never log the host out
-                try {
-                    localStorage.setItem('hostSession_aanandham', JSON.stringify({
-                        expires: Date.now() + 30 * 24 * 60 * 60 * 1000,
-                        station
-                    }));
-                } catch { /* ignore */ }
+                // Persist session ONLY when "Remember station session" is checked (24h).
+                // Without it, the session dies with the browser tab (session cookie + no local persistence).
+                if (rememberMe) {
+                    try {
+                        localStorage.setItem('hostSession_aanandham', JSON.stringify({
+                            expires: Date.now() + 24 * 60 * 60 * 1000,
+                            station
+                        }));
+                    } catch { /* ignore */ }
+                } else {
+                    try { localStorage.removeItem('hostSession_aanandham'); } catch { /* ignore */ }
+                }
 
                 setIsAuthenticated(true);
                 setHostPasscode('');
@@ -674,8 +672,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setIsChangingTent(false);
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
                 setExtraGuestsCount(0);
-                stopCamera();
-                setIsCameraEnabled(false);
                 showToast(`✓ Verified Pass #${data.booking.id} (${data.booking.name})`);
             } else {
                 setErrorMessage(data.message || 'Scanned QR code is not registered with Aanandham Camps.');
@@ -719,8 +715,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
                 setExtraGuestsCount(0);
                 setIsManualModalOpen(false);
-                stopCamera();
-                setIsCameraEnabled(false);
             } else {
                 setErrorMessage(data.message || `No reservation found for #${manualIdInput}`);
             }
@@ -807,8 +801,6 @@ export default function MobileMarshalScanner({ onBackToAdmin = null }) {
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
                 setExtraGuestsCount(0);
                 setIsManualModalOpen(false);
-                stopCamera();
-                setIsCameraEnabled(false);
             } else {
                 setErrorMessage(data.message || `No reservation found for #${manualIdInput}`);
             }
@@ -1037,13 +1029,10 @@ _Sent by Aanandham Organizers_`
 
         setIsSubmittingCheckin(true);
 
-        const activeUpiId = hostUpiId.trim() || '9074858014@upi';
         const formattedPaymentMode = isBalancePaid 
             ? (settlementMethod === 'cash' 
                 ? 'Cash Collected at Gate' 
-                : settlementMethod === 'upi_direct' 
-                    ? `Direct UPI (${activeUpiId})` 
-                    : 'Online Payment Gateway')
+                : 'Online Payment Gateway')
             : 'Payment Pending at Gate';
 
         try {
@@ -1110,6 +1099,13 @@ _Sent by Aanandham Organizers_`
             setIsSubmittingCheckin(false);
         }
     };
+
+    useEffect(() => {
+        if (scannedBooking) {
+            const el = document.getElementById('checkin-workspace');
+            el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [scannedBooking]);
 
     const resetScanner = () => {
         setScannedBooking(null);
@@ -1516,6 +1512,7 @@ _Sent by Aanandham Organizers_`
                     </form>
 
                     <div style={{ marginTop: '18px' }}>
+                        {!embedded && (
                         <Link
                             href="/"
                             style={{
@@ -1530,6 +1527,7 @@ _Sent by Aanandham Organizers_`
                         >
                             ← Return to Aanandham Homepage
                         </Link>
+                        )}
                     </div>
                 </motion.div>
             </div>
@@ -1569,6 +1567,8 @@ _Sent by Aanandham Organizers_`
             }}>
                 {/* Left: Back / Home & Brand Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                    {!embedded && (
+                    <>
                     {onBackToAdmin ? (
                         <button
                             type="button"
@@ -1632,6 +1632,8 @@ _Sent by Aanandham Organizers_`
                             <Home size={15} />
                         </Link>
                     )}
+                    </>
+                    )}
 
                     {/* Sleek Golden Host Brand Badge & Title */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
@@ -1656,7 +1658,9 @@ _Sent by Aanandham Organizers_`
                                 <span style={{ fontSize: '15px', fontWeight: '900', letterSpacing: '-0.02em', color: '#FFFFFF' }}>
                                     Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                                 </span>
-                                {authStation.isMasterAdmin ? (
+                                {!embedded && (
+                                    <>
+                                    {authStation.isMasterAdmin ? (
                                     <Link
                                         href="/admin"
                                         title="Open Master HQ Admin Dashboard"
@@ -1697,10 +1701,14 @@ _Sent by Aanandham Organizers_`
                                         {`${authStation.icon} ${authStation.shortName || 'STATION'}`}
                                     </span>
                                 )}
+                                </>
+                                )}
                             </div>
+                            {!embedded && (
                             <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {authStation.isMasterAdmin ? 'Enterprise Multi-Sanctuary Access' : `${authStation.campName} · Station Locked`}
                             </span>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -2018,7 +2026,7 @@ _Sent by Aanandham Organizers_`
             {/* ══════════════════════════════════════════════════════════
                 TAB 1: LIVE QR CAMERA SCANNER
             ══════════════════════════════════════════════════════════ */}
-            {activeTab === 'scanner' && !scannedBooking && !clearedGatePermit && (
+            {activeTab === 'scanner' && !clearedGatePermit && (
                 <main style={{
                     flex: 1,
                     display: 'flex',
@@ -2198,7 +2206,8 @@ _Sent by Aanandham Organizers_`
                         )}
                     </div>
 
-                    {/* Quick Tools */}
+                    {/* Quick Tools (hidden while a scanned pass is open) */}
+                    {!scannedBooking && (
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
                         {isCameraEnabled && (
                             <>
@@ -2288,6 +2297,7 @@ _Sent by Aanandham Organizers_`
                             <span>Enter Booking ID</span>
                         </button>
                     </div>
+                    )}
                 </main>
             )}
 
@@ -2361,7 +2371,7 @@ _Sent by Aanandham Organizers_`
                                 </span>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                            <div className="admin-region-chip-row" style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                                 {AANANDHAM_CAMPS.map(camp => {
                                     const isSelected = selectedCampground === camp.id;
                                     const count = rosterList.filter(g => isGuestMatchingCamp(g, camp.id)).length;
@@ -2424,45 +2434,6 @@ _Sent by Aanandham Organizers_`
                         </div>
                     </div>
 
-                    {/* Simulation Generator Bar */}
-                    <div style={{
-                        background: 'linear-gradient(135deg, rgba(229, 169, 59, 0.1) 0%, rgba(213, 237, 85, 0.1) 100%)',
-                        border: '1px solid rgba(229, 169, 59, 0.3)',
-                        borderRadius: '16px',
-                        padding: '12px 16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '14px',
-                        gap: '10px'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Sparkles size={16} color="#E5A93B" />
-                            <span style={{ fontSize: '12px', fontWeight: '800', color: '#FFFFFF' }}>
-                                Need realistic test data?
-                            </span>
-                        </div>
-                        <button
-                            onClick={handleSeedDemoCampers}
-                            disabled={isSeedingDemo}
-                            style={{
-                                padding: '6px 14px',
-                                borderRadius: '10px',
-                                background: '#E5A93B',
-                                color: '#0B150E',
-                                fontSize: '11.5px',
-                                fontWeight: '800',
-                                border: 'none',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                            }}
-                        >
-                            <span>{isSeedingDemo ? 'Seeding...' : '⚡ Seed 5-Camp Demo Data'}</span>
-                        </button>
-                    </div>
-
                     {/* Search & Status Filter */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
                         <div style={{ position: 'relative' }}>
@@ -2487,7 +2458,7 @@ _Sent by Aanandham Organizers_`
                         </div>
 
                         {/* Filter Chips */}
-                        <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
+                        <div className="admin-region-chip-row" style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                             {[
                                 { id: 'all', label: `All (${campIsolatedRoster.length})` },
                                 { id: 'pending', label: `⏳ Expected (${campIsolatedRoster.filter(r => r.status !== 'Checked In' && r.status !== 'Partial Check-In').length})` },
@@ -3266,13 +3237,14 @@ _Sent by Aanandham Organizers_`
                 (Responsive 1-Col Mobile, 2-Col Tablet/Laptop)
             ══════════════════════════════════════════════════════════ */}
             {scannedBooking && !clearedGatePermit && (
-                <main style={{
+                <main id="checkin-workspace" style={{
                     flex: 1,
                     padding: '20px clamp(16px, 4vw, 32px) 100px',
                     maxWidth: '1080px',
                     margin: '0 auto',
                     width: '100%',
-                    boxSizing: 'border-box'
+                    boxSizing: 'border-box',
+                    scrollMarginTop: '70px'
                 }}>
                     {/* Cross-Sanctuary Warning Banner */}
                     {!authStation.isMasterAdmin && authStation.campId !== 'all' && !isGuestMatchingCamp(scannedBooking, authStation.campId) && (
@@ -3407,7 +3379,7 @@ _Sent by Aanandham Organizers_`
                                             <a
                                                 href={`tel:${leadPhone.replace(/[^\d+]/g, '')}`}
                                                 style={{
-                                                    padding: '10px 16px',
+padding: embedded ? '12px 18px' : '10px 16px',
                                                     borderRadius: '12px',
                                                     background: 'rgba(255, 255, 255, 0.08)',
                                                     border: '1px solid rgba(255, 255, 255, 0.18)',
@@ -4017,39 +3989,16 @@ _Sent by Aanandham Organizers_`
                                     </div>
                                 </div>
 
-                                {/* 3-WAY SETTLEMENT METHOD TABS */}
+                                {/* 2-WAY SETTLEMENT METHOD TABS */}
                                 <div style={{
                                     display: 'grid',
-                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                    gridTemplateColumns: 'repeat(2, 1fr)',
                                     gap: '6px',
                                     background: 'rgba(0, 0, 0, 0.4)',
                                     padding: '4px',
                                     borderRadius: '14px',
                                     marginBottom: '16px'
                                 }}>
-                                    <button
-                                        type="button"
-                                        onClick={() => setSettlementMethod('upi_direct')}
-                                        style={{
-                                            padding: '8px 4px',
-                                            borderRadius: '10px',
-                                            border: 'none',
-                                            background: settlementMethod === 'upi_direct' ? '#D5ED55' : 'transparent',
-                                            color: settlementMethod === 'upi_direct' ? '#0B150E' : '#A2B6A6',
-                                            fontSize: '11.5px',
-                                            fontWeight: '800',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '4px',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.15s ease'
-                                        }}
-                                    >
-                                        <Smartphone size={13} />
-                                        <span>Instant UPI</span>
-                                    </button>
-
                                     <button
                                         type="button"
                                         onClick={() => setSettlementMethod('cash')}
@@ -4097,164 +4046,7 @@ _Sent by Aanandham Organizers_`
                                     </button>
                                 </div>
 
-                                {/* TAB 1: INSTANT DIRECT UPI (NO QR) */}
-                                {settlementMethod === 'upi_direct' && (
-                                    <div style={{
-                                        background: 'rgba(213, 237, 85, 0.06)',
-                                        border: '1px solid rgba(213, 237, 85, 0.25)',
-                                        borderRadius: '16px',
-                                        padding: '16px',
-                                        marginBottom: '16px',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '12px'
-                                    }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                                ⚡ Instant UPI Transfer (No QR Needed)
-                                            </div>
-                                            <span style={{ fontSize: '11px', color: '#8E9B92', fontWeight: '700' }}>
-                                                GPay • PhonePe • Paytm • BHIM
-                                            </span>
-                                        </div>
-
-                                        {/* Amount Banner */}
-                                        <div style={{
-                                            background: '#08120A',
-                                            border: '1px solid rgba(213, 237, 85, 0.2)',
-                                            borderRadius: '14px',
-                                            padding: '14px 16px',
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center'
-                                        }}>
-                                            <div>
-                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '800' }}>
-                                                    Amount to Transfer:
-                                                </span>
-                                                <span style={{ fontSize: '24px', fontWeight: '900', color: '#D5ED55', lineHeight: 1.1 }}>
-                                                    ₹{dynamicBalanceDue.toLocaleString('en-IN')}
-                                                </span>
-                                            </div>
-                                            <div style={{ textAlign: 'right' }}>
-                                                <span style={{ fontSize: '10.5px', color: '#8E9B92', display: 'block', textTransform: 'uppercase', fontWeight: '800' }}>
-                                                    Receiving UPI ID:
-                                                </span>
-                                                <span style={{ fontSize: '13px', fontWeight: '900', color: '#FFFFFF', wordBreak: 'break-all' }}>
-                                                    {hostUpiId}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* UPI ID Quick Copy & Edit Bar */}
-                                        <div style={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            flexWrap: 'wrap',
-                                            gap: '8px',
-                                            background: 'rgba(255, 255, 255, 0.03)',
-                                            padding: '10px 12px',
-                                            borderRadius: '12px',
-                                            border: '1px solid rgba(255, 255, 255, 0.06)'
-                                        }}>
-                                            {isEditingUpi ? (
-                                                <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
-                                                    <input
-                                                        type="text"
-                                                        value={tempUpiInput}
-                                                        onChange={e => setTempUpiInput(e.target.value)}
-                                                        placeholder="e.g. yourname@upi"
-                                                        style={{
-                                                            flex: 1,
-                                                            background: '#08120A',
-                                                            border: '1px solid #D5ED55',
-                                                            color: '#FFFFFF',
-                                                            fontSize: '12.5px',
-                                                            padding: '8px 10px',
-                                                            borderRadius: '8px',
-                                                            outline: 'none'
-                                                        }}
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setHostUpiId(tempUpiInput.trim() || '9188685831@upi');
-                                                            setIsEditingUpi(false);
-                                                            showToast('✓ Updated receiving UPI ID');
-                                                        }}
-                                                        style={{ padding: '8px 12px', borderRadius: '8px', background: '#D5ED55', color: '#0B150E', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                    >
-                                                        <Save size={12} />
-                                                        <span>Save</span>
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                        <span style={{ fontSize: '11.5px', color: '#C8D8CB' }}>ID:</span>
-                                                        <strong style={{ fontSize: '12.5px', color: '#D5ED55' }}>{hostUpiId}</strong>
-                                                    </div>
-                                                    <div style={{ display: 'flex', gap: '6px' }}>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (navigator.clipboard) {
-                                                                    navigator.clipboard.writeText(hostUpiId);
-                                                                    setCopiedUpi(true);
-                                                                    showToast(`✓ Copied UPI ID: ${hostUpiId}`);
-                                                                    setTimeout(() => setCopiedUpi(false), 2500);
-                                                                }
-                                                            }}
-                                                            style={{ padding: '6px 12px', borderRadius: '8px', background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                        >
-                                                            <Copy size={12} />
-                                                            <span>{copiedUpi ? 'Copied!' : 'Copy UPI ID'}</span>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                setTempUpiInput(hostUpiId);
-                                                                setIsEditingUpi(true);
-                                                            }}
-                                                            style={{ padding: '6px 10px', borderRadius: '8px', background: 'rgba(255, 255, 255, 0.08)', color: '#FFFFFF', border: '1px solid rgba(255, 255, 255, 0.12)', fontSize: '11px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                        >
-                                                            <Edit2 size={12} />
-                                                            <span>Edit</span>
-                                                        </button>
-                                                    </div>
-                                                </>
-                                            )}
-                                        </div>
-
-                                        {/* Direct Launch in UPI App */}
-                                        {dynamicBalanceDue > 0 && (
-                                            <a
-                                                href={`upi://pay?pa=${encodeURIComponent(hostUpiId.trim() || '9188685831@upi')}&pn=${encodeURIComponent('Aanandham Wilderness')}&am=${dynamicBalanceDue}&cu=INR&tn=${encodeURIComponent('Gate Pass ' + (scannedBooking.id || ''))}`}
-                                                style={{
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '6px',
-                                                    width: '100%',
-                                                    padding: '11px',
-                                                    borderRadius: '12px',
-                                                    background: '#D5ED55',
-                                                    color: '#0B150E',
-                                                    fontSize: '12.5px',
-                                                    fontWeight: '900',
-                                                    textDecoration: 'none',
-                                                    boxSizing: 'border-box'
-                                                }}
-                                            >
-                                                <ExternalLink size={14} />
-                                                <span>Pay ₹{dynamicBalanceDue.toLocaleString('en-IN')} via UPI App</span>
-                                            </a>
-                                        )}
-                                    </div>
-                                )}
-
-                                {/* TAB 2: CASH AT GATE */}
+                                {/* TAB 1: CASH AT GATE */}
                                 {settlementMethod === 'cash' && (
                                     <div style={{
                                         background: 'rgba(34, 197, 94, 0.06)',
@@ -4294,14 +4086,14 @@ _Sent by Aanandham Organizers_`
                                             </div>
                                             <span style={{
                                                 fontSize: '9.5px',
-                                                color: '#FACC15',
-                                                background: 'rgba(250, 204, 21, 0.12)',
-                                                border: '1px solid rgba(250, 204, 21, 0.3)',
+                                                color: '#4ADE80',
+                                                background: 'rgba(34, 197, 94, 0.12)',
+                                                border: '1px solid rgba(34, 197, 94, 0.3)',
                                                 padding: '2px 7px',
                                                 borderRadius: '6px',
                                                 fontWeight: '800'
                                             }}>
-                                                ON HOLD (Template Ready)
+                                                ACTIVE
                                             </span>
                                         </div>
 
@@ -4405,8 +4197,8 @@ _Sent by Aanandham Organizers_`
                                         </div>
                                         <span>
                                             {isBalancePaid 
-                                                ? `✓ Balance Settled (₹${dynamicBalanceDue} received via ${settlementMethod === 'cash' ? 'Cash' : settlementMethod === 'upi_direct' ? 'Direct UPI' : 'Gateway'})` 
-                                                : `Mark ₹${dynamicBalanceDue.toLocaleString('en-IN')} balance as collected (${settlementMethod === 'cash' ? 'Cash' : settlementMethod === 'upi_direct' ? 'Direct UPI' : 'Gateway'})`}
+                                                ? `✓ Balance Settled (₹${dynamicBalanceDue} received via ${settlementMethod === 'cash' ? 'Cash' : 'Online Gateway'})` 
+                                                : `Mark ₹${dynamicBalanceDue.toLocaleString('en-IN')} balance as collected (${settlementMethod === 'cash' ? 'Cash' : 'Online Gateway'})`}
                                         </span>
                                     </div>
                                     <span style={{ fontSize: '11px', color: isBalancePaid ? '#4ADE80' : '#8E9B92', fontWeight: '700', flexShrink: 0 }}>

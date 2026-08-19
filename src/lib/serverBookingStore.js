@@ -8,7 +8,7 @@ const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
 const INITIAL_SERVER_BOOKINGS = [];
 
 // In-memory fallback if disk write is not available
-let memoryStore = [];
+let memoryStore = [...INITIAL_SERVER_BOOKINGS];
 
 // Helper: Ensure directory exists on local disk
 function ensureDataDir() {
@@ -28,15 +28,16 @@ function readLocalBookings() {
         if (fs.existsSync(BOOKINGS_FILE)) {
             const raw = fs.readFileSync(BOOKINGS_FILE, 'utf-8');
             const data = JSON.parse(raw);
-            if (Array.isArray(data)) {
+            if (Array.isArray(data) && data.length > 0) {
                 memoryStore = data;
                 return data;
             }
         }
-        fs.writeFileSync(BOOKINGS_FILE, JSON.stringify([], null, 2), 'utf-8');
-        return [];
+        fs.writeFileSync(BOOKINGS_FILE, JSON.stringify(INITIAL_SERVER_BOOKINGS, null, 2), 'utf-8');
+        memoryStore = [...INITIAL_SERVER_BOOKINGS];
+        return INITIAL_SERVER_BOOKINGS;
     } catch (err) {
-        return memoryStore;
+        return memoryStore.length > 0 ? memoryStore : INITIAL_SERVER_BOOKINGS;
     }
 }
 

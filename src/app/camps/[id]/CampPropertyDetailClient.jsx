@@ -15,6 +15,7 @@ import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsD
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
 import { CANCELLATION_TIERS } from '../../../lib/cancellation';
+import { loadDiscountsFromStorage, applyDiscounts } from '../../../lib/discountsCore';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -35,6 +36,18 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const [guestsCount, setGuestsCount] = useState(2);
     const [customUnits, setCustomUnits] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [discounts, setDiscounts] = useState(null);
+
+    // Load active discount campaigns (server authoritative, localStorage fallback)
+    useEffect(() => {
+        setDiscounts(loadDiscountsFromStorage());
+        fetch('/api/discounts', { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                if (data && Array.isArray(data.discounts)) setDiscounts(data.discounts);
+            })
+            .catch(() => { /* keep localStorage fallback */ });
+    }, []);
 
     // Wishlist & Share Toast
     const [wishlist, setWishlist] = useState([]);
@@ -171,7 +184,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const calculatedUnits = Math.ceil(guestsCount / capacityNum);
     const effectiveUnits = customUnits !== null ? customUnits : calculatedUnits;
     const totalCapacity = effectiveUnits * capacityNum;
-    const estimatedTotal = guestsCount * roomPrice;
+    const discount = applyDiscounts({ baseTotal: guestsCount * roomPrice, guests: guestsCount, campsiteId: camp?.id, discounts });
+    const estimatedTotal = discount.discountedTotal;
+    const discountLabel = discount.discountLabel;
+    const discountAmount = discount.discountAmount;
 
     const nearbyCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
 
@@ -702,7 +718,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                 3. Total Campers
                                             </label>
                                             <span style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800' }}>
-                                                {guestsCount >= 8 ? '🎉 15% Squad Off' : guestsCount >= 4 ? '✨ 10% Squad Off' : `${effectiveUnits} Unit(s)`}
+                                                {discountLabel ? `✨ ${discountLabel}` : `${effectiveUnits} Unit(s)`}
                                             </span>
                                         </div>
 
@@ -740,9 +756,19 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '3px' }}>
                                             <span style={{ fontSize: '13px', fontWeight: '700', color: '#59655D' }}>Estimated Total:</span>
                                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#166534' }}>
+                                                {discountAmount > 0 && (
+                                                    <span style={{ textDecoration: 'line-through', fontSize: '14px', fontWeight: '700', color: '#8A938B', marginRight: '8px' }}>
+                                                        ₹{(guestsCount * roomPrice).toLocaleString('en-IN')}
+                                                    </span>
+                                                )}
                                                 ₹{estimatedTotal.toLocaleString('en-IN')}
                                             </span>
                                         </div>
+                                        {discountAmount > 0 && (
+                                            <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700', marginBottom: '3px' }}>
+                                                ✨ {discountLabel} · You save ₹{discountAmount.toLocaleString('en-IN')}
+                                            </div>
+                                        )}
                                         <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>
                                             ✓ Includes {effectiveUnits} × {currentRoom.name}, Dinner BBQ & Guided Trek
                                         </div>
@@ -796,7 +822,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                     </a>
 
                                     <div style={{ textAlign: 'center', fontSize: '11px', color: '#7D8880', marginTop: '2px' }}>
-                                        🔒 0% Fee Direct UPI · 30% Advance Deposit locks permits
+                                        🔒 Secure Razorpay Checkout · 30% Advance Deposit locks permits
                                     </div>
 
                                 </div>

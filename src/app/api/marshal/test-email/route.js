@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 import { sendBookingConfirmationEmail } from '@/lib/email.js';
 import { addServerBooking, getStoredBookings } from '@/lib/serverBookingStore.js';
-import { getClientIp } from '@/lib/authConfig.js';
+import { getClientIp, getAdminPayload } from '@/lib/authConfig.js';
 import { checkRateLimit } from '@/lib/redis.js';
 
 export async function POST(request) {
     const ip = getClientIp(request);
+
+    // Dev/test tool: master admin only
+    const session = getAdminPayload(request);
+    if (!session) {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
 
     // Rate limit test emails (Max 10 / min)
     const rateLimit = await checkRateLimit(`ratelimit:test_email:${ip}`, 10, 60);

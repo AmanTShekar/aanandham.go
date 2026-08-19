@@ -1,4 +1,4 @@
-export const DEFAULT_WA_PHONE = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+export const DEFAULT_WA_PHONE = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '9188685831';
 
 /**
  * Format a phone number into an international numeric string without special chars

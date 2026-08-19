@@ -31,6 +31,7 @@ import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { getPaymentSettings } from '../lib/paymentSettings';
+import { loadDiscountsFromStorage, applyDiscounts } from '../lib/discountsCore';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -62,13 +63,14 @@ export default function BookingEngineModal({
     useFocusTrap(isOpen, modalRef);
 
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
+    const [discounts, setDiscounts] = useState(null);
     const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
     const [selectedRoomId, setSelectedRoomId] = useState('');
     const [travelDate, setTravelDate] = useState(() => initialDate || getDefaultUpcomingBatch());
     const [adults, setAdults] = useState(initialAdults || (typeof initialGuests === 'number' ? Math.max(1, initialGuests) : 2));
     const [children, setChildren] = useState(initialChildren || 0);
     const [customUnits, setCustomUnits] = useState(initialCustomUnits || null);
-    const [selectedAddons, setSelectedAddons] = useState(['bbq']);
+    const [selectedAddons, setSelectedAddons] = useState([]);
     
     // Explorer Details
     const [customerName, setCustomerName] = useState('');
@@ -89,12 +91,8 @@ export default function BookingEngineModal({
     // Payment Options (Step 4) & Admin Dynamic Controls
     const [paymentSettings, setPaymentSettings] = useState(() => getPaymentSettings());
     const [paymentMode, setPaymentMode] = useState('advance'); // 'advance' (30%) | 'full' (100%)
-    const [utrNumber, setUtrNumber] = useState('');
-    const [copiedUpi, setCopiedUpi] = useState(false);
     const [confirmedPass, setConfirmedPass] = useState(null);
-
-    const UPI_ID = paymentSettings.upiId || 'aanandhamgo@okhdfcbank';
-    const UPI_PAYEE_NAME = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
+const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
 
     // Synchronize payment settings on custom event & modal open
     useEffect(() => {
@@ -174,6 +172,17 @@ export default function BookingEngineModal({
         }
     }, [isOpen, initialPackage, initialRoom, initialRoomId, initialDate, initialGuests, initialAdults, initialChildren, initialCustomUnits, campsList]);
 
+    // Load active discount campaigns (server authoritative, localStorage fallback)
+    useEffect(() => {
+        setDiscounts(loadDiscountsFromStorage());
+        fetch('/api/discounts', { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                if (data && Array.isArray(data.discounts)) setDiscounts(data.discounts);
+            })
+            .catch(() => { /* keep localStorage fallback */ });
+    }, []);
+
     // Current Package
     const currentPkg = useMemo(() => {
         return campsList.find(p => p.id === selectedPkgId) || campsList[0] || INITIAL_ALL_CAMPS[0];
@@ -234,9 +243,11 @@ export default function BookingEngineModal({
     const roomPricePerPerson = currentRoom?.price || currentPkg?.price || 2499;
     const baseTotal = (roomPricePerPerson * adults) + (Math.round(roomPricePerPerson * 0.5) * children);
     
-    // Squad Discount
-    const discountPercent = totalGuests >= 8 ? 15 : totalGuests >= 4 ? 10 : 0;
-    const discountAmount = Math.round((baseTotal * discountPercent) / 100);
+    // Discounts (admin-managed campaigns)
+    const discount = applyDiscounts({ baseTotal, guests: totalGuests, campsiteId: currentPkg?.id, discounts });
+    const discountPercent = discount.discountPercent;
+    const discountAmount = discount.discountAmount;
+    const discountLabel = discount.discountLabel;
 
     // Add-ons Total
     const addonsTotal = selectedAddons.reduce((acc, addonId) => {
@@ -245,7 +256,7 @@ export default function BookingEngineModal({
         return acc + (addon.perPerson ? addon.price * totalGuests : addon.price);
     }, 0);
 
-    const grandTotal = baseTotal - discountAmount + addonsTotal;
+    const grandTotal = discount.discountedTotal + addonsTotal;
     const advanceAmount = Math.round(grandTotal * 0.3); // 30% advance deposit
     const payableNow = paymentMode === 'advance' ? advanceAmount : grandTotal;
     const balanceOnArrival = grandTotal - payableNow;
@@ -291,14 +302,6 @@ export default function BookingEngineModal({
         );
     };
 
-    const handleCopyUpi = () => {
-        if (navigator?.clipboard?.writeText) {
-            navigator.clipboard.writeText(UPI_ID);
-            setCopiedUpi(true);
-            setTimeout(() => setCopiedUpi(false), 2500);
-        }
-    };
-
     // Step 1 Validation -> Step 2
     const handleProceedToStep2 = () => {
         if (!travelDate) {
@@ -333,8 +336,17 @@ export default function BookingEngineModal({
         setStep(4);
     };
 
-    // Step 4 Complete: Confirm Booking & Generate Official Voucher Pass
-    const handleConfirmBookingAndIssuePass = async () => {
+    // Step 4 Live Gateway: Create Booking + Open Razorpay Checkout
+    const loadRazorpayCheckoutScript = () => new Promise((resolve, reject) => {
+        if (typeof window !== 'undefined' && window.Razorpay) return resolve();
+        const s = document.createElement('script');
+        s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error('Failed to load payment checkout. Please retry.'));
+        document.body.appendChild(s);
+    });
+
+    const handleRazorpayCheckout = async () => {
         if (honeypot && honeypot.trim().length > 0) {
             onClose();
             return;
@@ -349,11 +361,10 @@ export default function BookingEngineModal({
         setValidationError('');
 
         const selectedAddonNames = selectedAddons.map(id => ADDONS_LIST.find(a => a.id === id)?.name).filter(Boolean);
-        const bookingId = activeBookingRef;
         const datesString = travelDate || getDefaultUpcomingBatch();
 
         const passData = {
-            id: bookingId,
+            id: generateBookingId(),
             name: customerName.trim(),
             phone: customerPhone.trim(),
             email: customerEmail.trim() || undefined,
@@ -368,46 +379,100 @@ export default function BookingEngineModal({
             roomType: `${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Mountain Glamp'}`,
             addons: selectedAddonNames,
             total: grandTotal,
-            paidAmount: payableNow,
-            balanceDue: balanceOnArrival,
             paymentMode: paymentMode === 'advance' ? '30% Advance Deposit' : '100% Full Expedition Fare',
-            utrNumber: utrNumber.trim() || 'UPI-DIRECT-INTENT',
+            paymentGateway: 'razorpay',
             dietaryChoice,
             vegCount,
             nonVegCount,
             mealSummary: `${vegCount} Veg + ${nonVegCount} Non-Veg BBQ (${dietaryChoice})`,
             notes: specialNotes.trim(),
-            status: 'Confirmed',
             source: 'Direct Website Reservation',
             createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
         };
 
-        // 1. Sync with Server API (Authoritative ID Assignment)
-        let finalBookingId = bookingId;
         try {
             const res = await fetch('/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(passData)
             });
-            if (res.ok) {
-                const resData = await res.json();
-                if (resData.bookingId) {
-                    finalBookingId = resData.bookingId;
-                }
+            const resData = await res.json();
+            if (!res.ok || !resData.success) {
+                setValidationError(resData.message || 'Could not reserve your slot. Please retry.');
+                setIsSubmitting(false);
+                return;
             }
+
+            const orderId = resData.razorpayOrder?.id;
+            const keyId = resData.razorpayKeyId;
+            const finalPass = { ...passData, id: resData.bookingId, total: grandTotal, paidAmount: payableNow, balanceDue: balanceOnArrival, status: 'Confirmed' };
+
+            // Demo/dev mode (no Razorpay credentials configured): simulate payment
+            if (!keyId || String(orderId).startsWith('order_dev_')) {
+                await fetch('/api/payments/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ bookingId: resData.bookingId, orderId: orderId || `order_dev_${Date.now()}`, paymentId: `pay_demo_${Date.now()}`, signature: 'demo' })
+                });
+                setConfirmedPass(finalPass);
+                setIsSubmitting(false);
+                setStep(5);
+                return;
+            }
+
+            // Live mode: open the Razorpay checkout
+            await loadRazorpayCheckoutScript();
+            const options = {
+                key: keyId,
+                amount: resData.razorpayOrder.amount,
+                currency: resData.razorpayOrder.currency || 'INR',
+                name: 'Aanandham.go Wilderness Stays',
+                description: `${currentPkg.title} · ${allocatedUnits} × ${currentRoom ? currentRoom.name : 'Glamp'} · ${totalGuests} Campers`,
+                order_id: orderId,
+                prefill: {
+                    name: customerName.trim(),
+                    contact: customerPhone.trim(),
+                    email: customerEmail.trim() || undefined
+                },
+                handler: async (response) => {
+                    try {
+                        const vRes = await fetch('/api/payments/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                bookingId: resData.bookingId,
+                                orderId: response.razorpay_order_id || orderId,
+                                paymentId: response.razorpay_payment_id,
+                                signature: response.razorpay_signature || ''
+                            })
+                        });
+                        const vData = await vRes.json();
+                        if (vData.success) {
+                            setConfirmedPass({ ...finalPass, status: 'Confirmed' });
+                            setIsSubmitting(false);
+                            setStep(5);
+                        } else {
+                            setValidationError('Payment received — our team will confirm your booking shortly.');
+                            setIsSubmitting(false);
+                        }
+                    } catch (err) {
+                        setValidationError('Payment received — our team will confirm your booking shortly.');
+                        setIsSubmitting(false);
+                    }
+                },
+                modal: {
+                    ondismiss: () => {
+                        setIsSubmitting(false);
+                        setValidationError('Payment window closed. Your slot is held for 10 minutes — you can retry the payment.');
+                    }
+                }
+            };
+            new window.Razorpay(options).open();
         } catch (err) {
-            console.error('Server sync notice:', err);
+            console.error('Razorpay checkout error:', err);
+            setValidationError('Payment gateway unavailable. Please retry or contact our concierge.');
+            setIsSubmitting(false);
         }
-
-        const finalPass = {
-            ...passData,
-            id: finalBookingId
-        };
-
-        setConfirmedPass(finalPass);
-        setIsSubmitting(false);
-        setStep(5); // Show Official Boarding Pass Voucher
     };
 
     // WhatsApp Instant Sync
@@ -424,7 +489,7 @@ export default function BookingEngineModal({
             `🍽️ *Meal Prep Allocation:* ${confirmedPass.vegCount} Veg + ${confirmedPass.nonVegCount} Non-Veg BBQ (${confirmedPass.dietaryChoice})\n` +
             `✨ *Add-ons:* ${confirmedPass.addons.length > 0 ? confirmedPass.addons.join(', ') : 'None'}\n` +
             `💰 *Grand Total:* ${inr(confirmedPass.total)}\n` +
-            `💳 *Paid via UPI:* ${inr(confirmedPass.paidAmount)} (${confirmedPass.paymentMode})\n` +
+            `💳 *Paid:* ${inr(confirmedPass.paidAmount)} (${confirmedPass.paymentMode})\n` +
             `⏳ *Balance on Check-in:* ${inr(confirmedPass.balanceDue)}\n` +
             `📝 *Notes:* ${confirmedPass.notes || 'None'}\n\n` +
             `Please share the 4x4 Jeep pickup coordinator contact and offline GPS map! 🏔️✨`;
@@ -780,7 +845,7 @@ export default function BookingEngineModal({
                                                 4. Number of Campers
                                             </label>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
-                                                {totalGuests >= 8 ? '🎉 15% Squad Discount' : totalGuests >= 4 ? '✨ 10% Squad Discount' : 'Standard Fare'}
+                                                {discountLabel ? `✨ ${discountLabel}` : 'Standard Fare'}
                                             </span>
                                         </div>
 
@@ -1011,8 +1076,21 @@ export default function BookingEngineModal({
                                     <div style={{ padding: '14px 18px', background: '#121613', borderRadius: '16px', color: '#FFFFFF', marginBottom: '18px' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12.5px' }}>
                                             <span style={{ color: '#A2B6A6' }}>{currentPkg.title} ({totalGuests} Campers):</span>
-                                            <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
+                                            <span>
+                                                {discountAmount > 0 && (
+                                                    <span style={{ textDecoration: 'line-through', color: '#8A938B', marginRight: '8px', fontSize: '11.5px' }}>
+                                                        ₹{baseTotal.toLocaleString('en-IN')}
+                                                    </span>
+                                                )}
+                                                <span>₹{(baseTotal - discountAmount).toLocaleString('en-IN')}</span>
+                                            </span>
                                         </div>
+                                        {discountAmount > 0 && (
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px', color: '#D5ED55' }}>
+                                                <span>{discountLabel || 'Discount Applied'}:</span>
+                                                <span>−₹{discountAmount.toLocaleString('en-IN')}</span>
+                                            </div>
+                                        )}
                                         {addonsTotal > 0 && (
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12.5px', color: '#D5ED55' }}>
                                                 <span>Add-ons ({selectedAddons.length} Selected):</span>
@@ -1344,84 +1422,50 @@ export default function BookingEngineModal({
                                             </div>
                                         </div>
                                     ) : (
-                                        /* Dynamic UPI Payment Card */
-                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '16px', background: '#121613', borderRadius: '20px', padding: '18px', color: '#FFFFFF', marginBottom: '18px' }}>
-                                            {/* Left Column: QR Code */}
-                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: '#FFFFFF', padding: '14px', borderRadius: '16px' }}>
-                                                <img
-                                                    src={qrCodeImageUrl}
-                                                    alt="Aanandham Dynamic UPI QR Code"
-                                                    style={{ width: '160px', height: '160px', display: 'block', borderRadius: '8px', objectFit: 'contain' }}
-                                                />
-                                                <div style={{ textAlign: 'center', marginTop: '8px', color: '#121613' }}>
-                                                    <div style={{ fontSize: '10.5px', fontWeight: '800', textTransform: 'uppercase', color: '#166534' }}>
-                                                        Scan With Any UPI App
-                                                    </div>
-                                                    <div style={{ fontSize: '15px', fontWeight: '900', color: '#121613' }}>
-                                                        ₹{payableNow.toLocaleString('en-IN')}
-                                                    </div>
-                                                </div>
+                                        /* Secure Razorpay Gateway Card */
+                                        <div style={{ background: '#121613', borderRadius: '20px', padding: '18px', color: '#FFFFFF', marginBottom: '18px', border: '1px solid rgba(213, 237, 85, 0.25)' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                                <span style={{ background: '#22C55E', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '900', padding: '3px 8px', borderRadius: '999px', letterSpacing: '0.5px' }}>
+                                                    ● SECURE CHECKOUT
+                                                </span>
+                                                <span style={{ color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase' }}>
+                                                    Razorpay Gateway
+                                                </span>
                                             </div>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 6px' }}>
+                                                Pay Securely with Razorpay
+                                            </h3>
+                                            <p style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.55, margin: '0 0 14px' }}>
+                                                UPI · Cards · NetBanking · Wallets — all accepted inside the encrypted Razorpay checkout. Your slot is held for 10 minutes while you pay.
+                                            </p>
 
-                                            {/* Right Column: 1-Tap Buttons & UPI ID */}
-                                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                                                <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
-                                                        <ShieldCheck size={13} color="#D5ED55" />
-                                                        <span>Direct Campsite Fare</span>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E', fontSize: '14px', fontWeight: '900' }}>
+                                                        ✓
                                                     </div>
-                                                    <h3 style={{ fontSize: '16px', fontWeight: '800', margin: '0 0 8px', color: '#FFFFFF' }}>
-                                                        Instant UPI Payment
-                                                    </h3>
-                                                    
-                                                    {/* Copy UPI ID */}
-                                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.08)', padding: '6px 10px', borderRadius: '8px', marginBottom: '10px' }}>
-                                                        <div>
-                                                            <div style={{ fontSize: '9.5px', color: '#A2B6A6' }}>Official UPI VPA:</div>
-                                                            <div style={{ fontSize: '12px', fontWeight: '800', color: '#D5ED55' }}>{UPI_ID}</div>
-                                                        </div>
-                                                        <button
-                                                            type="button"
-                                                            onClick={handleCopyUpi}
-                                                            style={{ background: '#FFFFFF', border: 'none', color: '#121613', padding: '4px 10px', borderRadius: '6px', fontSize: '10.5px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                                        >
-                                                            <Copy size={11} />
-                                                            <span>{copiedUpi ? 'Copied!' : 'Copy'}</span>
-                                                        </button>
-                                                    </div>
-
-                                                    {/* 1-Tap Mobile Intent Buttons */}
-                                                    <div style={{ fontSize: '11px', color: '#A2B6A6', marginBottom: '6px' }}>
-                                                        On mobile? Tap app directly:
-                                                    </div>
-                                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', marginBottom: '10px' }}>
-                                                        <a
-                                                            href={upiPayLink}
-                                                            style={{ padding: '7px', background: '#FFFFFF', borderRadius: '8px', color: '#121613', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-                                                        >
-                                                            <span>GPay →</span>
-                                                        </a>
-                                                        <a
-                                                            href={upiPayLink}
-                                                            style={{ padding: '7px', background: '#5F259F', borderRadius: '8px', color: '#FFFFFF', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-                                                        >
-                                                            <span>PhonePe →</span>
-                                                        </a>
+                                                    <div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Pay Now</div>
+                                                        <div style={{ fontSize: '17px', fontWeight: '900', color: '#D5ED55' }}>₹{payableNow.toLocaleString('en-IN')}</div>
                                                     </div>
                                                 </div>
-
-                                                {/* UTR Input */}
-                                                <div>
-                                                    <label style={{ fontSize: '10.5px', color: '#A2B6A6', display: 'block', marginBottom: '3px' }}>
-                                                        12-Digit UPI Ref / UTR No. (Optional):
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        placeholder="e.g. 423871928371"
-                                                        value={utrNumber}
-                                                        onChange={(e) => setUtrNumber(e.target.value)}
-                                                        style={{ width: '100%', padding: '7px 10px', borderRadius: '8px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', color: '#FFFFFF', fontSize: '11.5px', boxSizing: 'border-box' }}
-                                                    />
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(229, 169, 59, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E5A93B', fontSize: '14px' }}>
+                                                        ⏳
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Slot Hold</div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>10 Minutes</div>
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontSize: '14px' }}>
+                                                        <ShieldCheck size={15} />
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Protected</div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>Bank-grade Secured</div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1486,17 +1530,17 @@ export default function BookingEngineModal({
                                         ) : (
                                             <button
                                                 type="button"
-                                                onClick={handleConfirmBookingAndIssuePass}
+                                                onClick={handleRazorpayCheckout}
                                                 disabled={isSubmitting}
                                                 className="btn-lime"
                                                 style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
                                             >
                                                 <span>
                                                     {isSubmitting 
-                                                        ? 'Generating Pass...' 
-                                                        : `Confirm & Issue Pass (₹${payableNow.toLocaleString('en-IN')}) →`}
+                                                        ? 'Opening Secure Checkout...' 
+                                                        : `Pay ₹${payableNow.toLocaleString('en-IN')} Securely →`}
                                                 </span>
-                                                <Check size={16} />
+                                                <ShieldCheck size={16} />
                                             </button>
                                         )}
                                     </div>

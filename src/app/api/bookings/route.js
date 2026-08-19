@@ -1,5 +1,5 @@
 import { NextResponse, after } from 'next/server';
-import { randomUUID } from 'crypto';
+import crypto, { randomUUID } from 'crypto';
 import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked, blockIp, addToWaitlist, acquireSlotLock, releaseSlotLock, getIdempotentResponse, setIdempotentResponse } from '@/lib/redis';
 import { validateBookingPayload } from '@/lib/validation';
@@ -244,7 +244,7 @@ export async function POST(request) {
                 success: true,
                 bookingId,
                 status: 'Pending',
-                message: 'Reservation and UPI reference logged. Basecamp coordinator will verify and confirm.'
+                message: 'Reservation received. Our concierge desk will confirm your booking shortly.'
             };
             if (idempotencyKey) await setIdempotentResponse(idempotencyKey, resData);
             return NextResponse.json(resData);
@@ -257,6 +257,7 @@ export async function POST(request) {
             holdExpiresAt,
             ttlSeconds: 600,
             discountPercent,
+            razorpayKeyId: process.env.RAZORPAY_KEY_ID || null,
             razorpayOrder: {
                 id: rzpOrder.id,
                 amount: rzpOrder.amount,

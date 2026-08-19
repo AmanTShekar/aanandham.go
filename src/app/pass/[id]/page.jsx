@@ -49,43 +49,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                (alphanumericId.length >= 6 && bAlpha.includes(alphanumericId));
     });
 
-    // If test/demo booking not in store, auto-reconstruct
-    if (!booking && (cleanId.startsWith('BK-TEST') || cleanId.startsWith('BK-DEMO') || cleanId.startsWith('BK-SIM') || cleanId.startsWith('BK-') || alphanumericId.startsWith('BKTEST') || alphanumericId.startsWith('BKDEMO') || alphanumericId.startsWith('BKSIM') || alphanumericId.startsWith('BK'))) {
-        const { addServerBooking } = await import('@/lib/serverBookingStore');
-        booking = {
-            id: cleanId,
-            name: 'Aman Shekar (Test Lead)',
-            email: 'aman.tshekar@gmail.com',
-            phone: '+91 91886 85831',
-            package: 'Kolukkumalai Sunrise Ridge Glamp (7,900 FT)',
-            campsiteId: 'pkg-kolukkumalai',
-            region: 'Munnar',
-            dates: 'Upcoming Weekend (2D / 1N)',
-            roomType: 'Geodesic Luxury Dome Pod',
-            guests: 4,
-            adults: 3,
-            children: 1,
-            vegCount: 2,
-            nonVegCount: 2,
-            total: 9996,
-            advancePaid: 2998,
-            balanceDue: 6998,
-            isBalancePaid: false,
-            status: 'Confirmed',
-            convoyTime: '02:30 PM Suryanelli 4x4 Convoy',
-            notes: 'Test reservation digital pass.',
-            attendanceRoster: [
-                { id: 1, name: 'Aman Shekar (Lead)', present: true },
-                { id: 2, name: 'Squad Camper #2', present: true },
-                { id: 3, name: 'Squad Camper #3', present: true },
-                { id: 4, name: 'Squad Camper #4', present: true }
-            ],
-            createdAt: new Date().toISOString()
-        };
-        await addServerBooking(booking);
-    }
-
-    // 1. Strict 404 if still not found
+    // 1. Strict 404 if not found — no auto-reconstruction of fake bookings
     if (!booking) {
         notFound();
     }
@@ -112,15 +76,8 @@ export default async function PassDetailPage({ params, searchParams }) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://aanandham.in';
     const passUrl = `${baseUrl}/pass/${data.id}?token=${passToken}`;
     const icsUrl = `/api/pass/${data.id}/ics?token=${passToken}`;
-    const googleCalUrl = buildGoogleCalendarUrl({
-        title: data.package,
-        dates: data.dates,
-        location: `${landmarkGuide.hubName}, Suryanelli, Munnar`,
-        description: `Official Aanandham Wilderness Booking (Ref: ${data.id}). Present your digital pass or QR upon arrival at ${landmarkGuide.hubName} by 1:30 PM for 4x4 convoy.`,
-        bookingId: data.id
-    });
-
-    const qrImageUrl = await generateQrDataUri(passUrl, 260);
+    const qrImageUrl = isTokenVerified ? await generateQrDataUri(passUrl, 260) : null;
+    const cleanGuestPhone = isTokenVerified && data.phone ? String(data.phone).replace(/[^0-9+]/g, '') : null;
 
     const marshalWaMsg = `🏕️ *AANANDHAM CAMPER CHECK-IN PING*\n\n` +
         `🔖 *Pass Reference:* ${data.id}\n` +
@@ -132,7 +89,7 @@ export default async function PassDetailPage({ params, searchParams }) {
         `📅 *Dates:* ${data.dates}\n\n` +
         `We are arriving at ${landmarkGuide.hubName}. Please verify our check-in pass! 🏔️✨`;
 
-    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '9188685831';
     const formattedAdminPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
         ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
         : `+${adminPhone}`;
@@ -264,7 +221,7 @@ export default async function PassDetailPage({ params, searchParams }) {
 
                         {/* ── SCANNABLE QR CODE FOR BASECAMP MARSHALS ── */}
                         <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '20px', textAlign: 'center', color: '#121613', marginBottom: '24px' }}>
-                            {isConfirmed ? (
+                            {isConfirmed && isTokenVerified && qrImageUrl ? (
                                 <img 
                                     src={qrImageUrl} 
                                     alt={`Pass QR Code for ${data.id}`}
@@ -272,28 +229,37 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 />
                             ) : (
                                 <div style={{ width: '180px', height: '180px', margin: '0 auto 10px', background: '#F8FAFC', borderRadius: '12px', border: '2px dashed #CBD5E1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
-                                    <Clock size={38} color="#D97706" />
-                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>QR Unlocks On Approval</span>
+                                    <Lock size={38} color="#D97706" />
+                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>{isConfirmed ? 'Scan Locked' : 'QR Unlocks On Approval'}</span>
                                 </div>
                             )}
                             <div style={{ fontSize: '13px', fontWeight: '900', color: isConfirmed ? '#166534' : '#D97706', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 {isConfirmed ? 'Official Check-In QR' : 'Verification In Progress'}
                             </div>
                             <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
-                                {isConfirmed 
-                                    ? 'Present this QR code to the camp marshals upon arrival to verify your stay & squad roster'
-                                    : 'Official check-in QR code will activate immediately once transaction is approved.'}
+                                {isConfirmed && !isTokenVerified
+                                    ? 'QR activates when opened from your confirmation email/WhatsApp link (signed access link).'
+                                    : isConfirmed
+                                        ? 'Present this QR code to the camp marshals upon arrival to verify your stay & squad roster'
+                                        : 'Official check-in QR code will activate immediately once transaction is approved.'}
                             </div>
                         </div>
 
                         {/* ── 1-CLICK ADD TO CALENDAR ── */}
+                        {isTokenVerified && (
                         <div className="no-print" style={{ textAlign: 'center', margin: '0 0 20px', background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
                             <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
                                 Sync Stay to Your Calendar
                             </div>
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <a
-                                    href={googleCalUrl}
+                                    href={buildGoogleCalendarUrl({
+                                        title: data.package,
+                                        dates: data.dates,
+                                        location: `${landmarkGuide.hubName}, Suryanelli, Munnar`,
+                                        description: `Official Aanandham Wilderness Booking (Ref: ${data.id}). Present your digital pass or QR upon arrival at ${landmarkGuide.hubName} by 1:30 PM for 4x4 convoy.`,
+                                        bookingId: data.id
+                                    })}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{
@@ -335,6 +301,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 </a>
                             </div>
                         </div>
+                        )}
 
                         {/* ── MEAL & BBQ KITCHEN PREP ALLOCATION CARD ── */}
                         <div className="details-box-print" style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '16px', padding: '16px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.06)' }}>

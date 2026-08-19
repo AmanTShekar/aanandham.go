@@ -1,7 +1,13 @@
 import { NextResponse } from 'next/server';
 import { addServerBooking, getStoredBookings, saveStoredBookings } from '@/lib/serverBookingStore.js';
+import { getAdminPayload } from '@/lib/authConfig.js';
 
-export async function POST() {
+export async function POST(request) {
+    // Dev/test tool: master admin only
+    const session = getAdminPayload(request);
+    if (!session) {
+        return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
     try {
         const sampleCampers = [
             {

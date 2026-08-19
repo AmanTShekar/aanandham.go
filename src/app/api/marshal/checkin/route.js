@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getStoredBookings, saveStoredBookings, updateServerBooking } from '@/lib/serverBookingStore';
-import { getClientIp } from '@/lib/authConfig';
+import { getClientIp, getMarshalPayload } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
+import { recordWalMutation, logCrash } from '@/lib/auditLedger';
 
 export async function POST(request) {
     const ip = getClientIp(request);
+
+    // Require an authenticated host / coordinator session
+    const session = getMarshalPayload(request);
+    if (!session) {
+        return NextResponse.json({ success: false, message: 'Unauthorized. Please unlock the scanner console first.' }, { status: 401 });
+    }
 
     // Rate limit checkin actions
     const rateLimit = await checkRateLimit(`ratelimit:marshal_checkin:${ip}`, 60, 60);
@@ -39,20 +46,13 @@ export async function POST(request) {
         const numPresent = Number(checkedInCount) || 0;
         const numShort = Number(shortCount) || 0;
         const updatedRoster = Array.isArray(roster) ? roster : [];
-        const existing = bookingIndex !== -1 ? bookings[bookingIndex] : {
-            id: bookingId,
-            name: body.name || 'Explorer Lead',
-            phone: body.phone || '+91 98471 23456',
-            email: body.email || 'camper@aanandham.in',
-            package: body.campsite || 'Kolukkumalai Sunrise Ridge Glamp',
-            dates: 'Upcoming Weekend (2D / 1N)',
-            roomType: assignedTent || 'Geodesic Luxury Dome Pod',
-            guests: Math.max(numPresent + numShort, updatedRoster.length, 1),
-            total: Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499,
-            advancePaid: Math.round(Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499 * 0.3),
-            balanceDue: Math.max(numPresent + numShort, updatedRoster.length, 1) * 2499 * 0.7,
-            createdAt: new Date().toISOString()
-        };
+
+        // Check-in is only allowed for bookings that already exist in the reservation database.
+        if (bookingIndex === -1) {
+            return NextResponse.json({ success: false, message: `Booking #${bookingId} not found in reservation database` }, { status: 404 });
+        }
+
+        const existing = bookings[bookingIndex];
 
         const updatedTotalGuests = Math.max(numPresent + numShort, updatedRoster.length, Number(existing.guests) || 1);
         const newStatus = numShort > 0 ? 'Partial Check-In' : 'Checked In';
@@ -79,8 +79,6 @@ export async function POST(request) {
 
         if (bookingIndex !== -1) {
             bookings[bookingIndex] = updatedRecord;
-        } else {
-            bookings.unshift(updatedRecord);
         }
 
         await saveStoredBookings(bookings);
@@ -98,6 +96,18 @@ export async function POST(request) {
             console.warn('DB update sync notice:', e.message);
         }
 
+        recordWalMutation({
+            entityType: 'BOOKING',
+            entityId: bookingId,
+            action: newStatus === 'Checked In' ? 'STATUS_CHANGE' : 'BATCH_RESCHEDULE',
+            previousState: existing,
+            newState: updatedRecord,
+            actor: marshalName || 'Basecamp Host',
+            actorRole: 'camp_marshal',
+            details: `Field gate ${newStatus === 'Checked In' ? 'full check-in' : 'partial check-in'} for ${bookingId} (${numPresent} present, ${numShort} short)`,
+            request
+        });
+
         return NextResponse.json({
             success: true,
             message: numShort > 0 
@@ -108,6 +118,7 @@ export async function POST(request) {
 
     } catch (err) {
         console.error('Error in marshal check-in API:', err);
+        logCrash({ source: 'MARSHAL_CHECKIN', route: 'POST /api/marshal/checkin', error: err, request });
         return NextResponse.json({ success: false, message: 'Server error processing check-in' }, { status: 500 });
     }
 }

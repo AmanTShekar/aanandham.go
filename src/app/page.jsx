@@ -10,6 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
+import { loadTestimonialsFromStorage } from '../lib/testimonialsCore';
 
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
 const OVERVIEW_HIGHLIGHTS = [
@@ -636,8 +637,27 @@ export default function HomePage() {
     const [activeFaq, setActiveFaq] = useState(0);
     const [highlightIdx, setHighlightIdx] = useState(0);
     const [testimonialIdx, setTestimonialIdx] = useState(0);
+    const [testimonials, setTestimonials] = useState(TESTIMONIALS);
+
+    // Load admin-managed testimonials (server authoritative, localStorage fallback)
+    useEffect(() => {
+        const saved = loadTestimonialsFromStorage();
+        if (Array.isArray(saved) && saved.length > 0) setTestimonials(saved);
+        fetch('/api/testimonials', { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (data && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+                    setTestimonials(data.testimonials);
+                }
+            })
+            .catch(() => {});
+    }, []);
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const openBookingModal = (pkg, opts = {}) => {
+        if (pkg) setSelectedPackage(pkg);
+        setIsBookingModalOpen(true);
+    };
     const [selectedPackage, setSelectedPackage] = useState(INITIAL_ALL_CAMPS[0]);
     const { user: currentUser, logout } = useAuth();
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
@@ -804,8 +824,11 @@ export default function HomePage() {
         }
     }, [isVideoModalOpen, selectedLightboxImg, isBookingModalOpen]);
 
-    const nextTestimonial = () => setTestimonialIdx((prev) => (prev + 1) % TESTIMONIALS.length);
-    const prevTestimonial = () => setTestimonialIdx((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
+    const nextTestimonial = () => setTestimonialIdx((prev) => (prev + 1) % (testimonials.length > 0 ? testimonials.length : TESTIMONIALS.length));
+    const prevTestimonial = () => setTestimonialIdx((prev) => {
+        const len = testimonials.length > 0 ? testimonials.length : TESTIMONIALS.length;
+        return prev === 0 ? len - 1 : prev - 1;
+    });
     const nextHighlight = () => setHighlightIdx((prev) => (prev + 1) % OVERVIEW_HIGHLIGHTS.length);
     const prevHighlight = () => setHighlightIdx((prev) => (prev === 0 ? OVERVIEW_HIGHLIGHTS.length - 1 : prev - 1));
     
@@ -2928,7 +2951,10 @@ export default function HomePage() {
                         </div>
 
                         {/* Real Notebook Paper Review Sheets */}
-                        {[TESTIMONIALS[testimonialIdx], TESTIMONIALS[(testimonialIdx + 1) % TESTIMONIALS.length]].map((t, idx) => (
+                        {(() => {
+                            const list = testimonials.length > 0 ? testimonials : TESTIMONIALS;
+                            const pair = [list[testimonialIdx % list.length], list[(testimonialIdx + 1) % list.length]];
+                            return pair.map((t, idx) => (
                             <motion.div 
                                 key={`testimonial-card-${t.id}-${testimonialIdx}-${idx}`} 
                                 initial={{ opacity: 0, y: 16 }}
@@ -2963,6 +2989,16 @@ export default function HomePage() {
                                             <div style={{ fontSize: '11.5px', color: '#8E9B92', fontWeight: '600' }}>
                                                 {t.batchDate}
                                             </div>
+                                            {t.instagram ? (
+                                                <a
+                                                    href={`https://instagram.com/${encodeURIComponent(String(t.instagram).replace(/^@/, ''))}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{ fontSize: '11.5px', color: '#0B5CAD', fontWeight: '700', textDecoration: 'none' }}
+                                                >
+                                                    @{String(t.instagram).replace(/^@/, '')}
+                                                </a>
+                                            ) : null}
                                         </div>
                                     </div>
 
@@ -3006,7 +3042,8 @@ export default function HomePage() {
                                     </span>
                                 </div>
                             </motion.div>
-                        ))}
+                        ));
+                        })()}
                     </div>
                 </div>
             </motion.section>

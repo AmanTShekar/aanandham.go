@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { LayoutDashboard, ClipboardList, Tent, Mountain, Users, IndianRupee, QrCode, ShieldCheck, Settings, Plus, RefreshCw, ChevronLeft, ChevronRight, ArrowUpRight, X, Upload, Camera, Download, Banknote, TrendingUp, Zap, Calendar, Compass, ScrollText, Search, Bell, Phone, KeyRound, Ticket, MessageCircle, Smartphone, Save, Clock, Flame, ShowerHead, Sunrise, Trees, Sprout, User, Briefcase, Trash2, Database, Heart, BadgePercent, MessageSquareQuote } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
@@ -9,8 +10,70 @@ import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsDat
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 import { getPaymentSettings, savePaymentSettings } from '../../lib/paymentSettings';
+import { DEFAULT_DISCOUNTS, loadDiscountsFromStorage, saveDiscountsToStorage } from '../../lib/discountsCore';
+import { DEFAULT_TESTIMONIALS, loadTestimonialsFromStorage, saveTestimonialsToStorage } from '../../lib/testimonialsCore';
 import { uploadCampsitePhoto } from '../../lib/mediaUpload';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
+
+// ── SHARED LIQUID WAVE DRAWER VARIANTS (Matches SiteHeader) ──
+const drawerWaveVariants = {
+    hidden: { 
+        opacity: 0,
+        y: -6,
+        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
+    },
+    visible: { 
+        opacity: 1,
+        y: 0,
+        clipPath: 'circle(260% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
+        transition: { 
+            duration: 0.42, 
+            ease: [0.22, 1, 0.36, 1] 
+        }
+    },
+    exit: { 
+        opacity: 0,
+        y: -6,
+        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        transition: { 
+            duration: 0.3, 
+            ease: [0.4, 0, 0.2, 1] 
+        }
+    }
+};
+
+const drawerStaggerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.035,
+            delayChildren: 0.06
+        }
+    },
+    exit: {
+        opacity: 1,
+        transition: {
+            duration: 0.38
+        }
+    }
+};
+
+const drawerItemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.28, ease: "easeOut" }
+    },
+    exit: {
+        opacity: 1,
+        transition: { duration: 0.38 }
+    }
+};
 
 // Helper to safely validate, downscale and compress images before storing as Base64 (UP1, Item 9)
 function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.82) {
@@ -59,6 +122,22 @@ function compressImageFile(file, maxWidth = 1280, maxHeight = 960, quality = 0.8
     });
 }
 
+// ── TESTIMONIAL AVATAR PRESETS (clean human portraits) ──
+const AVATAR_PRESETS = [
+    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?auto=format&fit=crop&w=200&q=80',
+    'https://images.unsplash.com/photo-1552058544-f2b08422138a?auto=format&fit=crop&w=200&q=80'
+];
+
 // ── SCHEDULED EXPEDITION BATCHES ──
 const INITIAL_EVENTS = [
     {
@@ -70,7 +149,7 @@ const INITIAL_EVENTS = [
         capacity: 30,
         booked: 18,
         spotsLeft: 12,
-        badge: 'Bestseller ⭐',
+badge: 'Bestseller ',
         status: 'Active',
         image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
         description: 'Guided 4x4 convoy, high-altitude tiger rock hike, campfire live BBQ, and midnight stargazing.'
@@ -84,7 +163,7 @@ const INITIAL_EVENTS = [
         capacity: 20,
         booked: 14,
         spotsLeft: 6,
-        badge: 'High Altitude 🏔️',
+badge: 'High Altitude ',
         status: 'Active',
         image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
         description: 'South India’s 2nd highest peak summit trek with forest permits, certified mountain guides, and tent glamping.'
@@ -179,8 +258,9 @@ const INITIAL_DB_LOGS = [
 
 export default function AdminPortal() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [passcode, setPasscode] = useState('');
+const [passcode, setPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState(false);
+    const [rememberMe, setRememberMe] = useState(true);
 
     // Active Navigation Tab ('overview' | 'bookings' | 'properties' | 'events' | 'financials' | 'settings')
     const [activeTab, setActiveTab] = useState('overview');
@@ -204,7 +284,7 @@ export default function AdminPortal() {
         title: '',
         region: 'Munnar',
         category: 'Summit Trek & Glamp',
-        tag: 'Bestseller ⭐',
+tag: 'Bestseller ',
         location: 'Suryanelli / Kolukkumalai, Munnar, Kerala',
         altitude: '7,900 FT',
         price: 2499,
@@ -222,8 +302,28 @@ export default function AdminPortal() {
         exclusions: 'Personal transport, personal trekking gear'
     });
 
-    // Mobile Sidebar Drawer State
+    // Mobile Responsive & Drawer State
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [scannerOverlayOpen, setScannerOverlayOpen] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    useEffect(() => {
+        if (isMobileSidebarOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMobileSidebarOpen]);
 
     // Create / Edit Room Modal State
     const [isAddRoomModalOpen, setIsAddRoomModalOpen] = useState(false);
@@ -248,7 +348,7 @@ export default function AdminPortal() {
         price: 2499,
         capacity: 30,
         booked: 0,
-        badge: 'New Batch 🌿',
+badge: 'New Batch ',
         status: 'Active',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
         description: 'Guided wilderness expedition with campfire barbecue and sunrise ridge trek.'
@@ -402,15 +502,15 @@ export default function AdminPortal() {
     const handleSaveMarshalForm = (e) => {
         e.preventDefault();
         if (!marshalForm.name || !marshalForm.phone) {
-            showToast('⚠️ Please enter marshal name and phone');
+showToast(' Please enter the full name and phone number');
             return;
         }
 
         if (editingMarshal) {
             const updated = marshals.map(m => m.id === editingMarshal.id ? { ...m, ...marshalForm } : m);
             saveMarshals(updated);
-            logDbAction('EDIT_MARSHAL', `Updated marshal profile: ${marshalForm.name} (${marshalForm.station})`, editingMarshal.id);
-            showToast(`✓ Station Marshal ${marshalForm.name} updated`);
+            logDbAction('EDIT_CREW', `Updated host/guide profile: ${marshalForm.name} (${marshalForm.station})`, editingMarshal.id);
+showToast(` ${marshalForm.name}'s details saved`);
         } else {
             const newMarshal = {
                 id: `m-${Date.now().toString(36)}`,
@@ -418,8 +518,8 @@ export default function AdminPortal() {
             };
             const updated = [newMarshal, ...marshals];
             saveMarshals(updated);
-            logDbAction('CREATE_MARSHAL', `Enrolled new marshal: ${marshalForm.name} for ${marshalForm.station}`, newMarshal.id);
-            showToast(`✓ New Station Marshal ${marshalForm.name} assigned!`);
+            logDbAction('ADD_CREW', `Added new host/guide: ${marshalForm.name} for ${marshalForm.station}`, newMarshal.id);
+showToast(` ${marshalForm.name} added to field crew!`);
         }
         setIsMarshalModalOpen(false);
     };
@@ -427,20 +527,20 @@ export default function AdminPortal() {
     const handleDeleteMarshal = (id) => {
         const marshalToDelete = marshals.find(m => m.id === id);
         openDeleteConfirm({
-            title: 'Revoke Marshal Credentials?',
-            subtitle: `Are you sure you want to remove ${marshalToDelete?.name || 'this marshal'} from station ${marshalToDelete?.station || ''}? Their station gate PIN will be deactivated.`,
+            title: 'Remove from Field Crew?',
+            subtitle: `Are you sure you want to remove ${marshalToDelete?.name || 'this crew member'} from ${marshalToDelete?.station || 'their station'}? Their gate PIN will be deactivated.`,
             itemDetails: {
                 badge: id,
-                label: marshalToDelete?.name || 'Station Marshal',
+                label: marshalToDelete?.name || 'Camp Host / Guide',
                 subtext: `${marshalToDelete?.station} · PIN: ${marshalToDelete?.passcode}`,
                 status: marshalToDelete?.status || 'Active'
             },
-            confirmText: '🗑️ Revoke Marshal Access',
+confirmText: ' Remove from Crew',
             onConfirm: () => {
                 const updated = marshals.filter(m => m.id !== id);
                 saveMarshals(updated);
-                logDbAction('REVOKE_MARSHAL', `Revoked marshal access: ${marshalToDelete?.name || id}`, id);
-                showToast(`✓ Marshal ${marshalToDelete?.name || id} removed`);
+                logDbAction('REMOVE_CREW', `Removed host/guide: ${marshalToDelete?.name || id}`, id);
+showToast(` ${marshalToDelete?.name || 'Crew member'} removed`);
             }
         });
     };
@@ -454,37 +554,160 @@ export default function AdminPortal() {
             return m;
         });
         saveMarshals(updated);
-        showToast('✓ Marshal duty status updated');
+showToast(' Marshal duty status updated');
     };
 
     // Admin Notification Settings
-    const [adminPhone, setAdminPhone] = useState('+91 9400 987 654');
+    const [adminPhone, setAdminPhone] = useState('+91 91886 85831');
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
     const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
-    // Payment Gateway & QR Settings State
+// Payment Gateway & QR Settings State
     const [paymentSettings, setPaymentSettings] = useState(() => getPaymentSettings());
-    const [qrImageUploading, setQrImageUploading] = useState(false);
 
-    const handleSavePaymentSettings = (e) => {
-        if (e) e.preventDefault();
-        savePaymentSettings(paymentSettings);
-        showToast('✓ Payment Gateway Settings Saved & Synchronized Live!');
+    // Discounts & Offers State
+    const [discounts, setDiscounts] = useState([]);
+    const [discountsSaving, setDiscountsSaving] = useState(false);
+
+    const handleSaveDiscounts = async () => {
+        setDiscountsSaving(true);
+        try {
+            const res = await fetch('/api/admin/discounts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ discounts })
+            });
+            if (res.ok) {
+                saveDiscountsToStorage(discounts);
+                showToast(' Discounts & Offers Saved & Applied Live!');
+            } else {
+                const err = await res.json().catch(() => ({}));
+                showToast(' Failed to Save Discounts: ' + (err.error || res.status));
+            }
+        } catch (e) {
+            showToast(' Network Error Saving Discounts');
+        } finally {
+            setDiscountsSaving(false);
+        }
     };
 
-    const handleQrImageUpload = async (e) => {
-        const file = e.target.files?.[0];
+    const handleResetDiscounts = async () => {
+        if (!window.confirm('Reset all discounts & offers back to factory defaults?')) return;
+        setDiscountsSaving(true);
+        try {
+            const res = await fetch('/api/admin/discounts', { method: 'DELETE', credentials: 'include' });
+            if (res.ok) {
+                setDiscounts(DEFAULT_DISCOUNTS);
+                saveDiscountsToStorage(DEFAULT_DISCOUNTS);
+                showToast(' Discounts Reset to Factory Defaults');
+            } else {
+                showToast(' Failed to Reset Discounts');
+            }
+        } catch (e) {
+            showToast(' Network Error Resetting Discounts');
+        } finally {
+            setDiscountsSaving(false);
+        }
+    };
+
+    const handleAddDiscount = () => {
+        const now = new Date().toISOString();
+        setDiscounts(prev => [
+            ...prev,
+            { id: `campaign-${Date.now()}`, name: 'New Offer', type: 'percent', value: 5, minGuests: 2, scope: 'all', active: true, createdAt: now }
+        ]);
+    };
+
+    const handleUpdateDiscount = (id, patch) => {
+        setDiscounts(prev => prev.map(d => d.id === id ? { ...d, ...patch } : d));
+    };
+
+    const handleRemoveDiscount = (id) => {
+        setDiscounts(prev => prev.filter(d => d.id !== id));
+    };
+
+    // Testimonials State
+    const [testimonials, setTestimonials] = useState([]);
+    const [testimonialsSaving, setTestimonialsSaving] = useState(false);
+
+    const handleSaveTestimonials = async () => {
+        setTestimonialsSaving(true);
+        try {
+            const res = await fetch('/api/admin/testimonials', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ testimonials })
+            });
+            if (res.ok) {
+                saveTestimonialsToStorage(testimonials);
+                showToast(' Testimonials Saved & Published Live!');
+            } else {
+                const err = await res.json().catch(() => ({}));
+                showToast(' Failed to Save Testimonials: ' + (err.error || res.status));
+            }
+        } catch (e) {
+            showToast(' Network Error Saving Testimonials');
+        } finally {
+            setTestimonialsSaving(false);
+        }
+    };
+
+    const handleResetTestimonials = async () => {
+        if (!window.confirm('Reset all testimonials back to the factory defaults?')) return;
+        setTestimonialsSaving(true);
+        try {
+            const res = await fetch('/api/admin/testimonials', { method: 'DELETE', credentials: 'include' });
+            if (res.ok) {
+                setTestimonials(DEFAULT_TESTIMONIALS);
+                saveTestimonialsToStorage(DEFAULT_TESTIMONIALS);
+                showToast(' Testimonials Reset to Defaults');
+            } else {
+                showToast(' Failed to Reset Testimonials');
+            }
+        } catch (e) {
+            showToast(' Network Error Resetting Testimonials');
+        } finally {
+            setTestimonialsSaving(false);
+        }
+    };
+
+    const handleAddTestimonial = () => {
+        setTestimonials(prev => [
+            ...prev,
+            { id: `t-${Date.now()}`, quote: '', author: 'Guest Camper', campBadge: 'camp', batchDate: '', avatar: '', active: true }
+        ]);
+    };
+
+    const handleUpdateTestimonial = (id, patch) => {
+        setTestimonials(prev => prev.map(t => t.id === id ? { ...t, ...patch } : t));
+    };
+
+    const handleRandomTestimonialAvatar = (id) => {
+        const pick = AVATAR_PRESETS[Math.floor(Math.random() * AVATAR_PRESETS.length)];
+        handleUpdateTestimonial(id, { avatar: pick });
+    };
+
+    const handleTestimonialAvatarUpload = async (id, file) => {
         if (!file) return;
         try {
-            setQrImageUploading(true);
-            const compressed = await compressImageFile(file, 800, 800, 0.9);
-            setPaymentSettings(prev => ({ ...prev, customQrUrl: compressed }));
-            showToast('✓ Custom QR Code Image Loaded');
-        } catch (err) {
-            alert(err.message || 'Failed to process QR image');
-        } finally {
-            setQrImageUploading(false);
+            const dataUrl = await compressImageFile(file, 160, 160, 0.82);
+            handleUpdateTestimonial(id, { avatar: dataUrl });
+            showToast('Avatar Photo Ready — Click Save & Publish to apply');
+        } catch (e) {
+            showToast(e.message || 'Avatar Upload Failed');
         }
+    };
+
+    const handleRemoveTestimonial = (id) => {
+        setTestimonials(prev => prev.filter(t => t.id !== id));
+    };
+
+const handleSavePaymentSettings = (e) => {
+        if (e) e.preventDefault();
+        savePaymentSettings(paymentSettings);
+showToast(' Payment Gateway Settings Saved & Synchronized Live!');
     };
 
     // Toast message state with cleanup ref (UP5)
@@ -496,9 +719,31 @@ export default function AdminPortal() {
         toastTimerRef.current = setTimeout(() => setToastMessage(''), 3200);
     };
 
-    // Load from Server APIs + LocalStorage Fallback (N1)
+// Load from Server APIs + LocalStorage Fallback (N1)
     const reloadDataFromStorage = async () => {
         setPaymentSettings(getPaymentSettings());
+
+        // Testimonials sync (server authoritative, localStorage + defaults fallback)
+        const savedTestimonials = loadTestimonialsFromStorage();
+        setTestimonials(Array.isArray(savedTestimonials) && savedTestimonials.length > 0 ? savedTestimonials : DEFAULT_TESTIMONIALS);
+        try {
+            const testRes = await fetch('/api/admin/testimonials', { credentials: 'include' });
+            if (testRes.ok) {
+                const testData = await testRes.json();
+                if (Array.isArray(testData?.testimonials)) setTestimonials(testData.testimonials);
+            }
+        } catch (e) {}
+
+        // Discounts sync (server authoritative, localStorage + defaults fallback)
+        const savedDiscounts = loadDiscountsFromStorage();
+        setDiscounts(Array.isArray(savedDiscounts) && savedDiscounts.length > 0 ? savedDiscounts : DEFAULT_DISCOUNTS);
+        try {
+            const discRes = await fetch('/api/admin/discounts', { credentials: 'include' });
+            if (discRes.ok) {
+                const discData = await discRes.json();
+                if (Array.isArray(discData?.discounts)) setDiscounts(discData.discounts);
+            }
+        } catch (e) {}
         const savedPhone = localStorage.getItem('aanandham_admin_phone');
         if (savedPhone) setAdminPhone(savedPhone);
         const savedTelegram = localStorage.getItem('aanandham_admin_telegram');
@@ -587,7 +832,7 @@ export default function AdminPortal() {
         localStorage.setItem('aanandham_admin_telegram', adminTelegram);
         setSettingsSavedToast(true);
         setTimeout(() => setSettingsSavedToast(false), 3000);
-        showToast('✓ Notification coordinates saved');
+showToast(' Notification coordinates saved');
     };
 
     const [auditLogs, setAuditLogs] = useState([]);
@@ -596,11 +841,11 @@ export default function AdminPortal() {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('/api/admin/auth', {
+const res = await fetch('/api/admin/auth', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ passcode: passcode.trim() })
+                body: JSON.stringify({ passcode: passcode.trim(), rememberMe })
             });
             const data = await res.json();
             if (data.success) {
@@ -628,7 +873,7 @@ export default function AdminPortal() {
             });
         } catch {}
         setIsAuthenticated(false);
-        showToast('✓ Logged out securely');
+showToast(' Logged out securely');
     };
 
     // Load Audit Logs from Secure Server
@@ -671,7 +916,7 @@ export default function AdminPortal() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        showToast('✓ Full JSON system backup exported');
+showToast(' Full JSON system backup exported');
     };
 
     // Restore Complete JSON Backup
@@ -702,9 +947,9 @@ export default function AdminPortal() {
                         localStorage.setItem('aanandham_admin_telegram', parsed.settings.adminTelegram);
                     }
                 }
-                showToast('✓ System backup restored successfully');
+showToast(' System backup restored successfully');
             } catch {
-                showToast('⚠️ Invalid JSON backup file format');
+showToast(' Invalid JSON backup file format');
             }
         };
         reader.readAsText(file);
@@ -717,7 +962,7 @@ export default function AdminPortal() {
             saveAllCamps(updated);
         } catch (err) {
             console.error('Error saving camps to storage:', err);
-            showToast('⚠️ Storage quota reached. Consider exporting backup.');
+showToast(' Storage quota reached. Consider exporting backup.');
         }
         fetch('/api/admin/camps', {
             method: 'POST',
@@ -739,7 +984,7 @@ export default function AdminPortal() {
             localStorage.setItem('aanandham_admin_events', JSON.stringify(updated));
         } catch (err) {
             console.error('Error saving events to storage:', err);
-            showToast('⚠️ Storage quota reached.');
+showToast(' Storage quota reached.');
         }
     };
 
@@ -763,7 +1008,7 @@ export default function AdminPortal() {
     const handleToggleAvailability = (id) => {
         const updated = properties.map(p => p.id === id ? { ...p, isAvailable: !p.isAvailable } : p);
         saveProperties(updated);
-        showToast('✓ Property availability updated');
+showToast(' Property availability updated');
     };
 
     // Adjust Price
@@ -801,7 +1046,7 @@ export default function AdminPortal() {
             return p;
         });
         saveProperties(updated);
-        showToast('✓ Room availability updated');
+showToast(' Room availability updated');
     };
 
     // Room Image File Upload — Supabase Storage first, Base64 fallback (UP1)
@@ -813,15 +1058,15 @@ export default function AdminPortal() {
             const campId = currentDetailProperty?.id || 'general';
             const result = await uploadCampsitePhoto(file, `camps/${campId}/rooms`);
             setRoomForm(prev => ({ ...prev, image: result.url }));
-            showToast(`✓ Room photo uploaded to CDN (${result.sizeKB} KB)`);
+showToast(` Room photo uploaded to CDN (${result.sizeKB} KB)`);
         } catch (supabaseErr) {
             // Fallback: compress to base64 for local/dev use
             try {
                 const compressedBase64 = await compressImageFile(file, 1200, 800, 0.82);
                 setRoomForm(prev => ({ ...prev, image: compressedBase64 }));
-                showToast('✓ Room photo compressed locally (connect Supabase for CDN storage)');
+showToast(' Room photo compressed locally (connect Supabase for CDN storage)');
             } catch (err) {
-                showToast(`⚠️ ${err.message || 'Error uploading room image'}`);
+showToast(` ${err.message || 'Error uploading room image'}`);
             }
         }
         e.target.value = '';
@@ -867,7 +1112,7 @@ export default function AdminPortal() {
                 amount: room?.price ? `₹${room.price.toLocaleString('en-IN')} / Night` : null,
                 status: `${room?.totalUnits || 0} Units Total`
             },
-            confirmText: '🗑️ Delete Room Type',
+confirmText: ' Delete Room Type',
             onConfirm: () => {
                 const updated = properties.map(p => {
                     if (p.id === propId && p.rooms) {
@@ -876,7 +1121,7 @@ export default function AdminPortal() {
                     return p;
                 });
                 saveProperties(updated);
-                showToast('✓ Room type deleted');
+showToast(' Room type deleted');
             }
         });
     };
@@ -909,7 +1154,7 @@ export default function AdminPortal() {
                 return p;
             });
             saveProperties(updated);
-            showToast('✓ Room type updated');
+showToast(' Room type updated');
         } else {
             const newRoom = {
                 id: `r-${Date.now()}`,
@@ -930,7 +1175,7 @@ export default function AdminPortal() {
                 return p;
             });
             saveProperties(updated);
-            showToast('✓ New room type added');
+showToast(' New room type added');
         }
         setIsAddRoomModalOpen(false);
         setEditingRoom(null);
@@ -944,7 +1189,7 @@ export default function AdminPortal() {
                 title: prop.title,
                 region: prop.region || 'Munnar',
                 category: prop.category || 'Summit Trek & Glamp',
-                tag: prop.tag || 'Bestseller ⭐',
+tag: prop.tag || 'Bestseller ',
                 location: prop.location || 'Munnar, Kerala',
                 altitude: prop.altitude || '7,900 FT',
                 price: prop.price || 2499,
@@ -964,7 +1209,7 @@ export default function AdminPortal() {
                 title: '',
                 region: 'Munnar',
                 category: 'Summit Trek & Glamp',
-                tag: 'New Campsite 🌿',
+tag: 'New Campsite ',
                 location: 'Munnar, Kerala',
                 altitude: '6,500 FT',
                 price: 1999,
@@ -1024,9 +1269,9 @@ export default function AdminPortal() {
                     image: prev.image || uploadedUrls[0]
                 };
             });
-            showToast(`✓ Uploaded ${successCount} photo(s) to CDN`);
+showToast(` Uploaded ${successCount} photo(s) to CDN`);
         } else {
-            showToast('⚠️ No valid images were uploaded');
+showToast(' No valid images were uploaded');
         }
         e.target.value = '';
     };
@@ -1045,7 +1290,7 @@ export default function AdminPortal() {
             };
         });
         setImageUrlInput('');
-        showToast('✓ Image URL added to gallery');
+showToast(' Image URL added to gallery');
     };
 
     // Remove Image from Gallery
@@ -1057,7 +1302,7 @@ export default function AdminPortal() {
             gallery: newGallery,
             image: newPrimary
         });
-        showToast('✓ Image removed');
+showToast(' Image removed');
     };
 
     // Set Primary Cover Image
@@ -1066,7 +1311,7 @@ export default function AdminPortal() {
             ...propertyForm,
             image: url
         });
-        showToast('★ Set as main cover image');
+showToast(' Set as main cover image');
     };
 
     // Save Property Form
@@ -1096,7 +1341,7 @@ export default function AdminPortal() {
                 return p;
             });
             saveProperties(updated);
-            showToast('✓ Campsite details updated');
+showToast(' Campsite details updated');
         } else {
             const newProp = {
                 id: `pkg-${Date.now()}`,
@@ -1115,9 +1360,9 @@ export default function AdminPortal() {
                     { id: `r-${Date.now()}-1`, name: 'Standard Mountain Dome Pod', capacity: '2 Adults', price: Number(propertyForm.price), totalUnits: 8, bookedUnits: 0, isAvailable: true, image: primaryImage, features: ['Mountain View', 'Thermal Blankets', 'Charging Point'] }
                 ],
                 amenities: [
-                    { id: `am-${Date.now()}-1`, name: 'Campfire Circle & BBQ', icon: '🔥', enabled: true },
-                    { id: `am-${Date.now()}-2`, name: 'Western Washrooms', icon: '🚿', enabled: true },
-                    { id: `am-${Date.now()}-3`, name: 'Wilderness Guide Marshals', icon: '🧭', enabled: true }
+                    { id: `am-${Date.now()}-1`, name: 'Campfire Circle & BBQ', icon: Flame, enabled: true },
+                    { id: `am-${Date.now()}-2`, name: 'Western Washrooms', icon: ShowerHead, enabled: true },
+                    { id: `am-${Date.now()}-3`, name: 'Wilderness Guide Marshals', icon: Compass, enabled: true }
                 ],
                 addons: [
                     { id: `ad-${Date.now()}-1`, name: 'Live Campfire BBQ Platter', price: 450, enabled: true },
@@ -1128,7 +1373,7 @@ export default function AdminPortal() {
                 ]
             };
             saveProperties([...properties, newProp]);
-            showToast('✓ New campsite listing created');
+showToast(' New campsite listing created');
         }
         setIsPropertyModalOpen(false);
     };
@@ -1148,7 +1393,7 @@ export default function AdminPortal() {
                 price: 2499,
                 capacity: 30,
                 booked: 0,
-                badge: 'New Batch 🌿',
+badge: 'New Batch ',
                 status: 'Active',
                 image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
                 description: 'Guided wilderness expedition with campfire barbecue and sunrise ridge trek.'
@@ -1168,7 +1413,7 @@ export default function AdminPortal() {
         if (editingEvent) {
             const updated = events.map(ev => ev.id === editingEvent.id ? { ...ev, ...eventForm, capacity: cap, booked: bkd, spotsLeft: spots, status: st } : ev);
             saveEvents(updated);
-            showToast('✓ Batch updated');
+showToast(' Batch updated');
         } else {
             const newEvent = {
                 id: `ev-${Date.now()}`,
@@ -1179,7 +1424,7 @@ export default function AdminPortal() {
                 status: st
             };
             saveEvents([...events, newEvent]);
-            showToast('✓ New event batch scheduled');
+showToast(' New event batch scheduled');
         }
         setIsEventModalOpen(false);
     };
@@ -1197,11 +1442,11 @@ export default function AdminPortal() {
                 amount: eventToDelete?.price ? `₹${eventToDelete.price.toLocaleString('en-IN')} / Pax` : null,
                 status: eventToDelete ? `${eventToDelete.spotsLeft} spots left (${eventToDelete.booked}/${eventToDelete.capacity})` : 'Active'
             },
-            confirmText: '🗑️ Remove Batch',
+confirmText: ' Remove Batch',
             onConfirm: () => {
                 const updated = events.filter(e => e.id !== id);
                 saveEvents(updated);
-                showToast('✓ Event batch removed');
+showToast(' Event batch removed');
             }
         });
     };
@@ -1251,24 +1496,40 @@ export default function AdminPortal() {
             status: 'Confirmed',
             notes: ''
         });
-        showToast(`✓ Booking ${newBooking.id} created successfully (${newBooking.groupType} · ${newBooking.allocatedUnit})`);
+showToast(` Booking ${newBooking.id} created successfully (${newBooking.groupType} · ${newBooking.allocatedUnit})`);
     };
 
     // Quick Update Allocated Unit (Tent / Pod #)
-    const handleUpdateAllocatedUnit = (id, newUnit) => {
+    const handleUpdateAllocatedUnit = async (id, newUnit) => {
         const updated = bookings.map(b => b.id === id ? { ...b, allocatedUnit: newUnit } : b);
-        saveBookings(updated);
-        showToast(`✓ Booking ${id} unit allocated: ${newUnit}`);
+        setBookings(updated);
+        try {
+            await fetch('/api/admin/bookings', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ id, allocatedUnit: newUnit })
+            });
+        } catch (e) {}
+showToast(` Booking ${id} unit allocated: ${newUnit}`);
     };
 
     // Quick Update Squad / Group Type
-    const handleUpdateGroupType = (id, newGroupType) => {
+    const handleUpdateGroupType = async (id, newGroupType) => {
         const updated = bookings.map(b => b.id === id ? { ...b, groupType: newGroupType } : b);
-        saveBookings(updated);
-        showToast(`✓ Booking ${id} squad category set: ${newGroupType}`);
+        setBookings(updated);
+        try {
+            await fetch('/api/admin/bookings', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ id, groupType: newGroupType })
+            });
+        } catch (e) {}
+showToast(` Booking ${id} squad category set: ${newGroupType}`);
     };
 
-    // Delete Booking
+    // Delete Single Booking Securely
     const handleDeleteBooking = (id) => {
         const bookingToDelete = bookings.find(b => b.id === id);
         openDeleteConfirm({
@@ -1281,7 +1542,7 @@ export default function AdminPortal() {
                 amount: bookingToDelete?.total ? `₹${Number(bookingToDelete.total).toLocaleString('en-IN')}` : null,
                 status: bookingToDelete?.status || 'Pending'
             },
-            confirmText: '🗑️ Delete Reservation',
+confirmText: ' Delete Reservation',
             onConfirm: async () => {
                 const updated = bookings.filter(b => b.id !== id);
                 setBookings(updated);
@@ -1293,17 +1554,42 @@ export default function AdminPortal() {
                 } catch (err) {
                     console.error('Failed to call DELETE /api/admin/bookings:', err);
                 }
-                saveBookings(updated);
-                showToast(`✓ Reservation ${id} permanently deleted`);
+                logDbAction('DELETE_BOOKING', `Permanently deleted reservation: ${id}`, id);
+showToast(` Reservation ${id} permanently deleted`);
             }
         });
     };
 
-    // Update Booking Status
-    const handleUpdateBookingStatus = (id, newStatus) => {
+    // Update Booking Status via direct PATCH
+    const handleUpdateBookingStatus = async (id, newStatus) => {
         const updated = bookings.map(b => b.id === id ? { ...b, status: newStatus } : b);
-        saveBookings(updated);
-        showToast(`✓ Booking ${id} marked as ${newStatus}`);
+        setBookings(updated);
+        try {
+            await fetch('/api/admin/bookings', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ id, status: newStatus })
+            });
+        } catch (e) {
+            console.error('Error updating status via PATCH:', e);
+        }
+        logDbAction('UPDATE_STATUS', `Updated booking ${id} status to ${newStatus}`, id);
+showToast(` Booking ${id} marked as ${newStatus}`);
+    };
+
+    // Restore / Seed Sample Bookings Roster
+    const handleSeedSampleBookings = async () => {
+        try {
+            const res = await fetch('/api/marshal/seed', { method: 'POST' });
+            if (res.ok) {
+                await reloadDataFromStorage();
+showToast(' Sample bookings roster restored successfully!');
+                return;
+            }
+        } catch (e) {}
+        await reloadDataFromStorage();
+showToast(' Refreshed live bookings roster');
     };
 
     // Export CSV with Formula Injection Protection (E2)
@@ -1342,15 +1628,11 @@ export default function AdminPortal() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        showToast('✓ Bookings exported to CSV');
+showToast(' Bookings exported to CSV');
     };
 
-    // Filter properties by region
+// Filter properties by region
     const filteredProperties = propertyFilterRegion === 'All' ? properties : properties.filter(p => (p.region || 'Munnar') === propertyFilterRegion);
-
-    // Track pending UTR verification queue
-    const pendingUtrBookings = bookings.filter(b => b.status === 'Pending' || (b.utrNumber && b.status !== 'Confirmed' && b.status !== 'Cancelled'));
-    const pendingUtrCount = pendingUtrBookings.length;
 
     // Campsite Matching Helper for Bookings
     const isBookingMatchingCamp = (b, campId) => {
@@ -1400,7 +1682,6 @@ export default function AdminPortal() {
 
             const matchStatus = 
                 bookingFilterStatus === 'All' ? true :
-                bookingFilterStatus === 'Pending UTRs' ? (b.status === 'Pending' || Boolean(b.utrNumber && b.status !== 'Confirmed')) :
                 b.status === bookingFilterStatus;
 
             const matchCamp = isBookingMatchingCamp(b, bookingFilterCamp);
@@ -1463,7 +1744,7 @@ export default function AdminPortal() {
                             style={{ height: '62px', width: 'auto', objectFit: 'contain', marginBottom: '14px', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.12))' }}
                         />
                         <div className="star-badge">
-                            <span className="star-icon">★</span> BASECAMP COMMAND
+<span className="star-icon">★</span> BASECAMP COMMAND
                         </div>
                     </div>
 
@@ -1517,14 +1798,47 @@ export default function AdminPortal() {
                                 gap: '8px'
                             }}
                         >
-                            <span>Unlock Dashboard</span>
-                            <span>→</span>
+<span>Unlock Dashboard</span>
+<span><ChevronRight size={14} /></span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setRememberMe(prev => !prev)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                background: 'transparent',
+                                border: 'none',
+                                color: rememberMe ? '#121613' : '#8A938B',
+                                fontSize: '12.5px',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                padding: '4px 0',
+                                marginTop: '-2px'
+                            }}
+                        >
+                            <div style={{
+                                width: '17px',
+                                height: '17px',
+                                borderRadius: '5px',
+                                border: `2px solid ${rememberMe ? '#0B150E' : 'rgba(18,22,19,0.25)'}`,
+                                background: rememberMe ? '#D5ED55' : 'transparent',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexShrink: 0
+                            }}>
+                                {rememberMe && <span style={{ fontSize: '10px', fontWeight: '900', color: '#0B150E' }}>✓</span>}
+                            </div>
+                            Keep me signed in for 24 hours
                         </button>
                     </form>
 
                     <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid rgba(18,22,19,0.08)' }}>
                         <Link href="/" style={{ color: '#59655D', textDecoration: 'none', fontSize: '13px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            ← Return to Website
+← Return to Website
                         </Link>
                     </div>
                 </motion.div>
@@ -1559,7 +1873,7 @@ export default function AdminPortal() {
                                     cursor: 'pointer'
                                 }}
                             >
-                                ← Back to Campsites
+← Back to Campsites
                             </button>
                             <div>
                                 <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'block' }}>
@@ -1587,7 +1901,7 @@ export default function AdminPortal() {
                                     textDecoration: 'none'
                                 }}
                             >
-                                🌐 View Public Page →
+View Public Page →
                             </Link>
                             <button
                                 onClick={() => handleToggleAvailability(currentDetailProperty.id)}
@@ -1602,14 +1916,14 @@ export default function AdminPortal() {
                                     cursor: 'pointer'
                                 }}
                             >
-                                {currentDetailProperty.isAvailable ? '● Active & Bookable' : '○ Property Sold Out'}
+{currentDetailProperty.isAvailable ? '● Active & Bookable' : '○ Property Sold Out'}
                             </button>
                             <button
                                 onClick={() => handleOpenPropertyModal(currentDetailProperty)}
                                 className="btn-lime"
                                 style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}
                             >
-                                Edit Property & Gallery ✏️
+Edit Property & Gallery 
                             </button>
                         </div>
                     </div>
@@ -1656,12 +1970,12 @@ export default function AdminPortal() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                             <div>
                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                    📸 Campsite Photo Gallery ({currentDetailProperty.gallery ? currentDetailProperty.gallery.length : 1})
+Campsite Photo Gallery ({currentDetailProperty.gallery ? currentDetailProperty.gallery.length : 1})
                                 </h3>
                                 <div style={{ fontSize: '12.5px', color: '#59655D' }}>High-res wilderness, pod, and sunset photos displayed on public page</div>
                             </div>
                             <button onClick={() => handleOpenPropertyModal(currentDetailProperty)} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}>
-                                Manage Gallery Photos 🖼️
+Manage Gallery Photos 
                             </button>
                         </div>
 
@@ -1671,7 +1985,7 @@ export default function AdminPortal() {
                                     <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                     {img === currentDetailProperty.image && (
                                         <span style={{ position: 'absolute', top: '6px', left: '6px', background: '#121613', color: '#E5A93B', fontSize: '9.5px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px' }}>
-                                            ★ Cover
+Cover
                                         </span>
                                     )}
                                 </div>
@@ -1684,7 +1998,7 @@ export default function AdminPortal() {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', marginBottom: '24px' }}>
                             <div>
                                 <div className="star-badge">
-                                    <span className="star-icon">★</span> ACCOMMODATION UNITS
+<span className="star-icon">★</span> ACCOMMODATION UNITS
                                 </div>
                                 <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '4px 0 0', color: '#121613' }}>
                                     Rooms, Dome Pods & Tent Inventory ({currentDetailProperty.rooms ? currentDetailProperty.rooms.length : 0})
@@ -1791,7 +2105,7 @@ export default function AdminPortal() {
                                                     cursor: 'pointer'
                                                 }}
                                             >
-                                                Edit ✏️
+Edit 
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteRoom(currentDetailProperty.id, room.id)}
@@ -1806,7 +2120,7 @@ export default function AdminPortal() {
                                                     cursor: 'pointer'
                                                 }}
                                             >
-                                                🗑️
+                                            <Trash2 size={14} />
                                             </button>
                                         </div>
                                     </div>
@@ -1820,7 +2134,7 @@ export default function AdminPortal() {
                 {/* MODAL: ADD / EDIT ROOM TYPE */}
                 <AnimatePresence>
                     {isAddRoomModalOpen && (
-                        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+                        <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
                             <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '32px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                     <div>
@@ -1832,7 +2146,7 @@ export default function AdminPortal() {
                                         </h3>
                                     </div>
                                     <button onClick={() => { setIsAddRoomModalOpen(false); setEditingRoom(null); }} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
-                                        ✕
+<X size={15} strokeWidth={2.5} />
                                     </button>
                                 </div>
 
@@ -1842,14 +2156,14 @@ export default function AdminPortal() {
                                     <div style={{ background: '#F4F7EB', borderRadius: '16px', padding: '14px 16px', border: '1px solid rgba(22, 101, 52, 0.15)' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                             <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                                ⚡ Fast Capacity & Tent Presets
+Fast Capacity & Tent Presets
                                             </label>
                                             <span style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '700' }}>1-Click Setup</span>
                                         </div>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '6px' }}>
                                             {[
                                                 {
-                                                    label: '👤 Single Tent (1P)',
+label: ' Single Tent (1P)',
                                                     name: 'Single Solo Ridge Tent',
                                                     capacity: '1 Person',
                                                     price: 1699,
@@ -1858,7 +2172,7 @@ export default function AdminPortal() {
                                                     image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-                                                    label: '👥 2-Person Dome',
+label: ' 2-Person Dome',
                                                     name: 'Geodesic Luxury Dome Pod',
                                                     capacity: '2 Persons',
                                                     price: 2499,
@@ -1867,7 +2181,7 @@ export default function AdminPortal() {
                                                     image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-                                                    label: '🏕️ 3-Person Tent',
+label: ' 3-Person Tent',
                                                     name: '3-Person Alpine Weatherproof Tent',
                                                     capacity: '3 Persons',
                                                     price: 1999,
@@ -1876,7 +2190,7 @@ export default function AdminPortal() {
                                                     image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-                                                    label: '⛺ 4-Person Quad',
+label: ' 4-Person Quad',
                                                     name: 'Weatherproof 4-Person Alpine Quad Tent',
                                                     capacity: '4 Persons',
                                                     price: 1799,
@@ -1885,7 +2199,7 @@ export default function AdminPortal() {
                                                     image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-                                                    label: '🏡 Family Cottage',
+label: ' Family Cottage',
                                                     name: 'Private Cliffside Wooden Cottage',
                                                     capacity: '4-6 Persons',
                                                     price: 3499,
@@ -1907,7 +2221,7 @@ export default function AdminPortal() {
                                                             features: preset.features,
                                                             image: roomForm.image || preset.image
                                                         });
-                                                        showToast(`✓ Applied ${preset.label} preset`);
+showToast(` Applied ${preset.label} preset`);
                                                     }}
                                                     style={{
                                                         padding: '7px 6px',
@@ -1935,12 +2249,12 @@ export default function AdminPortal() {
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                                             <div>
                                                 <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', display: 'block' }}>
-                                                    📸 Room / Pod Photo
+Room / Pod Photo
                                                 </label>
                                                 <span style={{ fontSize: '11px', color: '#59655D' }}>Upload file from device or paste image URL</span>
                                             </div>
                                             <label style={{ cursor: 'pointer', background: '#121613', color: '#FFFFFF', padding: '7px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                                <span>📤 Upload File</span>
+                                                <span><Upload size={14} /> Upload File</span>
                                                 <input type="file" accept="image/*" onChange={handleRoomImageUpload} style={{ display: 'none' }} />
                                             </label>
                                         </div>
@@ -1950,19 +2264,19 @@ export default function AdminPortal() {
                                             <div style={{ position: 'relative', height: '140px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #E5A93B', marginBottom: '12px' }}>
                                                 <img src={roomForm.image} alt="Room Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                 <span style={{ position: 'absolute', top: '8px', left: '8px', background: '#121613', color: '#E5A93B', fontSize: '10px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
-                                                    ★ Selected Room Photo
+Selected Room Photo
                                                 </span>
                                                 <button
                                                     type="button"
                                                     onClick={() => setRoomForm({ ...roomForm, image: '' })}
                                                     style={{ position: 'absolute', top: '8px', right: '8px', background: '#EF4444', color: '#FFFFFF', border: 'none', padding: '4px 10px', borderRadius: '6px', fontSize: '11px', fontWeight: '800', cursor: 'pointer' }}
                                                 >
-                                                    Remove ✕
+Remove
                                                 </button>
                                             </div>
                                         ) : (
                                             <label style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '90px', borderRadius: '12px', border: '2px dashed rgba(18,22,19,0.18)', background: '#FFFFFF', cursor: 'pointer', marginBottom: '12px' }}>
-                                                <span style={{ fontSize: '20px', marginBottom: '4px' }}>📷</span>
+                                                <span style={{ fontSize: '20px', marginBottom: '4px' }}><Camera size={20} /></span>
                                                 <span style={{ fontSize: '12px', fontWeight: '700', color: '#121613' }}>Click to select photo from device</span>
                                                 <input type="file" accept="image/*" onChange={handleRoomImageUpload} style={{ display: 'none' }} />
                                             </label>
@@ -2054,12 +2368,12 @@ export default function AdminPortal() {
                                 </form>
                             </motion.div>
                         </div>
-                    )}
-                </AnimatePresence>
+)}
+</AnimatePresence>
 
-            </div>
-        );
-    }
+        </div>
+    );
+}
 
     // ─────────────────────────────────────────────────────────────
     // MAIN ADMIN DASHBOARD WITH SLEEK COLLAPSIBLE SIDEBAR
@@ -2068,23 +2382,27 @@ export default function AdminPortal() {
         {
             category: 'COMMAND & ROSTER',
             items: [
-                { id: 'overview', name: 'Dashboard Overview', icon: '📊', desc: 'Live KPIs & ops' },
-                { id: 'bookings', name: 'Camper Reservations', icon: '📋', count: bookings.length, badgeColor: '#E5A93B' },
-                { id: 'properties', name: 'Campsites & Pods', icon: '⛺', count: properties.length, badgeColor: '#22C55E' },
-                { id: 'events', name: 'Scheduled Batches', icon: '🏔️', count: activeEventsCount, badgeColor: '#38BDF8' },
-                { id: 'marshals', name: 'Station Marshals', icon: '🧭', count: marshals.length, badgeColor: '#166534' }
+                { id: 'overview', name: 'Dashboard', icon: LayoutDashboard },
+                { id: 'bookings', name: 'Reservations', icon: ClipboardList, count: bookings.length },
+                { id: 'properties', name: 'Campsites & Pods', icon: Tent, count: properties.length },
+                { id: 'events', name: 'Scheduled Batches', icon: Mountain, count: activeEventsCount },
+                { id: 'marshals', name: 'Hosts & Guides', icon: Users, count: marshals.length }
             ]
         },
-        {
+{
             category: 'FINANCE & SECURITY',
             items: [
-                { id: 'financials', name: 'Revenue & Margin', icon: '💰', desc: `₹${totalRevenue.toLocaleString('en-IN')}` },
-                { id: 'payment', name: 'Payment & QR Gateway', icon: '💳', desc: paymentSettings.mode === 'coming_soon' ? '⏳ Coming Soon' : '⚡ Live UPI' },
-                { id: 'logs', name: 'Security & DB Logs', icon: '🛡️', count: (auditLogs?.length || 0) + (dbLogs?.length || 0), badgeColor: '#DC2626' },
-                { id: 'settings', name: 'Alerts & Dispatch', icon: '⚙️', desc: 'WhatsApp & Bot' }
+                { id: 'financials', name: 'Revenue & Margins', icon: IndianRupee },
+                { id: 'payment', name: 'Payment & QR Gateway', icon: QrCode, statusDot: paymentSettings.mode === 'razorpay' ? '#22C55E' : '#E5A93B' },
+                { id: 'discounts', name: 'Discounts & Offers', icon: BadgePercent, count: discounts.length },
+                { id: 'testimonials', name: 'Testimonials', icon: MessageSquareQuote, count: testimonials.length },
+                { id: 'logs', name: 'Security & DB Logs', icon: ShieldCheck, count: (auditLogs?.length || 0) + (dbLogs?.length || 0) },
+                { id: 'settings', name: 'Alerts & Dispatch', icon: Settings }
             ]
         }
     ];
+
+    const allNavItems = navSections.flatMap(sec => sec.items);
 
     const renderSidebarContent = (isMobile = false) => {
         const isCollapsed = !isMobile && isSidebarCollapsed;
@@ -2098,7 +2416,33 @@ export default function AdminPortal() {
                 boxSizing: 'border-box',
                 gap: '14px'
             }}>
-                {/* Brand Header */}
+                {/* Brand Header (mobile menu shows brand + close) */}
+                {isMobile ? (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham.go Official Logo"
+                                style={{ height: '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
+                            />
+                            <div style={{ minWidth: 0 }}>
+                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
+                                    Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                </span>
+                                <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                    BASECAMP HQ
+                                </span>
+                            </div>
+                        </Link>
+                        <button
+                            onClick={() => setIsMobileSidebarOpen(false)}
+                            aria-label="Close navigation menu"
+                            style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#F1F3EC', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                        >
+                            <X size={18} strokeWidth={2.5} />
+                        </button>
+                    </div>
+                ) : (
                 <div style={{ paddingBottom: isCollapsed ? '12px' : '14px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', marginBottom: isCollapsed ? '0' : '10px' }}>
                         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', minWidth: 0 }}>
@@ -2124,7 +2468,7 @@ export default function AdminPortal() {
                                 onClick={() => setIsMobileSidebarOpen(false)}
                                 style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F1F3EC', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', fontWeight: '800' }}
                             >
-                                ✕
+                                <X size={15} strokeWidth={2.5} />
                             </button>
                         ) : (
                             !isCollapsed && (
@@ -2145,13 +2489,13 @@ export default function AdminPortal() {
                                         fontSize: '12px'
                                     }}
                                 >
-                                    ◀
+                                    <ChevronLeft size={14} strokeWidth={2.5} />
                                 </button>
                             )
                         )}
                     </div>
 
-                    {!isCollapsed && (
+                    {!isCollapsed && !isMobile && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#DCFCE7', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '4px 9px', borderRadius: '999px', width: 'fit-content' }}>
                             <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', boxShadow: '0 0 6px #22C55E' }}></span>
                             <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
@@ -2179,11 +2523,12 @@ export default function AdminPortal() {
                                     fontSize: '12px'
                                 }}
                             >
-                                ▶
+                                <ChevronRight size={14} strokeWidth={2.5} />
                             </button>
                         </div>
                     )}
                 </div>
+                )}
 
                 {/* Dual Quick Action Buttons */}
                 <div style={{ display: isCollapsed ? 'flex' : 'grid', flexDirection: isCollapsed ? 'column' : undefined, gridTemplateColumns: isCollapsed ? undefined : '1fr 1fr', gap: '6px' }}>
@@ -2208,7 +2553,7 @@ export default function AdminPortal() {
                             boxShadow: '0 2px 8px rgba(213, 237, 85, 0.28)'
                         }}
                     >
-                        <span>+</span>
+                        <Plus size={13} strokeWidth={3} />
                         {!isCollapsed && <span>Booking</span>}
                     </button>
                     <button
@@ -2233,10 +2578,69 @@ export default function AdminPortal() {
                             whiteSpace: 'nowrap'
                         }}
                     >
-                        <span>⛺</span>
+                        <span><Tent size={13} strokeWidth={2.5} /></span>
                         {!isCollapsed && <span>Campsite</span>}
                     </button>
                 </div>
+
+                {/* Sync Database */}
+                <button
+                    onClick={() => {
+                        reloadDataFromStorage();
+showToast(' Synced database');
+                        if (isMobile) setIsMobileSidebarOpen(false);
+                    }}
+                    title="Sync Database"
+                    style={{
+                        width: '100%',
+                        padding: isCollapsed ? '8px 0' : '9px 8px',
+                        borderRadius: '10px',
+                        fontSize: isCollapsed ? '13px' : '11.5px',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        background: '#0B150E',
+                        border: '1px solid rgba(213, 237, 85, 0.35)',
+                        color: '#D5ED55',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px',
+                        whiteSpace: 'nowrap',
+                        marginTop: '6px'
+                    }}
+                >
+                    <RefreshCw size={13} strokeWidth={2.5} />
+                    {!isCollapsed && <span>Sync Database</span>}
+                </button>
+
+                {/* QR Scanner (Desktop sidebar only; mobile uses the header circle icon) */}
+                {!isMobile && (
+<button
+                    onClick={() => { setScannerOverlayOpen(true); if (isMobile) setIsMobileSidebarOpen(false); }}
+                    title="Open Live QR Pass Scanner & Basecamp Host Gate Attendance"
+                    style={{
+                        width: '100%',
+                        padding: isCollapsed ? '8px 0' : '9px 8px',
+                        borderRadius: '10px',
+                        fontSize: isCollapsed ? '13px' : '11.5px',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        background: '#FFFFFF',
+                        border: '1.5px solid #D5ED55',
+                        color: '#0B150E',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px',
+                        whiteSpace: 'nowrap',
+                        textDecoration: 'none',
+                        marginTop: '6px'
+                    }}
+                >
+                    <QrCode size={13} strokeWidth={2.5} />
+{!isCollapsed && <span>QR Scanner </span>}
+                </button>
+                )}
 
                 {/* Categorized Navigation Menu */}
                 <nav style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '10px' : '14px' }}>
@@ -2277,7 +2681,7 @@ export default function AdminPortal() {
                                             }}
                                         >
                                             <div style={{ display: 'flex', alignItems: 'center', gap: isCollapsed ? '0' : '10px' }}>
-                                                <span style={{ fontSize: '16px' }}>{item.icon}</span>
+                                                <item.icon size={16} strokeWidth={2.4} />
                                                 {!isCollapsed && <span>{item.name}</span>}
                                             </div>
                                             {!isCollapsed && item.count !== undefined && (
@@ -2349,7 +2753,7 @@ export default function AdminPortal() {
                                     gap: '4px'
                                 }}
                             >
-                                <span>Website ↗</span>
+                                <span>Website <ArrowUpRight size={12} strokeWidth={2.5} /></span>
                             </Link>
                         )}
                         <button
@@ -2382,373 +2786,449 @@ export default function AdminPortal() {
     return (
         <div style={{ minHeight: '100vh', width: '100%', background: '#F8F9F5', color: '#121613', display: 'flex', flexDirection: 'column' }}>
             
-            {/* ── MOBILE ADMIN TOPBAR (Visible on < 1024px) ── */}
-            <header className="admin-mobile-topbar" style={{
-                display: 'none',
-                position: 'sticky',
-                top: 0,
-                zIndex: 900,
-                background: '#FFFFFF',
-                borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
-                padding: '12px 18px',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                color: '#121613'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <button
-                        onClick={() => setIsMobileSidebarOpen(true)}
-                        aria-label="Open Admin Menu"
-                        style={{
-                            width: '38px',
-                            height: '38px',
-                            borderRadius: '10px',
-                            background: '#F8F9F5',
-                            border: '1px solid rgba(18, 22, 19, 0.12)',
-                            color: '#121613',
-                            fontSize: '18px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        ☰
-                    </button>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <img
-                            src="/logo.png"
-                            alt="Aanandham.go Official Logo"
-                            style={{ height: '28px', width: 'auto', objectFit: 'contain' }}
-                        />
-                        <div>
-                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613', display: 'block', lineHeight: 1.1 }}>
-                                Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
-                            </span>
-                            <div style={{ fontSize: '9px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase' }}>
-                                {activeTab.toUpperCase()}
+            {/* ═════════════════════════════════════════════════════════════
+                TOP FIXED ADMIN NAVBAR (Reusing SiteHeader structure & style)
+            ═════════════════════════════════════════════════════════════ */}
+            <motion.header
+                className="admin-site-header site-header"
+                initial={{ y: -20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            >
+                <div style={{
+                    width: '100%',
+                    maxWidth: '1720px',
+                    margin: '0 auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '14px',
+                    boxSizing: 'border-box'
+                }}>
+                    {/* Far Left: Brand Logo & Title */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
+                            <img
+                                src="/logo.png"
+                                alt="Aanandham.go Logo"
+                                width="38"
+                                height="38"
+                                decoding="async"
+                                style={{
+                                    width: '38px',
+                                    height: '38px',
+                                    objectFit: 'contain',
+                                    borderRadius: '50%',
+                                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45))'
+                                }}
+                            />
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span style={{
+                                    fontSize: '17px',
+                                    fontWeight: '900',
+                                    letterSpacing: '-0.02em',
+                                    color: '#FFFFFF',
+                                    fontFamily: 'var(--font-heading)',
+                                    lineHeight: 1.1
+                                }}>
+Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
+                                </span>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginTop: '1px' }}>
+                                    <span style={{ fontSize: '8.5px', fontWeight: '800', color: '#D5ED55', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                                        HQ ADMIN
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        </Link>
+                    </div>
+
+{/* Far Right: QR Scanner Circle Icon + Mobile Burger Toggle */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                        {/* QR Scanner Circle Icon (Icon Only, No Text) */}
+                        <button
+                            onClick={() => setScannerOverlayOpen(true)}
+                            aria-label="Open QR Scanner"
+                            title="Open QR Scanner"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '50%',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                border: '1px solid rgba(255, 255, 255, 0.22)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                textDecoration: 'none',
+                                cursor: 'pointer',
+                                transition: 'background 0.2s ease'
+                            }}
+                        >
+                            <QrCode size={19} strokeWidth={2.2} color="#D5ED55" />
+                        </button>
+                        {/* Morphing 3-Bar Hamburger Toggle (Shows on <= 1100px) */}
+                        <button
+                            id="nav-mobile-toggle-btn"
+                            className={`nav-mobile-toggle ${isMobileSidebarOpen ? 'is-open' : ''}`}
+                            onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+                            aria-label={isMobileSidebarOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                            aria-expanded={isMobileSidebarOpen}
+                            aria-controls="mobile-navigation-drawer"
+                            aria-haspopup="dialog"
+                        >
+                            <span className="burger-line line-top" />
+                            <span className="burger-line line-mid" />
+                            <span className="burger-line line-bot" />
+                        </button>
                     </div>
                 </div>
+            </motion.header>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Link
-                        href="/checkin"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            padding: '7px 11px',
-                            borderRadius: '8px',
-                            background: '#0B150E',
-                            border: '1px solid #D5ED55',
-                            color: '#D5ED55',
-                            fontSize: '11px',
-                            fontWeight: '800',
-                            textDecoration: 'none'
-                        }}
-                    >
-                        📱 Check-In
-                    </Link>
-                    <button
-                        onClick={() => setIsAddBookingModalOpen(true)}
-                        className="btn-lime"
-                        style={{ padding: '7px 12px', fontSize: '11.5px', fontWeight: '800', borderRadius: '8px' }}
-                    >
-                        + Booking
-                    </button>
-                </div>
-            </header>
-
-            {/* ── MOBILE SLIDE-OUT DRAWER OVERLAY ── */}
+            {/* ═════════════════════════════════════════════════════════════
+                MOBILE FULLSCREEN LIQUID WAVE MENU (Matching SiteHeader)
+            ═════════════════════════════════════════════════════════════ */}
+{/* ── MOBILE FULL-SCREEN NAV MENU (No Blur Backdrop) ── */}
             <AnimatePresence>
                 {isMobileSidebarOpen && (
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setIsMobileSidebarOpen(false)}
+                        id="mobile-navigation-drawer"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Admin Navigation Menu"
+                        initial={{ opacity: 0, x: -48 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -48 }}
+                        transition={{ type: 'spring', damping: 30, stiffness: 320 }}
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            zIndex: 9999,
-                            background: 'rgba(0, 0, 0, 0.5)',
-                            backdropFilter: 'blur(8px)',
-                            display: 'flex'
+                            zIndex: 100010,
+                            background: '#FFFFFF',
+                            boxSizing: 'border-box',
+                            color: '#121613',
+                            overflowY: 'auto',
+                            overscrollBehavior: 'contain',
+                            WebkitOverflowScrolling: 'touch',
+                            padding: '20px 16px calc(24px + env(safe-area-inset-bottom))'
                         }}
                     >
-                        <motion.aside
-                            initial={{ x: -280 }}
-                            animate={{ x: 0 }}
-                            exit={{ x: -280 }}
-                            transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-                            onClick={(e) => e.stopPropagation()}
-                            style={{
-                                width: '280px',
-                                maxWidth: '85vw',
-                                height: '100%',
-                                background: '#FFFFFF',
-                                borderRight: '1px solid rgba(18, 22, 19, 0.1)',
-                                padding: '24px 18px',
-                                boxSizing: 'border-box',
-                                color: '#121613',
-                                overflowY: 'auto'
-                            }}
-                        >
-                            {renderSidebarContent(true)}
-                        </motion.aside>
+                        {renderSidebarContent(true)}
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            <div style={{ display: 'flex', flex: 1, minHeight: '100vh', '--admin-sidebar-width': isSidebarCollapsed ? '76px' : '270px' }}>
-                
-                {/* ── DESKTOP LEFT SIDEBAR (Fixed Static, Full Viewport Height) ── */}
-                <aside className="admin-desktop-sidebar" style={{ width: isSidebarCollapsed ? '76px' : '270px' }}>
+            {/* ═════════════════════════════════════════════════════════════
+                FULL-WIDTH MAIN CONTENT WORKSPACE
+            ═════════════════════════════════════════════════════════════ */}
+            
+                {/* DESKTOP LEFT SIDEBAR (Original Fixed Sidebar) */}
+                <aside className="admin-desktop-sidebar" style={{ '--admin-sidebar-width': isSidebarCollapsed ? '76px' : '270px' }}>
                     {renderSidebarContent(false)}
                 </aside>
 
-                {/* ── MAIN CONTENT WORKSPACE (Scrolls independently next to static sidebar) ── */}
-                <main className="admin-main-workspace" style={{ flex: 1, minHeight: '100vh', marginLeft: isSidebarCollapsed ? '76px' : '270px', width: `calc(100% - ${isSidebarCollapsed ? '76px' : '270px'})`, padding: '28px clamp(18px, 3vw, 48px)', boxSizing: 'border-box', overflowY: 'auto' }}>
+                <main className="admin-main-workspace" style={{ '--admin-sidebar-width': isSidebarCollapsed ? '76px' : '270px' }}>
                 
                 {/* ── TOP EXECUTIVE COMMAND BAR ── */}
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    paddingBottom: '20px',
-                    marginBottom: '28px',
+                    paddingBottom: '12px',
+                    marginBottom: '16px',
                     borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                     flexWrap: 'wrap',
-                    gap: '14px'
+                    gap: '10px'
                 }}>
-                    {/* Left: Breadcrumbs & Live Pulse */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <button
-                            onClick={() => setIsSidebarCollapsed(prev => !prev)}
-                            title={isSidebarCollapsed ? "Expand Sidebar (270px)" : "Collapse Sidebar (76px)"}
-                            style={{
-                                width: '36px',
-                                height: '36px',
-                                borderRadius: '10px',
-                                background: '#FFFFFF',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                fontSize: '13px',
-                                fontWeight: '800',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
-                            }}
-                        >
-                            {isSidebarCollapsed ? '▶' : '◀'}
-                        </button>
-                        <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                                <span style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                    Aanandham Enterprise HQ
-                                </span>
-                                <span style={{ color: '#CBD5E1', fontSize: '10px' }}>/</span>
-                                <span style={{ fontSize: '10.5px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                    {activeTab.toUpperCase()}
-                                </span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
+                    {/* Left: Breadcrumbs & Section Title */}
+                    <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                            <span style={{ fontSize: '10px', color: '#59655D', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                Aanandham Enterprise HQ
+                            </span>
+                            <span style={{ color: '#CBD5E1', fontSize: '10px' }}>/</span>
+                            <span style={{ fontSize: '10px', color: '#E5A93B', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                {activeTab.toUpperCase()}
+                            </span>
+                        </div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 2.5vw, 24px)', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
                                     {activeTab === 'overview' ? 'Mission Control & Operations' :
                                      activeTab === 'bookings' ? 'Camper Reservations Roster' :
                                      activeTab === 'properties' ? 'Campsites & Pod Inventory' :
                                      activeTab === 'events' ? 'Scheduled Batches' :
+                                     activeTab === 'marshals' ? 'Camp Hosts & Trek Guides' :
                                      activeTab === 'financials' ? 'Revenue & Margins' :
-                                     activeTab === 'payment' ? 'Payment Gateway & Live QR' :
+activeTab === 'payment' ? 'Payment Gateway & Live QR' :
+                                     activeTab === 'discounts' ? 'Discounts & Offers Center' :
+                                     activeTab === 'testimonials' ? 'Guest Testimonials & Reviews' :
+                                     activeTab === 'logs' ? 'Security & Database Audit Logs' :
                                      'Alerts & Dispatch Settings'}
                                 </h1>
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#DCFCE7', color: '#166534', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '3px 9px', borderRadius: '999px', fontSize: '10.5px', fontWeight: '800' }}>
-                                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#DCFCE7', color: '#166534', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '2px 8px', borderRadius: '999px', fontSize: '10px', fontWeight: '800' }}>
+                                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
                                     Live DB · {bookings.length} Bookings
                                 </span>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Right: Quick Action Controls */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                        <Link
-                            href="/checkin"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="Open Live QR Pass Scanner & Basecamp Host Gate Attendance"
-                            style={{
-                                padding: '9px 18px',
-                                borderRadius: '12px',
-                                background: '#0B150E',
-                                border: '1.5px solid #D5ED55',
-                                color: '#D5ED55',
-                                fontSize: '13px',
-                                fontWeight: '800',
-                                textDecoration: 'none',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '7px',
-                                boxShadow: '0 4px 14px rgba(11, 21, 14, 0.25)',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <span style={{ fontSize: '16px' }}>📱</span>
-                            <span>QR Scanner / Check-In ↗</span>
-                        </Link>
-                        <button
-                            onClick={() => { reloadDataFromStorage(); showToast('✓ Live data refreshed from database'); }}
-                            title="Force sync data directly from PostgreSQL / server store"
-                            style={{
-                                padding: '9px 14px',
-                                borderRadius: '12px',
-                                background: '#FFFFFF',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                fontSize: '12.5px',
-                                fontWeight: '700',
-                                cursor: 'pointer',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '5px',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
-                            }}
-                        >
-                            <span>↻</span>
-                            <span>Sync DB</span>
-                        </button>
-                        <button
-                            onClick={() => setIsAddBookingModalOpen(true)}
-                            className="btn-lime"
-                            style={{ padding: '9px 18px', fontSize: '13px', fontWeight: '800', borderRadius: '12px' }}
-                        >
-                            + Add Booking
-                        </button>
-                    </div>
                 </div>
+
+
 
                 {/* ─────────────────────────────────────────────────────────────
                     TAB 1: EXECUTIVE OVERVIEW
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'overview' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         
                         {/* Header Intro */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '18px' }}>
                             <div>
-                                <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> EXECUTIVE DASHBOARD
+                                <div className="star-badge" style={{ marginBottom: '3px' }}>
+<span className="star-icon">★</span> EXECUTIVE DASHBOARD
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     Real-Time Operations & KPIs
                                 </h2>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                <button onClick={handleExportCSV} style={{ padding: '9px 18px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)' }}>
-                                    <span>📥 Export CSV</span>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                <button onClick={handleExportCSV} style={{ padding: '7px 14px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                    <span><Download size={14} /> Export CSV</span>
                                 </button>
-                                <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '9px 20px', fontSize: '13px', fontWeight: '800' }}>
+                                <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '7px 16px', fontSize: '12px', fontWeight: '800' }}>
                                     + Manual Booking
                                 </button>
                             </div>
                         </div>
 
-                        {/* 4 Hero Minimalist Squared Metric Cards */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px', marginBottom: '32px' }}>
+{/* 4 Hero KPI Cards */}
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+                            gap: '12px',
+                            marginBottom: '20px'
+                        }}>
                             
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Gross Confirmed Revenue
+                            {/* Card 1: Gross Revenue */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                        Gross Revenue
+                                    </span>
+                                    <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
+                                    <Banknote size={15} />
+                                    </span>
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '34px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', margin: '2px 0 6px' }}>
                                     ₹{totalRevenue.toLocaleString('en-IN')}
                                 </div>
-                                <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '8px', fontWeight: '600' }}>
-                                    From {paidBookings.length} confirmed reservations
+                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>
+                                    From {paidBookings.length} confirmed bookings
                                 </div>
                             </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Est. Net Operating Profit
+                            {/* Card 2: Operating Profit */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                        Est. Net Profit
+                                    </span>
+                                    <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(22, 101, 52, 0.08)', border: '1px solid rgba(22, 101, 52, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
+                                    <TrendingUp size={15} />
+                                    </span>
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '34px', fontWeight: '800', color: '#166534', letterSpacing: '-0.02em' }}>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#166534', letterSpacing: '-0.02em', margin: '2px 0 6px' }}>
                                     ₹{estimatedNetProfit.toLocaleString('en-IN')}
                                 </div>
-                                <div style={{ fontSize: '12.5px', color: '#166534', marginTop: '8px', fontWeight: '700' }}>
-                                    ✓ {profitMarginPercent}% Net Operating Margin
+                                <div style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}>
+✓ {profitMarginPercent}% Net Margin
                                 </div>
                             </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Total Confirmed Campers
+                            {/* Card 3: Total Campers */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                        Total Confirmed Campers
+                                    </span>
+                                    <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
+                                    <Users size={15} />
+                                    </span>
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '34px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em' }}>
-                                    {activeCampers} <span style={{ fontSize: '18px', color: '#59655D', fontWeight: '600' }}>Pax</span>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', margin: '2px 0 6px' }}>
+                                    {activeCampers} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Pax</span>
                                 </div>
-                                <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '8px', fontWeight: '600' }}>
+                                <div style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>
                                     Across Kerala Campsites
                                 </div>
                             </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '8px' }}>
-                                    Pending Inquiries
+                            {/* Card 4: Pending Inquiries */}
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between'
+                            }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                        Pending Inquiries
+                                    </span>
+                                    <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
+                                    <Zap size={15} />
+                                    </span>
                                 </div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '34px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.02em' }}>
-                                    {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '18px', color: '#59655D', fontWeight: '600' }}>Leads</span>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#B45309', letterSpacing: '-0.02em', margin: '2px 0 6px' }}>
+                                    {bookings.filter(b => b.status === 'Pending').length} <span style={{ fontSize: '16px', color: '#59655D', fontWeight: '600' }}>Leads</span>
                                 </div>
-                                <div style={{ fontSize: '12.5px', color: '#B45309', marginTop: '8px', fontWeight: '700' }}>
-                                    ⚡ Instant WhatsApp Dispatch
+                                <div style={{ fontSize: '12px', color: '#B45309', fontWeight: '700' }}>
+Instant WhatsApp Dispatch
                                 </div>
                             </div>
 
                         </div>
 
+{/* Operational Quick Jump Bar */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', marginBottom: '22px' }}>
+                            <button
+                                onClick={() => setActiveTab('properties')}
+                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                            >
+                                <span style={{ fontSize: '22px' }}><Tent size={22} /></span>
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Campsites & Pods</div>
+                                    <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{properties.length} Sanctuaries</div>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('events')}
+                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                            >
+                                <span style={{ fontSize: '22px' }}><Calendar size={22} /></span>
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Weekend Batches</div>
+                                    <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{activeEventsCount} Active Treks</div>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('marshals')}
+                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                            >
+                                <span style={{ fontSize: '22px' }}><Compass size={22} /></span>
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Hosts & Guides</div>
+                                    <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{marshals.length} Field Crew</div>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('payment')}
+                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                            >
+                                <span style={{ fontSize: '22px' }}><Zap size={22} /></span>
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Payment Gateway</div>
+<div style={{ fontSize: '11px', color: '#166534', fontWeight: '700', marginTop: '2px' }}>{paymentSettings.mode === 'coming_soon' ? ' Concierge Mode' : ' Live Razorpay'}</div>
+                                </div>
+                            </button>
+
+                            <button
+                                onClick={() => setActiveTab('logs')}
+                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                            >
+                                <span style={{ fontSize: '22px' }}><ScrollText size={22} /></span>
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Audit Trail</div>
+                                    <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>Live DB Security</div>
+                                </div>
+                            </button>
+                        </div>
+
                         {/* Split Row: Recent Bookings Stream + Upcoming Scheduled Batches */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '28px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
                             
                             {/* Recent Live Reservations */}
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '22px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                            ⚡ Recent Reservations
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: 0, color: '#121613' }}>
+Recent Reservations
                                         </h3>
-                                        <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '2px' }}>
+                                        <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
                                             Latest camper submissions
                                         </div>
                                     </div>
-                                    <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
-                                        View All →
+                                    <button onClick={() => setActiveTab('bookings')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '11.5px', fontWeight: '800', borderRadius: '8px' }}>
+View All ({bookings.length}) →
                                     </button>
                                 </div>
 
                                 {bookings.length === 0 ? (
-                                    <div style={{ padding: '36px 20px', textAlign: 'center', color: '#7D8880', background: '#F8F9F5', borderRadius: '16px', border: '1px dashed rgba(18,22,19,0.12)' }}>
-                                        <div style={{ fontSize: '28px', marginBottom: '8px' }}>📋</div>
-                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>No Bookings Yet</div>
-                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '4px' }}>Click "+ Add Manual Booking" above or submit via the website.</div>
+                                    <div style={{ padding: '28px 16px', textAlign: 'center', color: '#7D8880', background: '#F8F9F5', borderRadius: '14px', border: '1px dashed rgba(18,22,19,0.12)' }}>
+<div style={{ fontSize: '24px', marginBottom: '6px' }}><ClipboardList size={24} /></div>
+                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>No Bookings Yet</div>
+                                        <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '4px', marginBottom: '10px' }}>Click below to create a booking or restore sample data.</div>
+                                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                            <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '6px 14px', fontSize: '11.5px', fontWeight: '800' }}>
+                                                + Manual Booking
+                                            </button>
+                                            <button onClick={handleSeedSampleBookings} style={{ padding: '6px 14px', borderRadius: '10px', background: '#121613', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+Restore Sample Roster
+                                            </button>
+                                        </div>
                                     </div>
                                 ) : (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                                        {bookings.slice(0, 4).map(b => (
-                                            <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.04)', padding: '14px 18px', borderRadius: '16px' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        {bookings.slice(0, 5).map(b => (
+                                            <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.04)', padding: '12px 14px', borderRadius: '14px' }}>
                                                 <div>
-                                                    <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>{b.name} ({b.guests} Pax)</div>
-                                                    <div style={{ fontSize: '12px', color: '#59655D' }}>{b.package ? b.package.slice(0, 32) : 'Campsite'}... · {b.dates}</div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                                        <span style={{ fontSize: '10px', fontWeight: '800', background: 'rgba(18,22,19,0.08)', padding: '1px 6px', borderRadius: '4px' }}>{b.id}</span>
+                                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>{b.name} ({b.guests} Pax)</span>
+                                                    </div>
+                                                    <div style={{ fontSize: '11.5px', color: '#59655D' }}>{b.package ? b.package.slice(0, 28) : 'Campsite'}... · {b.dates}</div>
                                                 </div>
                                                 <div style={{ textAlign: 'right' }}>
-                                                    <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>₹{(b.total || 0).toLocaleString('en-IN')}</div>
-                                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: b.status === 'Confirmed' ? '#166534' : '#B45309' }}>{b.status}</span>
+                                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>₹{(b.total || 0).toLocaleString('en-IN')}</div>
+                                                    <span style={{ fontSize: '10px', fontWeight: '800', color: b.status === 'Confirmed' ? '#166534' : '#B45309' }}>{b.status}</span>
                                                 </div>
-                                                <div>
-                                                    <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '7px 12px', fontSize: '11.5px', fontWeight: '800' }}>
-                                                        WhatsApp →
+                                                <div style={{ display: 'flex', gap: '6px' }}>
+                                                    <a href={`/pass/${b.id}`} target="_blank" rel="noopener noreferrer" style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', borderRadius: '8px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+Pass
+                                                    </a>
+                                                    <a href={waLink(`Hi ${b.name}! Aanandham desk regarding your reservation (${b.id}).`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '800', borderRadius: '8px', textDecoration: 'none' }}>
+WhatsApp →
                                                     </a>
                                                 </div>
                                             </div>
@@ -2758,32 +3238,32 @@ export default function AdminPortal() {
                             </div>
 
                             {/* Upcoming Scheduled Batches */}
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '22px', padding: '28px', boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
+                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '22px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                            🎉 Upcoming Weekend Batches
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: 0, color: '#121613' }}>
+Weekend Batches
                                         </h3>
-                                        <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '2px' }}>
+                                        <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
                                             Live capacity tracking
                                         </div>
                                     </div>
-                                    <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '12px', fontWeight: '800' }}>
-                                        Manage Batches →
+                                    <button onClick={() => setActiveTab('events')} className="btn-lime" style={{ padding: '6px 14px', fontSize: '11.5px', fontWeight: '800', borderRadius: '8px' }}>
+Manage Batches →
                                     </button>
                                 </div>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {events.map(ev => (
-                                        <div key={ev.id} style={{ background: '#F8F9F5', padding: '14px 16px', borderRadius: '16px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '14px', alignItems: 'center' }}>
-                                            <img src={ev.image} alt={ev.title} style={{ width: '52px', height: '52px', borderRadius: '12px', objectFit: 'cover' }} />
+                                        <div key={ev.id} style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                            <img src={ev.image} alt={ev.title} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} />
                                             <div style={{ flex: 1, minWidth: 0 }}>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3px' }}>
-                                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
-                                                    <span style={{ fontSize: '11px', color: '#59655D' }}>{ev.dates}</span>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                    <span style={{ fontSize: '10px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
+                                                    <span style={{ fontSize: '10.5px', color: '#59655D' }}>{ev.dates}</span>
                                                 </div>
-                                                <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', fontSize: '11.5px' }}>
+                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '3px', fontSize: '11px' }}>
                                                     <span style={{ color: '#59655D' }}>{ev.booked} / {ev.capacity} Pax</span>
                                                     <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
                                                         {ev.spotsLeft === 0 ? 'SOLD OUT' : `${ev.spotsLeft} Spots Remaining`}
@@ -2803,27 +3283,27 @@ export default function AdminPortal() {
                     TAB 2: LIVE BOOKINGS & LEADS ROSTER
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'bookings' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         
                         {/* 1. CAMPSITE DIVIDER BAR */}
                         <div style={{ marginBottom: '22px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                    🌲 Filter By Sanctuary Location
+Filter By Sanctuary Location
                                 </span>
                                 <span style={{ fontSize: '12px', fontWeight: '700', color: '#166534' }}>
-                                    ● {filteredBookings.length} of {bookings.length} Bookings Shown
+● {filteredBookings.length} of {bookings.length} Bookings Shown
                                 </span>
                             </div>
                             
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+                            <div className="admin-region-chip-row" style={{ display: 'flex', flexWrap: 'nowrap', gap: '8px', alignItems: 'center', overflowX: 'auto', paddingBottom: '6px' }}>
                                 {[
-                                    { id: 'All', label: 'All Sanctuaries', icon: '🏕️', count: bookings.length },
-                                    { id: 'pkg-kolukkumalai', label: 'Kolukkumalai (7,900 FT)', icon: '🌄', count: koluBookingsCount },
-                                    { id: 'pkg-meesapulimala', label: 'Meesapulimala Ridge', icon: '⛰️', count: meesaBookingsCount },
-                                    { id: 'pkg-suryanelli', label: 'Suryanelli Valley', icon: '⛺', count: suryaBookingsCount },
-                                    { id: 'pkg-vagamon-pine', label: 'Vagamon Pine Forest', icon: '🌲', count: vagaBookingsCount },
-                                    { id: 'pkg-wayanad', label: 'Wayanad 900 Kandi', icon: '🌿', count: wayaBookingsCount }
+                                    { id: 'All', label: 'All Sanctuaries', icon: Tent, count: bookings.length },
+                                    { id: 'pkg-kolukkumalai', label: 'Kolukkumalai (7,900 FT)', icon: Sunrise, count: koluBookingsCount },
+                                    { id: 'pkg-meesapulimala', label: 'Meesapulimala Ridge', icon: Mountain, count: meesaBookingsCount },
+                                    { id: 'pkg-suryanelli', label: 'Suryanelli Valley', icon: Tent, count: suryaBookingsCount },
+                                    { id: 'pkg-vagamon-pine', label: 'Vagamon Pine Forest', icon: Trees, count: vagaBookingsCount },
+                                    { id: 'pkg-wayanad', label: 'Wayanad 900 Kandi', icon: Sprout, count: wayaBookingsCount }
                                 ].map(c => {
                                     const isSelected = bookingFilterCamp === c.id;
                                     return (
@@ -2847,7 +3327,7 @@ export default function AdminPortal() {
                                                 transition: 'all 0.15s ease'
                                             }}
                                         >
-                                            <span>{c.icon}</span>
+                                            <c.icon size={14} />
                                             <span>{c.label}</span>
                                             <span style={{
                                                 background: isSelected ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
@@ -2868,10 +3348,10 @@ export default function AdminPortal() {
                         {/* 2. SEARCH, STATUS FILTER & SORT CONTROLS */}
                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'center', marginBottom: '22px' }}>
                             <div style={{ position: 'relative', flex: 1, minWidth: '260px' }}>
-                                <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '14px', color: '#7D8880' }}>🔍</span>
+                                <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', fontSize: '14px', color: '#7D8880' }}><Search size={14} /></span>
                                 <input
                                     type="text"
-                                    placeholder="Search by camper name, phone, UTR or booking ID..."
+                                    placeholder="Search by camper name, phone, payment ref or booking ID..."
                                     value={bookingSearch}
                                     onChange={(e) => setBookingSearch(e.target.value)}
                                     style={{
@@ -2888,37 +3368,27 @@ export default function AdminPortal() {
                                 />
                             </div>
 
-                            {/* Status Pills */}
-                            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                {[
-                                    { id: 'All', label: 'All Status' },
-                                    { id: 'Pending UTRs', label: `Pending UTRs ${pendingUtrCount > 0 ? `(${pendingUtrCount})` : ''}`, isAlert: pendingUtrCount > 0 },
-                                    { id: 'Confirmed', label: 'Confirmed 🟢' },
-                                    { id: 'Checked In', label: 'Checked In 🔵' },
-                                    { id: 'Cancelled', label: 'Cancelled 🔴' }
-                                ].map(st => (
-                                    <button
-                                        key={st.id}
-                                        onClick={() => setBookingFilterStatus(st.id)}
-                                        style={{
-                                            padding: '8px 14px',
-                                            borderRadius: '999px',
-                                            border: bookingFilterStatus === st.id ? '1px solid #121613' : st.isAlert ? '1px solid #F59E0B' : '1px solid rgba(18,22,19,0.1)',
-                                            background: bookingFilterStatus === st.id ? '#121613' : st.isAlert ? '#FEF3C7' : '#FFFFFF',
-                                            color: bookingFilterStatus === st.id ? '#FFFFFF' : st.isAlert ? '#B45309' : '#59655D',
-                                            fontSize: '12px',
-                                            fontWeight: '800',
-                                            cursor: 'pointer',
-                                            display: 'inline-flex',
-                                            alignItems: 'center',
-                                            gap: '5px'
-                                        }}
-                                    >
-                                        <span>{st.label}</span>
-                                        {st.isAlert && <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#F59E0B', display: 'inline-block' }} />}
-                                    </button>
-                                ))}
-                            </div>
+{/* Status Filter Dropdown */}
+                            <select
+                                value={bookingFilterStatus}
+                                onChange={(e) => setBookingFilterStatus(e.target.value)}
+                                style={{
+                                    padding: '9px 12px',
+                                    borderRadius: '12px',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
+                                    fontSize: '12.5px',
+                                    fontWeight: '700',
+                                    cursor: 'pointer',
+                                    outline: 'none'
+                                }}
+                            >
+                                <option value="All">All Status</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Checked In">Checked In</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
 
                             {/* Sort Selector */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -2938,10 +3408,10 @@ export default function AdminPortal() {
                                         outline: 'none'
                                     }}
                                 >
-                                    <option value="newest">⏱️ Newest First</option>
-                                    <option value="highest_amount">💰 Highest Total (₹)</option>
-                                    <option value="guests_desc">👥 Most Campers</option>
-                                    <option value="oldest">⏳ Oldest First</option>
+<option value="newest">Newest First</option>
+<option value="highest_amount">Highest Total (₹)</option>
+<option value="guests_desc">Most Campers</option>
+<option value="oldest">Oldest First</option>
                                 </select>
                             </div>
 
@@ -2962,162 +3432,273 @@ export default function AdminPortal() {
                                     gap: '5px'
                                 }}
                             >
-                                <span>📥 CSV</span>
+                                <span><Download size={14} /> CSV</span>
                             </button>
-                        </div>
 
-                        {/* 3. UTR VERIFICATION TRIAGE NOTICE */}
-                        {pendingUtrCount > 0 && bookingFilterStatus !== 'Confirmed' && (
-                            <div style={{ background: '#FFFBEB', border: '1.5px solid #F59E0B', borderRadius: '16px', padding: '14px 18px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                    <div style={{ fontSize: '22px' }}>🔔</div>
-                                    <div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#92400E' }}>
-                                            {pendingUtrCount} Direct UPI Payment{pendingUtrCount > 1 ? 's' : ''} Awaiting Bank Credit Verification
-                                        </div>
-                                        <div style={{ fontSize: '11.5px', color: '#B45309', marginTop: '2px' }}>
-                                            Cross-check the customer's 12-digit UTR against your UPI/bank SMS and click "✓ Confirm" to lock permit and issue boarding pass.
-                                        </div>
-                                    </div>
-                                </div>
-                                <button
-                                    onClick={() => setBookingFilterStatus('Pending UTRs')}
-                                    className="btn-lime"
-                                    style={{ padding: '7px 14px', fontSize: '11.5px', fontWeight: '900', borderRadius: '10px' }}
-                                >
-                                    Filter Pending UTRs ({pendingUtrCount}) →
-                                </button>
-                            </div>
-                        )}
+                            <button
+                                onClick={() => setIsAddBookingModalOpen(true)}
+                                className="btn-lime"
+                                style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800', borderRadius: '12px' }}
+                            >
+                                + New Booking
+                            </button>
+</div>
 
                         {/* 4. BOOKINGS CARDS LIST */}
                         {filteredBookings.length === 0 ? (
-                            <div style={{ padding: '60px 20px', textAlign: 'center', background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18,22,19,0.08)' }}>
-                                <div style={{ fontSize: '36px', marginBottom: '12px' }}>📋</div>
+                            <div style={{ padding: '48px 24px', textAlign: 'center', background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18,22,19,0.08)' }}>
+<div style={{ fontSize: '40px', marginBottom: '10px' }}><ClipboardList size={40} /></div>
                                 <div style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>No Reservations Found</div>
-                                <div style={{ fontSize: '13px', color: '#59655D', marginTop: '6px', maxWidth: '400px', margin: '6px auto 16px' }}>
-                                    No records match your selected campsite or search filter.
+                                <div style={{ fontSize: '13px', color: '#59655D', marginTop: '4px', maxWidth: '440px', margin: '4px auto 18px' }}>
+                                    No records match your selected campsite or search filter. You can add a manual booking or restore sample demonstration bookings.
                                 </div>
-                                <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13px', fontWeight: '800' }}>
-                                    + Add Manual Booking
-                                </button>
+                                <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                    <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '9px 20px', fontSize: '13px', fontWeight: '800' }}>
+                                        + Add Manual Booking
+                                    </button>
+                                    <button onClick={handleSeedSampleBookings} style={{ padding: '9px 18px', borderRadius: '12px', background: '#121613', color: '#FFFFFF', fontSize: '13px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
+Restore Sample Bookings Roster
+                                    </button>
+                                </div>
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                 {filteredBookings.map(b => {
                                     const formattedCreated = b.createdAt 
                                         ? (isNaN(new Date(b.createdAt).getTime()) ? b.createdAt : new Date(b.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true }))
                                         : 'Recent';
 
                                     return (
-                                    <div key={b.id} style={{ background: '#FFFFFF', border: b.status === 'Pending' ? '1.5px solid #F59E0B' : '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '18px', padding: '20px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                        <div>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginBottom: '3px' }}>
-                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#121613', background: '#F8F9F5', padding: '2px 7px', borderRadius: '4px', border: '1px solid rgba(18,22,19,0.08)' }}>{b.id}</span>
-                                                {/* Group / Squad Category Badge */}
-                                                <span style={{
-                                                    fontSize: '10.5px',
-                                                    fontWeight: '800',
-                                                    padding: '2px 8px',
-                                                    borderRadius: '6px',
-                                                    background: b.groupType === 'Family' ? '#FEF3C7' : b.groupType === 'Couple' ? '#FCE7F3' : b.groupType === 'Corporate' ? '#EDE9FE' : b.groupType === 'Solo' ? '#E0F2FE' : '#DCFCE7',
-                                                    color: b.groupType === 'Family' ? '#92400E' : b.groupType === 'Couple' ? '#9D174D' : b.groupType === 'Corporate' ? '#5B21B6' : b.groupType === 'Solo' ? '#0369A1' : '#166534',
-                                                    border: '1px solid rgba(0,0,0,0.06)'
-                                                }}>
-                                                    {b.groupType === 'Family' ? '👨‍👩‍👧‍👦 Family' : b.groupType === 'Couple' ? '💑 Couple' : b.groupType === 'Corporate' ? '💼 Corporate' : b.groupType === 'Solo' ? '🧗‍♂️ Solo' : '👥 Friends Squad'}
+                                    <div
+                                        key={b.id}
+                                        style={{
+                                            background: '#FFFFFF',
+                                            border: b.status === 'Pending' ? '1.5px solid #F59E0B' : '1px solid rgba(18, 22, 19, 0.08)',
+                                            borderRadius: '20px',
+                                            padding: '20px 24px',
+                                            boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            gap: '16px',
+                                            transition: 'all 0.2s ease'
+                                        }}
+                                    >
+                                        {/* TOP ROW: ID, Squad Category, Date/Time, and Status Pill */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', borderBottom: '1px solid rgba(18,22,19,0.06)', paddingBottom: '12px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                                <span style={{ fontSize: '11.5px', fontWeight: '900', color: '#121613', background: '#F8F9F5', padding: '3px 9px', borderRadius: '6px', border: '1px solid rgba(18,22,19,0.1)' }}>
+                                                    {b.id}
                                                 </span>
-                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>{formattedCreated}</span>
-                                            </div>
-                                            <div style={{ fontSize: '15.5px', fontWeight: '800', color: '#121613' }}>{b.name}</div>
-                                            <div style={{ fontSize: '12.5px', color: '#59655D' }}>{b.phone}</div>
-                                            {b.utrNumber && (
-                                                <div style={{ marginTop: '6px', fontSize: '11px', fontWeight: '800', color: '#166534', background: 'rgba(22, 101, 52, 0.08)', padding: '3px 8px', borderRadius: '6px', display: 'inline-block' }}>
-                                                    🔑 UTR / Ref: {b.utrNumber}
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div>
-                                            <div style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>{b.package}</div>
-                                            <div style={{ fontSize: '12px', color: '#59655D' }}>{b.dates} · {b.guests} Guests</div>
-                                            
-                                            {/* Unit / Tent Allocation Badge */}
-                                            <div style={{ marginTop: '5px', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                                                 <span style={{
                                                     fontSize: '11px',
                                                     fontWeight: '800',
-                                                    background: '#F1F5F9',
-                                                    color: '#0F172A',
-                                                    border: '1px solid rgba(15, 23, 42, 0.12)',
-                                                    padding: '2px 8px',
+                                                    padding: '3px 10px',
                                                     borderRadius: '6px',
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: '4px'
+                                                    background: b.groupType === 'Family' ? '#FEF3C7' : b.groupType === 'Couple' ? '#FCE7F3' : b.groupType === 'Corporate' ? '#EDE9FE' : b.groupType === 'Solo' ? '#E0F2FE' : '#DCFCE7',
+                                                    color: b.groupType === 'Family' ? '#92400E' : b.groupType === 'Couple' ? '#9D174D' : b.groupType === 'Corporate' ? '#5B21B6' : b.groupType === 'Solo' ? '#0369A1' : '#166534'
                                                 }}>
-                                                    <span>⛺ Unit:</span>
-                                                    <span style={{ color: '#166534' }}>{b.allocatedUnit || 'Tent #01'}</span>
+{b.groupType === 'Family' ? ' Family' : b.groupType === 'Couple' ? ' Couple' : b.groupType === 'Corporate' ? ' Corporate' : b.groupType === 'Solo' ? ' Solo' : ' Friends Squad'}
                                                 </span>
-                                                {b.roomType && <span style={{ fontSize: '11px', color: '#B45309', fontWeight: '600' }}>· {b.roomType}</span>}
+                                                <span style={{ fontSize: '11.5px', color: '#7D8880', fontWeight: '600' }}>
+{formattedCreated}
+                                                </span>
                                             </div>
 
-                                            {b.notes && (
-                                                <div style={{ marginTop: '4px', fontSize: '11px', color: '#59655D', fontStyle: 'italic', background: '#F8F9F5', padding: '3px 8px', borderRadius: '6px' }}>
-                                                    📝 {b.notes}
-                                                </div>
-                                            )}
-                                            {b.mealSummary && <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>🍽️ {b.mealSummary}</div>}
-                                        </div>
-
-                                        <div>
-                                            <div style={{ fontSize: '10.5px', color: '#7D8880' }}>Total Fare</div>
-                                            <div style={{ fontSize: '19px', fontWeight: '800', color: '#121613' }}>
-                                                ₹{(b.total || 0).toLocaleString('en-IN')}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <span style={{
+                                                    fontSize: '11.5px',
+                                                    fontWeight: '800',
+                                                    padding: '4px 12px',
+                                                    borderRadius: '999px',
+                                                    background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7',
+                                                    color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E',
+                                                    border: '1px solid rgba(0,0,0,0.06)'
+                                                }}>
+{b.status === 'Confirmed' ? ' Confirmed' : b.status === 'Checked In' ? ' Checked In' : b.status === 'Cancelled' ? ' Cancelled' : ' Pending Verification'}
+                                                </span>
                                             </div>
-                                            {b.paidAmount != null && (
-                                                <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700' }}>
-                                                    Paid: ₹{b.paidAmount.toLocaleString('en-IN')} · Due: ₹{(b.balanceDue || 0).toLocaleString('en-IN')}
-                                                </div>
-                                            )}
                                         </div>
 
-                                        <div>
-                                            <label style={{ fontSize: '10px', color: '#7D8880', display: 'block', marginBottom: '4px', fontWeight: '700', textTransform: 'uppercase' }}>Status</label>
-                                            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                        {/* MIDDLE SECTION: 3 Balanced Information Columns */}
+                                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px', alignItems: 'flex-start' }}>
+                                            {/* Col 1: Camper Contact */}
+                                            <div>
+                                                <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613', marginBottom: '2px' }}>
+                                                    {b.name}
+                                                </div>
+                                                <div style={{ fontSize: '13px', color: '#59655D', display: 'flex', alignItems: 'center', gap: '6px', marginTop: '3px' }}>
+                                                    <span><Phone size={14} /> {b.phone}</span>
+{b.email && b.email !== 'N/A' && <span style={{ color: '#7D8880' }}>·  {b.email}</span>}
+                                                </div>
+{b.utrNumber && (
+                                                    <div style={{ marginTop: '8px', fontSize: '11.5px', fontWeight: '800', color: '#166534', background: 'rgba(22, 101, 52, 0.08)', border: '1px solid rgba(22,101,52,0.15)', padding: '4px 10px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                                        <span><KeyRound size={14} /> Payment Ref:</span>
+                                                        <span>{b.utrNumber}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Col 2: Trip & Allocation */}
+                                            <div>
+                                                <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>
+{b.package}
+                                                </div>
+                                                <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '2px' }}>
+{b.dates} · <strong style={{ color: '#121613' }}>{b.guests} Guests</strong>
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                                    <span style={{ fontSize: '11.5px', fontWeight: '800', background: '#F1F5F9', color: '#0F172A', border: '1px solid rgba(15, 23, 42, 0.12)', padding: '2px 8px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                        <span><Tent size={14} /> Unit:</span>
+                                                        <span style={{ color: '#166534' }}>{b.allocatedUnit || 'Tent #01'}</span>
+                                                    </span>
+                                                    {b.roomType && <span style={{ fontSize: '11.5px', color: '#B45309', fontWeight: '700' }}>· {b.roomType}</span>}
+                                                </div>
+                                                {b.mealSummary && (
+                                                    <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '4px', fontWeight: '600' }}>
+ Meals: {b.mealSummary}
+                                                    </div>
+                                                )}
+                                                {b.notes && (
+                                                    <div style={{ marginTop: '6px', fontSize: '11.5px', color: '#59655D', fontStyle: 'italic', background: '#F8F9F5', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(18,22,19,0.04)' }}>
+"{b.notes}"
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Col 3: Pricing & Financials */}
+                                            <div style={{ background: '#F8F9F5', padding: '12px 16px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.06)' }}>
+                                                <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase' }}>
+                                                    Total Fare
+                                                </div>
+                                                <div style={{ fontSize: '20px', fontWeight: '800', color: '#121613', marginTop: '2px' }}>
+                                                    ₹{(b.total || 0).toLocaleString('en-IN')}
+                                                </div>
+                                                <div style={{ fontSize: '11.5px', color: b.balanceDue === 0 ? '#166534' : '#B45309', fontWeight: '700', marginTop: '2px' }}>
+                                                    {b.paidAmount != null ? `Paid: ₹${b.paidAmount.toLocaleString('en-IN')} · Due: ₹${(b.balanceDue || 0).toLocaleString('en-IN')}` : `Source: ${b.source || 'Direct'}`}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* BOTTOM ACTION TRAY: Cleanly aligned toolbar utilizing space */}
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', background: '#F8F9F5', padding: '10px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.06)' }}>
+                                            {/* Left: Quick Status Dropdown */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase' }}>Update:</span>
                                                 <select
                                                     value={b.status}
                                                     onChange={(e) => handleUpdateBookingStatus(b.id, e.target.value)}
-                                                    style={{ padding: '7px 11px', borderRadius: '10px', background: b.status === 'Confirmed' ? '#DCFCE7' : b.status === 'Checked In' ? '#DBEAFE' : b.status === 'Cancelled' ? '#FEE2E2' : '#FEF3C7', color: b.status === 'Confirmed' ? '#166534' : b.status === 'Checked In' ? '#1E40AF' : b.status === 'Cancelled' ? '#991B1B' : '#92400E', fontWeight: '800', fontSize: '12px', border: '1px solid rgba(18,22,19,0.1)', cursor: 'pointer' }}
+                                                    style={{
+                                                        padding: '6px 10px',
+                                                        borderRadius: '8px',
+                                                        background: '#FFFFFF',
+                                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                                        fontSize: '12px',
+                                                        fontWeight: '800',
+                                                        color: '#121613',
+                                                        cursor: 'pointer',
+                                                        outline: 'none'
+                                                    }}
                                                 >
-                                                    <option value="Pending">Pending 🟡</option>
-                                                    <option value="Confirmed">Confirmed 🟢</option>
-                                                    <option value="Checked In">Checked In 🔵</option>
-                                                    <option value="Cancelled">Cancelled 🔴</option>
+<option value="Pending"> Mark Pending</option>
+<option value="Confirmed"> Mark Confirmed</option>
+<option value="Checked In"> Mark Checked In</option>
+<option value="Cancelled"> Mark Cancelled</option>
                                                 </select>
                                                 {b.status === 'Pending' && (
                                                     <button
                                                         onClick={() => handleUpdateBookingStatus(b.id, 'Confirmed')}
                                                         className="btn-lime"
-                                                        style={{ padding: '6px 10px', fontSize: '11px', fontWeight: '900', borderRadius: '8px', cursor: 'pointer' }}
-                                                        title="Verify UTR and Confirm Reservation"
+                                                        style={{ padding: '6px 12px', fontSize: '11.5px', fontWeight: '900', borderRadius: '8px', cursor: 'pointer' }}
                                                     >
-                                                        ✓ Confirm
+Confirm Now
                                                     </button>
                                                 )}
                                             </div>
-                                        </div>
 
-                                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', flexWrap: 'wrap' }}>
-                                            <a href={`/pass/${b.id}`} target="_blank" rel="noopener noreferrer" style={{ padding: '8px 12px', borderRadius: '8px', background: '#F1F3EC', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', textDecoration: 'none', fontSize: '11.5px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                <span>Pass 🎫</span>
-                                            </a>
-                                            <a href={waLink(`Hi ${b.name}! Aanandham coordinator desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)} target="_blank" rel="noopener noreferrer" className="btn-lime" style={{ padding: '8px 14px', fontSize: '12px', gap: '6px' }}>
-                                                <span>WhatsApp</span>
-                                                <span>→</span>
-                                            </a>
-                                            <button onClick={() => handleDeleteBooking(b.id)} style={{ padding: '8px 11px', borderRadius: '8px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', cursor: 'pointer', fontSize: '12px' }}>
-                                                🗑️
-                                            </button>
+                                            {/* Right: Action Buttons Group */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                <a
+                                                    href={`/pass/${b.id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        padding: '7px 12px',
+                                                        borderRadius: '8px',
+                                                        background: '#FFFFFF',
+                                                        border: '1px solid rgba(18,22,19,0.12)',
+                                                        color: '#121613',
+                                                        textDecoration: 'none',
+                                                        fontSize: '12px',
+                                                        fontWeight: '800',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px',
+                                                        boxShadow: '0 1px 3px rgba(0,0,0,0.02)'
+                                                    }}
+                                                >
+                                                    <span><Ticket size={14} /> Pass</span>
+                                                </a>
+
+                                                <a
+                                                    href={waLink(`Hi ${b.name}! Aanandham coordinator desk confirming your booking (${b.id}) for ${b.package} on ${b.dates}.`, b.phone)}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{
+                                                        padding: '7px 14px',
+                                                        borderRadius: '8px',
+                                                        background: '#25D366',
+                                                        color: '#FFFFFF',
+                                                        textDecoration: 'none',
+                                                        fontSize: '12px',
+                                                        fontWeight: '800',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '5px',
+                                                        boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)'
+                                                    }}
+                                                >
+                                                    <span><MessageCircle size={14} /> WhatsApp</span>
+                                                </a>
+
+                                                <a
+                                                    href={`tel:${(b.phone || '').replace(/\s+/g, '')}`}
+                                                    style={{
+                                                        padding: '7px 10px',
+                                                        borderRadius: '8px',
+                                                        background: '#FFFFFF',
+                                                        border: '1px solid rgba(18,22,19,0.12)',
+                                                        color: '#121613',
+                                                        textDecoration: 'none',
+                                                        fontSize: '12px',
+                                                        fontWeight: '700',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px'
+                                                    }}
+                                                    title="Call camper directly"
+                                                >
+                                                    <span><Phone size={14} /> Call</span>
+                                                </a>
+
+                                                <button
+                                                    onClick={() => handleDeleteBooking(b.id)}
+                                                    title="Delete reservation"
+                                                    style={{
+                                                        padding: '7px 10px',
+                                                        borderRadius: '8px',
+                                                        background: 'rgba(239,68,68,0.08)',
+                                                        border: '1px solid rgba(239,68,68,0.18)',
+                                                        color: '#DC2626',
+                                                        cursor: 'pointer',
+                                                        fontSize: '12px',
+                                                        fontWeight: '800',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center'
+                                                    }}
+                                                >
+<span><Trash2 size={14} /></span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     );
@@ -3131,11 +3712,11 @@ export default function AdminPortal() {
                     TAB 3: CAMPSITES & ROOM INVENTORY
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'properties' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> CAMPSITE INVENTORY
+<span className="star-icon">★</span> CAMPSITE INVENTORY
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     Regional Campsites & Glamping Pods
@@ -3146,8 +3727,8 @@ export default function AdminPortal() {
                             </button>
                         </div>
 
-                        {/* Region Filter Selector */}
-                        <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '24px' }}>
+{/* Region Filter Selector */}
+                        <div className="admin-region-chip-row" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '24px' }}>
                             {['All', 'Munnar', 'Suryanelli', 'Wayanad', 'Vagamon', 'Athirappilly'].map(reg => (
                                 <button
                                     key={reg}
@@ -3198,7 +3779,7 @@ export default function AdminPortal() {
 
                                     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                         <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '4px' }}>
-                                            📍 {prop.region || 'Munnar'} · {prop.location}
+{prop.region || 'Munnar'} · {prop.location}
                                         </div>
                                         <h4 
                                             onClick={() => setActivePropertyDetailId(prop.id)}
@@ -3224,12 +3805,12 @@ export default function AdminPortal() {
                                         {/* Manage Rooms Button */}
                                         <button
                                             onClick={() => setActivePropertyDetailId(prop.id)}
-                                            style={{
-                                                width: '100%',
-                                                padding: '12px',
-                                                borderRadius: '12px',
-                                                background: '#121613',
-                                                color: '#FFFFFF',
+style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '12px',
+                        background: '#121613',
+                        color: '#FFFFFF',
                                                 fontSize: '13px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer',
@@ -3242,7 +3823,7 @@ export default function AdminPortal() {
                                             }}
                                         >
                                             <span>Manage Rooms & Gallery ({prop.gallery ? prop.gallery.length : 1} photos)</span>
-                                            <span>→</span>
+<span><ChevronRight size={14} /></span>
                                         </button>
 
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
@@ -3252,7 +3833,7 @@ export default function AdminPortal() {
                                                 rel="noopener noreferrer"
                                                 style={{ padding: '10px 12px', borderRadius: '10px', background: 'rgba(18,22,19,0.06)', color: '#121613', fontSize: '12px', fontWeight: '700', textDecoration: 'none', display: 'flex', alignItems: 'center' }}
                                             >
-                                                👁️ Public Page
+ Public Page
                                             </Link>
                                             <button
                                                 onClick={() => handleToggleAvailability(prop.id)}
@@ -3261,7 +3842,7 @@ export default function AdminPortal() {
                                                 {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
                                             </button>
                                             <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '10px 14px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}>
-                                                Edit ✏️
+Edit 
                                             </button>
                                         </div>
                                     </div>
@@ -3275,11 +3856,11 @@ export default function AdminPortal() {
                     TAB 4: TREK BATCHES
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'events' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> EXPEDITION BATCHES
+<span className="star-icon">★</span> EXPEDITION BATCHES
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     Scheduled Trek Batches & Camps
@@ -3305,7 +3886,7 @@ export default function AdminPortal() {
 
                                     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                         <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
-                                            📍 {ev.campsite}
+{ev.campsite}
                                         </div>
                                         <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#121613', margin: '0 0 8px', lineHeight: 1.3 }}>
                                             {ev.title}
@@ -3327,10 +3908,10 @@ export default function AdminPortal() {
 
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
                                             <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '10px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
-                                                Edit Batch ✏️
+Edit Batch 
                                             </button>
                                             <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', fontSize: '12.5px', cursor: 'pointer' }}>
-                                                🗑️
+                                            <Trash2 size={14} />
                                             </button>
                                         </div>
                                     </div>
@@ -3341,62 +3922,62 @@ export default function AdminPortal() {
                 )}
 
                 {/* ─────────────────────────────────────────────────────────────
-                    TAB: STATION MARSHALS & CHECK-IN CREW MANAGEMENT
+                    TAB 4: CAMP HOSTS, TREK GUIDES & FIELD CREW
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'marshals' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> FIELD OPERATIONS & CHECK-IN CREW
+<span className="star-icon">★</span> FIELD OPERATIONS & SANCTUARY CREW
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                    Station Marshals & Check-In Staff
+                                    Camp Hosts & Certified Guides
                                 </h2>
                                 <div style={{ fontSize: '13px', color: '#59655D', marginTop: '4px' }}>
-                                    Manage basecamp hosts, 4x4 convoy pilots, and gate check-in PIN access across all Kerala sanctuaries.
+                                    Manage basecamp hosts, summit trek guides, 4x4 convoy pilots, and gate check-in PIN access across all sanctuaries.
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                <Link
-                                    href="/admin/scanner"
-                                    target="_blank"
+<button
+                                    onClick={() => setScannerOverlayOpen(true)}
                                     style={{
                                         padding: '10px 18px',
                                         borderRadius: '12px',
-                                        background: '#F8F9F5',
+                                        background: '#FFFFFF',
                                         border: '1px solid rgba(18,22,19,0.12)',
                                         color: '#121613',
                                         fontSize: '13px',
                                         fontWeight: '800',
-                                        textDecoration: 'none',
+                                        cursor: 'pointer',
                                         display: 'inline-flex',
                                         alignItems: 'center',
-                                        gap: '6px'
+                                        gap: '6px',
+                                        boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
                                     }}
                                 >
-                                    <span>📱 Open Scanner Simulator ↗</span>
-                                </Link>
+                                    <span><Smartphone size={14} /> Open Scanner Simulator</span>
+                                </button>
                                 <button
                                     onClick={() => handleOpenMarshalModal()}
                                     className="btn-lime"
-                                    style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}
+                                    style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800', cursor: 'pointer', border: 'none', borderRadius: '12px' }}
                                 >
-                                    + Add Station Marshal
+                                    + Add Camp Host / Guide
                                 </button>
                             </div>
                         </div>
 
-                        {/* Marshals Card Grid */}
+                        {/* Hosts & Guides Card Grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
                             {marshals.map(m => (
                                 <div
                                     key={m.id}
                                     style={{
                                         background: '#FFFFFF',
-                                        border: m.status === 'On Duty' ? '1px solid rgba(22, 101, 52, 0.2)' : '1px solid rgba(18, 22, 19, 0.08)',
+                                        border: m.status === 'On Duty' ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid rgba(18, 22, 19, 0.08)',
                                         borderRadius: '20px',
-                                        padding: '24px',
+                                        padding: '22px',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         justifyContent: 'space-between',
@@ -3405,57 +3986,71 @@ export default function AdminPortal() {
                                     }}
                                 >
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', gap: '10px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: 0 }}>
                                                 <img
                                                     src={m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80'}
                                                     alt={m.name}
-                                                    style={{ width: '56px', height: '56px', borderRadius: '16px', objectFit: 'cover', border: '2px solid #D5ED55' }}
+                                                    style={{
+                                                        width: '54px',
+                                                        height: '54px',
+                                                        borderRadius: '16px',
+                                                        objectFit: 'cover',
+                                                        flexShrink: 0,
+                                                        border: m.status === 'On Duty' ? '2.5px solid #22C55E' : m.status === 'Off Duty' ? '2.5px solid #F59E0B' : '2.5px solid #EF4444'
+                                                    }}
                                                 />
-                                                <div>
-                                                    <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613' }}>{m.name}</div>
-                                                    <div style={{ fontSize: '12px', color: '#59655D', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                                                        <span>📞</span>
-                                                        <span>{m.phone}</span>
+                                                <div style={{ minWidth: 0 }}>
+                                                    <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                        {m.name}
+                                                    </div>
+                                                    <div style={{ fontSize: '11px', color: '#166534', fontWeight: '800', background: 'rgba(22,101,52,0.06)', padding: '2px 6px', borderRadius: '4px', display: 'inline-block', marginTop: '2px' }}>
+{m.role || ' Camp Host & Guide'}
+                                                    </div>
+                                                    <div style={{ fontSize: '12px', color: '#59655D', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '3px' }}>
+                                                        <span><Phone size={16} /></span>
+                                                        <a href={`tel:${m.phone}`} style={{ color: '#59655D', textDecoration: 'none', fontWeight: '600' }}>{m.phone}</a>
                                                     </div>
                                                 </div>
                                             </div>
                                             <button
                                                 onClick={() => handleToggleMarshalStatus(m.id)}
-                                                title="Click to cycle duty status"
+                                                title="Click to cycle duty status (On Duty / Off Duty / Closed)"
                                                 style={{
-                                                    padding: '4px 10px',
+                                                    padding: '5px 12px',
                                                     borderRadius: '999px',
                                                     fontSize: '11px',
                                                     fontWeight: '800',
                                                     border: 'none',
                                                     cursor: 'pointer',
+                                                    flexShrink: 0,
                                                     background: m.status === 'On Duty' ? '#DCFCE7' : m.status === 'Off Duty' ? '#FEF3C7' : '#FEE2E2',
-                                                    color: m.status === 'On Duty' ? '#166534' : m.status === 'Off Duty' ? '#92400E' : '#991B1B'
+                                                    color: m.status === 'On Duty' ? '#166534' : m.status === 'Off Duty' ? '#92400E' : '#991B1B',
+                                                    boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
                                                 }}
                                             >
-                                                {m.status === 'On Duty' ? '🟢 On Duty' : m.status === 'Off Duty' ? '🟡 Off Duty' : '🔴 Closed'}
+{m.status === 'On Duty' ? ' On Duty' : m.status === 'Off Duty' ? ' Off Duty' : ' Closed'}
                                             </button>
                                         </div>
 
                                         {/* Station Assignment Box */}
                                         <div style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', marginBottom: '14px', border: '1px solid rgba(18,22,19,0.06)' }}>
-                                            <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '3px' }}>
+                                            <div style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', marginBottom: '4px' }}>
                                                 Assigned Sanctuary Station & Gate PIN
                                             </div>
-                                            <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613', marginBottom: '4px' }}>
-                                                📍 {m.station}
+                                            <div style={{ fontSize: '13px', fontWeight: '700', color: '#121613', marginBottom: '6px' }}>
+{m.station}
                                             </div>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px' }}>
-                                                <div style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800', background: 'rgba(22,101,52,0.08)', padding: '2px 8px', borderRadius: '6px' }}>
-                                                    🔑 Gate PIN: {m.passcode}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
+                                                <div style={{ fontSize: '12px', color: '#166534', fontWeight: '800', background: 'rgba(22,101,52,0.08)', padding: '3px 10px', borderRadius: '6px', border: '1px solid rgba(22,101,52,0.15)' }}>
+Passcode: {m.passcode}
                                                 </div>
-                                                <span style={{ fontSize: '11px', color: '#7D8880' }}>ID: {m.id}</span>
+                                                <span style={{ fontSize: '11px', color: '#7D8880', fontWeight: '600' }}>ID: {m.id}</span>
                                             </div>
                                         </div>
 
                                         {m.notes && (
-                                            <div style={{ fontSize: '12px', color: '#59655D', fontStyle: 'italic', marginBottom: '16px', lineHeight: 1.4 }}>
+                                            <div style={{ fontSize: '12px', color: '#59655D', fontStyle: 'italic', marginBottom: '16px', lineHeight: 1.4, background: 'rgba(18,22,19,0.02)', padding: '8px 12px', borderRadius: '8px' }}>
                                                 "{m.notes}"
                                             </div>
                                         )}
@@ -3482,7 +4077,7 @@ export default function AdminPortal() {
                                                 gap: '6px'
                                             }}
                                         >
-                                            <span>WhatsApp</span>
+                                            <span><MessageCircle size={14} /> WhatsApp Dispatch</span>
                                         </a>
                                         <button
                                             onClick={() => handleOpenMarshalModal(m)}
@@ -3497,21 +4092,22 @@ export default function AdminPortal() {
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            Edit ✏️
+Edit 
                                         </button>
                                         <button
                                             onClick={() => handleDeleteMarshal(m.id)}
+                                            title="Revoke Credentials"
                                             style={{
                                                 padding: '9px 12px',
                                                 borderRadius: '10px',
                                                 background: 'rgba(239,68,68,0.08)',
-                                                border: 'none',
+                                                border: '1px solid rgba(239,68,68,0.15)',
                                                 color: '#DC2626',
                                                 fontSize: '12px',
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            🗑️
+                                        <Trash2 size={14} />
                                         </button>
                                     </div>
                                 </div>
@@ -3524,33 +4120,56 @@ export default function AdminPortal() {
                     TAB 5: PROFIT & FINANCIALS BREAKDOWN
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'financials' && (
-                    <div style={{ maxWidth: '1300px' }}>
-                        <div style={{ marginBottom: '28px' }}>
-                            <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                <span className="star-icon">★</span> FINANCIAL INTELLIGENCE
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '20px' }}>
+                            <div className="star-badge" style={{ marginBottom: '3px' }}>
+<span className="star-icon">★</span> FINANCIAL INTELLIGENCE
                             </div>
-                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                 Profit & Revenue Analytics
                             </h2>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '24px', marginBottom: '32px' }}>
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Gross Revenue (Booked)</div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#121613', margin: '8px 0' }}>₹{totalRevenue.toLocaleString('en-IN')}</div>
-                                <div style={{ fontSize: '12.5px', color: '#59655D' }}>100% of confirmed reservations</div>
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                            gap: '16px',
+                            marginBottom: '24px'
+                        }}>
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+                            }}>
+                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Gross Revenue (Booked)</div>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#121613', margin: '6px 0' }}>₹{totalRevenue.toLocaleString('en-IN')}</div>
+                                <div style={{ fontSize: '12px', color: '#59655D' }}>100% of confirmed reservations</div>
                             </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Direct Operations (45%)</div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#B45309', margin: '8px 0' }}>₹{estimatedDirectCosts.toLocaleString('en-IN')}</div>
-                                <div style={{ fontSize: '12.5px', color: '#59655D' }}>Permits, Food & 4x4 safaris</div>
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+                            }}>
+                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Direct Operations (45%)</div>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#B45309', margin: '6px 0' }}>₹{estimatedDirectCosts.toLocaleString('en-IN')}</div>
+                                <div style={{ fontSize: '12px', color: '#59655D' }}>Permits, Food & 4x4 safaris</div>
                             </div>
 
-                            <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '26px 28px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase' }}>Net Operating Profit</div>
-                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '32px', fontWeight: '800', color: '#166534', margin: '8px 0' }}>₹{estimatedNetProfit.toLocaleString('en-IN')}</div>
-                                <div style={{ fontSize: '12.5px', color: '#166534', fontWeight: '700' }}>✓ {profitMarginPercent}% Net Margin</div>
+                            <div style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '18px',
+                                padding: '20px 22px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
+                            }}>
+                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Net Operating Profit</div>
+                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#166534', margin: '6px 0' }}>₹{estimatedNetProfit.toLocaleString('en-IN')}</div>
+<div style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}> ✓ {profitMarginPercent}% Net Margin</div>
                             </div>
                         </div>
                     </div>
@@ -3560,42 +4179,42 @@ export default function AdminPortal() {
                     TAB: PAYMENT GATEWAY & DYNAMIC QR CONTROL
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'payment' && (
-                    <div style={{ maxWidth: '980px' }}>
-                        <div style={{ marginBottom: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px' }}>
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
                             <div>
-                                <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> PAYMENT CONTROL CENTER
+                                <div className="star-badge" style={{ marginBottom: '3px' }}>
+<span className="star-icon">★</span> PAYMENT CONTROL CENTER
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: '#121613' }}>
                                     Payment Gateway, QR Code & Checkout Mode
                                 </h2>
-                                <p style={{ fontSize: '13.5px', color: '#59655D', margin: 0 }}>
-                                    Toggle between "Coming Soon" concierge reservation mode and "Live UPI / QR Gateway" mode in 1 click.
-                                </p>
+                                    <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
+                                        Toggle between "Coming Soon" concierge reservation mode and the "Live Razorpay Gateway" checkout in 1 click.
+                                    </p>
                             </div>
                             <button
                                 onClick={handleSavePaymentSettings}
                                 className="btn-lime"
-                                style={{ padding: '11px 24px', fontSize: '13.5px', fontWeight: '800', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                                style={{ padding: '9px 20px', fontSize: '12.5px', fontWeight: '800', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                             >
-                                <span>💾 Save & Apply Live</span>
+                                <span><Save size={14} /> Save & Apply</span>
                             </button>
                         </div>
 
                         {/* SECTION 1: MODE SELECTOR CARDS */}
-                        <div style={{ marginBottom: '32px' }}>
-                            <label style={{ fontSize: '11px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '14px' }}>
+                        <div style={{ marginBottom: '24px' }}>
+                            <label style={{ fontSize: '11px', fontWeight: '800', color: '#627266', letterSpacing: '1px', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>
                                 1. ACTIVE CHECKOUT PAYMENT MODE
                             </label>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '18px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
                                 {/* Mode 1: Coming Soon (Default) */}
                                 <div
                                     onClick={() => setPaymentSettings(prev => ({ ...prev, mode: 'coming_soon' }))}
                                     style={{
                                         border: paymentSettings.mode === 'coming_soon' ? '2px solid #E5A93B' : '1px solid rgba(18,22,19,0.1)',
                                         background: paymentSettings.mode === 'coming_soon' ? '#FFFDF5' : '#FFFFFF',
-                                        borderRadius: '20px',
-                                        padding: '24px',
+                                        borderRadius: '18px',
+                                        padding: '18px',
                                         cursor: 'pointer',
                                         boxShadow: paymentSettings.mode === 'coming_soon' ? '0 8px 30px rgba(229,169,59,0.14)' : '0 2px 8px rgba(0,0,0,0.02)',
                                         transition: 'all 0.2s ease',
@@ -3603,7 +4222,7 @@ export default function AdminPortal() {
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                        <span style={{ fontSize: '24px' }}>⏳</span>
+<span style={{ fontSize: '24px' }}><Clock size={24} /></span>
                                         <span style={{
                                             background: paymentSettings.mode === 'coming_soon' ? '#E5A93B' : 'rgba(18,22,19,0.06)',
                                             color: paymentSettings.mode === 'coming_soon' ? '#121613' : '#59655D',
@@ -3613,7 +4232,7 @@ export default function AdminPortal() {
                                             borderRadius: '999px',
                                             letterSpacing: '0.5px'
                                         }}>
-                                            {paymentSettings.mode === 'coming_soon' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
+{paymentSettings.mode === 'coming_soon' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
                                         </span>
                                     </div>
                                     <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
@@ -3623,144 +4242,46 @@ export default function AdminPortal() {
                                         Displays a clean "Gateway Coming Soon" notice. Guests complete bookings with <strong>₹0 advance</strong> and their reservation pass dispatches directly to your WhatsApp desk for personal confirmation.
                                     </p>
                                     <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#B45309', background: 'rgba(245,158,11,0.1)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
-                                        ✓ 0 Payment Friction · High Conversion
+0 Payment Friction · High Conversion
                                     </div>
                                 </div>
 
-                                {/* Mode 2: Live UPI & QR Gateway */}
+                                {/* Mode 2: Live Razorpay Gateway */}
                                 <div
-                                    onClick={() => setPaymentSettings(prev => ({ ...prev, mode: 'active' }))}
+                                    onClick={() => setPaymentSettings(prev => ({ ...prev, mode: 'razorpay' }))}
                                     style={{
-                                        border: paymentSettings.mode === 'active' ? '2px solid #22C55E' : '1px solid rgba(18,22,19,0.1)',
-                                        background: paymentSettings.mode === 'active' ? '#F0FDF4' : '#FFFFFF',
+                                        border: paymentSettings.mode === 'razorpay' ? '2px solid #22C55E' : '1px solid rgba(18,22,19,0.1)',
+                                        background: paymentSettings.mode === 'razorpay' ? '#F0FDF4' : '#FFFFFF',
                                         borderRadius: '20px',
                                         padding: '24px',
                                         cursor: 'pointer',
-                                        boxShadow: paymentSettings.mode === 'active' ? '0 8px 30px rgba(34,197,94,0.14)' : '0 2px 8px rgba(0,0,0,0.02)',
+                                        boxShadow: paymentSettings.mode === 'razorpay' ? '0 8px 30px rgba(34,197,94,0.14)' : '0 2px 8px rgba(0,0,0,0.02)',
                                         transition: 'all 0.2s ease',
                                         position: 'relative'
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                        <span style={{ fontSize: '24px' }}>⚡</span>
+                                        <span style={{ fontSize: '24px' }}><Zap size={24} /></span>
                                         <span style={{
-                                            background: paymentSettings.mode === 'active' ? '#22C55E' : 'rgba(18,22,19,0.06)',
-                                            color: paymentSettings.mode === 'active' ? '#FFFFFF' : '#59655D',
+                                            background: paymentSettings.mode === 'razorpay' ? '#22C55E' : 'rgba(18,22,19,0.06)',
+                                            color: paymentSettings.mode === 'razorpay' ? '#FFFFFF' : '#59655D',
                                             fontSize: '10.5px',
                                             fontWeight: '900',
                                             padding: '3px 10px',
                                             borderRadius: '999px',
                                             letterSpacing: '0.5px'
                                         }}>
-                                            {paymentSettings.mode === 'active' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
+{paymentSettings.mode === 'razorpay' ? '● CURRENTLY ACTIVE' : 'CLICK TO ACTIVATE'}
                                         </span>
                                     </div>
                                     <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
-                                        Live Dynamic UPI & QR Gateway
+                                        Live Razorpay Gateway Checkout
                                     </h4>
                                     <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.55, margin: '0 0 14px' }}>
-                                        Generates dynamic UPI QR codes, 1-click GPay / PhonePe payment intent buttons, and accepts 12-digit UTR transaction IDs from guests during checkout.
+                                        Guests pay through the encrypted Razorpay checkout (UPI · Cards · NetBanking · Wallets). Each booking creates a server-validated order with a 10-minute slot hold; payments are confirmed automatically via webhook.
                                     </p>
                                     <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#15803D', background: 'rgba(34,197,94,0.12)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
-                                        ✓ Direct Settlement · 0% Gateway Fees
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* SECTION 2: UPI & QR CODE CONFIGURATION */}
-                        <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', marginBottom: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                                <div>
-                                    <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
-                                        2. OFFICIAL UPI VPA & CUSTOM QR CODE CONFIGURATION
-                                    </label>
-                                    <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '2px' }}>
-                                        These credentials are embedded into the dynamic QR codes and 1-tap mobile payment links.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px', marginBottom: '20px' }}>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                        Official UPI VPA ID (Virtual Payment Address):
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. aanandhamgo@okhdfcbank or 9074858014@upi"
-                                        value={paymentSettings.upiId || ''}
-                                        onChange={(e) => setPaymentSettings(prev => ({ ...prev, upiId: e.target.value }))}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
-                                    />
-                                </div>
-                                <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                        Official Payee Display Name:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. Aanandham Wilderness Stays"
-                                        value={paymentSettings.payeeName || ''}
-                                        onChange={(e) => setPaymentSettings(prev => ({ ...prev, payeeName: e.target.value }))}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Custom QR Upload / URL */}
-                            <div style={{ borderTop: '1px solid rgba(18,22,19,0.06)', paddingTop: '20px', marginTop: '10px' }}>
-                                <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '6px' }}>
-                                    Custom QR Code Image (Optional - Overrides Dynamic Amount QR):
-                                </label>
-                                <div style={{ display: 'flex', gap: '14px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                    {paymentSettings.customQrUrl ? (
-                                        <div style={{ position: 'relative', width: '90px', height: '90px', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(18,22,19,0.12)', background: '#FFFFFF', padding: '4px' }}>
-                                            <img src={paymentSettings.customQrUrl} alt="Custom QR Preview" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
-                                            <button
-                                                type="button"
-                                                onClick={() => setPaymentSettings(prev => ({ ...prev, customQrUrl: '' }))}
-                                                style={{ position: 'absolute', top: '4px', right: '4px', background: '#DC2626', color: '#FFFFFF', border: 'none', borderRadius: '50%', width: '20px', height: '20px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                                title="Remove Custom QR"
-                                            >
-                                                ✕
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <div style={{ width: '90px', height: '90px', borderRadius: '12px', border: '1px dashed rgba(18,22,19,0.2)', background: '#F8F9F5', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#7D8880', fontSize: '11px', textAlign: 'center', padding: '8px' }}>
-                                            <span style={{ fontSize: '20px' }}>📱</span>
-                                            <span>Dynamic Auto QR</span>
-                                        </div>
-                                    )}
-
-                                    <div style={{ flex: 1, minWidth: '220px' }}>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            id="qr-image-uploader"
-                                            onChange={handleQrImageUpload}
-                                            style={{ display: 'none' }}
-                                        />
-                                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                            <label
-                                                htmlFor="qr-image-uploader"
-                                                style={{ padding: '9px 16px', borderRadius: '10px', background: '#121613', color: '#FFFFFF', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                                            >
-                                                <span>📷 {qrImageUploading ? 'Processing...' : 'Upload QR Image'}</span>
-                                            </label>
-                                            {paymentSettings.customQrUrl && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setPaymentSettings(prev => ({ ...prev, customQrUrl: '' }))}
-                                                    style={{ padding: '9px 14px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', color: '#DC2626', border: 'none', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}
-                                                >
-                                                    Reset to Dynamic QR
-                                                </button>
-                                            )}
-                                        </div>
-                                        <div style={{ fontSize: '11.5px', color: '#7D8880', marginTop: '6px' }}>
-                                            {paymentSettings.customQrUrl ? 'Using custom static QR code image.' : 'Currently using real-time dynamic UPI QR code generator for exact amounts.'}
-                                        </div>
+                                        Auto-Confirmed · Webhook Verified
                                     </div>
                                 </div>
                             </div>
@@ -3801,7 +4322,7 @@ export default function AdminPortal() {
                         <div style={{ background: '#121613', borderRadius: '20px', padding: '24px 28px', color: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
                             <div>
                                 <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                                    ACTIVE STATUS: {paymentSettings.mode === 'coming_soon' ? '⏳ COMING SOON MODE' : '⚡ LIVE UPI GATEWAY'}
+ACTIVE STATUS: {paymentSettings.mode === 'coming_soon' ? ' COMING SOON MODE' : ' LIVE RAZORPAY GATEWAY'}
                                 </div>
                                 <div style={{ fontSize: '13.5px', color: '#A2B6A6', marginTop: '2px' }}>
                                     Changes take effect immediately across all booking modals on the website.
@@ -3812,7 +4333,433 @@ export default function AdminPortal() {
                                 className="btn-lime"
                                 style={{ padding: '13px 32px', fontSize: '14px', fontWeight: '900', border: 'none', cursor: 'pointer' }}
                             >
-                                💾 Save & Apply Settings
+Save & Apply Settings
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
+                    TAB: DISCOUNTS & OFFERS
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'discounts' && (
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '3px' }}>
+<span className="star-icon">★</span> OFFERS & CAMPAIGNS
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: '#121613' }}>
+                                    Discounts & Offers Center
+                                </h2>
+                                <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
+                                    Manage automated discount campaigns. The best applicable offer is applied automatically at booking across all campsites.
+                                </p>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                <button
+                                    onClick={handleAddDiscount}
+                                    className="btn-secondary"
+                                    style={{ padding: '9px 16px', fontSize: '12.5px', fontWeight: '800', border: '1px solid rgba(18,22,19,0.15)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', borderRadius: '10px' }}
+                                >
+                                    <span><Plus size={14} /> New Campaign</span>
+                                </button>
+                                <button
+                                    onClick={handleResetDiscounts}
+                                    className="btn-secondary"
+                                    style={{ padding: '9px 16px', fontSize: '12.5px', fontWeight: '800', border: '1px solid rgba(18,22,19,0.15)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', borderRadius: '10px', color: '#B45309' }}
+                                >
+                                    <span><RefreshCw size={14} /> Reset to Defaults</span>
+                                </button>
+                                <button
+                                    onClick={handleSaveDiscounts}
+                                    disabled={discountsSaving}
+                                    className="btn-lime"
+                                    style={{ padding: '9px 20px', fontSize: '12.5px', fontWeight: '800', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', opacity: discountsSaving ? 0.6 : 1 }}
+                                >
+                                    <span><Save size={14} /> {discountsSaving ? 'Saving...' : 'Save & Apply'}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '16px', background: 'rgba(229,169,59,0.08)', border: '1px solid rgba(229,169,59,0.25)', borderRadius: '12px', padding: '10px 14px' }}>
+                            <span style={{ fontSize: '13px' }}><Zap size={15} style={{ color: '#B45309' }} /></span>
+                            <span style={{ fontSize: '12.5px', color: '#7C4A03', fontWeight: '700', lineHeight: 1.45 }}>
+                                When multiple offers qualify, the one saving guests the most is applied automatically. Scoped offers apply only to their selected campsite.
+                            </span>
+                        </div>
+
+                        {discounts.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '40px 20px', background: '#F8F9F5', borderRadius: '16px', border: '1px dashed rgba(18,22,19,0.2)' }}>
+                                <div style={{ fontSize: '13px', color: '#59655D', fontWeight: '700' }}>No discount campaigns yet — click "New Campaign" to create one.</div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '14px' }}>
+                                {discounts.map((d, idx) => {
+                                    const activeQualifies = d.active && !(d.expiresAt && Date.now() > new Date(d.expiresAt).getTime());
+                                    return (
+                                        <div key={d.id || idx} style={{ background: '#FFFFFF', border: activeQualifies ? '1px solid rgba(22,101,52,0.25)' : '1px solid rgba(18,22,19,0.1)', borderRadius: '16px', padding: '16px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', gap: '8px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                                                    <span style={{ background: activeQualifies ? '#DCFCE7' : 'rgba(18,22,19,0.06)', color: activeQualifies ? '#166534' : '#59655D', fontSize: '10.5px', fontWeight: '900', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.5px', whiteSpace: 'nowrap' }}>
+                                                        {activeQualifies ? '● LIVE' : d.active ? 'EXPIRED' : 'PAUSED'}
+                                                    </span>
+                                                    <span style={{ fontSize: '10px', color: '#8A938B', fontWeight: '700', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.id}</span>
+                                                </div>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleRemoveDiscount(d.id)}
+                                                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#B91C1C', padding: '4px' }}
+                                                    title="Delete campaign"
+                                                >
+                                                    <Trash2 size={15} />
+                                                </button>
+                                            </div>
+
+                                            <div style={{ marginBottom: '10px' }}>
+                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Campaign Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={d.name || ''}
+                                                    onChange={(e) => handleUpdateDiscount(d.id, { name: e.target.value })}
+                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
+                                                />
+                                            </div>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                                                <div>
+                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Type</label>
+                                                    <select
+                                                        value={d.type || 'percent'}
+                                                        onChange={(e) => handleUpdateDiscount(d.id, { type: e.target.value })}
+                                                        style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                    >
+                                                        <option value="percent">Percent (%)</option>
+                                                        <option value="flat">Flat (₹)</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>{d.type === 'flat' ? 'Amount Off (₹)' : 'Percent Off (%)'}</label>
+                                                    <input
+                                                        type="number"
+                                                        min="0"
+                                                        max={d.type === 'flat' ? 50000 : 90}
+                                                        value={d.value ?? 0}
+                                                        onChange={(e) => handleUpdateDiscount(d.id, { value: Math.max(0, Number(e.target.value) || 0) })}
+                                                        style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                                                <div>
+                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Min Guests</label>
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        value={d.minGuests ?? 1}
+                                                        onChange={(e) => handleUpdateDiscount(d.id, { minGuests: Math.max(1, Number(e.target.value) || 1) })}
+                                                        style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Scope</label>
+                                                    <select
+                                                        value={d.scope || 'all'}
+                                                        onChange={(e) => handleUpdateDiscount(d.id, { scope: e.target.value })}
+                                                        style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                    >
+                                                        <option value="all">All Campsites</option>
+                                                        {properties.map(p => (
+                                                            <option key={p.id} value={p.id}>{p.title}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div style={{ marginBottom: '12px' }}>
+                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Expires (Optional)</label>
+                                                <input
+                                                    type="date"
+                                                    value={d.expiresAt ? String(d.expiresAt).slice(0, 10) : ''}
+                                                    onChange={(e) => handleUpdateDiscount(d.id, { expiresAt: e.target.value ? new Date(e.target.value + 'T23:59:59.000Z').toISOString() : null })}
+                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                />
+                                            </div>
+
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(18,22,19,0.08)', paddingTop: '12px' }}>
+                                                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: '800', color: '#121613', cursor: 'pointer' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!d.active}
+                                                        onChange={(e) => handleUpdateDiscount(d.id, { active: e.target.checked })}
+                                                        style={{ width: '16px', height: '16px', accentColor: '#166534', cursor: 'pointer' }}
+                                                    />
+                                                    Active Campaign
+                                                </label>
+                                                <span style={{ fontSize: '12px', fontWeight: '900', color: '#166534' }}>
+                                                    {d.type === 'flat' ? `₹${Number(d.value || 0).toLocaleString('en-IN')} OFF` : `${Number(d.value || 0)}% OFF`}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+
+                        {/* LIVE PREVIEW & SAVE */}
+                        <div style={{ background: '#121613', borderRadius: '20px', padding: '24px 28px', color: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginTop: '20px' }}>
+                            <div>
+                                <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                    {discounts.filter(d => d.active).length} ACTIVE CAMPAIGN{discounts.filter(d => d.active).length === 1 ? '' : 'S'}
+                                </div>
+                                <div style={{ fontSize: '13.5px', color: '#A2B6A6', marginTop: '2px' }}>
+                                    Changes take effect immediately across all booking modals on the website.
+                                </div>
+                            </div>
+                            <button
+                                onClick={handleSaveDiscounts}
+                                disabled={discountsSaving}
+                                className="btn-lime"
+                                style={{ padding: '13px 32px', fontSize: '14px', fontWeight: '900', border: 'none', cursor: 'pointer', opacity: discountsSaving ? 0.6 : 1 }}
+                            >
+                                {discountsSaving ? 'Saving...' : 'Save & Apply Campaigns'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* ─────────────────────────────────────────────────────────────
+                    TAB: TESTIMONIALS & REVIEWS
+                ───────────────────────────────────────────────────────────── */}
+                {activeTab === 'testimonials' && (
+                    <div style={{ width: '100%' }}>
+                        <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px' }}>
+                            <div>
+                                <div className="star-badge" style={{ marginBottom: '3px' }}>
+<span className="star-icon">★</span> CAMPER REVIEWS
+                                </div>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 4px', color: '#121613' }}>
+                                    Guest Testimonials & Reviews
+                                </h2>
+                                <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
+                                    Curate the verified camper reviews shown on the homepage. Only active testimonials are published.
+                                </p>
+                            </div>
+                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                <button
+                                    onClick={handleAddTestimonial}
+                                    className="btn-secondary"
+                                    style={{ padding: '9px 16px', fontSize: '12.5px', fontWeight: '800', border: '1px solid rgba(18,22,19,0.15)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', borderRadius: '10px' }}
+                                >
+                                    <span><Plus size={14} /> New Testimonial</span>
+                                </button>
+                                <button
+                                    onClick={handleResetTestimonials}
+                                    className="btn-secondary"
+                                    style={{ padding: '9px 16px', fontSize: '12.5px', fontWeight: '800', border: '1px solid rgba(18,22,19,0.15)', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#FFFFFF', borderRadius: '10px', color: '#B45309' }}
+                                >
+                                    <span><RefreshCw size={14} /> Reset to Defaults</span>
+                                </button>
+                                <button
+                                    onClick={handleSaveTestimonials}
+                                    disabled={testimonialsSaving}
+                                    className="btn-lime"
+                                    style={{ padding: '9px 20px', fontSize: '12.5px', fontWeight: '800', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', opacity: testimonialsSaving ? 0.6 : 1 }}
+                                >
+                                    <span><Save size={14} /> {testimonialsSaving ? 'Saving...' : 'Save & Publish'}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {testimonials.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '40px 20px', background: '#F8F9F5', borderRadius: '16px', border: '1px dashed rgba(18,22,19,0.2)' }}>
+                                <div style={{ fontSize: '13px', color: '#59655D', fontWeight: '700' }}>No testimonials yet — click "New Testimonial" to add one.</div>
+                            </div>
+                        ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '14px' }}>
+                                {testimonials.map((t, idx) => (
+                                    <div key={t.id || idx} style={{ background: '#FFFFFF', border: t.active ? '1px solid rgba(22,101,52,0.25)' : '1px solid rgba(18,22,19,0.1)', borderRadius: '16px', padding: '16px', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', gap: '8px' }}>
+                                            <span style={{ background: t.active ? '#DCFCE7' : 'rgba(18,22,19,0.06)', color: t.active ? '#166534' : '#59655D', fontSize: '10.5px', fontWeight: '900', padding: '3px 10px', borderRadius: '999px', letterSpacing: '0.5px' }}>
+                                                {t.active ? '● PUBLISHED' : 'HIDDEN'}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveTestimonial(t.id)}
+                                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#B91C1C', padding: '4px' }}
+                                                title="Delete testimonial"
+                                            >
+                                                <Trash2 size={15} />
+                                            </button>
+                                        </div>
+
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Review Quote</label>
+                                            <textarea
+                                                rows={4}
+                                                value={t.quote || ''}
+                                                onChange={(e) => handleUpdateTestimonial(t.id, { quote: e.target.value })}
+                                                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12.5px', outline: 'none', resize: 'vertical', boxSizing: 'border-box', lineHeight: 1.5 }}
+                                            />
+                                        </div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                                            <div>
+                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Camper Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={t.author || ''}
+                                                    onChange={(e) => handleUpdateTestimonial(t.id, { author: e.target.value })}
+                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Instagram ID (Optional)</label>
+                                                <input
+                                                    type="text"
+                                                    placeholder="e.g. daniel.kim.trails"
+                                                    value={t.instagram || ''}
+                                                    onChange={(e) => handleUpdateTestimonial(t.id, { instagram: e.target.value.replace(/\s+/g, '').replace(/^@/, '') })}
+                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
+                                            <div>
+                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Camp Badge</label>
+                                                <input
+                                                    type="text"
+                                                    value={t.campBadge || ''}
+                                                    onChange={(e) => handleUpdateTestimonial(t.id, { campBadge: e.target.value })}
+                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div style={{ marginBottom: '10px' }}>
+                                            <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Batch Date Line</label>
+                                            <input
+                                                type="text"
+                                                value={t.batchDate || ''}
+                                                onChange={(e) => handleUpdateTestimonial(t.id, { batchDate: e.target.value })}
+                                                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                        </div>
+
+                                        <div style={{ marginBottom: '12px' }}>
+                                            <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>Camper Avatar</label>
+
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                                                <div style={{ width: '52px', height: '52px', borderRadius: '50%', overflow: 'hidden', background: 'rgba(18,22,19,0.06)', flexShrink: 0, border: '2px solid rgba(22,101,52,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {t.avatar ? (
+                                                        <img src={t.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    ) : (
+                                                        <span style={{ fontSize: '18px', color: '#8A938B' }}>👤</span>
+                                                    )}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRandomTestimonialAvatar(t.id)}
+                                                        style={{ padding: '9px 14px', borderRadius: '10px', border: '1px solid rgba(18,22,19,0.14)', background: '#FFFFFF', color: '#121613', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                        title="Pick a random clean human portrait"
+                                                    >
+                                                        🎲 <span>Random Face</span>
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => document.getElementById(`avatar-upload-${t.id}`)?.click()}
+                                                        style={{ padding: '9px 14px', borderRadius: '10px', border: '1px solid rgba(22,101,52,0.35)', background: '#DCFCE7', color: '#166534', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                                                        title="Upload a photo from your device"
+                                                    >
+                                                        <Upload size={14} /> <span>Upload Photo</span>
+                                                    </button>
+                                                    {t.avatar && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleUpdateTestimonial(t.id, { avatar: '' })}
+                                                            style={{ padding: '9px 12px', borderRadius: '10px', border: '1px solid rgba(18,22,19,0.14)', background: '#FFFFFF', color: '#B91C1C', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}
+                                                            title="Remove avatar"
+                                                        >
+                                                            ✕ Clear
+                                                        </button>
+                                                    )}
+                                                    <input
+                                                        id={`avatar-upload-${t.id}`}
+                                                        type="file"
+                                                        accept="image/jpeg,image/png,image/webp,image/avif"
+                                                        style={{ display: 'none' }}
+                                                        onChange={(e) => { const f = e.target.files?.[0]; if (f) handleTestimonialAvatarUpload(t.id, f); e.target.value = ''; }}
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div style={{ marginBottom: '8px' }}>
+                                                <div style={{ fontSize: '10px', fontWeight: '800', color: '#8A938B', letterSpacing: '0.5px', textTransform: 'uppercase', marginBottom: '5px' }}>Pick a preset face (no upload needed)</div>
+                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                    {AVATAR_PRESETS.map((u) => (
+                                                        <button
+                                                            key={u}
+                                                            type="button"
+                                                            onClick={() => handleUpdateTestimonial(t.id, { avatar: u })}
+                                                            title="Use this avatar"
+                                                            style={{ width: '34px', height: '34px', borderRadius: '50%', overflow: 'hidden', padding: 0, border: t.avatar === u ? '2px solid #166534' : '2px solid transparent', cursor: 'pointer', background: 'rgba(18,22,19,0.06)', flexShrink: 0 }}
+                                                        >
+                                                            <img src={u} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+
+                                            <label style={{ fontSize: '10px', fontWeight: '800', color: '#8A938B', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Or paste an image URL</label>
+                                            <input
+                                                type="text"
+                                                placeholder="https://…"
+                                                value={t.avatar || ''}
+                                                onChange={(e) => handleUpdateTestimonial(t.id, { avatar: e.target.value })}
+                                                style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12px', outline: 'none', boxSizing: 'border-box' }}
+                                            />
+                                            <div style={{ fontSize: '10.5px', color: '#8A938B', fontWeight: '700', marginTop: '5px' }}>
+                                                Uploaded photos are auto-resized to 160px and stored inside the testimonials data file (no separate folder needed). Preset faces load from Unsplash CDN.
+                                            </div>
+                                        </div>
+
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(18,22,19,0.08)', paddingTop: '12px' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', fontWeight: '800', color: '#121613', cursor: 'pointer' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={!!t.active}
+                                                    onChange={(e) => handleUpdateTestimonial(t.id, { active: e.target.checked })}
+                                                    style={{ width: '16px', height: '16px', accentColor: '#166534', cursor: 'pointer' }}
+                                                />
+                                                Publish on Homepage
+                                            </label>
+                                            <span style={{ fontSize: '11px', color: '#8A938B', fontWeight: '700' }}>{t.id}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* LIVE PREVIEW & SAVE */}
+                        <div style={{ background: '#121613', borderRadius: '20px', padding: '24px 28px', color: '#FFFFFF', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginTop: '20px' }}>
+                            <div>
+                                <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '900', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                                    {testimonials.filter(t => t.active).length} TESTIMONIAL{testimonials.filter(t => t.active).length === 1 ? '' : 'S'} PUBLISHED
+                                </div>
+                                <div style={{ fontSize: '13.5px', color: '#A2B6A6', marginTop: '2px' }}>
+                                    Changes take effect immediately on the homepage testimonials carousel.
+                                </div>
+                            </div>
+                            <button
+                                onClick={handleSaveTestimonials}
+                                disabled={testimonialsSaving}
+                                className="btn-lime"
+                                style={{ padding: '13px 32px', fontSize: '14px', fontWeight: '900', border: 'none', cursor: 'pointer', opacity: testimonialsSaving ? 0.6 : 1 }}
+                            >
+                                {testimonialsSaving ? 'Saving...' : 'Save & Publish Reviews'}
                             </button>
                         </div>
                     </div>
@@ -3822,10 +4769,10 @@ export default function AdminPortal() {
                     TAB 6: COORDINATOR SETTINGS
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'settings' && (
-                    <div style={{ maxWidth: '780px' }}>
+                    <div style={{ width: '100%' }}>
                         <div style={{ marginBottom: '28px' }}>
                             <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                <span className="star-icon">★</span> COORDINATOR COORDINATES
+<span className="star-icon">★</span> COORDINATOR COORDINATES
                             </div>
                             <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                 Notification & Alert Dispatch Channels
@@ -3865,11 +4812,11 @@ export default function AdminPortal() {
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
                                 <button type="submit" className="btn-lime" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '800', border: 'none', cursor: 'pointer' }}>
-                                    💾 Save Coordinates
+Save Coordinates
                                 </button>
                                 {settingsSavedToast && (
                                     <motion.span initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} style={{ color: '#166534', fontSize: '13px', fontWeight: '700' }}>
-                                        ✓ Saved & Synchronized
+Saved & Synchronized
                                     </motion.span>
                                 )}
                             </div>
@@ -3880,7 +4827,7 @@ export default function AdminPortal() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                                 <div>
                                     <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
-                                        📦 SYSTEM BACKUP & DISASTER RECOVERY
+SYSTEM BACKUP & DISASTER RECOVERY
                                     </label>
                                     <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '4px' }}>
                                         Export an encrypted JSON snapshot of all campsite inventory, scheduled batches, and bookings.
@@ -3906,7 +4853,7 @@ export default function AdminPortal() {
                                         gap: '8px'
                                     }}
                                 >
-                                    <span>💾 Export JSON Backup</span>
+                                    <span><Save size={14} /> Export JSON Backup</span>
                                 </button>
 
                                 <label
@@ -3923,7 +4870,7 @@ export default function AdminPortal() {
                                         gap: '8px'
                                     }}
                                 >
-                                    <span>📥 Restore JSON Backup</span>
+                                    <span><Download size={14} /> Restore JSON Backup</span>
                                     <input type="file" accept=".json" onChange={handleImportBackup} style={{ display: 'none' }} />
                                 </label>
                             </div>
@@ -3934,7 +4881,7 @@ export default function AdminPortal() {
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                                 <div>
                                     <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
-                                        🛡️ COORDINATOR ACCESS AUDIT TRAIL
+ COORDINATOR ACCESS AUDIT TRAIL
                                     </label>
                                     <div style={{ fontSize: '12.5px', color: '#59655D', marginTop: '4px' }}>
                                         Live chronological audit trail of login and authentication events.
@@ -3954,7 +4901,7 @@ export default function AdminPortal() {
                                         cursor: 'pointer'
                                     }}
                                 >
-                                    {isLoadingAudit ? 'Refreshing...' : '🔄 Fetch Logs'}
+{isLoadingAudit ? 'Refreshing...' : ' Fetch Logs'}
                                 </button>
                             </div>
 
@@ -3984,11 +4931,11 @@ export default function AdminPortal() {
                     TAB: SECURITY, AUTHENTICATION & DATABASE AUDIT LOGS
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'logs' && (
-                    <div style={{ maxWidth: '1300px' }}>
+                    <div style={{ width: '100%' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
-                                    <span className="star-icon">★</span> ENTERPRISE SECURITY & AUDIT TRAIL
+<span className="star-icon">★</span> ENTERPRISE SECURITY & AUDIT TRAIL
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     Security & System Audit Logs
@@ -3999,7 +4946,7 @@ export default function AdminPortal() {
                             </div>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <button
-                                    onClick={() => { fetchAuditLogs(); showToast('✓ Logs refreshed live'); }}
+onClick={() => { fetchAuditLogs(); showToast(' Logs refreshed live'); }}
                                     style={{
                                         padding: '9px 16px',
                                         borderRadius: '12px',
@@ -4014,14 +4961,14 @@ export default function AdminPortal() {
                                         gap: '6px'
                                     }}
                                 >
-                                    <span>↻ Refresh Live Logs</span>
+<span><RefreshCw size={13} /> Refresh Live Logs</span>
                                 </button>
                                 <button
                                     onClick={handleExportBackup}
                                     className="btn-lime"
                                     style={{ padding: '9px 18px', fontSize: '12.5px', fontWeight: '800' }}
                                 >
-                                    💾 Export Audit Bundle
+Export Audit Bundle
                                 </button>
                             </div>
                         </div>
@@ -4044,7 +4991,7 @@ export default function AdminPortal() {
                                     gap: '8px'
                                 }}
                             >
-                                <span>🛡️ Authentication & Login Logs</span>
+<span><ShieldCheck size={14} /> Authentication & Login Logs</span>
                                 <span style={{
                                     background: logViewTab === 'auth' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
                                     color: logViewTab === 'auth' ? '#0B150E' : '#59655D',
@@ -4073,7 +5020,7 @@ export default function AdminPortal() {
                                     gap: '8px'
                                 }}
                             >
-                                <span>🗄️ Database & Mutation Trail</span>
+<span><Database size={14} /> Database & Mutation Trail</span>
                                 <span style={{
                                     background: logViewTab === 'db' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
                                     color: logViewTab === 'db' ? '#0B150E' : '#59655D',
@@ -4110,9 +5057,9 @@ export default function AdminPortal() {
                         </div>
 
                         {/* VIEW 1: AUTHENTICATION LOGS */}
-                        {logViewTab === 'auth' && (
+{logViewTab === 'auth' && (
                             <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div className="admin-audit-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '460px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
                                     {(auditLogs.length > 0 ? auditLogs : [
                                         { id: '1', timestamp: new Date().toISOString(), ip: '127.0.0.1 (Local)', action: 'AUTH_SUCCESS', role: 'admin_coordinator', details: 'Master HQ session authenticated', status: 'SUCCESS' },
                                         { id: '2', timestamp: new Date(Date.now() - 1800000).toISOString(), ip: '192.168.1.45', action: 'STATION_LOGIN', role: 'basecamp_host', details: 'Kolukkumalai Gate scanner verified', status: 'SUCCESS' },
@@ -4176,10 +5123,10 @@ export default function AdminPortal() {
                             </div>
                         )}
 
-                        {/* VIEW 2: DATABASE & MUTATION AUDIT TRAIL */}
+{/* VIEW 2: DATABASE & MUTATION AUDIT TRAIL */}
                         {logViewTab === 'db' && (
                             <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <div className="admin-audit-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '460px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
                                     {dbLogs
                                         .filter(l => !logSearch || JSON.stringify(l).toLowerCase().includes(logSearch.toLowerCase()))
                                         .map(log => (
@@ -4206,7 +5153,7 @@ export default function AdminPortal() {
                                                         background: '#E0F2FE',
                                                         color: '#0369A1'
                                                     }}>
-                                                        🗄️ {log.action}
+ {log.action}
                                                     </span>
                                                     <div style={{ fontSize: '11px', color: '#7D8880', marginTop: '4px' }}>
                                                         Ref: {log.recordId || log.id}
@@ -4232,28 +5179,27 @@ export default function AdminPortal() {
                 )}
 
             </main>
-            </div>
 
             {/* ── MODAL: CREATE MANUAL BOOKING ── */}
             <AnimatePresence>
                 {isAddBookingModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                 <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                         Create Manual Reservation
                                     </h3>
-                                    <div style={{ fontSize: '12.5px', color: '#59655D' }}>Record phone, walk-in or bespoke squad bookings</div>
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>Record phone, walk-in or bespoke squad bookings</div>
                                 </div>
-                                <button onClick={() => setIsAddBookingModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
-                                    ✕
+                                <button onClick={() => setIsAddBookingModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
+<X size={15} strokeWidth={2.5} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveManualBooking} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSaveManualBooking} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Customer / Squad Name *
                                     </label>
                                     <input
@@ -4262,13 +5208,13 @@ export default function AdminPortal() {
                                         placeholder="e.g. Rahul & Squad (4 Pax)"
                                         value={newBookingForm.name}
                                         onChange={e => setNewBookingForm({ ...newBookingForm, name: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Phone / WhatsApp *
                                         </label>
                                         <input
@@ -4277,7 +5223,7 @@ export default function AdminPortal() {
                                             placeholder="+91 98470 12345"
                                             value={newBookingForm.phone}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, phone: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
@@ -4289,7 +5235,7 @@ export default function AdminPortal() {
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
                                         <CustomSelectDropdown
                                             label="Campsite Package *"
@@ -4311,7 +5257,7 @@ export default function AdminPortal() {
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Number of Campers *
                                         </label>
                                         <input
@@ -4320,23 +5266,23 @@ export default function AdminPortal() {
                                             min="1"
                                             value={newBookingForm.guests}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, guests: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
                                 {/* Squad / Group Category Selector */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '8px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', display: 'block', marginBottom: '6px' }}>
                                         Squad / Group Category *
                                     </label>
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(95px, 1fr))', gap: '8px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(85px, 1fr))', gap: '6px' }}>
                                         {[
-                                            { id: 'Family', label: 'Family', icon: '👨‍👩‍👧‍👦' },
-                                            { id: 'Friends Squad', label: 'Friends', icon: '👥' },
-                                            { id: 'Couple', label: 'Couple', icon: '💑' },
-                                            { id: 'Corporate', label: 'Corporate', icon: '💼' },
-                                            { id: 'Solo', label: 'Solo', icon: '🧗‍♂️' }
+{ id: 'Family', label: 'Family', icon: Users },
+                                            { id: 'Friends Squad', label: 'Friends', icon: Users },
+                                            { id: 'Couple', label: 'Couple', icon: Heart },
+                                            { id: 'Corporate', label: 'Corporate', icon: Briefcase },
+                                            { id: 'Solo', label: 'Solo', icon: User }
                                         ].map(gt => {
                                             const isSelected = newBookingForm.groupType === gt.id;
                                             return (
@@ -4345,22 +5291,22 @@ export default function AdminPortal() {
                                                     type="button"
                                                     onClick={() => setNewBookingForm(prev => ({ ...prev, groupType: gt.id }))}
                                                     style={{
-                                                        padding: '9px 8px',
-                                                        borderRadius: '12px',
+                                                        padding: '8px 6px',
+                                                        borderRadius: '10px',
                                                         border: isSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
                                                         background: isSelected ? '#DCFCE7' : '#F8F9F5',
                                                         color: isSelected ? '#166534' : '#121613',
-                                                        fontSize: '12px',
+                                                        fontSize: '11.5px',
                                                         fontWeight: isSelected ? '800' : '600',
                                                         cursor: 'pointer',
                                                         display: 'flex',
                                                         flexDirection: 'column',
                                                         alignItems: 'center',
-                                                        gap: '3px',
+                                                        gap: '2px',
                                                         transition: 'all 0.15s ease'
                                                     }}
                                                 >
-                                                    <span style={{ fontSize: '18px' }}>{gt.icon}</span>
+                                                    <gt.icon size={16} />
                                                     <span>{gt.label}</span>
                                                 </button>
                                             );
@@ -4370,33 +5316,33 @@ export default function AdminPortal() {
 
                                 {/* Tent / Pod Unit Allocation & Quick Assign Chips */}
                                 <div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
                                         <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>
-                                            ⛺ Tent / Pod Unit Assignment (For Marshals & Basecamp)
+Tent / Pod Assignment (For Marshals)
                                         </label>
-                                        <span style={{ fontSize: '11px', color: '#7D8880' }}>Required for Gate Check-In</span>
+                                        <span style={{ fontSize: '10.5px', color: '#7D8880' }}>Gate Check-In</span>
                                     </div>
                                     <input
                                         type="text"
                                         placeholder="e.g. Tent #03 (Family Zone) or Dome Pod 2"
                                         value={newBookingForm.allocatedUnit}
                                         onChange={e => setNewBookingForm({ ...newBookingForm, allocatedUnit: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box', marginBottom: '8px' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box', marginBottom: '6px' }}
                                     />
                                     {/* Quick-Click Unit Suggestions */}
-                                    <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                        {['Tent 01', 'Tent 02', 'Tent 03', 'Dome Pod A', 'Dome Pod B', 'Alpine Hut 01', 'Family Suite'].map(unit => (
+                                    <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                                        {['Tent 01', 'Tent 02', 'Tent 03', 'Dome Pod A', 'Dome Pod B', 'Alpine Hut 01'].map(unit => (
                                             <button
                                                 key={unit}
                                                 type="button"
                                                 onClick={() => setNewBookingForm(prev => ({ ...prev, allocatedUnit: unit }))}
                                                 style={{
-                                                    padding: '4px 9px',
-                                                    borderRadius: '8px',
+                                                    padding: '3px 8px',
+                                                    borderRadius: '6px',
                                                     border: newBookingForm.allocatedUnit === unit ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
                                                     background: newBookingForm.allocatedUnit === unit ? '#DCFCE7' : '#FFFFFF',
                                                     color: newBookingForm.allocatedUnit === unit ? '#166534' : '#59655D',
-                                                    fontSize: '11px',
+                                                    fontSize: '10.5px',
                                                     fontWeight: '700',
                                                     cursor: 'pointer'
                                                 }}
@@ -4409,21 +5355,21 @@ export default function AdminPortal() {
 
                                 {/* Special Squad Requests & Dietary Notes */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Special Squad Requirements & Dietary Notes (Optional)
                                     </label>
                                     <textarea
                                         rows={2}
-                                        placeholder="e.g. Family with kids, requested adjacent tents with campfire setup, vegetarian food only"
+                                        placeholder="e.g. Family with kids, campfire setup, vegetarian food only"
                                         value={newBookingForm.notes}
                                         onChange={e => setNewBookingForm({ ...newBookingForm, notes: e.target.value })}
-                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.4 }}
+                                        style={{ width: '100%', padding: '9px 12px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12.5px', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.4 }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Price Per Camper (INR) *
                                         </label>
                                         <input
@@ -4431,7 +5377,7 @@ export default function AdminPortal() {
                                             required
                                             value={newBookingForm.pricePerGuest}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, pricePerGuest: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
@@ -4440,22 +5386,22 @@ export default function AdminPortal() {
                                             value={newBookingForm.status}
                                             onChange={val => setNewBookingForm({ ...newBookingForm, status: val })}
                                             options={[
-                                                { value: 'Confirmed', label: 'Confirmed 🟢' },
-                                                { value: 'Pending', label: 'Pending 🟡' },
-                                                { value: 'Checked In', label: 'Checked In 🔵' }
+{ value: 'Confirmed', label: 'Confirmed ' },
+{ value: 'Pending', label: 'Pending ' },
+{ value: 'Checked In', label: 'Checked In ' }
                                             ]}
                                         />
                                     </div>
                                 </div>
 
-                                <div style={{ background: '#F8F9F5', padding: '14px 18px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ fontSize: '13px', color: '#59655D', fontWeight: '600' }}>Calculated Total:</span>
-                                    <span style={{ fontSize: '20px', fontWeight: '800', color: '#121613' }}>
+                                <div style={{ background: '#F8F9F5', padding: '12px 16px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ fontSize: '12.5px', color: '#59655D', fontWeight: '600' }}>Calculated Total:</span>
+                                    <span style={{ fontSize: '18px', fontWeight: '800', color: '#121613' }}>
                                         ₹{((Number(newBookingForm.guests) || 1) * (Number(newBookingForm.pricePerGuest) || 2499)).toLocaleString('en-IN')}
                                     </span>
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14.5px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+<button type="submit" className="btn-lime" style={{ padding: '12px', fontSize: '14px', fontWeight: '800', marginTop: '4px', cursor: 'pointer', borderRadius: '12px' }}>
                                     + Add Booking to System
                                 </button>
                             </form>
@@ -4465,73 +5411,74 @@ export default function AdminPortal() {
             </AnimatePresence>
 
             {/* ── MODAL: CREATE / EDIT CAMPSITE & MULTI-IMAGE GALLERY ── */}
+            {/* ── MODAL: CREATE / EDIT CAMPSITE & MULTI-IMAGE GALLERY ── */}
             <AnimatePresence>
                 {isPropertyModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '720px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box" style={{ maxWidth: '720px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                 <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                         {editingProperty ? 'Edit Campsite & Photo Gallery' : 'Add New Kerala Campsite'}
                                     </h3>
-                                    <div style={{ fontSize: '12.5px', color: '#59655D' }}>Configure pricing, high-res photos, itinerary, and inclusions</div>
+                                    <div style={{ fontSize: '12px', color: '#59655D' }}>Configure pricing, photos, itinerary, and inclusions</div>
                                 </div>
-                                <button onClick={() => setIsPropertyModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
-                                    ✕
+                                <button onClick={() => setIsPropertyModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
+<X size={15} strokeWidth={2.5} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                 
                                 {/* SECTION: PHOTO GALLERY MANAGER */}
-                                <div style={{ background: '#F8F9F5', borderRadius: '18px', padding: '20px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                                <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '16px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                                         <div>
-                                            <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block' }}>
-                                                📸 Photo Gallery ({propertyForm.gallery ? propertyForm.gallery.length : 0} Images)
+                                            <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block' }}>
+Photo Gallery ({propertyForm.gallery ? propertyForm.gallery.length : 0} Images)
                                             </label>
-                                            <span style={{ fontSize: '11.5px', color: '#59655D' }}>Upload from your computer or paste image URLs</span>
+                                            <span style={{ fontSize: '11px', color: '#59655D' }}>Upload from device or paste image URLs</span>
                                         </div>
-                                        <label style={{ cursor: 'pointer', background: '#121613', color: '#FFFFFF', padding: '7px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                            <span>📤 Upload Photos</span>
+                                        <label style={{ cursor: 'pointer', background: '#121613', color: '#FFFFFF', padding: '6px 12px', borderRadius: '8px', fontSize: '11.5px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                            <span><Upload size={14} /> Upload</span>
                                             <input type="file" multiple accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
                                         </label>
                                     </div>
 
                                     {/* URL Input Bar */}
-                                    <div style={{ display: 'flex', gap: '8px', marginBottom: '14px' }}>
+                                    <div style={{ display: 'flex', gap: '6px', marginBottom: '10px' }}>
                                         <input
                                             type="url"
                                             placeholder="Paste Image URL (https://...)"
                                             value={imageUrlInput}
                                             onChange={e => setImageUrlInput(e.target.value)}
-                                            style={{ flex: 1, padding: '10px 14px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', fontSize: '13px', color: '#121613', outline: 'none' }}
+                                            style={{ flex: 1, padding: '9px 12px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', fontSize: '12.5px', color: '#121613', outline: 'none' }}
                                         />
-                                        <button type="button" onClick={handleAddImageUrl} className="btn-lime" style={{ padding: '10px 16px', fontSize: '12px', fontWeight: '800', flexShrink: 0 }}>
+                                        <button type="button" onClick={handleAddImageUrl} className="btn-lime" style={{ padding: '9px 14px', fontSize: '11.5px', fontWeight: '800', flexShrink: 0 }}>
                                             + Add URL
                                         </button>
                                     </div>
 
                                     {/* Gallery Preview Grid */}
-                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '10px' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(110px, 1fr))', gap: '8px' }}>
                                         {propertyForm.gallery && propertyForm.gallery.map((imgUrl, gIdx) => {
                                             const isCover = propertyForm.image === imgUrl;
                                             return (
-                                                <div key={gIdx} style={{ position: 'relative', height: '90px', borderRadius: '10px', overflow: 'hidden', border: isCover ? '2px solid #E5A93B' : '1px solid rgba(18, 22, 19, 0.1)' }}>
+                                                <div key={gIdx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: isCover ? '2px solid #E5A93B' : '1px solid rgba(18, 22, 19, 0.1)' }}>
                                                     <img src={imgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                     {isCover && (
-                                                        <span style={{ position: 'absolute', top: '4px', left: '4px', background: '#121613', color: '#E5A93B', fontSize: '9px', fontWeight: '800', padding: '2px 5px', borderRadius: '4px' }}>
-                                                            ★ Cover
+                                                        <span style={{ position: 'absolute', top: '3px', left: '3px', background: '#121613', color: '#E5A93B', fontSize: '8.5px', fontWeight: '800', padding: '1px 4px', borderRadius: '4px' }}>
+Cover
                                                         </span>
                                                     )}
-                                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', opacity: 0, transition: 'opacity 0.2s ease', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px' }} onMouseOver={e => e.currentTarget.style.opacity = 1} onMouseOut={e => e.currentTarget.style.opacity = 0}>
+                                                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.5)', opacity: 0, transition: 'opacity 0.2s ease', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3px' }} onMouseOver={e => e.currentTarget.style.opacity = 1} onMouseOut={e => e.currentTarget.style.opacity = 0}>
                                                         {!isCover && (
-                                                            <button type="button" onClick={() => handleSetPrimaryImage(imgUrl)} style={{ padding: '3px 8px', borderRadius: '4px', background: '#E5A93B', border: 'none', color: '#121613', fontSize: '10px', fontWeight: '800', cursor: 'pointer' }}>
+                                                            <button type="button" onClick={() => handleSetPrimaryImage(imgUrl)} style={{ padding: '2px 6px', borderRadius: '4px', background: '#E5A93B', border: 'none', color: '#121613', fontSize: '9px', fontWeight: '800', cursor: 'pointer' }}>
                                                                 Set Cover
                                                             </button>
                                                         )}
-                                                        <button type="button" onClick={() => handleRemoveImage(gIdx)} style={{ padding: '3px 8px', borderRadius: '4px', background: '#EF4444', border: 'none', color: '#FFFFFF', fontSize: '10px', fontWeight: '800', cursor: 'pointer' }}>
-                                                            Delete 🗑️
+                                                        <button type="button" onClick={() => handleRemoveImage(gIdx)} style={{ padding: '2px 6px', borderRadius: '4px', background: '#EF4444', border: 'none', color: '#FFFFFF', fontSize: '9px', fontWeight: '800', cursor: 'pointer' }}>
+Delete 
                                                         </button>
                                                     </div>
                                                 </div>
@@ -4542,7 +5489,7 @@ export default function AdminPortal() {
 
                                 {/* Title & Region */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Campsite Title *
                                     </label>
                                     <input
@@ -4550,19 +5497,19 @@ export default function AdminPortal() {
                                         required
                                         value={propertyForm.title}
                                         onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Region *
                                         </label>
                                         <select
                                             value={propertyForm.region}
                                             onChange={e => setPropertyForm({ ...propertyForm, region: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 12px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box' }}
                                         >
                                             <option value="Munnar">Munnar</option>
                                             <option value="Suryanelli">Suryanelli</option>
@@ -4572,7 +5519,7 @@ export default function AdminPortal() {
                                         </select>
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Altitude *
                                         </label>
                                         <input
@@ -4580,14 +5527,14 @@ export default function AdminPortal() {
                                             required
                                             value={propertyForm.altitude}
                                             onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Base Price (INR / Camper) *
                                         </label>
                                         <input
@@ -4595,84 +5542,84 @@ export default function AdminPortal() {
                                             required
                                             value={propertyForm.price}
                                             onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Original Strikethrough Price (INR)
                                         </label>
                                         <input
                                             type="number"
                                             value={propertyForm.originalPrice}
                                             onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Duration
                                         </label>
                                         <input
                                             type="text"
                                             value={propertyForm.duration}
                                             onChange={e => setPropertyForm({ ...propertyForm, duration: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Difficulty
                                         </label>
                                         <input
                                             type="text"
                                             value={propertyForm.difficulty}
                                             onChange={e => setPropertyForm({ ...propertyForm, difficulty: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Description & Story
                                     </label>
                                     <textarea
                                         rows={3}
                                         value={propertyForm.description}
                                         onChange={e => setPropertyForm({ ...propertyForm, description: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box', resize: 'vertical' }}
+                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical' }}
                                     />
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Key Highlights (Comma Separated)
                                     </label>
                                     <input
                                         type="text"
                                         value={propertyForm.highlights}
                                         onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Inclusions (Comma Separated)
                                     </label>
                                     <input
                                         type="text"
                                         value={propertyForm.inclusions}
                                         onChange={e => setPropertyForm({ ...propertyForm, inclusions: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '15px', fontSize: '15px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+                                <button type="submit" className="btn-lime" style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '4px', cursor: 'pointer', borderRadius: '12px' }}>
                                     {editingProperty ? 'Save Campsite & Gallery Changes' : '+ Publish New Campsite'}
                                 </button>
                             </form>
@@ -4684,20 +5631,20 @@ export default function AdminPortal() {
             {/* MODAL: CREATE / EDIT EVENT BATCH */}
             <AnimatePresence>
                 {isEventModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box">
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     {editingEvent ? 'Edit Trek Batch' : 'Schedule New Event Batch'}
                                 </h3>
-                                <button onClick={() => setIsEventModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
-                                    ✕
+                                <button onClick={() => setIsEventModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
+<X size={15} strokeWidth={2.5} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Event / Batch Title *
                                     </label>
                                     <input
@@ -4705,13 +5652,13 @@ export default function AdminPortal() {
                                         required
                                         value={eventForm.title}
                                         onChange={e => setEventForm({ ...eventForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Dates *
                                         </label>
                                         <input
@@ -4719,11 +5666,11 @@ export default function AdminPortal() {
                                             required
                                             value={eventForm.dates}
                                             onChange={e => setEventForm({ ...eventForm, dates: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Price Per Spot (INR) *
                                         </label>
                                         <input
@@ -4731,14 +5678,14 @@ export default function AdminPortal() {
                                             required
                                             value={eventForm.price}
                                             onChange={e => setEventForm({ ...eventForm, price: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Total Capacity (Pax) *
                                         </label>
                                         <input
@@ -4746,35 +5693,35 @@ export default function AdminPortal() {
                                             required
                                             value={eventForm.capacity}
                                             onChange={e => setEventForm({ ...eventForm, capacity: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                             Booked Spots
                                         </label>
                                         <input
                                             type="number"
                                             value={eventForm.booked}
                                             onChange={e => setEventForm({ ...eventForm, booked: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
                                         Campsite Location
                                     </label>
                                     <input
                                         type="text"
                                         value={eventForm.campsite}
                                         onChange={e => setEventForm({ ...eventForm, campsite: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
                                     />
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14.5px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
+<button type="submit" className="btn-lime" style={{ padding: '12px', fontSize: '14px', fontWeight: '800', marginTop: '4px', cursor: 'pointer', borderRadius: '12px' }}>
                                     {editingEvent ? 'Save Batch Changes' : '+ Schedule Batch'}
                                 </button>
                             </form>
@@ -4789,61 +5736,56 @@ export default function AdminPortal() {
                     <div style={{
                         position: 'fixed',
                         inset: 0,
-                        zIndex: 10000,
+                        zIndex: 100010,
                         background: 'rgba(0, 0, 0, 0.65)',
                         backdropFilter: 'blur(8px)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        padding: '20px'
+                        padding: '0px'
                     }}>
                         <motion.div
                             initial={{ opacity: 0, scale: 0.94, y: 16 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.94, y: 16 }}
                             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                            className="admin-modal-box"
                             style={{
-                                background: '#FFFFFF',
                                 border: '1px solid rgba(239, 68, 68, 0.2)',
-                                borderRadius: '24px',
-                                padding: '32px',
-                                maxWidth: '480px',
-                                width: '100%',
-                                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
-                                color: '#121613'
+                                maxWidth: '480px'
                             }}
                         >
                             {/* Modal Top Warning Header */}
-                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', marginBottom: '20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '16px' }}>
                                 <div style={{
-                                    width: '48px',
-                                    height: '48px',
-                                    borderRadius: '16px',
+                                    width: '42px',
+                                    height: '42px',
+                                    borderRadius: '12px',
                                     background: 'rgba(239, 68, 68, 0.1)',
                                     border: '1px solid rgba(239, 68, 68, 0.25)',
                                     color: '#DC2626',
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '22px',
+                                    fontSize: '20px',
                                     flexShrink: 0
                                 }}>
-                                    🗑️
+                                    <Trash2 size={16} />
                                 </div>
                                 <div style={{ flex: 1, minWidth: 0 }}>
                                     <div style={{
-                                        fontSize: '11px',
+                                        fontSize: '10.5px',
                                         fontWeight: '800',
                                         color: '#DC2626',
                                         letterSpacing: '1px',
                                         textTransform: 'uppercase',
-                                        marginBottom: '4px'
+                                        marginBottom: '3px'
                                     }}>
                                         CONFIRM DELETION
                                     </div>
                                     <h3 style={{
                                         fontFamily: 'var(--font-heading)',
-                                        fontSize: '20px',
+                                        fontSize: '18px',
                                         fontWeight: '800',
                                         margin: 0,
                                         color: '#121613',
@@ -4855,8 +5797,8 @@ export default function AdminPortal() {
                                 <button
                                     onClick={closeDeleteConfirm}
                                     style={{
-                                        width: '32px',
-                                        height: '32px',
+                                        width: '30px',
+                                        height: '30px',
                                         borderRadius: '50%',
                                         background: '#F8F9F5',
                                         border: '1px solid rgba(18, 22, 19, 0.1)',
@@ -4865,20 +5807,20 @@ export default function AdminPortal() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '14px',
+                                        fontSize: '13px',
                                         fontWeight: '800'
                                     }}
                                 >
-                                    ✕
+<X size={15} strokeWidth={2.5} />
                                 </button>
                             </div>
 
                             {/* Subtitle Description */}
                             <p style={{
-                                fontSize: '13.5px',
+                                fontSize: '13px',
                                 color: '#59655D',
-                                lineHeight: 1.55,
-                                margin: '0 0 20px'
+                                lineHeight: 1.5,
+                                margin: '0 0 16px'
                             }}>
                                 {deleteConfirmDialog.subtitle}
                             </p>
@@ -4888,25 +5830,25 @@ export default function AdminPortal() {
                                 <div style={{
                                     background: '#F8F9F5',
                                     border: '1px solid rgba(18, 22, 19, 0.08)',
-                                    borderRadius: '16px',
-                                    padding: '16px 18px',
-                                    marginBottom: '24px'
+                                    borderRadius: '14px',
+                                    padding: '14px 16px',
+                                    marginBottom: '18px'
                                 }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
                                         <span style={{
-                                            fontSize: '11px',
+                                            fontSize: '10.5px',
                                             fontWeight: '800',
                                             color: '#121613',
                                             background: '#FFFFFF',
                                             border: '1px solid rgba(18, 22, 19, 0.1)',
-                                            padding: '2px 8px',
+                                            padding: '2px 7px',
                                             borderRadius: '6px'
                                         }}>
                                             {deleteConfirmDialog.itemDetails.badge}
                                         </span>
                                         {deleteConfirmDialog.itemDetails.status && (
                                             <span style={{
-                                                fontSize: '11px',
+                                                fontSize: '10.5px',
                                                 fontWeight: '800',
                                                 color: deleteConfirmDialog.itemDetails.status === 'Confirmed' ? '#166534' : '#B45309'
                                             }}>
@@ -4915,10 +5857,10 @@ export default function AdminPortal() {
                                         )}
                                     </div>
                                     <div style={{
-                                        fontSize: '15px',
+                                        fontSize: '14px',
                                         fontWeight: '800',
                                         color: '#121613',
-                                        marginBottom: '4px',
+                                        marginBottom: '3px',
                                         whiteSpace: 'nowrap',
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis'
@@ -4926,7 +5868,7 @@ export default function AdminPortal() {
                                         {deleteConfirmDialog.itemDetails.label}
                                     </div>
                                     <div style={{
-                                        fontSize: '12.5px',
+                                        fontSize: '12px',
                                         color: '#59655D',
                                         display: 'flex',
                                         justifyContent: 'space-between',
@@ -4936,7 +5878,7 @@ export default function AdminPortal() {
                                             {deleteConfirmDialog.itemDetails.subtext}
                                         </span>
                                         {deleteConfirmDialog.itemDetails.amount && (
-                                            <span style={{ fontWeight: '800', color: '#121613', fontSize: '14px', marginLeft: '10px' }}>
+                                            <span style={{ fontWeight: '800', color: '#121613', fontSize: '13px', marginLeft: '8px' }}>
                                                 {deleteConfirmDialog.itemDetails.amount}
                                             </span>
                                         )}
@@ -4945,17 +5887,17 @@ export default function AdminPortal() {
                             )}
 
                             {/* Modal Action Buttons */}
-                            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
                                 <button
                                     type="button"
                                     onClick={closeDeleteConfirm}
                                     style={{
-                                        padding: '11px 20px',
-                                        borderRadius: '12px',
+                                        padding: '10px 18px',
+                                        borderRadius: '10px',
                                         background: '#F1F3EC',
                                         border: '1px solid rgba(18, 22, 19, 0.1)',
                                         color: '#121613',
-                                        fontSize: '13px',
+                                        fontSize: '12.5px',
                                         fontWeight: '800',
                                         cursor: 'pointer',
                                         transition: 'all 0.15s ease'
@@ -4967,17 +5909,17 @@ export default function AdminPortal() {
                                     type="button"
                                     onClick={deleteConfirmDialog.confirmAction}
                                     style={{
-                                        padding: '11px 22px',
-                                        borderRadius: '12px',
+                                        padding: '10px 20px',
+                                        borderRadius: '10px',
                                         background: '#DC2626',
                                         border: '1px solid #B91C1C',
                                         color: '#FFFFFF',
-                                        fontSize: '13px',
+                                        fontSize: '12.5px',
                                         fontWeight: '800',
                                         cursor: 'pointer',
                                         display: 'inline-flex',
                                         alignItems: 'center',
-                                        gap: '6px',
+                                        gap: '5px',
                                         boxShadow: '0 4px 14px rgba(220, 38, 38, 0.3)',
                                         transition: 'all 0.15s ease'
                                     }}
@@ -4990,104 +5932,126 @@ export default function AdminPortal() {
                 )}
             </AnimatePresence>
 
-            {/* ── MODAL: CREATE / EDIT STATION MARSHAL ── */}
+            {/* ── MODAL: CREATE / EDIT CAMP HOST / GUIDE ── */}
             <AnimatePresence>
                 {isMarshalModalOpen && (
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', borderRadius: '24px', padding: '36px', maxWidth: '580px', width: '100%', maxHeight: '90vh', overflowY: 'auto', color: '#121613', boxShadow: '0 20px 60px rgba(0, 0, 0, 0.18)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px' }}>
-                                <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '21px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                        {editingMarshal ? 'Edit Station Marshal' : 'Assign New Station Marshal'}
-                                    </h3>
-                                    <div style={{ fontSize: '12.5px', color: '#59655D' }}>Configure gate check-in privileges and station credentials</div>
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
+                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0 }} className="admin-modal-box">
+
+                            {/* ── Header ── */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px', gap: '12px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                                    {marshalForm.avatar ? (
+                                        <img
+                                            src={marshalForm.avatar}
+                                            alt="Preview"
+                                            style={{ width: '52px', height: '52px', borderRadius: '14px', objectFit: 'cover', border: '2px solid #D5ED55', flexShrink: 0 }}
+                                            onError={e => { e.target.style.display = 'none'; }}
+                                        />
+                                    ) : (
+                                        <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'linear-gradient(135deg, #D5ED55 0%, #A8D520 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>
+
+                                        </div>
+                                    )}
+                                    <div>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                            {editingMarshal ? 'Edit Host / Guide Details' : 'Add New Camp Host / Guide'}
+                                        </h3>
+                                        <div style={{ fontSize: '12px', color: '#59655D', marginTop: '2px' }}>
+                                            {editingMarshal ? `Updating credentials for ${marshalForm.name || 'this crew member'}` : 'Assign gate PIN & sanctuary station'}
+                                        </div>
+                                    </div>
                                 </div>
-                                <button onClick={() => setIsMarshalModalOpen(false)} style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
-                                    ✕
+                                <button
+                                    onClick={() => setIsMarshalModalOpen(false)}
+                                    style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', cursor: 'pointer', fontWeight: '800', fontSize: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
+                                >
+<X size={15} strokeWidth={2.5} />
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveMarshalForm} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <form onSubmit={handleSaveMarshalForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+
+                                {/* Full Name */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                        Marshal Full Name *
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                        Full Name *
                                     </label>
                                     <input
                                         type="text"
                                         required
-                                        placeholder="e.g. Jishnu Mohan"
+                                        placeholder="e.g. Suresh Babu"
                                         value={marshalForm.name}
                                         onChange={e => setMarshalForm({ ...marshalForm, name: e.target.value })}
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1.5px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box', outline: 'none', fontWeight: '600' }}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                {/* Phone + Passcode */}
+                                <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
                                             Phone / WhatsApp *
                                         </label>
                                         <input
                                             type="text"
                                             required
-                                            placeholder="+91 94471 55667"
+                                            placeholder="+91 98950 44332"
                                             value={marshalForm.phone}
                                             onChange={e => setMarshalForm({ ...marshalForm, phone: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1.5px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none' }}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                            Station Gate PIN / Passcode *
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                            Gate PIN / Passcode *
                                         </label>
                                         <input
                                             type="text"
                                             required
-                                            placeholder="e.g. KOLU7900"
+                                            placeholder="e.g. WAYA900"
                                             value={marshalForm.passcode}
-                                            onChange={e => setMarshalForm({ ...marshalForm, passcode: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            onChange={e => setMarshalForm({ ...marshalForm, passcode: e.target.value.toUpperCase() })}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1.5px solid rgba(18, 22, 19, 0.12)', color: '#166534', fontSize: '13.5px', boxSizing: 'border-box', outline: 'none', fontWeight: '800', letterSpacing: '1px', fontFamily: 'monospace' }}
                                         />
                                     </div>
                                 </div>
 
+                                {/* Sanctuary Station */}
                                 <div>
                                     <CustomSelectDropdown
                                         label="Assigned Sanctuary Station *"
                                         value={marshalForm.station}
                                         onChange={val => {
                                             const matched = properties.find(p => p.title === val || p.location?.includes(val));
-                                            setMarshalForm({
-                                                ...marshalForm,
-                                                station: val,
-                                                campId: matched?.id || marshalForm.campId
-                                            });
+                                            setMarshalForm({ ...marshalForm, station: val, campId: matched?.id || marshalForm.campId });
                                         }}
                                         options={[
-                                            { value: 'Kolukkumalai Sunrise 4x4 Station', label: '🌄 Kolukkumalai Sunrise 4x4 Station', sublabel: 'Munnar · 7,900 FT' },
-                                            { value: 'Meesapulimala High Altitude Basecamp', label: '⛰️ Meesapulimala High Altitude Basecamp', sublabel: 'Silent Valley · 8,661 FT' },
-                                            { value: 'Suryanelli Valley Glamp Gate', label: '⛺ Suryanelli Valley Glamp Gate', sublabel: 'Munnar Valley' },
-                                            { value: 'Vagamon Pine Forest Post', label: '🌲 Vagamon Pine Forest Post', sublabel: 'Vagamon Ridge' },
-                                            { value: 'Wayanad 900 Kandi Rainforest Post', label: '🌿 Wayanad 900 Kandi Rainforest Post', sublabel: 'Wayanad Canopy' }
+{ value: 'Kolukkumalai Sunrise 4x4 Station', label: ' Kolukkumalai Sunrise 4x4 Station', sublabel: 'Munnar · 7,900 FT' },
+{ value: 'Meesapulimala High Altitude Basecamp', label: ' Meesapulimala High Altitude Basecamp', sublabel: 'Silent Valley · 8,661 FT' },
+{ value: 'Suryanelli Valley Glamp Gate', label: ' Suryanelli Valley Glamp Gate', sublabel: 'Munnar Valley' },
+{ value: 'Vagamon Pine Forest Post', label: ' Vagamon Pine Forest Post', sublabel: 'Vagamon Ridge' },
+{ value: 'Wayanad 900 Kandi Rainforest Post', label: ' Wayanad 900 Kandi Rainforest Post', sublabel: 'Wayanad Canopy' }
                                         ]}
                                     />
                                 </div>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                                {/* Duty Status + Avatar */}
+                                <div className="admin-form-grid-2">
                                     <div>
                                         <CustomSelectDropdown
                                             label="Duty Status"
                                             value={marshalForm.status}
                                             onChange={val => setMarshalForm({ ...marshalForm, status: val })}
                                             options={[
-                                                { value: 'On Duty', label: '🟢 On Duty' },
-                                                { value: 'Off Duty', label: '🟡 Off Duty' },
-                                                { value: 'Station Closed', label: '🔴 Station Closed' }
+{ value: 'On Duty', label: ' On Duty' },
+{ value: 'Off Duty', label: ' Off Duty' },
+{ value: 'Station Closed', label: ' Station Closed' }
                                             ]}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
                                             Avatar / Photo URL
                                         </label>
                                         <input
@@ -5095,26 +6059,32 @@ export default function AdminPortal() {
                                             placeholder="https://images.unsplash.com/..."
                                             value={marshalForm.avatar}
                                             onChange={e => setMarshalForm({ ...marshalForm, avatar: e.target.value })}
-                                            style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '14px', boxSizing: 'border-box' }}
+                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1.5px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12.5px', boxSizing: 'border-box', outline: 'none' }}
                                         />
                                     </div>
                                 </div>
 
+                                {/* Responsibilities Notes */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
-                                        Station Responsibilities & Notes
+                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                        Responsibilities & Notes
                                     </label>
                                     <textarea
                                         rows={2}
-                                        placeholder="e.g. 4x4 convoy lead, emergency medical kit custodian, tent allocation"
+                                        placeholder="e.g. Glass bridge permit verification & treehouse canopy escort"
                                         value={marshalForm.notes}
                                         onChange={e => setMarshalForm({ ...marshalForm, notes: e.target.value })}
-                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical' }}
+                                        style={{ width: '100%', padding: '10px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1.5px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.5, outline: 'none' }}
                                     />
                                 </div>
 
-                                <button type="submit" className="btn-lime" style={{ padding: '14px', fontSize: '14px', fontWeight: '800', marginTop: '6px', cursor: 'pointer' }}>
-                                    {editingMarshal ? 'Save Marshal Updates' : '+ Assign Station Marshal'}
+                                {/* Submit */}
+                                <button
+                                    type="submit"
+                                    className="btn-lime"
+                                    style={{ padding: '13px', fontSize: '14px', fontWeight: '800', marginTop: '2px', cursor: 'pointer', borderRadius: '13px', letterSpacing: '0.2px', border: 'none' }}
+                                >
+{editingMarshal ? ' Save Details' : '+ Add to Field Crew'}
                                 </button>
                             </form>
                         </motion.div>
@@ -5126,7 +6096,7 @@ export default function AdminPortal() {
             <AnimatePresence>
                 {toastMessage && (
                     <div style={{
-                        position: 'fixed',
+position: 'fixed',
                         top: '24px',
                         left: 0,
                         right: 0,
@@ -5134,7 +6104,7 @@ export default function AdminPortal() {
                         justifyContent: 'center',
                         alignItems: 'center',
                         pointerEvents: 'none',
-                        zIndex: 100000,
+                        zIndex: 100010,
                         padding: '0 16px'
                     }}>
                         <motion.div
@@ -5156,11 +6126,59 @@ export default function AdminPortal() {
                                 gap: '8px'
                             }}
                         >
-                            <span>{toastMessage}</span>
+<span>{toastMessage}</span>
                         </motion.div>
                     </div>
                 )}
             </AnimatePresence>
+
+            {scannerOverlayOpen && (
+                <div style={{
+                    position: 'fixed',
+                    inset: 0,
+                    zIndex: 100010,
+                    background: '#0B150E',
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '6px 14px',
+                        background: '#0B150E',
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                        flexShrink: 0,
+                        height: '52px'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <QrCode size={17} color="#D5ED55" />
+                            <span style={{ fontSize: '13px', fontWeight: '800', color: '#F5F7F4' }}>Basecamp QR Scanner</span>
+                        </div>
+                        <button
+                            onClick={() => setScannerOverlayOpen(false)}
+                            aria-label="Close QR Scanner"
+                            title="Close QR Scanner"
+                            style={{
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '50%',
+                                background: 'rgba(255, 255, 255, 0.08)',
+                                border: '1px solid rgba(255, 255, 255, 0.22)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <X size={18} color="#F5F7F4" />
+                        </button>
+                    </div>
+                    <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+                        <MobileMarshalScanner embedded />
+                    </div>
+                </div>
+            )}
 
         </div>
     );

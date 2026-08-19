@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getStoredBookings } from '@/lib/serverBookingStore';
-import { getClientIp } from '@/lib/authConfig';
+import { getClientIp, getMarshalPayload } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
 
 export async function GET(request) {
     const ip = getClientIp(request);
+
+    // Require an authenticated host / coordinator session
+    const session = getMarshalPayload(request);
+    if (!session) {
+        return NextResponse.json({ success: false, message: 'Unauthorized. Please unlock the scanner console first.' }, { status: 401 });
+    }
 
     // Rate limit roster requests
     const rateLimit = await checkRateLimit(`ratelimit:marshal_roster:${ip}`, 60, 60);

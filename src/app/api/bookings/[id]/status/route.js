@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import { getStoredBookings } from '@/lib/serverBookingStore';
 import { checkRateLimit } from '@/lib/redis';
-import { getClientIp } from '@/lib/authConfig';
+import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 
 export async function GET(request, { params }) {
+    const admin = getAdminPayload(request);
+    if (!admin) {
+        return NextResponse.json({ success: false, message: 'Unauthorized. Admin session required.' }, { status: 401 });
+    }
+
     const ip = getClientIp(request);
     const { id } = await params;
 

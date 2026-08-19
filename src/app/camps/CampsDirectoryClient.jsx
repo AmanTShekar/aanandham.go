@@ -765,13 +765,6 @@ export default function CampsDirectoryClient({
                 )}
             </AnimatePresence>
 
-            {/* ── INTERACTIVE EXPEDITION BOOKING MODAL ── */}
-            <BookingEngineModal
-                isOpen={isBookingModalOpen}
-                onClose={() => setIsBookingModalOpen(false)}
-                initialPackage={selectedPackageForBooking}
-            />
-
             {/* ── TOAST NOTIFICATION ── */}
             <AnimatePresence>
                 {toastMessage && (

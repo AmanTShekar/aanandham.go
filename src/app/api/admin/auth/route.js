@@ -1,17 +1,13 @@
 import crypto from 'crypto';
 import { NextResponse } from 'next/server';
-import { AUTH_SECRET, VALID_PASSCODES, IS_PROD, createSignedToken, verifySignedToken, constantTimeCompare, getClientIp, revokeToken, authenticatePasscodeRole } from '@/lib/authConfig';
+import { AUTH_SECRET, VALID_PASSCODES, IS_PROD, createSignedToken, verifySignedToken, constantTimeCompare, getClientIp, getClientMetadata, revokeToken, authenticatePasscodeRole } from '@/lib/authConfig';
+import { recordAuditEvent, getUnifiedAuditStream, logCrash } from '@/lib/auditLedger';
 
-// In-memory audit trail of recent login events (capped at 50 entries)
-const authAuditLog = [];
-function logAuthEvent(event) {
-    authAuditLog.unshift({
-        timestamp: new Date().toISOString(),
+function logAuthEvent(event, request = null) {
+    return recordAuditEvent({
+        category: 'AUTH',
         ...event
-    });
-    if (authAuditLog.length > 50) {
-        authAuditLog.pop();
-    }
+    }, request);
 }
 
 // ── BOUNDED RATE LIMITING (Per-IP and Global Distributed Brute-Force Shield) ──
@@ -84,7 +80,7 @@ export async function POST(request) {
     const ip = getClientIp(request);
 
     if (isRateLimited(ip)) {
-        logAuthEvent({ ip, action: 'LOGIN_BLOCKED_RATE_LIMIT', success: false });
+        logAuthEvent({ ip, action: 'LOGIN_BLOCKED_RATE_LIMIT', details: 'Brute-force shield triggered rate limit', success: false, status: 'FAILED', severity: 'HIGH' }, request);
         return NextResponse.json(
             { success: false, message: 'Too many failed login attempts. Rate limit active. Please wait.' },
             { status: 429 }
@@ -100,7 +96,7 @@ export async function POST(request) {
 
     try {
         const body = await request.json();
-        const { passcode } = body;
+        const { passcode, rememberMe = true } = body;
 
         if (!passcode) {
             return NextResponse.json({ success: false, message: 'Passcode is required.' }, { status: 400 });
@@ -110,7 +106,16 @@ export async function POST(request) {
 
         if (!authResult.valid) {
             recordFailedAttempt(ip);
-            logAuthEvent({ ip, action: 'LOGIN_FAILED_INVALID_PASSCODE', success: false });
+            logAuthEvent({
+                ip,
+                action: 'LOGIN_FAILED_INVALID_PASSCODE',
+                actor: 'Unknown Caller',
+                actorRole: 'unknown',
+                details: `Failed passcode authentication attempt (prefix: ${String(passcode).slice(0, 2)}***)`,
+                success: false,
+                status: 'FAILED',
+                severity: 'HIGH'
+            }, request);
             // Artificial delay to mitigate high-speed automated brute-forcing
             await new Promise(r => setTimeout(r, 450 + Math.random() * 150));
             return NextResponse.json({ success: false, message: 'Invalid administrative passcode.' }, { status: 401 });
@@ -119,7 +124,8 @@ export async function POST(request) {
         // Authentication successful: clear attempt counter for this IP
         clearAttempts(ip);
 
-        // Generate signed, tamper-proof session token (expires in 24 hours)
+        // Generate signed, tamper-proof session token (24h when remembered; session-scoped otherwise)
+        const sessionTtlSeconds = rememberMe ? 24 * 60 * 60 : 12 * 60 * 60;
         const token = createSignedToken({
             role: authResult.role,
             isMasterAdmin: authResult.isMasterAdmin,
@@ -128,9 +134,19 @@ export async function POST(request) {
             shortName: authResult.shortName || 'Master HQ Scope',
             icon: authResult.icon || '⛺',
             issuedAt: Date.now()
-        }, 24 * 60 * 60);
+        }, sessionTtlSeconds);
 
-        logAuthEvent({ ip, action: 'LOGIN_SUCCESS', role: authResult.role, campId: authResult.campId, success: true });
+        logAuthEvent({
+            ip,
+            action: 'LOGIN_SUCCESS',
+            actor: authResult.campName || 'Admin Coordinator (Master HQ)',
+            actorRole: authResult.role,
+            recordId: authResult.campId,
+            details: `Coordinator session initialized for scope: ${authResult.campName}`,
+            success: true,
+            status: 'SUCCESS',
+            severity: 'INFO'
+        }, request);
 
         // Set HttpOnly, Secure, SameSite=Strict cookie (NEVER exposed to client JavaScript)
         const response = NextResponse.json({
@@ -148,21 +164,20 @@ export async function POST(request) {
             name: 'aanandham_admin_token',
             value: token,
             httpOnly: true,
-            secure: IS_PROD,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             path: '/',
-            maxAge: 24 * 60 * 60
+            ...(rememberMe ? { maxAge: 24 * 60 * 60 } : {}) // Remembered: 24h cookie; otherwise session cookie (cleared on browser close)
         });
 
         return response;
-
     } catch (err) {
-        console.error('Admin authentication error:', err);
-        return NextResponse.json({ success: false, message: 'Internal authentication error.' }, { status: 500 });
+        logCrash({ source: 'ADMIN_AUTH', route: 'POST /api/admin/auth', error: err, request });
+        return NextResponse.json({ success: false, message: 'Authentication processing error.' }, { status: 500 });
     }
 }
 
-// ── GET: Validate session token strictly from HttpOnly Cookie ──
+// ── GET: Check session validity and retrieve active coordinator scope ──
 export async function GET(request) {
     try {
         const cookieToken = request.cookies.get('aanandham_admin_token');
@@ -176,10 +191,10 @@ export async function GET(request) {
 
         if (payload && (payload.role === 'admin_coordinator' || payload.role === 'basecamp_host' || payload.role === 'camp_marshal')) {
             const url = new URL(request.url);
-            // If requested audit logs
             const isMaster = Boolean(payload.isMasterAdmin === true && payload.role === 'admin_coordinator');
 
             if (url.searchParams.get('audit') === 'true') {
+                const stream = getUnifiedAuditStream({ limit: 100 });
                 return NextResponse.json({
                     authenticated: true,
                     role: payload.role,
@@ -189,7 +204,10 @@ export async function GET(request) {
                     shortName: payload.shortName || 'Master HQ Scope',
                     icon: payload.icon || '⛺',
                     user: { role: payload.role, exp: payload.exp, campId: payload.campId, campName: payload.campName },
-                    auditLogs: authAuditLog
+                    auditLogs: stream.logs,
+                    walLedger: stream.walLedger,
+                    snapshots: stream.snapshots,
+                    stats: stream.stats
                 });
             }
 
@@ -206,7 +224,8 @@ export async function GET(request) {
         } else {
             return NextResponse.json({ authenticated: false, message: 'Invalid or expired session token.' }, { status: 401 });
         }
-    } catch {
+    } catch (err) {
+        logCrash({ source: 'ADMIN_AUTH', route: 'GET /api/admin/auth', error: err, request });
         return NextResponse.json({ authenticated: false, message: 'Error validating session token.' }, { status: 401 });
     }
 }
@@ -222,7 +241,15 @@ export async function DELETE(request) {
         }
 
         const ip = getClientIp(request);
-        logAuthEvent({ ip, action: 'LOGOUT', success: true });
+        logAuthEvent({
+            ip,
+            action: 'LOGOUT',
+            actor: 'Admin Coordinator',
+            details: 'Session explicitly terminated by coordinator',
+            success: true,
+            status: 'SUCCESS',
+            severity: 'INFO'
+        }, request);
 
         const response = NextResponse.json({ success: true, message: 'Logged out successfully.' });
         response.cookies.set({
@@ -236,7 +263,8 @@ export async function DELETE(request) {
         });
 
         return response;
-    } catch {
+    } catch (err) {
+        logCrash({ source: 'ADMIN_AUTH', route: 'DELETE /api/admin/auth', error: err, request });
         return NextResponse.json({ success: false, message: 'Error processing logout.' }, { status: 500 });
     }
 }

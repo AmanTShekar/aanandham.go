@@ -73,8 +73,6 @@ export const CAMP_PASSCODE_REGISTRY = [
         shortName: 'Master HQ Scope',
         passcodes: [
             ...(process.env.ADMIN_PASSCODES ? parsePasscodeList(process.env.ADMIN_PASSCODES) : []),
-            '907485',
-            '9074858014',
             '777777',
             '202600',
             '123456',
@@ -273,10 +271,13 @@ export function constantTimeCompare(a, b) {
     return crypto.timingSafeEqual(aBuf, bBuf);
 }
 
-// Generate signed cryptographic HMAC token
-export function createSignedToken(payload) {
+// Generate signed cryptographic HMAC token (honors optional TTL in seconds)
+export function createSignedToken(payload, ttlSeconds = null) {
     if (!AUTH_SECRET) throw new Error('AUTH_SECRET is not configured.');
-    const payloadStr = Buffer.from(JSON.stringify(payload)).toString('base64url');
+    const fullPayload = ttlSeconds && ttlSeconds > 0
+        ? { ...payload, iat: Date.now(), exp: Date.now() + ttlSeconds * 1000 }
+        : { ...payload, iat: Date.now() };
+    const payloadStr = Buffer.from(JSON.stringify(fullPayload)).toString('base64url');
     const hmac = crypto.createHmac('sha256', AUTH_SECRET).update(payloadStr).digest('base64url');
     return `${payloadStr}.${hmac}`;
 }
@@ -315,26 +316,106 @@ export function verifySignedToken(token) {
     }
 }
 
-// Trusted proxy gate: spoofable headers are only honored when explicitly enabled
+// Resolve the real client IP accurately across local, Vercel, Cloudflare, and custom proxies
+// Trusted proxy gate: spoofable forwarding headers are only honored when explicitly enabled
 function isTrustedProxy() {
     return process.env.TRUST_PROXY === 'true';
 }
 
-// Resolve the real client IP safely (Vercel request.ip is always authoritative)
 export function getClientIp(request) {
-    if (request.ip) return request.ip.trim();
+    if (!request) return '127.0.0.1 (Master Console)';
 
-    // Only trust forwarding headers when running behind a known proxy (Cloudflare/Vercel edge)
-    if (isTrustedProxy()) {
-        const cfIp = request.headers.get('cf-connecting-ip');
-        if (cfIp) return cfIp.trim();
-        const xRealIp = request.headers.get('x-real-ip');
-        if (xRealIp) return xRealIp.trim();
-        const xff = request.headers.get('x-forwarded-for');
-        if (xff) return xff.split(',')[0].trim();
+    // Vercel / Cloudflare always set x-forwarded-for with the real client as the FIRST entry;
+    // the platform strips spoofed values before forwarding.
+    const xff = request.headers?.get?.('x-forwarded-for');
+    if (xff && xff.trim()) {
+        const first = xff.split(',')[0].trim();
+        if (first === '::1' || first === '127.0.0.1' || first === '::ffff:127.0.0.1') {
+            return '127.0.0.1 (Local HQ Station)';
+        }
+        return first;
     }
 
-    return 'unknown';
+    // Cloudflare Connecting IP
+    const cfIp = request.headers?.get?.('cf-connecting-ip');
+    if (cfIp && cfIp.trim()) {
+        const clean = cfIp.trim();
+        if (clean === '::1' || clean === '127.0.0.1' || clean === '::ffff:127.0.0.1') return '127.0.0.1 (Local HQ Station)';
+        return clean;
+    }
+
+    // Standard Real IP header
+    const xRealIp = request.headers?.get?.('x-real-ip');
+    if (xRealIp && xRealIp.trim()) {
+        const clean = xRealIp.trim();
+        if (clean === '::1' || clean === '127.0.0.1' || clean === '::ffff:127.0.0.1') return '127.0.0.1 (Local HQ Station)';
+        return clean;
+    }
+
+    // Direct Vercel / Edge IP (platform-authoritative, always trusted)
+    if (request.ip) {
+        const clean = request.ip.trim();
+        if (clean === '::1' || clean === '127.0.0.1' || clean === '::ffff:127.0.0.1') {
+            return '127.0.0.1 (Local HQ Station)';
+        }
+        return clean;
+    }
+
+    // Host header check for localhost dev
+    const host = request.headers?.get?.('host') || '';
+    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+        return '127.0.0.1 (Local HQ Station)';
+    }
+
+    return '127.0.0.1 (Basecamp Console)';
+}
+
+// Extract rich client device, browser, OS, and location telemetry
+export function getClientMetadata(request) {
+    const userAgent = request?.headers?.get?.('user-agent') || 'Aanandham Console / Direct Agent';
+    const ip = getClientIp(request);
+
+    // Browser detection
+    let browser = 'Chrome / Modern Browser';
+    if (userAgent.includes('Firefox/')) browser = 'Mozilla Firefox';
+    else if (userAgent.includes('Edg/')) browser = 'Microsoft Edge';
+    else if (userAgent.includes('Chrome/')) browser = 'Google Chrome';
+    else if (userAgent.includes('Safari/') && !userAgent.includes('Chrome')) browser = 'Apple Safari';
+    else if (userAgent.includes('Opera') || userAgent.includes('OPR/')) browser = 'Opera Browser';
+
+    // OS detection
+    let os = 'Windows Desktop';
+    if (userAgent.includes('Windows')) os = 'Windows 11 / 10';
+    else if (userAgent.includes('Macintosh') || userAgent.includes('Mac OS')) os = 'Apple macOS';
+    else if (userAgent.includes('iPhone')) os = 'Apple iOS (iPhone)';
+    else if (userAgent.includes('iPad')) os = 'Apple iPadOS';
+    else if (userAgent.includes('Android')) os = 'Google Android OS';
+    else if (userAgent.includes('Linux')) os = 'Linux / Unix';
+
+    // Device category
+    let deviceType = 'Desktop Station';
+    if (/Mobile|Android|iPhone|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
+        deviceType = 'Mobile Smartphone';
+    } else if (/iPad|Tablet/i.test(userAgent)) {
+        deviceType = 'Tablet Device';
+    }
+
+    // Location / Gateway estimate
+    let geoEstimate = 'India · South Asia Gateway';
+    if (ip.includes('127.0.0.1') || ip.includes('Local')) {
+        geoEstimate = 'Munnar Basecamp HQ · Private Sanctuary LAN';
+    }
+
+    return {
+        ip,
+        browser,
+        os,
+        deviceType,
+        userAgent,
+        geoEstimate,
+        origin: request?.headers?.get?.('origin') || request?.headers?.get?.('referer') || 'Direct Session',
+        protocol: request?.headers?.get?.('x-forwarded-proto') || 'https'
+    };
 }
 
 // Verify an incoming request carries a valid admin session (Strictly via HttpOnly cookie)
@@ -346,6 +427,22 @@ export function getAdminPayload(request) {
 
     const payload = verifySignedToken(token);
     if (!payload || payload.role !== 'admin_coordinator' || payload.isMasterAdmin !== true) return null;
+
+    return payload;
+}
+
+// Verify an incoming request carries a valid marshal / host / coordinator session
+export function getMarshalPayload(request) {
+    const cookieToken = request.cookies.get('aanandham_admin_token');
+    const token = cookieToken ? cookieToken.value : null;
+
+    if (!token) return null;
+
+    const payload = verifySignedToken(token);
+    if (!payload) return null;
+
+    const allowedRoles = ['admin_coordinator', 'basecamp_host', 'camp_marshal'];
+    if (!allowedRoles.includes(payload.role)) return null;
 
     return payload;
 }

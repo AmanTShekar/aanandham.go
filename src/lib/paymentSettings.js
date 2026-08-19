@@ -1,16 +1,15 @@
 // ─────────────────────────────────────────────────────────────
 // PAYMENT & GATEWAY SETTINGS MANAGEMENT
-// Controls "Coming Soon" vs "Live UPI / QR" payment mode and custom QR config
+// Controls "Coming Soon" vs "Live Razorpay" payment mode.
+// Payments are processed exclusively through the Razorpay gateway.
 // ─────────────────────────────────────────────────────────────
 
 export const DEFAULT_PAYMENT_SETTINGS = {
-    mode: 'coming_soon', // 'coming_soon' | 'active'
-    upiId: '9074858014@upi',
+    mode: 'coming_soon', // 'coming_soon' | 'razorpay'
     payeeName: 'Aanandham Wilderness Stays',
-    customQrUrl: '',
     allowPayOnArrival: true,
-    comingSoonTitle: 'Online UPI & Gateway Payment · Coming Soon',
-    comingSoonMessage: 'Our automated instant payment gateway is launching soon! You can submit your reservation request now for instant priority confirmation via our 24/7 Mountain Concierge Desk with zero upfront advance.'
+    comingSoonTitle: 'Online Secure Payment · Coming Soon',
+    comingSoonMessage: 'Our automated secure payment gateway is launching soon! You can submit your reservation request now for instant priority confirmation via our 24/7 Mountain Concierge Desk with zero upfront advance.'
 };
 
 export function getPaymentSettings() {

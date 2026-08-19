@@ -3,6 +3,7 @@ import { getAdminPayload, getClientIp } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
 import { getAllCamps } from '@/lib/campsData';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
+import { recordWalMutation, logCrash } from '@/lib/auditLedger';
 
 // In-memory override cache for admin-saved camps fallback
 let campsOverride = null;
@@ -86,9 +87,21 @@ export async function POST(request) {
             }
         }
 
+        recordWalMutation({
+            entityType: 'CAMPSITE',
+            entityId: 'camps_catalog_v1',
+            action: 'UPDATE',
+            previousState: null,
+            newState: { totalCamps: valid.length, campIds: valid.map(c => c.id) },
+            actor: getAdminPayload(request)?.campName || 'Admin Coordinator (Master HQ)',
+            details: `Synchronized campsite catalog: ${valid.length} camps published`,
+            request
+        });
+
         return NextResponse.json({ success: true, totalCount: valid.length });
     } catch (err) {
         console.error('Error saving camps:', err);
+        logCrash({ source: 'ADMIN_CAMPS', route: 'POST /api/admin/camps', error: err, request });
         return NextResponse.json({ success: false, message: 'Internal server error while saving camps' }, { status: 500 });
     }
 }

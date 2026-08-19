@@ -180,7 +180,7 @@ export async function generateBookingPassPdf(booking, qrBuffer) {
         const balTextColor = balDue > 0 ? AMBER_DUE : GREEN_PAID;
         const balTitle = balDue > 0 ? 'BALANCE PAYABLE AT CHECK-IN' : 'PAYMENT STATUS';
         const balText = balDue > 0 
-            ? `Rs. ${balDue.toLocaleString('en-IN')} (Cash / UPI · Carry cash from Munnar)`
+            ? `Rs. ${balDue.toLocaleString('en-IN')} (Cash / Online Payment · Carry cash from Munnar)`
             : '100% Fully Paid Online';
 
         doc.roundedRect(LEFT_X, mY, LEFT_W, 42, 8).fill(balBg);

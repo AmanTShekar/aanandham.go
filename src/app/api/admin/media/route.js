@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/redis';
 import { uploadBuffer, deleteFile, IS_SUPABASE_CONFIGURED } from '@/lib/supabaseStorage';
 import { randomUUID } from 'crypto';
 import sharp from 'sharp';
+import { recordAuditEvent, logCrash } from '@/lib/auditLedger';
 
 // ── POST: Upload a campsite / room / event photo to Supabase Storage ──
 // Accepts multipart/form-data with fields:
@@ -80,8 +81,26 @@ export async function POST(request) {
         const { url, error } = await uploadBuffer(processedBuffer, filePath, 'image/webp');
 
         if (error) {
+            recordAuditEvent({
+                category: 'MEDIA',
+                action: 'UPLOAD_FAILED',
+                actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
+                details: `Media upload failed for folder "${folder}"`,
+                status: 'FAILED',
+                severity: 'HIGH'
+            }, request);
             return NextResponse.json({ success: false, message: `Upload failed: ${error}` }, { status: 500 });
         }
+
+        recordAuditEvent({
+            category: 'MEDIA',
+            action: 'UPLOAD_SUCCESS',
+            actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
+            recordId: filePath,
+            details: `Uploaded image to ${filePath} (${Math.round(processedBuffer.length / 1024)} KB WebP)`,
+            status: 'SUCCESS',
+            severity: 'INFO'
+        }, request);
 
         return NextResponse.json({
             success: true,
@@ -94,6 +113,7 @@ export async function POST(request) {
 
     } catch (err) {
         console.error('Media upload error:', err);
+        logCrash({ source: 'ADMIN_MEDIA', route: 'POST /api/admin/media', error: err, request });
         return NextResponse.json({ success: false, message: 'Internal error during file upload.' }, { status: 500 });
     }
 }
@@ -120,12 +140,32 @@ export async function DELETE(request) {
 
         const { success, error } = await deleteFile(path);
         if (!success) {
+            recordAuditEvent({
+                category: 'MEDIA',
+                action: 'DELETE_FAILED',
+                actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
+                recordId: path,
+                details: `Media deletion failed for ${path}`,
+                status: 'FAILED',
+                severity: 'HIGH'
+            }, request);
             return NextResponse.json({ success: false, message: error || 'Delete failed.' }, { status: 500 });
         }
+
+        recordAuditEvent({
+            category: 'MEDIA',
+            action: 'DELETE_SUCCESS',
+            actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
+            recordId: path,
+            details: `Deleted media file ${path}`,
+            status: 'SUCCESS',
+            severity: 'WARN'
+        }, request);
 
         return NextResponse.json({ success: true, message: 'File deleted.' });
     } catch (err) {
         console.error('Media delete error:', err);
+        logCrash({ source: 'ADMIN_MEDIA', route: 'DELETE /api/admin/media', error: err, request });
         return NextResponse.json({ success: false, message: 'Internal error during file deletion.' }, { status: 500 });
     }
 }

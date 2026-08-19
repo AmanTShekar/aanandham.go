@@ -3,6 +3,7 @@ import { getAllCamps } from '@/lib/campsData';
 import { CAMPSITE_TIMEZONE } from '@/lib/timezone';
 import { checkRateLimit } from '@/lib/redis';
 import { getClientIp } from '@/lib/authConfig';
+import crypto from 'crypto';
 
 // Helper to sanitize any text against CRLF injection and iCal special chars
 function sanitizeIcalText(str) {
@@ -11,6 +12,11 @@ function sanitizeIcalText(str) {
         .replace(/[\r\n]/g, ' ')
         .replace(/[,;\\]/g, ' ')
         .trim();
+}
+
+// Opaque per-booking UID — no real booking IDs exposed to external calendars
+function bookingUid(bookingId) {
+    return crypto.createHash('sha256').update(String(bookingId)).digest('hex').slice(0, 16);
 }
 
 // ── GET: RFC 5545 iCalendar (.ics) Sync Feed for External Channels ──
@@ -43,16 +49,15 @@ export async function GET(request, { params }) {
     const nowTimestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
 
     const events = campBookings.map(booking => {
-        const safeUid = sanitizeIcalText(booking.id || Math.random().toString(36).substring(7));
         const safeRoom = sanitizeIcalText(booking.roomType || 'Alpine Glamping Tent');
         const safeLocation = sanitizeIcalText(camp.location || 'Suryanelli, Munnar, Kerala');
         
         return [
             'BEGIN:VEVENT',
-            `UID:booking-${safeUid}@aanandham.in`,
+            `UID:booking-${bookingUid(booking.id)}@aanandham.in`,
             `DTSTAMP:${nowTimestamp}`,
             `SUMMARY:Reserved: ${safeRoom}`,
-            `DESCRIPTION:Aanandham Wilderness Reservation (${safeUid})`,
+            `DESCRIPTION:Aanandham Wilderness Reservation`,
             `LOCATION:${safeLocation}`,
             `STATUS:${booking.status === 'Confirmed' ? 'CONFIRMED' : 'TENTATIVE'}`,
             'END:VEVENT'

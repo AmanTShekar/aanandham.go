@@ -45,7 +45,7 @@ export function generateSignedPassPayload(booking) {
     return {
         payload,
         signature,
-        qrSignatureString: `AANANDHAM:V2:${payload.bid}:${payload.pax}:${payload.bal}:${payload.exp}:${payload.nonce}:${signature}`,
+        qrSignatureString: `AANANDHAM:V2:${payload.bid}:${encodeURIComponent(payload.pkg || 'PKG-CAMP')}:${payload.pax}:${payload.veg}:${payload.nvg}:${payload.bal}:${payload.iat}:${payload.exp}:${payload.nonce}:${signature}`,
         isTimeValid: true
     };
 }
@@ -62,11 +62,11 @@ export function verifyScannedPassSignature(qrString, optionalKnownBooking = null
     }
 
     const parts = qrString.split(':');
-    if (parts.length < 8) {
+    if (parts.length < 11) {
         return { valid: false, reason: 'Malformed cryptographic pass payload' };
     }
 
-    const [prefix, version, bid, pax, bal, expStr, nonce, signature] = parts;
+    const [, , bid, pkg, pax, veg, nvg, bal, iat, expStr, nonce, signature] = parts;
     const exp = parseInt(expStr, 10);
     const now = Math.floor(Date.now() / 1000);
 
@@ -75,17 +75,14 @@ export function verifyScannedPassSignature(qrString, optionalKnownBooking = null
         return { valid: false, reason: 'Pass has expired' };
     }
 
-    // 2. Recompute expected signature
-    let pkg = optionalKnownBooking?.campsiteId || optionalKnownBooking?.package || 'PKG-CAMP';
-    let veg = optionalKnownBooking?.vegCount ?? 2;
-    let nvg = optionalKnownBooking?.nonVegCount ?? 0;
-
-    // Verify signature with fallback canonical forms
-    const canonicalString = `${bid}|${pkg}|${pax}|${veg}|${nvg}|${bal}|${optionalKnownBooking?.createdAt || ''}|${exp}|${nonce}`;
+    // 2. Recompute expected signature from the exact fields that were signed
+    const canonicalString = `${bid}|${decodeURIComponent(pkg)}|${pax}|${veg}|${nvg}|${bal}|${iat}|${expStr}|${nonce}`;
     const expectedSig = crypto.createHmac('sha256', PASS_SIGNING_SECRET).update(canonicalString).digest('hex').substring(0, 24);
 
-    // Timing-safe comparison if lengths match
-    const isValid = signature.length === 24; // Structure verified
+    // 3. Timing-safe comparison (forged/truncated signatures never match)
+    const aBuf = Buffer.from(signature);
+    const bBuf = Buffer.from(expectedSig);
+    const isValid = aBuf.length === bBuf.length && aBuf.length > 0 && crypto.timingSafeEqual(aBuf, bBuf);
 
     return {
         valid: isValid,

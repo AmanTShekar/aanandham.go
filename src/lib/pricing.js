@@ -3,6 +3,7 @@
 // never underpay by sending a forged `total` field. Mirrors the client pricing
 // formula exactly (squad discount, children rate, per-person add-ons).
 import { getAllCamps } from '@/lib/campsData';
+import { applyDiscounts } from '@/lib/discounts';
 
 // Canonical add-on catalog (id, price, perPerson) — matches the public booking engine
 const ADDON_CATALOG = {
@@ -27,13 +28,14 @@ export function findCampAndRoom(campsiteId, roomId) {
 }
 
 // Recompute the exact total the customer must pay (in rupees)
-export function computeBookingTotal({ camp, room, adults, children, addonIds = [] }) {
+// Squad-off and all other campaigns are applied from the admin-managed discount store.
+export function computeBookingTotal({ camp, room, adults, children, addonIds = [], discounts = null }) {
     const pricePerPerson = room?.price || camp?.price || 2499;
     const totalGuests = adults + children;
 
     const baseTotal = (pricePerPerson * adults) + (Math.round(pricePerPerson * 0.5) * children);
-    const discountPercent = totalGuests >= 8 ? 15 : totalGuests >= 4 ? 10 : 0;
-    const discounted = Math.round(baseTotal * (1 - discountPercent / 100));
+    const discount = applyDiscounts({ baseTotal, guests: totalGuests, campsiteId: camp?.id || null, discounts });
+    const discounted = discount.discountedTotal;
 
     const addonTotal = addonIds.reduce((sum, id) => {
         const addon = ADDON_CATALOG[id];
@@ -43,7 +45,9 @@ export function computeBookingTotal({ camp, room, adults, children, addonIds = [
 
     return {
         total: discounted + addonTotal,
-        discountPercent,
+        discountPercent: discount.discountPercent,
+        discountAmount: discount.discountAmount,
+        discountLabel: discount.discountLabel,
         baseTotal,
         pricePerPerson
     };

@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getStoredBookings } from '@/lib/serverBookingStore';
 import { verifyScannedPassSignature } from '@/lib/cryptoPass';
-import { getClientIp } from '@/lib/authConfig';
+import { getClientIp, getMarshalPayload } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
 
 export async function POST(request) {
     const ip = getClientIp(request);
-    
+
+    // Require an authenticated host / coordinator session
+    const session = getMarshalPayload(request);
+    if (!session) {
+        return NextResponse.json({ success: false, message: 'Unauthorized. Please unlock the scanner console first.' }, { status: 401 });
+    }
+
     // Rate limit marshal scanner scans (Max 120 scans / min)
     const rateLimit = await checkRateLimit(`ratelimit:marshal_scan:${ip}`, 120, 60);
     if (!rateLimit.allowed) {
@@ -69,40 +75,8 @@ export async function POST(request) {
                    (bAlpha.length >= 6 && alphanumericQuery.includes(bAlpha));
         });
 
-        // If not found in DB but matches a test/demo/simulation booking prefix, auto-reconstruct
-        if (!booking && (cleanQuery.startsWith('BK-TEST') || cleanQuery.startsWith('BK-DEMO') || cleanQuery.startsWith('BK-SIM') || cleanQuery.startsWith('BK-') || alphanumericQuery.startsWith('BKTEST') || alphanumericQuery.startsWith('BKDEMO') || alphanumericQuery.startsWith('BKSIM') || alphanumericQuery.startsWith('BK'))) {
-            const { addServerBooking } = await import('@/lib/serverBookingStore');
-            booking = {
-                id: cleanQuery,
-                name: 'Aman Shekar (Test Explorer)',
-                email: 'aman.tshekar@gmail.com',
-                phone: '+91 91886 85831',
-                package: 'Kolukkumalai Sunrise Ridge Glamp (7,900 FT)',
-                campsiteId: 'pkg-kolukkumalai',
-                region: 'Munnar',
-                dates: 'This Weekend (2D / 1N)',
-                roomType: 'Geodesic Luxury Dome Pod',
-                guests: 4,
-                vegCount: 2,
-                nonVegCount: 2,
-                total: 9996,
-                advancePaid: 2998,
-                balanceDue: 6998,
-                isBalancePaid: false,
-                status: 'Confirmed',
-                convoyTime: '02:30 PM Suryanelli 4x4 Convoy',
-                notes: 'Verified Test Pass auto-synced to check-in console.',
-                attendanceRoster: [
-                    { id: 1, name: 'Aman Shekar (Lead)', present: true },
-                    { id: 2, name: 'Squad Camper #2', present: true },
-                    { id: 3, name: 'Squad Camper #3', present: true },
-                    { id: 4, name: 'Squad Camper #4', present: true }
-                ],
-                createdAt: new Date().toISOString()
-            };
-            await addServerBooking(booking);
-        }
-
+        // Only real bookings in the reservation database are verifiable.
+        // No bookings are auto-created or reconstructed here.
         if (!booking) {
             return NextResponse.json({ 
                 success: false, 
