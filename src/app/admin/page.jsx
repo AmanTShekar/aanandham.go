@@ -13,6 +13,7 @@ import { getPaymentSettings, savePaymentSettings } from '../../lib/paymentSettin
 import { DEFAULT_DISCOUNTS, loadDiscountsFromStorage, saveDiscountsToStorage } from '../../lib/discountsCore';
 import { DEFAULT_TESTIMONIALS, loadTestimonialsFromStorage, saveTestimonialsToStorage } from '../../lib/testimonialsCore';
 import { uploadCampsitePhoto } from '../../lib/mediaUpload';
+import { getSecurityHeaders } from '../../lib/securityClient';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
 
 // ── SHARED LIQUID WAVE DRAWER VARIANTS (Matches SiteHeader) ──
@@ -442,9 +443,10 @@ badge: 'New Batch ',
         }
         return INITIAL_DB_LOGS;
     });
-    const [logViewTab, setLogViewTab] = useState('auth'); // 'auth' | 'db'
+const [logViewTab, setLogViewTab] = useState('auth'); // 'auth' | 'db' | 'security'
     const [logSearch, setLogSearch] = useState('');
     const [logFilterSeverity, setLogFilterSeverity] = useState('all');
+    const [securityOverview, setSecurityOverview] = useState({ activeBlocks: [], recentEvents: [], stats: {} });
 
     const logDbAction = (action, details, recordId = '') => {
         const newEntry = {
@@ -843,7 +845,7 @@ showToast('Notification coordinates saved');
         try {
 const res = await fetch('/api/admin/auth', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
                 credentials: 'include',
                 body: JSON.stringify({ passcode: passcode.trim(), rememberMe })
             });
@@ -876,7 +878,7 @@ const res = await fetch('/api/admin/auth', {
 showToast('Logged out securely');
     };
 
-    // Load Audit Logs from Secure Server
+// Load Audit Logs from Secure Server
     const fetchAuditLogs = async () => {
         setIsLoadingAudit(true);
         try {
@@ -890,6 +892,73 @@ showToast('Logged out securely');
             }
         } catch {}
         setIsLoadingAudit(false);
+    };
+
+    // Load Live Security Overview (active blocks + abuse events)
+    const fetchSecurityOverview = async () => {
+        try {
+            const res = await fetch('/api/admin/security', { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) setSecurityOverview(data);
+            }
+        } catch {}
+    };
+
+    // Export full WAL + audit + snapshot ledger bundle from the server
+    const handleExportWalBackup = async () => {
+        try {
+            const res = await fetch('/api/admin/audit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ action: 'export_backup' })
+            });
+            const data = await res.json();
+            if (data.success && data.auditLogs) {
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                const dateStr = new Date().toISOString().split('T')[0];
+                a.href = url;
+                a.download = `aanandham-wal-ledger-backup-${dateStr}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showToast('WAL & ledger backup exported');
+            } else {
+                showToast(data.message || 'Export requires Master HQ scope');
+            }
+        } catch {
+            showToast('Network error exporting WAL backup');
+        }
+    };
+
+    // Block / unblock an IP or device fingerprint from the audit console
+    const handleSecurityAction = async (action, type, value) => {
+        try {
+            const res = await fetch('/api/admin/security', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    action,
+                    type,
+                    value,
+                    reason: action === 'block' ? 'Manual block from audit console' : undefined
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast(action === 'unblock' ? 'Entity unblocked' : 'Entity blocked');
+                fetchSecurityOverview();
+            } else {
+                showToast(data.message || 'Action requires Master HQ scope');
+            }
+        } catch {
+            showToast('Network error');
+        }
     };
 
     // Export Complete JSON Backup
@@ -4945,8 +5014,8 @@ SYSTEM BACKUP & DISASTER RECOVERY
                                 </div>
                             </div>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                                <button
-onClick={() => { fetchAuditLogs(); showToast('Logs refreshed live'); }}
+<button
+onClick={() => { fetchAuditLogs(); fetchSecurityOverview(); showToast('Logs refreshed live'); }}
                                     style={{
                                         padding: '9px 16px',
                                         borderRadius: '12px',
@@ -4963,12 +5032,30 @@ onClick={() => { fetchAuditLogs(); showToast('Logs refreshed live'); }}
                                 >
 <span><RefreshCw size={13} /> Refresh Live Logs</span>
                                 </button>
-                                <button
+<button
                                     onClick={handleExportBackup}
                                     className="btn-lime"
                                     style={{ padding: '9px 18px', fontSize: '12.5px', fontWeight: '800' }}
                                 >
 Export Audit Bundle
+                                </button>
+                                <button
+                                    onClick={handleExportWalBackup}
+                                    style={{
+                                        padding: '9px 16px',
+                                        borderRadius: '12px',
+                                        background: '#F8F9F5',
+                                        border: '1px solid rgba(18,22,19,0.12)',
+                                        color: '#121613',
+                                        fontSize: '12.5px',
+                                        fontWeight: '800',
+                                        cursor: 'pointer',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px'
+                                    }}
+                                >
+<span><Database size={13} /> Export WAL Ledger</span>
                                 </button>
                             </div>
                         </div>
@@ -5030,6 +5117,35 @@ Export Audit Bundle
                                     borderRadius: '999px'
                                 }}>
                                     {dbLogs.length}
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={() => { setLogViewTab('security'); fetchSecurityOverview(); }}
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '12px',
+                                    border: logViewTab === 'security' ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                    background: logViewTab === 'security' ? '#121613' : '#FFFFFF',
+                                    color: logViewTab === 'security' ? '#FFFFFF' : '#3A443E',
+                                    fontSize: '13px',
+                                    fontWeight: logViewTab === 'security' ? '800' : '600',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+<span><ShieldCheck size={14} /> Security & Blocks</span>
+                                <span style={{
+                                    background: logViewTab === 'security' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
+                                    color: logViewTab === 'security' ? '#0B150E' : '#59655D',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    padding: '1px 7px',
+                                    borderRadius: '999px'
+                                }}>
+                                    {securityOverview.activeBlocks?.length || 0}
                                 </span>
                             </button>
                         </div>
@@ -5171,7 +5287,144 @@ Export Audit Bundle
                                                     </div>
                                                 </div>
                                             </div>
-                                        ))}
+))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW 3: SECURITY & BLOCKS (device fingerprint + IP tracking) */}
+                        {logViewTab === 'security' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                {/* Stats Chips */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
+                                    {[
+                                        { label: 'Active IP Blocks', value: securityOverview.stats?.activeIpBlocks || 0, color: '#991B1B' },
+                                        { label: 'Active Device Blocks', value: securityOverview.stats?.activeDeviceBlocks || 0, color: '#B45309' },
+                                        { label: 'Suspicious Events', value: securityOverview.stats?.suspiciousEvents || 0, color: '#0369A1' },
+                                        { label: 'Bot Events', value: securityOverview.stats?.botEvents || 0, color: '#6D28D9' },
+                                        { label: 'Permanent Blocks', value: securityOverview.stats?.permanentBlocks || 0, color: '#7F1D1D' },
+                                        { label: 'Total Events', value: securityOverview.stats?.totalEvents || 0, color: '#166534' }
+                                    ].map(stat => (
+                                        <div key={stat.label} style={{ background: '#FFFFFF', borderRadius: '14px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '12px 16px' }}>
+                                            <div style={{ fontSize: '22px', fontWeight: '800', color: stat.color }}>{stat.value}</div>
+                                            <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '700', marginTop: '2px' }}>{stat.label}</div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Active Blocks */}
+                                <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                        <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>Active Blocks (IP & Device)</div>
+                                        <button
+                                            onClick={fetchSecurityOverview}
+                                            style={{ background: 'none', border: 'none', color: '#59655D', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                        >
+<RefreshCw size={12} /> Refresh
+                                        </button>
+                                    </div>
+                                    {securityOverview.activeBlocks && securityOverview.activeBlocks.length > 0 ? (
+                                        <div className="admin-audit-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '300px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+                                            {securityOverview.activeBlocks.map((block, idx) => (
+                                                <div key={block.id || idx} style={{
+                                                    padding: '12px 16px',
+                                                    borderRadius: '12px',
+                                                    background: block.tier >= 3 ? '#FEF2F2' : '#FFFBEB',
+                                                    border: '1px solid rgba(18, 22, 19, 0.06)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'space-between',
+                                                    gap: '12px',
+                                                    flexWrap: 'wrap',
+                                                    fontSize: '12.5px'
+                                                }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                                                        <span style={{
+                                                            fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px',
+                                                            background: block.type === 'ip' ? '#DBEAFE' : '#EDE9FE',
+                                                            color: block.type === 'ip' ? '#1E40AF' : '#5B21B6'
+                                                        }}>
+                                                            {block.type === 'ip' ? 'IP' : 'DEVICE'}
+                                                        </span>
+                                                        <span style={{ fontFamily: 'monospace', fontWeight: '700', color: '#121613', fontSize: '12px' }}>{block.value}</span>
+                                                        <span style={{ fontSize: '11px', fontWeight: '700', color: block.tier >= 3 ? '#991B1B' : '#B45309' }}>
+                                                            Tier {block.tier}{block.tier === 4 ? ' (PERMANENT)' : ''}
+                                                        </span>
+                                                        <span style={{ fontSize: '11px', color: '#7D8880' }}>
+                                                            {block.until === Infinity ? 'Never expires' : `until ${new Date(block.until).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`}
+                                                        </span>
+                                                    </div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                        <span style={{ fontSize: '11px', color: '#59655D', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{block.reason}</span>
+                                                        <button
+                                                            onClick={() => handleSecurityAction('unblock', block.type, block.value)}
+                                                            style={{ padding: '6px 12px', borderRadius: '9px', background: '#121613', color: '#FFFFFF', border: 'none', fontSize: '11px', fontWeight: '800', cursor: 'pointer' }}
+                                                        >
+Unblock
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div style={{ padding: '18px', borderRadius: '12px', background: '#F8F9F5', fontSize: '12.5px', color: '#59655D', textAlign: 'center' }}>
+                                            No active blocks. Automated tiered blocking will appear here when abuse patterns are detected.
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Recent Security Events */}
+                                <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613', marginBottom: '14px' }}>Recent Security Events (fingerprint + bot scoring)</div>
+                                    <div className="admin-audit-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '360px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+                                        {(securityOverview.recentEvents && securityOverview.recentEvents.length > 0 ? securityOverview.recentEvents : [])
+                                            .filter(e => !logSearch || JSON.stringify(e).toLowerCase().includes(logSearch.toLowerCase()))
+                                            .map((evt, idx) => (
+                                                <div key={evt.id || idx} style={{
+                                                    padding: '12px 16px',
+                                                    borderRadius: '12px',
+                                                    background: evt.severity === 'SUSPICIOUS' ? '#FEF2F2' : '#F8F9F5',
+                                                    border: '1px solid rgba(18, 22, 19, 0.06)',
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                                                    gap: '10px',
+                                                    alignItems: 'center',
+                                                    fontSize: '12px'
+                                                }}>
+                                                    <div>
+                                                        <span style={{
+                                                            fontSize: '10.5px', fontWeight: '800', padding: '2px 8px', borderRadius: '6px',
+                                                            background: evt.severity === 'SUSPICIOUS' ? '#FEE2E2' : '#E0F2FE',
+                                                            color: evt.severity === 'SUSPICIOUS' ? '#991B1B' : '#0369A1'
+                                                        }}>
+                                                            {evt.severity}
+                                                        </span>
+                                                        <div style={{ fontWeight: '800', color: '#121613', marginTop: '4px' }}>{evt.action}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#7D8880', fontSize: '10.5px' }}>IP</div>
+                                                        <div style={{ fontFamily: 'monospace', fontWeight: '600', color: '#3A443E' }}>{evt.ip}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#7D8880', fontSize: '10.5px' }}>Device / Bot</div>
+                                                        <div style={{ fontFamily: 'monospace', fontWeight: '600', color: '#3A443E', fontSize: '11px' }}>
+                                                            {evt.deviceFingerprint ? `${evt.deviceFingerprint.slice(0, 10)}…` : '—'} · bot {evt.botScore || 0}/10
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#7D8880', fontSize: '10.5px' }}>When</div>
+                                                        <div style={{ color: '#59655D' }}>
+                                                            {new Date(evt.timestamp).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        {(!securityOverview.recentEvents || securityOverview.recentEvents.length === 0) && (
+                                            <div style={{ padding: '18px', borderRadius: '12px', background: '#F8F9F5', fontSize: '12.5px', color: '#59655D', textAlign: 'center' }}>
+                                                No security events yet. Failed logins, abuse patterns and bot detections will appear here.
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         )}

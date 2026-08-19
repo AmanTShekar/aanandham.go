@@ -3,6 +3,7 @@ import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { getStoredInquiries, addStoredInquiry } from '@/lib/inquiryStore';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
+import { checkSecurityGate } from '@/lib/securityTracker';
 
 export async function GET(request) {
     const admin = await getAdminPayload(request);
@@ -23,6 +24,11 @@ export async function POST(request) {
 
     if (await isIpBlocked(ip)) {
         return NextResponse.json({ success: false, message: 'Access restricted.' }, { status: 403 });
+    }
+
+    const gate = checkSecurityGate(request, String(request.headers.get('x-device-fingerprint') || '').slice(0, 400));
+    if (!gate.allowed) {
+        return NextResponse.json({ success: false, message: gate.reason || 'Access restricted.' }, { status: gate.status || 403 });
     }
 
     const rateLimit = await checkRateLimit(`ratelimit:inquiry:${ip}`, 5, 120);

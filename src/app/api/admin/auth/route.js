@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import { NextResponse } from 'next/server';
 import { AUTH_SECRET, VALID_PASSCODES, IS_PROD, createSignedToken, verifySignedToken, constantTimeCompare, getClientIp, getClientMetadata, revokeToken, authenticatePasscodeRole } from '@/lib/authConfig';
 import { recordAuditEvent, getUnifiedAuditStream, logCrash } from '@/lib/auditLedger';
+import { recordSecurityEvent } from '@/lib/securityTracker';
 
 function logAuthEvent(event, request = null) {
     return recordAuditEvent({
@@ -116,6 +117,13 @@ export async function POST(request) {
                 status: 'FAILED',
                 severity: 'HIGH'
             }, request);
+            recordSecurityEvent({
+                eventType: 'AUTH_FAILURE',
+                action: 'LOGIN_FAILED_PASSCODE',
+                request,
+                fingerprint: String(request.headers.get('x-device-fingerprint') || '').slice(0, 400),
+                details: 'Invalid admin passcode attempt'
+            });
             // Artificial delay to mitigate high-speed automated brute-forcing
             await new Promise(r => setTimeout(r, 450 + Math.random() * 150));
             return NextResponse.json({ success: false, message: 'Invalid administrative passcode.' }, { status: 401 });

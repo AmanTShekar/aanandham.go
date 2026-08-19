@@ -8,7 +8,9 @@ import {
     listDatabaseSnapshots,
     restoreDatabaseSnapshot,
     getUnifiedAuditStream,
-    logCrash
+    logCrash,
+    exportFullLedger,
+    importFullLedger
 } from '@/lib/auditLedger';
 
 // Privileged recovery operations require master-admin scope
@@ -131,6 +133,45 @@ export async function POST(request) {
                 request
             });
             return NextResponse.json({ success: true, walEntry });
+        }
+
+        // 6. Export full WAL + audit + snapshot bundle for offline backup (master admin only)
+        if (action === 'export_backup') {
+            if (!isMasterAdmin(admin)) {
+                return NextResponse.json({ success: false, message: 'Master admin scope required for backup export.' }, { status: 403 });
+            }
+            recordAuditEvent({
+                category: 'SYSTEM',
+                action: 'BACKUP_EXPORTED',
+                actor: actorName,
+                actorRole: 'admin_coordinator',
+                details: 'Full WAL + audit + snapshot bundle exported by admin',
+                status: 'SUCCESS',
+                severity: 'INFO'
+            }, request);
+            return NextResponse.json({ success: true, ...exportFullLedger() });
+        }
+
+        // 7. Restore WAL + audit ledger from an uploaded backup bundle (master admin only — destructive)
+        if (action === 'restore_backup') {
+            if (!isMasterAdmin(admin)) {
+                return NextResponse.json({ success: false, message: 'Master admin scope required for backup restore.' }, { status: 403 });
+            }
+            const { bundle } = body;
+            if (!bundle || !Array.isArray(bundle.auditLogs)) {
+                return NextResponse.json({ success: false, message: 'Valid backup bundle required (auditLogs array).' }, { status: 400 });
+            }
+            const restored = importFullLedger(bundle);
+            recordAuditEvent({
+                category: 'SYSTEM',
+                action: 'BACKUP_RESTORED',
+                actor: actorName,
+                actorRole: 'admin_coordinator',
+                details: 'Ledger bundle restored from backup',
+                status: 'WARNING',
+                severity: 'HIGH'
+            }, request);
+            return NextResponse.json({ success: true, ...restored });
         }
 
         return NextResponse.json({ success: false, message: `Unknown action: ${action}` }, { status: 400 });

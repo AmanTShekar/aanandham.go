@@ -65,6 +65,7 @@ import {
     Wallet
 } from 'lucide-react';
 import Link from 'next/link';
+import { getSecurityHeaders } from '@/lib/securityClient';
 
 // ── AANANDHAM SANCTUARY CAMPSITES (PROPERTY-LEVEL ACCESS & ISOLATION) ──
 const AANANDHAM_CAMPS = [
@@ -378,7 +379,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = 
         try {
             const res = await fetch('/api/admin/auth', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
                 credentials: 'include',
                 body: JSON.stringify({ passcode: trimmed, rememberMe })
             });

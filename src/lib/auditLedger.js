@@ -477,3 +477,32 @@ export function getUnifiedAuditStream({
         }
     };
 }
+
+/**
+ * Export the complete ledger bundle (audit + WAL + snapshots) for backup
+ */
+export function exportFullLedger() {
+    initLedger();
+    return {
+        exportedAt: new Date().toISOString(),
+        auditLogs: memoryAuditLogs,
+        walLedger: memoryWalLogs,
+        snapshots: listDatabaseSnapshots()
+    };
+}
+
+/**
+ * Import a ledger bundle (WAL + audit restore from backup)
+ */
+export function importFullLedger(bundle) {
+    initLedger();
+    if (bundle && Array.isArray(bundle.auditLogs)) {
+        memoryAuditLogs = bundle.auditLogs.slice(0, MAX_AUDIT_LOGS);
+        persistAuditLogs();
+    }
+    if (bundle && Array.isArray(bundle.walLedger)) {
+        memoryWalLogs = bundle.walLedger.slice(0, MAX_WAL_LOGS);
+        persistWalLogs();
+    }
+    return { success: true, message: 'Ledger bundle imported.' };
+}

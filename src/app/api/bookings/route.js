@@ -9,6 +9,7 @@ import { findCampAndRoom, computeBookingTotal, campGuestCapacity, parseRoomCapac
 import { logLockContention } from '@/lib/monitoring';
 import { sendBookingConfirmationEmail } from '@/lib/email';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
+import { checkSecurityGate } from '@/lib/securityTracker';
 
 // Unique, collision-free human readable booking ID generator with cryptographic entropy
 function generateBookingId() {
@@ -87,6 +88,15 @@ export async function POST(request) {
         return NextResponse.json(
             { success: false, message: 'Access temporarily restricted. Contact support.' },
             { status: 403 }
+        );
+    }
+
+    // 2.5 Security Gate (device fingerprint + bot heuristics + tiered blocks)
+    const gate = checkSecurityGate(request, String(request.headers.get('x-device-fingerprint') || '').slice(0, 400));
+    if (!gate.allowed) {
+        return NextResponse.json(
+            { success: false, message: gate.reason || 'Access restricted.' },
+            { status: gate.status || 403 }
         );
     }
 

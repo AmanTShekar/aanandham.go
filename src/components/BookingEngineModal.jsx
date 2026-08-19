@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 import CustomDateBatchPicker from './CustomDateBatchPicker';
 import LucideAmenityIcon from './common/LucideAmenityIcon';
+import { getSecurityHeaders } from '@/lib/securityClient';
 import { 
     Check, 
     Users, 
@@ -393,7 +394,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
         try {
             const res = await fetch('/api/bookings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
                 body: JSON.stringify(passData)
             });
             const resData = await res.json();

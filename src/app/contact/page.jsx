@@ -8,6 +8,7 @@ import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 import { useAuth } from '../../hooks/useAuth';
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
+import { getSecurityHeaders } from '../../lib/securityClient';
 
 // ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
 const sectionReveal = {
@@ -399,7 +400,7 @@ export default function ContactPage() {
             try {
                 fetch('/api/inquiries', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify(newInquiryRecord)
                 }).catch(err => console.error('Error syncing inquiry to server:', err));
 
@@ -420,7 +421,7 @@ export default function ContactPage() {
             try {
                 const res = await fetch('/api/contact', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({
                         name: formData.name.trim(),
                         email: formData.email.trim(),

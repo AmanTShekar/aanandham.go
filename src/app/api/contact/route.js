@@ -4,6 +4,7 @@ import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { addStoredInquiry } from '@/lib/inquiryStore';
 import { sendContactInquiryEmail } from '@/lib/email';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
+import { checkSecurityGate } from '@/lib/securityTracker';
 
 export async function POST(request) {
     const ip = getClientIp(request);
@@ -11,6 +12,12 @@ export async function POST(request) {
     // 1. IP Blocklist Check
     if (await isIpBlocked(ip)) {
         return NextResponse.json({ success: false, message: 'Access restricted.' }, { status: 403 });
+    }
+
+    // 1.5 Security Gate (device fingerprint + bot heuristics + tiered blocks)
+    const gate = checkSecurityGate(request, String(request.headers.get('x-device-fingerprint') || '').slice(0, 400));
+    if (!gate.allowed) {
+        return NextResponse.json({ success: false, message: gate.reason || 'Access restricted.' }, { status: gate.status || 403 });
     }
 
     // 2. Rate Limit (Max 5 contact requests per 2 minutes per IP)
