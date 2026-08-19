@@ -1,7 +1,7 @@
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export default function sitemap() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
   const currentDate = new Date().toISOString();
 
   // Primary Money Pages & Core Landing Routes

@@ -3,7 +3,7 @@ import CampsDirectoryClient from '../CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Munnar Camping & Suryanelli Stays | Aanandham.go',
+  title: 'Munnar Camping & Suryanelli Stays',
   description:
     'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 Kolukkumalai sunrise treks, campfire BBQ & luxury dome pods with Aanandham.go.',
   keywords: [
@@ -17,13 +17,13 @@ export const metadata = {
     'Safe Couples Camping Munnar'
   ],
   alternates: {
-    canonical: 'https://aanandham.in/camps/munnar',
+    canonical: 'https://www.aanandham.in/camps/munnar',
   },
   openGraph: {
-    title: 'Munnar Camping & Suryanelli Stays | Aanandham.go',
+    title: 'Munnar Camping & Suryanelli Stays',
     description:
       'Explore verified high-altitude campsites in Munnar & Suryanelli with 4x4 sunrise treks & campfire BBQ.',
-    url: 'https://aanandham.in/camps/munnar',
+    url: 'https://www.aanandham.in/camps/munnar',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Munnar Camping & Suryanelli Stays | Aanandham.go',
+    title: 'Munnar Camping & Suryanelli Stays',
     description: 'Explore verified high-altitude campsites in Munnar & Suryanelli.',
     images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],
   },
@@ -46,7 +46,7 @@ export const metadata = {
 
 export default function MunnarCampsPage() {
   const munnarCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Munnar');
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',

@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Aanandham.go — Admin Portal & Property Management System',
+  title: 'Admin Portal & Property Management System',
   description: 'Manage campsites, update package pricing, handle incoming customer bookings, and edit live website announcements.',
   robots: {
     index: false,

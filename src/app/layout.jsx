@@ -17,7 +17,7 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
 export const viewport = {
   width: 'device-width',
@@ -54,7 +54,7 @@ export const metadata = {
   creator: 'Aanandham.go',
   publisher: 'Aanandham.go',
   alternates: {
-    canonical: 'https://aanandham.in',
+    canonical: 'https://www.aanandham.in',
   },
   openGraph: {
     title: 'Aanandham.go — Luxury Camping & Tent Stays in Munnar',

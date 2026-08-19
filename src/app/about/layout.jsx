@@ -1,11 +1,11 @@
 export const metadata = {
-  title: 'About Us | Aanandham.go Wilderness Platform',
+  title: 'About Us',
   description: 'The story behind Aanandham.go. High-altitude ridge glamping, 4x4 sunrise expeditions, and certified mountain pathfinders in Munnar, Kerala.',
   alternates: {
     canonical: 'https://aanandham.in/about',
   },
   openGraph: {
-    title: 'About Us | Aanandham.go Wilderness Platform',
+    title: 'About Us',
     description: 'Meet certified pathfinders and explore high-altitude ridge camping across Munnar, Suryanelli, and Kerala Western Ghats.',
     url: 'https://aanandham.in/about',
     siteName: 'Aanandham.go',
@@ -22,7 +22,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About Us | Aanandham.go Wilderness Platform',
+    title: 'About Us',
     description: 'Meet certified pathfinders and explore high-altitude tea estate ridge stays in Kerala.',
     creator: '@aanandham_go',
     images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],

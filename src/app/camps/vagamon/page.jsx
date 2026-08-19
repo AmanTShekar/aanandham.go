@@ -3,7 +3,7 @@ import CampsDirectoryClient from '../CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Vagamon Pine Forest Glamping & Stays | Aanandham.go',
+  title: 'Vagamon Pine Forest Glamping & Stays',
   description:
     'Book secluded pine valley dome glamping & offroad jeep camping in Vagamon, Kerala. Private stream treks & live campfire BBQ with Aanandham.go.',
   keywords: [
@@ -15,13 +15,13 @@ export const metadata = {
     'Couples Glamping Vagamon'
   ],
   alternates: {
-    canonical: 'https://aanandham.in/camps/vagamon',
+    canonical: 'https://www.aanandham.in/camps/vagamon',
   },
   openGraph: {
-    title: 'Vagamon Pine Forest Glamping & Stays | Aanandham.go',
+    title: 'Vagamon Pine Forest Glamping & Stays',
     description:
       'Book secluded pine valley dome glamping & offroad jeep camping in Vagamon, Kerala with Aanandham.go.',
-    url: 'https://aanandham.in/camps/vagamon',
+    url: 'https://www.aanandham.in/camps/vagamon',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -36,7 +36,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Vagamon Pine Forest Glamping & Stays | Aanandham.go',
+    title: 'Vagamon Pine Forest Glamping & Stays',
     description: 'Book secluded pine valley dome glamping in Vagamon, Kerala.',
     images: ['https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&h=630&q=80'],
   },
@@ -44,7 +44,7 @@ export const metadata = {
 
 export default function VagamonCampsPage() {
   const vagamonCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Vagamon');
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',

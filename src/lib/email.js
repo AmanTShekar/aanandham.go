@@ -43,9 +43,9 @@ function escapeHtml(str) {
  */
 
 function resolveSiteUrl() {
-    const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://aanandham.in';
+    const raw = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://www.aanandham.in';
     if (!raw || raw.includes('localhost') || raw.includes('127.0.0.1')) {
-        return 'https://aanandham.in';
+        return 'https://www.aanandham.in';
     }
     return raw.replace(/\/+$/, '');
 }
@@ -101,7 +101,7 @@ export async function sendBookingConfirmationEmail(booking) {
     });
 
     // Production public URL for logo — works in all email clients (no attachment trick needed)
-    const logoPublicUrl = 'https://aanandham.in/logo.png';
+    const logoPublicUrl = 'https://www.aanandham.in/logo.png';
 
     const safeId = escapeHtml(booking.id);
     const safeName = escapeHtml(booking.name);
@@ -453,7 +453,7 @@ export async function sendContactInquiryEmail(inquiry) {
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0B150E; color: #FFFFFF; padding: 24px; margin: 0;">
             <div style="max-width: 600px; margin: 0 auto; background: #121F16; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 32px;">
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="https://aanandham.in/logo.png" alt="Aanandham Wilderness" width="56" height="56" style="display:block;margin:0 auto 10px;border-radius:12px;object-fit:contain;" />
+                    <img src="https://www.aanandham.in/logo.png" alt="Aanandham Wilderness" width="56" height="56" style="display:block;margin:0 auto 10px;border-radius:12px;object-fit:contain;" />
                     <div style="font-size: 11px; font-weight: 800; color: #D5ED55; letter-spacing: 2px; text-transform: uppercase;">AANANDHAM WILDERNESS BASECAMPS</div>
                     <h1 style="font-size: 24px; font-weight: 800; color: #FFFFFF; margin: 8px 0 0;">We Received Your Inquiry! 🏔️</h1>
                 </div>

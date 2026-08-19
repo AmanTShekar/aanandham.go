@@ -3,7 +3,7 @@ import CampsDirectoryClient from './CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+  title: 'Wilderness Campsites & Tent Stays in Kerala',
   description:
     'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ. Book with Aanandham.go.',
   keywords: [
@@ -20,7 +20,7 @@ export const metadata = {
     canonical: 'https://aanandham.in/camps',
   },
   openGraph: {
-    title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+    title: 'Wilderness Campsites & Tent Stays in Kerala',
     description:
       'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ.',
     url: 'https://aanandham.in/camps',
@@ -38,7 +38,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Wilderness Campsites & Tent Stays in Kerala | Aanandham.go',
+    title: 'Wilderness Campsites & Tent Stays in Kerala',
     description: 'Explore verified high-altitude campgrounds in Munnar, Suryanelli, Vagamon and Wayanad.',
     images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],
   },

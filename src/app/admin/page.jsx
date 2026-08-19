@@ -502,7 +502,7 @@ badge: 'New Batch ',
     const handleSaveMarshalForm = (e) => {
         e.preventDefault();
         if (!marshalForm.name || !marshalForm.phone) {
-showToast(' Please enter the full name and phone number');
+showToast('Please enter the full name and phone number');
             return;
         }
 
@@ -554,7 +554,7 @@ showToast(` ${marshalToDelete?.name || 'Crew member'} removed`);
             return m;
         });
         saveMarshals(updated);
-showToast(' Marshal duty status updated');
+showToast('Marshal duty status updated');
     };
 
     // Admin Notification Settings
@@ -580,13 +580,13 @@ showToast(' Marshal duty status updated');
             });
             if (res.ok) {
                 saveDiscountsToStorage(discounts);
-                showToast(' Discounts & Offers Saved & Applied Live!');
+                showToast('Discounts & Offers Saved & Applied Live!');
             } else {
                 const err = await res.json().catch(() => ({}));
-                showToast(' Failed to Save Discounts: ' + (err.error || res.status));
+                showToast('Failed to Save Discounts: ' + (err.error || res.status));
             }
         } catch (e) {
-            showToast(' Network Error Saving Discounts');
+            showToast('Network Error Saving Discounts');
         } finally {
             setDiscountsSaving(false);
         }
@@ -600,12 +600,12 @@ showToast(' Marshal duty status updated');
             if (res.ok) {
                 setDiscounts(DEFAULT_DISCOUNTS);
                 saveDiscountsToStorage(DEFAULT_DISCOUNTS);
-                showToast(' Discounts Reset to Factory Defaults');
+                showToast('Discounts Reset to Factory Defaults');
             } else {
-                showToast(' Failed to Reset Discounts');
+                showToast('Failed to Reset Discounts');
             }
         } catch (e) {
-            showToast(' Network Error Resetting Discounts');
+            showToast('Network Error Resetting Discounts');
         } finally {
             setDiscountsSaving(false);
         }
@@ -642,13 +642,13 @@ showToast(' Marshal duty status updated');
             });
             if (res.ok) {
                 saveTestimonialsToStorage(testimonials);
-                showToast(' Testimonials Saved & Published Live!');
+                showToast('Testimonials Saved & Published Live!');
             } else {
                 const err = await res.json().catch(() => ({}));
-                showToast(' Failed to Save Testimonials: ' + (err.error || res.status));
+                showToast('Failed to Save Testimonials: ' + (err.error || res.status));
             }
         } catch (e) {
-            showToast(' Network Error Saving Testimonials');
+            showToast('Network Error Saving Testimonials');
         } finally {
             setTestimonialsSaving(false);
         }
@@ -662,12 +662,12 @@ showToast(' Marshal duty status updated');
             if (res.ok) {
                 setTestimonials(DEFAULT_TESTIMONIALS);
                 saveTestimonialsToStorage(DEFAULT_TESTIMONIALS);
-                showToast(' Testimonials Reset to Defaults');
+                showToast('Testimonials Reset to Defaults');
             } else {
-                showToast(' Failed to Reset Testimonials');
+                showToast('Failed to Reset Testimonials');
             }
         } catch (e) {
-            showToast(' Network Error Resetting Testimonials');
+            showToast('Network Error Resetting Testimonials');
         } finally {
             setTestimonialsSaving(false);
         }
@@ -707,7 +707,7 @@ showToast(' Marshal duty status updated');
 const handleSavePaymentSettings = (e) => {
         if (e) e.preventDefault();
         savePaymentSettings(paymentSettings);
-showToast(' Payment Gateway Settings Saved & Synchronized Live!');
+showToast('Payment Gateway Settings Saved & Synchronized Live!');
     };
 
     // Toast message state with cleanup ref (UP5)
@@ -832,7 +832,7 @@ showToast(' Payment Gateway Settings Saved & Synchronized Live!');
         localStorage.setItem('aanandham_admin_telegram', adminTelegram);
         setSettingsSavedToast(true);
         setTimeout(() => setSettingsSavedToast(false), 3000);
-showToast(' Notification coordinates saved');
+showToast('Notification coordinates saved');
     };
 
     const [auditLogs, setAuditLogs] = useState([]);
@@ -873,7 +873,7 @@ const res = await fetch('/api/admin/auth', {
             });
         } catch {}
         setIsAuthenticated(false);
-showToast(' Logged out securely');
+showToast('Logged out securely');
     };
 
     // Load Audit Logs from Secure Server
@@ -916,7 +916,7 @@ showToast(' Logged out securely');
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-showToast(' Full JSON system backup exported');
+showToast('Full JSON system backup exported');
     };
 
     // Restore Complete JSON Backup
@@ -947,9 +947,9 @@ showToast(' Full JSON system backup exported');
                         localStorage.setItem('aanandham_admin_telegram', parsed.settings.adminTelegram);
                     }
                 }
-showToast(' System backup restored successfully');
+showToast('System backup restored successfully');
             } catch {
-showToast(' Invalid JSON backup file format');
+showToast('Invalid JSON backup file format');
             }
         };
         reader.readAsText(file);
@@ -962,7 +962,7 @@ showToast(' Invalid JSON backup file format');
             saveAllCamps(updated);
         } catch (err) {
             console.error('Error saving camps to storage:', err);
-showToast(' Storage quota reached. Consider exporting backup.');
+showToast('Storage quota reached. Consider exporting backup.');
         }
         fetch('/api/admin/camps', {
             method: 'POST',
@@ -984,7 +984,7 @@ showToast(' Storage quota reached. Consider exporting backup.');
             localStorage.setItem('aanandham_admin_events', JSON.stringify(updated));
         } catch (err) {
             console.error('Error saving events to storage:', err);
-showToast(' Storage quota reached.');
+showToast('Storage quota reached.');
         }
     };
 
@@ -1008,7 +1008,7 @@ showToast(' Storage quota reached.');
     const handleToggleAvailability = (id) => {
         const updated = properties.map(p => p.id === id ? { ...p, isAvailable: !p.isAvailable } : p);
         saveProperties(updated);
-showToast(' Property availability updated');
+showToast('Property availability updated');
     };
 
     // Adjust Price
@@ -1046,7 +1046,7 @@ showToast(' Property availability updated');
             return p;
         });
         saveProperties(updated);
-showToast(' Room availability updated');
+showToast('Room availability updated');
     };
 
     // Room Image File Upload — Supabase Storage first, Base64 fallback (UP1)
@@ -1064,7 +1064,7 @@ showToast(` Room photo uploaded to CDN (${result.sizeKB} KB)`);
             try {
                 const compressedBase64 = await compressImageFile(file, 1200, 800, 0.82);
                 setRoomForm(prev => ({ ...prev, image: compressedBase64 }));
-showToast(' Room photo compressed locally (connect Supabase for CDN storage)');
+showToast('Room photo compressed locally (connect Supabase for CDN storage)');
             } catch (err) {
 showToast(` ${err.message || 'Error uploading room image'}`);
             }
@@ -1121,7 +1121,7 @@ confirmText: ' Delete Room Type',
                     return p;
                 });
                 saveProperties(updated);
-showToast(' Room type deleted');
+showToast('Room type deleted');
             }
         });
     };
@@ -1154,7 +1154,7 @@ showToast(' Room type deleted');
                 return p;
             });
             saveProperties(updated);
-showToast(' Room type updated');
+showToast('Room type updated');
         } else {
             const newRoom = {
                 id: `r-${Date.now()}`,
@@ -1175,7 +1175,7 @@ showToast(' Room type updated');
                 return p;
             });
             saveProperties(updated);
-showToast(' New room type added');
+showToast('New room type added');
         }
         setIsAddRoomModalOpen(false);
         setEditingRoom(null);
@@ -1271,7 +1271,7 @@ tag: 'New Campsite ',
             });
 showToast(` Uploaded ${successCount} photo(s) to CDN`);
         } else {
-showToast(' No valid images were uploaded');
+showToast('No valid images were uploaded');
         }
         e.target.value = '';
     };
@@ -1290,7 +1290,7 @@ showToast(' No valid images were uploaded');
             };
         });
         setImageUrlInput('');
-showToast(' Image URL added to gallery');
+showToast('Image URL added to gallery');
     };
 
     // Remove Image from Gallery
@@ -1302,7 +1302,7 @@ showToast(' Image URL added to gallery');
             gallery: newGallery,
             image: newPrimary
         });
-showToast(' Image removed');
+showToast('Image removed');
     };
 
     // Set Primary Cover Image
@@ -1311,7 +1311,7 @@ showToast(' Image removed');
             ...propertyForm,
             image: url
         });
-showToast(' Set as main cover image');
+showToast('Set as main cover image');
     };
 
     // Save Property Form
@@ -1341,7 +1341,7 @@ showToast(' Set as main cover image');
                 return p;
             });
             saveProperties(updated);
-showToast(' Campsite details updated');
+showToast('Campsite details updated');
         } else {
             const newProp = {
                 id: `pkg-${Date.now()}`,
@@ -1373,7 +1373,7 @@ showToast(' Campsite details updated');
                 ]
             };
             saveProperties([...properties, newProp]);
-showToast(' New campsite listing created');
+showToast('New campsite listing created');
         }
         setIsPropertyModalOpen(false);
     };
@@ -1413,7 +1413,7 @@ badge: 'New Batch ',
         if (editingEvent) {
             const updated = events.map(ev => ev.id === editingEvent.id ? { ...ev, ...eventForm, capacity: cap, booked: bkd, spotsLeft: spots, status: st } : ev);
             saveEvents(updated);
-showToast(' Batch updated');
+showToast('Batch updated');
         } else {
             const newEvent = {
                 id: `ev-${Date.now()}`,
@@ -1424,7 +1424,7 @@ showToast(' Batch updated');
                 status: st
             };
             saveEvents([...events, newEvent]);
-showToast(' New event batch scheduled');
+showToast('New event batch scheduled');
         }
         setIsEventModalOpen(false);
     };
@@ -1446,7 +1446,7 @@ confirmText: ' Remove Batch',
             onConfirm: () => {
                 const updated = events.filter(e => e.id !== id);
                 saveEvents(updated);
-showToast(' Event batch removed');
+showToast('Event batch removed');
             }
         });
     };
@@ -1584,12 +1584,12 @@ showToast(` Booking ${id} marked as ${newStatus}`);
             const res = await fetch('/api/marshal/seed', { method: 'POST' });
             if (res.ok) {
                 await reloadDataFromStorage();
-showToast(' Sample bookings roster restored successfully!');
+showToast('Sample bookings roster restored successfully!');
                 return;
             }
         } catch (e) {}
         await reloadDataFromStorage();
-showToast(' Refreshed live bookings roster');
+showToast('Refreshed live bookings roster');
     };
 
     // Export CSV with Formula Injection Protection (E2)
@@ -1628,7 +1628,7 @@ showToast(' Refreshed live bookings roster');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-showToast(' Bookings exported to CSV');
+showToast('Bookings exported to CSV');
     };
 
 // Filter properties by region
@@ -2587,7 +2587,7 @@ Remove
                 <button
                     onClick={() => {
                         reloadDataFromStorage();
-showToast(' Synced database');
+showToast('Synced database');
                         if (isMobile) setIsMobileSidebarOpen(false);
                     }}
                     title="Sync Database"
@@ -4946,7 +4946,7 @@ SYSTEM BACKUP & DISASTER RECOVERY
                             </div>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                                 <button
-onClick={() => { fetchAuditLogs(); showToast(' Logs refreshed live'); }}
+onClick={() => { fetchAuditLogs(); showToast('Logs refreshed live'); }}
                                     style={{
                                         padding: '9px 16px',
                                         borderRadius: '12px',

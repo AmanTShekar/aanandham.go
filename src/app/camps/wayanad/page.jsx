@@ -3,7 +3,7 @@ import CampsDirectoryClient from '../CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Wayanad Forest Camping & Pod Stays | Aanandham.go',
+  title: 'Wayanad Forest Camping & Pod Stays',
   description:
     'Discover rainforest treehouses & Chembra cloud-level wooden pods in Wayanad. Verified wilderness camps & 900 Kandi stays with Aanandham.go.',
   keywords: [
@@ -15,13 +15,13 @@ export const metadata = {
     'Safe Forest Campsites Wayanad'
   ],
   alternates: {
-    canonical: 'https://aanandham.in/camps/wayanad',
+    canonical: 'https://www.aanandham.in/camps/wayanad',
   },
   openGraph: {
-    title: 'Wayanad Forest Camping & Pod Stays | Aanandham.go',
+    title: 'Wayanad Forest Camping & Pod Stays',
     description:
       'Discover rainforest treehouses & Chembra cloud-level wooden pods in Wayanad with Aanandham.go.',
-    url: 'https://aanandham.in/camps/wayanad',
+    url: 'https://www.aanandham.in/camps/wayanad',
     siteName: 'Aanandham.go',
     images: [
       {
@@ -36,7 +36,7 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Wayanad Forest Camping & Pod Stays | Aanandham.go',
+    title: 'Wayanad Forest Camping & Pod Stays',
     description: 'Discover rainforest treehouses & Chembra wooden pods in Wayanad.',
     images: ['https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&h=630&q=80'],
   },
@@ -44,7 +44,7 @@ export const metadata = {
 
 export default function WayanadCampsPage() {
   const wayanadCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Wayanad');
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://aanandham.in';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',

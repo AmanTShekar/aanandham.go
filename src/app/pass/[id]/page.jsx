@@ -73,7 +73,7 @@ export default async function PassDetailPage({ params, searchParams }) {
     const landmarkGuide = getCheckInLandmarkGuide(data.campsiteId || data.package, data);
     const refundInfo = calculateRefundAmount(data.rawDate || data.dates || data.createdAt, Number(data.paidAmount || data.total || 0));
     const passToken = generatePassToken(data.id);
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://aanandham.in';
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://www.aanandham.in';
     const passUrl = `${baseUrl}/pass/${data.id}?token=${passToken}`;
     const icsUrl = `/api/pass/${data.id}/ics?token=${passToken}`;
     const qrImageUrl = isTokenVerified ? await generateQrDataUri(passUrl, 260) : null;

@@ -389,12 +389,15 @@ export default function ContactPage() {
                 status: 'Pending',
                 source: 'Contact Form (WhatsApp Mode)',
                 notes: formData.message.trim(),
+                inquiryType: formData.inquiryType,
+                travelDates: formData.travelDates || 'Flexible',
+                message: formData.message.trim(),
                 createdAt: new Date().toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }),
                 mode: 'whatsapp'
             };
 
             try {
-                fetch('/api/bookings', {
+                fetch('/api/inquiries', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newInquiryRecord)

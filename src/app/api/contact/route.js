@@ -1,7 +1,7 @@
 import { NextResponse, after } from 'next/server';
 import { getClientIp } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked } from '@/lib/redis';
-import { addServerBooking } from '@/lib/serverBookingStore';
+import { addStoredInquiry } from '@/lib/inquiryStore';
 import { sendContactInquiryEmail } from '@/lib/email';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
 
@@ -47,21 +47,17 @@ export async function POST(request) {
             name,
             email,
             phone,
-            package: `[${inquiryType.toUpperCase()}] ${message ? message.slice(0, 40) : 'General Inquiry'}...`,
-            region: 'Kerala Inquiry',
-            dates: travelDates,
+            inquiryType,
             guests,
-            roomType: inquiryType === 'corporate' ? 'Private Buyout' : 'Custom Inquiry',
-            addons: [],
-            total: guests * 2499,
-            status: 'Pending',
+            travelDates,
+            message,
             source: 'Contact Form (Email Mode)',
-            notes: message,
             createdAt: new Date().toISOString()
         };
 
-        // Save to database
-        await addServerBooking(newRecord);
+        // Store as a standalone inquiry (never a Booking row — inquiries must not
+        // hold camp capacity or appear in the bookings pipeline)
+        await addStoredInquiry(newRecord);
 
         // Dispatch Resend Email in background
         after(async () => {
