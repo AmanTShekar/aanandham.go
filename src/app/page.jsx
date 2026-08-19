@@ -492,7 +492,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                         }}
                     >
                         <img
-                            src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1600&q=80"
+                            src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80"
                             alt="Canopy Wilderness"
                             style={{
                                 width: '100%',
@@ -942,7 +942,7 @@ export default function HomePage() {
                     justifyContent: 'center',
                     textAlign: 'center',
                     padding: 'clamp(90px, 12dvh, 130px) 24px clamp(40px, 6dvh, 70px)',
-                    backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=2000&q=85")',
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1400&q=75")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     color: '#FFFFFF'

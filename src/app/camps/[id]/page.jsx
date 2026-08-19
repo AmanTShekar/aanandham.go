@@ -21,7 +21,7 @@ export async function generateMetadata({ params }) {
     }
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
-    const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : `${siteUrl}/images/hero-1.webp`;
+    const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : `${siteUrl}/logo.png`;
     const cleanTitle = `${camp.shortTitle || camp.title} (${camp.altitude || 'Kerala'})`;
     const cleanDesc = `Book ${camp.shortTitle || camp.title} at ${camp.altitude || 'Western Ghats'} in ${camp.location}. 4x4 jeep safari, campfire BBQ & tent stays with Aanandham.go.`;
 
