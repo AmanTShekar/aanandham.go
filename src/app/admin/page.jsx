@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { LayoutDashboard, ClipboardList, Tent, Mountain, Users, IndianRupee, QrCode, ShieldCheck, Settings, Plus, RefreshCw, ChevronLeft, ChevronRight, ArrowUpRight, X, Upload, Camera, Download, Banknote, TrendingUp, Zap, Calendar, Compass, ScrollText, Search, Bell, Phone, KeyRound, Ticket, MessageCircle, Smartphone, Save, Clock, Flame, ShowerHead, Sunrise, Trees, Sprout, User, Briefcase, Trash2, Database, Heart, BadgePercent, MessageSquareQuote } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Tent, Mountain, Users, IndianRupee, QrCode, ShieldCheck, Settings, Plus, RefreshCw, ChevronLeft, ChevronRight, ArrowUpRight, X, Upload, Camera, Download, Banknote, TrendingUp, Zap, Calendar, Compass, ScrollText, Search, Bell, Phone, KeyRound, Ticket, MessageCircle, Smartphone, Save, Clock, Flame, ShowerHead, Sunrise, Trees, Sprout, User, Briefcase, Trash2, Database, Heart, BadgePercent, MessageSquareQuote, Inbox } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
@@ -443,10 +443,11 @@ badge: 'New Batch ',
         }
         return INITIAL_DB_LOGS;
     });
-const [logViewTab, setLogViewTab] = useState('auth'); // 'auth' | 'db' | 'security'
+const [logViewTab, setLogViewTab] = useState('auth'); // 'auth' | 'db' | 'security' | 'inquiries'
     const [logSearch, setLogSearch] = useState('');
     const [logFilterSeverity, setLogFilterSeverity] = useState('all');
     const [securityOverview, setSecurityOverview] = useState({ activeBlocks: [], recentEvents: [], stats: {} });
+    const [inquiries, setInquiries] = useState([]);
 
     const logDbAction = (action, details, recordId = '') => {
         const newEntry = {
@@ -901,6 +902,17 @@ showToast('Logged out securely');
             if (res.ok) {
                 const data = await res.json();
                 if (data.success) setSecurityOverview(data);
+            }
+        } catch {}
+    };
+
+    // Load Contact Form Inquiries from the server (stored as INQ- records, never bookings)
+    const fetchInquiries = async () => {
+        try {
+            const res = await fetch('/api/inquiries', { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && Array.isArray(data.inquiries)) setInquiries(data.inquiries);
             }
         } catch {}
     };
@@ -2465,7 +2477,7 @@ Remove
                 { id: 'payment', name: 'Payment & QR Gateway', icon: QrCode, statusDot: paymentSettings.mode === 'razorpay' ? '#22C55E' : '#E5A93B' },
                 { id: 'discounts', name: 'Discounts & Offers', icon: BadgePercent, count: discounts.length },
                 { id: 'testimonials', name: 'Testimonials', icon: MessageSquareQuote, count: testimonials.length },
-                { id: 'logs', name: 'Security & DB Logs', icon: ShieldCheck, count: (auditLogs?.length || 0) + (dbLogs?.length || 0) },
+                { id: 'logs', name: 'Security & DB Logs', icon: ShieldCheck, count: (auditLogs?.length || 0) + (dbLogs?.length || 0) + (inquiries?.length || 0) },
                 { id: 'settings', name: 'Alerts & Dispatch', icon: Settings }
             ]
         }
@@ -2728,6 +2740,11 @@ showToast('Synced database');
                                             key={item.id}
                                             onClick={() => {
                                                 setActiveTab(item.id);
+                                                if (item.id === 'logs') {
+                                                    fetchAuditLogs();
+                                                    fetchSecurityOverview();
+                                                    fetchInquiries();
+                                                }
                                                 if (isMobile) setIsMobileSidebarOpen(false);
                                             }}
                                             title={isCollapsed ? item.name : undefined}
@@ -3233,7 +3250,7 @@ Instant WhatsApp Dispatch
                             </button>
 
                             <button
-                                onClick={() => setActiveTab('logs')}
+                                onClick={() => { setActiveTab('logs'); fetchAuditLogs(); fetchSecurityOverview(); fetchInquiries(); }}
                                 style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
                             >
                                 <span style={{ fontSize: '22px' }}><ScrollText size={22} /></span>
@@ -5015,7 +5032,7 @@ SYSTEM BACKUP & DISASTER RECOVERY
                             </div>
                             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
 <button
-onClick={() => { fetchAuditLogs(); fetchSecurityOverview(); showToast('Logs refreshed live'); }}
+onClick={() => { fetchAuditLogs(); fetchSecurityOverview(); fetchInquiries(); showToast('Logs refreshed live'); }}
                                     style={{
                                         padding: '9px 16px',
                                         borderRadius: '12px',
@@ -5146,6 +5163,35 @@ Export Audit Bundle
                                     borderRadius: '999px'
                                 }}>
                                     {securityOverview.activeBlocks?.length || 0}
+                                </span>
+                            </button>
+
+                            <button
+                                onClick={() => { setLogViewTab('inquiries'); fetchInquiries(); }}
+                                style={{
+                                    padding: '10px 20px',
+                                    borderRadius: '12px',
+                                    border: logViewTab === 'inquiries' ? '1.5px solid #121613' : '1px solid rgba(18, 22, 19, 0.1)',
+                                    background: logViewTab === 'inquiries' ? '#121613' : '#FFFFFF',
+                                    color: logViewTab === 'inquiries' ? '#FFFFFF' : '#3A443E',
+                                    fontSize: '13px',
+                                    fontWeight: logViewTab === 'inquiries' ? '800' : '600',
+                                    cursor: 'pointer',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}
+                            >
+<span><Inbox size={14} /> Contact Inquiries</span>
+                                <span style={{
+                                    background: logViewTab === 'inquiries' ? '#D5ED55' : 'rgba(18, 22, 19, 0.08)',
+                                    color: logViewTab === 'inquiries' ? '#0B150E' : '#59655D',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    padding: '1px 7px',
+                                    borderRadius: '999px'
+                                }}>
+                                    {inquiries.length}
                                 </span>
                             </button>
                         </div>
@@ -5422,6 +5468,79 @@ Unblock
                                         {(!securityOverview.recentEvents || securityOverview.recentEvents.length === 0) && (
                                             <div style={{ padding: '18px', borderRadius: '12px', background: '#F8F9F5', fontSize: '12.5px', color: '#59655D', textAlign: 'center' }}>
                                                 No security events yet. Failed logins, abuse patterns and bot detections will appear here.
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* VIEW 4: CONTACT INQUIRIES (stored as INQ- records, never bookings) */}
+                        {logViewTab === 'inquiries' && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div style={{ fontSize: '13px', color: '#59655D' }}>
+                                        Contact form submissions — stored as standalone inquiries (INQ- references). They never touch the booking pipeline or camp capacity.
+                                    </div>
+                                    <button
+                                        onClick={fetchInquiries}
+                                        style={{ background: 'none', border: 'none', color: '#59655D', fontSize: '12px', fontWeight: '700', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                    >
+<RefreshCw size={12} /> Refresh
+                                    </button>
+                                </div>
+
+                                <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                                    <div className="admin-audit-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '480px', overflowY: 'auto', overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' }}>
+                                        {(inquiries.length > 0 ? inquiries : [])
+                                            .filter(q => !logSearch || JSON.stringify(q).toLowerCase().includes(logSearch.toLowerCase()))
+                                            .map((inq, idx) => (
+                                                <div key={inq.id || idx} style={{
+                                                    padding: '14px 18px',
+                                                    borderRadius: '12px',
+                                                    background: '#F8F9F5',
+                                                    border: '1px solid rgba(18, 22, 19, 0.06)',
+                                                    display: 'grid',
+                                                    gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                                                    gap: '12px',
+                                                    alignItems: 'center',
+                                                    fontSize: '12.5px'
+                                                }}>
+                                                    <div>
+                                                        <span style={{
+                                                            fontSize: '10.5px', fontWeight: '800', padding: '2px 8px', borderRadius: '6px',
+                                                            background: '#E0F2FE', color: '#0369A1'
+                                                        }}>
+                                                            {(inq.inquiryType || 'general').toUpperCase()}
+                                                        </span>
+                                                        <div style={{ fontWeight: '800', color: '#121613', marginTop: '4px' }}>{inq.name}</div>
+                                                        <div style={{ fontSize: '11px', color: '#7D8880', fontFamily: 'monospace' }}>{inq.id}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Contact</div>
+                                                        <div style={{ fontWeight: '600', color: '#3A443E' }}>{inq.phone || 'N/A'}</div>
+                                                        <div style={{ fontSize: '11px', color: '#59655D' }}>{inq.email || ''}</div>
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Party / Dates</div>
+                                                        <div style={{ fontWeight: '700', color: '#121613' }}>{inq.guests || 2} campers</div>
+                                                        <div style={{ fontSize: '11px', color: '#59655D' }}>{inq.travelDates || 'Flexible'}</div>
+                                                    </div>
+                                                    <div style={{ gridColumn: 'span 2' }}>
+                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Message</div>
+                                                        <div style={{ color: '#59655D', fontSize: '12px' }}>{inq.message || 'No message'}</div>
+                                                    </div>
+                                                    <div style={{ textAlign: 'right' }}>
+                                                        <div style={{ fontSize: '11px', color: '#7D8880' }}>
+                                                            {new Date(inq.createdAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true })}
+                                                        </div>
+                                                        <div style={{ fontSize: '10.5px', color: '#7D8880' }}>{inq.source || 'Contact Form'}</div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        {inquiries.length === 0 && (
+                                            <div style={{ padding: '18px', borderRadius: '12px', background: '#F8F9F5', fontSize: '12.5px', color: '#59655D', textAlign: 'center' }}>
+                                                No contact inquiries yet. Contact form submissions will appear here as INQ- records.
                                             </div>
                                         )}
                                     </div>

@@ -377,8 +377,8 @@ export async function sendContactInquiryEmail(inquiry) {
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <bookings@aanandham.in>';
-    const adminDestEmail = 'bookings@aanandham.in';
+    const fromEmail = process.env.EMAIL_FROM || 'Aanandham.go team <inquiries@aanandham.in>';
+    const adminDestEmail = 'inquiries@aanandham.in';
     const siteUrl = resolveSiteUrl();
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '9188685831';
     const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
@@ -410,7 +410,7 @@ export async function sendContactInquiryEmail(inquiry) {
     try {
         const resend = new Resend(apiKey);
 
-        // 1. Dispatch Notification Email to Basecamp Desk (bookings@aanandham.in)
+        // 1. Dispatch Notification Email to Basecamp Desk (inquiries@aanandham.in)
         const adminHtml = `
         <!DOCTYPE html>
         <html>
