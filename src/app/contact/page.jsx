@@ -9,6 +9,8 @@ import { useAuth } from '../../hooks/useAuth';
 import { inr, generateBookingId } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
 import { getSecurityHeaders } from '../../lib/securityClient';
+import { Phone, PhoneCall, Mail, Mountain, Plane, Car, SquareParking, Truck, Check, MapPin } from 'lucide-react';
+import { WhatsAppIcon } from '../../components/common/BrandIcons';
 
 // ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
 const sectionReveal = {
@@ -54,7 +56,7 @@ const CONTACT_CHANNELS = [
         title: 'Direct Voice Concierge',
         val: formattedAdminPhone,
         sub: 'Live basecamp coordinators on ridge',
-        icon: 'fa-solid fa-phone',
+        icon: Phone,
         href: `tel:+${adminPhone}`,
         actionLabel: 'Call Concierge',
         accent: '#E5A93B'
@@ -65,7 +67,7 @@ const CONTACT_CHANNELS = [
         title: 'WhatsApp Travel Desk',
         val: formattedAdminPhone,
         sub: 'Instant booking & route guidance',
-        icon: 'fa-brands fa-whatsapp',
+        icon: WhatsAppIcon,
         href: waLink('Hi Aanandham Concierge! I have an inquiry regarding campsites and treks.'),
         actionLabel: 'WhatsApp Chat →',
         accent: '#25D366'
@@ -76,7 +78,7 @@ const CONTACT_CHANNELS = [
         title: 'Reservations & Media',
         val: 'bookings@aanandham.in',
         sub: 'Replies within 2 to 4 hours',
-        icon: 'fa-regular fa-envelope',
+        icon: Mail,
         href: 'mailto:bookings@aanandham.in',
         actionLabel: 'Send Email →',
         accent: '#D5ED55'
@@ -87,7 +89,7 @@ const CONTACT_CHANNELS = [
         title: 'Suryanelli Base Station',
         val: 'Suryanelli, Munnar, Kerala 685618',
         sub: '6,500 FT Elevation · Western Ghats',
-        icon: 'fa-solid fa-mountain-sun',
+        icon: Mountain,
         href: 'https://maps.google.com/?q=Suryanelli+Munnar+Kerala',
         actionLabel: 'Google Maps →',
         accent: '#F28B66'
@@ -98,7 +100,7 @@ const CONTACT_CHANNELS = [
 const EXPEDITION_TEMPLATES = {
     booking: {
         id: 'booking',
-        title: '⛺ Dome Glamp',
+        title: 'Dome Glamp',
         tagline: 'Luxury Weatherproof Dome Stay & Mountain BBQ',
         badge: 'GLAMPING SUITE',
         accent: '#D5ED55',
@@ -124,7 +126,7 @@ const EXPEDITION_TEMPLATES = {
     },
     kolukkumalai: {
         id: 'kolukkumalai',
-        title: '🌅 4x4 Safari',
+        title: '4x4 Safari',
         tagline: 'High-Altitude Peak Sunrise & Off-Road Convoy',
         badge: 'KOLUKKUMALAI RIDGE',
         accent: '#E5A93B',
@@ -150,7 +152,7 @@ const EXPEDITION_TEMPLATES = {
     },
     custom: {
         id: 'custom',
-        title: '👥 Squad Offsite',
+        title: 'Squad Offsite',
         tagline: 'Corporate Retreats & Private Mountain Buyouts',
         badge: 'GROUP EXPEDITION',
         accent: '#60A5FA',
@@ -176,7 +178,7 @@ const EXPEDITION_TEMPLATES = {
     },
     general: {
         id: 'general',
-        title: '💬 General Query',
+        title: 'General Query',
         tagline: 'Route Directions, Road Status & Basecamp Rules',
         badge: 'CONCIERGE DESK',
         accent: '#A7F3D0',
@@ -205,7 +207,7 @@ const TRAVEL_STEPS = [
         paperBg: '#FEF08A', // Sunlit Canary Yellow
         inkColor: '#1A2218',
         rotation: '-1.5deg',
-        icon: 'fa-solid fa-plane-departure',
+        icon: Plane,
         memo: 'Early morning drives through Neriamangalam forest offer misty river valley views.'
     },
     {
@@ -219,7 +221,7 @@ const TRAVEL_STEPS = [
         paperBg: '#A7F3D0', // Alpine Mint
         inkColor: '#0A2518',
         rotation: '1.5deg',
-        icon: 'fa-solid fa-car-side',
+        icon: Car,
         memo: 'Roll windows down to catch fresh eucalyptus and high-grown tea leaf aromas.'
     },
     {
@@ -233,7 +235,7 @@ const TRAVEL_STEPS = [
         paperBg: '#FED7AA', // Sunburst Peach
         inkColor: '#2B1405',
         rotation: '-1.2deg',
-        icon: 'fa-solid fa-square-parking',
+        icon: SquareParking,
         memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
     },
     {
@@ -247,7 +249,7 @@ const TRAVEL_STEPS = [
         paperBg: '#BAE6FD', // Glacial Sky Blue
         inkColor: '#0C2333',
         rotation: '1.6deg',
-        icon: 'fa-solid fa-truck-monster',
+        icon: Truck,
         memo: 'The 4x4 climb through mountain mists is an unforgettable highlight in itself!'
     }
 ];
@@ -517,7 +519,7 @@ export default function ContactPage() {
                                     objectFit: 'contain',
                                     filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6))'
                                 }}
-                            />
+                             loading="lazy" decoding="async"/>
                         </motion.div>
 
                         {/* Main Headline */}
@@ -592,7 +594,7 @@ export default function ContactPage() {
                                     gap: '8px'
                                 }}
                             >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                                <WhatsAppIcon size={18} />
                                 <span>Instant WhatsApp Concierge →</span>
                             </a>
 
@@ -688,7 +690,7 @@ export default function ContactPage() {
                                                 justifyContent: 'center',
                                                 fontSize: '19px'
                                             }}>
-                                                <i className={ch.icon}></i>
+                                                <ch.icon size={19} color={ch.accent} />
                                             </div>
 
                                             <span style={{
@@ -788,7 +790,7 @@ export default function ContactPage() {
                                     lineHeight: 1.15,
                                     margin: '0 0 16px'
                                 }}>
-                                    Plan Your Mountain Escape with Our Ridge Marshals
+                                    Plan Your Mountain Escape with Our Ridge Guides
                                 </h2>
                                 <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, margin: '0 0 24px' }}>
                                     Fill in your preferred dates, party size, and expedition type. Our local team in Suryanelli will personally review availability and respond with a customized route & tariff plan.
@@ -845,7 +847,7 @@ export default function ContactPage() {
                                         flexShrink: 0
                                     }} />
                                     <div style={{ fontSize: '13px', fontWeight: '700' }}>
-                                        <span style={{ color: '#D5ED55' }}>Live Ridge Status:</span> Marshals active on Suryanelli ridge · 14°C mist
+                                        <span style={{ color: '#D5ED55' }}>Live Ridge Status:</span> Guides active on Suryanelli ridge · 14°C mist
                                     </div>
                                 </div>
                             </div>
@@ -895,7 +897,7 @@ export default function ContactPage() {
                                             justifyContent: 'center',
                                             margin: '0 auto 16px'
                                         }}>
-                                            {submissionMode === 'email' ? '✉' : '✓'}
+                                            {submissionMode === 'email' ? <Mail size={24} /> : <Check size={26} />}
                                         </div>
                                         <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '8px' }}>
                                             {submissionMode === 'email' ? 'Inquiry Sent via Email!' : 'Inquiry Received!'}
@@ -923,7 +925,7 @@ export default function ContactPage() {
                                                         gap: '8px'
                                                     }}
                                                 >
-                                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px' }}></i>
+                                                    <WhatsAppIcon size={16} />
                                                     <span>Open WhatsApp Chat →</span>
                                                 </a>
                                             )}
@@ -981,15 +983,15 @@ export default function ContactPage() {
                                                         gap: '4px'
                                                     }}
                                                 >
-                                                    <span>✨ Custom Options</span>
+                                                    <span>Custom Options</span>
                                                 </button>
                                             </div>
                                             <div className="contact-form-types">
                                                 {[
-                                                    { id: 'booking', label: '⛺ Dome Glamp' },
-                                                    { id: 'kolukkumalai', label: '🌅 4x4 Safari' },
-                                                    { id: 'custom', label: '👥 Squad Offsite' },
-                                                    { id: 'general', label: '💬 General Query' }
+                                                    { id: 'booking', label: 'Dome Glamp' },
+                                                    { id: 'kolukkumalai', label: '4x4 Safari' },
+                                                    { id: 'custom', label: 'Squad Offsite' },
+                                                    { id: 'general', label: 'General Query' }
                                                 ].map((t) => {
                                                     const isSel = formData.inquiryType === t.id;
                                                     return (
@@ -1218,7 +1220,7 @@ export default function ContactPage() {
                                                     borderRadius: '12px'
                                                 }}
                                             >
-                                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '17px' }}></i>
+                                                <WhatsAppIcon size={17} />
                                                 <span>{loading ? 'Sending...' : 'Send via WhatsApp →'}</span>
                                             </button>
 
@@ -1244,7 +1246,7 @@ export default function ContactPage() {
                                                     cursor: 'pointer'
                                                 }}
                                             >
-                                                <i className="fa-regular fa-envelope" style={{ fontSize: '15px', color: '#D5ED55' }}></i>
+                                                <Mail size={15} color="#D5ED55" />
                                                 <span>{loading ? 'Sending...' : 'Send via Email →'}</span>
                                             </button>
                                         </div>
@@ -1411,7 +1413,7 @@ export default function ContactPage() {
                                                     borderRadius: '50%',
                                                     border: '1px solid rgba(0,0,0,0.15)'
                                                 }}
-                                            />
+                                             loading="lazy" decoding="async"/>
                                             <span style={{
                                                 fontSize: '10.5px',
                                                 fontWeight: '900',
@@ -1465,7 +1467,7 @@ export default function ContactPage() {
                                             color: st.inkColor,
                                             flexShrink: 0
                                         }}>
-                                            <i className={st.icon}></i>
+                                            <st.icon size={17} color={st.inkColor} />
                                         </div>
                                         <h3 style={{
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -1522,7 +1524,7 @@ export default function ContactPage() {
                                         alignItems: 'flex-start',
                                         gap: '6px'
                                     }}>
-                                        <span style={{ fontSize: '13px' }}>📌</span>
+                                        <span style={{ fontSize: '13px', display: 'inline-flex' }}><MapPin size={13} /></span>
                                         <span>{st.memo}</span>
                                     </div>
                                 </motion.div>
@@ -1706,7 +1708,7 @@ export default function ContactPage() {
                                 boxShadow: '0 12px 35px rgba(213, 237, 85, 0.45)'
                             }}
                         >
-                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                            <WhatsAppIcon size={18} />
                             <span>Chat with Mountain Offsite Lead →</span>
                         </a>
                     </div>

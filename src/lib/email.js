@@ -465,7 +465,7 @@ export async function sendContactInquiryEmail(inquiry) {
                 <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 18px; margin: 20px 0; border: 1px solid rgba(255,255,255,0.06);">
                     <div style="font-size: 12px; color: #8E9B92; margin-bottom: 4px;">Inquiry Reference: <strong style="color: #D5ED55; font-family: monospace;">${inquiryId}</strong></div>
                     <div style="font-size: 12px; color: #8E9B92; margin-bottom: 4px;">Campers: <strong style="color: #FFFFFF;">${safeGuests}</strong> · Dates: <strong style="color: #FFFFFF;">${safeDates}</strong></div>
-                    <div style="font-size: 12px; color: #8E9B92;">Status: <strong style="color: #E5A93B;">Under Review by Ridge Marshals</strong></div>
+                    <div style="font-size: 12px; color: #8E9B92;">Status: <strong style="color: #E5A93B;">Under Review by Ridge Guides</strong></div>
                 </div>
 
                 <p style="font-size: 13.5px; color: #A2B6A6; line-height: 1.6;">

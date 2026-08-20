@@ -25,13 +25,14 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'What time does the Kolukkumalai sunrise trek start?', a: 'You leave basecamp at 4:30–4:45 AM in a 4x4 jeep to reach the ridge before sunrise (5:45–6:15 AM depending on season).' }, { q: 'Is the Kolukkumalai trek difficult?', a: 'The jeep-and-summit version is easy to moderate — a 20–30 minute rocky climb to the top after the jeep drop. Full-hike versions are longer and best for experienced trekkers.' }, { q: 'Do I need a permit for Kolukkumalai?', a: 'No official permit is needed, but estate access is controlled; booked expeditions handle entry through the organised jeep route.' }, { q: 'What is included in the Kolukkumalai package?', a: 'The package includes 4x4 jeep transfers, summit sunrise trek, dome/alpine tent stay, dinner BBQ, breakfast, marshals, and forest permits.' }, { q: 'Can solo travelers join the Kolukkumalai sunrise trek?', a: 'Yes — the expedition runs in shared jeep batches with marshals and is popular with solo travelers; we host 350+ solo female campers annually.' }],
         description: 'Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude Quechua dome pods, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.',
         highlights: [
             'Private 4x4 Rugged Jeep Convoy to World’s Highest Tea Estate',
             'Tiger Rock Sunrise Ridge Hike above endless cloud carpets',
             'Live Campfire BBQ Dinner with Kerala Spiced Marinades',
             'Weatherproof Geodesic Dome Pods & Alpine Tents',
-            'Certified Wilderness Marshals & Forest Entry Permits Included'
+            'Certified Wilderness Guides & Forest Entry Permits Included'
         ],
         inclusions: [
             '1 Night Accommodation (Dome Pod / Alpine Tent)',
@@ -154,9 +155,10 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'How difficult is the Meesapulimala trek?', a: 'Moderate — the Rhodo Valley route is an 8–13 km ridge trek with sustained ascents. Achievable for regular walkers with a guide, tougher than Kolukkumalai but easier than Anamudi.' }, { q: 'Do I need a permit for Meesapulimala?', a: 'Yes — an ecodevelopment committee permit is required; organised treks arrange it as part of the package.' }, { q: 'How long is the Meesapulimala trek?', a: 'Typically 4–7 hours depending on route and pace; sunrise expeditions start around 3:30–4:00 AM.' }, { q: 'Is Meesapulimala good for beginners?', a: 'With an organised guide and reasonable fitness (regular 5–8 km walks), yes — but it is not a casual stroll; do Kolukkumalai first if unsure.' }, { q: 'What altitude is Meesapulimala?', a: '8,660 ft — South India\'s second-highest peak after Anamudi.' }],
         description: 'South India’s 2nd highest peak expedition. Trek across 8 rolling high-altitude hills, traverse blooming rhododendron valleys, and sleep above dense oceans of white clouds in Silent Valley basecamps.',
         highlights: [
-            '8-Peak High-Altitude Ridge Crossing with Certified Marshals',
+            '8-Peak High-Altitude Ridge Crossing with Certified Guides',
             'Wilderness Basecamp Tent Glamping in Silent Valley',
             'Official Kerala Forest Department Trek Permits Included',
             'Campfire Acoustic Session under Milky Way Stars',
@@ -165,7 +167,7 @@ export const INITIAL_ALL_CAMPS = [
         inclusions: [
             'Basecamp Alpine Tent Glamping',
             'Forest Entry & Trekking Permits',
-            'Wilderness Guide Marshals',
+'Wilderness Guide & Host',
             'Dinner, Breakfast & Energy Trail Snacks',
             'Campfire Evening with Hot Tea'
         ],
@@ -208,7 +210,7 @@ export const INITIAL_ALL_CAMPS = [
         ],
         amenities: [
             { id: 'am-10', name: 'Forest Permit & Entry Passes', icon: '🎫', enabled: true },
-            { id: 'am-11', name: 'Wilderness Guide Marshals', icon: '🧭', enabled: true },
+            { id: 'am-11', name: 'Wilderness Guide & Host', icon: '🧭', enabled: true },
             { id: 'am-12', name: 'Western Washrooms at Basecamp', icon: '🚿', enabled: true }
         ],
         addons: [
@@ -221,7 +223,7 @@ export const INITIAL_ALL_CAMPS = [
             nearestTown: 'Munnar (24 km)'
         },
         reviews: [
-            { id: 'rv-4', name: 'Karthik Rao', location: 'Hyderabad', rating: 5, date: '1 month ago', comment: 'Standing on peak 8 feeling the mountain breeze was an unforgettable feeling. Marshals were supportive every step of the way.' }
+            { id: 'rv-4', name: 'Karthik Rao', location: 'Hyderabad', rating: 5, date: '1 month ago', comment: 'Standing on peak 8 feeling the mountain breeze was an unforgettable feeling. Guides were supportive every step of the way.' }
         ]
     },
     {
@@ -246,6 +248,7 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'Where is Suryanelli?', a: 'Suryanelli is a hill village on the Munnar–Bodimettu road, about 45 minutes from Munnar town, at ~6,000 ft altitude.' }, { q: 'Is a Suryanelli tent stay better than staying in Munnar town?', a: 'For camping and sunrise treks, yes — Suryanelli sits closer to Kolukkumalai and Meesapulimala, with quieter campsites and better night skies.' }, { q: 'How far is Suryanelli from Kolukkumalai?', a: 'About 20 minutes from the Kolukkumalai jeep/estate gate — the main reason sunrise trek campers base themselves in Suryanelli.' }, { q: 'Does a Suryanelli tent stay include food?', a: 'Organised glamp packages include dinner BBQ and breakfast; many also bundle the Kolukkumalai sunrise trek.' }, { q: 'What tent types are available at Suryanelli?', a: 'Glass domes, Alpine domes (2-person), Alpine Quads (4-person), and cottage-style pods — all with real beds, power and hot water.' }],
         description: 'Private geodesic dome pods facing cascading green tea slopes and misty sunset valleys. Live acoustic sessions, star observation scopes, and authentic farm-to-table Kerala dining.',
         highlights: [
             'Geodesic Dome Glamping with Private Valley Decks',
@@ -331,8 +334,9 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'Where is Phantom Head Peak?', a: 'On the edge of Munnar\'s tea-estate country, a short drive from Munnar town — the trailhead is reached via organised camp transport.' }, { q: 'Is Phantom Head Peak suitable for beginners?', a: 'Yes — it\'s one of the easiest summit treks in Munnar (2–3 hours, moderate ascent) and a great first trek.' }, { q: 'What\'s the best time for Phantom Head Peak?', a: 'Late afternoon, arriving at the summit 30–45 minutes before sunset. Carry a headlamp for the descent.' }, { q: 'Can Phantom Head be combined with Kolukkumalai?', a: 'Yes — it works perfectly as a Day 2 sunset trek after a Day 1 Kolukkumalai sunrise expedition.' }],
         description: '360-degree panoramic golden hour peak overlooking the Western Ghats mountain layers. Guided evening cliff walk, campfire dinner, and high-altitude tent stay.',
-        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Marshals', 'Campfire Dinner'],
+        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Treks', 'Campfire Dinner'],
         inclusions: ['Alpine Tent Stay', 'Dinner & Breakfast', 'Guided Peak Hike', 'Campfire'],
         exclusions: ['Personal transport'],
         itinerary: [
@@ -376,9 +380,10 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'What is Chembra Peak famous for?', a: 'The heart-shaped lake (Hridaya Saras) near the summit — one of Kerala\'s most photographed natural landmarks.' }, { q: 'How hard is the Chembra trek?', a: 'Moderate — about 4–5 hours round trip with some steep sections; forest department permission is required and arranged by guides.' }, { q: 'Can I visit the heart lake year-round?', a: 'Best post-monsoon (Sep–May); during heavy rain the trail gets slippery and the lake may overflow.' }],
         description: 'Trek through dense Western Ghats rainforest canopies, discover the legendary perennial heart-shaped mountain lake, and sleep under millions of stars in secluded estate pods.',
         highlights: ['Chembra Peak & Heart Lake Trek', 'Banasura Sagar Dam Kayaking', 'Rainforest Canopy Night Safari', 'Zero-Trace Wilderness Campout', 'Natural Rock Pool Swimming'],
-        inclusions: ['2 Nights Glamping Accommodation', 'All Meals & BBQ', 'Forest Department Permits', 'Kayaking Pass', 'Certified Trek Marshals'],
+        inclusions: ['2 Nights Glamping Accommodation', 'All Meals & BBQ', 'Forest Department Permits', 'Kayaking Pass', 'Certified Trek Guides'],
         exclusions: ['Travel to Meppadi, Wayanad'],
         itinerary: [
             { day: 'Day 1', title: 'Arrival & Plantation Walk', items: ['02:00 PM – Check-in', '04:00 PM – Bamboo forest stream hike', '07:30 PM – Campfire & tribal meal'] },
@@ -414,6 +419,7 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'What is special about Wayanad camping?', a: 'Rainforest camps with spice plantations, waterfalls, and wildlife corridors — a completely different vibe from Munnar\'s high-altitude tea ridges.' }, { q: 'Is Wayanad camping good in monsoon?', a: 'The rainforest is at its greenest but trails get slippery and leech activity rises; organised camps with weather-aware planning are recommended June–August.' }, { q: 'What wildlife can you see?', a: 'Elephants, deer, birds, and occasional big cats in the surrounding sanctuaries — wildlife drives are a popular add-on.' }],
         description: 'Glass bridge canopy walks, off-road 4x4 jeep safaris into deep evergreen jungle, natural rock-pool swimming, and treehouse canopy stays.',
         highlights: ['Glass Bridge Access', '4x4 Deep Forest Safari', 'Natural Stream Swims', 'Treehouse Glamp Villa', 'Tribal Dinner Feast'],
         inclusions: ['Treehouse / Alpine Tent', 'Glass Bridge Entry', '4x4 Jeep Ride', 'Dinner & Breakfast'],
@@ -451,6 +457,7 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'Is Vagamon or Munnar better for glamping?', a: 'Munnar for high-altitude adventure and sunrise treks; Vagamon for pine-forest calm, milder weather and group offsites.' }, { q: 'Can I do Munnar and Vagamon in one trip?', a: 'Yes — they\'re about 3.5 hours apart; a 3–4 night split itinerary is a popular Kerala hill-station loop.' }, { q: 'Is Vagamon good for corporate offsites?', a: 'Very — the pine-forest setting, open meadows and mild weather suit team activities; our Squad Expedition packages are built for this.' }],
         description: 'Unwind in the misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, starlit barbecues, and refreshing morning walks through tea valleys.',
         highlights: ['Pine Forest Glamping Site', 'Off-Road Jeep Trail to Kurisumala', 'Sunset at Vagamon Rolling Meadows', 'Open-Mic Acoustic Campfire', 'Live Barbecue Station'],
         inclusions: ['Pine Grove Tent Stay', 'Campfire with Live BBQ', 'Dinner & Hot Breakfast', 'Guided Meadows Hike'],
@@ -488,6 +495,7 @@ export const INITIAL_ALL_CAMPS = [
             'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
         ],
+        faqs: [{ q: 'What is Athirappilly known for?', a: 'Kerala\'s largest waterfall (80 ft) — the "Niagara of India" — with rainforest camps and river-side trekking.' }, { q: 'Is Athirappilly good for families?', a: 'Yes — the waterfall view is spectacular, camps are in the rainforest buffer zone, and the drive from Kochi is short (~1.5 hrs).' }],
         description: 'Experience Kerala’s grandest rainforest river cascades. Natural rock-pool swims, river kayaking, birding walks in hornbill sanctuaries, and riverside luxury canvas tents.',
         highlights: ['Private River Stream Access', 'Canoeing & Kayak Equipment', 'Night Forest Insect & Hornbill Walk', 'Bamboo Raft Stream Ride', 'Forest-to-Table Kerala Feast'],
         inclusions: ['Riverside Canvas Tent', 'Kayaking & Stream Bathing', 'Campfire & Dinner', 'Breakfast'],

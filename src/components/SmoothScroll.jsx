@@ -81,8 +81,14 @@ export default function SmoothScroll() {
         window.__lenis = lenis;
 
         // Dispatch window scroll event on Lenis scroll so IntersectionObserver and Framer Motion trigger reliably
+        // Guard against re-entrancy: the dispatched 'scroll' event re-enters Lenis's native scroll handler,
+        // which would otherwise recurse emit -> onNativeScroll -> emit -> ... and overflow the call stack.
+        let dispatchingScroll = false;
         lenis.on('scroll', () => {
+            if (dispatchingScroll) return;
+            dispatchingScroll = true;
             window.dispatchEvent(new Event('scroll'));
+            requestAnimationFrame(() => { dispatchingScroll = false; });
         });
 
         let rafId;

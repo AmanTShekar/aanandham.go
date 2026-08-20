@@ -101,12 +101,12 @@ export const generateUpcomingWeekendBatches = (count = 6) => {
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const eventTypes = [
-    { title: 'Cloud Bed Batch ☁️', subtitle: 'This Weekend (Sat–Sun)', status: 'Filling Fast 🔥', color: '#B45309', spots: '4 spots left', badge: '🔥 Filling Fast' },
-    { title: 'Perseid Meteor Camp 🌠', subtitle: 'Next Weekend (Sat–Sun)', status: 'Open 🟢', color: '#166534', spots: '12 spots left', badge: '🌠 Meteor Shower' },
-    { title: 'Full Moon Ridge Glamp 🌕', subtitle: 'Peak Stargazing', status: 'Special Event ⭐', color: '#7C3AED', spots: '8 spots left', badge: '🌕 Full Moon' },
-    { title: 'Acoustic Campfire & BBQ 🎸', subtitle: 'Live Mountain Music', status: 'Open 🟢', color: '#166534', spots: '16 spots left', badge: '🎸 Live BBQ' },
-    { title: 'Meesapulimala Summit Batch 🏔️', subtitle: 'High Peak Challenge', status: 'Open 🟢', color: '#166534', spots: '10 spots left', badge: '⚡ Summit Trek' },
-    { title: 'Rainforest Canopy Camp 🌿', subtitle: 'Deep Mist Valley', status: 'Open 🟢', color: '#166534', spots: '14 spots left', badge: '🌿 High Mist' }
+    { title: 'Cloud Bed Batch', subtitle: 'This Weekend (Sat–Sun)', status: 'Filling Fast', color: '#B45309', spots: '4 spots left', badge: 'Filling Fast' },
+    { title: 'Perseid Meteor Camp', subtitle: 'Next Weekend (Sat–Sun)', status: 'Open', color: '#166534', spots: '12 spots left', badge: 'Meteor Shower' },
+    { title: 'Full Moon Ridge Glamp', subtitle: 'Peak Stargazing', status: 'Special Event', color: '#7C3AED', spots: '8 spots left', badge: 'Full Moon' },
+    { title: 'Acoustic Campfire & BBQ', subtitle: 'Live Mountain Music', status: 'Open', color: '#166534', spots: '16 spots left', badge: 'Live BBQ' },
+    { title: 'Meesapulimala Summit Batch', subtitle: 'High Peak Challenge', status: 'Open', color: '#166534', spots: '10 spots left', badge: 'Summit Trek' },
+    { title: 'Rainforest Canopy Camp', subtitle: 'Deep Mist Valley', status: 'Open', color: '#166534', spots: '14 spots left', badge: 'High Mist' }
   ];
 
   for (let i = 0; i < count; i++) {

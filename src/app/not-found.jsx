@@ -5,6 +5,7 @@ import Link from 'next/link';
 import SiteHeader from '../components/SiteHeader';
 import Footer from '../components/Footer';
 import { useAuth } from '../hooks/useAuth';
+import { Mountain, Compass, Tent, PhoneCall } from 'lucide-react';
 
 export default function NotFound() {
     const { user: currentUser, logout: handleLogout } = useAuth();
@@ -13,15 +14,15 @@ export default function NotFound() {
         {
             title: "Handcrafted Packages",
             subtitle: "Summit treks & ridge glamping",
-            icon: "fa-solid fa-mountain-sun",
+            icon: Mountain,
             href: "/camps",
             badge: "Top Expeditions",
             accent: "#E5A93B"
         },
         {
             title: "About Our Tribe",
-            subtitle: "Philosophy, marshals & camp history",
-            icon: "fa-solid fa-compass",
+            subtitle: "Philosophy, guides & camp history",
+            icon: Compass,
             href: "/about",
             badge: "Our Story",
             accent: "#10B981"
@@ -29,7 +30,7 @@ export default function NotFound() {
         {
             title: "Custom Arrangements",
             subtitle: "College treks, offsites & celebrations",
-            icon: "fa-solid fa-campground",
+            icon: Tent,
             href: "/#arrangements",
             badge: "Group Events",
             accent: "#F97316"
@@ -37,7 +38,7 @@ export default function NotFound() {
         {
             title: "Expedition Dispatch Desk",
             subtitle: "24/7 mountain concierge hotline",
-            icon: "fa-solid fa-phone-volume",
+            icon: PhoneCall,
             href: "/contact",
             badge: "Get Help",
             accent: "#3B82F6"
@@ -52,6 +53,7 @@ export default function NotFound() {
                 activePage="404" 
                 currentUser={currentUser} 
                 onLogout={handleLogout} 
+                transparentOnTop={false}
             />
 
             {/* ── MAIN 404 EXPERIENCE ── */}
@@ -120,7 +122,7 @@ export default function NotFound() {
                                     objectFit: 'contain',
                                     filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))'
                                 }} 
-                            />
+                             loading="lazy" decoding="async"/>
                         </div>
 
                         {/* Tactical Mini Compass Needle Badge */}
@@ -141,7 +143,7 @@ export default function NotFound() {
                             fontWeight: '900',
                             boxShadow: '0 4px 10px rgba(0,0,0,0.12)'
                         }}>
-                            🧭
+                            <Compass size={26} strokeWidth={2.2} />
                         </div>
                     </motion.div>
 
@@ -212,7 +214,7 @@ export default function NotFound() {
                             lineHeight: 1.65,
                             margin: 0
                         }}>
-                            Even our veteran mountain marshals take a wrong turn in the Suryanelli fog. Let’s guide you back to the marked ridge trails.
+                            Even our veteran mountain guides take a wrong turn in the Suryanelli fog. Let's guide you back to the marked ridge trails.
                         </p>
                     </motion.div>
 
@@ -232,34 +234,67 @@ export default function NotFound() {
                     >
                         <Link 
                             href="/" 
-                            className="btn-lime hover-lift"
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '10px',
-                                padding: '14px 28px',
+                                justifyContent: 'space-between',
+                                gap: '12px',
+                                padding: '14px 14px 14px 24px',
                                 borderRadius: '999px',
+                                background: '#121613',
+                                color: '#FFFFFF',
+                                border: '1px solid rgba(229, 169, 59, 0.4)',
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
+                                fontSize: '14.5px',
                                 fontWeight: '800',
-                                fontSize: '15px',
                                 textDecoration: 'none',
-                                boxShadow: '0 8px 24px rgba(0,0,0,0.1)'
+                                minHeight: '52px',
+                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.boxShadow = '0 12px 30px rgba(229, 169, 59, 0.25)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.2)';
+                                e.currentTarget.style.transform = 'translateY(0)';
                             }}
                         >
                             <span>← Return to Basecamp</span>
+                            <div className="btn-arrow-circle" style={{ width: '30px', height: '30px', fontSize: '13px', background: '#FFFFFF' }}>←</div>
                         </Link>
 
                         <Link 
                             href="/camps" 
-                            className="action-arrow-btn"
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
+                                justifyContent: 'space-between',
                                 gap: '12px',
-                                textDecoration: 'none'
+                                padding: '14px 14px 14px 24px',
+                                borderRadius: '999px',
+                                background: 'linear-gradient(135deg, #D5ED55 0%, #B7DB46 100%)',
+                                color: '#121613',
+                                border: '1px solid rgba(213, 237, 85, 0.4)',
+                                boxShadow: '0 8px 24px rgba(213, 237, 85, 0.25)',
+                                fontSize: '14.5px',
+                                fontWeight: '900',
+                                textDecoration: 'none',
+                                minHeight: '52px',
+                                fontFamily: 'var(--font-heading)',
+                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.boxShadow = '0 12px 30px rgba(213, 237, 85, 0.4)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(213, 237, 85, 0.25)';
+                                e.currentTarget.style.transform = 'translateY(0)';
                             }}
                         >
-                            <span style={{ fontWeight: '800' }}>Explore Expeditions</span>
-                            <div className="btn-arrow-circle">→</div>
+                            <span>Explore Expeditions</span>
+                            <span className="btn-arrow-circle" style={{ width: '30px', height: '30px', fontSize: '13px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)' }}>→</span>
                         </Link>
                     </motion.div>
 
@@ -306,7 +341,7 @@ export default function NotFound() {
                                         fontSize: '16px',
                                         color: trail.accent
                                     }}>
-                                        <i className={trail.icon}></i>
+                                        <trail.icon size={16} />
                                     </div>
                                     <span style={{
                                         fontSize: '10.5px',

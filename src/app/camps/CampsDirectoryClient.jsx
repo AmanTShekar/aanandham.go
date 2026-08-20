@@ -9,7 +9,7 @@ import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
-import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2 } from 'lucide-react';
+import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 
@@ -253,7 +253,7 @@ export default function CampsDirectoryClient({
                                             transition: 'all 0.2s ease'
                                         }}
                                     >
-                                        <span>{onlyWishlisted ? '❤️ Showing Wishlist Only' : `❤️ Saved Wishlist (${wishlist.length})`}</span>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>{onlyWishlisted ? <Heart size={15} fill="#121613" /> : <Heart size={15} />} {onlyWishlisted ? 'Showing Wishlist Only' : `Saved Wishlist (${wishlist.length})`}</span>
                                     </button>
                                 </div>
                             )}
@@ -269,7 +269,7 @@ export default function CampsDirectoryClient({
                     position: 'relative',
                     zIndex: 10
                 }}>
-                    <div style={{
+                    <div className="camps-filter-card" style={{
                         background: '#FFFFFF',
                         borderRadius: '24px',
                         padding: '24px 28px',
@@ -284,10 +284,10 @@ export default function CampsDirectoryClient({
                         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
                             
                             {/* Search Input */}
-                            <div style={{ flex: 1, minWidth: '260px', position: 'relative' }}>
+                            <div className="camps-filter-search" style={{ flex: 1, position: 'relative' }}>
                                 <input
                                     type="text"
-                                    placeholder="Search by camp name, altitude (e.g. 7,900 FT), or location..."
+                                    placeholder="Search by location or camp name"
                                     value={searchQuery}
                                     onChange={e => setSearchQuery(e.target.value)}
                                     style={{
@@ -317,7 +317,7 @@ export default function CampsDirectoryClient({
                             </div>
 
                             {/* Sort Selector with Reusable CustomSelectDropdown */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: '240px' }}>
+                            <div className="camps-filter-sort" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <span style={{ fontSize: '12px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px', flexShrink: 0 }}>
                                     Sort:
                                 </span>
@@ -337,10 +337,7 @@ export default function CampsDirectoryClient({
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.06)', paddingTop: '16px' }}>
                             
                             {/* Region Pills */}
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', marginRight: '4px' }}>
-                                    Region:
-                                </span>
+                            <div className="camps-pills-row" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                                 {allRegions.map(reg => {
                                     const isSelected = selectedRegion === reg;
                                     return (
@@ -359,19 +356,19 @@ export default function CampsDirectoryClient({
                                                 transition: 'all 0.2s ease'
                                             }}
                                         >
-                                            {reg === 'All' ? 'All Kerala' : `📍 ${reg}`}
+                                            {reg === 'All' ? 'All Kerala' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {reg}</span>}
                                         </button>
                                     );
                                 })}
                             </div>
 
                             {/* Category Filter Pills */}
-                            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <div className="camps-pills-row" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                                 {[
                                     { id: 'All', label: 'All Styles' },
-                                    { id: 'Glamp', label: '⛺ Glamping' },
-                                    { id: 'Summit', label: '🏔️ Summit Treks' },
-                                    { id: 'Forest', label: '🌲 Rainforest & Pine' }
+                                    { id: 'Glamp', label: 'Glamping' },
+                                    { id: 'Summit', label: 'Summit Treks' },
+                                    { id: 'Forest', label: 'Rainforest & Pine' }
                                 ].map(cat => {
                                     const isSelected = selectedCategory === cat.id;
                                     return (
@@ -422,7 +419,7 @@ export default function CampsDirectoryClient({
 
                     {filteredCamps.length === 0 ? (
                         <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '60px 20px', textAlign: 'center', border: '1px solid rgba(18,22,19,0.08)' }}>
-                            <div style={{ fontSize: '42px', marginBottom: '14px' }}>⛺</div>
+                            <div style={{ fontSize: '42px', marginBottom: '14px', display: 'inline-flex' }}><Tent size={42} strokeWidth={1.6} /></div>
                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 8px' }}>
                                 No campsites match your filters
                             </h3>
@@ -452,7 +449,7 @@ export default function CampsDirectoryClient({
                                     <div
                                         key={camp.id}
                                         onClick={() => router.push(`/camps/${camp.id}`)}
-                                        className="hover-lift card-img-zoom"
+                                        className="hover-lift card-img-zoom camps-card"
                                         style={{
                                             background: '#FFFFFF',
                                             borderRadius: '28px',
@@ -466,7 +463,7 @@ export default function CampsDirectoryClient({
                                         }}
                                     >
                                         {/* Top Image & Interactive Photo Carousel / Badges */}
-                                        <div style={{ position: 'relative', height: '270px', overflow: 'hidden' }}>
+                                        <div className="camps-card-media" style={{ position: 'relative', height: '270px', overflow: 'hidden' }}>
                                             <img
                                                 src={camp.image || galleryList[0]}
                                                 alt={camp.title}
@@ -589,7 +586,7 @@ export default function CampsDirectoryClient({
                                         </div>
 
                                         {/* Card Body */}
-                                        <div style={{ padding: '24px 24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        <div className="camps-card-body" style={{ padding: '24px 24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                             
                                             {/* Region & Duration */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -609,15 +606,15 @@ export default function CampsDirectoryClient({
                                             </h3>
 
                                             {/* Description snippet */}
-                                            <p style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.6, margin: '0 0 16px', flex: 1 }}>
-                                                {camp.description ? camp.description.slice(0, 115) + '...' : 'High-altitude ridge glamping, sunrise jeep convoy safari, campfire barbecue dinner, and certified trail marshals.'}
+                                            <p className="camps-card-desc" style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.6, margin: '0 0 16px', flex: 1 }}>
+                                                {camp.description ? camp.description.slice(0, 115) + '...' : 'High-altitude ridge glamping, sunrise jeep convoy safari, campfire barbecue dinner, and certified trail guides.'}
                                             </p>
 
                                             {/* Highlights Tags */}
                                             {camp.highlights && (
-                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '20px' }}>
+                                                <div className="camps-card-highlights" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
                                                     {camp.highlights.slice(0, 3).map((h, hidx) => (
-                                                        <span key={hidx} style={{ fontSize: '11px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '4px 9px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                                        <span key={hidx} style={{ fontSize: '11.5px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '5px 12px', borderRadius: '9px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                                             <LucideAmenityIcon name={h} size={12} color="#166534" />
                                                             <span>{h}</span>
                                                         </span>
@@ -626,7 +623,7 @@ export default function CampsDirectoryClient({
                                             )}
 
                                             {/* Price & Book Now Action Footer */}
-                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
                                                 <div>
                                                     <span style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block', marginBottom: '2px' }}>
                                                         Starts at
@@ -635,8 +632,10 @@ export default function CampsDirectoryClient({
                                                         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', color: '#121613' }}>
                                                             ₹{camp.price.toLocaleString('en-IN')}
                                                         </span>
-                                                        <span style={{ fontSize: '12px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
                                                     </div>
+                                                    <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', display: 'block', marginTop: '1px' }}>
+                                                        / camper
+                                                    </span>
                                                 </div>
 
                                                 <button
@@ -686,7 +685,7 @@ export default function CampsDirectoryClient({
                             </p>
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '24px' }}>
+                        <div className="accommodation-types-grid" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                             {[
                                 {
                                     title: 'Geodesic Luxury Dome Pods',
@@ -712,7 +711,7 @@ export default function CampsDirectoryClient({
                             ].map((pod, pidx) => (
                                 <div key={pidx} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '24px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                                     <div style={{ height: '200px', position: 'relative' }}>
-                                        <img src={pod.img} alt={pod.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={pod.img} alt={pod.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}  loading="lazy" decoding="async"/>
                                         <span style={{ position: 'absolute', top: '14px', left: '14px', background: '#D5ED55', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {pod.badge}
                                         </span>
@@ -758,7 +757,7 @@ export default function CampsDirectoryClient({
                         style={{ position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0, 0, 0, 0.92)', backdropFilter: 'blur(16px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
                     >
                         <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }} onClick={e => e.stopPropagation()} style={{ position: 'relative', maxWidth: '900px', width: '100%', maxHeight: '85vh', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 30px 90px rgba(0,0,0,0.6)' }}>
-                            <img src={selectedLightboxPhoto} alt="Campsite Preview" style={{ width: '100%', height: 'auto', maxHeight: '80vh', objectFit: 'contain', display: 'block', margin: '0 auto' }} />
+                            <img src={selectedLightboxPhoto} alt="Campsite Preview" style={{ width: '100%', height: 'auto', maxHeight: '80vh', objectFit: 'contain', display: 'block', margin: '0 auto' }}  loading="lazy" decoding="async"/>
                             <button onClick={() => setSelectedLightboxPhoto(null)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'rgba(0,0,0,0.7)', color: '#FFFFFF', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontWeight: '800', fontSize: '16px' }}>✕</button>
                         </motion.div>
                     </div>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import SiteHeader from '../components/SiteHeader';
 import Footer from '../components/Footer';
 import { useAuth } from '../hooks/useAuth';
+import { TriangleAlert } from 'lucide-react';
 
 export default function GlobalErrorBoundary({ error, reset }) {
     const { user: currentUser, logout: handleLogout } = useAuth();
@@ -20,6 +21,7 @@ export default function GlobalErrorBoundary({ error, reset }) {
                 activePage="error" 
                 currentUser={currentUser} 
                 onLogout={handleLogout} 
+                transparentOnTop={false}
             />
 
             <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '140px 20px 80px', textAlign: 'center' }}>
@@ -43,7 +45,7 @@ export default function GlobalErrorBoundary({ error, reset }) {
                             margin: '0 auto 24px'
                         }}
                     >
-                        ⚠️
+                        <TriangleAlert size={32} strokeWidth={2} />
                     </motion.div>
 
                     <div className="star-badge" style={{ margin: '0 auto 12px' }}>
@@ -75,20 +77,67 @@ export default function GlobalErrorBoundary({ error, reset }) {
                     <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <button
                             onClick={() => reset()}
-                            className="action-arrow-btn"
-                            style={{ padding: '14px 28px', border: 'none', cursor: 'pointer' }}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '12px',
+                                padding: '14px 14px 14px 24px',
+                                borderRadius: '999px',
+                                background: '#121613',
+                                color: '#FFFFFF',
+                                border: '1px solid rgba(229, 169, 59, 0.4)',
+                                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
+                                fontSize: '14.5px',
+                                fontWeight: '800',
+                                cursor: 'pointer',
+                                minHeight: '52px',
+                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.boxShadow = '0 12px 30px rgba(229, 169, 59, 0.25)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.2)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }}
                         >
                             <span>Retry Mountain Trail</span>
-                            <div className="btn-arrow-circle">↻</div>
+                            <div className="btn-arrow-circle" style={{ width: '30px', height: '30px', fontSize: '13px', background: '#FFFFFF' }}>↻</div>
                         </button>
 
                         <Link
                             href="/"
-                            className="action-arrow-btn-dark"
-                            style={{ padding: '14px 28px', textDecoration: 'none' }}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: '12px',
+                                padding: '14px 14px 14px 24px',
+                                borderRadius: '999px',
+                                background: 'linear-gradient(135deg, #D5ED55 0%, #B7DB46 100%)',
+                                color: '#121613',
+                                border: '1px solid rgba(213, 237, 85, 0.4)',
+                                boxShadow: '0 8px 24px rgba(213, 237, 85, 0.25)',
+                                fontSize: '14.5px',
+                                fontWeight: '900',
+                                textDecoration: 'none',
+                                minHeight: '52px',
+                                fontFamily: 'var(--font-heading)',
+                                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.boxShadow = '0 12px 30px rgba(213, 237, 85, 0.4)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.boxShadow = '0 8px 24px rgba(213, 237, 85, 0.25)';
+                                e.currentTarget.style.transform = 'translateY(0)';
+                            }}
                         >
                             <span>Return to Basecamp</span>
-                            <div className="btn-arrow-circle">→</div>
+                            <span className="btn-arrow-circle" style={{ width: '30px', height: '30px', fontSize: '13px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)' }}>→</span>
                         </Link>
                     </div>
 

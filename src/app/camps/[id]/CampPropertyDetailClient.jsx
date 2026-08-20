@@ -1,5 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+
+const CARD_WHITE = { background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' };
+const IMG_FILL = { width: '100%', height: '100%', objectFit: 'cover' };
+const ROW_GAP_6 = { display: 'inline-flex', alignItems: 'center', gap: '6px' };
+const ROW_SPACE_12 = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', flexWrap: 'wrap', columnGap: '12px' };
+
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
@@ -10,7 +16,8 @@ const BookingEngineModal = dynamic(() => import('../../../components/BookingEngi
 import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
-import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck } from 'lucide-react';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock } from 'lucide-react';
+import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
@@ -127,7 +134,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                 <SiteHeader />
                 <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 20px 60px', textAlign: 'center' }}>
                     <div style={{ maxWidth: '520px', width: '100%', background: '#121E15', padding: '44px 28px', borderRadius: '28px', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 25px 60px rgba(0,0,0,0.5)' }}>
-                        <div style={{ fontSize: '54px', marginBottom: '16px' }}>🧭</div>
+                        <div style={{ fontSize: '54px', marginBottom: '16px', display: 'inline-flex' }}><Compass size={54} strokeWidth={1.5} /></div>
                         <span style={{ fontSize: '11px', fontWeight: '800', background: 'rgba(213,237,85,0.15)', color: '#D5ED55', padding: '5px 14px', borderRadius: '999px', letterSpacing: '1px', textTransform: 'uppercase' }}>
                             404 · Basecamp Not Found
                         </span>
@@ -157,7 +164,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         return (
             <div style={{ minHeight: '100vh', background: '#0B150E', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>🌲</div>
+                    <div style={{ fontSize: '32px', marginBottom: '12px', display: 'inline-flex' }}><Trees size={32} strokeWidth={1.6} /></div>
                     <p style={{ color: '#D5ED55', fontWeight: '700' }}>Loading Basecamp Sanctuary...</p>
                 </div>
             </div>
@@ -216,57 +223,75 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         }
     };
 
-    return (
-        <div style={{ minHeight: '100vh', background: '#F8F9F5', color: '#121613' }}>
-            
-            {/* ── HEADER ── */}
-            <SiteHeader transparentOnTop={false} activePage="camps" />
+return (
+    <div style={{ minHeight: '100vh', background: '#F8F9F5', color: '#121613' }}>
+
+    {/* FAQPage JSON-LD for rich results */}
+    {camp?.faqs && camp.faqs.length > 0 && (
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: camp.faqs.map((f) => ({
+              '@type': 'Question',
+              name: f.q,
+              acceptedAnswer: { '@type': 'Answer', text: f.a },
+            })),
+          }),
+        }}
+      />
+    )}
+
+    {/* ── HEADER ── */}
+    <SiteHeader transparentOnTop={false} activePage="camps" />
 
             <main style={{ paddingBottom: '120px' }}>
                 
                 {/* ── BREADCRUMB & TITLE BAR ── */}
-                <section style={{ background: '#101E13', color: '#FFFFFF', padding: 'clamp(105px, 11vw, 130px) clamp(20px, 4vw, 48px) clamp(34px, 4vw, 46px)' }}>
+                <section className="camp-hero" style={{ background: '#101E13', color: '#FFFFFF', padding: 'clamp(105px, 11vw, 130px) clamp(20px, 4vw, 48px) clamp(34px, 4vw, 46px)' }}>
                     <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                         {/* Breadcrumbs */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#C5D8C8', marginBottom: '16px', flexWrap: 'wrap', fontWeight: '600' }}>
+                        <div className="camp-hero-breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#C5D8C8', marginBottom: '16px', flexWrap: 'wrap', fontWeight: '600' }}>
                             <Link href="/" style={{ color: '#C5D8C8', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
                             <span style={{ color: '#6A7D6E' }}>/</span>
                             <Link href="/camps" style={{ color: '#C5D8C8', textDecoration: 'none', transition: 'color 0.2s' }}>Campsites</Link>
                             <span style={{ color: '#6A7D6E' }}>/</span>
-                            <span style={{ color: '#D5ED55', fontWeight: '800' }}>{camp.title}</span>
+                            <span className="camp-hero-breadcrumb-current" style={{ color: '#D5ED55', fontWeight: '800' }}>{camp.title}</span>
                         </div>
 
                         {/* Title & Actions Bar */}
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
                             <div>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-                                    <span style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
+                                <div className="camp-hero-badges" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                                    <span className="camp-hero-badge" style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
                                         {camp.altitude || 'Western Ghats'}
                                     </span>
-                                    <span style={{ background: 'rgba(213, 237, 85, 0.2)', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.4)' }}>
+                                    <span className="camp-hero-badge" style={{ background: 'rgba(213, 237, 85, 0.2)', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.4)' }}>
                                         ★ {camp.rating || '4.98'} ({camp.reviewsCount || 342} verified campers)
                                     </span>
                                     {camp.tag && (
-                                        <span style={{ background: 'rgba(255,255,255,0.12)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.18)' }}>
+                                        <span className="camp-hero-badge" style={{ background: 'rgba(255,255,255,0.12)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.18)' }}>
                                             {camp.tag}
                                         </span>
                                     )}
                                 </div>
 
-                                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: '800', margin: '0 0 12px', color: '#FFFFFF', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
+                                <h1 className="camp-hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: '800', margin: '0 0 12px', color: '#FFFFFF', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
                                     {camp.title}
                                 </h1>
 
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '14px', color: '#C5D8C8', flexWrap: 'wrap', fontWeight: '600' }}>
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                <div className="camp-hero-info" style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '14px', color: '#C5D8C8', flexWrap: 'wrap', fontWeight: '600' }}>
+                                    <span style={ROW_GAP_6}>
                                         <MapPin size={16} color="#D5ED55" />
                                         <span>{camp.location || 'Suryanelli, Munnar'}</span>
                                     </span>
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <span style={ROW_GAP_6}>
                                         <Clock size={16} color="#D5ED55" />
                                         <span>{camp.duration || '2 Days / 1 Night'}</span>
                                     </span>
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <span style={ROW_GAP_6}>
                                         <Compass size={16} color="#D5ED55" />
                                         <span>{camp.difficulty || 'Easy - Moderate Expedition'}</span>
                                     </span>
@@ -274,9 +299,10 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
 
                             {/* Like & Share Action Buttons */}
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div className="camp-hero-actions" style={{ display: 'flex', gap: '10px' }}>
                                 <button
                                     onClick={handleToggleWishlist}
+                                    className="camp-hero-btn"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',
@@ -298,6 +324,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
                                 <button
                                     onClick={handleShare}
+                                    className="camp-hero-btn"
                                     style={{
                                         display: 'inline-flex',
                                         alignItems: 'center',
@@ -333,12 +360,12 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 alt={`${camp.title} Main View`}
                                 width="800"
                                 height="500"
-                                decoding="async"
+                               
                                 fetchPriority="high"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                            />
+                                style={IMG_FILL}
+                             loading="lazy" decoding="async"/>
                             <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800' }}>
-                                📸 View Gallery ({gallery.length} photos)
+                                <span style={ROW_GAP_6}><Camera size={13} /> View Gallery ({gallery.length} photos)</span>
                             </div>
                         </div>
 
@@ -354,7 +381,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 height="250"
                                 loading="lazy"
                                 decoding="async"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                style={IMG_FILL}
                             />
                         </div>
 
@@ -370,7 +397,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 height="250"
                                 loading="lazy"
                                 decoding="async"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                style={IMG_FILL}
                             />
                         </div>
 
@@ -403,7 +430,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                         <div>
                             
                             {/* SECTION 1: HIGHLIGHTS & DESCRIPTION */}
-                            <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={CARD_WHITE}>
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> EXPEDITION OVERVIEW
                                 </div>
@@ -433,16 +460,13 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
 
                             {/* SECTION 2: LODGING ROOM TYPES & TENT SELECTION */}
-                            <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={CARD_WHITE}>
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> LODGING INVENTORY
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 8px', color: '#121613' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 20px', color: '#121613' }}>
                                     Available Lodging & Room Types
                                 </h2>
-                                <p style={{ fontSize: '14px', color: '#59655D', margin: '0 0 20px' }}>
-                                    Select your preferred tent style or cabin pod. Pricing is calculated per camper with dedicated unit allocation.
-                                </p>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     {availableRooms.map((room) => {
@@ -451,6 +475,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                             <div
                                                 key={room.id}
                                                 onClick={() => { setSelectedRoomId(room.id); setCustomUnits(null); }}
+                                                className="room-card"
                                                 style={{
                                                     borderRadius: '18px',
                                                     border: isSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
@@ -465,7 +490,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                     flexWrap: 'wrap'
                                                 }}
                                             >
-                                                <div style={{ flex: 1, minWidth: '220px' }}>
+                                                <div className="room-card-main" style={{ flex: 1, minWidth: '220px' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                                                         <span style={{ background: '#121613', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px' }}>
                                                             {room.type?.toUpperCase() || 'TENT'}
@@ -479,7 +504,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                         {room.name}
                                                     </h3>
                                                     {room.features && room.features.length > 0 && (
-                                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                        <div className="room-feats" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                                                             {room.features.map((feat, fidx) => (
                                                                 <span key={fidx} style={{ fontSize: '11px', color: '#59655D', background: '#F8F9F5', padding: '2px 8px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                                                     <LucideAmenityIcon name={feat} size={11} color="#166534" />
@@ -490,24 +515,25 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                     )}
                                                 </div>
 
-                                                <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
-                                                    <div>
+                                                <div className="room-price-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                                                    <div style={{ textAlign: 'right' }}>
                                                         <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Per Person</span>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap' }}>
                                                             ₹{(room.price || room.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
                                                     <button
                                                         type="button"
                                                         style={{
-                                                            padding: '6px 14px',
-                                                            borderRadius: '8px',
+                                                            padding: '8px 16px',
+                                                            borderRadius: '10px',
                                                             background: isSelected ? '#166534' : '#F1F3EC',
                                                             color: isSelected ? '#FFFFFF' : '#121613',
                                                             border: isSelected ? 'none' : '1px solid rgba(18,22,19,0.2)',
                                                             fontSize: '12px',
                                                             fontWeight: '800',
-                                                            cursor: 'pointer'
+                                                            cursor: 'pointer',
+                                                            whiteSpace: 'nowrap'
                                                         }}
                                                     >
                                                         {isSelected ? '✓ Selected' : 'Select'}
@@ -520,7 +546,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
 
                             {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (CRISP LUCIDE ICONS) */}
-                            <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={CARD_WHITE}>
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> BASECAMP PERKS
                                 </div>
@@ -530,7 +556,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 <p style={{ fontSize: '14px', color: '#59655D', margin: '0 0 22px' }}>
                                     Every Aanandham basecamp is verified for wilderness safety, hygienic washrooms, and curated culinary experiences.
                                 </p>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+                                <div className="amenities-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
                                     {(camp.amenities && camp.amenities.length > 0 ? camp.amenities : [
                                         { name: 'Campfire Circle & Acoustic Jams', icon: '🔥' },
                                         { name: '4x4 Offroad Trail Access', icon: '🚙' },
@@ -541,6 +567,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                     ]).map((amenity, aIdx) => (
                                         <div
                                             key={aIdx}
+                                            className="amenity-module"
                                             style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
@@ -572,7 +599,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
 
                             {/* SECTION 4: 2-DAY DETAILED ITINERARY */}
-                            <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={CARD_WHITE}>
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> EXPEDITION TIMELINE
                                 </div>
@@ -604,7 +631,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             </div>
 
                             {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
-                            <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' }}>
+                            <div style={CARD_WHITE}>
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '32px' }}>
                                     <div>
                                         <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#166534', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -665,7 +692,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             }}>
                                 
                                 {/* Header / Per-Camper Pricing Display */}
-                                <div style={{ borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                                     <div>
                                         <div style={{ fontSize: '11px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px' }}>Starts at</div>
                                         <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
@@ -677,7 +704,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                     </div>
                                     <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '11px', fontWeight: '800', padding: '5px 11px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                                         <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E' }} />
-                                        <span>⚡ Live Available</span>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Zap size={11} /> Live Available</span>
                                     </span>
                                 </div>
 
@@ -718,7 +745,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                                 3. Total Campers
                                             </label>
                                             <span style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800' }}>
-                                                {discountLabel ? `✨ ${discountLabel}` : `${effectiveUnits} Unit(s)`}
+                                                {discountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel}</span> : `${effectiveUnits} Unit(s)`}
                                             </span>
                                         </div>
 
@@ -766,7 +793,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                         </div>
                                         {discountAmount > 0 && (
                                             <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700', marginBottom: '3px' }}>
-                                                ✨ {discountLabel} · You save ₹{discountAmount.toLocaleString('en-IN')}
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel} · You save ₹{discountAmount.toLocaleString('en-IN')}</span>
                                             </div>
                                         )}
                                         <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>
@@ -775,54 +802,58 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                     </div>
 
                                     {/* Primary Booking Button */}
-                                    <button
-                                        onClick={() => setIsBookingModalOpen(true)}
-                                        className="btn-lime"
-                                        style={{
-                                            width: '100%',
-                                            padding: '14px',
-                                            fontSize: '14.5px',
-                                            fontWeight: '900',
-                                            borderRadius: '14px',
-                                            cursor: 'pointer',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '8px',
-                                            boxShadow: '0 4px 16px rgba(213,237,85,0.35)'
-                                        }}
-                                    >
-                                        <span>Check Availability & Book →</span>
-                                    </button>
+                                    <div style={{ display: 'flex', gap: '10px' }}>
+                                        <button
+                                            onClick={() => setIsBookingModalOpen(true)}
+                                            className="btn-lime"
+                                            style={{
+                                                flex: '1.45',
+                                                minWidth: 0,
+                                                padding: '13px 12px',
+                                                fontSize: '13.5px',
+                                                fontWeight: '900',
+                                                borderRadius: '14px',
+                                                cursor: 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '6px',
+                                                boxShadow: '0 4px 16px rgba(213,237,85,0.35)'
+                                            }}
+                                        >
+                                            <span className="cta-label-wide">Check Availability &amp; Book</span><span className="cta-label-narrow">Check &amp; Book</span>
+                                            <span style={{ whiteSpace: 'nowrap' }}>→</span>
+                                        </button>
 
-                                    {/* Secondary WhatsApp Inquire Button */}
-                                    <a
-                                        href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        style={{
-                                            width: '100%',
-                                            padding: '11.5px',
-                                            borderRadius: '14px',
-                                            background: '#F1F3EC',
-                                            border: '1px solid rgba(18,22,19,0.08)',
-                                            color: '#121613',
-                                            fontSize: '13px',
-                                            fontWeight: '800',
-                                            textDecoration: 'none',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            gap: '7px',
-                                            boxSizing: 'border-box'
-                                        }}
-                                    >
-                                        <i className="fa-brands fa-whatsapp" style={{ fontSize: '16px', color: '#25D366' }}></i>
-                                        <span>Quick Inquire on WhatsApp</span>
-                                    </a>
+                                        <a
+                                            href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                flex: '1',
+                                                minWidth: 0,
+                                                padding: '11.5px 10px',
+                                                borderRadius: '14px',
+                                                background: '#F1F3EC',
+                                                border: '1px solid rgba(18,22,19,0.08)',
+                                                color: '#121613',
+                                                fontSize: '13px',
+                                                fontWeight: '800',
+                                                textDecoration: 'none',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '7px',
+                                                boxSizing: 'border-box'
+                                            }}
+                                        >
+                                            <WhatsAppIcon size={16} color="#25D366" />
+                                            <span className="cta-label-wide">Quick Inquire on WhatsApp</span><span className="cta-label-narrow">WhatsApp</span>
+                                        </a>
+                                    </div>
 
                                     <div style={{ textAlign: 'center', fontSize: '11px', color: '#7D8880', marginTop: '2px' }}>
-                                        🔒 Secure Razorpay Checkout · 30% Advance Deposit locks permits
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}><Lock size={11} /> Secure Razorpay Checkout · 30% Advance Deposit locks permits</span>
                                     </div>
 
                                 </div>
@@ -845,19 +876,19 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                     </span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                    <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Basecamp Check-in:</span>
                                         <span style={{ fontWeight: '800', color: '#121613' }}>02:00 PM (Snacks & Tea)</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                    <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Campfire & Live BBQ:</span>
                                         <span style={{ fontWeight: '800', color: '#121613' }}>08:00 PM</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                    <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>4x4 Sunrise Jeep Safari:</span>
                                         <span style={{ fontWeight: '800', color: '#166534' }}>04:30 AM (Peak Sunrise)</span>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                                    <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Breakfast & Checkout:</span>
                                         <span style={{ fontWeight: '800', color: '#121613' }}>11:00 AM</span>
                                     </div>
@@ -882,7 +913,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px', color: '#E2E8F0' }}>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <span style={{ color: '#D5ED55', fontWeight: '900' }}>✓</span>
-                                        <span>24/7 Gated Perimeter & Certified Marshals</span>
+                                        <span>24/7 Gated Perimeter & Certified Guides</span>
                                     </div>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <span style={{ color: '#D5ED55', fontWeight: '900' }}>✓</span>
@@ -902,7 +933,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                         rel="noopener noreferrer"
                                         style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
                                     >
-                                        <span>Chat with Marshal →</span>
+                                        <span>Chat with Guide →</span>
                                     </a>
                                 </div>
                             </div>
@@ -924,7 +955,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {CANCELLATION_TIERS.map(tier => (
-                                        <div key={tier.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontSize: '11.5px', borderBottom: '1px solid rgba(18,22,19,0.05)', paddingBottom: '6px' }}>
+                                        <div key={tier.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', fontSize: '11.5px', borderBottom: '1px solid rgba(18,22,19,0.05)', paddingBottom: '6px', flexWrap: 'wrap', columnGap: '8px' }}>
                                             <div>
                                                 <div style={{ fontWeight: '800', color: '#121613' }}>{tier.title}</div>
                                                 <div style={{ color: '#59655D', fontSize: '10.5px' }}>{tier.description}</div>
@@ -964,7 +995,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 <Link
                                     key={nc.id}
                                     href={`/camps/${nc.id}`}
-                                    className="hover-lift card-img-zoom"
+                                    className="similar-camp-card hover-lift card-img-zoom"
                                     style={{
                                         background: '#FFFFFF',
                                         borderRadius: '22px',
@@ -984,7 +1015,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                             height="200"
                                             loading="lazy"
                                             decoding="async"
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            style={IMG_FILL}
                                         />
                                         <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {nc.altitude}
@@ -1058,7 +1089,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                                 src={gallery[activePhotoIdx]}
                                 alt={`${camp.title} Full View`}
                                 style={{ width: '100%', height: 'auto', maxHeight: '75vh', objectFit: 'contain', display: 'block', margin: '0 auto', borderRadius: '16px' }}
-                            />
+                             loading="lazy" decoding="async"/>
                             
                             {/* Controls */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', color: '#FFFFFF' }}>

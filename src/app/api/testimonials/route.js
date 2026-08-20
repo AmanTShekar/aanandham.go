@@ -11,5 +11,7 @@ export async function GET(request) {
         return NextResponse.json({ success: false, message: 'Too many requests' }, { status: 429 });
     }
 
-    return NextResponse.json({ success: true, testimonials: getActiveTestimonials(getTestimonials()) });
+    const res = NextResponse.json({ success: true, testimonials: getActiveTestimonials(getTestimonials()) });
+    res.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    return res;
 }

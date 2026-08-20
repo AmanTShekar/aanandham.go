@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Calendar as CalendarIcon, 
@@ -15,14 +16,15 @@ import {
     MapPin, 
     ShieldCheck, 
     ThermometerSun,
-    CalendarDays
+    CalendarDays,
+    Flag
 } from 'lucide-react';
 import { generateUpcomingWeekendBatches } from '../lib/utils';
 import CustomThemeCalendar from './CustomThemeCalendar';
 
 const BATCH_DETAILS_META = {
     0: {
-        themeTag: '🌕 Full Moon Ridge Glamp',
+        themeTag: 'Full Moon Ridge Glamp',
         icon: Moon,
         inclusions: ['4x4 Kolukkumalai Sunrise Jeep', 'Acoustic Campfire & BBQ Dinner', 'Starlit Ridge Tent Pod'],
         weather: '14°C Alpine Night · Clear Skies',
@@ -30,7 +32,7 @@ const BATCH_DETAILS_META = {
         bookedSlots: 9,
     },
     1: {
-        themeTag: '🌠 Meteor Campfire Night',
+        themeTag: 'Meteor Campfire Night',
         icon: Sparkles,
         inclusions: ['Stargazing Telescope Guide', 'Live Acoustic BBQ Night', 'Phantom Head Morning Trek'],
         weather: '13°C Misty Breeze · 7,130 FT',
@@ -38,7 +40,7 @@ const BATCH_DETAILS_META = {
         bookedSlots: 11,
     },
     2: {
-        themeTag: '🎸 Live Wilderness Acoustic',
+        themeTag: 'Live Wilderness Acoustic',
         icon: Flame,
         inclusions: ['Campfire Jam & Dinner', 'Cloud Bed Sunrise Safari', 'Hot Kerala Breakfast'],
         weather: '15°C Foggy Valley Night',
@@ -46,7 +48,7 @@ const BATCH_DETAILS_META = {
         bookedSlots: 7,
     },
     3: {
-        themeTag: '☁️ Summit Cloud Bed Batch',
+        themeTag: 'Summit Cloud Bed Batch',
         icon: Tent,
         inclusions: ['Sunrise Valley View Trek', 'Tea Plantation Nature Walk', 'All Meals & Camp Stay'],
         weather: '14°C Crisp Sunrise Ridge',
@@ -54,7 +56,7 @@ const BATCH_DETAILS_META = {
         bookedSlots: 12,
     },
     4: {
-        themeTag: '🌿 High-Altitude Forest Trail',
+        themeTag: 'High-Altitude Forest Trail',
         icon: Compass,
         inclusions: ['Guided Off-Road 4x4 Safari', 'Bonfire & Marshmallows', 'Alpine Dome Pod'],
         weather: '16°C Fresh Mountain Air',
@@ -62,7 +64,7 @@ const BATCH_DETAILS_META = {
         bookedSlots: 6,
     },
     5: {
-        themeTag: '🔥 Weekend Expedition Special',
+        themeTag: 'Weekend Expedition Special',
         icon: Flame,
         inclusions: ['4x4 Kolukkumalai Peak Safari', 'Campfire & Dinner Feast', 'Panoramic Sunrise Pod'],
         weather: '14°C Starlit Ridge Night',
@@ -172,7 +174,7 @@ export default function CustomDateBatchPicker({
                     e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.04)';
                 }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', width: '100%', minWidth: 0 }}>
                     <div style={{
                         width: '36px',
                         height: '36px',
@@ -186,14 +188,28 @@ export default function CustomDateBatchPicker({
                     }}>
                         <CalendarIcon size={18} strokeWidth={2.2} />
                     </div>
-                    <div style={{ textAlign: 'left', overflow: 'hidden' }}>
+                    <div style={{ textAlign: 'left', overflow: 'hidden', flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: '13.5px', fontWeight: '800', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {displayTitle}
                         </div>
-                        <div style={{ fontSize: '11px', color: isDark ? '#D5ED55' : '#59655D', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span>{displaySubtitle}</span>
-                            <span style={{ color: '#E5A93B' }}>•</span>
-                            <span style={{ color: isDark ? '#A2B6A6' : '#166534', fontWeight: '800' }}>2:00 PM In ➔ 11:00 AM Out</span>
+                        <div style={{ fontSize: '11px', color: isDark ? '#D5ED55' : '#59655D', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {displaySubtitle}
+                        </div>
+                        <div style={{
+                            fontSize: '10.5px',
+                            fontWeight: '800',
+                            color: isDark ? '#E5A93B' : '#166534',
+                            background: isDark ? 'rgba(229, 169, 59, 0.15)' : '#E9EFE6',
+                            borderRadius: '6px',
+                            padding: '2px 8px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            marginTop: '4px',
+                            whiteSpace: 'nowrap'
+                        }}>
+                            <Clock size={10} strokeWidth={2.4} />
+                            <span>2:00 PM In ➔ 11:00 AM Out</span>
                         </div>
                     </div>
                 </div>
@@ -215,7 +231,8 @@ export default function CustomDateBatchPicker({
                 </div>
             </button>
 
-            {/* ── EXPEDITION BATCH SELECTOR POPUP MODAL ── */}
+            {/* ── EXPEDITION BATCH SELECTOR POPUP MODAL (PORTAL → body so it always stacks above the nav bar) ── */}
+            {typeof document !== 'undefined' && createPortal(
             <AnimatePresence>
                 {isModalOpen && (
                     <div style={{
@@ -236,9 +253,12 @@ export default function CustomDateBatchPicker({
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.94, y: 16 }}
                             transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                            data-lenis-prevent="true"
+                            data-lenis-prevent-wheel="true"
+                            data-lenis-prevent-touch="true"
                             style={{
-                                background: '#0B150E',
-                                border: '1.5px solid rgba(229, 169, 59, 0.45)',
+                                background: '#FFFFFF',
+                                border: '1.5px solid rgba(18, 22, 19, 0.12)',
                                 borderRadius: '28px',
                                 width: '100%',
                                 maxWidth: '780px',
@@ -246,29 +266,29 @@ export default function CustomDateBatchPicker({
                                 display: 'flex',
                                 flexDirection: 'column',
                                 overflow: 'hidden',
-                                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(229, 169, 59, 0.18)',
-                                color: '#FFFFFF',
+                                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.35), 0 0 40px rgba(18, 22, 19, 0.08)',
+                                color: '#121613',
                                 position: 'relative'
                             }}
                         >
                             {/* Modal Header */}
                             <div style={{
                                 padding: '20px 24px 16px',
-                                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                                borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                background: 'linear-gradient(180deg, #112216 0%, #0B150E 100%)'
+                                background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%)'
                             }}>
                                 <div>
                                     <div style={{ fontSize: '10.5px', fontWeight: '900', color: '#E5A93B', letterSpacing: '1.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                         <Compass size={13} color="#E5A93B" />
                                         <span>EXPEDITION BATCH SELECTOR & ITINERARY</span>
                                     </div>
-                                    <h3 style={{ margin: '4px 0 0', fontSize: '19px', fontWeight: '800', color: '#FFFFFF', fontFamily: 'var(--font-heading)' }}>
+                                    <h3 style={{ margin: '4px 0 0', fontSize: '19px', fontWeight: '800', color: '#121613', fontFamily: 'var(--font-heading)' }}>
                                         Select Check-In Weekend Batch or Date
                                     </h3>
-                                    <p style={{ margin: '3px 0 0', fontSize: '12px', color: '#A2B6A6' }}>
+                                    <p style={{ margin: '3px 0 0', fontSize: '12px', color: '#59655D' }}>
                                         Check-in: <strong>Saturday 2:00 PM</strong> · Check-out: <strong>Sunday 11:00 AM</strong> (2 Days / 1 Night)
                                     </p>
                                 </div>
@@ -280,9 +300,9 @@ export default function CustomDateBatchPicker({
                                         width: '36px',
                                         height: '36px',
                                         borderRadius: '50%',
-                                        background: 'rgba(255, 255, 255, 0.08)',
-                                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                                        color: '#FFFFFF',
+                                        background: 'rgba(18, 22, 19, 0.06)',
+                                        border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        color: '#121613',
                                         fontSize: '14px',
                                         fontWeight: '800',
                                         display: 'flex',
@@ -291,8 +311,8 @@ export default function CustomDateBatchPicker({
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease'
                                     }}
-                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-                                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(18,22,19,0.12)'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(18,22,19,0.06)'}
                                 >
                                     ✕
                                 </button>
@@ -306,8 +326,8 @@ export default function CustomDateBatchPicker({
                                 flexWrap: 'wrap',
                                 gap: '10px',
                                 padding: '10px 16px',
-                                background: '#08100B',
-                                borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+                                background: '#F6F8F2',
+                                borderBottom: '1px solid rgba(18, 22, 19, 0.06)'
                             }}>
                                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
                                     <button
@@ -320,8 +340,8 @@ export default function CustomDateBatchPicker({
                                             fontWeight: '800',
                                             border: 'none',
                                             cursor: 'pointer',
-                                            background: activeTab === 'batches' ? '#E5A93B' : 'rgba(255, 255, 255, 0.06)',
-                                            color: activeTab === 'batches' ? '#070E08' : '#A2B6A6',
+                                            background: activeTab === 'batches' ? '#E5A93B' : 'rgba(18, 22, 19, 0.06)',
+                                            color: activeTab === 'batches' ? '#070E08' : '#59655D',
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: '6px',
@@ -342,8 +362,8 @@ export default function CustomDateBatchPicker({
                                             fontWeight: '800',
                                             border: 'none',
                                             cursor: 'pointer',
-                                            background: activeTab === 'calendar' ? '#E5A93B' : 'rgba(255, 255, 255, 0.06)',
-                                            color: activeTab === 'calendar' ? '#070E08' : '#A2B6A6',
+                                            background: activeTab === 'calendar' ? '#E5A93B' : 'rgba(18, 22, 19, 0.06)',
+                                            color: activeTab === 'calendar' ? '#070E08' : '#59655D',
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: '6px',
@@ -357,7 +377,7 @@ export default function CustomDateBatchPicker({
 
                                 {/* Duration Toggle Tag */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                    <span style={{ fontSize: '11px', color: '#A2B6A6', fontWeight: '700' }}>Duration:</span>
+                                    <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '700' }}>Duration:</span>
                                     <button
                                         type="button"
                                         onClick={() => setSelectedDuration(2)}
@@ -366,9 +386,9 @@ export default function CustomDateBatchPicker({
                                             borderRadius: '6px',
                                             fontSize: '11px',
                                             fontWeight: '800',
-                                            border: selectedDuration === 2 ? '1px solid #D5ED55' : '1px solid rgba(255,255,255,0.1)',
-                                            background: selectedDuration === 2 ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
-                                            color: selectedDuration === 2 ? '#D5ED55' : '#7D8880',
+                                            border: selectedDuration === 2 ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
+                                            background: selectedDuration === 2 ? 'rgba(22, 101, 52, 0.08)' : 'transparent',
+                                            color: selectedDuration === 2 ? '#166534' : '#7D8880',
                                             cursor: 'pointer'
                                         }}
                                     >
@@ -382,9 +402,9 @@ export default function CustomDateBatchPicker({
                                             borderRadius: '6px',
                                             fontSize: '11px',
                                             fontWeight: '800',
-                                            border: selectedDuration === 3 ? '1px solid #D5ED55' : '1px solid rgba(255,255,255,0.1)',
-                                            background: selectedDuration === 3 ? 'rgba(213, 237, 85, 0.15)' : 'transparent',
-                                            color: selectedDuration === 3 ? '#D5ED55' : '#7D8880',
+                                            border: selectedDuration === 3 ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
+                                            background: selectedDuration === 3 ? 'rgba(22, 101, 52, 0.08)' : 'transparent',
+                                            color: selectedDuration === 3 ? '#166534' : '#7D8880',
                                             cursor: 'pointer'
                                         }}
                                     >
@@ -426,11 +446,11 @@ export default function CustomDateBatchPicker({
                                                     onMouseLeave={() => setHoveredBatch(null)}
                                                     style={{
                                                         background: isSelected 
-                                                            ? 'linear-gradient(145deg, #162E1D 0%, #0F2014 100%)' 
-                                                            : 'rgba(255, 255, 255, 0.03)',
+                                                            ? 'linear-gradient(145deg, #F4F7EB 0%, #EDF2E3 100%)' 
+                                                            : '#F8F9F5',
                                                         border: isSelected 
-                                                            ? '1.5px solid #D5ED55' 
-                                                            : '1px solid rgba(255, 255, 255, 0.09)',
+                                                            ? '1.5px solid #166534' 
+                                                            : '1px solid rgba(18, 22, 19, 0.08)',
                                                         borderRadius: '18px',
                                                         padding: '16px',
                                                         cursor: 'pointer',
@@ -439,7 +459,7 @@ export default function CustomDateBatchPicker({
                                                         gap: '10px',
                                                         transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                                                         position: 'relative',
-                                                        boxShadow: isSelected ? '0 8px 24px rgba(213, 237, 85, 0.15)' : 'none'
+                                                        boxShadow: isSelected ? '0 8px 24px rgba(22, 101, 52, 0.12)' : 'none'
                                                     }}
                                                 >
                                                     {/* Top Batch Header */}
@@ -460,7 +480,7 @@ export default function CustomDateBatchPicker({
                                                                     • {batch.status}
                                                                 </span>
                                                             </div>
-                                                            <div style={{ fontSize: '15px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '-0.01em' }}>
+                                                            <div style={{ fontSize: '15px', fontWeight: '900', color: '#121613', letterSpacing: '-0.01em' }}>
                                                                 {batch.title}
                                                             </div>
                                                         </div>
@@ -469,12 +489,12 @@ export default function CustomDateBatchPicker({
                                                             width: '24px',
                                                             height: '24px',
                                                             borderRadius: '50%',
-                                                            border: isSelected ? 'none' : '1px solid rgba(255, 255, 255, 0.2)',
-                                                            background: isSelected ? '#D5ED55' : 'transparent',
+                                                            border: isSelected ? 'none' : '1px solid rgba(18, 22, 19, 0.2)',
+                                                            background: isSelected ? '#166534' : 'transparent',
                                                             display: 'flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
-                                                            color: '#070E08',
+                                                            color: '#FFFFFF',
                                                             flexShrink: 0
                                                         }}>
                                                             {isSelected && <Check size={14} strokeWidth={3} />}
@@ -483,35 +503,35 @@ export default function CustomDateBatchPicker({
 
                                                     {/* Check-In & Check-Out Marks */}
                                                     <div style={{
-                                                        background: 'rgba(0, 0, 0, 0.3)',
+                                                        background: 'rgba(18, 22, 19, 0.04)',
                                                         borderRadius: '12px',
                                                         padding: '8px 12px',
                                                         display: 'grid',
                                                         gridTemplateColumns: '1fr 1fr',
                                                         gap: '8px',
                                                         fontSize: '11px',
-                                                        border: '1px solid rgba(255, 255, 255, 0.05)'
+                                                        border: '1px solid rgba(18, 22, 19, 0.06)'
                                                     }}>
                                                         <div>
-                                                            <div style={{ color: '#E5A93B', fontWeight: '800', fontSize: '9.5px', textTransform: 'uppercase' }}>
-                                                                📍 Check-In (Sat)
+                                                            <div style={{ color: '#B8860B', fontWeight: '800', fontSize: '9.5px', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <MapPin size={11} /> Check-In (Sat)
                                                             </div>
-                                                            <div style={{ color: '#FFFFFF', fontWeight: '700' }}>
+                                                            <div style={{ color: '#121613', fontWeight: '700' }}>
                                                                 2:00 PM Basecamp
                                                             </div>
                                                         </div>
-                                                        <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.08)', paddingLeft: '8px' }}>
-                                                            <div style={{ color: '#D5ED55', fontWeight: '800', fontSize: '9.5px', textTransform: 'uppercase' }}>
-                                                                🏁 Check-Out (Sun)
+                                                        <div style={{ borderLeft: '1px solid rgba(18, 22, 19, 0.1)', paddingLeft: '8px' }}>
+                                                            <div style={{ color: '#166534', fontWeight: '800', fontSize: '9.5px', textTransform: 'uppercase', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <Flag size={11} /> Check-Out (Sun)
                                                             </div>
-                                                            <div style={{ color: '#FFFFFF', fontWeight: '700' }}>
+                                                            <div style={{ color: '#121613', fontWeight: '700' }}>
                                                                 11:00 AM Departure
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                     {/* Hover Details Card (Inclusions & Live Weather Snapshot) */}
-                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11.5px', color: '#A2B6A6' }}>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11.5px', color: '#59655D' }}>
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                             <ThermometerSun size={13} color="#E5A93B" />
                                                             <span>{meta.weather}</span>
@@ -530,7 +550,7 @@ export default function CustomDateBatchPicker({
                                     <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                                         <CustomThemeCalendar
                                             inline={true}
-                                            theme="dark"
+                                            theme="light"
                                             selectedDate={matchedBatch?.rawDate || selectedDate}
                                             defaultDuration={selectedDuration}
                                             onDateSelect={(isoDate) => handleCalendarSelect(isoDate)}
@@ -542,16 +562,16 @@ export default function CustomDateBatchPicker({
                             {/* Modal Footer Summary */}
                             <div style={{
                                 padding: '14px 24px',
-                                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                                background: '#070E08',
+                                borderTop: '1px solid rgba(18, 22, 19, 0.08)',
+                                background: '#F8F9F5',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center'
                             }}>
-                                <div style={{ fontSize: '12.5px', color: '#A2B6A6' }}>
+                                <div style={{ fontSize: '12.5px', color: '#59655D' }}>
                                     <span>Selected: </span>
-                                    <strong style={{ color: '#FFFFFF' }}>{displayTitle}</strong>
-                                    <span style={{ color: '#D5ED55', marginLeft: '6px' }}>({selectedDuration}D/{selectedDuration - 1}N)</span>
+                                    <strong style={{ color: '#121613' }}>{displayTitle}</strong>
+                                    <span style={{ color: '#166534', marginLeft: '6px' }}>({selectedDuration}D/{selectedDuration - 1}N)</span>
                                 </div>
 
                                 <button
@@ -576,7 +596,9 @@ export default function CustomDateBatchPicker({
                         </motion.div>
                     </div>
                 )}
-            </AnimatePresence>
+            </AnimatePresence>,
+            document.body
+            )}
         </div>
     );
 }

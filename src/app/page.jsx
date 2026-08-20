@@ -1,8 +1,14 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from 'react';
+
+const CONTAINER = { maxWidth: '1440px', margin: '0 auto', width: '100%' };
+const IMG_FILL = { width: '100%', height: '100%', objectFit: 'cover' };
+const SECTION_PAD = { position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' };
+
 import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring, MotionConfig } from 'framer-motion';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
 const BookingEngineModal = dynamic(() => import('../components/BookingEngineModal'), { ssr: false });
@@ -10,6 +16,8 @@ import { useAuth } from '../hooks/useAuth';
 import { INITIAL_ALL_CAMPS, getAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
+import { GraduationCap, Building2, Tent, Flame, Check, ChevronLeft, ChevronRight, ChevronDown, Download, Play, ShieldCheck, Stethoscope, Truck, Heart, MapPin, Clock, Zap, Camera, Search, MessageCircle, Star, Sunrise, Footprints, PersonStanding, Telescope, Leaf, Mountain, Waves, Link2 } from 'lucide-react';
+import { WhatsAppIcon, InstagramIcon } from '../components/common/BrandIcons';
 import { loadTestimonialsFromStorage } from '../lib/testimonialsCore';
 
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
@@ -84,11 +92,11 @@ const WHY_AANANDHAM_PILLARS = [
         desc: 'We eliminate the roughness from wilderness camping. Every campsite features private gated perimeters, dedicated on-site female & male coordinators, clean western washrooms with running hot water, and 24/7 power backup.',
         image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
         stat: '350+ Solo Female Campers',
-        statIcon: '🛡️',
+        statIcon: ShieldCheck,
         rotation: '-1.2deg',
         paperBg: '#FFFDF6',
         accentColor: '#166534',
-        highlights: ['Gated Private Perimeter', '24/7 Marshals On-Site', 'Modern Western Washrooms & Hot Water', 'Zero-Tolerance Safety Protocol']
+        highlights: ['Gated Private Perimeter', '24/7 Guides On-Site', 'Modern Western Washrooms & Hot Water', 'Zero-Tolerance Safety Protocol']
     },
     {
         id: 'offroad',
@@ -101,7 +109,7 @@ const WHY_AANANDHAM_PILLARS = [
         desc: 'Our fleet of verified 4x4 off-road Mahindra jeeps takes you through rugged private tea estate tracks, crossing rolling cloud valleys to untouched summit vistas where ordinary transport cannot go.',
         image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
         stat: '7,900 FT Highest Camp',
-        statIcon: '🚙',
+        statIcon: Truck,
         rotation: '1.4deg',
         paperBg: '#FAF8EE',
         accentColor: '#B45309',
@@ -112,17 +120,17 @@ const WHY_AANANDHAM_PILLARS = [
         badge: 'Certified Mountain Guides',
         serial: 'EXP-TAG · 03',
         seal: 'WFA MEDICAL',
-        tagline: '1:6 Marshal-to-Camper Ratio',
+        tagline: '1:6 Guide-to-Camper Ratio',
         title: 'WFA-Certified Local Guides',
         fullTitle: 'WFA-Certified Local Mountain Guides',
         desc: 'Led by Western Ghats natives who grew up traversing these mist valleys. They pace each group with small 1:6 ratios, carrying medical kits, pulse oximeters, and deep indigenous flora and mountain wisdom.',
         image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80',
-        stat: '1:6 Marshal-to-Camper Ratio',
-        statIcon: '🩺',
+        stat: '1:6 Guide-to-Camper Ratio',
+        statIcon: Stethoscope,
         rotation: '-1.0deg',
         paperBg: '#F7FAF4',
         accentColor: '#047857',
-        highlights: ['Small 1:6 Marshal Ratio', 'WFA & CPR First Aid Certified', 'Oxygen & Medical Kits on Trail', 'Local Cultural Storytelling']
+        highlights: ['Small 1:6 Guide Ratio', 'WFA & CPR First Aid Certified', 'Oxygen & Medical Kits on Trail', 'Local Cultural Storytelling']
     },
     {
         id: 'gastronomy',
@@ -135,7 +143,7 @@ const WHY_AANANDHAM_PILLARS = [
         desc: 'Warm up around roaring campfires at 10°C with smoking hot barbecue platters, traditional Kerala feasts, live acoustic open-mic jams, and zero-light-pollution telescope observation of celestial nebulas.',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
         stat: '4.98★ Food & Stargaze Rating',
-        statIcon: '🔥',
+        statIcon: Flame,
         rotation: '1.2deg',
         paperBg: '#FEF6EE',
         accentColor: '#C2410C',
@@ -149,25 +157,25 @@ const EXPERIENCE_ITEMS = [
         category: 'for body',
         title: 'Yoga and Meditation',
         desc: 'Stretch out your trek-tired muscles with sunset mountain yoga and start your mornings centered with guided meadow meditation sessions. Re-align your posture and breathe in fresh high-altitude pine air.',
-        icon: '🧘'
+        icon: PersonStanding
     },
     {
         category: 'for soul',
         title: 'Temples and Ceremonies',
         desc: 'Experience Western Ghats spiritual side through ancient mountain folklore, temple walks, and evening campfire circles where we share what really matters under starlit cloud canopies.',
-        icon: '🍃'
+        icon: Leaf
     },
     {
         category: 'for mind',
         title: 'Culture and Growth',
         desc: 'Learn the stories behind the spice hills at local tea plantations, meet indigenous valley farmers, and connect over authentic forest-to-table dinners designed for real, deep conversation.',
-        icon: '🏔️'
+        icon: Mountain
     },
     {
         category: 'for fun',
         title: 'Adventures Together',
         desc: 'Discover hidden natural rock pools, wild river bamboo rafting rapids, and extreme off-road Jeep climbs to misty sunrise viewpoints. Make lifetime bonds with fellow mountain travelers.',
-        icon: '🏄'
+        icon: Waves
     }
 ];
 
@@ -237,7 +245,7 @@ const EVENT_ARRANGEMENTS = [
         stampColor: '#B45309',
         accentColor: '#D97706',
         btnBg: '#E5A93B',
-        iconClass: 'fa-solid fa-graduation-cap',
+        iconClass: GraduationCap,
         title: 'College & Youth Expeditions',
         badge: 'Squad Groups (10-80 pax)',
         desc: 'Curated high-energy student treks with budget-friendly tents, acoustic campfires, guided ridge hikes, and dedicated safety marshals.',
@@ -255,7 +263,7 @@ const EVENT_ARRANGEMENTS = [
         stampColor: '#047857',
         accentColor: '#059669',
         btnBg: '#10B981',
-        iconClass: 'fa-solid fa-building',
+        iconClass: Building2,
         title: 'Corporate Ridge Offsites',
         badge: 'Team Building & Strategy',
         desc: 'Step out of boardrooms into the clouds. High-altitude glamping, off-road team challenges, outdoor strategy sessions, and curated dining.',
@@ -273,7 +281,7 @@ const EVENT_ARRANGEMENTS = [
         stampColor: '#C2410C',
         accentColor: '#EA580C',
         btnBg: '#F97316',
-        iconClass: 'fa-solid fa-campground',
+        iconClass: Tent,
         title: 'Strangers Camp Meet',
         badge: 'Weekend Community Camp',
         desc: 'Travel alone and leave with a tribe. Safe, vibrant weekend camps where solo travelers bond over stargazing, icebreakers, and ridge sunrises.',
@@ -291,7 +299,7 @@ const EVENT_ARRANGEMENTS = [
         stampColor: '#7E22CE',
         accentColor: '#9333EA',
         btnBg: '#A855F7',
-        iconClass: 'fa-solid fa-fire',
+        iconClass: Flame,
         title: 'Private Ridge Celebrations',
         badge: 'Bespoke Arrangements',
         desc: 'Celebrate birthdays, pre-weddings, and milestones amidst mist and mountain ridges with drone cinematography and starlit barbecue dinners.',
@@ -470,7 +478,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
             id="cta"
             style={{ position: 'relative', padding: '80px clamp(20px, 4vw, 48px) 110px', background: '#F8F9F5' }}
         >
-            <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+            <div style={CONTAINER}>
                 <div 
                     style={{
                         position: 'relative',
@@ -491,12 +499,13 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                             height: '100%'
                         }}
                     >
-                        <img
+                        <Image
                             src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80"
                             alt="Canopy Wilderness"
+                            fill
+                            priority
+                            sizes="100vw"
                             style={{
-                                width: '100%',
-                                height: '100%',
                                 objectFit: 'cover',
                                 filter: 'brightness(0.68) contrast(1.15)'
                             }}
@@ -564,7 +573,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                                 rel="noopener noreferrer"
                                 className="btn-whatsapp-glass"
                             >
-                                <i className="fa-brands fa-whatsapp" style={{ fontSize: '19px', color: '#25D366' }}></i>
+                                <WhatsAppIcon size={19} color="#25D366" />
                                 <span>WhatsApp Helpdesk</span>
                             </a>
                         </div>
@@ -1010,7 +1019,7 @@ export default function HomePage() {
                                 boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                             }}
                         >
-                            ⛺ Explore Stays & Camps →
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Tent size={16} /> Explore Stays & Camps →</span>
                         </Link>
 
                         {/* Translucent Learn More Button */}
@@ -1044,7 +1053,7 @@ export default function HomePage() {
                             rel="noopener noreferrer"
                             className="hero-instagram-btn"
                         >
-                            <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }}></i>
+                            <InstagramIcon size={16} />
                             <span>@aanandham.go</span>
                         </a>
                     </motion.div>
@@ -1084,25 +1093,25 @@ export default function HomePage() {
             <div className="marquee-container" aria-hidden="true" style={{ background: '#0B150E', color: '#FFFFFF' }}>
                 <div className="marquee-track">
                     {[
-                        { icon: '★', label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
-                        { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
-                        { icon: '🔥', label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
-                        { icon: '⛺', label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
-                        { icon: '🥾', label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
-                        { icon: '🧘', label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
-                        { icon: '🔭', label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
-                        { icon: '🚙', label: 'VERIFIED OFF-ROAD SAFARI FLEET' },
-                        { icon: '★', label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
-                        { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
-                        { icon: '🔥', label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
-                        { icon: '⛺', label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
-                        { icon: '🥾', label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
-                        { icon: '🧘', label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
-                        { icon: '🔭', label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
-                        { icon: '🚙', label: 'VERIFIED OFF-ROAD SAFARI FLEET' }
+                        { icon: Star, label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
+                        { icon: Sunrise, label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                        { icon: Flame, label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
+                        { icon: Tent, label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
+                        { icon: Footprints, label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
+                        { icon: PersonStanding, label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
+                        { icon: Telescope, label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
+                        { icon: Truck, label: 'VERIFIED OFF-ROAD SAFARI FLEET' },
+                        { icon: Star, label: '6,500 FT HIGH-ALTITUDE RIDGE', highlight: true },
+                        { icon: Sunrise, label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                        { icon: Flame, label: 'STARLIT CAMPFIRE & LIVE BARBECUE' },
+                        { icon: Tent, label: '100% PRIVATE & FEMALE-FRIENDLY PODS', highlight: true },
+                        { icon: Footprints, label: 'GUIDED PHANTOM HEAD PEAK TRAILS' },
+                        { icon: PersonStanding, label: 'SUNRISE PRANAYAMA & MOUNTAIN YOGA' },
+                        { icon: Telescope, label: 'ZERO LIGHT-POLLUTION STARGAZING', highlight: true },
+                        { icon: Truck, label: 'VERIFIED OFF-ROAD SAFARI FLEET' }
                     ].map((item, idx) => (
                         <div key={idx} className="marquee-item">
-                            <span>{item.icon}</span>
+                            <item.icon size={16} strokeWidth={2.4} />
                             <span className={item.highlight ? 'highlight' : ''}>{item.label}</span>
                             <span style={{ opacity: 0.3 }}>·</span>
                         </div>
@@ -1121,7 +1130,7 @@ export default function HomePage() {
                 variants={staggerContainer}
                 style={{ position: 'relative', padding: 'clamp(64px, 7vw, 92px) clamp(20px, 4vw, 48px) clamp(50px, 5vw, 68px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="overview-3col-grid">
                         
                         {/* Left Column */}
@@ -1152,13 +1161,13 @@ export default function HomePage() {
                             {/* 3 Checkmark Pills */}
                             <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', marginBottom: '24px' }}>
                                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                    <i className="fa-solid fa-check" style={{ color: '#121613' }}></i> Misty Peaks
+                                    <Check size={13} color="#121613" /> Misty Peaks
                                 </span>
                                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                    <i className="fa-solid fa-check" style={{ color: '#121613' }}></i> Cloud Beds
+                                    <Check size={13} color="#121613" /> Cloud Beds
                                 </span>
                                 <span style={{ fontSize: '13px', fontWeight: '700', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                    <i className="fa-solid fa-check" style={{ color: '#121613' }}></i> Campfire Culture
+                                    <Check size={13} color="#121613" /> Campfire Culture
                                 </span>
                             </div>
 
@@ -1222,14 +1231,14 @@ export default function HomePage() {
                                         aria-label="Previous trip highlight"
                                         style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                     >
-                                        <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
+                                        <ChevronLeft size={13} />
                                     </button>
                                     <button 
                                         onClick={nextHighlight} 
                                         aria-label="Next highlight"
                                         style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                     >
-                                        <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
+                                        <ChevronRight size={13} />
                                     </button>
                                 </div>
                             </div>
@@ -1303,7 +1312,7 @@ export default function HomePage() {
                 variants={sectionReveal}
                 style={{ position: 'relative', padding: 'clamp(50px, 5vw, 68px) clamp(20px, 4vw, 48px) clamp(70px, 7vw, 96px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="why-aanandham-grid">
                         
                         {/* Interactive Cinematic Showcase Card (Desktop: Left, Mobile: Below Header/Tabs) */}
@@ -1370,7 +1379,7 @@ export default function HomePage() {
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255, 255, 255, 0.15)'
                             }}>
-                                {WHY_AANANDHAM_PILLARS[activeWhyIdx].statIcon} {WHY_AANANDHAM_PILLARS[activeWhyIdx].stat}
+                                {(() => { const StatIcon = WHY_AANANDHAM_PILLARS[activeWhyIdx].statIcon; return <StatIcon size={14} style={{ verticalAlign: '-2px' }} />; })()} {WHY_AANANDHAM_PILLARS[activeWhyIdx].stat}
                             </div>
 
                             {/* Bottom Content Card & Highlights */}
@@ -1417,14 +1426,14 @@ export default function HomePage() {
                                             aria-label="Previous reason"
                                             style={{ width: '38px', height: '38px', minWidth: '38px', minHeight: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-left" style={{ fontSize: '12px' }}></i>
+                                            <ChevronLeft size={12} />
                                         </button>
                                         <button 
                                             onClick={nextWhyPillar} 
                                             aria-label="Next reason"
                                             style={{ width: '38px', height: '38px', minWidth: '38px', minHeight: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}
                                         >
-                                            <i className="fa-solid fa-chevron-right" style={{ fontSize: '12px' }}></i>
+                                            <ChevronRight size={12} />
                                         </button>
                                     </div>
                                 </div>
@@ -1558,15 +1567,16 @@ export default function HomePage() {
                                                     width: '38px',
                                                     height: '38px',
                                                     borderRadius: '10px',
-                                                    background: isSelected ? '#121613' : 'rgba(0, 0, 0, 0.08)',
+                                                    background: isSelected ? 'rgba(229, 169, 59, 0.22)' : 'rgba(0, 0, 0, 0.08)',
+                                                    color: isSelected ? '#92400E' : '#121613',
                                                     display: 'flex',
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                     fontSize: '18px',
                                                     flexShrink: 0,
-                                                    transition: 'background 0.25s ease'
+                                                    transition: 'background 0.25s ease, color 0.25s ease'
                                                 }}>
-                                                    {pillar.statIcon}
+                                                    <pillar.statIcon size={18} strokeWidth={2.4} />
                                                 </div>
                                                 <h4 style={{
                                                     fontFamily: 'var(--font-heading)',
@@ -1603,15 +1613,15 @@ export default function HomePage() {
                             {/* Certified Trust Badges */}
                             <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', paddingTop: '16px', borderTop: '1px solid rgba(18, 22, 19, 0.08)' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
-                                    <span style={{ color: '#E5A93B' }}>🛡️</span>
+                                    <span style={{ color: '#E5A93B', display: 'inline-flex' }}><ShieldCheck size={16} /></span>
                                     <span>Kerala Forest Eco-Permits</span>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
-                                    <span style={{ color: '#E5A93B' }}>★</span>
+                                    <span style={{ color: '#E5A93B', display: 'inline-flex' }}><Star size={16} fill="#E5A93B" /></span>
                                     <span>4.98 / 5.0 Rating</span>
                                 </div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', color: '#121613', fontWeight: '700' }}>
-                                    <span style={{ color: '#E5A93B' }}>🚙</span>
+                                    <span style={{ color: '#E5A93B', display: 'inline-flex' }}><Truck size={16} /></span>
                                     <span>4x4 Jeep Convoy</span>
                                 </div>
                             </div>
@@ -1632,7 +1642,7 @@ export default function HomePage() {
                 variants={sectionReveal}
                 className="packages-section-container"
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="packages-section-header">
                         <div>
                             <div className="star-badge">
@@ -1647,7 +1657,7 @@ export default function HomePage() {
                         </div>
 
                         {/* Smooth Liquid-Glide Animated Filter Pills + View All Link */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                        <div className="packages-filter-row">
                             <LayoutGroup id="packagesFilterTabsGroup">
                                 <div className="packages-filter-scroll">
                                     {['All', 'Treks', 'Glamping', 'Water'].map(tab => {
@@ -1752,7 +1762,7 @@ export default function HomePage() {
                                                     alt={pkg.title} 
                                                     loading="lazy"
                                                     decoding="async"
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                    style={IMG_FILL} 
                                                 />
                                             </Link>
                                             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.65) 0%, transparent 45%)', pointerEvents: 'none' }} />
@@ -1788,7 +1798,7 @@ export default function HomePage() {
                                                         boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                                                     }}
                                                 >
-                                                    {isLiked ? '❤️' : '🤍'}
+                                                    {isLiked ? <Heart size={15} fill="#FFFFFF" /> : <Heart size={15} />}
                                                 </button>
 
                                                 <button
@@ -1810,7 +1820,7 @@ export default function HomePage() {
                                                         boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                                                     }}
                                                 >
-                                                    🔗
+<Link2 size={14} />
                                                 </button>
 
                                                 <div style={{ background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 8px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
@@ -1820,8 +1830,8 @@ export default function HomePage() {
 
                                             {/* Bottom Overlay Location & Duration */}
                                             <div style={{ position: 'absolute', bottom: '12px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', pointerEvents: 'none' }}>
-                                                <span>📍 {pkg.location}</span>
-                                                <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>⏱ {pkg.duration}</span>
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {pkg.location}</span>
+                                                <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={11} /> {pkg.duration}</span>
                                             </div>
                                         </div>
 
@@ -1898,7 +1908,7 @@ export default function HomePage() {
                                                         className="btn-lime" 
                                                         style={{ padding: '7px 13px', borderRadius: '10px', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                                                     >
-                                                        <span>Book ⚡</span>
+                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>Book <Zap size={12} /></span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1957,7 +1967,7 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={SECTION_PAD}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%', position: 'relative' }}>
                     
@@ -1997,7 +2007,7 @@ export default function HomePage() {
                                 transition: 'all 0.2s'
                             }}
                         >
-                            <i className="fa-solid fa-download" style={{ fontSize: '12px' }}></i> Full Program
+                            <Download size={12} /> Full Program
                         </a>
                     </div>
 
@@ -2032,7 +2042,7 @@ export default function HomePage() {
                                         alt={PROGRAM_DAYS[hoveredProgramDay].title} 
                                         loading="lazy"
                                         decoding="async"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                        style={IMG_FILL} 
                                     />
                                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(11,21,14,0.92) 0%, rgba(11,21,14,0.25) 50%, transparent 100%)' }} />
                                     <div style={{ position: 'absolute', bottom: '16px', left: '18px', right: '18px', color: '#FFFFFF' }}>
@@ -2112,7 +2122,7 @@ export default function HomePage() {
                                             transform: isOpen ? 'rotate(180deg)' : 'none',
                                             transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)'
                                         }}>
-                                            <i className="fa-solid fa-chevron-down"></i>
+                                            <ChevronDown size={14} />
                                         </div>
                                     </div>
 
@@ -2146,11 +2156,11 @@ export default function HomePage() {
                                                             alt={item.title} 
                                                             loading="lazy"
                                                             decoding="async"
-                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                                            style={IMG_FILL} 
                                                         />
                                                         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.75) 0%, transparent 50%)' }} />
                                                         <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
-                                                            <span>📍 {item.altitude || 'Western Ghats Ridge'}</span>
+                                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {item.altitude || 'Western Ghats Ridge'}</span>
                                                             <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 9px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>{item.terrain || 'Mountain Trail'}</span>
                                                         </div>
                                                     </div>
@@ -2176,9 +2186,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={SECTION_PAD}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
@@ -2235,8 +2245,8 @@ export default function HomePage() {
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                                <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', flexShrink: 0 }}>
-                                                    {exp.icon}
+                                                <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                                                    <exp.icon size={20} strokeWidth={2} />
                                                 </div>
                                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
                                                     {exp.category}
@@ -2475,7 +2485,7 @@ export default function HomePage() {
                                                 borderRadius: '50%',
                                                 border: '1px solid rgba(0,0,0,0.12)'
                                             }}
-                                        />
+                                         loading="lazy" decoding="async"/>
                                         <span style={{
                                             fontSize: '9px',
                                             fontWeight: '900',
@@ -2527,7 +2537,7 @@ export default function HomePage() {
                                         fontSize: '16px',
                                         flexShrink: 0
                                     }}>
-                                        <i className={ev.iconClass}></i>
+                                        <ev.iconClass size={16} />
                                     </div>
                                     <div>
                                         <span style={{ fontSize: '10.5px', fontWeight: '800', color: ev.accentColor, letterSpacing: '0.6px', textTransform: 'uppercase', display: 'block' }}>
@@ -2621,9 +2631,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={SECTION_PAD}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="sticky-split-grid" style={{ alignItems: 'flex-start', gap: 'clamp(32px, 4vw, 56px)' }}>
                         
                         {/* Sticky Pinned Left Header */}
@@ -2718,7 +2728,7 @@ export default function HomePage() {
                 className="wilderness-section-container"
                 style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#FFFFFF' }}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div className="wilderness-section-header" style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 48px' }}>
                         <div className="star-badge" style={{ margin: '0 auto 12px' }}>
                             <span className="star-icon">★</span> KERALA WILDERNESS GRID
@@ -2731,7 +2741,7 @@ export default function HomePage() {
                         </p>
                         <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" className="action-arrow-btn" style={{ display: 'inline-flex', margin: '0 auto' }}>
                             <span>Follow @aanandham.go</span>
-                            <div className="btn-arrow-circle">📸</div>
+                            <div className="btn-arrow-circle"><Camera size={15} /></div>
                         </a>
                     </div>
 
@@ -2758,7 +2768,7 @@ export default function HomePage() {
                                 }}
                             >
                                 <div style={{ position: 'relative', height: '260px' }}>
-                                    <img src={spot.img} alt={spot.name} loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={spot.img} alt={spot.name} loading="lazy" decoding="async" style={IMG_FILL} />
                                     <span style={{
                                         position: 'absolute',
                                         top: '16px',
@@ -2785,7 +2795,7 @@ export default function HomePage() {
                                         borderRadius: '999px',
                                         backdropFilter: 'blur(6px)'
                                     }}>
-                                        🔍 Click to Expand
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Search size={13} /> Click to Expand</span>
                                     </span>
                                 </div>
                                 <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -2830,9 +2840,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={SECTION_PAD}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
                         <div>
                             <div className="star-badge">
@@ -2860,14 +2870,14 @@ export default function HomePage() {
                                 aria-label="Previous testimonial"
                                 style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
                             >
-                                <i className="fa-solid fa-chevron-left" style={{ fontSize: '13px' }}></i>
+                                <ChevronLeft size={13} />
                             </button>
                             <button 
                                 onClick={nextTestimonial} 
                                 aria-label="Next testimonial"
                                 style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
                             >
-                                <i className="fa-solid fa-chevron-right" style={{ fontSize: '13px' }}></i>
+                                <ChevronRight size={13} />
                             </button>
                         </div>
                     </div>
@@ -2893,7 +2903,7 @@ export default function HomePage() {
                                     alt="Aanandham Wilderness Campfire" 
                                     loading="lazy"
                                     decoding="async"
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                                    style={IMG_FILL} 
                                 />
                                 
                                 {/* Subtle Vignette Gradient */}
@@ -2916,7 +2926,7 @@ export default function HomePage() {
                                     boxShadow: '0 4px 18px rgba(0, 0, 0, 0.12)',
                                     backdropFilter: 'blur(8px)'
                                 }}>
-                                    <i className="fa-solid fa-play" style={{ fontSize: '16px', marginLeft: '3px' }}></i>
+                                    <Play size={16} style={{ marginLeft: '3px' }} />
                                 </div>
 
                                 {/* Top Live Badge */}
@@ -2938,7 +2948,7 @@ export default function HomePage() {
                             <div className="polaroid-chin-text">
                                 <div>
                                     <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613', letterSpacing: '-0.01em' }}>
-                                        Kolukkumalai Sunrise & Campfire 🌄
+                                        Kolukkumalai Sunrise & Campfire
                                     </div>
                                     <div style={{ fontSize: '11.5px', color: '#7E8B82', marginTop: '3px', fontWeight: '600' }}>
                                         Batch #42 · Suryanelli Ridge (7,900 FT)
@@ -3066,9 +3076,9 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: '110px clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={SECTION_PAD}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                <div style={CONTAINER}>
                     
                     <div style={{ marginBottom: '60px' }}>
                         <div className="star-badge">
@@ -3114,7 +3124,7 @@ export default function HomePage() {
                                 fontSize: '22px', 
                                 marginBottom: '20px' 
                             }}>
-                                💬
+                                <MessageCircle size={22} strokeWidth={2.2} />
                             </div>
                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', marginBottom: '10px' }}>
                                 Still have questions?
@@ -3153,7 +3163,7 @@ export default function HomePage() {
                                                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '700', color: '#121613', lineHeight: 1.4 }}>{faq.question}</span>
                                             </div>
                                             <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#F1F3EC', color: '#121613', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                                                <i className="fa-solid fa-chevron-down" style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease', fontSize: '11px' }}></i>
+                                                <ChevronDown size={11} style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }} />
                                             </div>
                                         </button>
                                         <AnimatePresence initial={false}>
@@ -3326,7 +3336,7 @@ export default function HomePage() {
                             rel="noopener noreferrer"
                             className="insta-brand-button"
                         >
-                            <i className="fa-brands fa-instagram" style={{ fontSize: '20px' }} />
+                            <InstagramIcon size={20} />
                             <span style={{ fontFamily: 'system-ui, -apple-system, sans-serif', fontSize: '15px' }}>Instagram</span>
                         </a>
                     </div>
@@ -3388,7 +3398,7 @@ export default function HomePage() {
                                     src={story.img}
                                     alt={story.title}
                                     className="story-card-img"
-                                />
+                                 loading="lazy" decoding="async"/>
                                 <div className="story-card-overlay">
                                     <div style={{
                                         display: 'flex',
@@ -3575,8 +3585,8 @@ export default function HomePage() {
                                 <img
                                     src={selectedLightboxImg.img}
                                     alt={selectedLightboxImg.name}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                />
+                                    style={IMG_FILL}
+                                 loading="lazy" decoding="async"/>
                                 <div style={{
                                     position: 'absolute',
                                     bottom: 0,

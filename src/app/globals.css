@@ -275,6 +275,11 @@ body::-webkit-scrollbar-thumb:active,
   grid-template-columns: 1fr;
   gap: 32px;
   align-items: start;
+  min-width: 0;
+}
+
+.camp-detail-layout > div {
+  min-width: 0;
 }
 
 @media (min-width: 1024px) {
@@ -373,6 +378,222 @@ body::-webkit-scrollbar-thumb:active,
     grid-column: span 1;
     grid-row: span 1;
     height: 90px;
+  }
+}
+
+/* ── CAMP DETAIL HERO MOBILE (COMPACT BREADCRUMB, BADGES, INFO ROW) ── */
+@media (max-width: 640px) {
+  .camp-hero-breadcrumb {
+    gap: 6px;
+    font-size: 11.5px;
+    margin-bottom: 14px;
+  }
+
+  .camp-hero-breadcrumb-current {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .camp-hero-badges {
+    gap: 6px;
+  }
+
+  .camp-hero-badge {
+    font-size: 10.5px !important;
+    padding: 4px 10px !important;
+  }
+
+  .camp-hero-title {
+    font-size: 26px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .camp-hero-info {
+    gap: 10px 14px !important;
+    font-size: 12.5px !important;
+  }
+
+  .camp-hero-info svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .camp-hero-actions {
+    width: 100%;
+  }
+
+  .camp-hero-btn {
+    padding: 9px 14px !important;
+    font-size: 12px !important;
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .camp-hero-title {
+    font-size: 24px !important;
+  }
+}
+
+/* ── BOOKING CARD COMPACT CTAs (SIDE-BY-SIDE, RESPONSIVE LABELS) ── */
+.cta-label-narrow {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .cta-label-wide {
+    display: none;
+  }
+
+  .cta-label-narrow {
+    display: inline;
+  }
+}
+
+/* ── AMENITIES 2-COLUMN SPLIT ON MOBILE ── */
+.amenities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .amenities-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .amenity-module {
+    padding: 16px 18px !important;
+    gap: 14px !important;
+  }
+
+  .amenity-module > div {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .amenity-module > span {
+    font-size: 13px !important;
+    line-height: 1.45;
+  }
+}
+
+/* ── ROOM CARD MOBILE (2-COL FEATURES + FULL-WIDTH PRICE/SELECT ROW) ── */
+@media (max-width: 640px) {
+  .room-card {
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .room-card-main {
+    min-width: 0 !important;
+    flex: 1 1 100% !important;
+  }
+
+  .room-feats {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .room-feats > span {
+    font-size: 10.5px !important;
+    padding: 4px 8px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .room-price-row {
+    flex: 1 1 100% !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding-top: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .room-feats {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── SIMILAR CAMPS 2-UP GRID ON MOBILE (COMPACT CARDS) ── */
+@media (max-width: 640px) {
+  .similar-camps-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    flex-wrap: nowrap !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+    overscroll-behavior-x: auto !important;
+    padding: 0 !important;
+    touch-action: auto !important;
+    scroll-padding: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .similar-camps-grid > * {
+    flex: none !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    scroll-snap-align: none !important;
+    margin: 0 !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .similar-camp-card > div:first-child {
+    height: 110px !important;
+  }
+
+  .similar-camp-card > div:first-child span {
+    top: 8px;
+    left: 8px;
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .similar-camp-card > div:last-child {
+    padding: 12px 14px !important;
+  }
+
+  .similar-camp-card h3 {
+    font-size: 14.5px !important;
+    margin: 0 0 8px !important;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .similar-camp-card > div:last-child > div:first-child {
+    margin-bottom: 4px !important;
+    font-size: 10px !important;
+  }
+
+  .similar-camp-card > div:last-child > div:first-child span:last-child {
+    font-size: 10.5px !important;
+  }
+
+  .similar-camp-card > div:last-child > div:last-child {
+    padding-top: 9px !important;
+    margin-top: auto;
+  }
+
+  .similar-camp-card > div:last-child > div:last-child > span:first-child {
+    font-size: 10px !important;
+  }
+
+  .similar-camp-card > div:last-child > div:last-child > span:last-child {
+    font-size: 11px !important;
   }
 }
 
@@ -1442,6 +1663,36 @@ body::-webkit-scrollbar-thumb:active,
   -webkit-overflow-scrolling: touch !important;
   box-sizing: border-box !important;
   overscroll-behavior: contain !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.mobile-nav-drawer::-webkit-scrollbar,
+#mobile-navigation-drawer::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Compress drawer on short screens so nothing overflows (no scrollbar line) */
+@media (max-height: 720px) {
+  .mobile-nav-drawer {
+    padding: 70px 20px 20px !important;
+  }
+
+  .mobile-nav-drawer .mobile-nav-link-item {
+    padding: 7px 0 !important;
+    font-size: 19px !important;
+  }
+
+  .mobile-nav-drawer .btn-lime {
+    padding: 10px !important;
+    min-height: 40px !important;
+  }
+
+  .mobile-nav-drawer .mobile-nav-link-item .drawer-arrow {
+    font-size: 16px !important;
+  }
 }
 
 
@@ -1785,6 +2036,263 @@ body::-webkit-scrollbar-thumb:active,
 .marquee-item .highlight {
   color: #E5A93B;
   font-weight: 900;
+}
+
+/* Blog card link — white card with hover lift (used on server-rendered blog pages) */
+.blog-card-link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(18, 22, 19, 0.1);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blog-card-link .blog-card-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-card-link .blog-card-media img {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .blog-card-link:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .blog-card-link:hover .blog-card-media img {
+    transform: scale(1.05);
+  }
+}
+
+/* Camps directory filter bar — mobile friendly */
+.camps-filter-search {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+}
+
+.camps-filter-sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+}
+
+.camps-pills-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .camps-filter-card {
+    padding: 18px 16px !important;
+    border-radius: 18px !important;
+  }
+  .camps-filter-search {
+    min-width: 100% !important;
+  }
+  .camps-filter-sort {
+    min-width: 100% !important;
+  }
+  .camps-filter-sort > span {
+    display: none !important;
+  }
+  .camps-pills-row {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    scrollbar-width: none !important;
+    scroll-snap-type: x mandatory !important;
+    touch-action: pan-x pan-y !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    padding: 4px 4px 8px !important;
+    width: 100% !important;
+  }
+  .camps-pills-row::-webkit-scrollbar {
+    display: none !important;
+  }
+  .camps-pills-row > * {
+    flex-shrink: 0 !important;
+    scroll-snap-align: start !important;
+  }
+}
+
+/* Accommodation types — swipeable track on mobile */
+.accommodation-types-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .accommodation-types-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    gap: 14px !important;
+    margin: 0 calc(clamp(24px, 4vw, 60px) * -1) !important;
+    padding: 4px calc((100vw - min(86vw, 320px)) / 2) 14px !important;
+    scrollbar-width: none !important;
+    touch-action: pan-x pan-y !important;
+  }
+  .accommodation-types-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  .accommodation-types-grid > * {
+    flex: 0 0 min(86vw, 320px) !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
+  }
+}
+
+/* Campsite cards — Airbnb-style compact horizontal rows on phones */
+@media (max-width: 640px) {
+  .camps-card {
+    flex-direction: row !important;
+    border-radius: 18px !important;
+    min-height: 158px !important;
+  }
+  .camps-card-media {
+    width: 42% !important;
+    min-width: 42% !important;
+    height: auto !important;
+    min-height: 158px !important;
+    flex-shrink: 0 !important;
+  }
+  .camps-card-body {
+    padding: 12px 12px 12px 14px !important;
+    min-width: 0 !important;
+  }
+  .camps-card-body h3 {
+    font-size: 15px !important;
+    line-height: 1.3 !important;
+    margin: 0 0 6px !important;
+  }
+  .camps-card-desc,
+  .camps-card-highlights {
+    display: none !important;
+  }
+  .camps-card-body > div:first-child {
+    margin-bottom: 4px !important;
+  }
+  .camps-card-body > div:first-child > span:last-child {
+    display: none !important;
+  }
+  .camps-card-body > div:first-child > span:first-child {
+    font-size: 10.5px !important;
+  }
+  .camps-card-body > div:last-child {
+    margin-top: 6px !important;
+    padding-top: 10px !important;
+  }
+  .camps-card-body > div:last-child > div > span {
+    display: none !important;
+  }
+  .camps-card-body > div:last-child > div > div > span:first-child {
+    font-size: 18px !important;
+  }
+  .camps-card-body > div:last-child > button {
+    padding: 9px 16px !important;
+    font-size: 12px !important;
+  }
+  .camps-card-media > div:last-child > button {
+    display: none !important;
+  }
+  .camps-card-media > div:last-child {
+    bottom: 8px !important;
+    left: 8px !important;
+    right: 8px !important;
+  }
+  .camps-card-media > div:last-child > span {
+    padding: 3px 8px !important;
+    font-size: 10.5px !important;
+  }
+  .camps-card-media > div:nth-child(3) {
+    top: 10px !important;
+    left: 10px !important;
+  }
+  .camps-card-media > div:nth-child(3) > span {
+    padding: 3px 8px !important;
+    font-size: 9.5px !important;
+  }
+  .camps-card-media > div:nth-child(4) {
+    top: 10px !important;
+    right: 10px !important;
+  }
+  .camps-card-media > div:nth-child(4) > button {
+    width: 30px !important;
+    height: 30px !important;
+  }
+}
+
+/* Accommodation types — compact cards on phones */
+@media (max-width: 768px) {
+  .accommodation-types-grid > * > div:last-child {
+    padding: 14px !important;
+  }
+  .accommodation-types-grid > * > div:last-child > p,
+  .accommodation-types-grid > * > div:last-child > div {
+    display: none !important;
+  }
+  .accommodation-types-grid > * > div:last-child > h3 {
+    font-size: 16px !important;
+    margin: 0 !important;
+  }
+  .accommodation-types-grid > * > div:first-child {
+    height: 130px !important;
+  }
+}
+
+/* Blog cards grid — 2-up on phones to save scroll space */
+.blog-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .blog-cards-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .blog-cards-grid > .blog-card-link {
+    border-radius: 14px !important;
+  }
+  .blog-cards-grid .blog-card-media {
+    height: 110px !important;
+  }
+  .blog-cards-grid > .blog-card-link > div:last-child {
+    padding: 12px 14px !important;
+    gap: 6px !important;
+  }
+  .blog-cards-grid > .blog-card-link h3 {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+  .blog-cards-grid > .blog-card-link p {
+    display: none !important;
+  }
+  .blog-cards-grid > .blog-card-link > div:last-child > div:first-child {
+    font-size: 9px !important;
+    letter-spacing: 0.4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
 }
 
 @keyframes marquee-scroll {
@@ -2225,12 +2733,15 @@ button:focus-visible, a:focus-visible {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #F1F3EC;
+  background: #FFFFFF;
   color: #121613;
+  border: 1px solid rgba(18, 22, 19, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 15px;
+  font-family: 'Segoe UI Symbol', 'Noto Sans Symbols 2', 'Arial Unicode MS', 'DejaVu Sans', sans-serif;
+  line-height: 1;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
 }
@@ -2239,7 +2750,8 @@ button:focus-visible, a:focus-visible {
   .action-arrow-btn:hover .btn-arrow-circle {
     background: #121613;
     color: var(--accent-lime);
-    transform: translate(3px, -3px) rotate(8deg);
+    border-color: #121613;
+    transform: translate(3px, -3px) rotate(-45deg);
   }
 }
 
@@ -2275,8 +2787,9 @@ button:focus-visible, a:focus-visible {
 .action-arrow-btn-dark .btn-arrow-circle {
   width: 36px;
   height: 36px;
-  background: #D5ED55;
+  background: #FFFFFF;
   color: #121613;
+  border: 1px solid rgba(229, 169, 59, 0.35);
   font-size: 14px;
   font-weight: 900;
 }
@@ -2288,7 +2801,9 @@ button:focus-visible, a:focus-visible {
     background: #1c241e;
   }
   .action-arrow-btn-dark:hover .btn-arrow-circle {
-    transform: translate(2px, -2px) rotate(8deg);
+    background: var(--accent-lime);
+    border-color: var(--accent-lime);
+    transform: translate(3px, -3px) rotate(-45deg);
   }
 }
 
@@ -2642,6 +3157,12 @@ button:focus-visible, a:focus-visible {
 }
 
 /* Horizontal Smooth Filter Tabs on Mobile */
+.packages-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .packages-filter-scroll {
   display: flex;
   gap: 6px;
@@ -2658,6 +3179,35 @@ button:focus-visible, a:focus-visible {
 }
 .packages-filter-scroll::-webkit-scrollbar {
   display: none;
+}
+
+@media (max-width: 960px) {
+  .packages-filter-row {
+    width: 100%;
+    flex-wrap: wrap !important;
+    overflow: visible !important;
+    scroll-snap-type: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+    gap: 10px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    scrollbar-width: none !important;
+    touch-action: pan-x pan-y !important;
+  }
+  .packages-filter-row::-webkit-scrollbar {
+    display: none !important;
+  }
+  .packages-filter-row > * {
+    flex-shrink: 0 !important;
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+  }
+  .packages-filter-scroll {
+    flex: 1 1 auto !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -3178,8 +3728,10 @@ button, a, input, select, textarea {
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-x: contain !important;
     gap: 14px !important;
-    padding: 6px 4px 18px !important;
-    margin-bottom: 20px !important;
+    padding: 6px calc((100vw - min(86vw, 310px)) / 2) 18px !important;
+    margin: 0 calc(clamp(20px, 4vw, 48px) * -1) 20px !important;
+    width: calc(100% + (clamp(20px, 4vw, 48px) * 2)) !important;
+    max-width: none !important;
     scrollbar-width: none !important;
     touch-action: pan-x pan-y !important;
   }
@@ -3187,10 +3739,11 @@ button, a, input, select, textarea {
     display: none !important;
   }
   .why-desktop-pillars > * {
-    flex: 0 0 78vw !important;
-    min-width: 78vw !important;
+    flex: 0 0 min(86vw, 310px) !important;
+    min-width: min(86vw, 310px) !important;
     max-width: 310px !important;
-    scroll-snap-align: start !important;
+    scroll-snap-align: center !important;
+    scroll-snap-stop: always !important;
     transform: none !important;
   }
   .why-mobile-tabs {
@@ -4127,5 +4680,56 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   BOOKING MODAL — LIGHT THEME (white card, matches site palette)
+───────────────────────────────────────────────────────────── */
+.booking-modal-overlay {
+  z-index: 100015 !important;
+}
+
+.booking-modal-card {
+  background: #FFFFFF !important;
+  color: #121613 !important;
+  border: 1px solid rgba(18, 22, 19, 0.1) !important;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.28), 0 0 40px rgba(18, 22, 19, 0.06) !important;
+}
+
+.booking-modal-header {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%) !important;
+  border-bottom: 1px solid rgba(18, 22, 19, 0.08) !important;
+}
+
+.booking-steps-bar {
+  background: #F6F8F2 !important;
+  border-bottom: 1px solid rgba(18, 22, 19, 0.06) !important;
+}
+
+.booking-step-arrow {
+  color: rgba(18, 22, 19, 0.25) !important;
+}
+
+.booking-modal-body {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(18, 22, 19, 0.25) transparent !important;
+}
+
+.booking-modal-body::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.booking-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(18, 22, 19, 0.25) !important;
+  border-radius: 999px !important;
+}
+
+@media (max-width: 680px) {
+  .booking-modal-header {
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%) !important;
+  }
+  .booking-steps-bar {
+    background: #F6F8F2 !important;
   }
 }

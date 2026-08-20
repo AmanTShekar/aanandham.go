@@ -16,9 +16,11 @@ export async function GET(request) {
     const now = Date.now();
     const active = (Array.isArray(all) ? all : []).filter(d => d.active !== false && !(d.expiresAt && now > new Date(d.expiresAt).getTime()));
 
-    return NextResponse.json({
+    const res = NextResponse.json({
         success: true,
         discounts: active,
         count: active.length
     });
+    res.headers.set('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
+    return res;
 }

@@ -1,8 +1,12 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+
+const HERO_LINK = { fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' };
+
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { waLink } from '../lib/whatsapp';
+import { WhatsAppIcon } from './common/BrandIcons';
 
 // ── SHARED LIQUID WAVE DRAWER VARIANTS ──
 const drawerWaveVariants = {
@@ -174,7 +178,7 @@ export default function SiteHeader({
                                 alt="Aanandham.go Wilderness Basecamps"
                                 width="48"
                                 height="48"
-                                decoding="async"
+                               
                                 className="site-brand-logo"
                                 style={{
                                     width: 'clamp(42px, 3.4vw, 48px)',
@@ -184,7 +188,7 @@ export default function SiteHeader({
                                     filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45))',
                                     transition: 'transform 0.25s ease'
                                 }}
-                            />
+                             loading="lazy" decoding="async"/>
                             <span className="marker-text site-brand-text" style={{
                                 fontSize: 'clamp(18px, 1.4vw, 21px)',
                                 fontWeight: '900',
@@ -261,7 +265,7 @@ export default function SiteHeader({
                                 <span className="marker-text">Events</span>
                             </Link>
                             <Link 
-                                href="/#stories" 
+                                href="/blog" 
                                 className="text-hover-marker text-hover-marker-dark" 
                                 style={{ 
                                     fontFamily: 'var(--font-heading)',
@@ -273,7 +277,7 @@ export default function SiteHeader({
                                     padding: '4px 6px'
                                 }}
                             >
-                                <span className="marker-text">Tales</span>
+                                <span className="marker-text">Blog</span>
                             </Link>
                             <Link 
                                 href="/contact" 
@@ -292,25 +296,64 @@ export default function SiteHeader({
                             </Link>
                         </nav>
 
-                        {/* Direct Frictionless Booking CTA Button */}
+                        {/* Direct Frictionless Booking CTA Button - Pill Style */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                             <Link
                                 href="/camps"
-                                className="btn-lime"
                                 style={{
-                                    padding: '9px 22px',
-                                    fontSize: '13.5px',
-                                    fontWeight: '800',
+                                    padding: '11px 28px',
+                                    fontSize: '14px',
+                                    fontWeight: '900',
                                     textDecoration: 'none',
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '6px',
-                                    borderRadius: '12px',
-                                    boxShadow: '0 4px 14px rgba(213, 237, 85, 0.25)'
+                                    gap: '8px',
+                                    borderRadius: '999px',
+                                    background: 'linear-gradient(135deg, #121613 0%, #1C241E 100%)',
+                                    color: '#FFFFFF',
+                                    fontFamily: 'var(--font-heading)',
+                                    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(229, 169, 59, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1)',
+                                    border: '1px solid rgba(229, 169, 59, 0.45)',
+                                    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    textDecoration: 'none',
+                                    whiteSpace: 'nowrap',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(229, 169, 59, 0.7), 0 4px 10px rgba(0, 0, 0, 0.15)';
+                                    const arrow = e.currentTarget.querySelector('[data-nav-arrow]');
+                                    if (arrow) arrow.style.transform = 'rotate(-45deg)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(229, 169, 59, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1)';
+                                    const arrow = e.currentTarget.querySelector('[data-nav-arrow]');
+                                    if (arrow) arrow.style.transform = 'rotate(0deg)';
                                 }}
                             >
-                                <span>Book Campsite</span>
-                                <span>→</span>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', position: 'relative', zIndex: 1 }}>
+                                    <span style={{ fontWeight: '900', letterSpacing: '-0.01em' }}>Book Campsite</span>
+                                    <span
+                                        data-nav-arrow
+                                        style={{
+                                            width: '26px',
+                                            height: '26px',
+                                            borderRadius: '50%',
+                                            background: '#FFFFFF',
+                                            border: '1px solid rgba(229, 169, 59, 0.35)',
+                                            color: '#121613',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '13px',
+                                            lineHeight: 1,
+                                            flexShrink: 0,
+                                            transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94), background 0.2s ease'
+                                        }}
+                                    >→</span>
+                                </span>
                             </Link>
                         </div>
                     </div>
@@ -351,13 +394,12 @@ export default function SiteHeader({
                         style={{
                             position: 'fixed',
                             inset: 0,
-                            width: '100vw',
-                            maxWidth: '100vw',
+                            width: '100%',
+                            maxWidth: '100%',
                             height: '100vh',
                             height: '100dvh',
                             zIndex: 99999,
                             background: 'radial-gradient(circle at calc(100% - 42px) 36px, #172B1E 0%, #0D1911 50%, #070E08 100%)',
-                            border: '1px solid rgba(213, 237, 85, 0.12)',
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
@@ -370,27 +412,6 @@ export default function SiteHeader({
                             willChange: 'clip-path'
                         }}
                     >
-                        {/* Concentric Frosted Glass Liquid Ripple Rings (Clipped to prevent horizontal spill) */}
-                        <div style={{ position: 'absolute', top: 0, right: 0, width: '120px', height: '120px', overflow: 'hidden', pointerEvents: 'none' }}>
-                            <motion.div
-                                key="ripple-wave-1"
-                                initial={{ scale: 0.2, opacity: 0.9 }}
-                                animate={{ scale: [0.2, 2.0, 3.5], opacity: [0.9, 0.35, 0] }}
-                                transition={{ duration: 0.75, ease: [0.19, 1, 0.22, 1] }}
-                                style={{
-                                    position: 'absolute',
-                                    top: '14px',
-                                    right: '20px',
-                                    width: '44px',
-                                    height: '44px',
-                                    borderRadius: '50%',
-                                    border: '1.5px solid rgba(213, 237, 85, 0.65)',
-                                    boxShadow: '0 0 28px rgba(213, 237, 85, 0.4)',
-                                    pointerEvents: 'none'
-                                }}
-                            />
-                        </div>
-
                         {/* Unified Exit-Synchronized Drawer Body */}
                         <motion.div
                             variants={drawerStaggerVariants}
@@ -405,7 +426,7 @@ export default function SiteHeader({
                                         href="/" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'home' ? 'is-active-link' : ''}`}
-                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                        style={HERO_LINK}
                                     >
                                         <span className="marker-text">Home</span>
                                         <span className="drawer-arrow">→</span>
@@ -417,7 +438,7 @@ export default function SiteHeader({
                                         href="/about" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'about' ? 'is-active-link' : ''}`}
-                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                        style={HERO_LINK}
                                     >
                                         <span className="marker-text">About</span>
                                         <span className="drawer-arrow">→</span>
@@ -429,7 +450,7 @@ export default function SiteHeader({
                                         href="/camps" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`} 
-                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                        style={HERO_LINK}
                                     >
                                         <span className="marker-text">The Camps</span>
                                         <span className="drawer-arrow">→</span>
@@ -441,9 +462,21 @@ export default function SiteHeader({
                                         href="/#program" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                        style={HERO_LINK}
                                     >
                                         <span className="marker-text">Events & Trails</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/blog" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
+                                        style={HERO_LINK}
+                                    >
+                                        <span className="marker-text">Blog</span>
                                         <span className="drawer-arrow">→</span>
                                     </Link>
                                 </motion.div>
@@ -453,7 +486,7 @@ export default function SiteHeader({
                                         href="/contact" 
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'contact' ? 'is-active-link' : ''}`}
-                                        style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+                                        style={HERO_LINK}
                                     >
                                         <span className="marker-text">Contact</span>
                                         <span className="drawer-arrow">→</span>
@@ -468,7 +501,7 @@ export default function SiteHeader({
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className="btn-lime"
                                     style={{
-                                        padding: '14px',
+                                        padding: '14px 34px',
                                         fontSize: '15px',
                                         textDecoration: 'none',
                                         fontWeight: '800',
@@ -476,11 +509,11 @@ export default function SiteHeader({
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        gap: '8px'
+                                        gap: '8px',
+                                        boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                                     }}
                                 >
-                                    <span>Book A Campsite Now</span>
-                                    <span>→</span>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>Book A Campsite Now →</span>
                                 </Link>
 
                                 <a
@@ -489,7 +522,7 @@ export default function SiteHeader({
                                     rel="noopener noreferrer"
                                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.1)', border: '1px solid rgba(229, 169, 59, 0.25)', fontSize: '14px', fontWeight: '700', textDecoration: 'none', padding: '12px', borderRadius: '999px' }}
                                 >
-                                    <span>🏕️ WhatsApp Concierge (24/7) →</span>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><WhatsAppIcon size={17} /> WhatsApp Concierge (24/7) →</span>
                                 </a>
                             </motion.div>
                         </motion.div>

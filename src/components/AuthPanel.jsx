@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 
 export default function AuthPanel({ initialMode = 'login' }) {
     const { login } = useAuth();
@@ -166,7 +167,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                     boxShadow: '0 2px 10px rgba(0,0,0,0.03)',
                     transition: 'all 0.2s ease'
                 }}>
-                    <i className="fa-solid fa-arrow-left" style={{ fontSize: '11px' }}></i> <span>Back</span>
+                    <ArrowLeft size={11} /> <span>Back</span>
                 </Link>
 
                 <Link href="/" className="text-hover-marker" style={{
@@ -188,7 +189,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                             width: 'auto',
                             objectFit: 'contain'
                         }}
-                    />
+                     loading="lazy" decoding="async"/>
                     <span className="marker-text">Aanandham<span style={{ color: '#E5A93B' }}>.go</span></span>
                 </Link>
             </header>
@@ -369,7 +370,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                                     fontSize: '14px'
                                                 }}
                                             >
-                                                <i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i>
+                                                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                                             </button>
                                         </div>
                                     </div>
@@ -509,10 +510,10 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                         </label>
                                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
                                             {[
-                                                { id: 'newbie', label: 'Total Newbie 🌿' },
-                                                { id: 'beginner', label: 'Weekend Camper ⛺' },
-                                                { id: 'intermediate', label: 'Confident Hiker ⛰️' },
-                                                { id: 'advanced', label: 'Peak Trekker 🦅' }
+                                                { id: 'newbie', label: 'Total Newbie' },
+                                                { id: 'beginner', label: 'Weekend Camper' },
+                                                { id: 'intermediate', label: 'Confident Hiker' },
+                                                { id: 'advanced', label: 'Peak Trekker' }
                                             ].map((lvl) => {
                                                 const isSel = selectedLevel === lvl.id;
                                                 return (
@@ -581,7 +582,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                                     fontSize: '14px'
                                                 }}
                                             >
-                                                <i className={showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"}></i>
+                                                {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                                             </button>
                                         </div>
                                     </div>
@@ -706,7 +707,7 @@ export default function AuthPanel({ initialMode = 'login' }) {
                                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
                                     alt="Camp Lead"
                                     style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #E5A93B' }}
-                                />
+                                 loading="lazy" decoding="async"/>
                                 <div>
                                     <div style={{ color: '#FFFFFF', fontSize: '14px', fontWeight: '800' }}>
                                         {mode === 'login' ? 'Daniel Kim' : 'Pooja Menon'}

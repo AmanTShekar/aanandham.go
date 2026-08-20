@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { waLink } from '../lib/whatsapp';
+import { Mail, Phone } from 'lucide-react';
+import { WhatsAppIcon, InstagramIcon, YouTubeIcon, FacebookIcon, LinkedInIcon } from './common/BrandIcons';
 
 export default function Footer() {
     const [emailCopied, setEmailCopied] = useState(false);
@@ -54,9 +56,9 @@ export default function Footer() {
                                 alt="Aanandham.go Wilderness Basecamps"
                                 width="40"
                                 height="40"
-                                decoding="async"
+                               
                                 style={{ objectFit: 'contain' }}
-                            />
+                             loading="lazy" decoding="async"/>
                             <h3 style={{
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: '20px',
@@ -86,13 +88,13 @@ export default function Footer() {
                                 className="footer-contact-link"
                             >
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-regular fa-envelope" style={{ fontSize: '13px' }} />
+                                    <Mail size={13} />
                                 </div>
                                 <span>{emailCopied ? 'Email Copied! ✓' : 'bookings@aanandham.in'}</span>
                             </a>
                             <a href={`tel:+${adminPhone}`} className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-solid fa-phone" style={{ fontSize: '13px' }} />
+                                    <Phone size={13} />
                                 </div>
                                 <span>{formattedPhone}</span>
                             </a>
@@ -103,7 +105,7 @@ export default function Footer() {
                                 className="footer-contact-link"
                             >
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(37, 211, 102, 0.15)', color: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <i className="fa-brands fa-whatsapp" style={{ fontSize: '15px' }} />
+                                    <WhatsAppIcon size={15} />
                                 </div>
                                 <span>WhatsApp Concierge 24/7</span>
                             </a>
@@ -116,11 +118,11 @@ export default function Footer() {
                             </span>
                             <div style={{ display: 'flex', gap: '10px' }}>
                                 {[
-                                    { name: 'Instagram', icon: 'fa-brands fa-instagram', href: 'https://instagram.com/aanandham.go', color: '#E4405F' },
-                                    { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', href: waLink('Hi Aanandham.go!'), color: '#25D366' },
-                                    { name: 'YouTube', icon: 'fa-brands fa-youtube', href: 'https://youtube.com/@aanandhamgo', color: '#FF0000' },
-                                    { name: 'Facebook', icon: 'fa-brands fa-facebook-f', href: 'https://facebook.com/aanandham.go', color: '#1877F2' },
-                                    { name: 'LinkedIn', icon: 'fa-brands fa-linkedin-in', href: 'https://linkedin.com/company/aanandhamgo', color: '#0A66C2' }
+                                    { name: 'Instagram', Icon: InstagramIcon, href: 'https://instagram.com/aanandham.go', color: '#E4405F' },
+                                    { name: 'WhatsApp', Icon: WhatsAppIcon, href: waLink('Hi Aanandham.go!'), color: '#25D366' },
+                                    { name: 'YouTube', Icon: YouTubeIcon, href: 'https://youtube.com/@aanandhamgo', color: '#FF0000' },
+                                    { name: 'Facebook', Icon: FacebookIcon, href: 'https://facebook.com/aanandham.go', color: '#1877F2' },
+                                    { name: 'LinkedIn', Icon: LinkedInIcon, href: 'https://linkedin.com/company/aanandhamgo', color: '#0A66C2' }
                                 ].map((soc, idx) => (
                                     <a
                                         key={idx}
@@ -155,7 +157,7 @@ export default function Footer() {
                                             e.currentTarget.style.boxShadow = 'none';
                                         }}
                                     >
-                                        <i className={soc.icon} />
+                                        <soc.Icon size={15} color="#FFFFFF" />
                                     </a>
                                 ))}
                             </div>

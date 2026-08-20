@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CalendarDays } from 'lucide-react';
 
 // Dynamic Wilderness Event Batches & Calendar Annotations
 export function getSpecialBatchesForMonth(year, month) {
@@ -14,15 +15,15 @@ export function getSpecialBatchesForMonth(year, month) {
             saturdayIndex++;
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             if (saturdayIndex === 1) {
-                batches[dateStr] = { label: 'Full Moon Ridge Glamp 🌕', type: 'moon', badge: '🌕 Full Moon' };
+                batches[dateStr] = { label: 'Full Moon Ridge Glamp', type: 'moon', badge: 'Full Moon' };
             } else if (saturdayIndex === 2) {
-                batches[dateStr] = { label: 'Meteor Stargaze Camp 🌠', type: 'meteor', badge: '🌠 Meteor Camp' };
+                batches[dateStr] = { label: 'Meteor Stargaze Camp', type: 'meteor', badge: 'Meteor Camp' };
             } else if (saturdayIndex === 3) {
-                batches[dateStr] = { label: 'Acoustic Campfire & BBQ 🎸', type: 'music', badge: '🎸 Live BBQ' };
+                batches[dateStr] = { label: 'Acoustic Campfire & BBQ', type: 'music', badge: 'Live BBQ' };
             } else if (saturdayIndex === 4) {
-                batches[dateStr] = { label: 'Summit Cloud Bed Batch ☁️', type: 'weekend', badge: '🔥 Filling Fast' };
+                batches[dateStr] = { label: 'Summit Cloud Bed Batch', type: 'weekend', badge: 'Filling Fast' };
             } else {
-                batches[dateStr] = { label: 'Canopy Rainforest Trek 🌿', type: 'trek', badge: '⚡ Summit Trek' };
+                batches[dateStr] = { label: 'Canopy Rainforest Trek', type: 'trek', badge: 'Summit Trek' };
             }
         }
     }
@@ -361,7 +362,7 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        2D / 1N ⛺
+                        2D / 1N
                     </button>
                     <button
                         type="button"
@@ -378,7 +379,7 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        3D / 2N 🏔️
+                        3D / 2N
                     </button>
                 </div>
             </div>
@@ -516,7 +517,7 @@ export default function CustomThemeCalendar({
                         cursor: 'pointer'
                     }}
                 >
-                    Tomorrow ⚡
+                    Tomorrow
                 </button>
                 <button
                     type="button"
@@ -532,7 +533,7 @@ export default function CustomThemeCalendar({
                         cursor: 'pointer'
                     }}
                 >
-                    This Saturday 🔥
+                    This Saturday
                 </button>
                 <button
                     type="button"
@@ -548,7 +549,7 @@ export default function CustomThemeCalendar({
                         cursor: 'pointer'
                     }}
                 >
-                    In 2 Weeks 🏔️
+                    In 2 Weeks
                 </button>
             </div>
 
@@ -568,7 +569,7 @@ export default function CustomThemeCalendar({
                 >
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
                         <span style={{ fontSize: '11px', fontWeight: '800', color: isDark ? accentColor : '#2A4B1A', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                            🏕️ {durationDays}D / {durationDays - 1}N EXPEDITION WINDOW
+                            {durationDays}D / {durationDays - 1}N EXPEDITION WINDOW
                         </span>
                         {stagedDetails.special && (
                             <span style={{ fontSize: '10.5px', fontWeight: '800', color: accentColor, background: 'rgba(229, 169, 59, 0.15)', padding: '2px 8px', borderRadius: '999px' }}>
@@ -668,7 +669,7 @@ export default function CustomThemeCalendar({
                     }}
                 >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <span style={{ fontSize: '16px' }}>📅</span>
+                        <span style={{ fontSize: '16px', display: 'inline-flex' }}><CalendarDays size={17} /></span>
                         <span>{formattedDisplayDate}</span>
                     </div>
                     <span style={{ fontSize: '11px', opacity: 0.6 }}>

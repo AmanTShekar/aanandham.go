@@ -1,6 +1,26 @@
 "use client";
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { LayoutDashboard, ClipboardList, Tent, Mountain, Users, IndianRupee, QrCode, ShieldCheck, Settings, Plus, RefreshCw, ChevronLeft, ChevronRight, ArrowUpRight, X, Upload, Camera, Download, Banknote, TrendingUp, Zap, Calendar, Compass, ScrollText, Search, Bell, Phone, KeyRound, Ticket, MessageCircle, Smartphone, Save, Clock, Flame, ShowerHead, Sunrise, Trees, Sprout, User, Briefcase, Trash2, Database, Heart, BadgePercent, MessageSquareQuote, Inbox } from 'lucide-react';
+
+const META_LABEL_STYLE = { fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' };
+const ELLIPSIS_STYLE = { fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' };
+const MUTED_TEXT_11 = { color: '#7D8880', fontSize: '11px' };
+const COL_GAP_14 = { display: 'flex', flexDirection: 'column', gap: '14px' };
+const ROW_SPACE_8 = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' };
+const ROW_SPACE_10 = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' };
+const H2_STYLE = { fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' };
+const FIELD_LABEL_5 = { fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' };
+const CARD_CLICKABLE = { background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' };
+const MICRO_LABEL = { fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' };
+const ROW_SPACE_WRAP = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' };
+const ROW_SPACE_14 = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' };
+
+import { LayoutDashboard, ClipboardList, Tent, Mountain, Users, IndianRupee, QrCode, ShieldCheck, Settings, Plus, RefreshCw, ChevronLeft, ChevronRight, ArrowUpRight, X, Upload, Camera, Download, Banknote, TrendingUp, Zap, Calendar, Compass, ScrollText, Search, Bell, Phone, KeyRound, Ticket, MessageCircle, Smartphone, Save, Clock, Flame, ShowerHead, Sunrise, Trees, Sprout, User, Briefcase, Trash2, Database, Heart, BadgePercent, MessageSquareQuote, Inbox, Dices } from 'lucide-react';
+
+const FORM_INPUT_STYLE = { width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' };
+const FORM_INPUT_SMALL_STYLE = { width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' };
+const FIELD_LABEL_STYLE = { fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' };
+const SECTION_LABEL_STYLE = { fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' };
+const IMG_FILL_STYLE = { width: '100%', height: '100%', objectFit: 'cover' };
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import CustomDateBatchPicker from '../../components/CustomDateBatchPicker';
@@ -557,7 +577,7 @@ showToast(` ${marshalToDelete?.name || 'Crew member'} removed`);
             return m;
         });
         saveMarshals(updated);
-showToast('Marshal duty status updated');
+showToast('Guide duty status updated');
     };
 
     // Admin Notification Settings
@@ -1443,7 +1463,7 @@ showToast('Campsite details updated');
                 amenities: [
                     { id: `am-${Date.now()}-1`, name: 'Campfire Circle & BBQ', icon: Flame, enabled: true },
                     { id: `am-${Date.now()}-2`, name: 'Western Washrooms', icon: ShowerHead, enabled: true },
-                    { id: `am-${Date.now()}-3`, name: 'Wilderness Guide Marshals', icon: Compass, enabled: true }
+                    { id: `am-${Date.now()}-3`, name: 'Wilderness Guide & Host', icon: Compass, enabled: true }
                 ],
                 addons: [
                     { id: `ad-${Date.now()}-1`, name: 'Live Campfire BBQ Platter', price: 450, enabled: true },
@@ -1823,7 +1843,7 @@ showToast('Bookings exported to CSV');
                             src="/logo.png"
                             alt="Aanandham.go Official Logo"
                             style={{ height: '62px', width: 'auto', objectFit: 'contain', marginBottom: '14px', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.12))' }}
-                        />
+                         loading="lazy" decoding="async"/>
                         <div className="star-badge">
 <span className="star-icon">★</span> BASECAMP COMMAND
                         </div>
@@ -1836,7 +1856,7 @@ showToast('Bookings exported to CSV');
                         Enter coordinator passcode to manage inventory, photo galleries, event batches, and live bookings.
                     </p>
 
-                    <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <form onSubmit={handleLogin} style={COL_GAP_14}>
                         <input
                             type="password"
                             placeholder="Enter Passcode (e.g. 2026)"
@@ -2050,7 +2070,7 @@ Edit Property & Gallery
                     <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '28px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '40px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
                             <div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                <h3 style={H2_STYLE}>
 Campsite Photo Gallery ({currentDetailProperty.gallery ? currentDetailProperty.gallery.length : 1})
                                 </h3>
                                 <div style={{ fontSize: '12.5px', color: '#59655D' }}>High-res wilderness, pod, and sunset photos displayed on public page</div>
@@ -2063,7 +2083,7 @@ Manage Gallery Photos
                         <div style={{ display: 'flex', gap: '14px', overflowX: 'auto', paddingBottom: '8px' }}>
                             {(currentDetailProperty.gallery || [currentDetailProperty.image]).map((img, idx) => (
                                 <div key={idx} style={{ position: 'relative', width: '160px', height: '110px', borderRadius: '14px', overflow: 'hidden', flexShrink: 0, border: img === currentDetailProperty.image ? '2px solid #E5A93B' : '1px solid rgba(18,22,19,0.1)' }}>
-                                    <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <img src={img} alt="" style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                     {img === currentDetailProperty.image && (
                                         <span style={{ position: 'absolute', top: '6px', left: '6px', background: '#121613', color: '#E5A93B', fontSize: '9.5px', fontWeight: '800', padding: '2px 6px', borderRadius: '4px' }}>
 Cover
@@ -2110,7 +2130,7 @@ Cover
                                     }}
                                 >
                                     <div style={{ position: 'relative', height: '170px' }}>
-                                        <img src={room.image || currentDetailProperty.image} alt={room.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={room.image || currentDetailProperty.image} alt={room.name} style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                         <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#121613' : '#EF4444', color: room.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {room.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
@@ -2235,7 +2255,7 @@ Edit
                                     
                                     {/* FAST CAPACITY PRESETS */}
                                     <div style={{ background: '#F4F7EB', borderRadius: '16px', padding: '14px 16px', border: '1px solid rgba(22, 101, 52, 0.15)' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <div style={ROW_SPACE_8}>
                                             <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
 Fast Capacity & Tent Presets
                                             </label>
@@ -2327,7 +2347,7 @@ showToast(` Applied ${preset.label} preset`);
 
                                     {/* PHOTO UPLOAD & URL SECTION */}
                                     <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '18px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                        <div style={ROW_SPACE_10}>
                                             <div>
                                                 <label style={{ fontSize: '12px', fontWeight: '800', color: '#121613', display: 'block' }}>
 Room / Pod Photo
@@ -2343,7 +2363,7 @@ Room / Pod Photo
                                         {/* Image Preview */}
                                         {roomForm.image ? (
                                             <div style={{ position: 'relative', height: '140px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #E5A93B', marginBottom: '12px' }}>
-                                                <img src={roomForm.image} alt="Room Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                <img src={roomForm.image} alt="Room Preview" style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                                 <span style={{ position: 'absolute', top: '8px', left: '8px', background: '#121613', color: '#E5A93B', fontSize: '10px', fontWeight: '800', padding: '3px 8px', borderRadius: '4px' }}>
 Selected Room Photo
                                                 </span>
@@ -2376,7 +2396,7 @@ Remove
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={FIELD_LABEL_5}>
                                             Accommodation Name *
                                         </label>
                                         <input
@@ -2385,13 +2405,13 @@ Remove
                                             placeholder="e.g. Single Solo Ridge Tent / Geodesic Dome"
                                             value={roomForm.name}
                                             onChange={e => setRoomForm({ ...roomForm, name: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
 
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                                         <div>
-                                            <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            <label style={FIELD_LABEL_5}>
                                                 Guest Capacity *
                                             </label>
                                             <input
@@ -2400,11 +2420,11 @@ Remove
                                                 placeholder="e.g. 1 Person, 2 Persons, 4 Persons"
                                                 value={roomForm.capacity}
                                                 onChange={e => setRoomForm({ ...roomForm, capacity: e.target.value })}
-                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                                style={FORM_INPUT_STYLE}
                                             />
                                         </div>
                                         <div>
-                                            <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                            <label style={FIELD_LABEL_5}>
                                                 Price Per Camper / Person (INR) *
                                             </label>
                                             <input
@@ -2412,13 +2432,13 @@ Remove
                                                 required
                                                 value={roomForm.price}
                                                 onChange={e => setRoomForm({ ...roomForm, price: e.target.value })}
-                                                style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                                style={FORM_INPUT_STYLE}
                                             />
                                         </div>
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={FIELD_LABEL_5}>
                                             Total Units Available in Campsite *
                                         </label>
                                         <input
@@ -2426,12 +2446,12 @@ Remove
                                             required
                                             value={roomForm.totalUnits}
                                             onChange={e => setRoomForm({ ...roomForm, totalUnits: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
 
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '5px' }}>
+                                        <label style={FIELD_LABEL_5}>
                                             Features & Amenities (Comma Separated)
                                         </label>
                                         <input
@@ -2439,7 +2459,7 @@ Remove
                                             placeholder="Panoramic Mountain View, Ensuite Washroom, Hot Water, Fleece Blankets"
                                             value={roomForm.features}
                                             onChange={e => setRoomForm({ ...roomForm, features: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
 
@@ -2505,7 +2525,7 @@ Remove
                                 src="/logo.png"
                                 alt="Aanandham.go Official Logo"
                                 style={{ height: '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
-                            />
+                             loading="lazy" decoding="async"/>
                             <div style={{ minWidth: 0 }}>
                                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
                                     Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
@@ -2531,7 +2551,7 @@ Remove
                                 src="/logo.png"
                                 alt="Aanandham.go Official Logo"
                                 style={{ height: isCollapsed ? '32px' : '34px', width: 'auto', objectFit: 'contain', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.06))' }}
-                            />
+                             loading="lazy" decoding="async"/>
                             {!isCollapsed && (
                                 <div style={{ minWidth: 0 }}>
                                     <span style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', letterSpacing: '-0.02em', display: 'block', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
@@ -2803,7 +2823,7 @@ showToast('Synced database');
                 <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: isCollapsed ? '6px 0' : '8px 10px', justifyContent: isCollapsed ? 'center' : 'flex-start', background: '#F8F9F5', borderRadius: '12px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
                         <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#D5ED55', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '900', flexShrink: 0, boxShadow: '0 2px 6px rgba(213, 237, 85, 0.4)', overflow: 'hidden' }}>
-                            <img src="/logo.png" alt="Aanandham" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />
+                            <img src="/logo.png" alt="Aanandham" style={{ width: '20px', height: '20px', objectFit: 'contain' }}  loading="lazy" decoding="async"/>
                         </div>
                         {!isCollapsed && (
                             <div style={{ flex: 1, minWidth: 0 }}>
@@ -2899,7 +2919,7 @@ showToast('Synced database');
                                 alt="Aanandham.go Logo"
                                 width="38"
                                 height="38"
-                                decoding="async"
+                               
                                 style={{
                                     width: '38px',
                                     height: '38px',
@@ -2907,7 +2927,7 @@ showToast('Synced database');
                                     borderRadius: '50%',
                                     filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45))'
                                 }}
-                            />
+                             loading="lazy" decoding="async"/>
                             <div style={{ display: 'flex', flexDirection: 'column' }}>
                                 <span style={{
                                     fontSize: '17px',
@@ -2993,6 +3013,7 @@ Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             color: '#121613',
                             overflowY: 'auto',
                             overscrollBehavior: 'contain',
+                            scrollbarWidth: 'none',
                             WebkitOverflowScrolling: 'touch',
                             padding: '20px 16px calc(24px + env(safe-area-inset-bottom))'
                         }}
@@ -3071,7 +3092,7 @@ activeTab === 'payment' ? 'Payment Gateway & Live QR' :
                                 <div className="star-badge" style={{ marginBottom: '3px' }}>
 <span className="star-icon">★</span> EXECUTIVE DASHBOARD
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                <h2 style={H2_STYLE}>
                                     Real-Time Operations & KPIs
                                 </h2>
                             </div>
@@ -3104,8 +3125,8 @@ activeTab === 'payment' ? 'Payment Gateway & Live QR' :
                                 flexDirection: 'column',
                                 justifyContent: 'space-between'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                <div style={ROW_SPACE_8}>
+                                    <span style={META_LABEL_STYLE}>
                                         Gross Revenue
                                     </span>
                                     <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
@@ -3131,8 +3152,8 @@ activeTab === 'payment' ? 'Payment Gateway & Live QR' :
                                 flexDirection: 'column',
                                 justifyContent: 'space-between'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                <div style={ROW_SPACE_8}>
+                                    <span style={META_LABEL_STYLE}>
                                         Est. Net Profit
                                     </span>
                                     <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(22, 101, 52, 0.08)', border: '1px solid rgba(22, 101, 52, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
@@ -3158,8 +3179,8 @@ activeTab === 'payment' ? 'Payment Gateway & Live QR' :
                                 flexDirection: 'column',
                                 justifyContent: 'space-between'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                <div style={ROW_SPACE_8}>
+                                    <span style={META_LABEL_STYLE}>
                                         Total Confirmed Campers
                                     </span>
                                     <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
@@ -3185,8 +3206,8 @@ activeTab === 'payment' ? 'Payment Gateway & Live QR' :
                                 flexDirection: 'column',
                                 justifyContent: 'space-between'
                             }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
+                                <div style={ROW_SPACE_8}>
+                                    <span style={META_LABEL_STYLE}>
                                         Pending Inquiries
                                     </span>
                                     <span style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '15px' }}>
@@ -3207,55 +3228,55 @@ Instant WhatsApp Dispatch
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', marginBottom: '22px' }}>
                             <button
                                 onClick={() => setActiveTab('properties')}
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                                style={CARD_CLICKABLE}
                             >
                                 <span style={{ fontSize: '22px' }}><Tent size={22} /></span>
                                 <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Campsites & Pods</div>
+                                    <div style={ELLIPSIS_STYLE}>Campsites & Pods</div>
                                     <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{properties.length} Sanctuaries</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => setActiveTab('events')}
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                                style={CARD_CLICKABLE}
                             >
                                 <span style={{ fontSize: '22px' }}><Calendar size={22} /></span>
                                 <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Weekend Batches</div>
+                                    <div style={ELLIPSIS_STYLE}>Weekend Batches</div>
                                     <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{activeEventsCount} Active Treks</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => setActiveTab('marshals')}
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                                style={CARD_CLICKABLE}
                             >
                                 <span style={{ fontSize: '22px' }}><Compass size={22} /></span>
                                 <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Hosts & Guides</div>
+                                    <div style={ELLIPSIS_STYLE}>Hosts & Guides</div>
                                     <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>{marshals.length} Field Crew</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => setActiveTab('payment')}
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                                style={CARD_CLICKABLE}
                             >
                                 <span style={{ fontSize: '22px' }}><Zap size={22} /></span>
                                 <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Payment Gateway</div>
+                                    <div style={ELLIPSIS_STYLE}>Payment Gateway</div>
 <div style={{ fontSize: '11px', color: '#166534', fontWeight: '700', marginTop: '2px' }}>{paymentSettings.mode === 'coming_soon' ? ' Concierge Mode' : ' Live Razorpay'}</div>
                                 </div>
                             </button>
 
                             <button
                                 onClick={() => { setActiveTab('logs'); fetchAuditLogs(); fetchSecurityOverview(); fetchInquiries(); }}
-                                style={{ background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.08)', borderRadius: '14px', padding: '14px 16px', textAlign: 'left', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', boxShadow: '0 2px 6px rgba(0,0,0,0.02)', transition: 'all 0.15s ease' }}
+                                style={CARD_CLICKABLE}
                             >
                                 <span style={{ fontSize: '22px' }}><ScrollText size={22} /></span>
                                 <div style={{ minWidth: 0 }}>
-                                    <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Audit Trail</div>
+                                    <div style={ELLIPSIS_STYLE}>Audit Trail</div>
                                     <div style={{ fontSize: '11px', color: '#59655D', marginTop: '2px' }}>Live DB Security</div>
                                 </div>
                             </button>
@@ -3342,13 +3363,13 @@ Manage Batches →
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                     {events.map(ev => (
                                         <div key={ev.id} style={{ background: '#F8F9F5', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(18,22,19,0.04)', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                                            <img src={ev.image} alt={ev.title} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }} />
+                                            <img src={ev.image} alt={ev.title} style={{ width: '48px', height: '48px', borderRadius: '10px', objectFit: 'cover' }}  loading="lazy" decoding="async"/>
                                             <div style={{ flex: 1, minWidth: 0 }}>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
                                                     <span style={{ fontSize: '10px', fontWeight: '800', color: '#B45309' }}>{ev.badge}</span>
                                                     <span style={{ fontSize: '10.5px', color: '#59655D' }}>{ev.dates}</span>
                                                 </div>
-                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{ev.title}</div>
+                                                <div style={ELLIPSIS_STYLE}>{ev.title}</div>
                                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '3px', fontSize: '11px' }}>
                                                     <span style={{ color: '#59655D' }}>{ev.booked} / {ev.capacity} Pax</span>
                                                     <span style={{ fontWeight: '800', color: ev.spotsLeft === 0 ? '#DC2626' : '#166534' }}>
@@ -3373,7 +3394,7 @@ Manage Batches →
                         
                         {/* 1. CAMPSITE DIVIDER BAR */}
                         <div style={{ marginBottom: '22px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                            <div style={ROW_SPACE_10}>
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
 Filter By Sanctuary Location
                                 </span>
@@ -3799,7 +3820,7 @@ Confirm Now
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'properties' && (
                     <div style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={ROW_SPACE_WRAP}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
 <span className="star-icon">★</span> CAMPSITE INVENTORY
@@ -3854,7 +3875,7 @@ Confirm Now
                                         onClick={() => setActivePropertyDetailId(prop.id)}
                                         style={{ position: 'relative', height: '190px', cursor: 'pointer' }}
                                     >
-                                        <img src={prop.image} alt={prop.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={prop.image} alt={prop.title} style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                         <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#121613' : '#EF4444', color: prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {prop.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
@@ -3943,7 +3964,7 @@ Edit
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'events' && (
                     <div style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={ROW_SPACE_WRAP}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
 <span className="star-icon">★</span> EXPEDITION BATCHES
@@ -3961,7 +3982,7 @@ Edit
                             {events.map(ev => (
                                 <div key={ev.id} style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 4px 18px rgba(0,0,0,0.03)' }}>
                                     <div style={{ position: 'relative', height: '170px' }}>
-                                        <img src={ev.image} alt={ev.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        <img src={ev.image} alt={ev.title} style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                         <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {ev.badge}
                                         </span>
@@ -4012,7 +4033,7 @@ Edit Batch
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'marshals' && (
                     <div style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={ROW_SPACE_WRAP}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
 <span className="star-icon">★</span> FIELD OPERATIONS & SANCTUARY CREW
@@ -4085,7 +4106,7 @@ Edit Batch
                                                         flexShrink: 0,
                                                         border: m.status === 'On Duty' ? '2.5px solid #22C55E' : m.status === 'Off Duty' ? '2.5px solid #F59E0B' : '2.5px solid #EF4444'
                                                     }}
-                                                />
+                                                 loading="lazy" decoding="async"/>
                                                 <div style={{ minWidth: 0 }}>
                                                     <div style={{ fontSize: '16px', fontWeight: '800', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                         {m.name}
@@ -4229,7 +4250,7 @@ Edit
                                 padding: '20px 22px',
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
                             }}>
-                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Gross Revenue (Booked)</div>
+                                <div style={META_LABEL_STYLE}>Gross Revenue (Booked)</div>
                                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#121613', margin: '6px 0' }}>₹{totalRevenue.toLocaleString('en-IN')}</div>
                                 <div style={{ fontSize: '12px', color: '#59655D' }}>100% of confirmed reservations</div>
                             </div>
@@ -4241,7 +4262,7 @@ Edit
                                 padding: '20px 22px',
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
                             }}>
-                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Direct Operations (45%)</div>
+                                <div style={META_LABEL_STYLE}>Direct Operations (45%)</div>
                                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#B45309', margin: '6px 0' }}>₹{estimatedDirectCosts.toLocaleString('en-IN')}</div>
                                 <div style={{ fontSize: '12px', color: '#59655D' }}>Permits, Food & 4x4 safaris</div>
                             </div>
@@ -4253,7 +4274,7 @@ Edit
                                 padding: '20px 22px',
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.02)'
                             }}>
-                                <div style={{ fontSize: '10.5px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Net Operating Profit</div>
+                                <div style={META_LABEL_STYLE}>Net Operating Profit</div>
                                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '800', color: '#166534', margin: '6px 0' }}>₹{estimatedNetProfit.toLocaleString('en-IN')}</div>
 <div style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}> ✓ {profitMarginPercent}% Net Margin</div>
                             </div>
@@ -4307,7 +4328,7 @@ Edit
                                         position: 'relative'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <div style={ROW_SPACE_10}>
 <span style={{ fontSize: '24px' }}><Clock size={24} /></span>
                                         <span style={{
                                             background: paymentSettings.mode === 'coming_soon' ? '#E5A93B' : 'rgba(18,22,19,0.06)',
@@ -4346,7 +4367,7 @@ Edit
                                         position: 'relative'
                                     }}
                                 >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <div style={ROW_SPACE_10}>
                                         <span style={{ fontSize: '24px' }}><Zap size={24} /></span>
                                         <span style={{
                                             background: paymentSettings.mode === 'razorpay' ? '#22C55E' : 'rgba(18,22,19,0.06)',
@@ -4503,18 +4524,18 @@ Save & Apply Settings
                                             </div>
 
                                             <div style={{ marginBottom: '10px' }}>
-                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Campaign Name</label>
+                                                <label style={SECTION_LABEL_STYLE}>Campaign Name</label>
                                                 <input
                                                     type="text"
                                                     value={d.name || ''}
                                                     onChange={(e) => handleUpdateDiscount(d.id, { name: e.target.value })}
-                                                    style={{ width: '100%', padding: '9px 12px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13px', fontWeight: '700', outline: 'none', boxSizing: 'border-box' }}
+                                                    style={FORM_INPUT_SMALL_STYLE}
                                                 />
                                             </div>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                                                 <div>
-                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Type</label>
+                                                    <label style={SECTION_LABEL_STYLE}>Type</label>
                                                     <select
                                                         value={d.type || 'percent'}
                                                         onChange={(e) => handleUpdateDiscount(d.id, { type: e.target.value })}
@@ -4525,7 +4546,7 @@ Save & Apply Settings
                                                     </select>
                                                 </div>
                                                 <div>
-                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>{d.type === 'flat' ? 'Amount Off (₹)' : 'Percent Off (%)'}</label>
+                                                    <label style={SECTION_LABEL_STYLE}>{d.type === 'flat' ? 'Amount Off (₹)' : 'Percent Off (%)'}</label>
                                                     <input
                                                         type="number"
                                                         min="0"
@@ -4539,7 +4560,7 @@ Save & Apply Settings
 
                                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                                                 <div>
-                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Min Guests</label>
+                                                    <label style={SECTION_LABEL_STYLE}>Min Guests</label>
                                                     <input
                                                         type="number"
                                                         min="1"
@@ -4549,7 +4570,7 @@ Save & Apply Settings
                                                     />
                                                 </div>
                                                 <div>
-                                                    <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Scope</label>
+                                                    <label style={SECTION_LABEL_STYLE}>Scope</label>
                                                     <select
                                                         value={d.scope || 'all'}
                                                         onChange={(e) => handleUpdateDiscount(d.id, { scope: e.target.value })}
@@ -4564,7 +4585,7 @@ Save & Apply Settings
                                             </div>
 
                                             <div style={{ marginBottom: '12px' }}>
-                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Expires (Optional)</label>
+                                                <label style={SECTION_LABEL_STYLE}>Expires (Optional)</label>
                                                 <input
                                                     type="date"
                                                     value={d.expiresAt ? String(d.expiresAt).slice(0, 10) : ''}
@@ -4681,7 +4702,7 @@ Save & Apply Settings
                                         </div>
 
                                         <div style={{ marginBottom: '10px' }}>
-                                            <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Review Quote</label>
+                                            <label style={SECTION_LABEL_STYLE}>Review Quote</label>
                                             <textarea
                                                 rows={4}
                                                 value={t.quote || ''}
@@ -4692,7 +4713,7 @@ Save & Apply Settings
 
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                                             <div>
-                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Camper Name</label>
+                                                <label style={SECTION_LABEL_STYLE}>Camper Name</label>
                                                 <input
                                                     type="text"
                                                     value={t.author || ''}
@@ -4701,7 +4722,7 @@ Save & Apply Settings
                                                 />
                                             </div>
                                             <div>
-                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Instagram ID (Optional)</label>
+                                                <label style={SECTION_LABEL_STYLE}>Instagram ID (Optional)</label>
                                                 <input
                                                     type="text"
                                                     placeholder="e.g. daniel.kim.trails"
@@ -4714,7 +4735,7 @@ Save & Apply Settings
 
                                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '10px' }}>
                                             <div>
-                                                <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Camp Badge</label>
+                                                <label style={SECTION_LABEL_STYLE}>Camp Badge</label>
                                                 <input
                                                     type="text"
                                                     value={t.campBadge || ''}
@@ -4725,7 +4746,7 @@ Save & Apply Settings
                                         </div>
 
                                         <div style={{ marginBottom: '10px' }}>
-                                            <label style={{ fontSize: '10.5px', fontWeight: '800', color: '#59655D', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'block', marginBottom: '4px' }}>Batch Date Line</label>
+                                            <label style={SECTION_LABEL_STYLE}>Batch Date Line</label>
                                             <input
                                                 type="text"
                                                 value={t.batchDate || ''}
@@ -4740,9 +4761,9 @@ Save & Apply Settings
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
                                                 <div style={{ width: '52px', height: '52px', borderRadius: '50%', overflow: 'hidden', background: 'rgba(18,22,19,0.06)', flexShrink: 0, border: '2px solid rgba(22,101,52,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                                     {t.avatar ? (
-                                                        <img src={t.avatar} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        <img src={t.avatar} alt="avatar" style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                                     ) : (
-                                                        <span style={{ fontSize: '18px', color: '#8A938B' }}>👤</span>
+                                                        <span style={{ fontSize: '18px', color: '#8A938B', display: 'inline-flex' }}><User size={20} /></span>
                                                     )}
                                                 </div>
                                                 <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -4752,7 +4773,7 @@ Save & Apply Settings
                                                         style={{ padding: '9px 14px', borderRadius: '10px', border: '1px solid rgba(18,22,19,0.14)', background: '#FFFFFF', color: '#121613', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                                                         title="Pick a random clean human portrait"
                                                     >
-                                                        🎲 <span>Random Face</span>
+                                                        <Dices size={14} /> <span>Random Face</span>
                                                     </button>
                                                     <button
                                                         type="button"
@@ -4793,7 +4814,7 @@ Save & Apply Settings
                                                             title="Use this avatar"
                                                             style={{ width: '34px', height: '34px', borderRadius: '50%', overflow: 'hidden', padding: 0, border: t.avatar === u ? '2px solid #166534' : '2px solid transparent', cursor: 'pointer', background: 'rgba(18,22,19,0.06)', flexShrink: 0 }}
                                                         >
-                                                            <img src={u} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                            <img src={u} alt="" style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                                         </button>
                                                     ))}
                                                 </div>
@@ -4910,7 +4931,7 @@ Saved & Synchronized
 
                         {/* SECTION: SYSTEM DATA BACKUP & RESTORE */}
                         <div style={{ marginTop: '36px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                            <div style={ROW_SPACE_14}>
                                 <div>
                                     <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
 SYSTEM BACKUP & DISASTER RECOVERY
@@ -4964,7 +4985,7 @@ SYSTEM BACKUP & DISASTER RECOVERY
 
                         {/* SECTION: ACCESS AUDIT LOGS */}
                         <div style={{ marginTop: '24px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                            <div style={ROW_SPACE_14}>
                                 <div>
                                     <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block' }}>
  COORDINATOR ACCESS AUDIT TRAIL
@@ -5018,7 +5039,7 @@ SYSTEM BACKUP & DISASTER RECOVERY
                 ───────────────────────────────────────────────────────────── */}
                 {activeTab === 'logs' && (
                     <div style={{ width: '100%' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+                        <div style={ROW_SPACE_WRAP}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
 <span className="star-icon">★</span> ENTERPRISE SECURITY & AUDIT TRAIL
@@ -5260,17 +5281,17 @@ Export Audit Bundle
                                             </div>
 
                                             <div>
-                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Scope / Role</div>
+                                                <div style={MUTED_TEXT_11}>Scope / Role</div>
                                                 <div style={{ fontWeight: '700', color: '#121613' }}>{log.role || 'admin_coordinator'}</div>
                                             </div>
 
                                             <div>
-                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Origin IP</div>
+                                                <div style={MUTED_TEXT_11}>Origin IP</div>
                                                 <div style={{ fontFamily: 'monospace', fontWeight: '600', color: '#3A443E' }}>{log.ip || '127.0.0.1'}</div>
                                             </div>
 
                                             <div>
-                                                <div style={{ color: '#7D8880', fontSize: '11px' }}>Details / Note</div>
+                                                <div style={MUTED_TEXT_11}>Details / Note</div>
                                                 <div style={{ color: '#59655D' }}>{log.details || 'Coordinator login'}</div>
                                             </div>
 
@@ -5360,7 +5381,7 @@ Export Audit Bundle
 
                                 {/* Active Blocks */}
                                 <div style={{ background: '#FFFFFF', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                    <div style={ROW_SPACE_14}>
                                         <div style={{ fontSize: '14px', fontWeight: '800', color: '#121613' }}>Active Blocks (IP & Device)</div>
                                         <button
                                             onClick={fetchSecurityOverview}
@@ -5517,17 +5538,17 @@ Unblock
                                                         <div style={{ fontSize: '11px', color: '#7D8880', fontFamily: 'monospace' }}>{inq.id}</div>
                                                     </div>
                                                     <div>
-                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Contact</div>
+                                                        <div style={MUTED_TEXT_11}>Contact</div>
                                                         <div style={{ fontWeight: '600', color: '#3A443E' }}>{inq.phone || 'N/A'}</div>
                                                         <div style={{ fontSize: '11px', color: '#59655D' }}>{inq.email || ''}</div>
                                                     </div>
                                                     <div>
-                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Party / Dates</div>
+                                                        <div style={MUTED_TEXT_11}>Party / Dates</div>
                                                         <div style={{ fontWeight: '700', color: '#121613' }}>{inq.guests || 2} campers</div>
                                                         <div style={{ fontSize: '11px', color: '#59655D' }}>{inq.travelDates || 'Flexible'}</div>
                                                     </div>
                                                     <div style={{ gridColumn: 'span 2' }}>
-                                                        <div style={{ color: '#7D8880', fontSize: '11px' }}>Message</div>
+                                                        <div style={MUTED_TEXT_11}>Message</div>
                                                         <div style={{ color: '#59655D', fontSize: '12px' }}>{inq.message || 'No message'}</div>
                                                     </div>
                                                     <div style={{ textAlign: 'right' }}>
@@ -5559,7 +5580,7 @@ Unblock
                         <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                 <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    <h3 style={H2_STYLE}>
                                         Create Manual Reservation
                                     </h3>
                                     <div style={{ fontSize: '12px', color: '#59655D' }}>Record phone, walk-in or bespoke squad bookings</div>
@@ -5569,9 +5590,9 @@ Unblock
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveManualBooking} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <form onSubmit={handleSaveManualBooking} style={COL_GAP_14}>
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Customer / Squad Name *
                                     </label>
                                     <input
@@ -5580,13 +5601,13 @@ Unblock
                                         placeholder="e.g. Rahul & Squad (4 Pax)"
                                         value={newBookingForm.name}
                                         onChange={e => setNewBookingForm({ ...newBookingForm, name: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Phone / WhatsApp *
                                         </label>
                                         <input
@@ -5595,7 +5616,7 @@ Unblock
                                             placeholder="+91 98470 12345"
                                             value={newBookingForm.phone}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, phone: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
@@ -5629,7 +5650,7 @@ Unblock
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Number of Campers *
                                         </label>
                                         <input
@@ -5638,7 +5659,7 @@ Unblock
                                             min="1"
                                             value={newBookingForm.guests}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, guests: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
@@ -5727,7 +5748,7 @@ Tent / Pod Assignment (For Marshals)
 
                                 {/* Special Squad Requests & Dietary Notes */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Special Squad Requirements & Dietary Notes (Optional)
                                     </label>
                                     <textarea
@@ -5741,7 +5762,7 @@ Tent / Pod Assignment (For Marshals)
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Price Per Camper (INR) *
                                         </label>
                                         <input
@@ -5749,7 +5770,7 @@ Tent / Pod Assignment (For Marshals)
                                             required
                                             value={newBookingForm.pricePerGuest}
                                             onChange={e => setNewBookingForm({ ...newBookingForm, pricePerGuest: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
@@ -5790,7 +5811,7 @@ Tent / Pod Assignment (For Marshals)
                         <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box" style={{ maxWidth: '720px' }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
                                 <div>
-                                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                    <h3 style={H2_STYLE}>
                                         {editingProperty ? 'Edit Campsite & Photo Gallery' : 'Add New Kerala Campsite'}
                                     </h3>
                                     <div style={{ fontSize: '12px', color: '#59655D' }}>Configure pricing, photos, itinerary, and inclusions</div>
@@ -5800,11 +5821,11 @@ Tent / Pod Assignment (For Marshals)
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSavePropertyForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <form onSubmit={handleSavePropertyForm} style={COL_GAP_14}>
                                 
                                 {/* SECTION: PHOTO GALLERY MANAGER */}
                                 <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '16px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                                    <div style={ROW_SPACE_10}>
                                         <div>
                                             <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block' }}>
 Photo Gallery ({propertyForm.gallery ? propertyForm.gallery.length : 0} Images)
@@ -5837,7 +5858,7 @@ Photo Gallery ({propertyForm.gallery ? propertyForm.gallery.length : 0} Images)
                                             const isCover = propertyForm.image === imgUrl;
                                             return (
                                                 <div key={gIdx} style={{ position: 'relative', height: '80px', borderRadius: '8px', overflow: 'hidden', border: isCover ? '2px solid #E5A93B' : '1px solid rgba(18, 22, 19, 0.1)' }}>
-                                                    <img src={imgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    <img src={imgUrl} alt="" style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
                                                     {isCover && (
                                                         <span style={{ position: 'absolute', top: '3px', left: '3px', background: '#121613', color: '#E5A93B', fontSize: '8.5px', fontWeight: '800', padding: '1px 4px', borderRadius: '4px' }}>
 Cover
@@ -5861,7 +5882,7 @@ Delete
 
                                 {/* Title & Region */}
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Campsite Title *
                                     </label>
                                     <input
@@ -5869,13 +5890,13 @@ Delete
                                         required
                                         value={propertyForm.title}
                                         onChange={e => setPropertyForm({ ...propertyForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Region *
                                         </label>
                                         <select
@@ -5891,7 +5912,7 @@ Delete
                                         </select>
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Altitude *
                                         </label>
                                         <input
@@ -5899,14 +5920,14 @@ Delete
                                             required
                                             value={propertyForm.altitude}
                                             onChange={e => setPropertyForm({ ...propertyForm, altitude: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Base Price (INR / Camper) *
                                         </label>
                                         <input
@@ -5914,49 +5935,49 @@ Delete
                                             required
                                             value={propertyForm.price}
                                             onChange={e => setPropertyForm({ ...propertyForm, price: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Original Strikethrough Price (INR)
                                         </label>
                                         <input
                                             type="number"
                                             value={propertyForm.originalPrice}
                                             onChange={e => setPropertyForm({ ...propertyForm, originalPrice: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Duration
                                         </label>
                                         <input
                                             type="text"
                                             value={propertyForm.duration}
                                             onChange={e => setPropertyForm({ ...propertyForm, duration: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Difficulty
                                         </label>
                                         <input
                                             type="text"
                                             value={propertyForm.difficulty}
                                             onChange={e => setPropertyForm({ ...propertyForm, difficulty: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Description & Story
                                     </label>
                                     <textarea
@@ -5968,26 +5989,26 @@ Delete
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Key Highlights (Comma Separated)
                                     </label>
                                     <input
                                         type="text"
                                         value={propertyForm.highlights}
                                         onChange={e => setPropertyForm({ ...propertyForm, highlights: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Inclusions (Comma Separated)
                                     </label>
                                     <input
                                         type="text"
                                         value={propertyForm.inclusions}
                                         onChange={e => setPropertyForm({ ...propertyForm, inclusions: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
@@ -6006,7 +6027,7 @@ Delete
                     <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
                         <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96 }} className="admin-modal-box">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '14px' }}>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                <h3 style={H2_STYLE}>
                                     {editingEvent ? 'Edit Trek Batch' : 'Schedule New Event Batch'}
                                 </h3>
                                 <button onClick={() => setIsEventModalOpen(false)} style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#F8F9F5', border: 'none', color: '#121613', cursor: 'pointer', fontWeight: '800' }}>
@@ -6014,9 +6035,9 @@ Delete
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveEventForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <form onSubmit={handleSaveEventForm} style={COL_GAP_14}>
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Event / Batch Title *
                                     </label>
                                     <input
@@ -6024,13 +6045,13 @@ Delete
                                         required
                                         value={eventForm.title}
                                         onChange={e => setEventForm({ ...eventForm, title: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Dates *
                                         </label>
                                         <input
@@ -6038,11 +6059,11 @@ Delete
                                             required
                                             value={eventForm.dates}
                                             onChange={e => setEventForm({ ...eventForm, dates: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Price Per Spot (INR) *
                                         </label>
                                         <input
@@ -6050,14 +6071,14 @@ Delete
                                             required
                                             value={eventForm.price}
                                             onChange={e => setEventForm({ ...eventForm, price: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
 
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Total Capacity (Pax) *
                                         </label>
                                         <input
@@ -6065,31 +6086,31 @@ Delete
                                             required
                                             value={eventForm.capacity}
                                             onChange={e => setEventForm({ ...eventForm, capacity: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                        <label style={FIELD_LABEL_STYLE}>
                                             Booked Spots
                                         </label>
                                         <input
                                             type="number"
                                             value={eventForm.booked}
                                             onChange={e => setEventForm({ ...eventForm, booked: e.target.value })}
-                                            style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                            style={FORM_INPUT_STYLE}
                                         />
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
+                                    <label style={FIELD_LABEL_STYLE}>
                                         Campsite Location
                                     </label>
                                     <input
                                         type="text"
                                         value={eventForm.campsite}
                                         onChange={e => setEventForm({ ...eventForm, campsite: e.target.value })}
-                                        style={{ width: '100%', padding: '11px 14px', borderRadius: '12px', background: '#F8F9F5', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '13.5px', boxSizing: 'border-box' }}
+                                        style={FORM_INPUT_STYLE}
                                     />
                                 </div>
 
@@ -6319,7 +6340,7 @@ Delete
                                             alt="Preview"
                                             style={{ width: '52px', height: '52px', borderRadius: '14px', objectFit: 'cover', border: '2px solid #D5ED55', flexShrink: 0 }}
                                             onError={e => { e.target.style.display = 'none'; }}
-                                        />
+                                         loading="lazy" decoding="async"/>
                                     ) : (
                                         <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: 'linear-gradient(135deg, #D5ED55 0%, #A8D520 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px', flexShrink: 0 }}>
 
@@ -6342,11 +6363,11 @@ Delete
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveMarshalForm} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                            <form onSubmit={handleSaveMarshalForm} style={COL_GAP_14}>
 
                                 {/* Full Name */}
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                    <label style={MICRO_LABEL}>
                                         Full Name *
                                     </label>
                                     <input
@@ -6362,7 +6383,7 @@ Delete
                                 {/* Phone + Passcode */}
                                 <div className="admin-form-grid-2">
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                        <label style={MICRO_LABEL}>
                                             Phone / WhatsApp *
                                         </label>
                                         <input
@@ -6375,7 +6396,7 @@ Delete
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                        <label style={MICRO_LABEL}>
                                             Gate PIN / Passcode *
                                         </label>
                                         <input
@@ -6423,7 +6444,7 @@ Delete
                                         />
                                     </div>
                                     <div>
-                                        <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                        <label style={MICRO_LABEL}>
                                             Avatar / Photo URL
                                         </label>
                                         <input
@@ -6438,7 +6459,7 @@ Delete
 
                                 {/* Responsibilities Notes */}
                                 <div>
-                                    <label style={{ fontSize: '11.5px', fontWeight: '700', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', marginBottom: '5px' }}>
+                                    <label style={MICRO_LABEL}>
                                         Responsibilities & Notes
                                     </label>
                                     <textarea

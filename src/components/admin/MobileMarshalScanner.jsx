@@ -1,6 +1,11 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import jsQR from 'jsqr';
+
+const ROW_GAP_8 = { display: 'flex', alignItems: 'center', gap: '8px' };
+const ROW_GAP_10 = { display: 'flex', alignItems: 'center', gap: '10px' };
+const ROW_GAP_6 = { display: 'flex', alignItems: 'center', gap: '6px' };
+const ROW_SPACE = { display: 'flex', justifyContent: 'space-between', alignItems: 'center' };
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     Camera, 
@@ -66,15 +71,33 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { getSecurityHeaders } from '@/lib/securityClient';
+import { Sunrise, Mountain, Trees, Leaf, ChefHat, CircleCheck, CircleX, Hourglass, PersonStanding, Crown, Drumstick, Truck, Smartphone, IndianRupee } from 'lucide-react';
+
+// ── EMERGENCY GLYPHS: MAP SERVER-SOURCED EMOJI ICON STRINGS TO CLEAN LUCIDE ICONS ──
+const CAMP_GLYPHS = {
+    '⛺': Tent,
+    '🏕️': Tent,
+    '🌄': Sunrise,
+    '⛰️': Mountain,
+    '🌲': Trees,
+    '🌿': Leaf,
+    '🏡': Home,
+    '🛏': Home,
+    '👨‍🍳': ChefHat
+};
+function StationGlyph({ icon, size = 16, color }) {
+    const Ico = (icon && CAMP_GLYPHS[icon]) || Tent;
+    return <Ico size={size} color={color} />;
+}
 
 // ── AANANDHAM SANCTUARY CAMPSITES (PROPERTY-LEVEL ACCESS & ISOLATION) ──
 const AANANDHAM_CAMPS = [
-    { id: 'all', name: 'All Camp Sanctuaries', region: 'Enterprise Overview', icon: '⛺' },
-    { id: 'pkg-kolukkumalai', name: 'Kolukkumalai Sunrise 4x4', region: 'Munnar (7,900 FT)', icon: '🌄' },
-    { id: 'pkg-meesapulimala', name: 'Meesapulimala High Altitude', region: 'Silent Valley (8,600 FT)', icon: '⛰️' },
-    { id: 'pkg-suryanelli', name: 'Suryanelli Valley Glamp', region: 'Munnar', icon: '🏕️' },
-    { id: 'pkg-vagamon-pine', name: 'Vagamon Pine Forest', region: 'Vagamon', icon: '🌲' },
-    { id: 'pkg-wayanad', name: 'Wayanad 900 Kandi Rainforest', region: 'Wayanad', icon: '🌿' }
+    { id: 'all', name: 'All Camp Sanctuaries', region: 'Enterprise Overview', icon: Tent },
+    { id: 'pkg-kolukkumalai', name: 'Kolukkumalai Sunrise 4x4', region: 'Munnar (7,900 FT)', icon: Sunrise },
+    { id: 'pkg-meesapulimala', name: 'Meesapulimala High Altitude', region: 'Silent Valley (8,600 FT)', icon: Mountain },
+    { id: 'pkg-suryanelli', name: 'Suryanelli Valley Glamp', region: 'Munnar', icon: Tent },
+    { id: 'pkg-vagamon-pine', name: 'Vagamon Pine Forest', region: 'Vagamon', icon: Trees },
+    { id: 'pkg-wayanad', name: 'Wayanad 900 Kandi Rainforest', region: 'Wayanad', icon: Leaf }
 ];
 
 // ── HELPER: FORMAT DIRECT WHATSAPP PHONE NUMBER (ENSURES 91 COUNTRY CODE) ──
@@ -139,7 +162,7 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                 }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
-                    {selectedOption?.icon && <span style={{ flexShrink: 0 }}>{selectedOption.icon}</span>}
+                    {selectedOption?.icon && <span style={{ flexShrink: 0, display: 'inline-flex' }}><selectedOption.icon size={13} /></span>}
                     <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {selectedOption ? selectedOption.label : placeholder}
                     </span>
@@ -202,7 +225,7 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
                                     }}
                                 >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }}>
-                                        {option.icon && <span style={{ flexShrink: 0 }}>{option.icon}</span>}
+                                        {option.icon && <span style={{ flexShrink: 0, display: 'inline-flex' }}><option.icon size={13} /></span>}
                                         <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{option.label}</span>
                                     </div>
                                     {isSelected && <Check size={14} color="#D5ED55" style={{ flexShrink: 0 }} />}
@@ -217,6 +240,11 @@ function CustomDropdown({ label, value, options, onChange, placeholder = "Select
 }
 
 export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = false }) {
+    const jsQRRef = useRef(null);
+
+    useEffect(() => {
+        import('jsqr').then((mod) => { jsQRRef.current = mod.default; });
+    }, []);
     // ── NAVIGATION TABS: 'scanner' | 'roster' | 'kitchen' ──
     const [activeTab, setActiveTab] = useState('scanner');
 
@@ -418,7 +446,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = 
                 setIsAuthenticated(true);
                 setHostPasscode('');
                 setPasscodeError('');
-                showToast(`✓ ${station.icon} Station Authenticated: ${station.shortName || station.campName}`);
+                showToast(`✓ ${station.shortName || station.campName} Station Authenticated`);
             } else {
                 setPasscodeError(data.message || 'Invalid passcode. Access denied.');
             }
@@ -742,7 +770,7 @@ export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = 
                     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    const code = jsQRRef.current && jsQRRef.current(imageData.data, imageData.width, imageData.height, {
                         inversionAttempts: 'dontInvert'
                     });
 
@@ -820,14 +848,18 @@ export default function MobileMarshalScanner({ onBackToAdmin = null, embedded = 
         const reader = new FileReader();
         reader.onload = (event) => {
             const img = new Image();
-            img.onload = () => {
+            img.onload = async () => {
+                if (!jsQRRef.current) {
+                    const mod = await import('jsqr');
+                    jsQRRef.current = mod.default;
+                }
                 const canvas = document.createElement('canvas');
                 canvas.width = img.width;
                 canvas.height = img.height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0);
                 const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                const code = jsQRRef.current(imageData.data, imageData.width, imageData.height);
 
                 if (code && code.data) {
                     handleScannedResult(code.data);
@@ -1206,25 +1238,25 @@ _Sent by Aanandham Organizers_`
 
     // ── TENT / POD DROPDOWN OPTIONS ──
     const tentOptions = [
-        { value: 'Pod #1 (Sunset Ridge Deck)', label: 'Pod #1 (Sunset Ridge Deck)', icon: '⛺', color: '#D5ED55' },
-        { value: 'Pod #2 (Panoramic Glass Dome)', label: 'Pod #2 (Panoramic Glass Dome)', icon: '⛺', color: '#D5ED55' },
-        { value: 'Pod #3 (Sunrise Cliff Edge)', label: 'Pod #3 (Sunrise Cliff Edge)', icon: '⛺', color: '#D5ED55' },
-        { value: 'Pod #4 (Valley View Dome)', label: 'Pod #4 (Valley View Dome)', icon: '⛺', color: '#D5ED55' },
-        { value: 'Pod #5 (Cloud View Pod)', label: 'Pod #5 (Cloud View Pod)', icon: '⛺', color: '#D5ED55' },
-        { value: 'Alpine Tent A-1 (2-Person)', label: 'Alpine Tent A-1 (2-Person)', icon: '🏕️', color: '#60A5FA' },
-        { value: 'Alpine Tent A-2 (2-Person)', label: 'Alpine Tent A-2 (2-Person)', icon: '🏕️', color: '#60A5FA' },
-        { value: 'Alpine Quad Q-1 (4-Person)', label: 'Alpine Quad Q-1 (4-Person)', icon: '🏕️', color: '#34D399' },
-        { value: 'Alpine Quad Q-2 (4-Person)', label: 'Alpine Quad Q-2 (4-Person)', icon: '🏕️', color: '#34D399' },
-        { value: 'Cottage #1 (Cliffside Wooden)', label: 'Cottage #1 (Cliffside Wooden)', icon: '🏡', color: '#FBBF24' },
-        { value: 'Cottage #2 (Honeymoon Suite)', label: 'Cottage #2 (Honeymoon Suite)', icon: '🏡', color: '#FBBF24' }
+        { value: 'Pod #1 (Sunset Ridge Deck)', label: 'Pod #1 (Sunset Ridge Deck)', icon: Tent, color: '#D5ED55' },
+        { value: 'Pod #2 (Panoramic Glass Dome)', label: 'Pod #2 (Panoramic Glass Dome)', icon: Tent, color: '#D5ED55' },
+        { value: 'Pod #3 (Sunrise Cliff Edge)', label: 'Pod #3 (Sunrise Cliff Edge)', icon: Tent, color: '#D5ED55' },
+        { value: 'Pod #4 (Valley View Dome)', label: 'Pod #4 (Valley View Dome)', icon: Tent, color: '#D5ED55' },
+        { value: 'Pod #5 (Cloud View Pod)', label: 'Pod #5 (Cloud View Pod)', icon: Tent, color: '#D5ED55' },
+        { value: 'Alpine Tent A-1 (2-Person)', label: 'Alpine Tent A-1 (2-Person)', icon: Tent, color: '#60A5FA' },
+        { value: 'Alpine Tent A-2 (2-Person)', label: 'Alpine Tent A-2 (2-Person)', icon: Tent, color: '#60A5FA' },
+        { value: 'Alpine Quad Q-1 (4-Person)', label: 'Alpine Quad Q-1 (4-Person)', icon: Tent, color: '#34D399' },
+        { value: 'Alpine Quad Q-2 (4-Person)', label: 'Alpine Quad Q-2 (4-Person)', icon: Tent, color: '#34D399' },
+        { value: 'Cottage #1 (Cliffside Wooden)', label: 'Cottage #1 (Cliffside Wooden)', icon: Home, color: '#FBBF24' },
+        { value: 'Cottage #2 (Honeymoon Suite)', label: 'Cottage #2 (Honeymoon Suite)', icon: Home, color: '#FBBF24' }
     ];
 
     // ── CAMPER ATTENDANCE STATUS OPTIONS ──
     const camperStatusOptions = [
-        { value: 'present', label: 'Present (Checked In)', icon: '🟢', color: '#D5ED55', borderColor: 'rgba(213,237,85,0.4)' },
-        { value: 'late', label: 'Arriving Late (Next Jeep)', icon: '⏳', color: '#FACC15', borderColor: 'rgba(234,179,8,0.4)' },
-        { value: 'absent', label: 'Absent / No-Show', icon: '❌', color: '#EF4444', borderColor: 'rgba(239,68,68,0.4)' },
-        { value: 'departed', label: 'Departed Camp', icon: '🚶', color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
+        { value: 'present', label: 'Present (Checked In)', icon: CircleCheck, color: '#D5ED55', borderColor: 'rgba(213,237,85,0.4)' },
+        { value: 'late', label: 'Arriving Late (Next Jeep)', icon: Hourglass, color: '#FACC15', borderColor: 'rgba(234,179,8,0.4)' },
+        { value: 'absent', label: 'Absent / No-Show', icon: CircleX, color: '#EF4444', borderColor: 'rgba(239,68,68,0.4)' },
+        { value: 'departed', label: 'Departed Camp', icon: PersonStanding, color: '#8E9B92', borderColor: 'rgba(255,255,255,0.2)' }
     ];
 
     // ── CENTERED FLOATING TOAST NOTIFICATION RENDERER ──
@@ -1328,7 +1360,7 @@ _Sent by Aanandham Organizers_`
                     </div>
 
                     <div style={{ fontSize: '11px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px' }}>
-                        🔒 Security Restricted
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Lock size={12} /> Security Restricted</span>
                     </div>
 
                     <h1 style={{ fontSize: '22px', fontWeight: '900', color: '#FFFFFF', margin: '0 0 4px', letterSpacing: '-0.02em' }}>
@@ -1682,7 +1714,7 @@ _Sent by Aanandham Organizers_`
                                         }}
                                     >
                                         <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />
-                                        👑 HQ MASTER ↗
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Crown size={12} /> HQ MASTER ↗</span>
                                     </Link>
                                 ) : (
                                     <span style={{ 
@@ -1699,7 +1731,7 @@ _Sent by Aanandham Organizers_`
                                         gap: '4px'
                                     }}>
                                         <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#60A5FA', display: 'inline-block', boxShadow: '0 0 6px #60A5FA' }} />
-                                        {`${authStation.icon} ${authStation.shortName || 'STATION'}`}
+                                        {<StationGlyph icon={authStation.icon} size={15} />} {authStation.shortName || 'STATION'}
                                     </span>
                                 )}
                                 </>
@@ -1837,7 +1869,7 @@ _Sent by Aanandham Organizers_`
                     gap: '10px',
                     zIndex: 50
                 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={ROW_GAP_8}>
                         <AlertCircle size={18} />
                         <span>{errorMessage}</span>
                     </div>
@@ -1934,11 +1966,11 @@ _Sent by Aanandham Organizers_`
                             {/* Tent & Wristband Allocation Badges */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '10px', marginBottom: '14px' }}>
                                 <div style={{ background: 'rgba(213, 237, 85, 0.08)', border: '1px solid rgba(213, 237, 85, 0.3)', padding: '12px 14px', borderRadius: '14px' }}>
-                                    <span style={{ fontSize: '10.5px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>⛺ Assigned Tent / Pod</span>
+                                    <span style={{ fontSize: '10.5px', color: '#D5ED55', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>Assigned Tent / Pod</span>
                                     <strong style={{ fontSize: '13.5px', color: '#FFFFFF', marginTop: '2px', display: 'block' }}>{clearedGatePermit.assignedTent}</strong>
                                 </div>
                                 <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255, 255, 255, 0.1)', padding: '12px 14px', borderRadius: '14px' }}>
-                                    <span style={{ fontSize: '10.5px', color: '#8E9B92', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>🏷️ Wristbands Issued</span>
+                                    <span style={{ fontSize: '10.5px', color: '#8E9B92', fontWeight: '800', textTransform: 'uppercase', display: 'block' }}>Wristbands Issued</span>
                                     <strong style={{ fontSize: '13.5px', color: '#FFFFFF', marginTop: '2px', display: 'block' }}>{clearedGatePermit.wristbandRange || 'All Issued'}</strong>
                                 </div>
                             </div>
@@ -1961,7 +1993,7 @@ _Sent by Aanandham Organizers_`
 
                             {/* Settlement Summary */}
                             <div style={{ background: 'rgba(34, 197, 94, 0.12)', border: '1px solid rgba(34, 197, 94, 0.3)', padding: '12px 16px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '22px' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <div style={ROW_GAP_8}>
                                     <CheckCircle2 size={18} color="#4ADE80" />
                                     <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>
                                         Gate Balance Settlement:
@@ -2052,7 +2084,7 @@ _Sent by Aanandham Organizers_`
                         padding: '10px 16px',
                         borderRadius: '16px'
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={ROW_GAP_8}>
                             <span style={{
                                 width: '8px',
                                 height: '8px',
@@ -2326,7 +2358,7 @@ _Sent by Aanandham Organizers_`
                         gap: '8px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '6px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={ROW_GAP_6}>
                                 <MapPin size={14} color="#D5ED55" />
                                 <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                     {authStation.isMasterAdmin ? 'Sanctuary Property Scope (Master):' : `Station Scope: ${authStation.shortName}:`}
@@ -2348,8 +2380,8 @@ _Sent by Aanandham Organizers_`
                                 justifyContent: 'space-between',
                                 gap: '8px'
                             }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                    <span style={{ fontSize: '16px' }}>{authStation.icon}</span>
+                                <div style={ROW_GAP_8}>
+                                    <span style={{ fontSize: '16px', display: 'inline-flex' }}><StationGlyph icon={authStation.icon} size={16} /></span>
                                     <div>
                                         <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF', display: 'block' }}>
                                             {authStation.campName}
@@ -2368,7 +2400,7 @@ _Sent by Aanandham Organizers_`
                                     borderRadius: '6px',
                                     whiteSpace: 'nowrap'
                                 }}>
-                                    🔒 STATION LOCKED
+                                    STATION LOCKED
                                 </span>
                             </div>
                         ) : (
@@ -2397,7 +2429,7 @@ _Sent by Aanandham Organizers_`
                                                 transition: 'all 0.15s ease'
                                             }}
                                         >
-                                            <span>{camp.icon}</span>
+                                            <camp.icon size={14} strokeWidth={2.2} />
                                             <span>{camp.name}</span>
                                             <span style={{
                                                 fontSize: '9.5px',
@@ -2462,9 +2494,9 @@ _Sent by Aanandham Organizers_`
                         <div className="admin-region-chip-row" style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px' }}>
                             {[
                                 { id: 'all', label: `All (${campIsolatedRoster.length})` },
-                                { id: 'pending', label: `⏳ Expected (${campIsolatedRoster.filter(r => r.status !== 'Checked In' && r.status !== 'Partial Check-In').length})` },
-                                { id: 'checked_in', label: `🟢 Checked In (${campIsolatedRoster.filter(r => r.status === 'Checked In').length})` },
-                                { id: 'short', label: `⚠️ Short Arrival (${campIsolatedRoster.filter(r => r.status === 'Partial Check-In' && Number(r.shortCount) > 0 && Number(r.checkedInCount) > 0).length})` }
+                                { id: 'pending', label: `Expected (${campIsolatedRoster.filter(r => r.status !== 'Checked In' && r.status !== 'Partial Check-In').length})` },
+                                { id: 'checked_in', label: `Checked In (${campIsolatedRoster.filter(r => r.status === 'Checked In').length})` },
+                                { id: 'short', label: `Short Arrival (${campIsolatedRoster.filter(r => r.status === 'Partial Check-In' && Number(r.shortCount) > 0 && Number(r.checkedInCount) > 0).length})` }
                             ].map(filter => (
                                 <button
                                     key={filter.id}
@@ -2528,7 +2560,7 @@ _Sent by Aanandham Organizers_`
                                     >
                                         {/* Top Row: Avatar, Guest Info & Status Badge */}
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={ROW_GAP_10}>
                                                 <div style={{
                                                     width: '42px',
                                                     height: '42px',
@@ -2556,7 +2588,7 @@ _Sent by Aanandham Organizers_`
                                                         </span>
                                                     </div>
                                                     <span style={{ fontSize: '12px', color: '#A2B6A6', display: 'block', marginTop: '2px' }}>
-                                                        🏕️ {guest.campsite} • {guest.convoyTime}
+                                                        {guest.campsite} • {guest.convoyTime}
                                                     </span>
                                                 </div>
                                             </div>
@@ -2569,16 +2601,16 @@ _Sent by Aanandham Organizers_`
                                                 fontSize: '11.5px',
                                                 fontWeight: '800'
                                             }}>
-                                                {isCheckedIn ? '✓ Checked In' : isPartial ? `⚠️ ${guest.checkedInCount || (guest.totalGuests - guest.shortCount)}/${guest.totalGuests} Present (${guest.shortCount} Late)` : '⏳ Expected · Not Arrived'}
+                                                {isCheckedIn ? '✓ Checked In' : isPartial ? `${guest.checkedInCount || (guest.totalGuests - guest.shortCount)}/${guest.totalGuests} Present (${guest.shortCount} Late)` : 'Expected · Not Arrived'}
                                             </span>
                                         </div>
 
                                         {/* Middle Info Bar: Headcount, Catering & Balance */}
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', fontSize: '12px', color: '#8E9B92', background: 'rgba(0,0,0,0.25)', padding: '8px 12px', borderRadius: '10px' }}>
-                                            <span>👥 <strong>{guest.totalGuests}</strong> Campers</span>
-                                            <span>🥗 <strong style={{ color: '#4ADE80' }}>{guest.vegCount}V</strong> / 🍗 <strong style={{ color: '#FB923C' }}>{guest.nonVegCount}NV</strong></span>
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Users size={13} /> <strong>{guest.totalGuests}</strong> Campers</span>
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Leaf size={13} color='#4ADE80' /> <strong style={{ color: '#4ADE80' }}>{guest.vegCount}V</strong> / <Drumstick size={13} color='#FB923C' /> <strong style={{ color: '#FB923C' }}>{guest.nonVegCount}NV</strong></span>
                                             <span style={{ color: guest.isBalancePaid ? '#4ADE80' : '#FCA5A5', fontWeight: '700' }}>
-                                                {guest.isBalancePaid ? '✓ Balance Paid' : `💰 ₹${guest.balanceDue} Due`}
+                                                {guest.isBalancePaid ? '✓ Balance Paid' : `₹${guest.balanceDue} Due`}
                                             </span>
                                         </div>
 
@@ -2648,7 +2680,7 @@ _Sent by Aanandham Organizers_`
                                                     gap: '4px'
                                                 }}
                                             >
-                                                <span>⚡ Verify Pass & Check-In</span>
+                                                <span>Verify Pass & Check-In</span>
                                                 <ArrowRight size={13} />
                                             </button>
                                         </div>
@@ -2687,7 +2719,7 @@ _Sent by Aanandham Organizers_`
                         gap: '12px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <div style={ROW_GAP_10}>
                                 <div style={{
                                     width: '38px',
                                     height: '38px',
@@ -2699,10 +2731,10 @@ _Sent by Aanandham Organizers_`
                                     justifyContent: 'center',
                                     fontSize: '18px'
                                 }}>
-                                    {authStation.icon || '👨‍🍳'}
+                                    <StationGlyph icon={authStation.icon} size={24} />
                                 </div>
                                 <div>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={ROW_GAP_8}>
                                         <span style={{ fontSize: '15px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '0.3px' }}>
                                             {authStation.isMasterAdmin ? 'Master Enterprise Kitchen' : authStation.campName}
                                         </span>
@@ -2716,7 +2748,7 @@ _Sent by Aanandham Organizers_`
                                                 borderRadius: '6px',
                                                 fontWeight: '800'
                                             }}>
-                                                🔒 STATION LOCKED
+                                                STATION LOCKED
                                             </span>
                                         )}
                                     </div>
@@ -2769,7 +2801,7 @@ _Sent by Aanandham Organizers_`
                                                 transition: 'all 0.15s ease'
                                             }}
                                         >
-                                            <span>{camp.icon}</span>
+                                            <span style={{ display: 'inline-flex' }}><camp.icon size={14} strokeWidth={2.2} /></span>
                                             <span>{camp.name}</span>
                                         </button>
                                     );
@@ -2840,7 +2872,7 @@ _Sent by Aanandham Organizers_`
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '18px' }}>🥗</span>
+                                            <Leaf size={18} color='#4ADE80' />
                                             <span style={{ fontSize: '13px', fontWeight: '900', color: '#4ADE80', letterSpacing: '0.3px', textTransform: 'uppercase' }}>
                                                 Veg BBQ Meals
                                             </span>
@@ -2887,7 +2919,7 @@ _Sent by Aanandham Organizers_`
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-                                            <span style={{ fontSize: '18px' }}>🍗</span>
+                                            <Drumstick size={18} color='#FB923C' />
                                             <span style={{ fontSize: '13px', fontWeight: '900', color: '#FB923C', letterSpacing: '0.3px', textTransform: 'uppercase' }}>
                                                 Chicken BBQ Meals
                                             </span>
@@ -2933,7 +2965,7 @@ _Sent by Aanandham Organizers_`
                         gap: '14px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={ROW_GAP_8}>
                                 <div style={{
                                     width: '32px',
                                     height: '32px',
@@ -3029,8 +3061,8 @@ _Sent by Aanandham Organizers_`
                         flexDirection: 'column',
                         gap: '14px'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={ROW_SPACE}>
+                            <div style={ROW_GAP_8}>
                                 <TrendingUp size={17} color="#D5ED55" />
                                 <span style={{ fontSize: '13.5px', fontWeight: '900', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                     Ridge Seating & Arrival Flow
@@ -3043,7 +3075,7 @@ _Sent by Aanandham Organizers_`
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px' }}>
                             <div style={{ background: 'rgba(74, 222, 128, 0.08)', border: '1px solid rgba(74, 222, 128, 0.25)', padding: '12px 14px', borderRadius: '14px' }}>
-                                <span style={{ fontSize: '11px', color: '#4ADE80', fontWeight: '700', display: 'block' }}>🟢 In Camp & Seated</span>
+                                <span style={{ fontSize: '11px', color: '#4ADE80', fontWeight: '700', display: 'block' }}>In Camp & Seated</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#4ADE80', display: 'block', marginTop: '2px' }}>
                                     {activeStats.totalCheckedInCampers}
                                 </span>
@@ -3059,7 +3091,7 @@ _Sent by Aanandham Organizers_`
                             </div>
 
                             <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.25)', padding: '12px 14px', borderRadius: '14px' }}>
-                                <span style={{ fontSize: '11px', color: '#F87171', fontWeight: '700', display: 'block' }}>⚠️ Short / Absent</span>
+                                <span style={{ fontSize: '11px', color: '#F87171', fontWeight: '700', display: 'block' }}>Short / Absent</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#F87171', display: 'block', marginTop: '2px' }}>
                                     {activeStats.totalShortCampers}
                                 </span>
@@ -3094,8 +3126,8 @@ _Sent by Aanandham Organizers_`
                         flexDirection: 'column',
                         gap: '12px'
                     }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={ROW_SPACE}>
+                            <div style={ROW_GAP_8}>
                                 <FileText size={17} color="#D5ED55" />
                                 <span style={{ fontSize: '13.5px', fontWeight: '900', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                     Group Dinner Orders ({campIsolatedRoster.length})
@@ -3134,7 +3166,7 @@ _Sent by Aanandham Organizers_`
                                                 gap: '8px'
                                             }}
                                         >
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <div style={ROW_GAP_10}>
                                                 <div style={{
                                                     width: '32px',
                                                     height: '32px',
@@ -3146,10 +3178,10 @@ _Sent by Aanandham Organizers_`
                                                     justifyContent: 'center',
                                                     fontSize: '14px'
                                                 }}>
-                                                    {isCheckedIn ? '✓' : '⏳'}
+                                                    {isCheckedIn ? '✓' : <Hourglass size={13} />}
                                                 </div>
                                                 <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <div style={ROW_GAP_6}>
                                                         <span style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>
                                                             {booking.name}
                                                         </span>
@@ -3158,20 +3190,20 @@ _Sent by Aanandham Organizers_`
                                                         </span>
                                                     </div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px', fontSize: '11px', color: '#A2B6A6' }}>
-                                                        <span>🛖 {tentName}</span>
+                                                        <span>{tentName}</span>
                                                         <span>•</span>
-                                                        <span>🚙 {booking.convoyTime || '02:30 PM Batch'}</span>
+                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Truck size={13} /> {booking.convoyTime || '02:30 PM Batch'}</span>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <div style={ROW_GAP_8}>
                                                 <div style={{ display: 'flex', gap: '6px', fontSize: '11.5px', fontWeight: '800' }}>
                                                     <span style={{ color: '#4ADE80', background: 'rgba(34, 197, 94, 0.12)', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
-                                                        🥗 {vegCount}V
+                                                        {vegCount}V
                                                     </span>
                                                     <span style={{ color: '#FB923C', background: 'rgba(249, 115, 22, 0.12)', padding: '3px 8px', borderRadius: '6px', border: '1px solid rgba(249, 115, 22, 0.25)' }}>
-                                                        🍗 {nonVegCount}NV
+                                                        {nonVegCount}NV
                                                     </span>
                                                 </div>
                                                 <button
@@ -3208,7 +3240,7 @@ _Sent by Aanandham Organizers_`
                         flexDirection: 'column',
                         gap: '12px'
                     }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div style={ROW_GAP_8}>
                             <DollarSign size={17} color="#D5ED55" />
                             <span style={{ fontSize: '13.5px', fontWeight: '900', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 Front Desk Settlement
@@ -3262,7 +3294,7 @@ _Sent by Aanandham Organizers_`
                             <AlertCircle size={22} color="#FACC15" style={{ flexShrink: 0 }} />
                             <div>
                                 <strong style={{ fontSize: '13px', color: '#FACC15', display: 'block' }}>
-                                    ⚠️ Cross-Sanctuary Pass Notice
+                                    Cross-Sanctuary Pass Notice
                                 </strong>
                                 <span style={{ fontSize: '11.5px', color: '#E2E8F0' }}>
                                     This reservation is for <strong>{scannedBooking.campsite}</strong>, but this console is currently stationed at <strong>{authStation.campName}</strong>. Please confirm if the camper was transferred or rerouted.
@@ -3335,7 +3367,7 @@ _Sent by Aanandham Organizers_`
                                                 {isCheckedIn 
                                                     ? '✓ Checked In' 
                                                     : isPartialIn 
-                                                        ? `⚠️ ${scannedBooking.checkedInCount || 1}/${scannedBooking.totalGuests || scannedBooking.guests || 2} Present` 
+                                                        ? `${scannedBooking.checkedInCount || 1}/${scannedBooking.totalGuests || scannedBooking.guests || 2} Present` 
                                                         : '⏳ Expected · Confirmed'}
                                             </span>
                                         );
@@ -3348,7 +3380,7 @@ _Sent by Aanandham Organizers_`
                                     if (!leadPhone) {
                                         return (
                                             <div style={{ marginTop: '12px', fontSize: '11.5px', color: '#8E9B92', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                                                <span>📱 No customer phone number attached to this reservation.</span>
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Smartphone size={13} /> No customer phone number attached to this reservation.</span>
                                             </div>
                                         );
                                     }
@@ -3426,7 +3458,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
 
                                 {/* Catering & BBQ Tokens */}
                                 <div style={{ background: 'rgba(255,255,255,0.03)', padding: '12px 14px', borderRadius: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={ROW_GAP_8}>
                                         <Utensils size={15} color="#D5ED55" />
                                         <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#FFFFFF' }}>
                                             Catering Tokens:
@@ -3434,10 +3466,10 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                     </div>
                                     <div style={{ display: 'flex', gap: '10px', fontSize: '12px' }}>
                                         <span style={{ background: 'rgba(34, 197, 94, 0.15)', color: '#4ADE80', padding: '3px 8px', borderRadius: '6px', fontWeight: '800' }}>
-                                            🥗 {scannedBooking.vegCount} Veg
+                                            {scannedBooking.vegCount} Veg
                                         </span>
                                         <span style={{ background: 'rgba(249, 115, 22, 0.15)', color: '#FB923C', padding: '3px 8px', borderRadius: '6px', fontWeight: '800' }}>
-                                            🍗 {scannedBooking.nonVegCount} Non-Veg
+                                            {scannedBooking.nonVegCount} Non-Veg
                                         </span>
                                     </div>
                                 </div>
@@ -3459,7 +3491,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                     justifyContent: 'space-between',
                                     gap: '12px'
                                 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={ROW_GAP_10}>
                                         <CheckCircle2 size={24} color="#4ADE80" />
                                         <div>
                                             <span style={{ fontSize: '13px', fontWeight: '800', color: '#4ADE80', display: 'block' }}>
@@ -3482,7 +3514,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                     justifyContent: 'space-between',
                                     gap: '12px'
                                 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={ROW_GAP_10}>
                                         <Clock size={24} color="#FACC15" />
                                         <div>
                                             <span style={{ fontSize: '13px', fontWeight: '800', color: '#FACC15', display: 'block' }}>
@@ -3520,14 +3552,14 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                 padding: '20px'
                             }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={ROW_GAP_8}>
                                         <Ticket size={18} color="#D5ED55" />
                                         <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
                                             Camper Headcount & Attendance
                                         </span>
                                     </div>
 
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <div style={ROW_GAP_6}>
                                         <button
                                             type="button"
                                             onClick={checkInAllRemaining}
@@ -3552,7 +3584,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                             fontSize: '11.5px',
                                             fontWeight: '800'
                                         }}>
-                                            {shortCount === 0 ? `🟢 ${presentCount}/${totalCount} Full Party` : `⚠️ ${presentCount}/${totalCount} (${shortCount} Short)`}
+                                            {shortCount === 0 ? `${presentCount}/${totalCount} Full Party` : `${presentCount}/${totalCount} (${shortCount} Short)`}
                                         </span>
                                     </div>
                                 </div>
@@ -3616,8 +3648,8 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                         }}>
                                                             {camperInitials}
                                                             {isLead && (
-                                                                <span style={{ position: 'absolute', top: '-6px', right: '-6px', fontSize: '12px' }}>
-                                                                    👑
+                                                                <span style={{ position: 'absolute', top: '-6px', right: '-6px', display: 'inline-flex' }}>
+                                                                    <Crown size={12} color="#E5A93B" />
                                                                 </span>
                                                             )}
                                                         </div>
@@ -3638,7 +3670,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                                     Ticket #{idx + 1}
                                                                 </span>
                                                                 <span style={{ fontSize: '10.5px', color: '#60A5FA', fontWeight: '700', background: 'rgba(96, 165, 250, 0.1)', padding: '1px 6px', borderRadius: '4px' }}>
-                                                                    👤 Adult
+                                                                    Adult
                                                                 </span>
                                                                 <span style={{
                                                                     fontSize: '10.5px',
@@ -3648,7 +3680,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                                     background: camperMeal === 'Veg' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(249, 115, 22, 0.15)',
                                                                     color: camperMeal === 'Veg' ? '#4ADE80' : '#FB923C'
                                                                 }}>
-                                                                    {camperMeal === 'Veg' ? '🥗 Veg BBQ' : '🍗 Chicken BBQ'}
+                                                                    {camperMeal === 'Veg' ? 'Veg BBQ' : 'Chicken BBQ'}
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -3691,7 +3723,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                             transition: 'all 0.15s ease'
                                                         }}
                                                     >
-                                                        <span>🟢</span>
+                                                        <span style={{ display: 'inline-flex' }}><CheckCircle2 size={13} color="#22C55E" /></span>
                                                         <span>Present</span>
                                                     </button>
 
@@ -3794,7 +3826,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                 padding: '20px'
                             }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div style={ROW_GAP_10}>
                                         <div style={{
                                             width: '40px',
                                             height: '40px',
@@ -3814,7 +3846,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                 Reserved Accommodation (Pre-Assigned from Booking):
                                             </span>
                                             <div style={{ fontSize: '15.5px', fontWeight: '900', color: '#FFFFFF', marginTop: '2px' }}>
-                                                ⛺ {assignedTent || scannedBooking.roomType || scannedBooking.campsite}
+                                                {assignedTent || scannedBooking.roomType || scannedBooking.campsite}
                                             </div>
                                             <span style={{ fontSize: '11px', color: '#D5ED55', display: 'block', marginTop: '2px' }}>
                                                 ✓ Confirmed for Pass #{scannedBooking.id}
@@ -3848,7 +3880,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                 {isChangingTent && (
                                     <div style={{ marginTop: '14px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                                         <label style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', display: 'block', marginBottom: '8px', textTransform: 'uppercase' }}>
-                                            ⚡ Select New Pod / Tent To Reassign:
+                                            Select New Pod / Tent To Reassign:
                                         </label>
                                         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '8px', marginBottom: '10px' }}>
                                             {[
@@ -3901,7 +3933,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                 <div style={{ marginTop: '16px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                         <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#8E9B92' }}>
-                                            🏷️ Wristband Tag # Range:
+                                            Wristband Tag # Range:
                                         </label>
                                         <button
                                             type="button"
@@ -3917,7 +3949,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            ⚡ Auto-Sequence Tags
+                                            Auto-Sequence Tags
                                         </button>
                                     </div>
                                     <input
@@ -3952,7 +3984,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                             }}>
                                 {/* Header */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <div style={ROW_GAP_8}>
                                         <Wallet size={18} color="#D5ED55" />
                                         <span style={{ fontSize: '14.5px', fontWeight: '900', color: '#FFFFFF' }}>
                                             Gate Balance & Payment Options
@@ -3966,7 +3998,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                         background: isBalancePaid ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)',
                                         color: isBalancePaid ? '#4ADE80' : '#FCA5A5'
                                     }}>
-                                        {isBalancePaid ? '✓ ALL SETTLED' : '⚠️ PAYMENT DUE'}
+                                        {isBalancePaid ? '✓ ALL SETTLED' : 'PAYMENT DUE'}
                                     </span>
                                 </div>
 
@@ -4058,7 +4090,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                         textAlign: 'center'
                                     }}>
                                         <div style={{ fontSize: '11px', fontWeight: '800', color: '#4ADE80', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
-                                            💵 Physical Cash Handover at Basecamp Gate
+                                            Physical Cash Handover at Basecamp Gate
                                         </div>
                                         <div style={{ fontSize: '32px', fontWeight: '900', color: '#FFFFFF', margin: '6px 0' }}>
                                             ₹{dynamicBalanceDue.toLocaleString('en-IN')}
@@ -4081,9 +4113,9 @@ padding: embedded ? '12px 18px' : '10px 16px',
                                         flexDirection: 'column',
                                         gap: '12px'
                                     }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                        <div style={ROW_SPACE}>
                                             <div style={{ fontSize: '11px', fontWeight: '800', color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.8px' }}>
-                                                💳 Razorpay Payment Link
+                                                Razorpay Payment Link
                                             </div>
                                             <span style={{
                                                 fontSize: '9.5px',
@@ -4295,7 +4327,7 @@ padding: embedded ? '12px 18px' : '10px 16px',
                         maxWidth: '420px'
                     }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div style={ROW_GAP_8}>
                                 <Mail size={18} color="#E5A93B" />
                                 <span style={{ fontSize: '16px', fontWeight: '800', color: '#FFFFFF' }}>
                                     Dispatch Test Reservation Pass

@@ -1,4 +1,5 @@
 import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
+import { getAllBlogSlugs } from '@/lib/blogPosts';
 
 export default function sitemap() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
@@ -31,6 +32,12 @@ export default function sitemap() {
       priority: 0.9,
     },
     {
+      url: `${siteUrl}/blog`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
       url: `${siteUrl}/about`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
@@ -52,6 +59,14 @@ export default function sitemap() {
     priority: 0.9,
   }));
 
+  // Blog posts — the long-tail keyword engine (weekly crawl, mid priority)
+  const blogRoutes = getAllBlogSlugs().map((slug) => ({
+    url: `${siteUrl}/blog/${slug}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
   // Note: /login, /signup, /admin are omitted from sitemap to prevent crawl budget dilution
-  return [...staticRoutes, ...campRoutes];
+  return [...staticRoutes, ...campRoutes, ...blogRoutes];
 }

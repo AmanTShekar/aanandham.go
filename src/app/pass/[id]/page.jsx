@@ -1,4 +1,7 @@
 import React from 'react';
+
+const ROW_SPACE_BOTTOM = { display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' };
+
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getStoredBookings } from '@/lib/serverBookingStore';
@@ -9,7 +12,7 @@ import { buildGoogleCalendarUrl } from '@/lib/calendarLink';
 import { generateQrDataUri } from '@/lib/qrGenerator';
 import { calculateRefundAmount } from '@/lib/cancellation';
 import PrintPassButton from '@/components/PrintPassButton';
-import { ShieldCheck, MapPin, Calendar, Users, Phone, ArrowLeft, KeyRound, QrCode, Utensils, IndianRupee, CheckCircle2, Download, Lock, RefreshCw, Clock, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, MapPin, Calendar, Users, Phone, ArrowLeft, KeyRound, QrCode, Utensils, IndianRupee, CheckCircle2, Download, Lock, RefreshCw, Clock, AlertTriangle, MessageCircle, TriangleAlert } from 'lucide-react';
 
 export const metadata = {
     title: 'Verified Expedition Pass · Aanandham Wilderness',
@@ -140,7 +143,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 width="38"
                                 height="38"
                                 style={{ objectFit: 'contain' }}
-                            />
+                             loading="lazy" decoding="async"/>
                             <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '-0.5px' }}>
                                 Aanandham<span style={{ color: '#D5ED55' }}>.go</span> Wilderness Stays
                             </div>
@@ -188,7 +191,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                         rel="noopener noreferrer"
                                         style={{ background: '#25D366', color: '#0B150E', padding: '8px 14px', borderRadius: '8px', fontSize: '12px', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
                                     >
-                                        <span>💬 Chat with Camp Coordinator</span>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><MessageCircle size={14} /> Chat with Camp Coordinator</span>
                                     </a>
                                 </div>
                             </div>
@@ -226,7 +229,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                     src={qrImageUrl} 
                                     alt={`Pass QR Code for ${data.id}`}
                                     style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto 10px', borderRadius: '8px' }}
-                                />
+                                 loading="lazy" decoding="async"/>
                             ) : (
                                 <div style={{ width: '180px', height: '180px', margin: '0 auto 10px', background: '#F8FAFC', borderRadius: '12px', border: '2px dashed #CBD5E1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
                                     <Lock size={38} color="#D97706" />
@@ -333,11 +336,11 @@ export default async function PassDetailPage({ params, searchParams }) {
                             </div>
 
                             <div style={{ display: 'grid', gap: '10px', fontSize: '13.5px' }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Lead Camper:</span>
                                     <span style={{ fontWeight: '800', color: '#FFFFFF' }}>{maskedName}</span>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Contact Phone:</span>
                                     {isTokenVerified ? (
                                         <a href={`tel:${data.phone}`} style={{ fontWeight: '800', color: '#D5ED55', textDecoration: 'none' }}>{data.phone}</a>
@@ -345,20 +348,20 @@ export default async function PassDetailPage({ params, searchParams }) {
                                         <span style={{ fontWeight: '800', color: '#A2B6A6', fontFamily: 'monospace' }}>{maskedPhone}</span>
                                     )}
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Dates:</span>
                                     <span style={{ fontWeight: '800', color: '#FFFFFF' }}>{data.dates}</span>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Lodging:</span>
                                     <span style={{ fontWeight: '800', color: '#FFFFFF' }}>{data.roomType || 'Alpine Tent'}</span>
                                 </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Campers:</span>
                                     <span style={{ fontWeight: '800', color: '#FFFFFF' }}>{data.guests} Persons ({data.adults || data.guests} Adults{data.children > 0 ? `, ${data.children} Kids` : ''})</span>
                                 </div>
                                 {data.addons && data.addons.length > 0 && (
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' }}>
+                                    <div style={ROW_SPACE_BOTTOM}>
                                         <span style={{ color: '#A2B6A6' }}>Add-Ons:</span>
                                         <span style={{ fontWeight: '800', color: '#FFFFFF' }}>{Array.isArray(data.addons) ? data.addons.join(', ') : data.addons}</span>
                                     </div>
@@ -393,13 +396,13 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 4x4 Convoy & Navigation Guide
                             </div>
                             <p style={{ fontSize: '13px', color: '#FFFFFF', margin: '0 0 6px' }}>
-                                📍 <strong>Hub:</strong> {landmarkGuide.hubName}
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> <strong>Hub:</strong> {landmarkGuide.hubName}</span>
                             </p>
                             <p style={{ fontSize: '12.5px', color: '#A2B6A6', margin: '0 0 10px', lineHeight: 1.5 }}>
                                 {landmarkGuide.parkingArea}
                             </p>
                             <div style={{ background: 'rgba(229, 169, 59, 0.12)', border: '1px solid rgba(229, 169, 59, 0.3)', borderRadius: '10px', padding: '10px', fontSize: '12px', color: '#E5A93B' }}>
-                                ⚠️ <strong>Offline Advisory:</strong> {landmarkGuide.offlineNote}
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><TriangleAlert size={13} /> <strong>Offline Advisory:</strong> {landmarkGuide.offlineNote}</span>
                             </div>
                         </div>
 
@@ -445,7 +448,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                     textDecoration: 'none'
                                 }}
                             >
-                                <span>WhatsApp Dispatch 💬</span>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>WhatsApp Dispatch <MessageCircle size={14} /></span>
                             </a>
                         </div>
                     </div>

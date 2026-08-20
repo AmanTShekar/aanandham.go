@@ -4,6 +4,7 @@ import Script from 'next/script';
 import SmoothScroll from '@/components/SmoothScroll';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { SEO_KEYWORDS, SITE_RATING } from '@/lib/seoKeywords';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -35,21 +36,7 @@ export const metadata = {
     template: '%s | Aanandham.go'
   },
   description: 'Book verified high-altitude camping, Suryanelli tent stays & 4x4 Kolukkumalai sunrise treks in Munnar, Kerala with Aanandham.go.',
-  keywords: [
-    'Aanandham',
-    'Aanandham.go',
-    'Munnar Camping',
-    'Suryanelli Tent Stay',
-    'Kolukkumalai Sunrise Trek',
-    'Kolukkumalai 4x4 Jeep Safari',
-    'Vagamon Glamping',
-    'Wayanad Forest Stay',
-    'Phantom Head Trek',
-    'Kerala Camping',
-    'Best Tent Stays in Kerala',
-    'Safe Campsites for Couples',
-    'High-Altitude Ridge Pods'
-  ],
+  keywords: SEO_KEYWORDS,
   authors: [{ name: 'Aanandham Wilderness Platform' }],
   creator: 'Aanandham.go',
   publisher: 'Aanandham.go',
@@ -172,8 +159,10 @@ const jsonLd = {
     { '@type': 'LocationFeatureSpecification', name: 'Private Campfire & Live BBQ Platter', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Weatherproof Alpine Dome Tents', value: true },
     { '@type': 'LocationFeatureSpecification', name: 'Kolukkumalai Sunrise Guided Ridge Hike', value: true },
-    { '@type': 'LocationFeatureSpecification', name: '24/7 Forest Marshal & First-Aid Support', value: true }
-  ]
+    { '@type': 'LocationFeatureSpecification', name: '24/7 Forest Guide & First-Aid Support', value: true }
+  ],
+  aggregateRating: SITE_RATING,
+  additionalType: 'https://schema.org/TouristAttraction'
 };
 
 export default function RootLayout({ children }) {
@@ -186,18 +175,10 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
         <link rel="manifest" href="/site.webmanifest?v=2" />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://*.supabase.co" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://*.supabase.co" />
         
-        {/* Font Awesome 6 Icons with Subresource Integrity (SRI) */}
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-        />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

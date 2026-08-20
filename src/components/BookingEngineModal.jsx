@@ -1,5 +1,9 @@
 "use client";
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
+
+const ROW_GAP_10 = { display: 'flex', alignItems: 'center', gap: '10px' };
+
 import { motion, AnimatePresence } from 'framer-motion';
 import CustomThemeCalendar from './CustomThemeCalendar';
 import CustomDateBatchPicker from './CustomDateBatchPicker';
@@ -25,8 +29,20 @@ import {
     MapPin, 
     Calendar, 
     Clock, 
-    AlertCircle 
+    AlertCircle,
+    Flame,
+    Truck,
+    Camera,
+    PersonStanding,
+    Music2,
+    Utensils,
+    Leaf,
+    Drumstick,
+    PartyPopper,
+    Hourglass,
+    Lock
 } from 'lucide-react';
+import { WhatsAppIcon } from './common/BrandIcons';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
 import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
@@ -41,11 +57,11 @@ export function parseRoomCapacity(capacityStr) {
 }
 
 const ADDONS_LIST = [
-    { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true, icon: '🔥', desc: 'Marinated paneer/chicken skewers grilled live over wood coals' },
-    { id: 'jeep', name: 'Private 4x4 Off-Road Jeep Upgrade', price: 1200, perPerson: false, icon: '🚙', desc: 'Exclusive Mahindra 4x4 for your squad with summit sunrise stops' },
-    { id: 'drone', name: '4K Drone Mountain Video Reel Shoot', price: 1500, perPerson: false, icon: '📸', desc: 'Cinematic aerial 4K video clips edited for your Instagram reels' },
-    { id: 'yoga', name: 'Sunrise Mountain Yoga & Pranayama', price: 250, perPerson: true, icon: '🧘', desc: 'Guided breathwork & stretching above cloud beds with local yogi' },
-    { id: 'guitar', name: 'Acoustic Guitarist for Campfire Circle', price: 2000, perPerson: false, icon: '🎸', desc: 'Live unplugged indie mountain tunes around the starlit fire' }
+    { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true, icon: Flame, desc: 'Marinated paneer/chicken skewers grilled live over wood coals' },
+    { id: 'jeep', name: 'Private 4x4 Off-Road Jeep Upgrade', price: 1200, perPerson: false, icon: Truck, desc: 'Exclusive Mahindra 4x4 for your squad with summit sunrise stops' },
+    { id: 'drone', name: '4K Drone Mountain Video Reel Shoot', price: 1500, perPerson: false, icon: Camera, desc: 'Cinematic aerial 4K video clips edited for your Instagram reels' },
+    { id: 'yoga', name: 'Sunrise Mountain Yoga & Pranayama', price: 250, perPerson: true, icon: PersonStanding, desc: 'Guided breathwork & stretching above cloud beds with local yogi' },
+    { id: 'guitar', name: 'Acoustic Guitarist for Campfire Circle', price: 2000, perPerson: false, icon: Music2, desc: 'Live unplugged indie mountain tunes around the starlit fire' }
 ];
 
 export default function BookingEngineModal({ 
@@ -119,7 +135,6 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
             setStep(1);
             setValidationError('');
             setConfirmedPass(null);
-            setUtrNumber('');
 
             // 1. Sync Date
             if (initialDate) {
@@ -498,7 +513,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
         window.open(waLink(msg), '_blank');
     };
 
-    return (
+    return createPortal(
         <div 
             role="dialog"
             aria-modal="true"
@@ -547,7 +562,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                             {step === 2 && '2. Choose Experiences & Add-Ons'}
                             {step === 3 && '3. Camper & Contact Information'}
                             {step === 4 && '4. Payment & Reservation Details'}
-                            {step === 5 && '🎉 Expedition Boarding Pass Issued'}
+                            {step === 5 && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Expedition Boarding Pass Issued</span>}
                         </h2>
                     </div>
 
@@ -561,8 +576,8 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                             minWidth: '40px',
                             minHeight: '40px',
                             borderRadius: '50%',
-                            background: '#ECEEE6',
-                            border: 'none',
+                            background: 'rgba(18, 22, 19, 0.06)',
+                            border: '1px solid rgba(18, 22, 19, 0.12)',
                             color: '#121613',
                             fontSize: '16px',
                             fontWeight: '800',
@@ -597,14 +612,15 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                         style={{
                                             cursor: isCompleted ? 'pointer' : 'default',
                                             opacity: isActive ? 1 : isCompleted ? 0.95 : 0.5,
-                                            background: isActive ? 'rgba(22, 101, 52, 0.08)' : 'transparent'
+                                            background: isActive ? 'rgba(22, 101, 52, 0.06)' : 'transparent'
                                         }}
                                     >
                                         <div 
                                             className="booking-step-badge"
                                             style={{
-                                                background: isActive ? '#166534' : isCompleted ? '#D5ED55' : 'rgba(18,22,19,0.14)',
-                                                color: isActive ? '#FFFFFF' : isCompleted ? '#121613' : '#59655D'
+                                                background: isActive ? '#166534' : isCompleted ? 'rgba(22, 101, 52, 0.12)' : 'rgba(18, 22, 19, 0.06)',
+                                                border: isActive ? '1px solid #166534' : isCompleted ? '1px solid rgba(22, 101, 52, 0.35)' : '1px solid rgba(18, 22, 19, 0.12)',
+                                                color: isActive ? '#FFFFFF' : isCompleted ? '#166534' : '#59655D'
                                             }}
                                         >
                                             {isCompleted ? '✓' : s.num}
@@ -613,7 +629,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                             className="booking-step-label-full"
                                             style={{ 
                                                 fontWeight: isActive ? '800' : '600', 
-                                                color: isActive ? '#166534' : '#121613' 
+                                                color: isActive ? '#166534' : '#59655D' 
                                             }}
                                         >
                                             {s.label}
@@ -621,7 +637,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                         <span 
                                             className="booking-step-label-short"
                                             style={{ 
-                                                color: isActive ? '#166534' : '#121613' 
+                                                color: isActive ? '#166534' : '#59655D' 
                                             }}
                                         >
                                             {s.shortLabel}
@@ -798,7 +814,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                             src={room.image}
                                                             alt={room.name}
                                                             style={{ width: '56px', height: '56px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
-                                                        />
+                                                         loading="lazy" decoding="async"/>
                                                     )}
                                                     <div style={{ flex: 1, minWidth: 0 }}>
                                                         <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -846,7 +862,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                 4. Number of Campers
                                             </label>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
-                                                {discountLabel ? `✨ ${discountLabel}` : 'Standard Fare'}
+                                                {discountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel}</span> : 'Standard Fare'}
                                             </span>
                                         </div>
 
@@ -1046,8 +1062,8 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                                 onChange={() => toggleAddon(addon.id)}
                                                                 style={{ width: '18px', height: '18px', accentColor: '#166534', cursor: 'pointer' }}
                                                             />
-                                                            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: isChecked ? '#166534' : '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>
-                                                                {addon.icon}
+                                                            <div style={{ width: '34px', height: '34px', borderRadius: '10px', background: isChecked ? '#166534' : '#F1F3EC', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0, color: isChecked ? '#D5ED55' : '#121613' }}>
+                                                                <addon.icon size={17} strokeWidth={2.2} />
                                                             </div>
                                                             <div>
                                                                 <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
@@ -1191,8 +1207,8 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                         <div style={{ background: '#F8F9F5', padding: '16px 18px', borderRadius: '18px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '14px' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '6px' }}>
                                                 <div>
-                                                    <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                                        🍽️ Live Campfire Dinner & Breakfast Prep
+                                                    <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                                        <Utensils size={14} /> Live Campfire Dinner & Breakfast Prep
                                                     </div>
                                                     <div style={{ fontSize: '11px', color: '#59655D' }}>
                                                         Distribute {totalGuests} camper meal portions (Vegetarian vs Non-Veg BBQ):
@@ -1205,7 +1221,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
 
                                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', marginBottom: '12px' }}>
                                                 <div style={{ background: '#FFFFFF', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                                                    <div style={{ fontSize: '11px', color: '#166534', fontWeight: '800', marginBottom: '4px' }}>🥦 Vegetarian Campers</div>
+                                                    <div style={{ fontSize: '11px', color: '#166534', fontWeight: '800', marginBottom: '4px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Leaf size={12} /> Vegetarian Campers</div>
                                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                         <button
                                                             type="button"
@@ -1234,7 +1250,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                 </div>
 
                                                 <div style={{ background: '#FFFFFF', padding: '10px 12px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.06)' }}>
-                                                    <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '800', marginBottom: '4px' }}>🍗 Non-Veg BBQ Campers</div>
+                                                    <div style={{ fontSize: '11px', color: '#B45309', fontWeight: '800', marginBottom: '4px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Drumstick size={12} /> Non-Veg BBQ Campers</div>
                                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                         <button
                                                             type="button"
@@ -1402,7 +1418,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                             </p>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={ROW_GAP_10}>
                                                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E', fontSize: '14px', fontWeight: '900' }}>
                                                         ✓
                                                     </div>
@@ -1411,9 +1427,9 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                         <div style={{ fontSize: '13px', fontWeight: '800', color: '#D5ED55' }}>₹0 (Zero Advance)</div>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={ROW_GAP_10}>
                                                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(229, 169, 59, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E5A93B', fontSize: '14px' }}>
-                                                        🏕️
+                                                        <Tent size={16} />
                                                     </div>
                                                     <div>
                                                         <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Trip Fare (Pay on Arrival)</div>
@@ -1441,7 +1457,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                             </p>
 
                                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={ROW_GAP_10}>
                                                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E', fontSize: '14px', fontWeight: '900' }}>
                                                         ✓
                                                     </div>
@@ -1450,16 +1466,16 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                         <div style={{ fontSize: '17px', fontWeight: '900', color: '#D5ED55' }}>₹{payableNow.toLocaleString('en-IN')}</div>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={ROW_GAP_10}>
                                                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(229, 169, 59, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E5A93B', fontSize: '14px' }}>
-                                                        ⏳
+                                                        <Hourglass size={16} />
                                                     </div>
                                                     <div>
                                                         <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Slot Hold</div>
                                                         <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>10 Minutes</div>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                                <div style={ROW_GAP_10}>
                                                     <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontSize: '14px' }}>
                                                         <ShieldCheck size={15} />
                                                     </div>
@@ -1505,7 +1521,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                     }}
                                                     title="Online instant checkout is upcoming. Direct concierge inquiries are open."
                                                 >
-                                                    <span>🔒 Online Booking Upcoming · Disabled</span>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Lock size={14} /> Online Booking Upcoming · Disabled</span>
                                                 </button>
 
                                                 {/* WhatsApp Concierge Desk Inquiry */}
@@ -1525,7 +1541,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                                         borderRadius: '12px'
                                                     }}
                                                 >
-                                                    <span>Inquire on WhatsApp 💬 →</span>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><WhatsAppIcon size={15} /> Inquire on WhatsApp →</span>
                                                 </a>
                                             </div>
                                         ) : (
@@ -1553,7 +1569,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                 <div style={{ textAlign: 'center' }}>
                                     {/* Success Icon */}
                                     <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '26px' }}>
-                                        🏕️
+                                        <Tent size={26} />
                                     </div>
 
                                     <span style={{ background: '#166534', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 12px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
@@ -1626,12 +1642,12 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                                         </div>
 
                                         <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '8px' }}>
-                                            🍽️ <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount} Vegetarian + {confirmedPass.nonVegCount} Non-Veg BBQ ({confirmedPass.dietaryChoice})
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Utensils size={13} /> <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount} Vegetarian + {confirmedPass.nonVegCount} Non-Veg BBQ ({confirmedPass.dietaryChoice})</span>
                                         </div>
 
                                         {confirmedPass.addons.length > 0 && (
                                             <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '10px' }}>
-                                                ✨ <strong>Included Upgrades:</strong> {confirmedPass.addons.join(', ')}
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Sparkles size={13} /> <strong>Included Upgrades:</strong> {confirmedPass.addons.join(', ')}</span>
                                             </div>
                                         )}
 
@@ -1681,6 +1697,7 @@ const payeeName = paymentSettings.payeeName || 'Aanandham Wilderness Stays';
                             )}
                 </div>
             </motion.div>
-        </div>
+        </div>,
+        document.body
     );
 }

@@ -1,5 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
+
+const CONTAINER = { maxWidth: '1440px', margin: '0 auto', width: '100%' };
+
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import SiteHeader from '../../components/SiteHeader';
@@ -7,6 +10,8 @@ import Footer from '../../components/Footer';
 import { useAuth } from '../../hooks/useAuth';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
+import { Mountain, Compass, Tent, Waves, ShieldCheck, Flame, Leaf, CloudSun, Plus, Minus, Star, Sunrise, Footprints, Telescope, MapPin, MessageCircle, Thermometer, Wind, ScrollText, Truck, PenLine, Hexagon } from 'lucide-react';
+import { InstagramIcon, WhatsAppIcon } from '../../components/common/BrandIcons';
 
 // ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
 const sectionReveal = {
@@ -69,7 +74,7 @@ const ELEVATION_TIERS = [
         desc: 'World’s highest organic tea estate. Accessible exclusively via rugged 4x4 Jeep expeditions across granite boulder trails. Witness dawn floating above sea of clouds.',
         temp: '10°C - 16°C',
         wind: '32 km/h Peak Gales',
-        icon: 'fa-solid fa-mountain-sun',
+        icon: Mountain,
         coord: '10.0834° N, 77.2144° E'
     },
     {
@@ -86,12 +91,12 @@ const ELEVATION_TIERS = [
         image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
         stoneType: 'Ironstone & Red Basalt',
         terrainType: 'Precipitous Escarpment',
-        access: 'Marshal Ridge Trek',
+        access: 'Guided Ridge Trek',
         atmosphere: 'Golden Hour Silhouette',
         desc: 'A secret high-altitude ridge formation resembling a skull in profile. Unobstructed 360° panoramic amphitheater overlooking wild elephant trails and valley mists.',
         temp: '12°C - 18°C',
         wind: '22 km/h Sunset Breeze',
-        icon: 'fa-solid fa-compass',
+        icon: Compass,
         coord: '10.0612° N, 77.1895° E'
     },
     {
@@ -113,7 +118,7 @@ const ELEVATION_TIERS = [
         desc: 'Our private weather-sealed geodesic dome sanctuary. Structurally insulated against mountain gusts, featuring private hot-water showers, campfire pit, and acoustic dining.',
         temp: '14°C - 20°C',
         wind: '16 km/h Valley Draft',
-        icon: 'fa-solid fa-tent',
+        icon: Tent,
         coord: '10.0521° N, 77.1789° E'
     },
     {
@@ -135,7 +140,7 @@ const ELEVATION_TIERS = [
         desc: 'The historic watering oasis for wild mountain elephants, surrounded by rolling green tea slopes, pine groves, and tranquil waters reflecting the Western Ghats mountain wall.',
         temp: '16°C - 22°C',
         wind: '10 km/h Shoreline Calm',
-        icon: 'fa-solid fa-water',
+        icon: Waves,
         coord: '10.0125° N, 77.1560° E'
     }
 ];
@@ -144,18 +149,18 @@ const ELEVATION_TIERS = [
 const WILDERNESS_PILLARS = [
     {
         id: '01',
-        title: 'Certified Native Mountain Marshals',
+        title: 'Certified Native Mountain Guides',
         tag: 'FIELD DISPATCH · 01',
-        stamp: '100% MARSHAL GUIDED',
+        stamp: '100% GUIDE LED',
         stampColor: '#1E3A1E',
         paperBg: '#FEF08A', // Sunlit Canary Yellow
         inkColor: '#1A1D0E',
         tapeColor: 'rgba(234, 179, 8, 0.9)',
         tapeRotation: '-2.5deg',
         rotation: '-1.6deg',
-        icon: 'fa-solid fa-shield-halved',
+        icon: ShieldCheck,
         metric: '1:6 Guide-to-Camper Ratio',
-        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain marshals trained in high-altitude topography, medical response, and wildlife tracking.',
+        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain guides trained in high-altitude topography, medical response, and wildlife tracking.',
         specs: [
             '100% native Suryanelli ridge navigators',
             'Real-time satellite & radio coordination',
@@ -174,7 +179,7 @@ const WILDERNESS_PILLARS = [
         tapeColor: 'rgba(132, 204, 22, 0.9)',
         tapeRotation: '2.4deg',
         rotation: '1.4deg',
-        icon: 'fa-solid fa-tent',
+        icon: Tent,
         metric: '12°C Weather Insulated',
         desc: 'Engineered for true mountain comfort: double-walled waterproof canvas, premium pocket-spring mattresses, 300-threadcount duvets, and private hot-water washrooms.',
         specs: [
@@ -195,7 +200,7 @@ const WILDERNESS_PILLARS = [
         tapeColor: 'rgba(251, 146, 60, 0.9)',
         tapeRotation: '-1.8deg',
         rotation: '-1.2deg',
-        icon: 'fa-solid fa-fire-burner',
+        icon: Flame,
         metric: 'Live Earthen Pot BBQ',
         desc: 'Live campfire grills, authentic Kerala earthen-pot curries cooked over open woodfire, and estate-plucked organic cardamom chai brewed fresh on the ridge.',
         specs: [
@@ -216,7 +221,7 @@ const WILDERNESS_PILLARS = [
         tapeColor: 'rgba(52, 211, 153, 0.9)',
         tapeRotation: '2.0deg',
         rotation: '1.6deg',
-        icon: 'fa-solid fa-leaf',
+        icon: Leaf,
         metric: '0g Single-Use Plastic',
         desc: 'Strict environmental ethics: zero single-use plastics permitted, 100% solar ambient night lighting, organic composting, and direct reinvestment into local tribal youth employment.',
         specs: [
@@ -246,7 +251,7 @@ const TIMELINE_MILESTONES = [
         year: '2024',
         title: 'The Off-Road 4x4 Fleet Expansion',
         tag: 'EXPEDITION FLEET',
-        desc: 'Assembled our dedicated fleet of custom 4x4 safari Jeeps and recruited veteran local tribal marshals to lead sunrise expeditions up the rugged Kolukkumalai peak.'
+        desc: 'Assembled our dedicated fleet of custom 4x4 safari Jeeps and recruited veteran local tribal guides to lead sunrise expeditions up the rugged Kolukkumalai peak.'
     },
     {
         year: '2026',
@@ -332,7 +337,7 @@ const TEAM_CREATORS = [
     },
     {
         name: 'Ananya Menon',
-        role: 'Lead Expedition Host & Camp Marshal',
+        role: 'Lead Expedition Host & Camp Guide',
         handle: '@ananya.wildlife',
         img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85',
         specialty: 'Camper Care & High-Altitude Safety',
@@ -386,7 +391,7 @@ const ABOUT_FAQS = [
     {
         num: '02',
         q: 'Is it safe for solo female travelers and families with young children?',
-        a: 'Absolutely. We maintain a strict 1:6 marshal-to-guest ratio, well-lit perimeter pathways, 24/7 on-site staff, private sanitized washrooms with hot water geysers, and locked thermal insulated domes. Over 40% of our guests are families and solo female explorers.'
+        a: 'Absolutely. We maintain a strict 1:6 guide-to-guest ratio, well-lit perimeter pathways, 24/7 on-site staff, private sanitized washrooms with hot water geysers, and locked thermal insulated domes. Over 40% of our guests are families and solo female explorers.'
     },
     {
         num: '03',
@@ -487,7 +492,7 @@ export default function AboutPage() {
                                     objectFit: 'contain',
                                     filter: 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.6))'
                                 }}
-                            />
+                             loading="lazy" decoding="async"/>
                         </motion.div>
 
                         {/* Main Headline in Bricolage Grotesque */}
@@ -557,7 +562,7 @@ export default function AboutPage() {
                                     boxShadow: '0 10px 30px rgba(213, 237, 85, 0.3)'
                                 }}
                             >
-                                ⛺ Explore Our Camps →
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Tent size={16} /> Explore Our Camps →</span>
                             </Link>
 
                             <a
@@ -578,7 +583,7 @@ export default function AboutPage() {
                                     transition: 'all 0.25s ease'
                                 }}
                             >
-                                📜 Read Our Charter ↓
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><ScrollText size={15} /> Read Our Charter ↓</span>
                             </a>
 
                             <a
@@ -587,7 +592,7 @@ export default function AboutPage() {
                                 rel="noopener noreferrer"
                                 className="hero-instagram-btn"
                             >
-                                <i className="fa-brands fa-instagram" style={{ fontSize: '16px' }}></i>
+                                <InstagramIcon size={16} />
                                 <span>@aanandham.go</span>
                             </a>
                         </motion.div>
@@ -598,18 +603,18 @@ export default function AboutPage() {
                 <div className="marquee-container" aria-hidden="true" style={{ background: '#0B150E', color: '#FFFFFF' }}>
                     <div className="marquee-track">
                         {[
-                            { icon: '★', label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
-                            { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
-                            { icon: '🔥', label: 'STARLIT CAMPFIRE & FARM-TO-TABLE DINING' },
-                            { icon: '⛺', label: 'THERMAL INSULATED PODS & CLEAN SHOWERS', highlight: true },
-                            { icon: '🥾', label: 'SECRET PHANTOM HEAD PEAK TRAILS' },
-                            { icon: '🔭', label: 'ZERO LIGHT-POLLUTION MILKY WAY STARGAZING', highlight: true },
-                            { icon: '🌿', label: '100% LEAVE NO TRACE ECO CHARTER' },
-                            { icon: '★', label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
-                            { icon: '🌅', label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' }
+                            { icon: Star, label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
+                            { icon: Sunrise, label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' },
+                            { icon: Flame, label: 'STARLIT CAMPFIRE & FARM-TO-TABLE DINING' },
+                            { icon: Tent, label: 'THERMAL INSULATED PODS & CLEAN SHOWERS', highlight: true },
+                            { icon: Footprints, label: 'SECRET PHANTOM HEAD PEAK TRAILS' },
+                            { icon: Telescope, label: 'ZERO LIGHT-POLLUTION MILKY WAY STARGAZING', highlight: true },
+                            { icon: Leaf, label: '100% LEAVE NO TRACE ECO CHARTER' },
+                            { icon: Star, label: '7,900 FT HIGH-ALTITUDE SUMMIT RIDGE', highlight: true },
+                            { icon: Sunrise, label: 'KOLUKKUMALAI SUNRISE 4X4 JEEP EXPEDITIONS' }
                         ].map((item, idx) => (
                             <div key={idx} className="marquee-item" style={{ color: item.highlight ? '#E5A93B' : '#FFFFFF' }}>
-                                <span>{item.icon}</span>
+                                <item.icon size={16} strokeWidth={2.4} />
                                 <span>{item.label}</span>
                             </div>
                         ))}
@@ -759,7 +764,7 @@ export default function AboutPage() {
                                     }}
                                 >
                                     <div style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'rgba(229, 169, 59, 0.2)', color: '#E5A93B', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '22px' }}>
-                                        <i className="fa-solid fa-cloud-sun"></i>
+                                        <CloudSun size={16} />
                                     </div>
                                     <div>
                                         <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
@@ -792,7 +797,7 @@ export default function AboutPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div style={CONTAINER}>
                         <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">▲</span> RIDGE TOPOGRAPHY
@@ -884,7 +889,7 @@ export default function AboutPage() {
 
                                         {/* Natural wood icon pill */}
                                         <div className="stone-icon-pill">
-                                            <i className={tier.icon}></i>
+                                            <tier.icon size={16} color="#5C3A1E" />
                                         </div>
                                     </div>
 
@@ -918,7 +923,7 @@ export default function AboutPage() {
                                                 borderRadius: '4px',
                                                 letterSpacing: '0.5px'
                                             }}>
-                                                📍 {tier.coord}
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={10} /> {tier.coord}</span>
                                             </span>
                                         </div>
                                     </div>
@@ -962,11 +967,11 @@ export default function AboutPage() {
                                         {/* Micro-Spec Chips */}
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '18px' }}>
                                             <div className="stone-spec-chip">
-                                                <span style={{ color: tier.accentColor }}>🧭</span>
+                                                <span style={{ color: tier.accentColor, display: 'inline-flex' }}><Compass size={14} /></span>
                                                 <span>{tier.terrainType}</span>
                                             </div>
                                             <div className="stone-spec-chip">
-                                                <span style={{ color: tier.accentColor }}>🚙</span>
+                                                <span style={{ color: tier.accentColor, display: 'inline-flex' }}><Truck size={14} /></span>
                                                 <span>{tier.access}</span>
                                             </div>
                                         </div>
@@ -986,11 +991,11 @@ export default function AboutPage() {
                                         zIndex: 2
                                     }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span>🌡️</span>
+                                            <Thermometer size={13} />
                                             <strong style={{ color: '#2C1608' }}>{tier.temp}</strong>
                                         </div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <span>💨</span>
+                                            <Wind size={13} />
                                             <span style={{ color: '#5A3218', fontWeight: '700' }}>{tier.wind}</span>
                                         </div>
                                     </div>
@@ -1144,7 +1149,7 @@ export default function AboutPage() {
                                                     borderRadius: '50%',
                                                     border: '1px solid rgba(0,0,0,0.15)'
                                                 }}
-                                            />
+                                             loading="lazy" decoding="async"/>
                                             <span style={{
                                                 fontSize: '11px',
                                                 fontWeight: '900',
@@ -1211,7 +1216,7 @@ export default function AboutPage() {
                                             flexShrink: 0,
                                             boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.1)'
                                         }}>
-                                            <i className={pillar.icon}></i>
+                                            <pillar.icon size={22} color={pillar.inkColor} />
                                         </div>
                                         <h3 style={{
                                             fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -1274,7 +1279,7 @@ export default function AboutPage() {
                                         alignItems: 'flex-start',
                                         gap: '8px'
                                     }}>
-                                        <span style={{ fontSize: '15px' }}>✍</span>
+                                        <span style={{ fontSize: '15px', display: 'inline-flex' }}><PenLine size={14} /></span>
                                         <span>{pillar.memo}</span>
                                     </div>
                                 </motion.div>
@@ -1320,7 +1325,7 @@ export default function AboutPage() {
                                 color: '#C8A855', letterSpacing: '1.2px', textTransform: 'uppercase',
                                 marginBottom: '18px'
                             }}>
-                                <span>⬡</span> CHRONICLES INSCRIBED IN STONE
+                                <span style={{ display: 'inline-flex' }}><Hexagon size={13} /></span> CHRONICLES INSCRIBED IN STONE
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
@@ -1533,7 +1538,7 @@ export default function AboutPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div style={CONTAINER}>
                         <div style={{
                             display: 'flex',
                             justifyContent: 'space-between',
@@ -1666,7 +1671,7 @@ export default function AboutPage() {
                                         {/* Place Content */}
                                         <div style={{ padding: '26px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                             <div style={{ fontSize: '12px', color: '#E5A93B', fontWeight: '700', marginBottom: '8px' }}>
-                                                📍 {place.distance}
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {place.distance}</span>
                                             </div>
                                             
                                             <h3 style={{
@@ -1721,7 +1726,7 @@ export default function AboutPage() {
                         position: 'relative'
                     }}
                 >
-                    <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
+                    <div style={CONTAINER}>
                         <div style={{ textAlign: 'center', marginBottom: '64px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION CREATORS
@@ -1734,7 +1739,7 @@ export default function AboutPage() {
                                 letterSpacing: '-0.03em',
                                 margin: '0 0 14px'
                             }}>
-                                The Creators & <span style={{ color: '#E5A93B' }}>Mountain Marshals</span>
+                                The Creators & <span style={{ color: '#E5A93B' }}>Mountain Guides</span>
                             </h2>
                             <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
                                 The wilderness architects, expedition leads, and local ridge masters who live here and craft your Aanandham mountain journeys.
@@ -2048,7 +2053,7 @@ export default function AboutPage() {
                                                     flexShrink: 0
                                                 }}
                                             >
-                                                <i className={`fa-solid ${isOpen ? 'fa-minus' : 'fa-plus'}`} style={{ fontSize: '12px' }}></i>
+                                                {isOpen ? <Minus size={12} /> : <Plus size={12} />}
                                             </motion.div>
                                         </button>
 
@@ -2184,7 +2189,7 @@ export default function AboutPage() {
                                         gap: '8px'
                                     }}
                                 >
-                                    <span>💬 Talk to Concierge</span>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}><MessageCircle size={16} /> Talk to Concierge</span>
                                 </Link>
                             </div>
                         </div>
@@ -2252,7 +2257,7 @@ export default function AboutPage() {
                                 boxShadow: '0 12px 35px rgba(213, 237, 85, 0.45)'
                             }}
                         >
-                            <i className="fa-brands fa-whatsapp" style={{ fontSize: '18px' }}></i>
+                            <WhatsAppIcon size={18} />
                             <span>Chat with Mountain Offsite Lead →</span>
                         </a>
                     </div>
