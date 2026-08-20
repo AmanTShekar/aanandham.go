@@ -71,7 +71,7 @@ export default async function CampPropertyDetailPage({ params }) {
                 "description": camp.description,
                 "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : undefined,
                 "url": `${siteUrl}/camps/${camp.id}`,
-                "telephone": "+9188685831",
+                "telephone": "+919074858014",
                 "priceRange": `₹${camp.price || 1800}`,
                 "address": {
                     "@type": "PostalAddress",

@@ -1587,7 +1587,7 @@ export default function HomePage() {
                                                     lineHeight: 1.25,
                                                     letterSpacing: '-0.02em'
                                                 }}>
-                                                    {pillar.title}
+                                                    {pillar.fullTitle || pillar.title}
                                                 </h4>
                                             </div>
 

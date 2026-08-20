@@ -67,7 +67,7 @@ export function verifyPassToken(bookingId, token, status = 'Confirmed') {
  */
 export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) {
     const key = String(campsiteId || '').toLowerCase();
-    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '9188685831';
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
     const formattedPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
         ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
         : `+${adminPhone}`;

@@ -116,7 +116,7 @@ const jsonLd = {
   logo: `${siteUrl}/logo.png`,
   '@id': siteUrl,
   url: siteUrl,
-  telephone: process.env.NEXT_PUBLIC_ADMIN_WHATSAPP ? `+${process.env.NEXT_PUBLIC_ADMIN_WHATSAPP}` : '+9188685831',
+  telephone: process.env.NEXT_PUBLIC_ADMIN_WHATSAPP ? `+${process.env.NEXT_PUBLIC_ADMIN_WHATSAPP}` : '+919074858014',
   email: 'bookings@aanandham.in',
   priceRange: '₹₹',
   address: {

@@ -92,7 +92,7 @@ export default async function PassDetailPage({ params, searchParams }) {
         `📅 *Dates:* ${data.dates}\n\n` +
         `We are arriving at ${landmarkGuide.hubName}. Please verify our check-in pass! 🏔️✨`;
 
-    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '9188685831';
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
     const formattedAdminPhone = adminPhone.length === 12 && adminPhone.startsWith('91')
         ? `+91 ${adminPhone.slice(2, 7)} ${adminPhone.slice(7)}`
         : `+${adminPhone}`;
