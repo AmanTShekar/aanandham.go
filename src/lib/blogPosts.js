@@ -2,7 +2,7 @@ export const BLOG_POSTS = [
   {
     slug: 'kolukkumalai-sunrise-trek-complete-guide',
     title: 'Kolukkumalai Sunrise Trek: Complete Guide to Timing, Permits & Packing',
-    metaTitle: 'Kolukkumalai Sunrise Trek Guide: Timing, Permits & Packing | Aanandham.go',
+    metaTitle: 'Kolukkumalai Sunrise Trek Guide: Timing, Permits & Packing ',
     metaDescription: 'The complete Kolukkumalai sunrise trek guide: best time, 4x4 jeep route, permits, what to pack, and why the 7,900-ft sunrise over Tamil Nadu tea estates is Kerala\u2019s best trek.',
     date: '2026-08-20',
     readMinutes: 9,
@@ -72,7 +72,7 @@ export const BLOG_POSTS = [
   {
     slug: 'munnar-camping-vs-glamping-vs-tent-stay',
     title: 'Munnar Camping vs Glamping vs Tent Stay: What\u2019s the Difference?',
-    metaTitle: 'Munnar Camping vs Glamping vs Tent Stay — Which One Should You Book? | Aanandham.go',
+    metaTitle: 'Munnar Camping vs Glamping vs Tent Stay — Which One Should You Book? ',
     metaDescription: 'Struggling to pick between camping, glamping and a tent stay in Munnar? We break down costs, comfort, safety and the experience so you book the right one.',
     date: '2026-08-18',
     readMinutes: 7,
@@ -134,7 +134,7 @@ export const BLOG_POSTS = [
   {
     slug: 'best-time-to-visit-munnar-trekking-camping',
     title: 'Best Time to Visit Munnar for Trekking & Camping (Month-by-Month)',
-    metaTitle: 'Best Time to Visit Munnar for Trekking & Camping: Month-by-Month | Aanandham.go',
+    metaTitle: 'Best Time to Visit Munnar for Trekking & Camping: Month-by-Month ',
     metaDescription: 'When is the best time to visit Munnar for camping and trekking? A month-by-month guide to weather, crowds, prices and trail conditions for Kolukkumalai, Meesapulimala and more.',
     date: '2026-08-16',
     readMinutes: 8,
@@ -186,7 +186,7 @@ export const BLOG_POSTS = [
   {
     slug: 'suryanelli-tent-stay-guide',
     title: 'Suryanelli Tent Stay Guide: Why This Village Beats Munnar Town',
-    metaTitle: 'Suryanelli Tent Stay Guide: Camping Away From Munnar Crowds | Aanandham.go',
+    metaTitle: 'Suryanelli Tent Stay Guide: Camping Away From Munnar Crowds ',
     metaDescription: 'Suryanelli is Munnar\u2019s quieter, higher neighbour — home to the valley glamps that put you closer to Kolukkumalai. Here\u2019s why a Suryanelli tent stay beats staying in town.',
     date: '2026-08-14',
     readMinutes: 6,
@@ -242,7 +242,7 @@ export const BLOG_POSTS = [
   {
     slug: 'is-camping-in-munnar-safe-solo-female-travelers',
     title: 'Is Camping in Munnar Safe for Solo Female Travelers?',
-    metaTitle: 'Is Munnar Camping Safe for Solo Female Travelers? Honest Guide | Aanandham.go',
+    metaTitle: 'Is Munnar Camping Safe for Solo Female Travelers? Honest Guide ',
     metaDescription: '350+ solo female campers and counting. Here\u2019s how to pick a safe, verified Munnar campsite — what to check, what to avoid, and how organised camps handle solo safety.',
     date: '2026-08-12',
     readMinutes: 6,
@@ -297,7 +297,7 @@ export const BLOG_POSTS = [
   {
     slug: 'meesapulimala-trek-difficulty-guide',
     title: 'Meesapulimala Trek Difficulty Guide: South India\u2019s 2nd Highest Peak',
-    metaTitle: 'Meesapulimala Trek Difficulty, Distance & Route — Complete Guide | Aanandham.go',
+    metaTitle: 'Meesapulimala Trek Difficulty, Distance & Route — Complete Guide ',
     metaDescription: 'How hard is the Meesapulimala trek? Distance, altitude, fitness level, permits and the best route from Munnar — everything you need before tackling South India\u2019s 2nd highest peak.',
     date: '2026-08-10',
     readMinutes: 8,
@@ -354,7 +354,7 @@ export const BLOG_POSTS = [
   {
     slug: 'phantom-head-peak-trek-sunset-guide',
     title: 'Phantom Head Peak Trek: Munnar\u2019s Underrated Sunset Trek',
-    metaTitle: 'Phantom Head Peak Trek Guide: Sunset Views in Munnar | Aanandham.go',
+    metaTitle: 'Phantom Head Peak Trek Guide: Sunset Views in Munnar ',
     metaDescription: 'Phantom Head Peak is Munnar\u2019s hidden sunset trek — shorter than Kolukkumalai, less crowded, and beautiful at golden hour. Trail details, timing and how to book.',
     date: '2026-08-08',
     readMinutes: 6,
@@ -402,7 +402,7 @@ export const BLOG_POSTS = [
   {
     slug: 'vagamon-glamping-vs-munnar-glamping',
     title: 'Vagamon Glamping vs Munnar Glamping: Which One to Pick?',
-    metaTitle: 'Vagamon vs Munnar Glamping — Honest Comparison | Aanandham.go',
+    metaTitle: 'Vagamon vs Munnar Glamping — Honest Comparison ',
     metaDescription: 'Vagamon\u2019s pine forests vs Munnar\u2019s tea ridges — two very different glamping experiences in Kerala. Compare views, activities, weather and pricing to pick your campsite.',
     date: '2026-08-06',
     readMinutes: 7,
@@ -456,7 +456,7 @@ export const BLOG_POSTS = [
   {
     slug: 'wayanad-vs-munnar-camping-comparison',
     title: 'Wayanad vs Munnar Camping: Which Kerala Hill Station Wins?',
-    metaTitle: 'Wayanad vs Munnar for Camping — Side by Side | Aanandham.go',
+    metaTitle: 'Wayanad vs Munnar for Camping — Side by Side ',
     metaDescription: 'Wayanad\u2019s rainforest camps vs Munnar\u2019s high-altitude tent stays — a side-by-side comparison of altitude, weather, activities and who should book which.',
     date: '2026-08-04',
     readMinutes: 7,
@@ -504,7 +504,7 @@ export const BLOG_POSTS = [
   {
     slug: 'munnar-camping-packing-list',
     title: 'The Complete Munnar Camping Packing List (Season-by-Season)',
-    metaTitle: 'Munnar Camping Packing List: What to Bring for a Tent Stay | Aanandham.go',
+    metaTitle: 'Munnar Camping Packing List: What to Bring for a Tent Stay ',
     metaDescription: 'Everything to pack for a Munnar camping or glamping trip — winter layers, monsoon gear, trek essentials and what the camps already provide so you don\u2019t overpack.',
     date: '2026-08-02',
     readMinutes: 6,
@@ -558,7 +558,7 @@ export const BLOG_POSTS = [
   {
     slug: 'kochi-to-munnar-road-trip-camping-itinerary',
     title: 'Kochi to Munnar Road Trip + Camping: The Perfect 3-Day Itinerary',
-    metaTitle: 'Kochi to Munnar Road Trip Itinerary with Camping | Aanandham.go',
+    metaTitle: 'Kochi to Munnar Road Trip Itinerary with Camping ',
     metaDescription: 'The complete Kochi to Munnar road trip guide: distance, route options, scenic stops, and a 3-day itinerary that ends in a high-altitude campsite.',
     date: '2026-07-30',
     readMinutes: 7,
@@ -611,7 +611,7 @@ export const BLOG_POSTS = [
   {
     slug: 'corporate-offsite-college-group-camping-munnar',
     title: 'Corporate Offsites & College Group Camping in Munnar: A Complete Guide',
-    metaTitle: 'Corporate Offsite & College Camping in Munnar — Group Packages | Aanandham.go',
+    metaTitle: 'Corporate Offsite & College Camping in Munnar — Group Packages ',
     metaDescription: 'Planning a company offsite or college trip to Munnar? Group camping packages with 4x4 expeditions, BBQs and team activities — capacity, pricing and how to plan it.',
     date: '2026-07-28',
     readMinutes: 6,

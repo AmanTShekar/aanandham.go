@@ -5,13 +5,13 @@ import { BLOG_POSTS } from '@/lib/blogPosts';
 import { Star, Sunrise, Flame, Tent, Footprints, Telescope, Leaf, MapPin, Clock } from 'lucide-react';
 
 export const metadata = {
-  title: 'Munnar Camping & Trekking Guide — Blog | Aanandham.go',
+  title: 'Munnar Camping & Trekking Guide — Blog',
   description: 'Honest, detailed guides to camping, glamping and trekking in Munnar — Kolukkumalai sunrise trek, Meesapulimala difficulty, packing lists, itineraries and Kerala camp comparisons.',
   alternates: {
     canonical: 'https://www.aanandham.in/blog',
   },
   openGraph: {
-    title: 'Munnar Camping & Trekking Guide — Blog | Aanandham.go',
+    title: 'Munnar Camping & Trekking Guide — Blog',
     description: 'Honest, detailed guides to camping, glamping and trekking in Munnar — Kolukkumalai sunrise trek, Meesapulimala difficulty, packing lists, itineraries and Kerala camp comparisons.',
     url: 'https://www.aanandham.in/blog',
     siteName: 'Aanandham.go',

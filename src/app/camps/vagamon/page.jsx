@@ -15,13 +15,13 @@ export const metadata = {
     'Couples Glamping Vagamon'
   ],
   alternates: {
-    canonical: 'https://www.aanandham.in/camps/pkg-vagamon',
+    canonical: 'https://www.aanandham.in/camps/vagamon',
   },
   openGraph: {
     title: 'Vagamon Pine Forest Glamping & Stays',
     description:
       'Book secluded pine valley dome glamping & offroad jeep camping in Vagamon, Kerala with Aanandham.go.',
-    url: 'https://www.aanandham.in/camps/pkg-vagamon',
+    url: 'https://www.aanandham.in/camps/vagamon',
     siteName: 'Aanandham.go',
     images: [
       {
