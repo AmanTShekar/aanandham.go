@@ -1,5 +1,6 @@
 import React from 'react';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 export const metadata = {
   title: 'Camp Host Check-In & Scanner | Aanandham.go',
@@ -11,5 +12,9 @@ export const metadata = {
 };
 
 export default function MarshalDirectPage() {
-  return <MobileMarshalScanner />;
+  return (
+    <ErrorBoundary title="Scanner Station Error" description="The field scanner encountered an issue. Tap retry below to restart the camera scanner.">
+      <MobileMarshalScanner />
+    </ErrorBoundary>
+  );
 }

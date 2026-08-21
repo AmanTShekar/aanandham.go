@@ -31,6 +31,26 @@ export const CAMPSITE_TERRAIN_RULES = {
         familyFriendly: true,
         wheelchairAccessible: true
     },
+    'pkg-mini-mexico': {
+        vehicleRequirement: '2WD_ACCESSIBLE',
+        vehicleLabel: 'All Standard Vehicles Accessible',
+        vehicleDetails: 'Paved scenic mountain road leading directly to Mini Mexico Vattavada with dedicated private parking. Off-road 4x4 trails available on request.',
+        pitchAccessType: 'DRIVE_IN',
+        trailheadDistanceMeters: 10,
+        familyFriendly: true,
+        wheelchairAccessible: false,
+        petFriendly: true
+    },
+    'pkg-wildlink': {
+        vehicleRequirement: '2WD_ACCESSIBLE',
+        vehicleLabel: 'Manageable for All Standard Vehicles',
+        vehicleDetails: 'Main tar road from Munnar through Top Station and Vattavada checkpost. The final 8 km stretch past Koviloor to Pazhathottam (opposite Orion Farmers Resort) is a semi-off-road route manageable for bikes, sedans, hatchbacks, and SUVs.',
+        pitchAccessType: 'DRIVE_IN',
+        trailheadDistanceMeters: 10,
+        familyFriendly: true,
+        wheelchairAccessible: false,
+        petFriendly: true
+    },
     'default': {
         vehicleRequirement: '2WD_ACCESSIBLE',
         vehicleLabel: 'Standard Road Access',

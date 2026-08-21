@@ -28,7 +28,7 @@
       "properties": {
         "id": "pkg-suryanelli",
         "title": "Suryanelli Cloud Bed Glamping & Anayirangal Lake View",
-        "region": "Munnar",
+        "region": "Suryanelli",
         "altitude": "6,200 FT",
         "startingPrice": 2199,
         "rating": 4.95,
@@ -45,9 +45,9 @@
       },
       "properties": {
         "id": "pkg-meesapulimala",
-        "title": "Meesapulimala Basecamp & Rhodotrek High Ridge Camp",
+        "title": "Meesapulimala 8,661 FT Summit Cloud Bed Trek",
         "region": "Munnar",
-        "altitude": "7,200 FT",
+        "altitude": "8,661 FT",
         "startingPrice": 2899,
         "rating": 4.92,
         "reviewsCount": 215,
@@ -59,54 +59,18 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [77.1456, 10.0389]
+        "coordinates": [77.2652, 10.1584]
       },
       "properties": {
-        "id": "pkg-phantom",
-        "title": "Phantom Head Cliff-Edge Glamping & Starlit Amphitheatre",
+        "id": "pkg-mini-mexico",
+        "title": "Mini Mexico — Vattavada Cabins, Wood House & Tent Camp",
         "region": "Munnar",
         "altitude": "6,500 FT",
-        "startingPrice": 2399,
-        "rating": 4.89,
-        "reviewsCount": 178,
-        "badge": "Cliff Glamp ⛺",
-        "slug": "/camps/pkg-phantom"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [76.9056, 9.6852]
-      },
-      "properties": {
-        "id": "pkg-vagamon",
-        "title": "Vagamon Pine Valley Safari & Offroad Buggy Camp",
-        "region": "Vagamon",
-        "altitude": "3,800 FT",
         "startingPrice": 1999,
-        "rating": 4.86,
-        "reviewsCount": 164,
-        "badge": "Pine Forest 🌲",
-        "slug": "/camps/pkg-vagamon"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [76.0844, 11.5367]
-      },
-      "properties": {
-        "id": "pkg-wayanad",
-        "title": "Wayanad Chembra Mist Pods & Secret Stream Glamp",
-        "region": "Wayanad",
-        "altitude": "4,200 FT",
-        "startingPrice": 2299,
-        "rating": 4.91,
-        "reviewsCount": 196,
-        "badge": "Cloud Pods ☁️",
-        "slug": "/camps/pkg-wayanad"
+        "rating": 4.93,
+        "reviewsCount": 182,
+        "badge": "Farmstay Glamp 🍓",
+        "slug": "/camps/pkg-mini-mexico"
       }
     }
   ]

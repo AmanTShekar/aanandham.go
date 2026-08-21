@@ -38,7 +38,7 @@ const securityHeaders = [
       "default-src 'self';",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com;",
       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://aanandham.in https://*.aanandham.in https://www.google-analytics.com https://www.googletagmanager.com;",
+      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://encrypted-tbn0.gstatic.com https://*.gstatic.com https://*.fbcdn.net https://*.googleusercontent.com https://aanandham.in https://*.aanandham.in https://www.google-analytics.com https://www.googletagmanager.com;",
       "font-src 'self' data: https://cdnjs.cloudflare.com;",
       "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com;",
       "frame-ancestors 'none';",
@@ -64,6 +64,18 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'encrypted-tbn0.gstatic.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.fbcdn.net',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.googleusercontent.com',
       },
     ],
   },

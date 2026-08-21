@@ -1468,6 +1468,17 @@ export default function HomePage() {
                             </p>
 
                             {/* 4 Interactive Expedition Tag Note Cards (2x2 Grid on Desktop / Smooth Swipe Track on Mobile) */}
+                            <h3 style={{
+                                fontFamily: 'var(--font-heading)',
+                                fontSize: 'clamp(20px, 2.5vw, 26px)',
+                                fontWeight: '800',
+                                color: '#121613',
+                                letterSpacing: '-0.02em',
+                                lineHeight: 1.3,
+                                marginBottom: '20px'
+                            }}>
+                                Four Reasons Adventurers Trust Their Wilderness Stay
+                            </h3>
                             <div className="why-desktop-pillars" style={{ 
                                 display: 'grid', 
                                 gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 

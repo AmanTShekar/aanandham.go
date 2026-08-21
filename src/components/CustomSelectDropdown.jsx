@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useId } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Check } from 'lucide-react';
 import LucideAmenityIcon from './common/LucideAmenityIcon';
@@ -10,12 +10,20 @@ export default function CustomSelectDropdown({
     value,
     onChange,
     theme = 'light', // 'light' | 'dark'
-    placeholder = 'Select Option'
+    placeholder = 'Select Option',
+    id
 }) {
+    const generatedId = useId();
     const [isOpen, setIsOpen] = useState(false);
+    const [focusedIndex, setFocusedIndex] = useState(-1);
     const containerRef = useRef(null);
     const listRef = useRef(null);
     const selectedItemRef = useRef(null);
+    const dropdownId = id || `select-${generatedId.replace(/:/g, '')}`;
+
+    const selectedIndex = options.findIndex(opt => String(opt.value) === String(value));
+    const selectedOption = selectedIndex >= 0 ? options[selectedIndex] : null;
+    const isDark = theme === 'dark';
 
     // Close on click outside
     useEffect(() => {
@@ -28,43 +36,86 @@ export default function CustomSelectDropdown({
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Smoothly scroll selected item into view when dropdown opens
+    // Smoothly scroll selected/focused item into view when dropdown opens
     useEffect(() => {
-        if (isOpen && selectedItemRef.current) {
+        if (isOpen) {
+            setFocusedIndex(selectedIndex >= 0 ? selectedIndex : 0);
             setTimeout(() => {
                 selectedItemRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }, 50);
         }
-    }, [isOpen]);
-
-    const isDark = theme === 'dark';
-    const selectedOption = options.find(opt => String(opt.value) === String(value));
+    }, [isOpen, selectedIndex]);
 
     const handleSelect = (val) => {
-        onChange(val);
+        if (onChange) onChange(val);
         setIsOpen(false);
+    };
+
+    const handleKeyDown = (e) => {
+        if (!isOpen) {
+            if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
+                e.preventDefault();
+                setIsOpen(true);
+            }
+            return;
+        }
+
+        switch (e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                setFocusedIndex(prev => (prev < options.length - 1 ? prev + 1 : 0));
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                setFocusedIndex(prev => (prev > 0 ? prev - 1 : options.length - 1));
+                break;
+            case 'Enter':
+            case ' ':
+                e.preventDefault();
+                if (focusedIndex >= 0 && focusedIndex < options.length) {
+                    handleSelect(options[focusedIndex].value);
+                }
+                break;
+            case 'Escape':
+            case 'Tab':
+                setIsOpen(false);
+                break;
+            default:
+                break;
+        }
     };
 
     return (
         <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
             {label && (
-                <label style={{
-                    fontSize: '11px',
-                    fontWeight: '800',
-                    color: isDark ? '#D5ED55' : '#121613',
-                    letterSpacing: '0.8px',
-                    textTransform: 'uppercase',
-                    display: 'block',
-                    marginBottom: '6px'
-                }}>
+                <label
+                    id={`${dropdownId}-label`}
+                    htmlFor={`${dropdownId}-button`}
+                    style={{
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        color: isDark ? '#D5ED55' : '#121613',
+                        letterSpacing: '0.8px',
+                        textTransform: 'uppercase',
+                        display: 'block',
+                        marginBottom: '6px'
+                    }}
+                >
                     {label}
                 </label>
             )}
 
             {/* Main Trigger Button */}
             <button
+                id={`${dropdownId}-button`}
                 type="button"
+                role="combobox"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-labelledby={label ? `${dropdownId}-label ${dropdownId}-button` : undefined}
+                aria-controls={`${dropdownId}-listbox`}
                 onClick={() => setIsOpen(!isOpen)}
+                onKeyDown={handleKeyDown}
                 style={{
                     width: '100%',
                     padding: '12px 16px',
@@ -125,6 +176,9 @@ export default function CustomSelectDropdown({
                 {isOpen && (
                     <motion.div
                         ref={listRef}
+                        id={`${dropdownId}-listbox`}
+                        role="listbox"
+                        aria-labelledby={`${dropdownId}-label`}
                         initial={{ opacity: 0, y: 6, scale: 0.98 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 6, scale: 0.98 }}
@@ -151,11 +205,15 @@ export default function CustomSelectDropdown({
                         }}
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                            {options.map((opt) => {
+                            {options.map((opt, idx) => {
                                 const isSelected = String(opt.value) === String(value);
+                                const isFocused = idx === focusedIndex;
                                 return (
                                     <div
                                         key={opt.value}
+                                        id={`${dropdownId}-option-${idx}`}
+                                        role="option"
+                                        aria-selected={isSelected}
                                         ref={isSelected ? selectedItemRef : null}
                                         onClick={() => handleSelect(opt.value)}
                                         style={{
@@ -163,7 +221,7 @@ export default function CustomSelectDropdown({
                                             borderRadius: '10px',
                                             background: isSelected 
                                                 ? (isDark ? 'rgba(213, 237, 85, 0.16)' : '#F1F3EC') 
-                                                : 'transparent',
+                                                : (isFocused ? (isDark ? 'rgba(255,255,255,0.06)' : '#F8F9F5') : 'transparent'),
                                             border: isSelected 
                                                 ? (isDark ? '1px solid #D5ED55' : '1.5px solid #121613') 
                                                 : '1px solid transparent',
@@ -173,12 +231,7 @@ export default function CustomSelectDropdown({
                                             cursor: 'pointer',
                                             transition: 'all 0.15s ease'
                                         }}
-                                        onMouseOver={e => {
-                                            if (!isSelected) e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.06)' : '#F8F9F5';
-                                        }}
-                                        onMouseOut={e => {
-                                            if (!isSelected) e.currentTarget.style.background = 'transparent';
-                                        }}
+                                        onMouseEnter={() => setFocusedIndex(idx)}
                                     >
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
                                             <LucideAmenityIcon

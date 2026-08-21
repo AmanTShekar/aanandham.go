@@ -38,6 +38,54 @@ export const ADVENTURE_ACTIVITIES = [
         riskLevel: 'LOW',
         includesWaiver: false,
         description: 'High-altitude deep-sky telescope viewing of the Milky Way, constellations, and lunar craters.'
+    },
+    {
+        id: 'act-vattavada-forest-walk',
+        title: 'Shola National Park Guided Forest Walk',
+        campsiteId: 'pkg-mini-mexico',
+        timeSlot: '07:30 AM - 09:30 AM IST',
+        maxParticipantsPerBatch: 15,
+        guideRequired: true,
+        difficultyLevel: 'EASY_MODERATE',
+        riskLevel: 'LOW',
+        includesWaiver: false,
+        description: 'Guided biodiversity morning walk through Shola forest trails and terraced valleys.'
+    },
+    {
+        id: 'act-vattavada-farm-hilltop',
+        title: 'Terraced Farm Tour & Hilltop Sunset View Point',
+        campsiteId: 'pkg-mini-mexico',
+        timeSlot: '04:00 PM - 06:00 PM IST',
+        maxParticipantsPerBatch: 25,
+        guideRequired: false,
+        difficultyLevel: 'EASY',
+        riskLevel: 'LOW',
+        includesWaiver: false,
+        description: 'Complimentary walk through Vattavada organic vegetable and strawberry farms to the panoramic hilltop viewpoint.'
+    },
+    {
+        id: 'act-wildlink-shola-border',
+        title: 'Pampadum Shola National Park Border Exploration',
+        campsiteId: 'pkg-wildlink',
+        timeSlot: '07:30 AM - 09:30 AM IST',
+        maxParticipantsPerBatch: 20,
+        guideRequired: true,
+        difficultyLevel: 'EASY_MODERATE',
+        riskLevel: 'LOW',
+        includesWaiver: false,
+        description: 'Pampadum Shola rainforest border exploration with native flora and fauna sightings at 7,000 FT.'
+    },
+    {
+        id: 'act-wildlink-farm-sunset',
+        title: '7-Acre Sustainable Farm Walk & Sunset Viewpoint',
+        campsiteId: 'pkg-wildlink',
+        timeSlot: '04:30 PM - 06:30 PM IST',
+        maxParticipantsPerBatch: 30,
+        guideRequired: false,
+        difficultyLevel: 'EASY',
+        riskLevel: 'LOW',
+        includesWaiver: false,
+        description: 'Sunset golden hour walk through strawberry, cabbage, and garlic orchards across the 7-acre Pazhathottam farm.'
     }
 ];
 

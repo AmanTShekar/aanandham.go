@@ -194,8 +194,6 @@ export default function Footer() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
                                 { name: 'About Our Mission', href: '/about' },
-                                { name: 'Member Portal & Logins', href: '/login' },
-                                { name: 'Join Adventure Tribe', href: '/signup' },
                                 { name: 'Campsite Host & Admin', href: '/admin' },
                                 { name: 'Expedition Concierge Desk', href: '/contact' },
                                 { name: 'Privacy, Safety & Permits', href: '/about' }
@@ -227,8 +225,6 @@ export default function Footer() {
                     <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         <Link href="/about" style={{ color: '#A2B6A6', textDecoration: 'none' }}>About Us</Link>
                         <Link href="/contact" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Contact & Booking</Link>
-                        <Link href="/login" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Member Login</Link>
-                        <Link href="/signup" style={{ color: '#A2B6A6', textDecoration: 'none' }}>Join Tribe</Link>
                         <a href="https://instagram.com/aanandham.go" target="_blank" rel="noopener noreferrer" style={{ color: '#E5A93B', textDecoration: 'none', fontWeight: '700' }}>@aanandham.go →</a>
                     </div>
                     <div>

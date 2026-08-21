@@ -16,7 +16,7 @@ const BookingEngineModal = dynamic(() => import('../../../components/BookingEngi
 import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
-import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock } from 'lucide-react';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2 } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
@@ -677,6 +677,58 @@ return (
                                     </div>
                                 </div>
                             </div>
+
+                            {/* SECTION 6: ROUTE & NAVIGATION GUIDE */}
+                            {camp.routeGuide && (
+                                <div style={CARD_WHITE}>
+                                    <div className="star-badge" style={{ marginBottom: '8px' }}>
+                                        <span className="star-icon">★</span> ROUTE & NAVIGATION GUIDE
+                                    </div>
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                        Step-by-Step Directions & Route Guide
+                                    </h2>
+                                    <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 20px' }}>
+                                        Starting Point: <strong>{camp.routeGuide.from || 'Munnar Town'}</strong>
+                                    </p>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+                                        {camp.routeGuide.steps && camp.routeGuide.steps.map((step, sidx) => (
+                                            <div key={sidx} style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', background: '#F8F9F5', padding: '16px 18px', borderRadius: '16px', border: '1px solid rgba(18,22,19,0.05)' }}>
+                                                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: '#121613', color: '#D5ED55', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '13px', fontWeight: '800', flexShrink: 0, marginTop: '2px' }}>
+                                                    {sidx + 1}
+                                                </div>
+                                                <div style={{ fontSize: '14px', color: '#121613', lineHeight: 1.55, fontWeight: '600' }}>
+                                                    {step}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {camp.routeGuide.navigationWarning && (
+                                        <div style={{ background: '#FEF2F2', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '16px', padding: '16px 18px', marginBottom: '12px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                            <TriangleAlert size={20} color="#DC2626" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                            <div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#991B1B', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.4px' }}>Crucial Navigation Advisory</div>
+                                                <div style={{ fontSize: '13.5px', color: '#B91C1C', lineHeight: 1.5, fontWeight: '600' }}>
+                                                    {camp.routeGuide.navigationWarning}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {camp.routeGuide.roadCondition && (
+                                        <div style={{ background: '#F0FDF4', border: '1px solid rgba(22, 101, 52, 0.2)', borderRadius: '16px', padding: '16px 18px', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                                            <CheckCircle2 size={20} color="#166534" style={{ flexShrink: 0, marginTop: '2px' }} />
+                                            <div>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.4px' }}>Road Clearance & Vehicle Types</div>
+                                                <div style={{ fontSize: '13.5px', color: '#14532D', lineHeight: 1.5, fontWeight: '600' }}>
+                                                    {camp.routeGuide.roadCondition}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
 
                         </div>
 

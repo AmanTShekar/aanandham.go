@@ -58,6 +58,44 @@ export const CAMPSITE_TECHNICAL_SPECS = {
             'Pleasant day temperatures (20°C - 24°C), cool evening mist (14°C).',
             'Light fleece or sweater is sufficient for evenings.'
         ]
+    },
+    'pkg-mini-mexico': {
+        elevationMeters: 1890,
+        elevationFeet: '6,200 FT',
+        carrierSignals: {
+            airtel: '4G Good (Voice & Data)',
+            jio: '4G Good (Voice & Data)',
+            bsnl: '3G / Voice Strong',
+            vi: '3G / 4G Moderate'
+        },
+        powerGridType: 'GRID_POWER_WITH_INVERTER',
+        powerAdvisory: '24/7 Grid Power with Inverter backup. Mobile and laptop charging available in all cabins and wood houses.',
+        decibelRating: 'PET_FRIENDLY_SANCTUARY',
+        quietHoursRule: 'Campfire music allowed until 10:00 PM. Quiet hours 10:00 PM - 07:00 AM.',
+        acclimatizationTips: [
+            'Crisp mountain temperatures (12°C - 22°C). Light woolens or jackets recommended for evening & morning.',
+            'Pet friendly property: please keep pets supervised during farm walks.',
+            'Pre-booking required for special meals, transport, and extra campfire.'
+        ]
+    },
+    'pkg-wildlink': {
+        elevationMeters: 2134,
+        elevationFeet: '7,000 FT',
+        carrierSignals: {
+            airtel: '4G Moderate (Voice & Data)',
+            jio: '4G Moderate (Voice & Data)',
+            bsnl: '4G / Voice Strong',
+            vi: '3G / Voice Moderate'
+        },
+        powerGridType: 'SOLAR_AND_INVERTER',
+        powerAdvisory: 'Eco-friendly solar setup with Inverter power backup. Charging points available at common hub and cabins.',
+        decibelRating: 'ECO_FARM_SANCTUARY',
+        quietHoursRule: 'Zero-noise Shola border policy. Quiet hours 10:00 PM - 06:30 AM.',
+        acclimatizationTips: [
+            'Chilly mountain climate at 7,000 ft (9°C - 19°C). Warm thermals, rain protection, and trekking shoes essential.',
+            'Pampadum Shola border zone: strictly zero-waste, leave-no-trace policy.',
+            'All non-veg meals & BBQ must be reserved with prior confirmation.'
+        ]
     }
 };
 

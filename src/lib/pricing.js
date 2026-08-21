@@ -2,16 +2,21 @@
 // The server recomputes booking totals from the camps catalog so a client can
 // never underpay by sending a forged `total` field. Mirrors the client pricing
 // formula exactly (squad discount, children rate, per-person add-ons).
-import { getAllCamps } from '@/lib/campsData';
-import { applyDiscounts } from '@/lib/discounts';
+import { getAllCamps } from './campsData.js';
+import { applyDiscounts } from './discountsCore.js';
 
 // Canonical add-on catalog (id, price, perPerson) — matches the public booking engine
-const ADDON_CATALOG = {
-    bbq: { price: 450, perPerson: true },
-    jeep: { price: 1200, perPerson: false },
-    drone: { price: 1500, perPerson: false },
-    yoga: { price: 250, perPerson: true },
-    guitar: { price: 2000, perPerson: false }
+export const ADDON_CATALOG = {
+    bbq: { id: 'bbq', name: 'Campfire Live Barbecue Platter', price: 450, perPerson: true },
+    jeep: { id: 'jeep', name: 'Private 4x4 Off-Road Jeep Upgrade', price: 1200, perPerson: false },
+    drone: { id: 'drone', name: '4K Drone Mountain Video Reel Shoot', price: 1500, perPerson: false },
+    yoga: { id: 'yoga', name: 'Sunrise Mountain Yoga & Pranayama', price: 250, perPerson: true },
+    guitar: { id: 'guitar', name: 'Acoustic Guitarist for Campfire Circle', price: 2000, perPerson: false },
+    'ad-lunch-veg': { id: 'ad-lunch-veg', name: 'Optional Lunch (Vegetarian Meal)', price: 120, perPerson: true },
+    'ad-lunch-nonveg': { id: 'ad-lunch-nonveg', name: 'Optional Lunch (Non-Vegetarian Meal)', price: 170, perPerson: true },
+    'ad-live-bbq': { id: 'ad-live-bbq', name: 'Live BBQ (Per Piece / Portion)', price: 200, perPerson: false },
+    'ad-forest-walk': { id: 'ad-forest-walk', name: 'Shola National Park Forest Walk', price: 300, perPerson: true },
+    'ad-campfire-extra': { id: 'ad-campfire-extra', name: 'Extra Campfire Hour Duration', price: 500, perPerson: false }
 };
 
 export function parseRoomCapacity(capacity) {

@@ -228,77 +228,115 @@ export const INITIAL_ALL_CAMPS = [
     },
     {
         id: 'pkg-suryanelli',
-        title: 'Suryanelli Valley Ridge Geodesic Glamping',
-        shortTitle: 'Suryanelli Valley Glamp',
+        title: 'Suryanelli Valley Tea Plantation Camping & Tent Stay',
+        shortTitle: 'Suryanelli Valley Camping',
         region: 'Suryanelli',
-        category: 'Trek & Glamp',
-        tag: 'Couples & Squads',
-        location: 'Suryanelli, Idukki, Kerala',
-        altitude: '6,500 FT',
-        price: 1999,
-        originalPrice: 2600,
+        category: 'Tent Stay & Camping',
+        tag: 'Clean Tents & Pods ⛺',
+        location: 'Suryanelli, Munnar, Idukki, Kerala',
+        altitude: '6,070 FT',
+        price: 1499,
+        originalPrice: 2200,
         rating: 4.95,
         reviewsCount: 286,
         duration: '2 Days / 1 Night',
-        difficulty: 'Easy Ridge Walk',
+        difficulty: 'Easy Camp Stay',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
         gallery: [
-            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
             'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80'
         ],
-        faqs: [{ q: 'Where is Suryanelli?', a: 'Suryanelli is a hill village on the Munnar–Bodimettu road, about 45 minutes from Munnar town, at ~6,000 ft altitude.' }, { q: 'Is a Suryanelli tent stay better than staying in Munnar town?', a: 'For camping and sunrise treks, yes — Suryanelli sits closer to Kolukkumalai and Meesapulimala, with quieter campsites and better night skies.' }, { q: 'How far is Suryanelli from Kolukkumalai?', a: 'About 20 minutes from the Kolukkumalai jeep/estate gate — the main reason sunrise trek campers base themselves in Suryanelli.' }, { q: 'Does a Suryanelli tent stay include food?', a: 'Organised glamp packages include dinner BBQ and breakfast; many also bundle the Kolukkumalai sunrise trek.' }, { q: 'What tent types are available at Suryanelli?', a: 'Glass domes, Alpine domes (2-person), Alpine Quads (4-person), and cottage-style pods — all with real beds, power and hot water.' }],
-        description: 'Private geodesic dome pods facing cascading green tea slopes and misty sunset valleys. Live acoustic sessions, star observation scopes, and authentic farm-to-table Kerala dining.',
+        faqs: [
+            { q: 'Where is Suryanelli?', a: 'Suryanelli is a hill village on the Munnar–Bodimettu road, about 45 minutes from Munnar town, at ~6,000 ft altitude.' },
+            { q: 'Is a Suryanelli tent stay better than staying in Munnar town?', a: 'For camping and sunrise treks, yes — Suryanelli sits closer to Kolukkumalai and Meesapulimala, with quieter campsites, clean washrooms, and clear night skies.' },
+            { q: 'What types of stays are available at Suryanelli camp?', a: 'We offer clean weatherproof alpine camping tents, quad group tents, and cozy valley pods with comfortable bedding, foam mattresses, charging points, and clean modern washrooms.' },
+            { q: 'Does the Suryanelli camping package include food?', a: 'Yes — the package includes evening campfire with live barbecue, authentic Kerala dinner buffet, and hot mountain breakfast.' },
+            { q: 'Are washrooms clean and equipped with hot water?', a: 'Yes, our campsite maintains hygienic western washrooms with 24/7 running water and hot water facilities.' }
+        ],
+        description: 'Immerse yourself in authentic mountain camping surrounded by cascading green tea slopes and misty sunset valleys. Enjoy clean weatherproof alpine tent stays, cozy mountain pods, campfire barbecue, guided tea trail walks, clean modern washrooms, and farm-to-table Kerala dining.',
         highlights: [
-            'Geodesic Dome Glamping with Private Valley Decks',
-            'Stargazing Telescope Observation Sessions',
-            'Campfire Acoustic Music & Live Barbecue Grill',
-            'Easy Sunset Ridge Nature Walks',
-            'Farm-to-table Traditional Kerala Cuisine'
+            'Clean Weatherproof Alpine Tents & Mountain Pods',
+            'Tea Plantation Sunset Ridge Nature Walk',
+            'Evening Campfire with Live Barbecue Grill',
+            'Hygienic Modern Washrooms with Hot Water',
+            'Farm-to-table Traditional Kerala Dinner & Breakfast'
         ],
         inclusions: [
-            'Dome Pod Accommodation',
-            'Campfire & Live BBQ Skewers',
-            'Dinner & Hot Breakfast',
-            'Guided Evening Ridge Walk'
+            '1 Night Tent Stay / Mountain Pod Accommodation',
+            'Evening Campfire with Live Barbecue (Chicken / Veg)',
+            'Buffet Dinner (Authentic Kerala Cuisine) & Hot Breakfast',
+            'Guided Tea Plantation Sunset Ridge Walk',
+            'Clean Western Washrooms with Hot Water'
         ],
-        exclusions: ['Personal transport to camp'],
+        exclusions: [
+            'Personal transportation to Suryanelli basecamp',
+            'Snacks and extra personal expenses'
+        ],
         itinerary: [
             {
                 day: 'Day 1',
-                title: 'Check-in & Sunset Deck',
+                title: 'Check-in, Tea Slopes Walk & Campfire BBQ',
                 items: [
-                    '03:00 PM – Check-in at Suryanelli Ridge.',
-                    '05:00 PM – Sunset walk through tea slopes.',
-                    '07:30 PM – Campfire BBQ & acoustic sessions.'
+                    '03:00 PM – Arrival at Suryanelli Basecamp & welcome organic tea.',
+                    '04:00 PM – Clean tent / pod allocation and briefing.',
+                    '05:00 PM – Guided sunset nature walk through tea slopes.',
+                    '07:30 PM – Campfire lighting with live BBQ skewers.',
+                    '08:30 PM – Traditional Kerala buffet dinner.',
+                    '10:00 PM – Stargazing and peaceful overnight rest.'
                 ]
             },
             {
                 day: 'Day 2',
                 title: 'Morning Mist Walk & Breakfast',
                 items: [
-                    '07:00 AM – Morning tea walk in the misty plantations.',
-                    '08:30 AM – Kerala buffet breakfast & check-out.'
+                    '06:30 AM – Morning tea amidst misty tea hills.',
+                    '08:30 AM – Kerala breakfast buffet (Appam / Puttu / Poori).',
+                    '10:00 AM – Check-out with unforgettable memories.'
                 ]
             }
         ],
         rooms: [
             {
-                id: 'r6',
-                name: 'Valley View Geodesic Dome',
+                id: 'r6_tent',
+                name: 'Clean Alpine Camping Tent',
+                capacity: '2-3 Campers',
+                price: 1499,
+                totalUnits: 16,
+                bookedUnits: 5,
+                isAvailable: true,
+                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
+                features: ['Weatherproof Flysheet', 'Clean Foam Mattresses & Blankets', 'Camping Lantern', 'Clean Modern Washrooms with Hot Water']
+            },
+            {
+                id: 'r6_pod',
+                name: 'Cozy Valley Mountain Pod',
                 capacity: '2 Adults',
-                price: 2199,
+                price: 1999,
+                totalUnits: 8,
+                bookedUnits: 3,
+                isAvailable: true,
+                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
+                features: ['Valley View Deck', 'Comfortable Plush Bed', 'Charging Points', 'Attached Modern Clean Washroom']
+            },
+            {
+                id: 'r6_quad',
+                name: 'Group Alpine Quad Tent',
+                capacity: '4 Campers',
+                price: 1299,
                 totalUnits: 10,
                 bookedUnits: 4,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
-                features: ['Private Valley Deck', 'Plush Bedding', 'Glass Sky Window', 'Attached Washroom']
+                image: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80',
+                features: ['Spacious 4-Person Tent', '4 Foam Mattresses & Pillows', 'Thermal Blankets', 'Modern Shared Restrooms']
             }
         ],
         amenities: [
-            { id: 'am-20', name: 'Private Valley Deck', icon: '🌄', enabled: true },
-            { id: 'am-21', name: 'Stargazing Scope', icon: '🔭', enabled: true }
+            { id: 'am-20', name: 'Clean Modern Washrooms', icon: '🚿', enabled: true },
+            { id: 'am-21', name: 'Campfire Circle', icon: '🔥', enabled: true },
+            { id: 'am-22', name: 'Tea Plantation Trail', icon: '🌿', enabled: true },
+            { id: 'am-23', name: 'Charging Stations', icon: '⚡', enabled: true }
         ],
         addons: [
             { id: 'ad-7', name: 'Acoustic Guitarist for Evening', price: 2000, enabled: true }
@@ -310,233 +348,389 @@ export const INITIAL_ALL_CAMPS = [
             nearestTown: 'Suryanelli (2 km)'
         },
         reviews: [
-            { id: 'rv-5', name: 'Meera & Vineeth', location: 'Kochi', rating: 5, date: '3 weeks ago', comment: 'The view from the private deck in the morning with hot tea was pure therapy. Highly recommend for couples!' }
+            { id: 'rv-5', name: 'Meera & Vineeth', location: 'Kochi', rating: 5, date: '3 weeks ago', comment: 'The tents were exceptionally clean and comfortable. Loved the campfire and the morning tea walk through the tea gardens!' }
         ]
     },
     {
-        id: 'pkg-phantom',
-        title: 'Phantom Head Peak & Golden Hour Sunset Trek',
-        shortTitle: 'Phantom Head Peak',
+        id: 'pkg-mini-mexico',
+        title: 'Mini Mexico — Vattavada Cabins, Wood House & Tent Camp',
+        shortTitle: 'Mini Mexico Vattavada',
         region: 'Munnar',
-        category: 'Summit Trek',
-        tag: 'Sunset Vista',
-        location: 'Munnar Ridge, Kerala',
-        altitude: '6,800 FT',
-        price: 1799,
-        originalPrice: 2400,
-        rating: 4.91,
-        reviewsCount: 195,
+        category: 'Cabin & Tent Camp',
+        tag: 'Pet Friendly 🐾',
+        location: 'Vattavada, Munnar, Idukki, Kerala',
+        altitude: '6,200 FT',
+        price: 1500,
+        originalPrice: 2000,
+        rating: 4.96,
+        reviewsCount: 184,
         duration: '2 Days / 1 Night',
-        difficulty: 'Moderate Trek',
+        difficulty: 'Easy Scenic',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
+        image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
         gallery: [
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80'
+            'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
+            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/465987105_18057887323850452_2330242188932491135_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ohyVrM7OLFcQ7kNvwFHrvdh&_nc_oc=AdqE2_YJJm71pcF68VtZNof72DxSOxPb1ddFus7AoVOfL1PhLTpOcxHNLzraKMqSfXg6AW_MziIHCTuKIip_RG0X&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=6cYlCpdBMoawWnqR1LVDXQ&_nc_ss=7b289&oh=00_AQHA0mAdDHrIxAqeuWqQTuehH-qovuz7XM-HZmDTznZVCw&oe=6A8E85B6',
+            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/491462294_18073377121850452_2329010786375635633_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PYDazogwLPsQ7kNvwG2GfOb&_nc_oc=Adrk7mQmJIOqPi_phzK7VgvF2QggQM0h4JH5KfyDqakHdAuw2vKm1XIuXMtMpuoLgM0lUloq7OBH9UE4Ywmej17W&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=yvhIkbSNYZa4o8MCP_1gbA&_nc_ss=7b289&oh=00_AQHPLgNieqBlFFzXWznmnYP0MzIXpR8bWFBzU9CyUT9e_A&oe=6A8E7AD9',
+            'https://scontent.fccj2-1.fna.fbcdn.net/v/t51.75761-15/491520082_18073531504850452_6388308843358970211_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=mIN-M0re9xMQ7kNvwFwcqWV&_nc_oc=AdryCtFd2CLUWmNYFcthuFPHZwdTWdy2MxbfDB7EqqHMSRuZmu5iL8KSdNQuC9lXeste7gmU4sTjgZxWQJmaiCOb&_nc_zt=23&_nc_ht=scontent.fccj2-1.fna&_nc_gid=LQvn5mT5n5vpg8DcfFxLYA&_nc_ss=7b289&oh=00_AQGOONw9pZw62I-9s4D9DrLHxgNWh4oMVdYFJL2wVQ0MUw&oe=6A8E6417',
+            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.82787-15/657856773_18107793616850452_1148871301258396135_n.jpg?stp=dst-jpegr_tt6&cstp=mx1440x1920&ctp=s1440x1920&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=M1-75c17zYMQ7kNvwEdj-BK&_nc_oc=Adrz0g9mTdgIcZzTvpgS7-DLS7LTTgisDBmBfn4MfuHNBULyCVR1kmR4yW_pn_aTYOJMFttgMX3avoMoAMiYVvCy&_nc_zt=23&se=-1&_nc_ht=scontent.fccj2-3.fna&_nc_gid=chHb1zi7zctWGYAeBHL97w&_nc_ss=7b289&oh=00_AQEMYr8_kwT4Eqt6qGWz0YWfQ6DsuL7CJHfnGNwDK4SZrg&oe=6A8E8F50',
+            'https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnH8vlHaw3ERWDpX-_6ZvP-Cdhnz3Vk9bUy7gvLE8hQWkRqtDoGkC4MWdiC5Yq2Vlird1LvCjcf8bjcR3mHfFJLgypQD457k0IzHqoZhFVzspXjuS3ZrC3euEvTUVNlIb9jiTsS=s1360-w1360-h1020-rw',
+            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyte7Yo7rCOBCWHNFbuUFVSLrHxIGNWo5hEXNa27_Nw2F0L6lJmidpoXo&s=10'
         ],
-        faqs: [{ q: 'Where is Phantom Head Peak?', a: 'On the edge of Munnar\'s tea-estate country, a short drive from Munnar town — the trailhead is reached via organised camp transport.' }, { q: 'Is Phantom Head Peak suitable for beginners?', a: 'Yes — it\'s one of the easiest summit treks in Munnar (2–3 hours, moderate ascent) and a great first trek.' }, { q: 'What\'s the best time for Phantom Head Peak?', a: 'Late afternoon, arriving at the summit 30–45 minutes before sunset. Carry a headlamp for the descent.' }, { q: 'Can Phantom Head be combined with Kolukkumalai?', a: 'Yes — it works perfectly as a Day 2 sunset trek after a Day 1 Kolukkumalai sunrise expedition.' }],
-        description: '360-degree panoramic golden hour peak overlooking the Western Ghats mountain layers. Guided evening cliff walk, campfire dinner, and high-altitude tent stay.',
-        highlights: ['360° Mountain Panorama', 'Golden Hour Sunset Peak', 'High-Altitude Tent Stay', 'Guided Treks', 'Campfire Dinner'],
-        inclusions: ['Alpine Tent Stay', 'Dinner & Breakfast', 'Guided Peak Hike', 'Campfire'],
-        exclusions: ['Personal transport'],
+        faqs: [
+            { q: 'Where is Mini Mexico located?', a: 'Mini Mexico is nestled in the serene vegetable terraced valleys of Vattavada, approximately 42 km from Munnar town in Kerala.' },
+            { q: 'Is Mini Mexico pet-friendly?', a: 'Yes! Mini Mexico is a dedicated pet-friendly haven. We warmly welcome your four-legged companions.' },
+            { q: 'What meals are included in the stay?', a: 'All base packages include welcome hot beverages, dinner (Chapati / Ghee Rice with Chicken Curry), and morning breakfast (Kerala Tiffin or English Breakfast).' },
+            { q: 'What is the booking and special request policy?', a: 'Any additional requests, special meals, or transport bookings must be confirmed prior to arrival or during the booking process. No on-the-spot requests will be accepted upon arrival.' },
+            { q: 'What activities are available at Mini Mexico?', a: 'Included with your stay is a hilltop view point trek, vegetable farm visit, and 1 hour complimentary evening campfire. Optional activities include the Shola National Park Forest Walk, 4x4 off-road rides, and waterfall excursions.' }
+        ],
+        description: 'Escape to the serene hills of Vattavada and experience nature at its purest. Whether you are looking for cozy cabin stays, pet-friendly tent camping, or off-road mountain adventure, Mini Mexico offers an unforgettable retreat amidst vegetable-terraced valleys, strawberry farms, and misty eucalyptus ridges. All base packages include dinner and breakfast, with access to panoramic view points and complimentary campfire.',
+        highlights: [
+            '100% Pet-Friendly Wilderness Sanctuary & Mountain Retreat',
+            'Cozy Rustic Wood House & Alpine Cabin Stays with Valley Views',
+            'Complimentary Hilltop View Point & Organic Farm Visit',
+            'Included Dinner (Ghee Rice / Chapati with Chicken Curry) & Hot Breakfast',
+            'Complimentary 1-Hour Campfire with Extra Duration Options',
+            'Shola National Park Forest Walks & 4x4 Off-Road Trail Rides on Request'
+        ],
+        inclusions: [
+            '1 Night Stay (Wood House / Cabin / Alpine Tent)',
+            'Welcome Hot Beverages upon Arrival',
+            'Dinner (Chapati / Ghee Rice with Kerala Chicken Curry or Veg Alternative)',
+            'Morning Breakfast (Traditional Kerala Tiffin or English Breakfast)',
+            'Hilltop View Point Guided Walk & Organic Farm Tour',
+            '1 Hour Complimentary Evening Campfire',
+            'Clean Western Washrooms with Hot Water Facilities',
+            'Complimentary Safe Parking for 2WD & 4WD Vehicles'
+        ],
+        exclusions: [
+            'Lunch (Optional: Veg ₹120 | Non-Veg ₹170 per head)',
+            'Live BBQ (On Request: ₹200 per piece / portion)',
+            'Shola National Park Forest Walk (₹300 per head)',
+            'Trekking & 4x4 Off-Road Jeep Rides (Extra charge on request)',
+            'Extra Campfire Time beyond 1st hour (₹500 for additional duration)',
+            'Waterfall Visit (3 km from property, available on request for groups)',
+            'Personal transport to Vattavada property'
+        ],
         itinerary: [
             {
                 day: 'Day 1',
-                title: 'Sunset Cliff Walk',
-                items: ['03:00 PM – Basecamp arrival', '05:00 PM – Golden hour hike to Phantom Head Peak', '08:00 PM – Campfire & dinner']
+                title: 'Check-In, Farm Visit, Hilltop Sunset & Campfire',
+                items: [
+                    '02:00 PM – Arrival at Mini Mexico Vattavada & welcome hot mountain beverages.',
+                    '02:30 PM – Room / Tent allocation and property orientation by camp host.',
+                    '04:00 PM – Guided Hilltop View Point walk & organic vegetable farm tour.',
+                    '06:30 PM – Sunset golden hour tea over misty terraced hills.',
+                    '07:30 PM – 1-Hour complimentary campfire gathering with starlit mountain sky.',
+                    '08:30 PM – Warm dinner served (Chapati / Ghee Rice with Chicken Curry or Veg).',
+                    '10:30 PM – Quiet starlit sleep in cozy cabins, wood house, or tents.'
+                ]
             },
             {
                 day: 'Day 2',
-                title: 'Valley Walk',
-                items: ['07:30 AM – Morning tea walk', '09:00 AM – Breakfast and departure']
+                title: 'Morning Forest Walk, Breakfast & Check-Out',
+                items: [
+                    '06:30 AM – Morning tea & birdwatching in eucalyptus breezes.',
+                    '07:30 AM – Optional Shola National Park Forest Walk (₹300/head) or waterfall excursion.',
+                    '09:00 AM – Traditional Kerala Tiffin or English Breakfast.',
+                    '11:00 AM – Check-out with refreshed mountain memories and pet smiles.'
+                ]
             }
         ],
         rooms: [
-            { id: 'r7', name: 'Alpine Ridge Tent', capacity: '2 Campers', price: 1799, totalUnits: 12, bookedUnits: 3, isAvailable: true, image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80', features: ['Sleeping Bag', 'Foam Mat', 'Mountain View'] }
+            {
+                id: 'r-vattavada-woodhouse',
+                name: 'Rustic Wood House (Couple Deal: ₹5,000 | Group: ₹2,000/head)',
+                capacity: '2 - 6 Guests',
+                price: 2000,
+                couplePrice: 5000,
+                totalUnits: 4,
+                bookedUnits: 1,
+                isAvailable: true,
+                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
+                features: ['Private Wood House', 'Valley Deck', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly', 'Couple Deal ₹5,000 / Group ₹2,000 pp']
+            },
+            {
+                id: 'r-vattavada-cabin',
+                name: 'Cozy Mountain Cabin (Couple Deal: ₹5,000 | Group: ₹2,000/head)',
+                capacity: '2 - 4 Guests',
+                price: 2000,
+                couplePrice: 5000,
+                totalUnits: 4,
+                bookedUnits: 1,
+                isAvailable: true,
+                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/465987105_18057887323850452_2330242188932491135_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ohyVrM7OLFcQ7kNvwFHrvdh&_nc_oc=AdqE2_YJJm71pcF68VtZNof72DxSOxPb1ddFus7AoVOfL1PhLTpOcxHNLzraKMqSfXg6AW_MziIHCTuKIip_RG0X&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=6cYlCpdBMoawWnqR1LVDXQ&_nc_ss=7b289&oh=00_AQHA0mAdDHrIxAqeuWqQTuehH-qovuz7XM-HZmDTznZVCw&oe=6A8E85B6',
+                features: ['Cozy Wooden Cabin', 'Balcony Mountain View', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly']
+            },
+            {
+                id: 'r-vattavada-tent',
+                name: 'Alpine Tent Camping (₹1,500 per head)',
+                capacity: '2 - 4 Campers',
+                price: 1500,
+                totalUnits: 10,
+                bookedUnits: 2,
+                isAvailable: true,
+                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/491462294_18073377121850452_2329010786375635633_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PYDazogwLPsQ7kNvwG2GfOb&_nc_oc=Adrk7mQmJIOqPi_phzK7VgvF2QggQM0h4JH5KfyDqakHdAuw2vKm1XIuXMtMpuoLgM0lUloq7OBH9UE4Ywmej17W&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=yvhIkbSNYZa4o8MCP_1gbA&_nc_ss=7b289&oh=00_AQHPLgNieqBlFFzXWznmnYP0MzIXpR8bWFBzU9CyUT9e_A&oe=6A8E7AD9',
+                features: ['Weatherproof Alpine Tent', 'Foam Mattress & Warm Blankets', 'Dinner & Breakfast Included', 'Shared Clean Restrooms', 'Campfire Circle Access']
+            }
         ],
-        amenities: [{ id: 'am-30', name: 'Campfire Circle', icon: '🔥', enabled: true }],
-        addons: [],
-        locationCoordinates: { lat: '10.0512', lng: '77.1650', mapsUrl: 'https://maps.google.com/?q=Phantom+Head+Munnar', nearestTown: 'Munnar (18 km)' },
-        reviews: [{ id: 'rv-6', name: 'Arjun N.', location: 'Trivandrum', rating: 5, date: '1 month ago', comment: 'The golden hour sunset is unbelievable. Great budget adventure!' }]
+        amenities: [
+            { id: 'am-v1', name: '100% Pet Friendly Property 🐾', icon: '🐾', enabled: true },
+            { id: 'am-v2', name: 'Hilltop View Point & Farm Visit', icon: '🌿', enabled: true },
+            { id: 'am-v3', name: 'Complimentary Campfire (1 Hour)', icon: '🔥', enabled: true },
+            { id: 'am-v4', name: 'Western Washrooms with Hot Water', icon: '🚿', enabled: true },
+            { id: 'am-v5', name: 'On-Site 2WD & 4WD Parking', icon: '🚗', enabled: true },
+            { id: 'am-v6', name: 'Shola National Park Access Nearby', icon: '🌲', enabled: true }
+        ],
+        addons: [
+            { id: 'ad-lunch-veg', name: 'Optional Lunch (Vegetarian Meal)', price: 120, perPerson: true, enabled: true },
+            { id: 'ad-lunch-nonveg', name: 'Optional Lunch (Non-Vegetarian Meal)', price: 170, perPerson: true, enabled: true },
+            { id: 'ad-live-bbq', name: 'Live BBQ (Per Piece / Portion)', price: 200, enabled: true },
+            { id: 'ad-forest-walk', name: 'Shola National Park Forest Walk (Per Person)', price: 300, perPerson: true, enabled: true },
+            { id: 'ad-campfire-extra', name: 'Extra Campfire Hour Duration', price: 500, enabled: true }
+        ],
+        policyNote: 'Important Booking Policy: Any additional requests, special meals, or transport bookings must be confirmed prior to arrival or during the booking process. No on-the-spot requests will be accepted upon arrival.',
+        locationCoordinates: {
+            lat: '10.1834',
+            lng: '77.2625',
+            mapsUrl: 'https://maps.google.com/?q=Vattavada+Munnar+Kerala',
+            nearestTown: 'Vattavada (1.5 km) / Munnar (42 km)'
+        },
+        reviews: [
+            { id: 'rv-v1', name: 'Rahul & Priya', location: 'Bengaluru', rating: 5, date: '1 week ago', comment: 'Our Golden Retriever had the best time running around freely! The wood house was super cozy and dinner with ghee rice and chicken curry was fantastic.' },
+            { id: 'rv-v2', name: 'Akshay Menon', location: 'Ernakulam', rating: 5, date: '2 weeks ago', comment: 'Vattavada is untouched beauty. The farm walk and hilltop sunset view were peaceful. Excellent host hospitality.' }
+        ]
     },
     {
-        id: 'pkg-chembra',
-        title: 'Wayanad Chembra Peak & Heart Lake Expedition',
-        shortTitle: 'Chembra Heart Lake Trek',
-        region: 'Wayanad',
-        category: 'Summit Trek',
-        tag: 'Summit Challenge',
-        location: 'Meppadi, Wayanad, Kerala',
-        altitude: '6,900 FT',
-        price: 3799,
-        originalPrice: 4800,
-        rating: 4.95,
-        reviewsCount: 218,
-        duration: '3 Days / 2 Nights',
-        difficulty: 'High Endurance Peak',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&q=80',
-        gallery: [
-            'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
-        ],
-        faqs: [{ q: 'What is Chembra Peak famous for?', a: 'The heart-shaped lake (Hridaya Saras) near the summit — one of Kerala\'s most photographed natural landmarks.' }, { q: 'How hard is the Chembra trek?', a: 'Moderate — about 4–5 hours round trip with some steep sections; forest department permission is required and arranged by guides.' }, { q: 'Can I visit the heart lake year-round?', a: 'Best post-monsoon (Sep–May); during heavy rain the trail gets slippery and the lake may overflow.' }],
-        description: 'Trek through dense Western Ghats rainforest canopies, discover the legendary perennial heart-shaped mountain lake, and sleep under millions of stars in secluded estate pods.',
-        highlights: ['Chembra Peak & Heart Lake Trek', 'Banasura Sagar Dam Kayaking', 'Rainforest Canopy Night Safari', 'Zero-Trace Wilderness Campout', 'Natural Rock Pool Swimming'],
-        inclusions: ['2 Nights Glamping Accommodation', 'All Meals & BBQ', 'Forest Department Permits', 'Kayaking Pass', 'Certified Trek Guides'],
-        exclusions: ['Travel to Meppadi, Wayanad'],
-        itinerary: [
-            { day: 'Day 1', title: 'Arrival & Plantation Walk', items: ['02:00 PM – Check-in', '04:00 PM – Bamboo forest stream hike', '07:30 PM – Campfire & tribal meal'] },
-            { day: 'Day 2', title: 'Chembra Summit & Heart Lake', items: ['06:00 AM – Trek start to Heart Lake (5,000 FT)', '01:00 PM – Return & rock pool swim', '07:00 PM – BBQ Night'] },
-            { day: 'Day 3', title: 'Kayaking & Check-out', items: ['08:00 AM – Breakfast', '09:30 AM – Banasura Dam kayaking', '12:00 PM – Departure'] }
-        ],
-        rooms: [
-            { id: 'r8', name: 'Estate Canopy Cottage', capacity: '2 Adults', price: 3799, totalUnits: 6, bookedUnits: 2, isAvailable: true, image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=600&q=80', features: ['Balcony View', 'King Bed', 'Hot Geyser'] }
-        ],
-        amenities: [{ id: 'am-35', name: 'Permits & Passes', icon: '🎫', enabled: true }],
-        addons: [],
-        locationCoordinates: { lat: '11.5134', lng: '76.0917', mapsUrl: 'https://maps.google.com/?q=Chembra+Peak+Wayanad', nearestTown: 'Meppadi (7 km) / Kalpetta (18 km)' },
-        reviews: [{ id: 'rv-7', name: 'Deepa V.', location: 'Bangalore', rating: 5, date: '2 weeks ago', comment: 'Heart Lake is breathtaking in real life. The entire 3-day itinerary was perfectly organized!' }]
-    },
-    {
-        id: 'pkg-wayanad',
-        title: 'Wayanad 900 Kandi Rainforest Glass Bridge Glamp',
-        shortTitle: '900 Kandi Glass Bridge',
-        region: 'Wayanad',
-        category: 'Water & Wild',
-        tag: 'Canopy Glamp',
-        location: 'Meppadi, Wayanad, Kerala',
-        altitude: '3,200 FT',
-        price: 2699,
-        originalPrice: 3500,
-        rating: 4.96,
-        reviewsCount: 220,
+        id: 'pkg-wildlink',
+        title: 'Camp Wildlink — 7-Acre Sustainable Farm Camping & Shola Wilderness',
+        shortTitle: 'Camp Wildlink Vattavada',
+        region: 'Munnar',
+        category: 'Farm & Wilderness Camping',
+        tag: '7-Acre Shola Farm 🌿',
+        location: 'Pazhathottam, Vattavada, Munnar, Idukki, Kerala',
+        altitude: '7,000 FT',
+        price: 1499,
+        originalPrice: 1999,
+        rating: 4.98,
+        reviewsCount: 142,
         duration: '2 Days / 1 Night',
-        difficulty: 'Jungle Trail',
+        difficulty: 'Easy Farm Living',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/wildlinks/wildlink_16.jpg',
         gallery: [
-            'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
+            '/images/wildlinks/wildlink_16.jpg',
+            '/images/wildlinks/wildlink_1.jpg',
+            '/images/wildlinks/wildlink_3.jpg',
+            '/images/wildlinks/wildlink_7.jpg',
+            '/images/wildlinks/wildlink_8.jpg',
+            '/images/wildlinks/wildlink_10.jpg',
+            '/images/wildlinks/wildlink_12.jpg',
+            '/images/wildlinks/wildlink_13.jpg'
         ],
-        faqs: [{ q: 'What is special about Wayanad camping?', a: 'Rainforest camps with spice plantations, waterfalls, and wildlife corridors — a completely different vibe from Munnar\'s high-altitude tea ridges.' }, { q: 'Is Wayanad camping good in monsoon?', a: 'The rainforest is at its greenest but trails get slippery and leech activity rises; organised camps with weather-aware planning are recommended June–August.' }, { q: 'What wildlife can you see?', a: 'Elephants, deer, birds, and occasional big cats in the surrounding sanctuaries — wildlife drives are a popular add-on.' }],
-        description: 'Glass bridge canopy walks, off-road 4x4 jeep safaris into deep evergreen jungle, natural rock-pool swimming, and treehouse canopy stays.',
-        highlights: ['Glass Bridge Access', '4x4 Deep Forest Safari', 'Natural Stream Swims', 'Treehouse Glamp Villa', 'Tribal Dinner Feast'],
-        inclusions: ['Treehouse / Alpine Tent', 'Glass Bridge Entry', '4x4 Jeep Ride', 'Dinner & Breakfast'],
-        exclusions: ['Personal expenses'],
+        routeGuide: {
+            from: 'Munnar Town (42 km)',
+            steps: [
+                'Munnar to Top Station: Start from Munnar town and head toward Vattavada along the main tar road (approx. 42 km).',
+                'Vattavada Forest Checkpost: Cross Top Station to reach the Vattavada checkpost. Register your name, contact, and vehicle details with the authorities before proceeding.',
+                'Turn Towards Pazhathottam: Continue toward Koviloor. Just before reaching Koviloor town, take the concrete hairpin / U-turn road on the left side that heads downhill.',
+                'Pazhathottam Viewpoint (8 km): Ask locals for Pazhathottam S Valavu or Pazhathottam Viewpoint.',
+                'Final Mud Road Approach: Locate Orion Farmers (Tea Fed) Resort (marked by its wooden fencing). Take the mud road directly opposite Orion to arrive at the campsite.'
+            ],
+            navigationWarning: 'Crucial Navigation Warning: Do not follow Google Maps deviations before Top Station that lead to rugged off-road tracks. Stick strictly to the main tarred road until you pass Top Station.',
+            roadCondition: 'Road Condition: The final 8 km stretch from Vattavada town to the site is a semi-off-road route, but it is manageable for all standard vehicle types (bikes, sedans, hatchbacks, and SUVs).'
+        },
+        faqs: [
+            { q: 'Where is Camp Wildlink located?', a: 'Camp Wildlink is perched at 7,000 ft above MSL in Pazhathottam, Vattavada (approx. 42 km from Munnar), bordering the lush Pampadum Shola National Park across a pristine 7-acre eco farm.' },
+            { q: 'How do I reach Camp Wildlink from Munnar?', a: 'Drive along the main tar road from Munnar through Top Station (42 km) to the Vattavada Forest checkpost. Continue toward Koviloor, take the left downhill hairpin toward Pazhathottam Viewpoint (S Valavu), and take the mud road directly opposite Orion Farmers (Tea Fed) Resort.' },
+            { q: 'What meals are included in the base tariff?', a: 'Included in your stay: Welcome Black Tea / Coffee, Veg Dinner (Chapathi with Dal Curry / Potato Curry / Veg Kurma), and Authentic South Indian Breakfast (Puttu + Kadala / Dosa-Idli + Sambar / Upma + Egg Curry).' },
+            { q: 'Can we order non-veg meals or live BBQ?', a: 'Yes! Freshly prepared Chicken Curry (₹360/kg), Live BBQ Chicken (₹360/kg), and Lunch (Veg ₹120 | Non-Veg ₹150) can be added. Must be confirmed in advance.' },
+            { q: 'Is Camp Wildlink pet-friendly?', a: 'Yes! Camp Wildlink offers 7 acres of free-roaming, pet-friendly open spaces for four-legged friends.' }
+        ],
+        description: 'Experience sustainable farm camping perched at 7,000 ft above MSL in Pazhathottam, Vattavada, bordered by the lush greens of Pampadum Shola National Park. A 7-acre eco-friendly community haven crafted for authentic mountain living, tranquility, and nature immersion.',
+        highlights: [
+            'Sustainable 7-Acre Farm Camping Sanctuary at 7,000 FT MSL',
+            'Bordering Pristine Pampadum Shola National Park Forest',
+            'Hilltop Viewpoint & Sunset Walk across Organic Farmlands',
+            'Included Veg Dinner (Chapathi + Curries) & South Indian Breakfast',
+            'Farm-to-Table Experience (Strawberries, Garlic, Cabbage Orchards)',
+            '100% Pet-Friendly Community Grounds with Campfire Circle'
+        ],
+        inclusions: [
+            '1 Night Accommodation (Standard Camping Tent / Wood Cabin)',
+            'Welcome Hot Black Tea / Mountain Coffee on Arrival',
+            'Dinner (Veg: Chapathi with Dal Curry / Potato Curry / Veg Kurma)',
+            'South Indian Breakfast (Puttu+Kadala / Dosa-Idli / Upma+Egg Curry)',
+            'Hilltop Sunset Walk & Organic Farm Tour',
+            'Evening Community Campfire setup under the stars',
+            'Sunrise Mountain Peak Trek & Shola Border Exploration',
+            'Safe On-site Parking (2WD & 4WD Manageable)'
+        ],
+        exclusions: [
+            'Lunch: Veg at ₹120 | Non-Veg at ₹150 per head',
+            'Freshly prepared Chicken Curry: ₹360 per kg',
+            'Live BBQ Chicken: ₹360 per kg',
+            'Pampadum Shola Guided Safari / Trekking Permits',
+            'Personal transport to Pazhathottam Vattavada property'
+        ],
         itinerary: [
-            { day: 'Day 1', title: '4x4 Jungle Ride & Glass Bridge', items: ['01:00 PM – Offroad Jeep to 900 Kandi', '03:30 PM – Glass bridge walk', '07:30 PM – Campfire & dinner'] },
-            { day: 'Day 2', title: 'Rock Pool Swim', items: ['07:30 AM – Natural rock pool swim', '09:00 AM – Breakfast and departure'] }
+            {
+                day: 'Day 1',
+                title: 'Check-In (02:00 PM – 03:00 PM), Sunset Walk & Campfire',
+                items: [
+                    '02:00 PM – 03:00 PM – Welcome black tea/coffee & check-in across the 7-acre farm.',
+                    '04:30 PM – Hilltop Viewpoint & Sunset Walk through strawberry and garlic orchards.',
+                    '06:30 PM – Golden hour mist rolling in from Pampadum Shola borders.',
+                    '07:30 PM – Evening community campfire setup under the stars.',
+                    '08:30 PM – Warm dinner served (Chapathi with Dal / Potato / Veg Kurma or optional fresh chicken curry).',
+                    '10:30 PM – Quiet starlit sleep in mountain tents or wood cabins.'
+                ]
+            },
+            {
+                day: 'Day 2',
+                title: 'Sunrise Trek, South Indian Breakfast & Check-Out (10:00 AM – 12:00 PM)',
+                items: [
+                    '06:00 AM – Early morning tea & Sunrise Mountain Peak Trek overlooking Vattavada valley.',
+                    '07:30 AM – Pampadum Shola border exploration & birdwatching.',
+                    '08:30 AM – South Indian Breakfast (Puttu + Kadala / Dosa-Idli + Sambar / Upma + Egg Curry).',
+                    '10:00 AM – 12:00 PM – Leisure farm stroll & check-out.'
+                ]
+            }
         ],
         rooms: [
-            { id: 'r9', name: 'Rainforest Treehouse Villa', capacity: '2 Adults', price: 2699, totalUnits: 6, bookedUnits: 2, isAvailable: true, image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80', features: ['Canopy Deck', 'Forest View', 'En-suite Restroom'] }
+            {
+                id: 'r-wildlink-tent',
+                name: 'Standard Farm Tent Camping (₹1,499 per head)',
+                capacity: '2 - 4 Campers',
+                price: 1499,
+                totalUnits: 12,
+                bookedUnits: 2,
+                isAvailable: true,
+                image: '/images/wildlinks/wildlink_7.jpg',
+                features: ['High-Altitude Camping Tent', 'Foam Mattress & Warm Blankets', 'Dinner & Breakfast Included', 'Campfire Circle Access', 'Pet Friendly']
+            },
+            {
+                id: 'r-wildlink-cabin',
+                name: 'Shola View Wood Cabin (Couple Deal: ₹5,000 | Group: ₹2,000/head)',
+                capacity: '2 - 4 Guests',
+                price: 2000,
+                couplePrice: 5000,
+                totalUnits: 4,
+                bookedUnits: 1,
+                isAvailable: true,
+                image: '/images/wildlinks/wildlink_1.jpg',
+                features: ['Rustic Wood Cabin', 'Shola Forest Views', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly']
+            },
+            {
+                id: 'r-wildlink-cottage',
+                name: 'Panoramic Farm Cottage (₹2,500 per head)',
+                capacity: '2 - 6 Guests',
+                price: 2500,
+                totalUnits: 2,
+                bookedUnits: 0,
+                isAvailable: true,
+                image: '/images/wildlinks/wildlink_16.jpg',
+                features: ['Panoramic Deck Overlook', 'Spacious Living Area', 'En-suite Hot Shower', 'Dinner & Breakfast Included', 'Couple & Family Friendly']
+            }
         ],
-        amenities: [{ id: 'am-40', name: '4x4 Jeep Access', icon: '🚙', enabled: true }],
-        addons: [],
-        locationCoordinates: { lat: '11.4988', lng: '76.1345', mapsUrl: 'https://maps.google.com/?q=900+Kandi+Wayanad', nearestTown: 'Meppadi (12 km)' },
-        reviews: [{ id: 'rv-8', name: 'Rohan Joshi', location: 'Mumbai', rating: 5, date: '1 month ago', comment: 'Treehouse in the deep jungle with morning bird sounds was otherworldly.' }]
-    },
-    {
-        id: 'pkg-vagamon',
-        title: 'Vagamon Pine Valley & Starlit Acoustic Camp',
-        shortTitle: 'Vagamon Pine Valley Camp',
-        region: 'Vagamon',
-        category: 'Camp & Relax',
-        tag: 'Relax & Chill',
-        location: 'Pine Forest, Vagamon, Kerala',
-        altitude: '4,800 FT',
-        price: 2199,
-        originalPrice: 2900,
-        rating: 4.92,
-        reviewsCount: 184,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy / Family & Friends',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
-        gallery: [
-            'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80'
+        amenities: [
+            { id: 'am-wl1', name: '7-Acre Eco Farm Sanctuary', icon: '🌿', enabled: true },
+            { id: 'am-wl2', name: '100% Pet Friendly Grounds 🐾', icon: '🐾', enabled: true },
+            { id: 'am-wl3', name: 'Evening Community Campfire', icon: '🔥', enabled: true },
+            { id: 'am-wl4', name: 'Sunrise Mountain Peak Trek', icon: '⛰️', enabled: true },
+            { id: 'am-wl5', name: 'Pampadum Shola Exploration', icon: '🌲', enabled: true },
+            { id: 'am-wl6', name: 'Safe 2WD / 4WD Parking On-Site', icon: '🚗', enabled: true }
         ],
-        faqs: [{ q: 'Is Vagamon or Munnar better for glamping?', a: 'Munnar for high-altitude adventure and sunrise treks; Vagamon for pine-forest calm, milder weather and group offsites.' }, { q: 'Can I do Munnar and Vagamon in one trip?', a: 'Yes — they\'re about 3.5 hours apart; a 3–4 night split itinerary is a popular Kerala hill-station loop.' }, { q: 'Is Vagamon good for corporate offsites?', a: 'Very — the pine-forest setting, open meadows and mild weather suit team activities; our Squad Expedition packages are built for this.' }],
-        description: 'Unwind in the misty pine groves of Vagamon. Perfect for acoustic campfire jams, off-road trails, starlit barbecues, and refreshing morning walks through tea valleys.',
-        highlights: ['Pine Forest Glamping Site', 'Off-Road Jeep Trail to Kurisumala', 'Sunset at Vagamon Rolling Meadows', 'Open-Mic Acoustic Campfire', 'Live Barbecue Station'],
-        inclusions: ['Pine Grove Tent Stay', 'Campfire with Live BBQ', 'Dinner & Hot Breakfast', 'Guided Meadows Hike'],
-        exclusions: ['Travel to Vagamon'],
-        itinerary: [
-            { day: 'Day 1', title: 'Pine Grove Walk & Acoustic Night', items: ['02:00 PM – Check-in', '04:30 PM – Pine forest sunset hike', '07:30 PM – Open-mic acoustic jam & BBQ'] },
-            { day: 'Day 2', title: 'Rolling Meadows Walk', items: ['07:30 AM – Morning tea & green meadows walk', '09:30 AM – Breakfast and check-out'] }
+        addons: [
+            { id: 'ad-wl-lunch-veg', name: 'Lunch (Vegetarian Meal)', price: 120, perPerson: true, enabled: true },
+            { id: 'ad-wl-lunch-nonveg', name: 'Lunch (Non-Vegetarian Meal)', price: 150, perPerson: true, enabled: true },
+            { id: 'ad-wl-chicken-curry', name: 'Fresh Chicken Curry (Per Kg)', price: 360, enabled: true },
+            { id: 'ad-wl-live-bbq', name: 'Live BBQ Chicken (Per Kg)', price: 360, enabled: true }
         ],
-        rooms: [
-            { id: 'r10', name: 'Pine Forest Alpine Tent', capacity: '2 Campers', price: 2199, totalUnits: 10, bookedUnits: 3, isAvailable: true, image: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=600&q=80', features: ['Pine Grove View', 'Mattress & Blanket', 'Campfire Access'] }
-        ],
-        amenities: [{ id: 'am-50', name: 'Acoustic Guitar & Fire Pit', icon: '🎸', enabled: true }],
-        addons: [],
-        locationCoordinates: { lat: '9.6842', lng: '76.9056', mapsUrl: 'https://maps.google.com/?q=Vagamon+Pine+Forest', nearestTown: 'Vagamon Town (3 km)' },
-        reviews: [{ id: 'rv-9', name: 'Nikhil & Friends', location: 'Coimbatore', rating: 5, date: '1 month ago', comment: 'Chill vibes, acoustic music by the fire, and cold pine breeze. Loved every minute!' }]
-    },
-    {
-        id: 'pkg-athirappilly',
-        title: 'Athirappilly Jungle Rapids & Riverbank Glamping',
-        shortTitle: 'Athirappilly River Camp',
-        region: 'Athirappilly',
-        category: 'Water & Wild',
-        tag: 'Rainforest River',
-        location: 'Chalakudy River, Athirappilly, Kerala',
-        altitude: '1,200 FT',
-        price: 2499,
-        originalPrice: 3400,
-        rating: 4.89,
-        reviewsCount: 156,
-        duration: '2 Days / 1 Night',
-        difficulty: 'Easy River Trails',
-        isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
-        gallery: [
-            'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
-        ],
-        faqs: [{ q: 'What is Athirappilly known for?', a: 'Kerala\'s largest waterfall (80 ft) — the "Niagara of India" — with rainforest camps and river-side trekking.' }, { q: 'Is Athirappilly good for families?', a: 'Yes — the waterfall view is spectacular, camps are in the rainforest buffer zone, and the drive from Kochi is short (~1.5 hrs).' }],
-        description: 'Experience Kerala’s grandest rainforest river cascades. Natural rock-pool swims, river kayaking, birding walks in hornbill sanctuaries, and riverside luxury canvas tents.',
-        highlights: ['Private River Stream Access', 'Canoeing & Kayak Equipment', 'Night Forest Insect & Hornbill Walk', 'Bamboo Raft Stream Ride', 'Forest-to-Table Kerala Feast'],
-        inclusions: ['Riverside Canvas Tent', 'Kayaking & Stream Bathing', 'Campfire & Dinner', 'Breakfast'],
-        exclusions: ['Travel to Athirappilly'],
-        itinerary: [
-            { day: 'Day 1', title: 'River Kayaking & Sunset', items: ['02:00 PM – Riverbank check-in', '04:00 PM – Kayaking in calm stream', '07:30 PM – Riverside campfire dinner'] },
-            { day: 'Day 2', title: 'Hornbill Walk & Check-out', items: ['07:00 AM – Early morning birding walk', '09:00 AM – Breakfast and departure'] }
-        ],
-        rooms: [
-            { id: 'r11', name: 'Riverside Safari Tent', capacity: '2 Adults', price: 2499, totalUnits: 8, bookedUnits: 2, isAvailable: true, image: 'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?auto=format&fit=crop&w=600&q=80', features: ['River View Deck', 'Comfort Bed', 'Clean Washroom'] }
-        ],
-        amenities: [{ id: 'am-60', name: 'River Stream Access', icon: '🌊', enabled: true }],
-        addons: [],
-        locationCoordinates: { lat: '10.2851', lng: '76.5698', mapsUrl: 'https://maps.google.com/?q=Athirappilly+Waterfalls', nearestTown: 'Chalakudy (28 km)' },
-        reviews: [{ id: 'rv-10', name: 'Pooja Nair', location: 'Thrissur', rating: 5, date: '3 weeks ago', comment: 'Waking up to the sound of flowing water and birds was pure bliss.' }]
+        policyNote: 'Important Guidelines & Policies: Strictly follow leave-no-trace zero-waste principles. Carry warm thermal layers, rain gear, and trekking shoes. All non-veg meals and live BBQ must be reserved in advance.',
+        locationCoordinates: {
+            lat: '10.1865',
+            lng: '77.2650',
+            mapsUrl: 'https://maps.google.com/?q=Pazhathottam+Vattavada+Kerala',
+            nearestTown: 'Pazhathottam / Vattavada (1.5 km) / Munnar (42 km)'
+        },
+        reviews: [
+            { id: 'rv-wl1', name: 'Siddharth & Ananya', location: 'Bengaluru', rating: 5, date: '1 week ago', comment: 'The 7-acre farm at 7,000 ft is pure magic. Sunset walk and South Indian breakfast with hot puttu and kadala was unmatchable!' },
+            { id: 'rv-wl2', name: 'Gokul Krishna', location: 'Kochi', rating: 5, date: '2 weeks ago', comment: 'Peaceful tranquility bordering the Shola national park. Our dog had the best weekend of his life.' }
+        ]
     }
 ];
 
-// Helper to get all camps, merging localStorage overrides if present
-export function getAllCamps() {
+const DEPRECATED_CAMP_IDS = new Set([
+    'pkg-chembra-peak',
+    'pkg-900-kandi',
+    'pkg-vagamon-pine',
+    'pkg-athirappilly',
+    'pkg-athirappilly-rapids',
+    'pkg-chembra',
+    'pkg-vagamon',
+    'pkg-phantom',
+    'pkg-wayanad'
+]);
+
+// Helper to get all camps, dynamically calculating live room bookedUnits from active bookings
+export function getAllCamps(bookings = null) {
+    let baseCamps = INITIAL_ALL_CAMPS;
     if (typeof window !== 'undefined') {
         const saved = localStorage.getItem('aanandham_admin_properties_v2');
         if (saved) {
             try {
                 const parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
-                    return parsed;
+                    const cleaned = parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id));
+                    if (cleaned.length > 0) {
+                        baseCamps = cleaned;
+                    }
                 }
             } catch (e) {
                 console.error('Error parsing admin properties from localStorage:', e);
             }
         }
     }
-    return INITIAL_ALL_CAMPS;
+
+    if (!Array.isArray(bookings) || bookings.length === 0) {
+        return baseCamps;
+    }
+
+    // Dynamically calculate bookedUnits for each room from active bookings
+    return baseCamps.map(camp => {
+        if (!Array.isArray(camp.rooms)) return camp;
+        const campBookings = bookings.filter(b => {
+            if (['Cancelled', 'Refunded', 'Expired'].includes(b.status)) return false;
+            const bCamp = (b.campsiteId || b.packageId || b.package || '').toLowerCase();
+            return bCamp.includes(camp.id.toLowerCase().replace('pkg-', '')) || bCamp.includes((camp.title || camp.name || '').toLowerCase());
+        });
+
+        const updatedRooms = camp.rooms.map(room => {
+            const roomBookings = campBookings.filter(b => {
+                const bRoom = (b.roomType || '').toLowerCase();
+                return bRoom.includes((room.name || '').toLowerCase()) || bRoom.includes((room.id || '').toLowerCase());
+            });
+            const liveBookedCount = roomBookings.length;
+            return {
+                ...room,
+                bookedUnits: Math.min(room.totalUnits || 8, Math.max(room.bookedUnits || 0, liveBookedCount))
+            };
+        });
+
+        return {
+            ...camp,
+            rooms: updatedRooms
+        };
+    });
 }
 
 // Helper to save all camps to localStorage
 export function saveAllCamps(camps) {
     if (typeof window !== 'undefined') {
         try {
-            localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(camps));
+            const valid = Array.isArray(camps) ? camps.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id)) : [];
+            localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(valid));
             // Trigger storage event for other components in same window
             window.dispatchEvent(new Event('storage'));
         } catch (e) {
@@ -555,3 +749,80 @@ export function getCampById(id) {
         return cleanId === cleanTarget || c.id === id;
     }) || all[0];
 }
+
+export const INITIAL_EVENTS = [
+    {
+        id: 'evt-1',
+        title: 'Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp',
+        campsite: 'Kolukkumalai Sunrise Glamping',
+        dates: '24 Oct - 25 Oct 2026',
+        price: 2499,
+        capacity: 30,
+        booked: 24,
+        status: 'Fast Filling',
+        guide: 'Vignesh Marshal',
+        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 'evt-2',
+        title: 'Meesapulimala 8,661 FT Summit Cloud Bed Trek',
+        campsite: 'Meesapulimala Basecamp',
+        dates: '31 Oct - 01 Nov 2026',
+        price: 2899,
+        capacity: 25,
+        booked: 19,
+        status: 'Available',
+        guide: 'Anoop Marshal',
+        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 'evt-3',
+        title: 'Camp Wildlink — Vattavada Cabins, Wood House & Tent Camp',
+        campsite: 'Camp Wildlink Vattavada Sanctuary',
+        dates: '07 Nov - 08 Nov 2026',
+        price: 1999,
+        capacity: 20,
+        booked: 14,
+        status: 'Available',
+        guide: 'Manoj Guide',
+        image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765'
+    }
+];
+
+export const INITIAL_MARSHALS = [
+    {
+        id: 'msh-1',
+        name: 'Vignesh Kumar',
+        phone: '+91 98470 11223',
+        pin: '2026',
+        role: 'Senior Camp Marshal',
+        campsite: 'Kolukkumalai Sunrise Glamping',
+        stationId: 'kolukkumalai_gate',
+        status: 'On Station',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80'
+    },
+    {
+        id: 'msh-2',
+        name: 'Anoop Chandran',
+        phone: '+91 94471 99881',
+        pin: '9000',
+        role: 'Summit Guide & Marshal',
+        campsite: 'Meesapulimala Basecamp',
+        stationId: 'meesapulimala_gate',
+        status: 'On Station',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80'
+    },
+    {
+        id: 'msh-3',
+        name: 'Manoj Varghese',
+        phone: '+91 97455 33445',
+        pin: '1234',
+        role: 'Basecamp Coordinator',
+        campsite: 'Mini Mexico Vattavada Sanctuary',
+        stationId: 'vattavada_gate',
+        status: 'Active',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80'
+    }
+];
+
+

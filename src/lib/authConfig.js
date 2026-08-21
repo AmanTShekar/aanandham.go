@@ -66,22 +66,29 @@ function resolveHostPasscodes() {
 }
 
 // ── SANCTUARY & GROUP-BASED PASSCODE ACCESS REGISTRY ──
+const DEV_FALLBACK_CODES = {
+    all: ['777777', '202600', '123456', 'aanandham2026', 'master777', 'admin2026', 'hq2026', 'wildadmin2026'],
+    kolukkumalai: ['790001', '790079', '7900', '100101', '111111', 'kolu7900', 'kolukkumalai2026', 'kolu2026', 'kolukku2026'],
+    meesapulimala: ['860002', '860086', '8600', '200202', '222222', 'meesa8600', 'meesapulimala2026', 'meesa2026'],
+    suryanelli: ['300303', '303030', '3001', '333333', 'surya2026', 'suryanelli2026', 'surya777'],
+    vagamon: ['400404', '404040', '4001', '444444', 'vaga2026', 'vagamon2026', 'pine2026'],
+    wayanad: ['900900', '900500', '9001', '500505', '555555', 'waya2026', 'wayanad2026', 'kandi2026']
+};
+
+function getSanctuaryPasscodes(envKey, fallbackKey) {
+    const envCodes = process.env[envKey] ? parsePasscodeList(process.env[envKey]) : [];
+    if (IS_PROD) {
+        return envCodes.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
+    }
+    return Array.from(new Set([...envCodes, ...(DEV_FALLBACK_CODES[fallbackKey] || [])]));
+}
+
 export const CAMP_PASSCODE_REGISTRY = [
     {
         campId: 'all',
         campName: 'All Sanctuaries (Enterprise Master HQ)',
         shortName: 'Master HQ Scope',
-        passcodes: [
-            ...(process.env.ADMIN_PASSCODES ? parsePasscodeList(process.env.ADMIN_PASSCODES) : []),
-            '777777',
-            '202600',
-            '123456',
-            'aanandham2026',
-            'master777',
-            'admin2026',
-            'hq2026',
-            'wildadmin2026'
-        ],
+        passcodes: getSanctuaryPasscodes('ADMIN_PASSCODES', 'all'),
         isMasterAdmin: true,
         role: 'admin_coordinator',
         icon: '⛺'
@@ -90,18 +97,7 @@ export const CAMP_PASSCODE_REGISTRY = [
         campId: 'pkg-kolukkumalai',
         campName: 'Kolukkumalai Sunrise 4x4 Station',
         shortName: 'Kolukkumalai Station',
-        passcodes: [
-            ...(process.env.KOLUKKUMALAI_PASSCODES ? parsePasscodeList(process.env.KOLUKKUMALAI_PASSCODES) : []),
-            '790001',
-            '790079',
-            '7900',
-            '100101',
-            '111111',
-            'kolu7900',
-            'kolukkumalai2026',
-            'kolu2026',
-            'kolukku2026'
-        ],
+        passcodes: getSanctuaryPasscodes('KOLUKKUMALAI_PASSCODES', 'kolukkumalai'),
         isMasterAdmin: false,
         role: 'basecamp_host',
         icon: '🌄'
@@ -110,17 +106,7 @@ export const CAMP_PASSCODE_REGISTRY = [
         campId: 'pkg-meesapulimala',
         campName: 'Meesapulimala High Altitude Basecamp',
         shortName: 'Meesapulimala Basecamp',
-        passcodes: [
-            ...(process.env.MEESAPULIMALA_PASSCODES ? parsePasscodeList(process.env.MEESAPULIMALA_PASSCODES) : []),
-            '860002',
-            '860086',
-            '8600',
-            '200202',
-            '222222',
-            'meesa8600',
-            'meesapulimala2026',
-            'meesa2026'
-        ],
+        passcodes: getSanctuaryPasscodes('MEESAPULIMALA_PASSCODES', 'meesapulimala'),
         isMasterAdmin: false,
         role: 'basecamp_host',
         icon: '⛰️'
@@ -129,16 +115,7 @@ export const CAMP_PASSCODE_REGISTRY = [
         campId: 'pkg-suryanelli',
         campName: 'Suryanelli Valley Glamp Gate',
         shortName: 'Suryanelli Valley Gate',
-        passcodes: [
-            ...(process.env.SURYANELLI_PASSCODES ? parsePasscodeList(process.env.SURYANELLI_PASSCODES) : []),
-            '300303',
-            '303030',
-            '3001',
-            '333333',
-            'surya2026',
-            'suryanelli2026',
-            'surya777'
-        ],
+        passcodes: getSanctuaryPasscodes('SURYANELLI_PASSCODES', 'suryanelli'),
         isMasterAdmin: false,
         role: 'basecamp_host',
         icon: '🏕️'
@@ -147,16 +124,7 @@ export const CAMP_PASSCODE_REGISTRY = [
         campId: 'pkg-vagamon-pine',
         campName: 'Vagamon Pine Forest Post',
         shortName: 'Vagamon Pine Post',
-        passcodes: [
-            ...(process.env.VAGAMON_PASSCODES ? parsePasscodeList(process.env.VAGAMON_PASSCODES) : []),
-            '400404',
-            '404040',
-            '4001',
-            '444444',
-            'vaga2026',
-            'vagamon2026',
-            'pine2026'
-        ],
+        passcodes: getSanctuaryPasscodes('VAGAMON_PASSCODES', 'vagamon'),
         isMasterAdmin: false,
         role: 'basecamp_host',
         icon: '🌲'
@@ -165,17 +133,7 @@ export const CAMP_PASSCODE_REGISTRY = [
         campId: 'pkg-wayanad',
         campName: 'Wayanad 900 Kandi Rainforest Post',
         shortName: 'Wayanad Rainforest Post',
-        passcodes: [
-            ...(process.env.WAYANAD_PASSCODES ? parsePasscodeList(process.env.WAYANAD_PASSCODES) : []),
-            '900900',
-            '900500',
-            '9001',
-            '500505',
-            '555555',
-            'waya2026',
-            'wayanad2026',
-            'kandi2026'
-        ],
+        passcodes: getSanctuaryPasscodes('WAYANAD_PASSCODES', 'wayanad'),
         isMasterAdmin: false,
         role: 'basecamp_host',
         icon: '🌿'

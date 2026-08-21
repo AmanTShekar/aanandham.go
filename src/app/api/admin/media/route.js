@@ -25,13 +25,6 @@ export async function POST(request) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    if (!IS_SUPABASE_CONFIGURED) {
-        return NextResponse.json({
-            success: false,
-            message: 'Supabase Storage is not configured yet. Add NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, and SUPABASE_SERVICE_ROLE_KEY to your .env.local file.'
-        }, { status: 503 });
-    }
-
     try {
         const formData = await request.formData();
         const file = formData.get('file');
@@ -78,18 +71,25 @@ export async function POST(request) {
         const fileName = `${randomUUID()}.webp`;
         const filePath = `${folder}/${fileName}`;
 
-        const { url, error } = await uploadBuffer(processedBuffer, filePath, 'image/webp');
+        let publicUrl = null;
 
-        if (error) {
-            recordAuditEvent({
-                category: 'MEDIA',
-                action: 'UPLOAD_FAILED',
-                actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
-                details: `Media upload failed for folder "${folder}"`,
-                status: 'FAILED',
-                severity: 'HIGH'
-            }, request);
-            return NextResponse.json({ success: false, message: `Upload failed: ${error}` }, { status: 500 });
+        if (IS_SUPABASE_CONFIGURED) {
+            const { url, error } = await uploadBuffer(processedBuffer, filePath, 'image/webp');
+            if (error) {
+                return NextResponse.json({ success: false, message: `Upload failed: ${error}` }, { status: 500 });
+            }
+            publicUrl = url;
+        } else {
+            // Local filesystem fallback: write to public/uploads directory
+            const fs = await import('fs');
+            const path = await import('path');
+            const uploadsDir = path.join(process.cwd(), 'public', 'uploads');
+            if (!fs.existsSync(uploadsDir)) {
+                fs.mkdirSync(uploadsDir, { recursive: true });
+            }
+            const localDest = path.join(uploadsDir, fileName);
+            fs.writeFileSync(localDest, processedBuffer);
+            publicUrl = `/uploads/${fileName}`;
         }
 
         recordAuditEvent({
@@ -97,14 +97,14 @@ export async function POST(request) {
             action: 'UPLOAD_SUCCESS',
             actor: getAdminPayload(request)?.campName || 'Admin Coordinator',
             recordId: filePath,
-            details: `Uploaded image to ${filePath} (${Math.round(processedBuffer.length / 1024)} KB WebP)`,
+            details: `Uploaded image to ${publicUrl} (${Math.round(processedBuffer.length / 1024)} KB WebP)`,
             status: 'SUCCESS',
             severity: 'INFO'
         }, request);
 
         return NextResponse.json({
             success: true,
-            url,
+            url: publicUrl,
             path: filePath,
             width: metadata?.width || null,
             height: metadata?.height || null,

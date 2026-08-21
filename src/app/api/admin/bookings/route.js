@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAdminPayload, getClientIp } from '@/lib/authConfig';
+import { getAdminPayload, getMarshalPayload, getClientIp } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { validateBookingPayload, sanitizePhone } from '@/lib/validation';
 import { getStoredBookings, saveStoredBookings, addServerBooking, updateServerBooking, deleteServerBooking } from '@/lib/serverBookingStore';
@@ -14,11 +14,45 @@ export function generateBookingId() {
     return `BK-${timestampPart}-${entropyPart}`;
 }
 
-// Status values allowed to be written by the admin panel
+// Status values allowed to be written by the admin panel & field marshals
 const ALLOWED_STATUSES = ['Pending', 'Confirmed', 'Checked In', 'Cancelled', 'Refunded', 'Payment Pending', 'Expired'];
 
-// Fields an admin may update via PATCH (strict whitelist — total/phone/name stay tamper-proof)
-const PATCHABLE_FIELDS = ['status', 'notes', 'roomType', 'dates', 'guests'];
+// Fields an admin/marshal may update via PATCH (strict whitelist)
+const PATCHABLE_FIELDS = [
+    'status',
+    'notes',
+    'roomType',
+    'dates',
+    'guests',
+    'allocatedUnit',
+    'checkedInCount',
+    'shortCount',
+    'checkInAt',
+    'marshalName',
+    'marshalNotes',
+    'convoyTime'
+];
+
+// Helper to check if a booking matches an assigned campsite scope
+export function isBookingInCampScope(booking, campId) {
+    if (!campId || campId === 'all') return true;
+    const target = campId.toLowerCase().trim();
+    const bCampId = (booking.campsiteId || booking.packageId || '').toLowerCase().trim();
+    const bPkg = (booking.package || '').toLowerCase().trim();
+
+    if (bCampId && bCampId === target) return true;
+    if (bPkg && bPkg.includes(target)) return true;
+
+    // Cross-match friendly package names
+    if (target.includes('kolukkumalai') && bPkg.includes('kolukkumalai')) return true;
+    if (target.includes('suryanelli') && bPkg.includes('suryanelli')) return true;
+    if (target.includes('meesapulimala') && bPkg.includes('meesapulimala')) return true;
+    if (target.includes('phantom') && (bPkg.includes('phantom') || bPkg.includes('ridge'))) return true;
+    if (target.includes('vagamon') && bPkg.includes('vagamon')) return true;
+    if (target.includes('wayanad') && bPkg.includes('wayanad')) return true;
+
+    return false;
+}
 
 // Validate and safely normalize a single booking record without dropping valid records
 function normalizeRecord(body) {
@@ -53,6 +87,12 @@ function normalizeRecord(body) {
         status: status || 'Confirmed',
         source: String(body.source || 'Website Booking Engine').slice(0, 50),
         notes: String(body.notes || '').slice(0, 500),
+        checkedInCount: body.checkedInCount != null ? Number(body.checkedInCount) : null,
+        shortCount: body.shortCount != null ? Number(body.shortCount) : null,
+        checkInAt: body.checkInAt ? String(body.checkInAt).slice(0, 50) : null,
+        marshalName: body.marshalName ? String(body.marshalName).slice(0, 100) : null,
+        marshalNotes: body.marshalNotes ? String(body.marshalNotes).slice(0, 500) : null,
+        convoyTime: body.convoyTime ? String(body.convoyTime).slice(0, 50) : null,
         createdAt: String(body.createdAt || new Date().toLocaleString('en-IN', {
             day: 'numeric',
             month: 'short',
@@ -63,7 +103,7 @@ function normalizeRecord(body) {
     };
 }
 
-// ── GET: Read all bookings with optional pagination (auth required) ──
+// ── GET: Read all bookings with optional pagination (auth required with strict multi-camp scoping) ──
 export async function GET(request) {
     const ip = getClientIp(request);
 
@@ -73,9 +113,9 @@ export async function GET(request) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
 
-    // 2. Auth Check
-    const adminPayload = getAdminPayload(request);
-    if (!adminPayload) {
+    // 2. Auth Check (Allows Master Coordinator as well as Sanctuary Hosts / Marshals)
+    const authPayload = getMarshalPayload(request) || getAdminPayload(request);
+    if (!authPayload) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -86,8 +126,14 @@ export async function GET(request) {
         const limit = limitParam ? Math.min(500, Math.max(1, parseInt(limitParam, 10))) : undefined;
         const offset = offsetParam ? Math.max(0, parseInt(offsetParam, 10)) : undefined;
 
-        const bookings = await getStoredBookings({ limit, offset });
-        const role = adminPayload?.role || 'owner';
+        let bookings = await getStoredBookings({ limit, offset });
+
+        // Enforce Multi-Property Backend Isolation: Filter by campId if not Master HQ
+        if (!authPayload.isMasterAdmin && authPayload.campId && authPayload.campId !== 'all') {
+            bookings = bookings.filter(b => isBookingInCampScope(b, authPayload.campId));
+        }
+
+        const role = authPayload?.role || 'owner';
         const roleSanitized = sanitizeBookingsForRole(bookings, role);
         return NextResponse.json({ success: true, bookings: roleSanitized });
     } catch (err) {
@@ -153,17 +199,17 @@ export async function POST(request) {
     }
 }
 
-// ── PATCH: Update whitelisted fields of a booking (admin only) ──
+// ── PATCH: Update whitelisted fields of a booking (admin & authorized marshals) ──
 export async function PATCH(request) {
     const ip = getClientIp(request);
 
-    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 20, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:admin_bookings_write:${ip}`, 30, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
 
-    const adminPayload = getAdminPayload(request);
-    if (!adminPayload) {
+    const authPayload = getMarshalPayload(request) || getAdminPayload(request);
+    if (!authPayload) {
         return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -175,18 +221,30 @@ export async function PATCH(request) {
             return NextResponse.json({ success: false, message: 'Missing booking ID' }, { status: 400 });
         }
 
+        // Fetch previous state for WAL and scope check
+        const currentBookings = await getStoredBookings();
+        const prevRecord = currentBookings.find(b => b.id.toUpperCase() === String(id).toUpperCase()) || null;
+
+        // Scope verification: Marshals can only edit bookings for their assigned campsite
+        if (!authPayload.isMasterAdmin && authPayload.campId && authPayload.campId !== 'all') {
+            if (!prevRecord || !isBookingInCampScope(prevRecord, authPayload.campId)) {
+                return NextResponse.json({ success: false, message: 'Forbidden: Booking is outside your assigned campsite scope.' }, { status: 403 });
+            }
+        }
+
         // Strict whitelist — no arbitrary field injection
         const cleanUpdates = {};
         for (const key of Object.keys(updates)) {
             if (!PATCHABLE_FIELDS.includes(key)) continue;
             if (key === 'status' && !ALLOWED_STATUSES.includes(String(updates[key]))) continue;
-            if (key === 'guests') {
+            if (key === 'guests' || key === 'checkedInCount' || key === 'shortCount') {
                 const g = Number(updates[key]);
-                if (isNaN(g) || g < 1 || g > 50) continue;
-                cleanUpdates[key] = g;
+                if (!isNaN(g) && g >= 0 && g <= 100) {
+                    cleanUpdates[key] = g;
+                }
                 continue;
             }
-            if (key === 'notes') {
+            if (key === 'notes' || key === 'marshalNotes') {
                 cleanUpdates[key] = String(updates[key]).slice(0, 500);
                 continue;
             }
@@ -197,10 +255,6 @@ export async function PATCH(request) {
             return NextResponse.json({ success: false, message: 'No valid fields to update.' }, { status: 400 });
         }
 
-        // Fetch previous state for WAL
-        const currentBookings = await getStoredBookings();
-        const prevRecord = currentBookings.find(b => b.id === id) || null;
-
         const updated = await updateServerBooking(id, cleanUpdates);
 
         recordWalMutation({
@@ -209,7 +263,7 @@ export async function PATCH(request) {
             action: cleanUpdates.status ? 'STATUS_CHANGE' : 'UPDATE',
             previousState: prevRecord,
             newState: updated,
-            actor: adminPayload?.campName || 'Admin Coordinator (Master HQ)',
+            actor: authPayload?.campName || authPayload?.name || 'Sanctuary Marshal / Coordinator',
             details: `Updated reservation ${id}: ${Object.keys(cleanUpdates).join(', ')}`,
             request
         });

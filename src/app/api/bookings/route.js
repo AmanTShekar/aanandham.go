@@ -6,6 +6,7 @@ import { validateBookingPayload } from '@/lib/validation';
 import { createRazorpayOrder } from '@/lib/razorpay';
 import { addServerBooking, getStoredBookings } from '@/lib/serverBookingStore';
 import { findCampAndRoom, computeBookingTotal, campGuestCapacity, parseRoomCapacity } from '@/lib/pricing';
+import { allocateContiguousPitches } from '@/lib/pitchAllocation';
 import { logLockContention } from '@/lib/monitoring';
 import { sendBookingConfirmationEmail } from '@/lib/email';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
@@ -180,6 +181,8 @@ export async function POST(request) {
         });
         serverTotal = pricing.total > 0 ? pricing.total : serverTotal;
         discountPercent = pricing.discountPercent;
+        const discountLabel = pricing.discountLabel;
+        const discountAmount = pricing.discountAmount;
 
         const bookingId = generateBookingId();
 
@@ -210,31 +213,49 @@ export async function POST(request) {
 
         const holdExpiresAt = isOnlineGateway ? Date.now() + 10 * 60 * 1000 : null; // 10 minutes TTL for gateway checkout
 
+        // Automatically allocate contiguous pitch/unit using the pitchAllocation engine
+        const occupiedPitches = (existing || []).map(b => b.allocatedUnit || b.assignedTent).filter(Boolean);
+        const [allocatedUnit] = allocateContiguousPitches({
+            campsiteId,
+            roomType: data.roomType,
+            unitsCount: 1,
+            occupiedPitches
+        });
+
         const newBooking = {
             id: bookingId,
             slotKey,
             name: data.name,
+            email: data.email || null,
             phone: data.rawPhone,
+            campsiteId: campsiteId || null,
             package: data.package,
-            region: data.region,
+            region: data.region || 'Munnar',
             dates: data.dates,
             guests: data.guests,
+            groupType: data.groupType || 'Family / Squad',
             roomType: data.roomType,
+            allocatedUnit: allocatedUnit || 'TENT-101',
+            assignedTent: allocatedUnit || 'TENT-101',
             addons: data.addons,
             total: serverTotal,
             paidAmount: claimedPaid,
+            advancePaid: claimedPaid,
             balanceDue: Math.max(0, serverTotal - claimedPaid),
+            isBalancePaid: Math.max(0, serverTotal - claimedPaid) === 0,
             paymentMode: data.paymentMode || (isOnlineGateway ? 'Razorpay Gateway' : 'Direct UPI'),
             utrNumber: utrValue,
             dietaryChoice: data.dietaryChoice || 'Standard Campfire BBQ',
             vegCount: data.vegCount || 0,
             nonVegCount: data.nonVegCount || 0,
             mealSummary: data.mealSummary || null,
+            discountCode: discountLabel || null,
+            discountAmount: discountAmount || null,
             status: isOnlineGateway ? 'Payment Pending' : 'Pending',
             holdExpiresAt,
             razorpayOrderId: rzpOrder ? rzpOrder.id : null,
-            source: data.source,
-            notes: data.notes,
+            source: data.source || 'Website Booking Engine',
+            notes: data.notes || '',
             createdAt: new Date().toISOString()
         };
 

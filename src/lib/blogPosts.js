@@ -388,7 +388,7 @@ export const BLOG_POSTS = [
           'Phantom Head works brilliantly as the "second day" trek after a Kolukkumalai sunrise — you get the classic dawn expedition and the relaxed sunset trek in one trip. Both are available as add-ons from our camps, with guides and transport arranged.'
         ],
         internalLinks: [
-          { href: '/camps/pkg-phantom', text: 'See the Phantom Head Peak sunset package' },
+          { href: '/camps/pkg-suryanelli', text: 'See our Suryanelli Valley Glamp basecamp' },
           { href: '/camps/pkg-kolukkumalai', text: 'Pair it with the Kolukkumalai sunrise trek' }
         ]
       }
@@ -442,8 +442,7 @@ export const BLOG_POSTS = [
           'Pick Munnar for the Kolukkumalai sunrise, high-altitude tent stays, and a classic adventure itinerary. Pick Vagamon for corporate offsites, college groups, honeymooners who want pine-forest solitude, and travellers adding a second hill stop to a Kerala trip.'
         ],
         internalLinks: [
-          { href: '/camps/vagamon', text: 'Explore Vagamon Pine Forest camping' },
-          { href: '/camps/pkg-vagamon', text: 'Book the Vagamon Pine Forest package' }
+          { href: '/camps', text: 'Explore Kerala wilderness camping packages' }
         ]
       }
     ],
@@ -484,8 +483,8 @@ export const BLOG_POSTS = [
           'Munnar: Kolukkumalai & Meesapulimala sunrise treks, 4x4 jeep safaris, tea-estate walks, high-altitude glamping. Wayanad: forest treks, waterfall hikes (Chembra, Soochipara), spice-garden tours, wildlife drives, plantation stays. Adventure-preferring travellers lean Munnar; nature-and-wildlife travellers lean Wayanad.'
         ],
         internalLinks: [
-          { href: '/camps/wayanad', text: 'See Wayanad rainforest camping options' },
-          { href: '/camps/pkg-wayanad', text: 'Book the Wayanad 900 Kandi Rainforest package' }
+          { href: '/camps', text: 'See all Kerala wilderness camping options' },
+          { href: '/camps/pkg-kolukkumalai', text: 'Book the signature Kolukkumalai Sunrise package' }
         ]
       },
       {
@@ -652,7 +651,7 @@ export const BLOG_POSTS = [
         ],
         internalLinks: [
           { href: '/contact', text: 'Request a group camping quote for Munnar' },
-          { href: '/camps/pkg-vagamon', text: 'Or see the Vagamon group-friendly Pine Forest option' }
+          { href: '/camps', text: 'Explore group-friendly Kerala camping packages' }
         ]
       }
     ],

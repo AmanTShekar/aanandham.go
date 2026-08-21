@@ -1,5 +1,6 @@
 import React from 'react';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 export const metadata = {
   title: 'Basecamp Camper Check-In & QR Scanner',
@@ -14,5 +15,12 @@ export const metadata = {
 };
 
 export default function CheckinDirectPage() {
-  return <MobileMarshalScanner />;
+  return (
+    <ErrorBoundary
+      title="Scanner Console Glitch"
+      description="The basecamp check-in scanner encountered an unexpected camera or network event. Tap retry to re-initialize."
+    >
+      <MobileMarshalScanner />
+    </ErrorBoundary>
+  );
 }

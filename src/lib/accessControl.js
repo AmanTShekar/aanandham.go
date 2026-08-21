@@ -91,10 +91,17 @@ export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) 
         guide.hubName = 'KFDC Silent Valley Base Checkpost, Munnar';
         guide.parkingArea = 'KFDC Base Station Reserved Camper Parking';
         guide.offlineNote = 'Strict forest checkpost. Keep Forest ID proof and digital permit pass ready.';
-    } else if (key.includes('vattavada') || key.includes('top-station')) {
-        guide.hubName = 'Vattavada Village Basecamp Point, Munnar';
-        guide.parkingArea = 'Aanandham Vattavada Secure Farm Parking Yard';
-        guide.offlineNote = 'Dense mist expected after 4:00 PM. Follow orange trail markers.';
+    } else if (key.includes('vattavada') || key.includes('top-station') || key.includes('wildlink') || key.includes('mexico')) {
+        guide.hubName = 'Camp Wildlink / Pazhathottam Viewpoint, Vattavada';
+        guide.parkingArea = 'Opposite Orion Farmers (Tea Fed) Resort (Designated Parking Yard)';
+        guide.steps = [
+            'Munnar to Top Station: Start from Munnar town and head toward Vattavada along the main tar road (approx. 42 km).',
+            'Vattavada Forest Checkpost: Cross Top Station to reach the checkpost. Register your name, contact & vehicle details.',
+            'Turn Towards Pazhathottam: Continue toward Koviloor. Just before reaching Koviloor town, take the concrete hairpin / U-turn road on the left side that heads downhill.',
+            'Pazhathottam Viewpoint (8 km): Ask locals for Pazhathottam S Valavu or Pazhathottam Viewpoint.',
+            'Final Mud Road Approach: Locate Orion Farmers (Tea Fed) Resort (wooden fencing). Take the mud road directly opposite Orion to arrive at Camp Wildlink.'
+        ];
+        guide.offlineNote = 'CRUCIAL NAVIGATION WARNING: Do not follow Google Maps deviations before Top Station that lead to rugged off-road tracks. Stick strictly to the main tarred road until you pass Top Station. The final 8 km is semi-off-road but manageable for bikes, sedans, hatchbacks, and SUVs.';
     } else if (key.includes('anaerangal') || key.includes('cardamom') || key.includes('anaharan')) {
         guide.hubName = 'Anaerangal Lake Viewpoint Basecamp Hub';
         guide.parkingArea = 'Estate Private Shaded Camper Parking';

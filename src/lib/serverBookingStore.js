@@ -63,17 +63,40 @@ function mapFromPrisma(record) {
     return {
         ...record,
         holdExpiresAt: record.holdExpiresAt != null ? Number(record.holdExpiresAt) : null,
-        paidAt: record.paidAt ? record.paidAt.toISOString() : null,
+        paidAt: record.paidAt ? (typeof record.paidAt === 'string' ? record.paidAt : record.paidAt.toISOString()) : null,
+        checkInAt: record.checkInAt ? (typeof record.checkInAt === 'string' ? record.checkInAt : record.checkInAt.toISOString()) : null,
         createdAt: typeof record.createdAt === 'string' ? record.createdAt : record.createdAt?.toISOString?.() || String(record.createdAt),
         addons: Array.isArray(record.addons) ? record.addons : (typeof record.addons === 'string' ? JSON.parse(record.addons || '[]') : []),
+        attendanceRoster: Array.isArray(record.attendanceRoster) ? record.attendanceRoster : (typeof record.attendanceRoster === 'string' ? JSON.parse(record.attendanceRoster || '[]') : []),
         utrNumber: record.utrNumber || null,
-        paidAmount: record.paidAmount != null ? Number(record.paidAmount) : null,
+        paidAmount: record.paidAmount != null ? Number(record.paidAmount) : (record.advancePaid != null ? Number(record.advancePaid) : null),
+        advancePaid: record.advancePaid != null ? Number(record.advancePaid) : (record.paidAmount != null ? Number(record.paidAmount) : null),
         balanceDue: record.balanceDue != null ? Number(record.balanceDue) : null,
+        balanceCollected: record.balanceCollected != null ? Number(record.balanceCollected) : null,
+        isBalancePaid: Boolean(record.isBalancePaid),
         paymentMode: record.paymentMode || null,
+        settlementMethod: record.settlementMethod || null,
         mealSummary: record.mealSummary || null,
         dietaryChoice: record.dietaryChoice || null,
         vegCount: record.vegCount != null ? Number(record.vegCount) : null,
-        nonVegCount: record.nonVegCount != null ? Number(record.nonVegCount) : null
+        nonVegCount: record.nonVegCount != null ? Number(record.nonVegCount) : null,
+        email: record.email || null,
+        pickupDropStatus: record.pickupDropStatus || null,
+        pickupTime: record.pickupTime || null,
+        dropTime: record.dropTime || null,
+        checkedInCount: record.checkedInCount != null ? Number(record.checkedInCount) : null,
+        shortCount: record.shortCount != null ? Number(record.shortCount) : null,
+        marshalName: record.marshalName || null,
+        marshalNotes: record.marshalNotes || null,
+        convoyTime: record.convoyTime || null,
+        emergencyPhone: record.emergencyPhone || null,
+        discountCode: record.discountCode || null,
+        discountAmount: record.discountAmount != null ? Number(record.discountAmount) : null,
+        allocatedUnit: record.allocatedUnit || record.assignedTent || null,
+        assignedTent: record.assignedTent || record.allocatedUnit || null,
+        wristbandRange: record.wristbandRange || null,
+        campsiteId: record.campsiteId || null,
+        lastNotifiedStatus: record.lastNotifiedStatus || null
     };
 }
 
@@ -86,6 +109,9 @@ function mapToPrisma(data) {
     if (payload.paidAt !== undefined) {
         payload.paidAt = payload.paidAt ? new Date(payload.paidAt) : null;
     }
+    if (payload.checkInAt !== undefined) {
+        payload.checkInAt = payload.checkInAt ? new Date(payload.checkInAt) : null;
+    }
     if (payload.createdAt !== undefined) {
         const d = new Date(payload.createdAt);
         payload.createdAt = isNaN(d.getTime()) ? new Date() : d;
@@ -93,14 +119,25 @@ function mapToPrisma(data) {
     if (payload.addons !== undefined) {
         payload.addons = Array.isArray(payload.addons) ? payload.addons : [];
     }
+    if (payload.attendanceRoster !== undefined) {
+        payload.attendanceRoster = Array.isArray(payload.attendanceRoster) ? payload.attendanceRoster : [];
+    }
     if (payload.total !== undefined) {
         payload.total = Number(payload.total) || 0;
     }
-    if (payload.paidAmount !== undefined) {
-        payload.paidAmount = payload.paidAmount != null ? Number(payload.paidAmount) : null;
+    if (payload.paidAmount !== undefined || payload.advancePaid !== undefined) {
+        const amt = payload.paidAmount !== undefined ? payload.paidAmount : payload.advancePaid;
+        payload.paidAmount = amt != null ? Number(amt) : null;
+        payload.advancePaid = payload.paidAmount;
     }
     if (payload.balanceDue !== undefined) {
         payload.balanceDue = payload.balanceDue != null ? Number(payload.balanceDue) : null;
+    }
+    if (payload.balanceCollected !== undefined) {
+        payload.balanceCollected = payload.balanceCollected != null ? Number(payload.balanceCollected) : null;
+    }
+    if (payload.isBalancePaid !== undefined) {
+        payload.isBalancePaid = Boolean(payload.isBalancePaid);
     }
     if (payload.guests !== undefined) {
         payload.guests = Number(payload.guests) || 1;
@@ -111,19 +148,22 @@ function mapToPrisma(data) {
     if (payload.nonVegCount !== undefined) {
         payload.nonVegCount = payload.nonVegCount != null ? Number(payload.nonVegCount) : null;
     }
+    if (payload.checkedInCount !== undefined) {
+        payload.checkedInCount = payload.checkedInCount != null ? Number(payload.checkedInCount) : null;
+    }
+    if (payload.shortCount !== undefined) {
+        payload.shortCount = payload.shortCount != null ? Number(payload.shortCount) : null;
+    }
+    if (payload.assignedTent !== undefined || payload.allocatedUnit !== undefined) {
+        const unit = payload.assignedTent || payload.allocatedUnit || null;
+        payload.assignedTent = unit;
+        payload.allocatedUnit = unit;
+    }
+    if (payload.discountAmount !== undefined) {
+        payload.discountAmount = payload.discountAmount != null ? Number(payload.discountAmount) : null;
+    }
 
-    // Strip in-memory extra fields that are not defined in the Prisma PostgreSQL schema
-    delete payload.email;
-    delete payload.campsiteId;
-    delete payload.advancePaid;
-    delete payload.isBalancePaid;
-    delete payload.attendanceRoster;
-    delete payload.checkedInCount;
-    delete payload.shortCount;
-    delete payload.checkInAt;
-    delete payload.marshalName;
-    delete payload.marshalNotes;
-    delete payload.convoyTime;
+    // Strip transient non-database flags
     delete payload.lastUpdated;
 
     return payload;
@@ -160,26 +200,29 @@ export async function getStoredBookings({ limit, offset } = {}) {
 }
 
 /**
- * Persist / Bulk-sync bookings list
+ * Persist / Bulk-sync bookings list with non-destructive upserts
  */
-export async function saveStoredBookings(bookings) {
+export async function saveStoredBookings(bookings, { hardSync = false } = {}) {
     if (!Array.isArray(bookings)) return false;
     writeLocalBookings(bookings);
     memoryStore = bookings;
 
     if (isPrismaConfigured && prisma) {
         try {
-            const incomingIds = bookings.map(b => b.id).filter(Boolean);
-            if (incomingIds.length > 0) {
-                await prisma.booking.deleteMany({
-                    where: {
-                        id: { notIn: incomingIds }
-                    }
-                });
-            } else {
-                await prisma.booking.deleteMany({});
+            // ONLY delete records if hardSync is explicitly true, NEVER on routine save
+            if (hardSync) {
+                const incomingIds = bookings.map(b => b.id).filter(Boolean);
+                if (incomingIds.length > 0) {
+                    await prisma.booking.deleteMany({
+                        where: {
+                            id: { notIn: incomingIds }
+                        }
+                    });
+                }
             }
+            // Non-destructive individual upserts
             for (const b of bookings) {
+                if (!b || !b.id) continue;
                 const mapped = mapToPrisma(b);
                 await prisma.booking.upsert({
                     where: { id: b.id },

@@ -38,3 +38,7 @@ next-env.d.ts
 # dynamic data storage
 .data/
 
+# member auth pages (hidden from public git history)
+/src/app/login/
+/src/app/signup/
+/src/components/AuthPanel.jsx
