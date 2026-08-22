@@ -8,10 +8,14 @@ import {
 } from '../AdminSharedStyles';
 
 export default function AdminFinancialsTab({
-    financialStats,
-    bookings,
-    handleExportLedgerCSV
+    financialStats = {},
+    bookings = [],
+    handleExportLedgerCSV = () => {}
 }) {
+    const totalRevenue = financialStats?.totalRevenue ?? 0;
+    const estimatedDirectCosts = financialStats?.estimatedDirectCosts ?? Math.round(totalRevenue * 0.45);
+    const estimatedNetProfit = financialStats?.estimatedNetProfit ?? Math.round(totalRevenue * 0.55);
+    const profitMarginPercent = financialStats?.profitMarginPercent ?? (totalRevenue > 0 ? 55 : 0);
     return (
         <div>
                     <div style={{ width: '100%' }}>

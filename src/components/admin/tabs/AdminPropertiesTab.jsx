@@ -1,20 +1,29 @@
 "use client";
 import React from 'react';
+import Link from 'next/link';
 import { Tent, Mountain, Plus, ChevronRight, Trees, Sparkles, MapPin } from 'lucide-react';
 import { inr } from '../../../lib/utils';
 import LucideAmenityIcon from '../../common/LucideAmenityIcon';
 import { 
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
-    ROW_SPACE_10, H2_STYLE, CARD_CLICKABLE, ROW_SPACE_WRAP, ROW_SPACE_14 
+    ROW_SPACE_10, H2_STYLE, CARD_CLICKABLE, ROW_SPACE_WRAP, ROW_SPACE_14, IMG_FILL_STYLE 
 } from '../AdminSharedStyles';
 
 export default function AdminPropertiesTab({
-    properties,
-    propertyFilterRegion,
-    setPropertyFilterRegion,
-    openPropertyModal,
-    setActivePropertyDetailId
+    properties = [],
+    propertyFilterRegion = 'All',
+    setPropertyFilterRegion = () => {},
+    openPropertyModal = () => {},
+    handleOpenPropertyModal,
+    setActivePropertyDetailId = () => {},
+    handleAdjustPrice = () => {},
+    handleToggleAvailability = () => {}
 }) {
+    const onOpenModal = openPropertyModal || handleOpenPropertyModal;
+    const filteredProperties = Array.isArray(properties)
+        ? properties.filter(p => !propertyFilterRegion || propertyFilterRegion === 'All' || p.region === propertyFilterRegion)
+        : [];
+
     return (
         <div>
                     <div style={{ width: '100%' }}>
@@ -27,7 +36,7 @@ export default function AdminPropertiesTab({
                                     Regional Campsites & Glamping Pods
                                 </h2>
                             </div>
-                            <button onClick={() => handleOpenPropertyModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                            <button onClick={() => onOpenModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
                                 + Add New Campsite
                             </button>
                         </div>
@@ -146,7 +155,7 @@ style={{
                                             >
                                                 {prop.isAvailable ? 'Mark Sold Out' : 'Mark Available'}
                                             </button>
-                                            <button onClick={() => handleOpenPropertyModal(prop)} style={{ padding: '10px 14px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}>
+                                            <button onClick={() => onOpenModal(prop)} style={{ padding: '10px 14px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12px', fontWeight: '700', cursor: 'pointer' }}>
 Edit 
                                             </button>
                                         </div>

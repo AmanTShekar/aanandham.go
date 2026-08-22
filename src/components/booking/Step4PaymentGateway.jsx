@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { ShieldCheck, Lock, QrCode, ArrowLeft, Sparkles, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Lock, QrCode, ArrowLeft, Sparkles, AlertCircle, Tent, Hourglass } from 'lucide-react';
 import { WhatsAppIcon } from '../common/BrandIcons';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
@@ -20,18 +20,20 @@ export default function Step4PaymentGateway({
     discounts,
     baseLodgingAmount,
     addonsAmount,
-    totalAmount,
-    advanceAmount,
-    balanceAmount,
-    paymentMode,
-    setPaymentMode,
-    paymentSettings,
+    totalAmount = 0,
+    advanceAmount = 0,
+    balanceAmount = 0,
+    paymentMode = 'advance',
+    setPaymentMode = () => {},
+    paymentSettings = {},
     payeeName,
-    isSubmitting,
-    handleRazorpayCheckout,
-    handleDirectWhatsAppBooking,
-    setStep
+    isSubmitting = false,
+    handleRazorpayCheckout = () => {},
+    handleDirectWhatsAppBooking = () => {},
+    setStep = () => {}
 }) {
+    const grandTotal = totalAmount || 0;
+    const payableNow = paymentMode === 'advance' ? advanceAmount : grandTotal;
     return (
                                 <div>
                                     {/* Payment Mode Selector */}

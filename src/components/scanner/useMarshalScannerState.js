@@ -6,6 +6,7 @@ import {
     CheckCircle2, AlertCircle, Sparkles, Check, X, ShieldCheck
 } from 'lucide-react';
 import { AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
+import { getSecurityHeaders } from '@/lib/securityClient';
 
 export function useMarshalScannerState({ onBackToAdmin = null, embedded = false, forcedScope = null }) {
     const jsQRRef = useRef(null);

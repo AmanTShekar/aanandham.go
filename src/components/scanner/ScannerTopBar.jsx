@@ -1,32 +1,30 @@
 "use client";
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
 import { 
-    Camera, Flashlight, RefreshCw, Upload, Search, CheckCircle2, AlertCircle, 
-    Clock, UserCheck, UserX, Users, Phone, MessageCircle, DollarSign, 
-    Utensils, Tent, MapPin, Home, ArrowLeft, ArrowRight, Volume2, VolumeX, 
-    X, QrCode, Sparkles, ShieldCheck, Power, SlidersHorizontal, ChevronRight, 
-    ChevronDown, TrendingUp, ListFilter, Send, Mail, Flame, Compass, Ticket, 
-    CheckSquare, Square, UserPlus, UserMinus, Tag, Layers, History, Check, 
-    FileText, Printer, Share2, Award, Lock, Unlock, KeyRound, ShieldAlert, 
-    LogIn, Eye, EyeOff, Copy, CreditCard, Edit2, Wallet, Sunrise, Mountain, 
-    Trees, Leaf, ChefHat, CircleCheck, CircleX, Hourglass, PersonStanding, 
-    Crown, Drumstick, Truck, Smartphone, IndianRupee 
+    Camera, Users, Utensils, ArrowLeft, Home, 
+    Lock, Crown, Flame 
 } from 'lucide-react';
-import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, StationGlyph, AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
+import { StationGlyph } from './ScannerShared';
 
-
-export default function ScannerTopBar({ state, onBackToAdmin }) {
+export default function ScannerTopBar({ state = {}, onBackToAdmin = null, embedded = false }) {
     const {
         activeTab, setActiveTab,
-        authStation,
+        authStation = {},
         soundEnabled, setSoundEnabled,
         handleLockConsole,
+        handleHostLogout,
+        scannedBooking,
+        setScannedBooking,
         clearedGatePermit,
-        scopedStats,
-        fetchRosterData,
-        rosterLoading
+        resetScanner,
+        handleResetScanner,
+        stopCamera,
+        setIsCameraEnabled,
+        rosterList = []
     } = state;
+    const onReset = resetScanner || handleResetScanner || (() => {});
+    const onLock = handleHostLogout || handleLockConsole || (() => {});
 
     return (
         <div>
@@ -48,71 +46,71 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                 {/* Left: Back / Home & Brand Logo */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
                     {!embedded && (
-                    <>
-                    {onBackToAdmin ? (
-                        <button
-                            type="button"
-                            onClick={onBackToAdmin}
-                            title="Return to Coordinator Dashboard"
-                            style={{
-                                background: 'rgba(255, 255, 255, 0.06)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                color: '#FFFFFF',
-                                borderRadius: '10px',
-                                width: '34px',
-                                height: '34px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                flexShrink: 0
-                            }}
-                        >
-                            <ArrowLeft size={16} />
-                        </button>
-                    ) : (scannedBooking || clearedGatePermit) ? (
-                        <button
-                            type="button"
-                            onClick={resetScanner}
-                            title="Close Ticket & Return to Scanner"
-                            style={{
-                                background: 'rgba(255, 255, 255, 0.06)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                color: '#FFFFFF',
-                                borderRadius: '10px',
-                                width: '34px',
-                                height: '34px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                cursor: 'pointer',
-                                flexShrink: 0
-                            }}
-                        >
-                            <ArrowLeft size={16} />
-                        </button>
-                    ) : (
-                        <Link
-                            href="/"
-                            title="Return to Aanandham Homepage"
-                            style={{
-                                background: 'rgba(255, 255, 255, 0.06)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                color: '#FFFFFF',
-                                borderRadius: '10px',
-                                width: '34px',
-                                height: '34px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                textDecoration: 'none',
-                                flexShrink: 0
-                            }}
-                        >
-                            <Home size={15} />
-                        </Link>
-                    )}
-                    </>
+                        <>
+                            {onBackToAdmin ? (
+                                <button
+                                    type="button"
+                                    onClick={onBackToAdmin}
+                                    title="Return to Coordinator Dashboard"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.06)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        color: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        width: '34px',
+                                        height: '34px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    <ArrowLeft size={16} />
+                                </button>
+                            ) : (scannedBooking || clearedGatePermit) ? (
+                                <button
+                                    type="button"
+                                    onClick={onReset}
+                                    title="Close Ticket & Return to Scanner"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.06)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        color: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        width: '34px',
+                                        height: '34px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    <ArrowLeft size={16} />
+                                </button>
+                            ) : (
+                                <Link
+                                    href="/"
+                                    title="Return to Aanandham Homepage"
+                                    style={{
+                                        background: 'rgba(255, 255, 255, 0.06)',
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        color: '#FFFFFF',
+                                        borderRadius: '10px',
+                                        width: '34px',
+                                        height: '34px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        textDecoration: 'none',
+                                        flexShrink: 0
+                                    }}
+                                >
+                                    <Home size={15} />
+                                </Link>
+                            )}
+                        </>
                     )}
 
                     {/* Sleek Golden Host Brand Badge & Title */}
@@ -186,7 +184,7 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                             </div>
                             {!embedded && (
                             <span style={{ fontSize: '10px', color: '#8E9B92', display: 'block', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {authStation.isMasterAdmin ? 'Enterprise Multi-Sanctuary Access' : `${authStation.campName} · Station Locked`}
+                                {authStation.isMasterAdmin ? 'Enterprise Multi-Sanctuary Access' : `${authStation.campName || 'Basecamp'} · Station Locked`}
                             </span>
                             )}
                         </div>
@@ -196,7 +194,7 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                 {/* Right: Actions (Lock Console) */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
                     <button
-                        onClick={handleHostLogout}
+                        onClick={onLock}
                         style={{
                             background: 'rgba(239, 68, 68, 0.12)',
                             border: '1px solid rgba(239, 68, 68, 0.3)',
@@ -232,7 +230,10 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                     zIndex: 35
                 }}>
                     <button
-                        onClick={() => { setActiveTab('scanner'); setScannedBooking(null); }}
+                        onClick={() => { 
+                            if (setActiveTab) setActiveTab('scanner'); 
+                            if (setScannedBooking) setScannedBooking(null); 
+                        }}
                         style={{
                             flex: 1,
                             padding: '10px 8px',
@@ -255,7 +256,12 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                     </button>
 
                     <button
-                        onClick={() => { setActiveTab('roster'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
+                        onClick={() => { 
+                            if (setActiveTab) setActiveTab('roster'); 
+                            if (setScannedBooking) setScannedBooking(null); 
+                            if (stopCamera) stopCamera(); 
+                            if (setIsCameraEnabled) setIsCameraEnabled(false); 
+                        }}
                         style={{
                             flex: 1,
                             padding: '10px 8px',
@@ -278,7 +284,12 @@ export default function ScannerTopBar({ state, onBackToAdmin }) {
                     </button>
 
                     <button
-                        onClick={() => { setActiveTab('kitchen'); setScannedBooking(null); stopCamera(); setIsCameraEnabled(false); }}
+                        onClick={() => { 
+                            if (setActiveTab) setActiveTab('kitchen'); 
+                            if (setScannedBooking) setScannedBooking(null); 
+                            if (stopCamera) stopCamera(); 
+                            if (setIsCameraEnabled) setIsCameraEnabled(false); 
+                        }}
                         style={{
                             flex: 1,
                             padding: '10px 8px',

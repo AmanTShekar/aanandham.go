@@ -2,25 +2,31 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Phone, KeyRound, Briefcase, ShieldCheck, Mountain } from 'lucide-react';
+import CustomSelectDropdown from '../../CustomSelectDropdown';
 import { 
-    FORM_INPUT_STYLE, FIELD_LABEL_STYLE, H2_STYLE, COL_GAP_14 
+    FORM_INPUT_STYLE, FIELD_LABEL_STYLE, H2_STYLE, COL_GAP_14, MICRO_LABEL 
 } from '../AdminSharedStyles';
 
 export default function MarshalEditModal({
-    isMarshalModalOpen,
-    setIsMarshalModalOpen,
-    editingMarshal,
-    marshalForm,
-    setMarshalForm,
-    handleSaveMarshal,
-    properties
+    isMarshalModalOpen = false,
+    setIsMarshalModalOpen = () => {},
+    editingMarshal = null,
+    marshalForm = {},
+    setMarshalForm = () => {},
+    handleSaveMarshal = () => {},
+    handleSaveMarshalForm = null,
+    properties = []
 }) {
     if (!isMarshalModalOpen) return null;
+    const onSubmit = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        const handler = handleSaveMarshal || handleSaveMarshalForm;
+        if (typeof handler === 'function') handler(e);
+    };
     return (
         <AnimatePresence>
-            <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
-                    <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0px' }}>
-                        <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0 }} className="admin-modal-box">
+            <div style={{ position: 'fixed', inset: 0, zIndex: 100010, background: 'rgba(0, 0, 0, 0.65)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                <motion.div initial={{ scale: 0.96, y: 14 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.96, opacity: 0 }} className="admin-modal-box">
 
                             {/* ── Header ── */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px', gap: '12px' }}>
@@ -54,7 +60,7 @@ export default function MarshalEditModal({
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSaveMarshalForm} style={COL_GAP_14}>
+                            <form onSubmit={onSubmit} style={COL_GAP_14}>
 
                                 {/* Full Name */}
                                 <div>
@@ -172,7 +178,6 @@ export default function MarshalEditModal({
                                 </button>
                             </form>
                         </motion.div>
-                    </div>
             </div>
         </AnimatePresence>
     );

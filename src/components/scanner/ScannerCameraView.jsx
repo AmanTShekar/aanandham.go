@@ -3,30 +3,33 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
     Camera, Flashlight, RefreshCw, Upload, Search, CheckCircle2, AlertCircle, 
-    Sparkles, ArrowLeft, ArrowRight, X, QrCode, Power, Check, Tent, Users, Compass, Utensils, IndianRupee, ShieldCheck
+    Sparkles, ArrowLeft, ArrowRight, X, QrCode, Power, Check, Tent, Users, Compass, Utensils, IndianRupee, ShieldCheck, Award
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_6, ROW_SPACE } from './ScannerShared';
 
-export default function ScannerCameraView({ state }) {
+export default function ScannerCameraView({ state = {} }) {
     const {
+        activeTab = 'scanner',
+        setActiveTab = () => {},
         videoRef,
         isCameraEnabled,
         hasTorchSupport,
         torchOn,
         startCamera,
         stopCamera,
-        toggleTorch,
-        setFacingMode,
-        handleImageUpload,
+        toggleCameraPower = () => {},
+        toggleTorch = () => {},
+        setFacingMode = () => {},
+        handleImageUpload = () => {},
         isValidating,
         clearedGatePermit, setClearedGatePermit,
         scannedBooking,
-        setIsManualModalOpen,
-        setIsTestEmailModalOpen,
-        handleTriggerSeedData,
+        setIsManualModalOpen = () => {},
+        setIsTestEmailModalOpen = () => {},
+        handleTriggerSeedData = () => {},
         isTestSeeding,
-        resetScanner
-    } = state;
+        resetScanner = () => {}
+    } = state || {};
 
     return (
         <div style={{

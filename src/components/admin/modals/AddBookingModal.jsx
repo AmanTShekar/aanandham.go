@@ -72,7 +72,7 @@ export default function AddBookingModal({
                                     style={FORM_INPUT_STYLE}
                                 >
                                     {(properties || []).map(p => (
-                                        <option key={p.id || p.name} value={p.name}>{p.name}</option>
+                                        <option key={p.id} value={p.title || p.name}>{p.title || p.name}</option>
                                     ))}
                                     <option value="Kolukkumalai Sunrise Glamping">Kolukkumalai Sunrise Glamping</option>
                                     <option value="900 Kandi Rainforest Retreat">900 Kandi Rainforest Retreat</option>

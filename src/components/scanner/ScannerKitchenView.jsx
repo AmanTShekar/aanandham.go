@@ -3,20 +3,24 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
     ChefHat, Utensils, Drumstick, Users, Phone, MessageCircle, 
-    DollarSign, Flame, Clock, Tent, MapPin, Truck, Smartphone, Check, AlertCircle
+    DollarSign, Flame, Clock, Tent, MapPin, Truck, Smartphone, Check, AlertCircle,
+    Leaf, Copy, TrendingUp, FileText, Hourglass
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, StationGlyph, AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
 
-export default function ScannerKitchenView({ state }) {
+export default function ScannerKitchenView({ state = {} }) {
     const {
-        authStation,
+        authStation = {},
         selectedCampground,
-        handleSelectCampground,
-        campIsolatedRoster,
-        activeStats,
-        sendKitchenWhatsApp,
-        isGuestMatchingCamp
-    } = state;
+        handleSelectCampground = () => {},
+        campIsolatedRoster = [],
+        activeStats = {},
+        sendKitchenWhatsApp = () => {},
+        isGuestMatchingCamp = () => true,
+        handleCopyKitchenHeadcount = state?.handleCopyKitchenHeadcount || (() => {}),
+        getKitchenDispatchText = state?.getKitchenDispatchText || (() => ''),
+        selectGuestFromRoster = state?.selectGuestFromRoster || (() => {})
+    } = state || {};
 
     return (
         <main style={{
@@ -54,14 +58,14 @@ export default function ScannerKitchenView({ state }) {
                                     justifyContent: 'center',
                                     fontSize: '18px'
                                 }}>
-                                    <StationGlyph icon={authStation.icon} size={24} />
+                                    <StationGlyph icon={authStation?.icon} size={24} />
                                 </div>
                                 <div>
                                     <div style={ROW_GAP_8}>
                                         <span style={{ fontSize: '15px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '0.3px' }}>
-                                            {authStation.isMasterAdmin ? 'Master Enterprise Kitchen' : authStation.campName}
+                                            {authStation?.isMasterAdmin ? 'Master Enterprise Kitchen' : (authStation?.campName || 'Field Kitchen')}
                                         </span>
-                                        {!authStation.isMasterAdmin && (
+                                        {!authStation?.isMasterAdmin && (
                                             <span style={{
                                                 fontSize: '9.5px',
                                                 color: '#60A5FA',
@@ -574,13 +578,13 @@ export default function ScannerKitchenView({ state }) {
                             <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#F87171', display: 'block', fontWeight: '700' }}>Balance To Collect</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#EF4444', display: 'block', marginTop: '2px' }}>
-                                    ₹{activeStats.totalBalanceDue.toLocaleString('en-IN')}
+                                    ₹{Number(activeStats?.totalBalanceDue || 0).toLocaleString('en-IN')}
                                 </span>
                             </div>
                             <div style={{ background: 'rgba(74, 222, 128, 0.08)', border: '1px solid rgba(74, 222, 128, 0.2)', padding: '14px', borderRadius: '14px' }}>
                                 <span style={{ fontSize: '11px', color: '#4ADE80', display: 'block', fontWeight: '700' }}>Balance Settled at Gate</span>
                                 <span style={{ fontSize: '24px', fontWeight: '900', color: '#4ADE80', display: 'block', marginTop: '2px' }}>
-                                    ₹{activeStats.totalBalanceCollected.toLocaleString('en-IN')}
+                                    ₹{Number(activeStats?.totalBalanceCollected || 0).toLocaleString('en-IN')}
                                 </span>
                             </div>
                         </div>

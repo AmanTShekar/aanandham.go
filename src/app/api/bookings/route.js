@@ -199,14 +199,16 @@ export async function POST(request) {
             if (serverTotal < 100) {
                 return NextResponse.json({ success: false, message: 'Invalid booking amount.' }, { status: 400 });
             }
+            const amountToCharge = claimedPaid > 0 ? claimedPaid : serverTotal;
             rzpOrder = await createRazorpayOrder({
-                amountInRupees: serverTotal,
+                amountInRupees: amountToCharge,
                 receiptId: bookingId,
                 notes: {
                     guestName: data.name,
                     package: data.package,
                     dates: data.dates,
-                    guests: data.guests
+                    guests: data.guests,
+                    paymentMode: data.paymentMode
                 }
             });
         }
@@ -284,11 +286,18 @@ export async function POST(request) {
         const resData = {
             success: true,
             bookingId,
+            booking: newBooking,
             status: 'Payment Pending',
             holdExpiresAt,
             ttlSeconds: 600,
             discountPercent,
-            razorpayKeyId: process.env.RAZORPAY_KEY_ID || null,
+            keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
+            razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
+            order: {
+                id: rzpOrder.id,
+                amount: rzpOrder.amount,
+                currency: rzpOrder.currency || 'INR'
+            },
             razorpayOrder: {
                 id: rzpOrder.id,
                 amount: rzpOrder.amount,

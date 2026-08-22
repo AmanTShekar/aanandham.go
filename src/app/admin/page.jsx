@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { AnimatePresence } from 'framer-motion';
+import { QrCode, X } from 'lucide-react';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
 import { useAdminPortalState } from '@/components/admin/useAdminPortalState';
@@ -47,10 +48,10 @@ function AdminPortalInner() {
         isAddBookingModalOpen, setIsAddBookingModalOpen, newBookingForm, setNewBookingForm, handleSaveBooking,
         isEventModalOpen, setIsEventModalOpen, editingEvent, setEditingEvent, eventForm, setEventForm, handleSaveEvent,
         isMarshalModalOpen, setIsMarshalModalOpen, editingMarshal, setEditingMarshal, marshalForm, setMarshalForm, handleSaveMarshal,
-        deleteConfirmDialog, closeDeleteConfirm,
+        deleteConfirmDialog, setDeleteConfirmDialog, closeDeleteConfirm,
         // Tab specific
         stats, filteredBookings, bookingSearch, setBookingSearch, bookingFilterStatus, setBookingFilterStatus,
-        bookingFilterCamp, setBookingFilterCamp, copiedBookingId, isExportingCsv, handleExportBookingsCsv,
+        bookingFilterCamp, setBookingFilterCamp, bookingSortBy, setBookingSortBy, copiedBookingId, isExportingCsv, handleExportBookingsCsv,
         handleStatusChange, handleStatusUpdate, handleShareBookingWhatsApp, handleCopyBookingPassLink, openDeleteConfirm,
         filteredProperties, propertyFilterRegion, setPropertyFilterRegion, handleDeleteProperty,
         filteredEvents, handleDeleteEvent, filteredMarshals, handleDeleteMarshal,
@@ -62,7 +63,8 @@ function AdminPortalInner() {
         filteredLogs, filteredInquiries,
         // Data loading & actions
         isLoadingBookings, fetchBookings, isOnlineMode, handleDeleteBooking, handleExportBookingsCSV,
-        handleQuickAddStaffPreset, handleExportLedgerCSV, auditLogs, isLoadingAudit, fetchAuditLogs, inquiries, fetchInquiries
+        handleQuickAddStaffPreset, handleExportLedgerCSV, auditLogs, isLoadingAudit, fetchAuditLogs, inquiries, fetchInquiries,
+        securityOverview
     } = admin;
 
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId) || null;
@@ -236,15 +238,16 @@ function AdminPortalInner() {
             />
 
             {/* Main Content Area */}
-            <main style={{
+            <main className="no-scrollbar admin-scroll-container" style={{
                 flex: 1,
                 minWidth: 0,
-                padding: isMobile ? '16px' : '28px 36px',
-                marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '72px' : '260px'),
+                width: '100%',
+                padding: isMobile ? '16px 12px' : '32px 42px',
+                marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '76px' : '270px'),
                 transition: 'margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '24px'
+                gap: '26px'
             }}>
                 <AdminHeader
                     activeTab={activeTab}
@@ -263,13 +266,18 @@ function AdminPortalInner() {
                         stats={stats}
                         properties={properties}
                         bookings={bookings}
+                        events={events}
                         marshals={marshals}
+                        paymentSettings={paymentSettings}
                         setActiveTab={setActiveTab}
                         openPropertyModal={openPropertyModal}
                         setIsAddBookingModalOpen={setIsAddBookingModalOpen}
                         setIsMarshalModalOpen={setIsMarshalModalOpen}
                         setScannerOverlayOpen={setScannerOverlayOpen}
                         fetchBookings={fetchBookings}
+                        fetchAuditLogs={fetchAuditLogs}
+                        fetchInquiries={fetchInquiries}
+                        handleExportBookingsCSV={handleExportBookingsCSV}
                     />
                 )}
 
@@ -402,7 +410,7 @@ function AdminPortalInner() {
                 setIsAddBookingModalOpen={setIsAddBookingModalOpen}
                 newBookingForm={newBookingForm}
                 setNewBookingForm={setNewBookingForm}
-                handleSaveManualBooking={handleSaveManualBooking}
+                handleSaveManualBooking={handleSaveBooking}
                 properties={properties}
             />
 
@@ -416,7 +424,12 @@ function AdminPortalInner() {
                 setImageUrlInput={setImageUrlInput}
                 handleSaveProperty={handleSaveProperty}
                 handleUploadPhoto={handleUploadPhoto}
-                handleRemovePhoto={handleRemovePhoto}
+                handleRemovePhoto={(idx) => {
+                    const current = Array.isArray(propertyForm?.gallery) ? propertyForm.gallery : [];
+                    const next = [...current];
+                    next.splice(idx, 1);
+                    setPropertyForm(prev => ({ ...prev, gallery: next }));
+                }}
             />
 
             <EventEditModal
@@ -436,6 +449,7 @@ function AdminPortalInner() {
                 marshalForm={marshalForm}
                 setMarshalForm={setMarshalForm}
                 handleSaveMarshal={handleSaveMarshal}
+                handleSaveMarshalForm={handleSaveMarshal}
                 properties={properties}
             />
 
@@ -486,7 +500,7 @@ function AdminPortalInner() {
                         </button>
                     </div>
                     <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
-                        <MobileMarshalScanner embedded />
+                        <MobileMarshalScanner onBackToAdmin={() => setScannerOverlayOpen(false)} embedded />
                     </div>
                 </div>
             )}

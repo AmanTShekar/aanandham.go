@@ -1,24 +1,87 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     X, CheckCircle2, AlertCircle, Clock, Users, Phone, MessageCircle, 
     DollarSign, Utensils, Tent, MapPin, ArrowLeft, Ticket, CheckSquare, 
     Square, UserPlus, Tag, Layers, Check, CreditCard, Wallet, Flame, Compass, IndianRupee,
-    ChevronDown, Edit2, ShieldAlert, Smartphone
+    ChevronDown, Edit2, ShieldAlert, Smartphone, Crown, Drumstick, Leaf, Sunrise, Mountain, Trees, ChefHat
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, getCleanWhatsAppPhone } from './ScannerShared';
 
-export default function ScannerCheckInModal({ state }) {
+function CustomDropdown({ label, value, options = [], onChange }) {
+    return (
+        <div style={{ marginTop: '8px' }}>
+            {label && (
+                <label style={{ fontSize: '11px', fontWeight: '800', color: '#8E9B92', display: 'block', marginBottom: '6px' }}>
+                    {label}
+                </label>
+            )}
+            <select
+                value={value}
+                onChange={e => onChange?.(e.target.value)}
+                style={{
+                    width: '100%',
+                    padding: '10px 12px',
+                    borderRadius: '12px',
+                    background: '#08120A',
+                    border: '1px solid rgba(255, 255, 255, 0.14)',
+                    color: '#FFFFFF',
+                    fontSize: '12.5px',
+                    fontWeight: '700',
+                    outline: 'none',
+                    cursor: 'pointer'
+                }}
+            >
+                {options.map((opt, i) => {
+                    const optVal = typeof opt === 'string' ? opt : opt.value || opt.label;
+                    const optLabel = typeof opt === 'string' ? opt : opt.label || opt.value;
+                    return (
+                        <option key={i} value={optVal} style={{ background: '#101E13', color: '#FFFFFF' }}>
+                            {optLabel}
+                        </option>
+                    );
+                })}
+            </select>
+        </div>
+    );
+}
+
+export default function ScannerCheckInModal({ state = {}, embedded = false }) {
+    const [mounted, setMounted] = useState(false);
+    const isEmbedded = state?.embedded ?? embedded;
+
+    useEffect(() => {
+        setMounted(true);
+        const prevBodyOverflow = document.body.style.overflow;
+        const prevHtmlOverflow = document.documentElement.style.overflow;
+        const prevBodyTouchAction = document.body.style.touchAction;
+
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+        document.body.classList.add('scanner-modal-open');
+        document.documentElement.classList.add('scanner-modal-open');
+
+        return () => {
+            document.body.style.overflow = prevBodyOverflow;
+            document.documentElement.style.overflow = prevHtmlOverflow;
+            document.body.style.touchAction = prevBodyTouchAction;
+            document.body.classList.remove('scanner-modal-open');
+            document.documentElement.classList.remove('scanner-modal-open');
+        };
+    }, []);
+
     const {
         scannedBooking, setScannedBooking,
-        authStation,
+        authStation = {},
         attendeeChecklist,
         customAllocatedUnit, setCustomAllocatedUnit,
         isReassigningAccom, setIsReassigningAccom,
         customWristbandStart, setCustomWristbandStart,
         customWristbandEnd, setCustomWristbandEnd,
-        handleAutoGenerateWristbands,
+        handleAutoGenerateWristbands = () => {},
         gatePaymentMethod, setGatePaymentMethod,
         gateCashCollected, setGateCashCollected,
         gateNotes, setGateNotes,
@@ -27,16 +90,18 @@ export default function ScannerCheckInModal({ state }) {
         availableAccommodations,
         handleAddWalkInCamper,
         allCampAttendanceOptions,
-        dynamicBalanceDue,
-        isBalancePaid,
-        settlementMethod,
-        handleConfirmCheckin,
-        isSubmittingCheckin,
-        shortCount,
-        presentCount,
-        totalCount,
-        resetScanner,
-        isGuestMatchingCamp,
+        dynamicBalanceDue = 0,
+        isBalancePaid = false,
+        setIsBalancePaid = () => {},
+        settlementMethod = 'cash',
+        setSettlementMethod = () => {},
+        handleConfirmCheckin = () => {},
+        isSubmittingCheckin = false,
+        shortCount = 0,
+        presentCount = 0,
+        totalCount = 0,
+        resetScanner = () => {},
+        isGuestMatchingCamp = () => true,
         toggleCamperCheckin,
         toggleAllCampers,
         toggleCamperMeal,
@@ -49,27 +114,79 @@ export default function ScannerCheckInModal({ state }) {
         wristbandEnd,
         setWristbandEnd,
         autoAssignWristbands,
-        setSettlementMethod,
         setAmountCollected,
         amountCollected,
-        toggleBalancePaid
-    } = state;
+        toggleBalancePaid,
+        checkInAllRemaining = () => {},
+        handleAddExtraCamper = () => {},
+        handleRemoveExtraCamper = () => {},
+        extraGuestsCount = 0,
+        extraBalance = 0,
+        isChangingTent = false,
+        setIsChangingTent = () => {},
+        assignedTent = '',
+        setAssignedTent = () => {},
+        tentOptions = [],
+        wristbandRange = '',
+        setWristbandRange = () => {},
+        playSuccessChime = () => {},
+        showToast = () => {},
+        rosterChecklist = [],
+        setRosterChecklist = () => {}
+    } = state || {};
 
     if (!scannedBooking) return null;
 
-    return (
-        <div style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(3, 8, 4, 0.96)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            zIndex: 100,
-            overflowY: 'auto',
-            padding: '20px 16px 80px',
-            boxSizing: 'border-box'
-        }}>
-            <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+    const modalContent = (
+        <div 
+            className="scanner-modal-scroll"
+            onWheel={e => e.stopPropagation()}
+            onTouchMove={e => e.stopPropagation()}
+            style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                width: '100vw',
+                height: '100dvh',
+                background: 'rgba(3, 8, 4, 0.96)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                zIndex: 999999,
+                overflowY: 'scroll',
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'pan-y',
+                overscrollBehavior: 'contain',
+                pointerEvents: 'auto',
+                padding: '24px 16px 140px',
+                boxSizing: 'border-box'
+            }}
+        >
+            <div style={{ maxWidth: '1000px', margin: '0 auto', width: '100%', position: 'relative' }}>
+                {/* Floating Top Close Bar */}
+                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '14px' }}>
+                    <button
+                        type="button"
+                        onClick={resetScanner}
+                        style={{
+                            padding: '8px 16px',
+                            borderRadius: '999px',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            color: '#FFFFFF',
+                            fontSize: '12px',
+                            fontWeight: '800',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}
+                    >
+                        <X size={14} />
+                        <span>Close Pass (Esc)</span>
+                    </button>
+                </div>
                                     {/* ── RESPONSIVE GRID LAYOUT ── */}
                     <div style={{
                         display: 'grid',
@@ -179,7 +296,7 @@ export default function ScannerCheckInModal({ state }) {
                                             <a
                                                 href={`tel:${leadPhone.replace(/[^\d+]/g, '')}`}
                                                 style={{
-padding: embedded ? '12px 18px' : '10px 16px',
+                                                    padding: isEmbedded ? '12px 18px' : '10px 16px',
                                                     borderRadius: '12px',
                                                     background: 'rgba(255, 255, 255, 0.08)',
                                                     border: '1px solid rgba(255, 255, 255, 0.18)',
@@ -1072,4 +1189,8 @@ padding: embedded ? '12px 18px' : '10px 16px',
             </div>
         </div>
     );
+
+    return mounted && typeof document !== 'undefined'
+        ? createPortal(modalContent, document.body)
+        : modalContent;
 }

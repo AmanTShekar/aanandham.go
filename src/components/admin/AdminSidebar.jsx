@@ -169,7 +169,7 @@ export default function AdminSidebar({
             </div>
 
             {/* Navigation Sections */}
-            <nav style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '10px' : '14px', flex: 1, overflowY: 'auto' }}>
+            <nav className="no-scrollbar admin-sidebar-nav" style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '10px' : '14px', flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {navSections.map((sec, sIdx) => (
                     <div key={sIdx}>
                         {!isCollapsed && (
@@ -314,7 +314,7 @@ export default function AdminSidebar({
             {/* Desktop Fixed Sidebar */}
             {!isMobile && (
                 <aside style={{
-                    width: isSidebarCollapsed ? '76px' : '260px',
+                    width: isSidebarCollapsed ? '76px' : '270px',
                     height: '100vh',
                     position: 'fixed',
                     left: 0,
@@ -322,7 +322,7 @@ export default function AdminSidebar({
                     bottom: 0,
                     background: '#FFFFFF',
                     borderRight: '1px solid rgba(18, 22, 19, 0.08)',
-                    padding: '16px 12px',
+                    padding: '16px 14px',
                     zIndex: 50,
                     boxSizing: 'border-box',
                     transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'

@@ -5,9 +5,10 @@
 // ─────────────────────────────────────────────────────────────
 
 export const DEFAULT_PAYMENT_SETTINGS = {
-    mode: 'coming_soon', // 'coming_soon' | 'razorpay'
+    mode: 'razorpay', // 'coming_soon' | 'razorpay'
     payeeName: 'Aanandham Wilderness Stays',
     allowPayOnArrival: true,
+    razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
     comingSoonTitle: 'Online Secure Payment · Coming Soon',
     comingSoonMessage: 'Our automated secure payment gateway is launching soon! You can submit your reservation request now for instant priority confirmation via our 24/7 Mountain Concierge Desk with zero upfront advance.'
 };

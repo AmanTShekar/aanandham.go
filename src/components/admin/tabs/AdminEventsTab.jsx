@@ -4,14 +4,16 @@ import { Calendar, Plus, Users, Mountain, MapPin, Sparkles, Trash2 } from 'lucid
 import { inr } from '../../../lib/utils';
 import { 
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
-    ROW_SPACE_10, H2_STYLE, ROW_SPACE_WRAP, ROW_SPACE_14 
+    ROW_SPACE_10, H2_STYLE, ROW_SPACE_WRAP, ROW_SPACE_14, IMG_FILL_STYLE 
 } from '../AdminSharedStyles';
 
 export default function AdminEventsTab({
-    events,
-    openEventModal,
-    handleDeleteEvent
+    events = [],
+    openEventModal = () => {},
+    handleOpenEventModal,
+    handleDeleteEvent = () => {}
 }) {
+    const onOpenModal = openEventModal || handleOpenEventModal;
     return (
         <div>
                     <div style={{ width: '100%' }}>
@@ -24,7 +26,7 @@ export default function AdminEventsTab({
                                     Scheduled Trek Batches & Camps
                                 </h2>
                             </div>
-                            <button onClick={() => handleOpenEventModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
+                            <button onClick={() => onOpenModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
                                 + Create New Batch
                             </button>
                         </div>
@@ -65,7 +67,7 @@ export default function AdminEventsTab({
                                         </div>
 
                                         <div style={{ marginTop: 'auto', display: 'flex', gap: '8px' }}>
-                                            <button onClick={() => handleOpenEventModal(ev)} style={{ flex: 1, padding: '10px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
+                                            <button onClick={() => onOpenModal(ev)} style={{ flex: 1, padding: '10px', borderRadius: '10px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#121613', fontSize: '12.5px', fontWeight: '700', cursor: 'pointer' }}>
 Edit Batch 
                                             </button>
                                             <button onClick={() => handleDeleteEvent(ev.id)} style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(239,68,68,0.08)', border: 'none', color: '#DC2626', fontSize: '12.5px', cursor: 'pointer' }}>

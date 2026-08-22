@@ -1,9 +1,10 @@
 "use client";
 import React from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     ChevronLeft, Plus, Tent, Mountain, Users, ShowerHead, Trees, Sparkles, 
-    Trash2, Upload, Camera, Save, RefreshCw, AlertCircle, IndianRupee, MapPin 
+    Trash2, Upload, Camera, Save, RefreshCw, AlertCircle, IndianRupee, MapPin, X 
 } from 'lucide-react';
 import { inr } from '../../lib/utils';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
@@ -11,24 +12,56 @@ import {
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
     ROW_SPACE_10, H2_STYLE, FIELD_LABEL_5, CARD_CLICKABLE, MICRO_LABEL, 
     ROW_SPACE_WRAP, ROW_SPACE_14, FORM_INPUT_STYLE, FIELD_LABEL_STYLE, 
-    SECTION_LABEL_STYLE, IMG_FILL_STYLE 
+    SECTION_LABEL_STYLE, IMG_FILL_STYLE, uploadImageMedia, compressImageFile 
 } from './AdminSharedStyles';
 
 export default function PropertyDetailInspector({
-    currentDetailProperty,
-    setActivePropertyDetailId,
-    openAddRoomModal,
-    openEditRoomModal,
-    handleDeleteRoom,
-    openPropertyModal,
-    isAddRoomModalOpen,
-    setIsAddRoomModalOpen,
-    editingRoom,
-    roomForm,
-    setRoomForm,
-    handleSaveRoom,
-    handleUploadPhoto
+    currentDetailProperty = {},
+    setActivePropertyDetailId = () => {},
+    openAddRoomModal = () => {},
+    openEditRoomModal = () => {},
+    handleDeleteRoom = () => {},
+    openPropertyModal = () => {},
+    handleOpenPropertyModal,
+    isAddRoomModalOpen = false,
+    setIsAddRoomModalOpen = () => {},
+    editingRoom = null,
+    setEditingRoom = () => {},
+    roomForm = {},
+    setRoomForm = () => {},
+    handleSaveRoom = () => {},
+    handleUploadPhoto,
+    handleToggleAvailability = () => {},
+    handleAdjustPrice = () => {},
+    handleAdjustRoomUnits = () => {},
+    handleToggleRoomAvailability = () => {},
+    showToast = () => {}
 }) {
+    const onOpenPropertyModal = openPropertyModal || handleOpenPropertyModal;
+    const handleOpenRoomModal = (room = null) => {
+        if (room) openEditRoomModal(room);
+        else openAddRoomModal();
+    };
+
+    const handleRoomImageUpload = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        if (handleUploadPhoto) {
+            try {
+                const url = await handleUploadPhoto(file, 'rooms');
+                if (url) setRoomForm(prev => ({ ...prev, image: url }));
+                return;
+            } catch (err) {
+                console.error('Upload handler error:', err);
+            }
+        }
+        try {
+            const compressed = await compressImageFile(file, 800, 600, 0.85);
+            setRoomForm(prev => ({ ...prev, image: compressed }));
+        } catch (err) {
+            console.error('Compression fallback error:', err);
+        }
+    };
     return (
             <div style={{ minHeight: '100vh', width: '100%', background: '#F8F9F5', color: '#121613', paddingBottom: '90px' }}>
                 
@@ -98,7 +131,7 @@ View Public Page →
 {currentDetailProperty.isAvailable ? '● Active & Bookable' : '○ Property Sold Out'}
                             </button>
                             <button
-                                onClick={() => handleOpenPropertyModal(currentDetailProperty)}
+                                onClick={() => onOpenPropertyModal(currentDetailProperty)}
                                 className="btn-lime"
                                 style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}
                             >
@@ -153,7 +186,7 @@ Campsite Photo Gallery ({currentDetailProperty.gallery ? currentDetailProperty.g
                                 </h3>
                                 <div style={{ fontSize: '12.5px', color: '#59655D' }}>High-res wilderness, pod, and sunset photos displayed on public page</div>
                             </div>
-                            <button onClick={() => handleOpenPropertyModal(currentDetailProperty)} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}>
+                            <button onClick={() => onOpenPropertyModal(currentDetailProperty)} className="btn-lime" style={{ padding: '8px 16px', fontSize: '12.5px', fontWeight: '800' }}>
 Manage Gallery Photos 
                             </button>
                         </div>

@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Users, Plus, ShieldCheck, Phone, KeyRound, Smartphone, Check, X, RefreshCw, Trash2, Mountain } from 'lucide-react';
+import { Users, Plus, ShieldCheck, Phone, KeyRound, Smartphone, Check, X, RefreshCw, Trash2, Mountain, MessageCircle } from 'lucide-react';
 import { waLink } from '../../../lib/whatsapp';
 import { 
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
@@ -8,13 +8,16 @@ import {
 } from '../AdminSharedStyles';
 
 export default function AdminMarshalsTab({
-    marshals,
-    properties,
-    openMarshalModal,
-    handleDeleteMarshal,
-    setScannerOverlayOpen,
-    handleQuickAddStaffPreset
+    marshals = [],
+    properties = [],
+    openMarshalModal = () => {},
+    handleOpenMarshalModal,
+    handleDeleteMarshal = () => {},
+    setScannerOverlayOpen = () => {},
+    handleQuickAddStaffPreset = () => {},
+    handleToggleMarshalStatus = () => {}
 }) {
+    const onOpenModal = openMarshalModal || handleOpenMarshalModal;
     return (
         <div>
                     <div style={{ width: '100%' }}>
@@ -51,7 +54,7 @@ export default function AdminMarshalsTab({
                                     <span><Smartphone size={14} /> Open Scanner Simulator</span>
                                 </button>
                                 <button
-                                    onClick={() => handleOpenMarshalModal()}
+                                    onClick={() => onOpenModal()}
                                     className="btn-lime"
                                     style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800', cursor: 'pointer', border: 'none', borderRadius: '12px' }}
                                 >
@@ -172,7 +175,7 @@ Passcode: {m.passcode}
                                             <span><MessageCircle size={14} /> WhatsApp Dispatch</span>
                                         </a>
                                         <button
-                                            onClick={() => handleOpenMarshalModal(m)}
+                                            onClick={() => onOpenModal(m)}
                                             style={{
                                                 padding: '9px 14px',
                                                 borderRadius: '10px',

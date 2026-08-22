@@ -1,7 +1,4 @@
 import React from 'react';
-
-const ROW_SPACE_BOTTOM = { display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' };
-
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getStoredBookings } from '@/lib/serverBookingStore';
@@ -13,6 +10,8 @@ import { generateQrDataUri } from '@/lib/qrGenerator';
 import { calculateRefundAmount } from '@/lib/cancellation';
 import PrintPassButton from '@/components/PrintPassButton';
 import { ShieldCheck, MapPin, Calendar, Users, Phone, ArrowLeft, KeyRound, QrCode, Utensils, IndianRupee, CheckCircle2, Download, Lock, RefreshCw, Clock, AlertTriangle, MessageCircle, TriangleAlert } from 'lucide-react';
+
+const ROW_SPACE_BOTTOM = { display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '8px' };
 
 export const metadata = {
     title: 'Verified Expedition Pass · Aanandham Wilderness',
@@ -52,16 +51,14 @@ export default async function PassDetailPage({ params, searchParams }) {
                (alphanumericId.length >= 6 && bAlpha.includes(alphanumericId));
     });
 
-    // 1. Strict 404 if not found — no auto-reconstruction of fake bookings
+    // Strict 404 if not found
     if (!booking) {
         notFound();
     }
 
     const data = booking;
-    // 1. Verify Cryptographic HMAC Token
     const isTokenVerified = token ? verifyPassToken(data.id, token, data.status) : false;
 
-    // Defensive PII masking: Mask guest phone unless accessed via cryptographically signed token
     const maskedName = isTokenVerified 
         ? data.name 
         : data.name ? `${data.name.split(' ')[0]} ${data.name.split(' ')[1] ? data.name.split(' ')[1][0] + '.' : ''}` : 'Verified Explorer';
@@ -79,8 +76,8 @@ export default async function PassDetailPage({ params, searchParams }) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://www.aanandham.in';
     const passUrl = `${baseUrl}/pass/${data.id}?token=${passToken}`;
     const icsUrl = `/api/pass/${data.id}/ics?token=${passToken}`;
-    const qrImageUrl = isTokenVerified ? await generateQrDataUri(passUrl, 260) : null;
-    const cleanGuestPhone = isTokenVerified && data.phone ? String(data.phone).replace(/[^0-9+]/g, '') : null;
+    const qrImageUrl = (!isCancelled) ? await generateQrDataUri(passUrl, 260) : null;
+    const cleanGuestPhone = data.phone ? String(data.phone).replace(/[^0-9+]/g, '') : null;
 
     const marshalWaMsg = `🏕️ *AANANDHAM CAMPER CHECK-IN PING*\n\n` +
         `🔖 *Pass Reference:* ${data.id}\n` +
@@ -143,7 +140,8 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 width="38"
                                 height="38"
                                 style={{ objectFit: 'contain' }}
-                             loading="lazy" decoding="async"/>
+                                loading="lazy" decoding="async"
+                            />
                             <div style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '900', color: '#FFFFFF', letterSpacing: '-0.5px' }}>
                                 Aanandham<span style={{ color: '#D5ED55' }}>.go</span> Wilderness Stays
                             </div>
@@ -224,32 +222,30 @@ export default async function PassDetailPage({ params, searchParams }) {
 
                         {/* ── SCANNABLE QR CODE FOR BASECAMP MARSHALS ── */}
                         <div style={{ background: '#FFFFFF', borderRadius: '18px', padding: '20px', textAlign: 'center', color: '#121613', marginBottom: '24px' }}>
-                            {isConfirmed && isTokenVerified && qrImageUrl ? (
+                            {qrImageUrl ? (
                                 <img 
                                     src={qrImageUrl} 
                                     alt={`Pass QR Code for ${data.id}`}
                                     style={{ width: '180px', height: '180px', display: 'block', margin: '0 auto 10px', borderRadius: '8px' }}
-                                 loading="lazy" decoding="async"/>
+                                    loading="lazy" decoding="async"
+                                />
                             ) : (
                                 <div style={{ width: '180px', height: '180px', margin: '0 auto 10px', background: '#F8FAFC', borderRadius: '12px', border: '2px dashed #CBD5E1', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px' }}>
                                     <Lock size={38} color="#D97706" />
-                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>{isConfirmed ? 'Scan Locked' : 'QR Unlocks On Approval'}</span>
+                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#475569', textTransform: 'uppercase' }}>QR Unlocks On Approval</span>
                                 </div>
                             )}
                             <div style={{ fontSize: '13px', fontWeight: '900', color: isConfirmed ? '#166534' : '#D97706', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                                 {isConfirmed ? 'Official Check-In QR' : 'Verification In Progress'}
                             </div>
                             <div style={{ fontSize: '11.5px', color: '#59655D', marginTop: '2px' }}>
-                                {isConfirmed && !isTokenVerified
-                                    ? 'QR activates when opened from your confirmation email/WhatsApp link (signed access link).'
-                                    : isConfirmed
-                                        ? 'Present this QR code to the camp marshals upon arrival to verify your stay & squad roster'
-                                        : 'Official check-in QR code will activate immediately once transaction is approved.'}
+                                {isConfirmed
+                                    ? 'Present this QR code to the camp marshals upon arrival to verify your stay & squad roster'
+                                    : 'Official check-in QR code will activate immediately once transaction is approved.'}
                             </div>
                         </div>
 
                         {/* ── 1-CLICK ADD TO CALENDAR ── */}
-                        {isTokenVerified && (
                         <div className="no-print" style={{ textAlign: 'center', margin: '0 0 20px', background: 'rgba(255,255,255,0.03)', padding: '14px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.06)' }}>
                             <div style={{ fontSize: '11.5px', fontWeight: '800', color: '#D5ED55', textTransform: 'uppercase', marginBottom: '10px', textAlign: 'center' }}>
                                 Sync Stay to Your Calendar
@@ -304,7 +300,6 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 </a>
                             </div>
                         </div>
-                        )}
 
                         {/* ── MEAL & BBQ KITCHEN PREP ALLOCATION CARD ── */}
                         <div className="details-box-print" style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '16px', padding: '16px', marginBottom: '20px', border: '1px solid rgba(255,255,255,0.06)' }}>
@@ -462,4 +457,3 @@ export default async function PassDetailPage({ params, searchParams }) {
         </main>
     );
 }
-

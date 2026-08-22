@@ -24,13 +24,13 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Invalid request body' }, { status: 400 });
         }
 
-        const bookingId = String(body.bookingId || '').slice(0, 60);
-        const orderId = String(body.orderId || '').slice(0, 60);
-        const paymentId = String(body.paymentId || '').slice(0, 60);
-        const signature = String(body.signature || '').slice(0, 200);
+        const bookingId = String(body.bookingId || body.id || '').slice(0, 60);
+        const orderId = String(body.orderId || body.razorpay_order_id || '').slice(0, 60);
+        const paymentId = String(body.paymentId || body.razorpay_payment_id || '').slice(0, 60);
+        const signature = String(body.signature || body.razorpay_signature || '').slice(0, 200);
 
         if (!bookingId || !orderId || !paymentId) {
-            return NextResponse.json({ success: false, message: 'Missing payment details' }, { status: 400 });
+            return NextResponse.json({ success: false, message: 'Missing payment verification details' }, { status: 400 });
         }
 
         const bookings = await getStoredBookings();

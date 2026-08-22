@@ -58,7 +58,7 @@ export default function DeleteConfirmModal({
                     </div>
 
                     <p style={{ fontSize: '13.5px', color: '#3A443E', lineHeight: 1.55, margin: '0 0 16px' }}>
-                        {deleteConfirmDialog.message}
+                        {deleteConfirmDialog.subtitle || deleteConfirmDialog.message || 'Are you sure you want to proceed with this deletion?'}
                     </p>
 
                     {deleteConfirmDialog.itemDetails && (
@@ -70,7 +70,7 @@ export default function DeleteConfirmModal({
                             marginBottom: '20px'
                         }}>
                             <div style={{ fontWeight: '800', color: '#121613', fontSize: '13px', marginBottom: '4px' }}>
-                                {deleteConfirmDialog.itemDetails.title}
+                                {deleteConfirmDialog.itemDetails.title || deleteConfirmDialog.itemDetails.Name || 'Selected Item'}
                             </div>
                             <div style={{
                                 fontSize: '12px',
@@ -80,7 +80,7 @@ export default function DeleteConfirmModal({
                                 alignItems: 'center'
                             }}>
                                 <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {deleteConfirmDialog.itemDetails.subtext}
+                                    {deleteConfirmDialog.itemDetails.subtext || deleteConfirmDialog.itemDetails.Region || ''}
                                 </span>
                                 {deleteConfirmDialog.itemDetails.amount && (
                                     <span style={{ fontWeight: '800', color: '#121613', fontSize: '13px', marginLeft: '8px' }}>
@@ -111,7 +111,11 @@ export default function DeleteConfirmModal({
                         </button>
                         <button
                             type="button"
-                            onClick={deleteConfirmDialog.confirmAction}
+                            onClick={() => {
+                                const action = deleteConfirmDialog.onConfirm || deleteConfirmDialog.confirmAction;
+                                if (typeof action === 'function') action();
+                                closeDeleteConfirm();
+                            }}
                             style={{
                                 padding: '10px 20px',
                                 borderRadius: '10px',
@@ -128,7 +132,7 @@ export default function DeleteConfirmModal({
                                 transition: 'all 0.15s ease'
                             }}
                         >
-                            <span>{deleteConfirmDialog.confirmText}</span>
+                            <span>{deleteConfirmDialog.confirmText || 'Delete Record'}</span>
                         </button>
                     </div>
                 </motion.div>

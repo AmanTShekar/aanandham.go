@@ -3,7 +3,7 @@ import React from 'react';
 import { 
     ClipboardList, Search, RefreshCw, Plus, Download, ChevronLeft, ChevronRight, 
     Check, X, Phone, MessageCircle, AlertCircle, Calendar, Users, Mountain, ShieldCheck,
-    Tent, Sunrise, Trees, Sprout, Home
+    Tent, Sunrise, Trees, Sprout, Home, Ticket, Trash2, KeyRound
 } from 'lucide-react';
 import { inr } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
@@ -17,23 +17,28 @@ import {
 export default function AdminBookingsTab({
     bookings = [],
     filteredBookings = [],
-    bookingSearch,
-    setBookingSearch,
-    bookingFilterStatus,
-    setBookingFilterStatus,
-    bookingFilterCamp,
-    setBookingFilterCamp,
-    bookingSortBy,
-    setBookingSortBy,
-    properties,
-    isLoadingBookings,
-    fetchBookings,
-    setIsAddBookingModalOpen,
-    handleStatusUpdate,
-    handleDeleteBooking,
+    bookingSearch = '',
+    setBookingSearch = () => {},
+    bookingFilterStatus = 'All',
+    setBookingFilterStatus = () => {},
+    bookingFilterCamp = 'All',
+    setBookingFilterCamp = () => {},
+    bookingSortBy = 'newest',
+    setBookingSortBy = () => {},
+    properties = [],
+    isLoadingBookings = false,
+    fetchBookings = () => {},
+    setIsAddBookingModalOpen = () => {},
+    handleStatusUpdate = () => {},
+    handleUpdateBookingStatus: propHandleUpdateBookingStatus,
+    handleDeleteBooking = () => {},
     handleExportBookingsCSV,
-    isOnlineMode
+    handleExportCSV,
+    handleSeedSampleBookings = () => {},
+    isOnlineMode = true
 }) {
+    const handleUpdateBookingStatus = propHandleUpdateBookingStatus || handleStatusUpdate;
+    const onExport = handleExportBookingsCSV || handleExportCSV || (() => {});
     const koluBookingsCount = bookings.filter(b => (b.campsiteId || b.package || '').toLowerCase().includes('kolukkumalai')).length;
     const meesaBookingsCount = bookings.filter(b => (b.campsiteId || b.package || '').toLowerCase().includes('meesapulimala')).length;
     const suryaBookingsCount = bookings.filter(b => (b.campsiteId || b.package || '').toLowerCase().includes('suryanelli')).length;
@@ -179,7 +184,7 @@ Filter By Sanctuary Location
                             </div>
 
                             <button
-                                onClick={handleExportCSV}
+                                onClick={onExport}
                                 title="Export current roster to CSV"
                                 style={{
                                     padding: '8px 14px',

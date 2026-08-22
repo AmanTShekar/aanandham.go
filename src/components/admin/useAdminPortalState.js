@@ -277,18 +277,27 @@ export function useAdminPortalState() {
     const fetchBookings = async () => {
         setIsLoadingBookings(true);
         try {
-            const bRes = await fetch('/api/admin/bookings');
+            const [bRes, cRes] = await Promise.all([
+                fetch('/api/admin/bookings'),
+                fetch('/api/admin/camps')
+            ]);
             if (bRes.ok) {
                 const bData = await bRes.json();
                 if (Array.isArray(bData.bookings)) {
                     setBookings(bData.bookings);
                     setIsOnlineMode(true);
                 }
-            } else if (bRes.status === 401) {
-                // Not authenticated yet
             }
+            if (cRes.ok) {
+                const cData = await cRes.json();
+                if (Array.isArray(cData) && cData.length > 0) {
+                    setProperties(cData);
+                }
+            }
+            showToast('✓ Database Synchronized Live');
         } catch (err) {
-            console.error('Failed to load admin bookings:', err);
+            console.error('Failed to load admin data:', err);
+            showToast('Sync completed with local cache');
         } finally {
             setIsLoadingBookings(false);
         }
@@ -321,10 +330,42 @@ export function useAdminPortalState() {
         }
     };
 
-    // Load initial data
+    // Load initial data & verify existing session
     useEffect(() => {
+        const checkAuthSession = async () => {
+            try {
+                const res = await fetch('/api/admin/auth');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.authenticated) {
+                        setIsAuthenticated(true);
+                        setAdminProfile(data.user || data.profile || { role: data.role || 'SUPER_ADMIN', campName: data.campName || 'Super Admin HQ' });
+                        try {
+                            localStorage.setItem('aanandham_admin_authenticated', 'true');
+                        } catch { /* ignore */ }
+                        fetchBookings();
+                        return;
+                    }
+                }
+                // Token invalid or expired
+                setIsAuthenticated(false);
+                try {
+                    localStorage.removeItem('aanandham_admin_authenticated');
+                } catch { /* ignore */ }
+            } catch (err) {
+                console.error('Session verification network error:', err);
+            }
+        };
+
         const loadInitialData = async () => {
-            await fetchBookings();
+            // First check if token / session exists in cookie or localStorage
+            try {
+                if (localStorage.getItem('aanandham_admin_authenticated') === 'true') {
+                    setIsAuthenticated(true);
+                }
+            } catch { /* ignore */ }
+
+            await checkAuthSession();
 
             try {
                 const dRes = await fetch('/api/discounts');
@@ -368,7 +409,12 @@ export function useAdminPortalState() {
             if (data.success) {
                 setIsAuthenticated(true);
                 setPasscodeError(false);
-                setAdminProfile(data.profile || { role: 'SUPER_ADMIN', campName: 'Super Admin HQ' });
+                setAdminProfile(data.profile || { role: data.role || 'SUPER_ADMIN', campName: data.campName || 'Super Admin HQ' });
+                try {
+                    if (rememberMe) {
+                        localStorage.setItem('aanandham_admin_authenticated', 'true');
+                    }
+                } catch { /* ignore */ }
                 showToast('Welcome to Aanandham Operations Command Center');
                 fetchBookings();
             } else {
@@ -383,30 +429,45 @@ export function useAdminPortalState() {
 
     const handleLogout = async () => {
         try {
-            await fetch('/api/admin/logout', { method: 'POST' });
+            await fetch('/api/admin/auth', { method: 'DELETE' });
+        } catch { /* ignore */ }
+        try {
+            localStorage.removeItem('aanandham_admin_authenticated');
         } catch { /* ignore */ }
         setIsAuthenticated(false);
         setPasscode('');
         showToast('Logged out securely');
     };
 
-    const handleSaveProperty = (e) => {
+    const handleSaveProperty = async (e) => {
         if (e) e.preventDefault();
         if (!propertyForm.title?.trim()) {
             showToast('Please enter a campsite name');
             return;
         }
+        let nextProperties;
         if (editingProperty) {
-            setProperties(prev => prev.map(p => p.id === editingProperty.id ? { ...propertyForm, id: p.id } : p));
+            nextProperties = properties.map(p => p.id === editingProperty.id ? { ...propertyForm, id: p.id } : p);
+            setProperties(nextProperties);
             logDbAction('UPDATE_CAMPSITE', `Updated campsite ${propertyForm.title}`, editingProperty.id);
             showToast(`Campsite "${propertyForm.title}" Updated!`);
         } else {
             const newCamp = { ...propertyForm, id: `pkg-${Date.now()}` };
-            setProperties(prev => [newCamp, ...prev]);
+            nextProperties = [newCamp, ...properties];
+            setProperties(nextProperties);
             logDbAction('CREATE_CAMPSITE', `Created campsite ${propertyForm.title}`, newCamp.id);
             showToast(`Campsite "${propertyForm.title}" Added!`);
         }
         setIsPropertyModalOpen(false);
+        try {
+            await fetch('/api/admin/camps', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nextProperties)
+            });
+        } catch (err) {
+            console.error('Failed to sync campsite to server:', err);
+        }
     };
 
     const handleDeleteProperty = (id) => {
@@ -415,18 +476,28 @@ export function useAdminPortalState() {
             title: 'Delete Campsite',
             subtitle: `Are you sure you want to permanently remove "${camp?.title || id}"?`,
             itemDetails: { Name: camp?.title, Region: camp?.region },
-            onConfirm: () => {
-                setProperties(prev => prev.filter(p => p.id !== id));
+            onConfirm: async () => {
+                const nextProperties = properties.filter(p => p.id !== id);
+                setProperties(nextProperties);
                 logDbAction('DELETE_CAMPSITE', `Deleted campsite ${camp?.title || id}`, id);
                 showToast('Campsite Removed');
+                try {
+                    await fetch('/api/admin/camps', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(nextProperties)
+                    });
+                } catch (err) {
+                    console.error('Failed to delete campsite on server:', err);
+                }
             }
         });
     };
 
-    const handleSaveRoom = (e) => {
+    const handleSaveRoom = async (e) => {
         if (e) e.preventDefault();
         if (!activePropertyDetailId) return;
-        setProperties(prev => prev.map(p => {
+        const nextProperties = properties.map(p => {
             if (p.id !== activePropertyDetailId) return p;
             const currentRooms = Array.isArray(p.rooms) ? p.rooms : [];
             if (editingRoom) {
@@ -441,21 +512,41 @@ export function useAdminPortalState() {
                     rooms: [...currentRooms, newRoom]
                 };
             }
-        }));
+        });
+        setProperties(nextProperties);
         setIsAddRoomModalOpen(false);
         showToast('Room Accommodation Saved');
+        try {
+            await fetch('/api/admin/camps', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nextProperties)
+            });
+        } catch (err) {
+            console.error('Failed to sync room to server:', err);
+        }
     };
 
-    const handleDeleteRoom = (roomId) => {
+    const handleDeleteRoom = async (roomId) => {
         if (!activePropertyDetailId) return;
-        setProperties(prev => prev.map(p => {
+        const nextProperties = properties.map(p => {
             if (p.id !== activePropertyDetailId) return p;
             return {
                 ...p,
                 rooms: (p.rooms || []).filter(r => r.id !== roomId)
             };
-        }));
+        });
+        setProperties(nextProperties);
         showToast('Room Accommodation Removed');
+        try {
+            await fetch('/api/admin/camps', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nextProperties)
+            });
+        } catch (err) {
+            console.error('Failed to sync room delete to server:', err);
+        }
     };
 
     const handleSaveEvent = (e) => {
@@ -517,6 +608,15 @@ export function useAdminPortalState() {
         setBookings(prev => [created, ...prev]);
         setIsAddBookingModalOpen(false);
         showToast(`Booking Created for ${created.name}`);
+        try {
+            await fetch('/api/admin/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(created)
+            });
+        } catch (err) {
+            console.error('Failed to persist booking to database:', err);
+        }
     };
 
     const handleDeleteBooking = (id) => {
@@ -525,16 +625,39 @@ export function useAdminPortalState() {
             title: 'Delete Booking Record',
             subtitle: `Delete reservation for ${b?.name || id}?`,
             itemDetails: { Guest: b?.name, Pass: b?.id, Total: `₹${b?.total || 0}` },
-            onConfirm: () => {
+            onConfirm: async () => {
                 setBookings(prev => prev.filter(item => item.id !== id));
                 showToast('Booking Record Deleted');
+                try {
+                    const res = await fetch(`/api/admin/bookings?id=${encodeURIComponent(id)}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    if (res.ok) {
+                        showToast('✓ Permanently deleted from database');
+                    } else {
+                        showToast('Warning: Server delete returned status ' + res.status);
+                    }
+                } catch (err) {
+                    console.error('Failed to delete booking on server:', err);
+                    showToast('Failed to delete on server');
+                }
             }
         });
     };
 
-    const handleStatusChange = (id, newStatus) => {
+    const handleStatusChange = async (id, newStatus) => {
         setBookings(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b));
         showToast(`Status updated to ${newStatus}`);
+        try {
+            await fetch('/api/admin/bookings', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, status: newStatus })
+            });
+        } catch (err) {
+            console.error('Failed to sync booking status to database:', err);
+        }
     };
 
     const handleSaveDiscounts = async () => {

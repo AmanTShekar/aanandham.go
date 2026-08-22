@@ -132,8 +132,8 @@ export async function POST(request) {
         // Authentication successful: clear attempt counter for this IP
         clearAttempts(ip);
 
-        // Generate signed, tamper-proof session token (24h when remembered; session-scoped otherwise)
-        const sessionTtlSeconds = rememberMe ? 24 * 60 * 60 : 12 * 60 * 60;
+        // Generate signed, tamper-proof session token (30 days when remembered; 24 hours otherwise)
+        const sessionTtlSeconds = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60;
         const token = createSignedToken({
             role: authResult.role,
             isMasterAdmin: authResult.isMasterAdmin,
@@ -150,7 +150,7 @@ export async function POST(request) {
             actor: authResult.campName || 'Admin Coordinator (Master HQ)',
             actorRole: authResult.role,
             recordId: authResult.campId,
-            details: `Coordinator session initialized for scope: ${authResult.campName}`,
+            details: `Coordinator session initialized for scope: ${authResult.campName} (RememberMe: ${rememberMe})`,
             success: true,
             status: 'SUCCESS',
             severity: 'INFO'
@@ -173,9 +173,9 @@ export async function POST(request) {
             value: token,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'lax',
             path: '/',
-            ...(rememberMe ? { maxAge: 24 * 60 * 60 } : {}) // Remembered: 24h cookie; otherwise session cookie (cleared on browser close)
+            maxAge: sessionTtlSeconds
         });
 
         return response;

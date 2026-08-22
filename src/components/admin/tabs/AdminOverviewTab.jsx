@@ -2,9 +2,11 @@
 import React from 'react';
 import { 
     LayoutDashboard, TrendingUp, IndianRupee, Users, ShieldCheck, Ticket, 
-    ArrowUpRight, RefreshCw, Smartphone, Trees, Mountain, AlertCircle, ChevronRight 
+    ArrowUpRight, RefreshCw, Smartphone, Trees, Mountain, AlertCircle, ChevronRight, 
+    Download, Banknote, Zap, Tent, Calendar, Compass, ScrollText, ClipboardList 
 } from 'lucide-react';
 import { inr } from '../../../lib/utils';
+import { waLink } from '../../../lib/whatsapp';
 import { 
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
     ROW_SPACE_10, H2_STYLE, FIELD_LABEL_5, CARD_CLICKABLE, MICRO_LABEL, 
@@ -12,17 +14,32 @@ import {
 } from '../AdminSharedStyles';
 
 export default function AdminOverviewTab({
-    stats,
-    properties,
-    bookings,
-    marshals,
-    setActiveTab,
+    stats = {},
+    properties = [],
+    bookings = [],
+    events = [],
+    marshals = [],
+    paymentSettings = {},
+    setActiveTab = () => {},
     openPropertyModal,
-    setIsAddBookingModalOpen,
-    setIsMarshalModalOpen,
-    setScannerOverlayOpen,
-    fetchBookings
+    setIsAddBookingModalOpen = () => {},
+    setIsMarshalModalOpen = () => {},
+    setScannerOverlayOpen = () => {},
+    fetchBookings = () => {},
+    fetchAuditLogs = () => {},
+    fetchSecurityOverview = () => {},
+    fetchInquiries = () => {},
+    handleSeedSampleBookings = () => {},
+    handleExportCSV,
+    handleExportBookingsCSV
 }) {
+    const onExport = handleExportCSV || handleExportBookingsCSV;
+    const paidBookings = Array.isArray(bookings) ? bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In') : [];
+    const totalRevenue = stats?.totalRevenue ?? paidBookings.reduce((acc, b) => acc + (Number(b.total) || 0), 0);
+    const estimatedNetProfit = stats?.estimatedNetProfit ?? Math.round(totalRevenue * 0.55);
+    const profitMarginPercent = stats?.profitMarginPercent ?? (totalRevenue > 0 ? 55 : 0);
+    const activeCampers = stats?.activeCampers ?? paidBookings.reduce((acc, b) => acc + (Number(b.guests) || 0), 0);
+    const activeEventsCount = stats?.activeEventsCount ?? (Array.isArray(events) ? events.filter(e => e.status === 'Active').length : 0);
     return (
         <div>
                     <div style={{ width: '100%' }}>
@@ -38,7 +55,7 @@ export default function AdminOverviewTab({
                                 </h2>
                             </div>
                             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                <button onClick={handleExportCSV} style={{ padding: '7px 14px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
+                                <button onClick={onExport} style={{ padding: '7px 14px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.12)', color: '#121613', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.02)' }}>
                                     <span><Download size={14} /> Export CSV</span>
                                 </button>
                                 <button onClick={() => setIsAddBookingModalOpen(true)} className="btn-lime" style={{ padding: '7px 16px', fontSize: '12px', fontWeight: '800' }}>

@@ -4,36 +4,41 @@ import { motion } from 'framer-motion';
 import { 
     Search, CheckCircle2, Clock, Phone, MessageCircle, 
     DollarSign, Utensils, Tent, MapPin, RefreshCw, Users, Check,
-    AlertCircle, ListFilter, UserCheck, ShieldCheck, Sunrise, Mountain, Trees, Leaf, ArrowRight
+    AlertCircle, ListFilter, UserCheck, ShieldCheck, Sunrise, Mountain, Trees, Leaf, ArrowRight, Drumstick
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, StationGlyph, AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
 
-export default function ScannerRosterView({ state }) {
+export default function ScannerRosterView({ state = {} }) {
     const {
-        authStation,
+        authStation = {},
         selectedSanctuary,
         handleStationChange,
         scopedStats,
         rosterSearch, setRosterSearch,
         rosterFilter, setRosterFilter,
-        filteredRosterList,
-        rosterLoading,
+        rosterSearchQuery = '', setRosterSearchQuery = () => {},
+        rosterFilterStatus = 'all', setRosterFilterStatus = () => {},
+        isLoadingRoster = false,
+        filteredRoster = [],
+        filteredRosterList = [],
+        rosterLoading = false,
         handleSelectRosterGuest,
         handleCheckInAllRemainingLate,
         scopedRosterList,
-        fetchRosterData,
-        rosterList,
-        handleSelectCampground,
+        fetchRosterData = () => {},
+        rosterList = [],
+        handleSelectCampground = () => {},
         selectedCampground,
-        isGuestMatchingCamp,
-        activeStats,
-        selectGuestFromRoster,
+        isGuestMatchingCamp = () => true,
+        activeStats = {},
+        selectGuestFromRoster = () => {},
         filterStatus,
         setFilterStatus,
         searchQuery,
         setSearchQuery,
+        checkInAllRemaining = () => {},
         checkInAllRemainingLate
-    } = state;
+    } = state || {};
 
     const campIsolatedRoster = scopedRosterList || rosterList || [];
 

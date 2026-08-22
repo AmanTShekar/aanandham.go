@@ -92,8 +92,8 @@ export default function AdminAuthModal({
                                 gap: '8px'
                             }}
                         >
-<span>Unlock Dashboard</span>
-<span><ChevronRight size={14} /></span>
+                            <span>Unlock Dashboard</span>
+                            <span><ChevronRight size={14} /></span>
                         </button>
                         <button
                             type="button"
@@ -126,7 +126,7 @@ export default function AdminAuthModal({
                             }}>
                                 {rememberMe && <span style={{ fontSize: '10px', fontWeight: '900', color: '#0B150E' }}>✓</span>}
                             </div>
-                            Keep me signed in for 24 hours
+                            Keep me signed in (Remember for 30 days)
                         </button>
                     </form>
 

@@ -280,6 +280,10 @@ function BookingEngineModalInner({
                 throw new Error(orderData.message || 'Failed to initialize payment gateway.');
             }
 
+            const rzpOrder = orderData.order || orderData.razorpayOrder || {};
+            const orderKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || orderData.keyId || orderData.razorpayKeyId || 'rzp_test_placeholder';
+            const bookingRefId = orderData.bookingId || orderData.booking?.id;
+
             if (!window.Razorpay) {
                 const script = document.createElement('script');
                 script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -292,16 +296,16 @@ function BookingEngineModalInner({
             }
 
             const options = {
-                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || orderData.keyId,
-                amount: orderData.order.amount,
-                currency: orderData.order.currency || 'INR',
-                name: 'Aanandham Wilderness Stays',
+                key: orderKey,
+                amount: rzpOrder.amount || Math.round(amountToCharge * 100),
+                currency: rzpOrder.currency || 'INR',
+                name: paymentSettings.payeeName || 'Aanandham Wilderness Stays',
                 description: `${selectedPkg.title} - ${selectedRoom?.name || 'Camp Booking'}`,
                 image: '/icon.png',
-                order_id: orderData.order.id,
+                order_id: rzpOrder.id,
                 prefill: {
                     name: customerName,
-                    email: customerEmail || 'guest@aanandham.com',
+                    email: customerEmail || 'guest@aanandham.in',
                     contact: customerPhone
                 },
                 theme: {
@@ -316,17 +320,28 @@ function BookingEngineModalInner({
                                 ...getSecurityHeaders()
                             },
                             body: JSON.stringify({
-                                razorpay_order_id: response.razorpay_order_id,
+                                orderId: response.razorpay_order_id || rzpOrder.id,
+                                paymentId: response.razorpay_payment_id,
+                                signature: response.razorpay_signature,
+                                razorpay_order_id: response.razorpay_order_id || rzpOrder.id,
                                 razorpay_payment_id: response.razorpay_payment_id,
                                 razorpay_signature: response.razorpay_signature,
-                                bookingId: orderData.booking.id
+                                bookingId: bookingRefId
                             })
                         });
 
                         const verifyData = await verifyRes.json();
                         if (verifyData.success) {
                             setConfirmedPass({
-                                ...orderData.booking,
+                                ...(orderData.booking || {}),
+                                id: bookingRefId,
+                                name: customerName,
+                                phone: customerPhone,
+                                email: customerEmail,
+                                package: selectedPkg.title,
+                                dates: travelDate,
+                                guests: totalGuests,
+                                roomType: selectedRoom?.name,
                                 status: 'Confirmed',
                                 paymentId: response.razorpay_payment_id,
                                 paidAmount: amountToCharge,
@@ -338,6 +353,8 @@ function BookingEngineModalInner({
                         }
                     } catch (err) {
                         setValidationError('Verification error. Please contact WhatsApp concierge.');
+                    } finally {
+                        setIsSubmitting(false);
                     }
                 },
                 modal: {
@@ -349,7 +366,7 @@ function BookingEngineModalInner({
 
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (response) {
-                setValidationError(response.error.description || 'Payment transaction failed.');
+                setValidationError(response?.error?.description || 'Payment transaction was declined or cancelled.');
                 setIsSubmitting(false);
             });
             rzp.open();
@@ -458,10 +475,11 @@ _Please confirm my permit slot and send payment details._`;
 
     return createPortal(
         <div
+            className="booking-modal-overlay"
             style={{
                 position: 'fixed',
                 inset: 0,
-                zIndex: 9999,
+                zIndex: 100025,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

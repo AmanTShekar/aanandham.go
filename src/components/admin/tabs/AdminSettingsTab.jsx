@@ -1,22 +1,34 @@
 "use client";
 import React from 'react';
-import { Settings, Save, Smartphone, MessageCircle, Database, ShieldCheck, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Settings, Save, Smartphone, MessageCircle, Database, ShieldCheck, AlertCircle, Download } from 'lucide-react';
 import { 
     META_LABEL_STYLE, ELLIPSIS_STYLE, MUTED_TEXT_11, ROW_SPACE_8, 
     ROW_SPACE_10, H2_STYLE, ROW_SPACE_WRAP, ROW_SPACE_14, FORM_INPUT_STYLE, FIELD_LABEL_STYLE 
 } from '../AdminSharedStyles';
 
 export default function AdminSettingsTab({
-    adminPhone,
-    setAdminPhone,
-    adminTelegram,
-    setAdminTelegram,
+    adminPhone = '',
+    setAdminPhone = () => {},
+    adminTelegram = '',
+    setAdminTelegram = () => {},
     handleSaveGeneralSettings,
+    handleSaveNotifications,
     settingsSavedToast,
-    isOnlineMode,
-    bookings,
-    fetchBookings
+    isOnlineMode = false,
+    bookings = [],
+    fetchBookings = () => {},
+    auditLogs = [],
+    isLoadingAudit = false,
+    fetchAuditLogs = () => {},
+    handleExportBackup = () => {},
+    handleImportBackup = () => {}
 }) {
+    const onSave = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (handleSaveNotifications) handleSaveNotifications(e);
+        else if (handleSaveGeneralSettings) handleSaveGeneralSettings(e);
+    };
     return (
         <div>
                     <div style={{ width: '100%' }}>
@@ -29,7 +41,7 @@ export default function AdminSettingsTab({
                             </h2>
                         </div>
 
-                        <form onSubmit={handleSaveNotifications}>
+                        <form onSubmit={onSave}>
                             <div style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '20px', padding: '28px', marginBottom: '24px', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                                 <label style={{ fontSize: '11px', fontWeight: '800', color: '#121613', letterSpacing: '0.8px', textTransform: 'uppercase', display: 'block', marginBottom: '12px' }}>
                                     OFFICIAL ADMIN WHATSAPP DISPATCH NUMBER

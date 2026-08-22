@@ -105,6 +105,8 @@ export default function ScannerAuthLockScreen({ state, onBackToAdmin }) {
                         placeholder="ENTER PASSCODE"
                         value={authPasscode || ''}
                         onChange={(e) => setAuthPasscode && setAuthPasscode(e.target.value)}
+                        autoComplete="current-password"
+                        aria-label="Basecamp Host Passcode"
                         autoFocus
                         style={{
                             width: '100%',
