@@ -270,19 +270,61 @@ export function useAdminPortalState() {
     const [inquiries, setInquiries] = useState([]);
     const [isExportingCsv, setIsExportingCsv] = useState(false);
     const [copiedBookingId, setCopiedBookingId] = useState(null);
+    const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+    const [isLoadingAudit, setIsLoadingAudit] = useState(false);
+    const [isOnlineMode, setIsOnlineMode] = useState(true);
+
+    const fetchBookings = async () => {
+        setIsLoadingBookings(true);
+        try {
+            const bRes = await fetch('/api/admin/bookings');
+            if (bRes.ok) {
+                const bData = await bRes.json();
+                if (Array.isArray(bData.bookings)) {
+                    setBookings(bData.bookings);
+                    setIsOnlineMode(true);
+                }
+            } else if (bRes.status === 401) {
+                // Not authenticated yet
+            }
+        } catch (err) {
+            console.error('Failed to load admin bookings:', err);
+        } finally {
+            setIsLoadingBookings(false);
+        }
+    };
+
+    const fetchAuditLogs = async () => {
+        setIsLoadingAudit(true);
+        try {
+            const res = await fetch('/api/admin/audit');
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data.logs)) setDbLogs(data.logs);
+            }
+        } catch (err) {
+            console.error('Failed to load audit logs:', err);
+        } finally {
+            setIsLoadingAudit(false);
+        }
+    };
+
+    const fetchInquiries = async () => {
+        try {
+            const res = await fetch('/api/inquiries');
+            if (res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data.inquiries)) setInquiries(data.inquiries);
+            }
+        } catch (err) {
+            console.error('Failed to load inquiries:', err);
+        }
+    };
 
     // Load initial data
     useEffect(() => {
         const loadInitialData = async () => {
-            try {
-                const bRes = await fetch('/api/admin/bookings');
-                if (bRes.ok) {
-                    const bData = await bRes.json();
-                    if (Array.isArray(bData.bookings)) setBookings(bData.bookings);
-                }
-            } catch (err) {
-                console.error('Failed to load admin bookings:', err);
-            }
+            await fetchBookings();
 
             try {
                 const dRes = await fetch('/api/discounts');
@@ -328,12 +370,13 @@ export function useAdminPortalState() {
                 setPasscodeError(false);
                 setAdminProfile(data.profile || { role: 'SUPER_ADMIN', campName: 'Super Admin HQ' });
                 showToast('Welcome to Aanandham Operations Command Center');
+                fetchBookings();
             } else {
-                setPasscodeError(true);
+                setPasscodeError(data.message || 'Invalid Passcode');
                 showToast(data.message || 'Invalid Passcode');
             }
         } catch {
-            setPasscodeError(true);
+            setPasscodeError('Authentication Network Error');
             showToast('Authentication Network Error');
         }
     };
@@ -808,6 +851,12 @@ export function useAdminPortalState() {
         authStats, setAuthStats,
         isExportingCsv, setIsExportingCsv,
         copiedBookingId, setCopiedBookingId,
+        isLoadingBookings, setIsLoadingBookings,
+        isLoadingAudit, setIsLoadingAudit,
+        isOnlineMode, setIsOnlineMode,
+        fetchBookings,
+        fetchAuditLogs,
+        fetchInquiries,
         // Handlers
         showToast,
         logDbAction,
@@ -826,20 +875,28 @@ export function useAdminPortalState() {
         handleSaveBooking,
         handleDeleteBooking,
         handleStatusChange,
+        handleStatusUpdate: handleStatusChange,
         handleSaveDiscounts,
         handleResetDiscounts,
+        handleResetDefaultDiscounts: handleResetDiscounts,
         handleAddDiscount,
         handleUpdateDiscount,
         handleRemoveDiscount,
         handleSaveTestimonials,
         handleResetTestimonials,
+        handleResetDefaultTestimonials: handleResetTestimonials,
         handleAddTestimonial,
         handleUpdateTestimonial,
         handleRandomTestimonialAvatar,
         handleTestimonialAvatarUpload,
+        handleQuickAddRandomTestimonial: handleAddTestimonial,
+        handleQuickAddStaffPreset: handleSaveMarshal,
         handleSavePaymentSettings,
         handleSaveSettings,
+        handleSaveGeneralSettings: handleSaveSettings,
         handleExportBookingsCsv,
+        handleExportBookingsCSV: handleExportBookingsCsv,
+        handleExportLedgerCSV: handleExportBookingsCsv,
         handleShareBookingWhatsApp,
         handleCopyBookingPassLink,
         filteredBookings,
@@ -848,6 +905,8 @@ export function useAdminPortalState() {
         filteredMarshals,
         filteredLogs,
         filteredInquiries,
+        auditLogs: dbLogs,
+        financialStats: stats,
         stats
     };
 }

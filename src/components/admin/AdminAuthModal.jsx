@@ -51,6 +51,7 @@ export default function AdminAuthModal({
                     <form onSubmit={handleLogin} style={COL_GAP_14}>
                         <input
                             type="password"
+                            autoComplete="current-password"
                             placeholder="Enter Passcode (e.g. 2026)"
                             value={passcode}
                             onChange={(e) => setPasscode(e.target.value)}

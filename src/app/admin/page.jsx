@@ -43,6 +43,7 @@ function AdminPortalInner() {
         // Modals state
         isPropertyModalOpen, setIsPropertyModalOpen, editingProperty, setEditingProperty, propertyForm, setPropertyForm,
         imageUrlInput, setImageUrlInput, handleSaveProperty,
+        isAddRoomModalOpen, setIsAddRoomModalOpen, editingRoom, setEditingRoom, roomForm, setRoomForm, handleSaveRoom, handleDeleteRoom, handleUploadPhoto,
         isAddBookingModalOpen, setIsAddBookingModalOpen, newBookingForm, setNewBookingForm, handleSaveBooking,
         isEventModalOpen, setIsEventModalOpen, editingEvent, setEditingEvent, eventForm, setEventForm, handleSaveEvent,
         isMarshalModalOpen, setIsMarshalModalOpen, editingMarshal, setEditingMarshal, marshalForm, setMarshalForm, handleSaveMarshal,
@@ -50,15 +51,18 @@ function AdminPortalInner() {
         // Tab specific
         stats, filteredBookings, bookingSearch, setBookingSearch, bookingFilterStatus, setBookingFilterStatus,
         bookingFilterCamp, setBookingFilterCamp, copiedBookingId, isExportingCsv, handleExportBookingsCsv,
-        handleStatusChange, handleShareBookingWhatsApp, handleCopyBookingPassLink, openDeleteConfirm,
+        handleStatusChange, handleStatusUpdate, handleShareBookingWhatsApp, handleCopyBookingPassLink, openDeleteConfirm,
         filteredProperties, propertyFilterRegion, setPropertyFilterRegion, handleDeleteProperty,
         filteredEvents, handleDeleteEvent, filteredMarshals, handleDeleteMarshal,
         paymentSettings, setPaymentSettings, handleSavePaymentSettings, settingsSavedToast,
-        setDiscounts, handleSaveDiscounts, discountsSaving, handleResetDiscounts,
-        setTestimonials, handleSaveTestimonials, testimonialsSaving, handleResetTestimonials, handleAddTestimonial,
-        adminPhone, setAdminPhone, adminTelegram, setAdminTelegram, handleSaveSettings,
+        setDiscounts, handleSaveDiscounts, discountsSaving, handleResetDiscounts, handleResetDefaultDiscounts,
+        setTestimonials, handleSaveTestimonials, testimonialsSaving, handleResetTestimonials, handleResetDefaultTestimonials, handleAddTestimonial, handleQuickAddRandomTestimonial,
+        adminPhone, setAdminPhone, adminTelegram, setAdminTelegram, handleSaveSettings, handleSaveGeneralSettings,
         logViewTab, setLogViewTab, logSearch, setLogSearch, logFilterSeverity, setLogFilterSeverity,
-        filteredLogs, filteredInquiries
+        filteredLogs, filteredInquiries,
+        // Data loading & actions
+        isLoadingBookings, fetchBookings, isOnlineMode, handleDeleteBooking, handleExportBookingsCSV,
+        handleQuickAddStaffPreset, handleExportLedgerCSV, auditLogs, isLoadingAudit, fetchAuditLogs, inquiries, fetchInquiries
     } = admin;
 
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId) || null;
@@ -89,6 +93,45 @@ function AdminPortalInner() {
             });
         }
         setIsPropertyModalOpen(true);
+    };
+
+    const openEventModal = (event = null) => {
+        if (event) {
+            setEditingEvent(event);
+            setEventForm({ ...event });
+        } else {
+            setEditingEvent(null);
+            setEventForm({
+                title: '',
+                location: 'Kolukkumalai Peak',
+                date: '',
+                duration: '2 Days',
+                price: 2499,
+                totalSlots: 20,
+                status: 'Active',
+                tag: 'Upcoming'
+            });
+        }
+        setIsEventModalOpen(true);
+    };
+
+    const openMarshalModal = (marshal = null) => {
+        if (marshal) {
+            setEditingMarshal(marshal);
+            setMarshalForm({ ...marshal });
+        } else {
+            setEditingMarshal(null);
+            setMarshalForm({
+                name: '',
+                role: 'Basecamp Guide',
+                campsite: 'Kolukkumalai',
+                phone: '',
+                status: 'Active',
+                rating: '4.9',
+                languages: 'English, Malayalam, Tamil'
+            });
+        }
+        setIsMarshalModalOpen(true);
     };
 
     const openAddRoomModal = () => {
