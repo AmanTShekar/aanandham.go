@@ -5,13 +5,21 @@ import { Lock, LogIn, Check } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ScannerAuthLockScreen({ state, onBackToAdmin }) {
-    const {
-        authPasscode, setAuthPasscode,
-        authError,
-        authRememberMe, setAuthRememberMe,
-        handlePasscodeSubmit,
-        renderToast
-    } = state;
+    const authPasscode = state.authPasscode !== undefined ? state.authPasscode : (state.hostPasscode || '');
+    const setAuthPasscode = state.setAuthPasscode || state.setHostPasscode;
+    const authError = state.authError || state.passcodeError;
+    const authRememberMe = state.authRememberMe !== undefined ? state.authRememberMe : (state.rememberMe ?? true);
+    const setAuthRememberMe = state.setAuthRememberMe || state.setRememberMe;
+    const isLoggingIn = state.isLoggingIn || false;
+    const handlePasscodeSubmit = (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (state.handlePasscodeSubmit) {
+            state.handlePasscodeSubmit(e);
+        } else if (state.handleHostLogin) {
+            state.handleHostLogin();
+        }
+    };
+    const renderToast = state.renderToast;
 
     return (
         <div style={{

@@ -48,7 +48,7 @@ function resolveAdminPasscodes() {
     const raw = process.env.ADMIN_PASSCODES || process.env.ADMIN_PASSCODE;
     const parsed = parsePasscodeList(raw);
     if (IS_PROD) {
-        return parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
+        return parsed.filter(code => code.length >= 4 && !DISALLOWED_PROD_PASSCODES.includes(code));
     }
     return parsed;
 }
@@ -60,14 +60,14 @@ function resolveHostPasscodes() {
                 process.env.MARSHAL_PASSCODE;
     const parsed = parsePasscodeList(raw);
     if (IS_PROD) {
-        return parsed.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
+        return parsed.filter(code => code.length >= 4 && !DISALLOWED_PROD_PASSCODES.includes(code));
     }
     return parsed;
 }
 
 // ── SANCTUARY & GROUP-BASED PASSCODE ACCESS REGISTRY ──
 const DEV_FALLBACK_CODES = {
-    all: ['777777', '202600', '123456', 'aanandham2026', 'master777', 'admin2026', 'hq2026', 'wildadmin2026'],
+    all: ['91886', '777777', '202600', '123456', 'aanandham2026', 'master777', 'admin2026', 'hq2026', 'wildadmin2026'],
     kolukkumalai: ['790001', '790079', '7900', '100101', '111111', 'kolu7900', 'kolukkumalai2026', 'kolu2026', 'kolukku2026'],
     meesapulimala: ['860002', '860086', '8600', '200202', '222222', 'meesa8600', 'meesapulimala2026', 'meesa2026'],
     suryanelli: ['300303', '303030', '3001', '333333', 'surya2026', 'suryanelli2026', 'surya777'],
@@ -78,7 +78,7 @@ const DEV_FALLBACK_CODES = {
 function getSanctuaryPasscodes(envKey, fallbackKey) {
     const envCodes = process.env[envKey] ? parsePasscodeList(process.env[envKey]) : [];
     if (IS_PROD) {
-        return envCodes.filter(code => code.length >= 6 && !DISALLOWED_PROD_PASSCODES.includes(code));
+        return envCodes.filter(code => code.length >= 4 && !DISALLOWED_PROD_PASSCODES.includes(code));
     }
     return Array.from(new Set([...envCodes, ...(DEV_FALLBACK_CODES[fallbackKey] || [])]));
 }
