@@ -20,15 +20,37 @@ export const isValidPhoneNumber = (phone = '') => {
 };
 
 /**
- * Build a standard wa.me URL
- * @param {string} text - Message text
- * @param {string} [phone=DEFAULT_WA_PHONE] - Optional phone override
- * @returns {string} WhatsApp URL
+ * Build a standard wa.me URL with smart argument order detection
+ * Supports waLink(text, phone) and waLink(phone, text)
  */
-export const waLink = (text = '', phone = DEFAULT_WA_PHONE) => {
+export const waLink = (arg1 = '', arg2 = null) => {
+  let text = '';
+  let phone = DEFAULT_WA_PHONE;
+
+  const isPhonePattern = (str) => {
+    if (!str || typeof str !== 'string') return false;
+    const trimmed = str.trim();
+    // Digits only with optional leading +, length 10 to 14
+    return /^\+?\d{10,14}$/.test(trimmed.replace(/[\s-]/g, ''));
+  };
+
+  if (isPhonePattern(arg1)) {
+    // Called as waLink(phone, text)
+    phone = arg1;
+    text = typeof arg2 === 'string' ? arg2 : '';
+  } else if (arg2 && isPhonePattern(arg2)) {
+    // Called as waLink(text, phone)
+    text = typeof arg1 === 'string' ? arg1 : '';
+    phone = arg2;
+  } else {
+    // Called as waLink(text)
+    text = typeof arg1 === 'string' ? arg1 : '';
+    if (arg2) phone = arg2;
+  }
+
   const clean = cleanPhone(phone);
-  const encoded = encodeURIComponent(text.trim());
-  return `https://wa.me/${clean}?text=${encoded}`;
+  const encoded = encodeURIComponent(String(text).trim());
+  return `https://wa.me/${clean}${encoded ? `?text=${encoded}` : ''}`;
 };
 
 /**

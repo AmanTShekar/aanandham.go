@@ -43,11 +43,8 @@ export function validateBookingPayload(body) {
         errors.push('Number of guests must be between 1 and 50.');
     }
 
-    // 5. Total amount validation
-    const total = Number(body.total);
-    if (isNaN(total) || total < 100) {
-        errors.push('Total booking amount must be at least ₹100.');
-    }
+    // 5. Total amount (Optional & default to 0 for enquiries)
+    const total = isNaN(Number(body.total)) ? 0 : Number(body.total);
 
     // 6. Dates check
     const dates = (body.dates || '').trim();

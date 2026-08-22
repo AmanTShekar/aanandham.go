@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { PartyPopper, Calendar, MapPin, Tent, Users, ShieldCheck, Download, Share2, Copy, ExternalLink, QrCode } from 'lucide-react';
+import { PartyPopper, Calendar, MapPin, Tent, Users, ShieldCheck, Download, Share2, Copy, ExternalLink, QrCode, Utensils, Sparkles } from 'lucide-react';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
 
@@ -17,14 +17,14 @@ export default function Step5ConfirmationPass({
                                     </div>
 
                                     <span style={{ background: '#166534', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 12px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                        Wilderness Permit Locked
+                                        WhatsApp Enquiry Forwarded
                                     </span>
 
                                     <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', margin: '10px 0 4px' }}>
-                                        You're Headed to {confirmedPass.package}!
+                                        Inquiry Sent for {confirmedPass.package}!
                                     </h2>
                                     <p style={{ fontSize: '12.5px', color: '#59655D', margin: '0 0 18px' }}>
-                                        Your reservation has been recorded in our high-altitude basecamp roster. Present this pass on arrival.
+                                        Your booking request has opened on WhatsApp. Our 24/7 mountain concierge will confirm availability and coordinate your arrival.
                                     </p>
 
                                     {/* Digital Boarding Pass Ticket Card */}
@@ -85,11 +85,13 @@ export default function Step5ConfirmationPass({
                                             </div>
                                         </div>
 
-                                        <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '8px' }}>
-                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Utensils size={13} /> <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount} Vegetarian + {confirmedPass.nonVegCount} Non-Veg BBQ ({confirmedPass.dietaryChoice})</span>
-                                        </div>
+                                        {(confirmedPass.vegCount !== undefined || confirmedPass.dietaryChoice) && (
+                                            <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '8px' }}>
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Utensils size={13} /> <strong>Campfire Meal Prep:</strong> {confirmedPass.vegCount || 0} Vegetarian + {confirmedPass.nonVegCount || 0} Non-Veg BBQ ({confirmedPass.dietaryChoice || 'Standard'})</span>
+                                            </div>
+                                        )}
 
-                                        {confirmedPass.addons.length > 0 && (
+                                        {Array.isArray(confirmedPass.addons) && confirmedPass.addons.length > 0 && (
                                             <div style={{ background: 'rgba(255,255,255,0.06)', padding: '8px 12px', borderRadius: '8px', fontSize: '11.5px', color: '#D5ED55', marginBottom: '10px' }}>
                                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Sparkles size={13} /> <strong>Included Upgrades:</strong> {confirmedPass.addons.join(', ')}</span>
                                             </div>

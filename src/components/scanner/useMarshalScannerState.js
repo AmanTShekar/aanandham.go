@@ -39,7 +39,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
     const [isTestEmailModalOpen, setIsTestEmailModalOpen] = useState(false);
     const [testEmailInput, setTestEmailInput] = useState('aman.tshekar@gmail.com');
     const [testNameInput, setTestNameInput] = useState('Aman Shekar');
-    const [testPhoneInput, setTestPhoneInput] = useState('+91 91886 85831');
+    const [testPhoneInput, setTestPhoneInput] = useState('+91 90748 58014');
     const [testGuestsCount, setTestGuestsCount] = useState(4);
     const [isSendingTestEmail, setIsSendingTestEmail] = useState(false);
     const [isSeedingDemo, setIsSeedingDemo] = useState(false);

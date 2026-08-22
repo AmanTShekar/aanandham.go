@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────────
 
 export const DEFAULT_PAYMENT_SETTINGS = {
-    mode: 'razorpay', // 'coming_soon' | 'razorpay'
+    mode: 'coming_soon', // 'coming_soon' | 'razorpay'
     payeeName: 'Aanandham Wilderness Stays',
     allowPayOnArrival: true,
     razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',

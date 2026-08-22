@@ -905,7 +905,7 @@ return (
                                     </div>
 
                                     <div style={{ textAlign: 'center', fontSize: '11px', color: '#7D8880', marginTop: '2px' }}>
-                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}><Lock size={11} /> Secure Razorpay Checkout · 30% Advance Deposit locks permits</span>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}><Lock size={11} /> 24/7 WhatsApp Concierge Support · Online Checkout Coming Soon</span>
                                     </div>
 
                                 </div>

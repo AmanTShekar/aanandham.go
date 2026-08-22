@@ -4774,3 +4774,17 @@ html {
     background: #F6F8F2 !important;
   }
 }
+
+html.booking-modal-open,
+body.booking-modal-open {
+  overflow: hidden !important;
+  height: 100% !important;
+  touch-action: none !important;
+}
+
+.booking-modal-scroll {
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}

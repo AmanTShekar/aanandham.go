@@ -8,26 +8,40 @@ import { inr } from '../../lib/utils';
 import { parseRoomCapacity } from './BookingConstants';
 
 export default function Step1CampsiteLodging({
-    campsList,
+    campsList = [],
     selectedPkgId,
     setSelectedPkgId,
-    setCustomUnits,
+    customUnits = null,
+    setCustomUnits = () => {},
+    selectedRoomId,
     setSelectedRoomId,
     selectedPkg,
     travelDate,
     setTravelDate,
-    adults,
-    setAdults,
-    children,
-    setChildren,
-    totalGuests,
+    adults = 2,
+    setAdults = () => {},
+    children = 0,
+    setChildren = () => {},
+    totalGuests = 2,
     selectedRoom,
-    autoRequiredUnits,
-    totalUnits,
-    totalRoomCapacity,
-    currentStepPrice,
-    handleStep1Next
+    autoRequiredUnits = 1,
+    totalUnits = 1,
+    totalRoomCapacity = 2,
+    currentStepPrice = 0,
+    handleStep1Next = () => {},
+    discountLabel = '',
+    setValidationError = () => {}
 }) {
+    const currentPkg = selectedPkg || campsList.find(p => p.id === selectedPkgId) || campsList[0] || {};
+    const availableRooms = currentPkg.rooms || [];
+    const currentRoom = selectedRoom || availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0] || {};
+    const roomCapacity = currentRoom?.capacity ? parseRoomCapacity(currentRoom.capacity) : 2;
+    const autoUnits = autoRequiredUnits || Math.max(1, Math.ceil((adults + children) / roomCapacity));
+    const allocatedUnits = totalUnits !== undefined && totalUnits !== null ? totalUnits : autoUnits;
+    const totalMaxCapacity = totalRoomCapacity || (allocatedUnits * roomCapacity);
+    const handleProceedToStep2 = handleStep1Next;
+    const activeDiscountLabel = typeof discountLabel === 'string' ? discountLabel : '';
+
     return (
                         <div>
                             {/* Section 1: Campsite Selector */}
@@ -211,7 +225,7 @@ export default function Step1CampsiteLodging({
                                                 4. Number of Campers
                                             </label>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
-                                                {discountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel}</span> : 'Standard Fare'}
+                                                {activeDiscountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {activeDiscountLabel}</span> : 'Standard Fare'}
                                             </span>
                                         </div>
 

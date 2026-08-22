@@ -5,12 +5,33 @@ import { inr } from '../../lib/utils';
 import { ADDONS_LIST } from './BookingConstants';
 
 export default function Step2AddonsActivities({
-    selectedAddons,
-    toggleAddon,
-    adults,
-    currentStepPrice,
-    setStep
+    selectedAddons = [],
+    toggleAddon = () => {},
+    adults = 2,
+    children = 0,
+    totalGuests: propTotalGuests,
+    currentStepPrice = 0,
+    selectedPkg = {},
+    selectedRoom = {},
+    baseLodgingAmount = 0,
+    addonsAmount = 0,
+    totalAmount = 0,
+    discountSummary = {},
+    discountLabel = '',
+    setStep = () => {}
 }) {
+    const currentPkg = selectedPkg || {};
+    const totalGuests = propTotalGuests || (adults + children);
+    const baseTotal = baseLodgingAmount || currentStepPrice || 0;
+    const discountAmount = discountSummary?.totalSavings || discountSummary?.discountAmount || 0;
+    const activeDiscountLabel = discountLabel || discountSummary?.appliedDiscounts?.[0]?.name || discountSummary?.label || 'Discount Applied';
+    const addonsTotal = addonsAmount || selectedAddons.reduce((sum, addonId) => {
+        const addon = ADDONS_LIST.find(a => a.id === addonId);
+        if (!addon) return sum;
+        return sum + (addon.perPerson ? addon.price * adults : addon.price);
+    }, 0);
+    const grandTotal = totalAmount || Math.max(0, baseTotal - discountAmount + addonsTotal);
+
     return (
                                 <div>
                                     <div style={{ marginBottom: '20px' }}>
@@ -92,7 +113,7 @@ export default function Step2AddonsActivities({
                                         </div>
                                         {discountAmount > 0 && (
                                             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px', fontSize: '12px', color: '#D5ED55' }}>
-                                                <span>{discountLabel || 'Discount Applied'}:</span>
+                                                <span>{activeDiscountLabel}:</span>
                                                 <span>−₹{discountAmount.toLocaleString('en-IN')}</span>
                                             </div>
                                         )}

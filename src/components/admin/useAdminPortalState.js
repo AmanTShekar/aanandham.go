@@ -230,7 +230,7 @@ export function useAdminPortalState() {
     };
 
     // Admin Notification Settings
-    const [adminPhone, setAdminPhone] = useState('+91 91886 85831');
+    const [adminPhone, setAdminPhone] = useState('+91 90748 58014');
     const [adminTelegram, setAdminTelegram] = useState('@aanandham_concierge_bot');
     const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 

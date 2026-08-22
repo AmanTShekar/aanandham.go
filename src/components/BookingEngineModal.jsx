@@ -82,6 +82,23 @@ function BookingEngineModalInner({
         return () => window.removeEventListener('aanandham_payment_settings_updated', syncSettings);
     }, [isOpen]);
 
+    // Freeze background body scrolling while modal is open
+    useEffect(() => {
+        if (isOpen && typeof document !== 'undefined') {
+            document.body.classList.add('booking-modal-open');
+            document.documentElement.classList.add('booking-modal-open');
+        } else if (typeof document !== 'undefined') {
+            document.body.classList.remove('booking-modal-open');
+            document.documentElement.classList.remove('booking-modal-open');
+        }
+        return () => {
+            if (typeof document !== 'undefined') {
+                document.body.classList.remove('booking-modal-open');
+                document.documentElement.classList.remove('booking-modal-open');
+            }
+        };
+    }, [isOpen]);
+
     // Load active camps list from localStorage / default data
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -383,83 +400,29 @@ function BookingEngineModalInner({
     };
 
     // Direct WhatsApp Concierge Booking
-    const handleDirectWhatsAppBooking = async () => {
+    const handleDirectWhatsAppBooking = () => {
         if (isSubmitting) return;
-        setIsSubmitting(true);
         setValidationError('');
 
-        try {
-            const bookingRes = await fetch('/api/bookings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getSecurityHeaders()
-                },
-                body: JSON.stringify({
-                    name: customerName.trim(),
-                    phone: customerPhone.trim(),
-                    email: customerEmail.trim(),
-                    package: selectedPkg.title,
-                    campsiteId: selectedPkg.id,
-                    dates: travelDate,
-                    guests: totalGuests,
-                    adults,
-                    children,
-                    roomType: selectedRoom?.name || 'Standard Tent',
-                    addons: selectedAddons,
-                    total: totalAmount,
-                    paidAmount: 0,
-                    balanceDue: totalAmount,
-                    paymentMode: 'Direct UPI / Concierge Confirmation',
-                    dietaryChoice,
-                    vegCount,
-                    nonVegCount,
-                    notes: specialNotes,
-                    honeypot,
-                    paymentGateway: 'concierge'
-                })
-            });
+        const msg = `*🏕️ New Booking Inquiry - Aanandham Wilderness*
 
-            const bookingData = await bookingRes.json();
-            if (bookingRes.ok && bookingData.success) {
-                const passData = {
-                    id: bookingData.booking?.id || generateBookingId(),
-                    name: customerName,
-                    phone: customerPhone,
-                    package: selectedPkg.title,
-                    dates: travelDate,
-                    guests: totalGuests,
-                    roomType: selectedRoom?.name || 'Standard Tent',
-                    total: totalAmount,
-                    paidAmount: 0,
-                    balanceDue: totalAmount,
-                    status: 'Pending Verification'
-                };
-                setConfirmedPass(passData);
-                setStep(5);
-
-                const msg = `*🏕️ New Booking Request - Aanandham Wilderness*
-
-*Booking ID:* ${passData.id}
-*Guest:* ${customerName}
-*Phone:* ${customerPhone}
-*Sanctuary:* ${selectedPkg.title}
+*Guest:* ${customerName.trim() || 'Wilderness Explorer'}
+*Phone:* ${customerPhone.trim() || 'Not specified'}
+${customerEmail.trim() ? `*Email:* ${customerEmail.trim()}\n` : ''}*Sanctuary:* ${selectedPkg.title}
 *Stay Dates:* ${travelDate}
 *Camper Count:* ${totalGuests} (${adults} Adults, ${children} Kids)
 *Lodging:* ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} unit(s))
 *Dietary:* ${dietaryChoice} (${vegCount} Veg, ${nonVegCount} Non-Veg)
-*Total:* ₹${totalAmount.toLocaleString('en-IN')}
+${selectedAddons && selectedAddons.length > 0 ? `*Upgrades:* ${selectedAddons.join(', ')}\n` : ''}*Estimated Fare:* ₹${(totalAmount || 0).toLocaleString('en-IN')}
 
-_Please confirm my permit slot and send payment details._`;
-                window.open(waLink(paymentSettings.phone || '919188685831', msg), '_blank');
-            } else {
-                setValidationError(bookingData.message || 'Failed to submit reservation.');
-            }
-        } catch (err) {
-            setValidationError('Network error. Please try again or WhatsApp directly.');
-        } finally {
-            setIsSubmitting(false);
-        }
+_Please confirm availability and permit details for our expedition._`;
+
+        // 1. Immediately open WhatsApp to connect directly with concierge
+        window.open(waLink(msg, paymentSettings.phone || '919074858014'), '_blank');
+        
+        // 2. Close modal immediately without generating any booking voucher
+        onClose();
+        setIsSubmitting(false);
     };
 
     const handleSharePassToWhatsApp = () => {
@@ -473,7 +436,7 @@ _Please confirm my permit slot and send payment details._`;
 *Status:* ${confirmedPass.status}
 *Total Amount:* ₹${(confirmedPass.total || 0).toLocaleString('en-IN')}
 *Pass Portal:* ${typeof window !== 'undefined' ? window.location.origin : ''}/pass/${confirmedPass.id}`;
-        window.open(waLink(paymentSettings.phone || '919188685831', msg), '_blank');
+        window.open(waLink(msg, paymentSettings.phone || '919074858014'), '_blank');
     };
 
     if (!isOpen || !mounted || typeof document === 'undefined' || !document.body) return null;
@@ -491,8 +454,11 @@ _Please confirm my permit slot and send payment details._`;
                 padding: '16px',
                 background: 'rgba(10, 15, 12, 0.75)',
                 backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)'
+                WebkitBackdropFilter: 'blur(8px)',
+                touchAction: 'none'
             }}
+            onWheel={(e) => e.stopPropagation()}
+            onTouchMove={(e) => e.stopPropagation()}
             onClick={(e) => {
                 if (e.target === e.currentTarget) onClose();
             }}
@@ -514,6 +480,8 @@ _Please confirm my permit slot and send payment details._`;
                     flexDirection: 'column',
                     overflow: 'hidden'
                 }}
+                onWheel={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
             >
                 {/* Header & Step Tracker */}
                 <BookingWizardHeader
@@ -525,13 +493,27 @@ _Please confirm my permit slot and send payment details._`;
                 />
 
                 {/* Content Container */}
-                <div style={{ flex: 1, overflowY: 'auto', padding: '24px' }}>
+                <div
+                    className="booking-modal-body booking-modal-scroll"
+                    style={{
+                        flex: 1,
+                        overflowY: 'auto',
+                        overscrollBehavior: 'contain',
+                        WebkitOverflowScrolling: 'touch',
+                        touchAction: 'pan-y',
+                        padding: '24px'
+                    }}
+                    onWheel={(e) => e.stopPropagation()}
+                    onTouchMove={(e) => e.stopPropagation()}
+                >
                     {step === 1 && (
                         <Step1CampsiteLodging
                             campsList={campsList}
                             selectedPkgId={selectedPkgId}
                             setSelectedPkgId={setSelectedPkgId}
+                            customUnits={customUnits}
                             setCustomUnits={setCustomUnits}
+                            selectedRoomId={selectedRoomId}
                             setSelectedRoomId={setSelectedRoomId}
                             selectedPkg={selectedPkg}
                             travelDate={travelDate}
@@ -547,6 +529,8 @@ _Please confirm my permit slot and send payment details._`;
                             totalRoomCapacity={totalRoomCapacity}
                             currentStepPrice={currentStepPrice}
                             handleStep1Next={handleStep1Next}
+                            discountLabel={discountSummary?.appliedDiscounts?.[0]?.name || discountSummary?.label || ''}
+                            setValidationError={setValidationError}
                         />
                     )}
 
@@ -555,7 +539,16 @@ _Please confirm my permit slot and send payment details._`;
                             selectedAddons={selectedAddons}
                             toggleAddon={toggleAddon}
                             adults={adults}
+                            children={children}
+                            totalGuests={totalGuests}
                             currentStepPrice={currentStepPrice}
+                            selectedPkg={selectedPkg}
+                            selectedRoom={selectedRoom}
+                            baseLodgingAmount={baseLodgingAmount}
+                            addonsAmount={addonsAmount}
+                            totalAmount={totalAmount}
+                            discountSummary={discountSummary}
+                            discountLabel={discountSummary?.appliedDiscounts?.[0]?.name || discountSummary?.label || ''}
                             setStep={setStep}
                         />
                     )}
@@ -577,11 +570,14 @@ _Please confirm my permit slot and send payment details._`;
                             nonVegCount={nonVegCount}
                             setNonVegCount={setNonVegCount}
                             adults={adults}
+                            children={children}
+                            totalGuests={totalGuests}
                             currentStepPrice={currentStepPrice}
                             honeypot={honeypot}
                             setHoneypot={setHoneypot}
                             handleStep3Next={handleStep3Next}
                             setStep={setStep}
+                            setValidationError={setValidationError}
                         />
                     )}
 

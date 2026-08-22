@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { User, Phone, Mail, FileText, ArrowRight, ArrowLeft, Leaf, Drumstick, Minus, Plus } from 'lucide-react';
+import { User, Phone, Mail, FileText, ArrowRight, ArrowLeft, Leaf, Drumstick, Utensils, Minus, Plus } from 'lucide-react';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
 
@@ -19,13 +19,18 @@ export default function Step3CamperContact({
     setVegCount,
     nonVegCount,
     setNonVegCount,
-    adults,
+    adults = 2,
+    children = 0,
+    totalGuests: propTotalGuests,
     currentStepPrice,
     honeypot,
     setHoneypot,
     handleStep3Next,
-    setStep
+    setStep,
+    setValidationError = () => {}
 }) {
+    const totalGuests = propTotalGuests || (adults + children) || 2;
+
     return (
                                 <div>
                                     <div style={{ marginBottom: '20px' }}>

@@ -36,59 +36,61 @@ export default function Step4PaymentGateway({
     const payableNow = paymentMode === 'advance' ? advanceAmount : grandTotal;
     return (
                                 <div>
-                                    {/* Payment Mode Selector */}
-                                    <div style={{ marginBottom: '18px' }}>
-                                        <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                            Select Payment Amount Choice
-                                        </label>
-                                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                                            <div
-                                                onClick={() => setPaymentMode('advance')}
-                                                style={{
-                                                    padding: '12px 14px',
-                                                    borderRadius: '14px',
-                                                    border: paymentMode === 'advance' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                    background: paymentMode === 'advance' ? '#F4F7EB' : '#FFFFFF',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s ease'
-                                                }}
-                                            >
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>30% Advance</span>
-                                                    <span style={{ background: '#D5ED55', color: '#121613', fontSize: '9.5px', fontWeight: '900', padding: '1px 6px', borderRadius: '999px' }}>POPULAR</span>
+                                    {paymentSettings.mode !== 'coming_soon' && (
+                                        /* Payment Mode Selector for Razorpay mode */
+                                        <div style={{ marginBottom: '18px' }}>
+                                            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                                Select Payment Amount Choice
+                                            </label>
+                                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                                <div
+                                                    onClick={() => setPaymentMode('advance')}
+                                                    style={{
+                                                        padding: '12px 14px',
+                                                        borderRadius: '14px',
+                                                        border: paymentMode === 'advance' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
+                                                        background: paymentMode === 'advance' ? '#F4F7EB' : '#FFFFFF',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.2s ease'
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>30% Advance</span>
+                                                        <span style={{ background: '#D5ED55', color: '#121613', fontSize: '9.5px', fontWeight: '900', padding: '1px 6px', borderRadius: '999px' }}>POPULAR</span>
+                                                    </div>
+                                                    <div style={{ fontSize: '18px', fontWeight: '900', color: '#166534' }}>
+                                                        ₹{advanceAmount.toLocaleString('en-IN')}
+                                                    </div>
+                                                    <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
+                                                        Locks permits now. Balance on arrival.
+                                                    </div>
                                                 </div>
-                                                <div style={{ fontSize: '18px', fontWeight: '900', color: '#166534' }}>
-                                                    ₹{advanceAmount.toLocaleString('en-IN')}
-                                                </div>
-                                                <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
-                                                    Locks permits now. Balance on arrival.
-                                                </div>
-                                            </div>
 
-                                            <div
-                                                onClick={() => setPaymentMode('full')}
-                                                style={{
-                                                    padding: '12px 14px',
-                                                    borderRadius: '14px',
-                                                    border: paymentMode === 'full' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                    background: paymentMode === 'full' ? '#F4F7EB' : '#FFFFFF',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s ease'
-                                                }}
-                                            >
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                                                    <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>100% Full</span>
-                                                    <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '9.5px', fontWeight: '800', padding: '1px 6px', borderRadius: '999px' }}>VIP</span>
-                                                </div>
-                                                <div style={{ fontSize: '18px', fontWeight: '900', color: '#121613' }}>
-                                                    ₹{grandTotal.toLocaleString('en-IN')}
-                                                </div>
-                                                <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
-                                                    Zero balance on arrival. Fast key pickup.
+                                                <div
+                                                    onClick={() => setPaymentMode('full')}
+                                                    style={{
+                                                        padding: '12px 14px',
+                                                        borderRadius: '14px',
+                                                        border: paymentMode === 'full' ? '2px solid #166534' : '1px solid rgba(18,22,19,0.1)',
+                                                        background: paymentMode === 'full' ? '#F4F7EB' : '#FFFFFF',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.2s ease'
+                                                    }}
+                                                >
+                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
+                                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613' }}>100% Full</span>
+                                                        <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '9.5px', fontWeight: '800', padding: '1px 6px', borderRadius: '999px' }}>VIP</span>
+                                                    </div>
+                                                    <div style={{ fontSize: '18px', fontWeight: '900', color: '#121613' }}>
+                                                        ₹{grandTotal.toLocaleString('en-IN')}
+                                                    </div>
+                                                    <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
+                                                        Zero balance on arrival. Fast key pickup.
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
 
                                     {/* ── PAYMENT CARD: DYNAMIC COMING SOON vs LIVE UPI GATEWAY ── */}
                                     {paymentSettings.mode === 'coming_soon' ? (
@@ -98,33 +100,33 @@ export default function Step4PaymentGateway({
                                                     ⏳ COMING SOON
                                                 </span>
                                                 <span style={{ color: '#D5ED55', fontSize: '11px', fontWeight: '800', textTransform: 'uppercase' }}>
-                                                    Concierge Desk Active
+                                                    Online Payment Coming Soon
                                                 </span>
                                             </div>
                                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#FFFFFF', margin: '0 0 8px' }}>
-                                                {paymentSettings.comingSoonTitle || 'Online UPI & Gateway Payment · Coming Soon'}
+                                                Direct WhatsApp Concierge Enquiry
                                             </h3>
                                             <p style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.55, margin: '0 0 16px' }}>
-                                                {paymentSettings.comingSoonMessage || 'Our automated instant payment gateway is launching soon! You can lock your dates and room reservation right now with zero upfront advance. Our 24/7 mountain concierge will confirm your booking instantly via WhatsApp.'}
+                                                Instant online payment checkout is launching soon. Connect directly with our basecamp concierge on WhatsApp to check live slot availability, answer questions, and finalize your booking.
                                             </p>
 
-                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '12px 14px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', background: 'rgba(255, 255, 255, 0.05)', padding: '14px 16px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)' }}>
                                                 <div style={ROW_GAP_10}>
-                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22C55E', fontSize: '14px', fontWeight: '900' }}>
-                                                        ✓
-                                                    </div>
-                                                    <div>
-                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Advance Deposit</div>
-                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#D5ED55' }}>₹0 (Zero Advance)</div>
-                                                    </div>
-                                                </div>
-                                                <div style={ROW_GAP_10}>
-                                                    <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(229, 169, 59, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E5A93B', fontSize: '14px' }}>
+                                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(213, 237, 85, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontSize: '14px' }}>
                                                         <Tent size={16} />
                                                     </div>
                                                     <div>
-                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6' }}>Trip Fare (Pay on Arrival)</div>
-                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>₹{grandTotal.toLocaleString('en-IN')}</div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>Estimated Expedition Total</div>
+                                                        <div style={{ fontSize: '17px', fontWeight: '900', color: '#D5ED55' }}>₹{grandTotal.toLocaleString('en-IN')}</div>
+                                                    </div>
+                                                </div>
+                                                <div style={ROW_GAP_10}>
+                                                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(37, 211, 102, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#25D366' }}>
+                                                        <WhatsAppIcon size={16} color="#25D366" />
+                                                    </div>
+                                                    <div>
+                                                        <div style={{ fontSize: '10.5px', color: '#A2B6A6', textTransform: 'uppercase' }}>WhatsApp Desk</div>
+                                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#FFFFFF' }}>+91 90748 58014</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -192,39 +194,29 @@ export default function Step4PaymentGateway({
 
                                         {paymentSettings.mode === 'coming_soon' ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                                                {/* Disabled Online Booking Button */}
-                                                <button
-                                                    type="button"
-                                                    disabled={true}
-                                                    style={{
-                                                        padding: '12px 22px',
-                                                        fontSize: '13px',
-                                                        fontWeight: '800',
-                                                        borderRadius: '12px',
-                                                        background: '#F3F4F6',
-                                                        color: '#6B7280',
-                                                        border: '1.5px dashed #9CA3AF',
-                                                        cursor: 'not-allowed',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '8px',
-                                                        opacity: 0.85
-                                                    }}
-                                                    title="Online instant checkout is upcoming. Direct concierge inquiries are open."
-                                                >
-                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><Lock size={14} /> Online Booking Upcoming · Disabled</span>
-                                                </button>
-
                                                 {/* WhatsApp Concierge Desk Inquiry */}
                                                 <button
                                                     type="button"
                                                     onClick={handleDirectWhatsAppBooking}
                                                     disabled={isSubmitting}
-                                                    className="btn-lime"
-                                                    style={{ padding: '12px 24px', fontSize: '13.5px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer' }}
+                                                    style={{
+                                                        padding: '13px 26px',
+                                                        fontSize: '14px',
+                                                        fontWeight: '900',
+                                                        borderRadius: '14px',
+                                                        background: '#25D366',
+                                                        color: '#FFFFFF',
+                                                        border: 'none',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                        boxShadow: '0 4px 16px rgba(37, 211, 102, 0.35)',
+                                                        transition: 'all 0.2s ease'
+                                                    }}
                                                 >
-                                                    <WhatsAppIcon size={16} color="#121613" />
-                                                    <span>Confirm Permit via WhatsApp Concierge</span>
+                                                    <WhatsAppIcon size={18} color="#FFFFFF" />
+                                                    <span>Enquire on WhatsApp →</span>
                                                 </button>
                                             </div>
                                         ) : (

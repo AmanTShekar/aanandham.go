@@ -124,7 +124,7 @@ export default function BookingWizardHeader({
                 </div>
             )}
 
-            {validationError && (
+            {validationError && step !== 5 && (
                 <div style={{
                     background: 'rgba(255, 90, 95, 0.12)',
                     border: '1px solid rgba(255, 90, 95, 0.35)',
