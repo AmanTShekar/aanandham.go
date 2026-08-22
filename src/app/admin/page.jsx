@@ -243,7 +243,7 @@ function AdminPortalInner() {
                 minWidth: 0,
                 width: '100%',
                 padding: isMobile ? '16px 12px' : '32px 42px',
-                marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '76px' : '270px'),
+                marginLeft: isMobile ? 0 : (isSidebarCollapsed ? '80px' : '315px'),
                 transition: 'margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 display: 'flex',
                 flexDirection: 'column',

@@ -30,27 +30,27 @@ export default function AdminSidebar({
         {
             category: 'Operations',
             items: [
-                { id: 'overview', name: 'Mission Control', icon: LayoutDashboard, desc: 'Live Analytics' },
-                { id: 'bookings', name: 'Bookings Roster', icon: ClipboardList, count: bookingsCount },
-                { id: 'properties', name: 'Campsites & Pods', icon: Tent, desc: 'Lodging Setup' },
-                { id: 'events', name: 'Trek Batches', icon: Calendar, desc: 'Expeditions' },
-                { id: 'marshals', name: 'Camp Marshals', icon: Users, desc: 'Staff & PINs' }
+                { id: 'overview', name: 'Overview', icon: LayoutDashboard },
+                { id: 'bookings', name: 'Bookings', icon: ClipboardList, count: bookingsCount },
+                { id: 'properties', name: 'Campsites', icon: Tent },
+                { id: 'events', name: 'Treks & Batches', icon: Calendar },
+                { id: 'marshals', name: 'Staff & Marshals', icon: Users }
             ]
         },
         {
             category: 'Financials',
             items: [
-                { id: 'financials', name: 'Revenue & Margins', icon: IndianRupee, desc: 'GST Ledger' },
-                { id: 'payment', name: 'Payment Gateway', icon: QrCode, desc: 'UPI & Razorpay' },
-                { id: 'discounts', name: 'Discounts & Offers', icon: BadgePercent, desc: 'Promo Codes' }
+                { id: 'financials', name: 'Revenue & Finance', icon: IndianRupee },
+                { id: 'payment', name: 'Payment Settings', icon: QrCode },
+                { id: 'discounts', name: 'Discounts & Promos', icon: BadgePercent }
             ]
         },
         {
             category: 'System',
             items: [
-                { id: 'testimonials', name: 'Guest Reviews', icon: MessageSquareQuote, desc: 'Testimonials' },
-                { id: 'logs', name: 'Security & Audit Logs', icon: ScrollText, desc: 'Access Control' },
-                { id: 'settings', name: 'Alerts & Dispatch', icon: Settings, desc: 'WhatsApp & SMS' }
+                { id: 'testimonials', name: 'Guest Reviews', icon: MessageSquareQuote },
+                { id: 'logs', name: 'Security & Audit', icon: ScrollText },
+                { id: 'settings', name: 'Notifications', icon: Settings }
             ]
         }
     ];
@@ -58,18 +58,18 @@ export default function AdminSidebar({
     const renderSidebarContent = (inMobile = false) => (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '14px' }}>
             {/* Header / Logo */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', padding: isCollapsed ? '8px 0' : '8px 4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: isCollapsed ? 'center' : 'space-between', padding: isCollapsed ? '8px 0' : '4px 2px 8px' }}>
                 <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
-                    <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#D5ED55', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(213, 237, 85, 0.4)' }}>
-                        <img src="/logo.png" alt="Aanandham" style={{ width: '24px', height: '24px', objectFit: 'contain' }} loading="lazy" decoding="async" />
+                    <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#D5ED55', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 2px 8px rgba(213, 237, 85, 0.4)' }}>
+                        <img src="/logo.png" alt="Aanandham" style={{ width: '22px', height: '22px', objectFit: 'contain' }} loading="lazy" decoding="async" />
                     </div>
                     {!isCollapsed && (
                         <div>
-                            <div style={{ fontSize: '15px', fontWeight: '900', color: '#121613', fontFamily: 'var(--font-heading)' }}>
+                            <div style={{ fontSize: '15px', fontWeight: '900', color: '#121613', fontFamily: 'var(--font-heading)', lineHeight: 1.1 }}>
                                 Aanandham<span style={{ color: '#E5A93B' }}>.go</span>
                             </div>
-                            <div style={{ fontSize: '9px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                HQ Enterprise
+                            <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase', marginTop: '2px' }}>
+                                Master Console
                             </div>
                         </div>
                     )}
@@ -117,14 +117,13 @@ export default function AdminSidebar({
                 )}
             </div>
 
-            {/* Sync & QR Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {/* Sync & QR Action Buttons */}
+            <div style={{ display: 'grid', gridTemplateColumns: isCollapsed ? '1fr' : '1fr 1fr', gap: '8px' }}>
                 <button
                     onClick={fetchBookings}
                     title="Sync Database with Live Cloud"
                     style={{
-                        width: '100%',
-                        padding: isCollapsed ? '8px 0' : '8px 10px',
+                        padding: isCollapsed ? '9px 0' : '9px 10px',
                         borderRadius: '10px',
                         fontSize: isCollapsed ? '13px' : '11.5px',
                         fontWeight: '800',
@@ -140,22 +139,21 @@ export default function AdminSidebar({
                     }}
                 >
                     <RefreshCw size={13} strokeWidth={2.5} />
-                    {!isCollapsed && <span>Sync Database</span>}
+                    {!isCollapsed && <span>Sync Cloud</span>}
                 </button>
 
                 <button
                     onClick={() => { setScannerOverlayOpen(true); if (inMobile) setIsMobileSidebarOpen(false); }}
                     title="Open Live QR Pass Scanner"
                     style={{
-                        width: '100%',
-                        padding: isCollapsed ? '8px 0' : '8px 10px',
+                        padding: isCollapsed ? '9px 0' : '9px 10px',
                         borderRadius: '10px',
                         fontSize: isCollapsed ? '13px' : '11.5px',
                         fontWeight: '800',
                         cursor: 'pointer',
-                        background: '#FFFFFF',
-                        border: '1.5px solid #D5ED55',
-                        color: '#0B150E',
+                        background: '#F1F3EC',
+                        border: '1px solid rgba(18, 22, 19, 0.08)',
+                        color: '#121613',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -164,16 +162,16 @@ export default function AdminSidebar({
                     }}
                 >
                     <QrCode size={13} strokeWidth={2.5} />
-                    {!isCollapsed && <span>QR Scanner</span>}
+                    {!isCollapsed && <span>Scanner</span>}
                 </button>
             </div>
 
             {/* Navigation Sections */}
-            <nav className="no-scrollbar admin-sidebar-nav" style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '10px' : '14px', flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <nav className="no-scrollbar admin-sidebar-nav" style={{ display: 'flex', flexDirection: 'column', gap: isCollapsed ? '12px' : '16px', flex: 1, overflowY: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {navSections.map((sec, sIdx) => (
                     <div key={sIdx}>
                         {!isCollapsed && (
-                            <div style={{ fontSize: '9.5px', fontWeight: '800', color: '#7D8880', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '5px', paddingLeft: '8px' }}>
+                            <div style={{ fontSize: '10px', fontWeight: '800', color: '#8A958E', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '6px', paddingLeft: '8px' }}>
                                 {sec.category}
                             </div>
                         )}
@@ -191,13 +189,13 @@ export default function AdminSidebar({
                                         title={isCollapsed ? item.name : undefined}
                                         style={{
                                             width: '100%',
-                                            padding: isCollapsed ? '9px 0' : '8px 12px',
-                                            borderRadius: '12px',
+                                            padding: isCollapsed ? '10px 0' : '9px 12px',
+                                            borderRadius: '11px',
                                             background: isActive ? '#D5ED55' : 'transparent',
-                                            color: isActive ? '#0B150E' : '#3A443E',
+                                            color: isActive ? '#0B150E' : '#333D36',
                                             border: isActive ? '1px solid rgba(180, 210, 60, 0.8)' : '1px solid transparent',
                                             fontSize: '13px',
-                                            fontWeight: isActive ? '800' : '600',
+                                            fontWeight: isActive ? '900' : '600',
                                             cursor: 'pointer',
                                             display: 'flex',
                                             alignItems: 'center',
@@ -208,28 +206,21 @@ export default function AdminSidebar({
                                         }}
                                     >
                                         <div style={{ display: 'flex', alignItems: 'center', gap: isCollapsed ? '0' : '10px' }}>
-                                            <ItemIcon size={16} strokeWidth={2.4} />
+                                            <ItemIcon size={16} strokeWidth={isActive ? 2.5 : 2} color={isActive ? '#0B150E' : '#59655D'} />
                                             {!isCollapsed && <span>{item.name}</span>}
                                         </div>
                                         {!isCollapsed && item.count !== undefined && (
                                             <span style={{
-                                                background: isActive ? '#0B150E' : 'rgba(18, 22, 19, 0.08)',
+                                                background: isActive ? '#0B150E' : '#E8EBE3',
                                                 color: isActive ? '#D5ED55' : '#121613',
                                                 fontSize: '11px',
                                                 fontWeight: '800',
-                                                padding: '2px 7px',
-                                                borderRadius: '999px'
+                                                padding: '2px 8px',
+                                                borderRadius: '999px',
+                                                minWidth: '18px',
+                                                textAlign: 'center'
                                             }}>
                                                 {item.count}
-                                            </span>
-                                        )}
-                                        {!isCollapsed && item.desc && !item.count && (
-                                            <span style={{
-                                                fontSize: '10.5px',
-                                                color: isActive ? '#166534' : '#7D8880',
-                                                fontWeight: '700'
-                                            }}>
-                                                {item.desc}
                                             </span>
                                         )}
                                     </button>
@@ -314,7 +305,7 @@ export default function AdminSidebar({
             {/* Desktop Fixed Sidebar */}
             {!isMobile && (
                 <aside style={{
-                    width: isSidebarCollapsed ? '76px' : '270px',
+                    width: isSidebarCollapsed ? '80px' : '315px',
                     height: '100vh',
                     position: 'fixed',
                     left: 0,
@@ -322,7 +313,7 @@ export default function AdminSidebar({
                     bottom: 0,
                     background: '#FFFFFF',
                     borderRight: '1px solid rgba(18, 22, 19, 0.08)',
-                    padding: '16px 14px',
+                    padding: isSidebarCollapsed ? '16px 8px' : '18px 16px',
                     zIndex: 50,
                     boxSizing: 'border-box',
                     transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
