@@ -36,6 +36,11 @@ function BookingEngineModalInner({
 }) {
     const modalRef = useRef(null);
     useFocusTrap(isOpen, modalRef);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
     const [discounts, setDiscounts] = useState(null);
@@ -115,30 +120,30 @@ function BookingEngineModalInner({
                 setCustomUnits(null);
             }
 
-            const targetId = initialPackage?.id || '';
-            const targetTitle = (initialPackage?.title || '').toLowerCase();
+            const targetId = String(initialPackage?.id || (typeof initialPackage === 'string' ? initialPackage : '') || '');
+            const targetTitle = String(initialPackage?.title || (typeof initialPackage === 'string' ? initialPackage : '') || '').toLowerCase();
             
             const matched = campsList.find(p => 
                 p.id === targetId || 
                 p.id === `pkg-${targetId}` ||
                 p.id.replace('pkg-', '') === targetId.replace('pkg-', '') ||
                 p.title.toLowerCase() === targetTitle ||
-                p.title.toLowerCase().includes(targetTitle.slice(0, 12)) ||
-                targetTitle.includes(p.title.toLowerCase().slice(0, 12))
+                (targetTitle && p.title.toLowerCase().includes(targetTitle.slice(0, 12))) ||
+                (targetTitle && targetTitle.includes(p.title.toLowerCase().slice(0, 12)))
             );
 
             const activeId = matched ? matched.id : (campsList[0]?.id || 'pkg-kolukkumalai');
             setSelectedPkgId(activeId);
 
             const activePkg = campsList.find(p => p.id === activeId) || campsList[0];
-            const targetRoomName = (initialRoom || '').toLowerCase();
-            const targetRoomId = (initialRoomId || '').toLowerCase();
+            const targetRoomName = String(typeof initialRoom === 'string' ? initialRoom : initialRoom?.name || '').toLowerCase();
+            const targetRoomId = String(typeof initialRoomId === 'string' ? initialRoomId : initialRoom?.id || '').toLowerCase();
 
             if (activePkg?.rooms?.length > 0) {
                 const roomMatch = activePkg.rooms.find(r => 
-                    r.id === targetRoomId ||
-                    r.name.toLowerCase() === targetRoomName ||
-                    r.name.toLowerCase().includes(targetRoomName) ||
+                    (targetRoomId && r.id.toLowerCase() === targetRoomId) ||
+                    (targetRoomName && r.name.toLowerCase() === targetRoomName) ||
+                    (targetRoomName && r.name.toLowerCase().includes(targetRoomName)) ||
                     (targetRoomName && targetRoomName.includes(r.name.toLowerCase()))
                 );
                 setSelectedRoomId(roomMatch ? roomMatch.id : activePkg.rooms[0].id);
@@ -471,7 +476,7 @@ _Please confirm my permit slot and send payment details._`;
         window.open(waLink(paymentSettings.phone || '919188685831', msg), '_blank');
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !mounted || typeof document === 'undefined' || !document.body) return null;
 
     return createPortal(
         <div

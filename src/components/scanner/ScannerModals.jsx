@@ -16,17 +16,16 @@ import {
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, StationGlyph, AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
 
 
-export function ScannerEmailTestPassModal({ state }) {
+export function ScannerEmailTestPassModal({ state = {} }) {
     const {
-        isTestEmailModalOpen, setIsTestEmailModalOpen,
-        testEmailInput, setTestEmailInput,
-        testPhoneInput, setTestPhoneInput,
-        testGuestName, setTestGuestName,
-        testCampSelection, setTestCampSelection,
-        testSendingState,
-        testSendResult,
-        handleTriggerTestEmail
-    } = state;
+        isTestEmailModalOpen, setIsTestEmailModalOpen = () => {},
+        testEmailInput, setTestEmailInput = () => {},
+        testPhoneInput, setTestPhoneInput = () => {},
+        testNameInput, setTestNameInput = () => {},
+        testGuestsCount = 2, setTestGuestsCount = () => {},
+        isSendingTestEmail,
+        handleSendTestEmail = () => {}
+    } = state || {};
 
     if (!isTestEmailModalOpen) return null;
 
@@ -200,13 +199,13 @@ export function ScannerEmailTestPassModal({ state }) {
     );
 }
 
-export function ScannerManualLookupModal({ state }) {
+export function ScannerManualLookupModal({ state = {} }) {
     const {
-        isManualModalOpen, setIsManualModalOpen,
-        manualIdInput, setManualIdInput,
-        isSearchingManual,
-        handleManualIdSearch
-    } = state;
+        isManualModalOpen, setIsManualModalOpen = () => {},
+        manualIdInput = '', setManualIdInput = () => {},
+        isSearchingManual = false,
+        handleManualSearch = () => {}
+    } = state || {};
 
     if (!isManualModalOpen) return null;
 
