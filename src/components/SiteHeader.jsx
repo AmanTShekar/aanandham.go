@@ -235,7 +235,22 @@ export default function SiteHeader({
                                 <span className="marker-text">About</span>
                             </Link>
                             <Link 
-                                href="/camps" 
+                                href="/services" 
+                                className={`text-hover-marker text-hover-marker-dark ${activePage === 'services' ? 'is-active-link' : ''}`}
+                                style={{ 
+                                    fontFamily: 'var(--font-heading)',
+                                    color: '#FFFFFF', 
+                                    textDecoration: 'none', 
+                                    fontSize: '15px', 
+                                    fontWeight: '700', 
+                                    letterSpacing: '-0.01em',
+                                    padding: '4px 6px'
+                                }}
+                            >
+                                <span className="marker-text">Services</span>
+                            </Link>
+                            <Link 
+                                href="/camps"
                                 className={`text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`}
                                 style={{ 
                                     fontFamily: 'var(--font-heading)',
@@ -447,7 +462,19 @@ export default function SiteHeader({
 
                                 <motion.div variants={drawerItemVariants}>
                                     <Link 
-                                        href="/camps" 
+                                        href="/services" 
+                                        onClick={() => setIsMobileMenuOpen(false)} 
+                                        className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'services' ? 'is-active-link' : ''}`}
+                                        style={HERO_LINK}
+                                    >
+                                        <span className="marker-text">Services</span>
+                                        <span className="drawer-arrow">→</span>
+                                    </Link>
+                                </motion.div>
+
+                                <motion.div variants={drawerItemVariants}>
+                                    <Link 
+                                        href="/camps"
                                         onClick={() => setIsMobileMenuOpen(false)} 
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`} 
                                         style={HERO_LINK}

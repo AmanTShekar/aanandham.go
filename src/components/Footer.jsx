@@ -176,7 +176,8 @@ export default function Footer() {
                                 { name: 'Wayanad Forest Pods', href: '/camps/wayanad' },
                                 { name: 'All 11+ Kerala Campsites', href: '/camps' },
                                 { name: 'About Our Ethos & Team', href: '/about' },
-                                { name: 'Expedition Concierge Desk', href: '/contact' }
+                                { name: 'Tech & Brand Services', href: '/services' },
+                                { name: 'Visit Expedition Concierge Desk', href: '/contact' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>

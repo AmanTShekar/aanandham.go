@@ -4788,3 +4788,177 @@ body.booking-modal-open {
   -webkit-overflow-scrolling: touch !important;
   touch-action: pan-y !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   SERVICES PAGE — Buttons, Hover Effects, WhatsApp Logo
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Gold gradient CTA — primary action */
+.services-cta-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #0B150E;
+  background: linear-gradient(135deg, #E5A93B 0%, #D5ED55 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(229, 169, 59, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.services-cta-gold::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #D5ED55 0%, #E5A93B 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+.services-cta-gold > * { position: relative; z-index: 1; }
+.services-cta-gold:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 36px rgba(229, 169, 59, 0.45);
+}
+.services-cta-gold:hover::before { opacity: 1; }
+.services-cta-gold:active { transform: translateY(0) scale(0.98); }
+
+/* WhatsApp CTA — green with WhatsApp logo */
+.services-cta-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.services-cta-whatsapp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 0;
+}
+.services-cta-whatsapp > * { position: relative; z-index: 1; }
+.services-cta-whatsapp:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 36px rgba(37, 211, 102, 0.5);
+}
+.services-cta-whatsapp:hover::before { opacity: 1; }
+.services-cta-whatsapp:active { transform: translateY(0) scale(0.98); }
+
+/* Email CTA — secondary */
+.services-cta-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.services-cta-email:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+.services-cta-email:active { transform: translateY(0); }
+
+/* Portfolio Card hover — border glow + lift */
+.portfolio-card {
+  background: #0B150E;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform;
+}
+.portfolio-card:hover {
+  border-color: var(--accent, #E5A93B);
+  box-shadow: 0 24px 60px rgba(229, 169, 59, 0.18);
+}
+.portfolio-card:hover .portfolio-image {
+  transform: scale(1.06);
+}
+
+/* View Live button */
+.view-live-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #D5ED55;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(213, 237, 85, 0.1);
+  border: 1px solid rgba(213, 237, 85, 0.3);
+  transition: all 0.2s ease;
+}
+.view-live-btn:hover {
+  background: rgba(213, 237, 85, 0.2);
+  border-color: rgba(213, 237, 85, 0.5);
+  transform: translateX(2px);
+}
+
+/* Wing service cards hover */
+.wing-service-card {
+  background: #0B150E;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  will-change: transform;
+}
+.wing-service-card:hover {
+  background: #121613;
+  border-color: rgba(229, 169, 59, 0.3);
+  box-shadow: 0 16px 40px rgba(229, 169, 59, 0.12);
+}
+.wing-service-card:hover > div:first-child {
+  transform: rotate(-5deg) scale(1.08);
+  background: rgba(229, 169, 59, 0.18);
+}
+.wing-service-card > div:first-child {
+  transition: all 0.3s ease;
+}
+
+/* Process step hover */
+.process-step:hover {
+  border-color: rgba(229, 169, 59, 0.4) !important;
+  box-shadow: 0 16px 40px rgba(229, 169, 59, 0.15);
+  background: #121613 !important;
+}
+
+/* Filter tab hover */
+.filter-tab:hover {
+  background: rgba(229, 169, 59, 0.15) !important;
+  color: #E5A93B !important;
+  border-color: rgba(229, 169, 59, 0.4) !important;
+}
