@@ -370,13 +370,12 @@ export const INITIAL_ALL_CAMPS = [
         duration: '2 Days / 1 Night',
         difficulty: 'Easy Scenic',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
+        image: '/images/mini-mexico/mini-mexico-main.jpg',
         gallery: [
-            'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=1200&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
-            'https://images.unsplash.com/photo-1508873696983-2df5293cb39f?q=80&w=1200&auto=format&fit=crop'
+            '/images/mini-mexico/mini-mexico-main.jpg',
+            '/images/mini-mexico/mini-mexico-sunset-gazebo.jpg',
+            '/images/mini-mexico/mini-mexico-cloudbed-valley.jpg',
+            '/images/mini-mexico/mini-mexico-alpine-tent.jpg'
         ],
         faqs: [
             { q: 'Where is Mini Mexico located?', a: 'Mini Mexico is nestled in the serene vegetable terraced valleys of Vattavada, approximately 42 km from Munnar town in Kerala.' },
@@ -448,7 +447,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 4,
                 bookedUnits: 1,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
+                image: '/images/mini-mexico/mini-mexico-main.jpg',
                 features: ['Private Wood House', 'Valley Deck', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly', 'Couple Deal ₹5,000 / Group ₹2,000 pp']
             },
             {
@@ -460,7 +459,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 4,
                 bookedUnits: 1,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=1200&auto=format&fit=crop',
+                image: '/images/mini-mexico/mini-mexico-sunset-gazebo.jpg',
                 features: ['Cozy Wooden Cabin', 'Balcony Mountain View', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly']
             },
             {
@@ -471,7 +470,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 10,
                 bookedUnits: 2,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop',
+                image: '/images/mini-mexico/mini-mexico-alpine-tent.jpg',
                 features: ['Weatherproof Alpine Tent', 'Foam Mattress & Warm Blankets', 'Dinner & Breakfast Included', 'Shared Clean Restrooms', 'Campfire Circle Access']
             }
         ],

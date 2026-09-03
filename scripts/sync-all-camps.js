@@ -137,6 +137,20 @@ export default tentvillaCamp;
       console.log('✅ Written PMS src/lib/camps/tentvilla.js');
     }
 
+    const miniMexicoCamp = INITIAL_ALL_CAMPS.find(c => c.id === 'pkg-mini-mexico');
+    if (miniMexicoCamp) {
+      const miniMexicoContent = `/**
+ * Mini Mexico — Vattavada Cabins, Wood House & Tent Camp
+ * ID: pkg-mini-mexico
+ */
+export const miniMexicoCamp = ${JSON.stringify(miniMexicoCamp, null, 2)};
+
+export default miniMexicoCamp;
+`;
+      fs.writeFileSync(path.join(PMS_DIR, 'src/lib/camps/miniMexico.js'), miniMexicoContent, 'utf8');
+      console.log('✅ Written PMS src/lib/camps/miniMexico.js');
+    }
+
     // 4. Update PMS src/lib/camps/index.js
     const pmsIndexContent = `/**
  * Lazy-loading index for all camp modules
