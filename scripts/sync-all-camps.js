@@ -106,49 +106,38 @@ async function syncAll() {
     }
     console.log('✅ All ' + INITIAL_ALL_CAMPS.length + ' Properties & RoomTypes upserted in PostgreSQL database!');
 
-    // 3. Write teddyDomes.js to PMS
+    // 3. Write all camp modules to PMS
     console.log('3. Writing PMS camp modules...');
-    const teddyCamp = INITIAL_ALL_CAMPS.find(c => c.id === 'pkg-kolukkumalai-teddy-domes');
-    const tentvillaCamp = INITIAL_ALL_CAMPS.find(c => c.id === 'pkg-tentvilla-domes');
+    const campFileMap = [
+      { id: 'pkg-kolukkumalai', filename: 'kolukkumalai.js', varName: 'kolukkumalaiCamp' },
+      { id: 'pkg-meesapulimala', filename: 'meesapulimala.js', varName: 'meesapulimalaCamp' },
+      { id: 'pkg-suryanelli', filename: 'suryanelli.js', varName: 'suryanelliCamp' },
+      { id: 'pkg-mini-mexico', filename: 'miniMexico.js', varName: 'miniMexicoCamp' },
+      { id: 'pkg-wildlink', filename: 'wildlink.js', varName: 'wildlinkCamp' },
+      { id: 'pkg-tentvilla-domes', filename: 'tentvilla.js', varName: 'tentvillaCamp' },
+      { id: 'pkg-kolukkumalai-teddy-domes', filename: 'teddyDomes.js', varName: 'teddyDomesCamp' }
+    ];
 
-    if (teddyCamp) {
-      const teddyContent = `/**
- * Kolukkumalai Teddy Domes — Luxury Geodesic Domes & Phantom Hills Sunset
- * ID: pkg-kolukkumalai-teddy-domes
+    for (const item of campFileMap) {
+      const camp = INITIAL_ALL_CAMPS.find(c => c.id === item.id);
+      if (camp) {
+        const enrichedCamp = {
+          ...camp,
+          tenantId: 't-aanandham-hq',
+          tenantSlug: 'aanandham.go',
+          tenantName: 'Aanandham.go'
+        };
+        const content = `/**
+ * ${camp.title}
+ * ID: ${camp.id}
  */
-export const teddyDomesCamp = ${JSON.stringify(teddyCamp, null, 2)};
+export const ${item.varName} = ${JSON.stringify(enrichedCamp, null, 2)};
 
-export default teddyDomesCamp;
+export default ${item.varName};
 `;
-      fs.writeFileSync(path.join(PMS_DIR, 'src/lib/camps/teddyDomes.js'), teddyContent, 'utf8');
-      console.log('✅ Written PMS src/lib/camps/teddyDomes.js');
-    }
-
-    if (tentvillaCamp) {
-      const tentvillaContent = `/**
- * Tentvilla Resort — Kolukkumalai Luxurious Geodesic Domes
- * ID: pkg-tentvilla-domes
- */
-export const tentvillaCamp = ${JSON.stringify(tentvillaCamp, null, 2)};
-
-export default tentvillaCamp;
-`;
-      fs.writeFileSync(path.join(PMS_DIR, 'src/lib/camps/tentvilla.js'), tentvillaContent, 'utf8');
-      console.log('✅ Written PMS src/lib/camps/tentvilla.js');
-    }
-
-    const miniMexicoCamp = INITIAL_ALL_CAMPS.find(c => c.id === 'pkg-mini-mexico');
-    if (miniMexicoCamp) {
-      const miniMexicoContent = `/**
- * Mini Mexico — Vattavada Cabins, Wood House & Tent Camp
- * ID: pkg-mini-mexico
- */
-export const miniMexicoCamp = ${JSON.stringify(miniMexicoCamp, null, 2)};
-
-export default miniMexicoCamp;
-`;
-      fs.writeFileSync(path.join(PMS_DIR, 'src/lib/camps/miniMexico.js'), miniMexicoContent, 'utf8');
-      console.log('✅ Written PMS src/lib/camps/miniMexico.js');
+        fs.writeFileSync(path.join(PMS_DIR, 'src/lib/camps', item.filename), content, 'utf8');
+        console.log(`✅ Written PMS src/lib/camps/${item.filename}`);
+      }
     }
 
     // 4. Update PMS src/lib/camps/index.js
