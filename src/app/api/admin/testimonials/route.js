@@ -30,9 +30,9 @@ export async function POST(request) {
         const sanitized = testimonials.map((t, idx) => ({
             id: String(t.id || `t-${Date.now()}-${idx}`).slice(0, 60),
             quote: String(t.quote || '').slice(0, 2000),
-            author: String(t.author || 'Guest Camper').slice(0, 80),
+            author: String(t.author || t.name || 'Guest Camper').slice(0, 80),
             campBadge: String(t.campBadge || 'camp').slice(0, 40),
-            batchDate: String(t.batchDate || '').slice(0, 80),
+            batchDate: String(t.batchDate || t.role || '').slice(0, 80),
             avatar: String(t.avatar || '').slice(0, 500),
             active: t.active !== false
         }));

@@ -273,7 +273,7 @@ export const BLOG_POSTS = [
       {
         h2: 'How Organised Camps Handle Solo Safety',
         paragraphs: [
-          'At our camps, solo female campers are assigned near the coordinator\u2019s tent, the WhatsApp group includes the duty coordinator, and every trek has a marshal with first-aid training. Check-in is digitally logged, and the coordinator\u2019s number is shared at arrival. Those are the specific practices you should look for when reading a camp\u2019s safety page.'
+          'At our camps, solo female campers are assigned near the coordinator\u2019s tent, the WhatsApp group includes the duty coordinator, and every trek has camp staff with first-aid training. Check-in is digitally logged, and the coordinator\u2019s number is shared at arrival. Those are the specific practices you should look for when reading a camp\u2019s safety page.'
         ],
         internalLinks: [
           { href: '/camps/pkg-suryanelli', text: 'See our Suryanelli Valley Glamp — popular with solo campers' },
@@ -283,13 +283,13 @@ export const BLOG_POSTS = [
       {
         h2: 'Solo Trekking Rules for the Hills',
         paragraphs: [
-          'For sunrise treks (Kolukkumalai, Meesapulimala), never go unguided at dawn — join an organised expedition with a marshal. Carry a power bank, keep your phone charged, and let your camp coordinator know your return time. The hills are forgiving to prepared travellers and unforgiving to shortcuts.'
+          'For sunrise treks (Kolukkumalai, Meesapulimala), never go unguided at dawn — join an organised expedition with camp staff. Carry a power bank, keep your phone charged, and let your camp coordinator know your return time. The hills are forgiving to prepared travellers and unforgiving to shortcuts.'
         ]
       }
     ],
     faq: [
       { q: 'Is it safe to go camping alone in Munnar as a woman?', a: 'Yes, at organised campsites with female-friendly staffing, gated grounds, 24×7 coordinators and digital check-in. Always verify reviews and protocols before booking.' },
-      { q: 'Are the sunrise treks safe for solo female trekkers?', a: 'Guided expeditions are safe and standard practice — you trek with a marshal and a small group; solo dawn treks on unlit estate trails are not recommended for anyone.' },
+      { q: 'Are the sunrise treks safe for solo female trekkers?', a: 'Guided expeditions are safe and standard practice — you trek with dedicated staff and a small group; solo dawn treks on unlit estate trails are not recommended for anyone.' },
       { q: 'How many solo female campers has Aanandham hosted?', a: 'Over 350 solo female campers to date, with dedicated safety protocols including coordinator-assigned tents and 24×7 WhatsApp support.' },
       { q: 'What should a solo female camper pack for Munnar?', a: 'Warm layers (nights hit 5–12°C), a power bank, personal toiletries, a whistle, and your coordinator\u2019s emergency number saved in your phone.' }
     ]
@@ -324,7 +324,7 @@ export const BLOG_POSTS = [
         h2: 'How Difficult Is It Really?',
         paragraphs: [
           'Moderate — harder than Kolukkumalai, easier than Anamudi. The ascent includes sustained gradient sections and grassy ridges with exposure; fitness requirements are real but achievable for regular walkers. First-timers routinely complete it with a guide and a steady pace. The summit push in the last kilometre is the steepest part — allow 40–50 minutes for it.',
-          'Attempt it at sunrise and you add a 3:30–4:00 AM start. It\u2019s cold, dark and the ridge can be windy — which is exactly why organised expeditions run with headlamps, marshals and hot tea at the summit.'
+          'Attempt it at sunrise and you add a 3:30–4:00 AM start. It\u2019s cold, dark and the ridge can be windy — which is exactly why organised expeditions run with headlamps, staff guides and hot tea at the summit.'
         ]
       },
       {

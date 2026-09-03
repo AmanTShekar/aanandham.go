@@ -72,6 +72,29 @@ export async function POST(request) {
 
         await addStoredInquiry(newRecord);
 
+        // Forward to OpenPMS CRM Inbound Pipeline
+        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        try {
+            fetch(`${pmsUrl}/api/inquiries`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    phone,
+                    email: body.email || '',
+                    inquiryType,
+                    guests,
+                    travelDates,
+                    message,
+                    source: source || 'Aanandham.go Website',
+                    tenantId: 't-aanandham-hq',
+                    campsiteId: body.campsiteId || null,
+                    status: 'NEW_LEAD'
+                }),
+                signal: AbortSignal.timeout(3000)
+            }).catch(() => {});
+        } catch (pmsSyncErr) {}
+
         return NextResponse.json({ success: true, inquiryId, message: 'Inquiry received.' });
     } catch (err) {
         console.error(sanitizeLogOutput(`[INQUIRY API ERROR] ${err.message}`));

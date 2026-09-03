@@ -84,7 +84,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
     const [isValidating, setIsValidating] = useState(false);
     const [rosterChecklist, setRosterChecklist] = useState([]);
     const [isBalancePaid, setIsBalancePaid] = useState(false);
-    const [assignedTent, setAssignedTent] = useState('Geodesic Luxury Dome Pod');
+    const [assignedTent, setAssignedTent] = useState('Geodesic Dome Pod');
     const [isChangingTent, setIsChangingTent] = useState(false);
     const [wristbandRange, setWristbandRange] = useState('#101 - #104');
     const [marshalNotes, setMarshalNotes] = useState('');
@@ -465,7 +465,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Dome Pod';
                 setAssignedTent(preassigned);
                 setIsChangingTent(false);
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
@@ -507,7 +507,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Dome Pod';
                 setAssignedTent(preassigned);
                 setIsChangingTent(false);
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
@@ -593,7 +593,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
                 setRosterChecklist(data.booking.roster || []);
                 setIsBalancePaid(Boolean(data.booking.isBalancePaid));
                 setMarshalNotes(data.booking.marshalNotes || '');
-                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Luxury Dome Pod';
+                const preassigned = data.booking.assignedTent || data.booking.roomType || data.booking.campsite || 'Geodesic Dome Pod';
                 setAssignedTent(preassigned);
                 setIsChangingTent(false);
                 setWristbandRange(data.booking.wristbandRange || `#101 - #${100 + (data.booking.roster?.length || data.booking.totalGuests || 2)}`);
@@ -676,7 +676,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
                             mealType: idx < Math.ceil(testGuestsCount / 2) ? 'Veg' : 'Non-Veg'
                         }));
                     setRosterChecklist(roster);
-                    const preassigned = data.booking.roomType || data.booking.assignedTent || data.booking.package || 'Geodesic Luxury Dome Pod';
+                    const preassigned = data.booking.roomType || data.booking.assignedTent || data.booking.package || 'Geodesic Dome Pod';
                     setAssignedTent(preassigned);
                     setIsChangingTent(false);
                     setWristbandRange(`#101 - #${100 + roster.length}`);
@@ -738,7 +738,7 @@ export function useMarshalScannerState({ onBackToAdmin = null, embedded = false,
         setRosterChecklist(initialRoster);
         setIsBalancePaid(Boolean(guest.isBalancePaid));
         setMarshalNotes(guest.notes || '');
-        const preassigned = guest.assignedTent || guest.roomType || guest.campsite || 'Geodesic Luxury Dome Pod';
+        const preassigned = guest.assignedTent || guest.roomType || guest.campsite || 'Geodesic Dome Pod';
         setAssignedTent(preassigned);
         setIsChangingTent(false);
         setWristbandRange(guest.wristbandRange || `#101 - #${100 + initialRoster.length}`);

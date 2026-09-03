@@ -34,17 +34,14 @@ export default function AdminHeader({
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
                     <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 2.5vw, 24px)', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em' }}>
-                        {activeTab === 'overview' ? 'Mission Control & Operations' :
-                         activeTab === 'bookings' ? 'Camper Reservations Roster' :
-                         activeTab === 'properties' ? 'Campsites & Pod Inventory' :
-                         activeTab === 'events' ? 'Scheduled Batches' :
-                         activeTab === 'marshals' ? 'Camp Hosts & Trek Guides' :
-                         activeTab === 'financials' ? 'Revenue & Margins' :
-                         activeTab === 'payment' ? 'Payment Gateway & Live QR' :
-                         activeTab === 'discounts' ? 'Discounts & Offers Center' :
-                         activeTab === 'testimonials' ? 'Guest Testimonials & Reviews' :
-                         activeTab === 'logs' ? 'Security & Database Audit Logs' :
-                         'Alerts & Dispatch Settings'}
+                        {activeTab === 'destinations' ? 'Destination SEO & Regional Landing Pages' :
+                         activeTab === 'blog' ? 'Blog Newsroom & Wilderness Travel Guides' :
+                         activeTab === 'about' ? 'Brand Story & Founding Mountain Philosophy' :
+                         activeTab === 'services' ? 'Expedition Services & Technology Packages' :
+                         activeTab === 'contact' ? '24/7 Hotline & WhatsApp Concierge Desk' :
+                         activeTab === 'properties' ? 'Campsites & Pod Showcase (Live OpenPMS Sync)' :
+                         activeTab === 'testimonials' ? 'Camper Testimonials & Social Proof' :
+                         'Marketing & Destination CMS Studio'}
                     </h1>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#DCFCE7', color: '#166534', border: '1px solid rgba(22, 101, 52, 0.2)', padding: '2px 8px', borderRadius: '999px', fontSize: '10px', fontWeight: '800' }}>
                         <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#22C55E', display: 'inline-block', boxShadow: '0 0 6px #22C55E' }} />

@@ -299,7 +299,7 @@ export async function updateServerBooking(id, updates) {
                     package: updates.package || 'Kolukkumalai Sunrise Ridge Glamp',
                     dates: updates.dates || 'Upcoming Weekend',
                     guests: Number(updates.guests) || 2,
-                    roomType: updates.roomType || 'Geodesic Luxury Dome Pod',
+                    roomType: updates.roomType || 'Geodesic Dome Pod',
                     total: Number(updates.total) || 4998,
                     ...mapped
                 },

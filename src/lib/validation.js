@@ -1,7 +1,4 @@
-/**
- * Lightweight & robust validation layer for production API routes.
- * Provides schema validation, honeypot bot trap detection, and string sanitization.
- */
+import { validateEmailClient } from './emailValidatorCore.js';
 
 // Phone number sanitization: strip non-digit characters except leading +
 export function sanitizePhone(raw) {
@@ -9,10 +6,15 @@ export function sanitizePhone(raw) {
     return raw.replace(/[^\d+]/g, '').trim();
 }
 
-// Basic email regex validator
+// Strict production email validator (requires valid user, @, valid domain, and >= 2 char TLD like .com, .in)
 export function isValidEmail(email) {
     if (!email || typeof email !== 'string') return false;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    const trimmed = email.trim().toLowerCase();
+    if (trimmed.length < 6 || trimmed.length > 254) return false;
+    if (/\s/.test(trimmed)) return false;
+    if (trimmed.includes('..')) return false;
+    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+    return regex.test(trimmed);
 }
 
 // Validate Booking Intent Payload
@@ -35,6 +37,13 @@ export function validateBookingPayload(body) {
     const phone = sanitizePhone(rawPhone);
     if (!phone || phone.replace(/\D/g, '').length < 10) {
         errors.push('Valid 10-digit mobile or WhatsApp number is required.');
+    }
+
+    // 3.5 Email validation (Mandatory, no disposable or fake emails)
+    const email = (body.email || '').trim().toLowerCase();
+    const emailCheck = validateEmailClient(email);
+    if (!emailCheck.isValid) {
+        errors.push(emailCheck.message || 'A valid email address is mandatory to issue your official digital pass.');
     }
 
     // 4. Guests count validation
@@ -60,6 +69,7 @@ export function validateBookingPayload(body) {
             name,
             phone,
             rawPhone,
+            email,
             campsiteId: (body.campsiteId || body.packageId || '').trim(),
             package: (body.package || 'Wilderness Glamping').trim(),
             region: (body.region || 'Munnar').trim(),

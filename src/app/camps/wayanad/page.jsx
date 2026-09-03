@@ -44,6 +44,7 @@ export const metadata = {
 
 export default function WayanadCampsPage() {
   const wayanadCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Wayanad');
+  const displayCamps = wayanadCamps.length > 0 ? wayanadCamps : INITIAL_ALL_CAMPS;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
@@ -78,11 +79,11 @@ export default function WayanadCampsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CampsDirectoryClient
-        initialCamps={wayanadCamps}
-        initialRegion="Wayanad"
-        heroBadge="★ RAINFOREST CANOPY"
-        heroTitle={<>Wayanad Forest Camping & <span style={{ color: '#D5ED55' }}>Pod Stays</span></>}
-        heroSubtitle="Perched among ancient rainforest canopies and overlooking Chembra Peak (4,200 FT). Featuring 900 Kandi treehouse glamping, cardamom trail hikes, and mist-covered wooden cabins."
+        initialCamps={displayCamps}
+        initialRegion={wayanadCamps.length > 0 ? 'Wayanad' : 'All'}
+        heroBadge="★ 900 KANDI & CHEMBRA PEAK"
+        heroTitle={<>Wayanad Rainforest <span style={{ color: '#D5ED55' }}>Camping & Pod Stays</span></>}
+        heroSubtitle="Immerse yourself in deep mist-covered rainforest canopies, glass bridge trails, and private mountain stream pools with 24/7 Aanandham concierge."
       />
     </>
   );

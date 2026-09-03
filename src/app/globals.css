@@ -52,17 +52,41 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   -webkit-text-size-adjust: 100%;
-  touch-action: pan-y;
+  touch-action: manipulation;
 }
 
-/* Cross-Browser Mobile Compositor Optimization (Chrome, Safari, Samsung Internet, Firefox) */
+/* Cross-Browser Mobile Touch & Compositor Optimization (Chrome, Safari, iOS, Android) */
 @media (pointer: coarse) {
   html, body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: auto;
     background-color: #F8F9F5 !important;
-    touch-action: pan-y;
+    touch-action: manipulation;
   }
+}
+
+/* Universal Mobile Horizontal Card & Chip Scroll Enablers */
+.horizontal-scroll,
+.admin-region-chip-row,
+.cards-carousel,
+.camps-carousel-track,
+.mobile-horizontal-slider,
+[style*="overflow-x: auto"],
+[style*="overflow-x: scroll"],
+[style*="overflowX: auto"],
+[style*="overflowX: scroll"] {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-x pan-y !important;
+  overscroll-behavior-x: contain !important;
+  scrollbar-width: none !important;
+}
+
+.horizontal-scroll::-webkit-scrollbar,
+.admin-region-chip-row::-webkit-scrollbar,
+.cards-carousel::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 main, section, header, footer {
@@ -243,23 +267,33 @@ body::-webkit-scrollbar-thumb:active,
   .stone-tablets-grid,
   .about-reviews-grid,
   .why-desktop-pillars,
-  .similar-camps-grid {
+  .similar-camps-grid,
+  .wings-grid,
+  .portfolio-grid,
+  .packages-grid {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
     scroll-snap-type: x mandatory !important;
     -webkit-overflow-scrolling: touch !important;
     overscroll-behavior-x: contain !important;
-    gap: 16px !important;
-    padding: 14px 20px 28px 20px !important;
-    scrollbar-width: none !important;
-    margin: 0 auto !important;
-    width: 100% !important;
-    max-width: 100% !important;
+    gap: 14px !important;
+    /* Full bleed edge-to-edge container with padding */
+    margin-left: calc(-1 * clamp(16px, 4.5vw, 24px)) !important;
+    margin-right: calc(-1 * clamp(16px, 4.5vw, 24px)) !important;
+    padding-left: clamp(16px, 4.5vw, 24px) !important;
+    padding-right: clamp(16px, 4.5vw, 24px) !important;
+    padding-top: 14px !important;
+    padding-bottom: 22px !important;
+    width: calc(100% + 2 * clamp(16px, 4.5vw, 24px)) !important;
+    max-width: none !important;
     box-sizing: border-box !important;
-    scroll-padding-left: 20px !important;
-    scroll-padding-right: 20px !important;
+    scroll-padding-left: clamp(16px, 4.5vw, 24px) !important;
+    scroll-padding-right: clamp(16px, 4.5vw, 24px) !important;
     touch-action: pan-x pan-y !important;
+    /* Sleek custom mobile scrollbar marker so user sees swipe progress */
+    scrollbar-width: thin !important;
+    scrollbar-color: rgba(229, 169, 59, 0.4) transparent !important;
   }
 
   .mobile-swipe-track::-webkit-scrollbar,
@@ -271,10 +305,33 @@ body::-webkit-scrollbar-thumb:active,
   .stone-tablets-grid::-webkit-scrollbar,
   .about-reviews-grid::-webkit-scrollbar,
   .why-desktop-pillars::-webkit-scrollbar,
-  .similar-camps-grid::-webkit-scrollbar {
-    display: none !important;
-    height: 0 !important;
-    width: 0 !important;
+  .similar-camps-grid::-webkit-scrollbar,
+  .wings-grid::-webkit-scrollbar,
+  .portfolio-grid::-webkit-scrollbar,
+  .packages-grid::-webkit-scrollbar {
+    display: block !important;
+    height: 4px !important;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border-radius: 999px !important;
+    margin: 0 20px !important;
+  }
+
+  .mobile-swipe-track::-webkit-scrollbar-thumb,
+  .pillars-sticky-grid::-webkit-scrollbar-thumb,
+  .route-notebook-grid::-webkit-scrollbar-thumb,
+  .about-landmarks-grid::-webkit-scrollbar-thumb,
+  .about-team-grid::-webkit-scrollbar-thumb,
+  .altitude-spectrum-grid::-webkit-scrollbar-thumb,
+  .stone-tablets-grid::-webkit-scrollbar-thumb,
+  .about-reviews-grid::-webkit-scrollbar-thumb,
+  .why-desktop-pillars::-webkit-scrollbar-thumb,
+  .similar-camps-grid::-webkit-scrollbar-thumb,
+  .wings-grid::-webkit-scrollbar-thumb,
+  .portfolio-grid::-webkit-scrollbar-thumb,
+  .packages-grid::-webkit-scrollbar-thumb {
+    background: #E5A93B !important;
+    border-radius: 999px !important;
+    box-shadow: 0 0 8px rgba(229, 169, 59, 0.6) !important;
   }
 
   .mobile-swipe-track > *,
@@ -286,10 +343,14 @@ body::-webkit-scrollbar-thumb:active,
   .stone-tablets-grid > *,
   .about-reviews-grid > *,
   .why-desktop-pillars > *,
-  .similar-camps-grid > * {
-    flex: 0 0 min(86vw, 360px) !important;
-    min-width: min(86vw, 360px) !important;
-    max-width: min(86vw, 360px) !important;
+  .similar-camps-grid > *,
+  .wings-grid > *,
+  .portfolio-grid > *,
+  .packages-grid > * {
+    /* 84vw width allows the next card to clearly peek in by ~16vw on the right edge */
+    flex: 0 0 calc(84vw - 8px) !important;
+    min-width: calc(84vw - 8px) !important;
+    max-width: calc(84vw - 8px) !important;
     scroll-snap-align: start !important;
     box-sizing: border-box !important;
     transform: none !important;
@@ -786,28 +847,28 @@ body::-webkit-scrollbar-thumb:active,
 .vintage-polaroid-frame {
   position: relative;
   background-color: #FAF8F3;
-  border-radius: 2px; /* Real Polaroid: Crisp, non-rounded square card */
+  border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.09);
-  padding: 14px 14px 22px 14px;
+  padding: 10px 10px 16px 10px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  box-shadow: 0 16px 38px rgba(0, 0, 0, 0.12), 0 3px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
-  transform: rotate(-1.5deg);
+  transform: rotate(-1deg);
 }
 
 .vintage-polaroid-frame:hover {
-  transform: rotate(0deg) translateY(-8px);
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.18), 0 6px 14px rgba(0, 0, 0, 0.08);
+  transform: rotate(0deg) translateY(-5px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
 .polaroid-inner-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
-  min-height: 260px;
-  border-radius: 1px; /* Sharp authentic photo cut */
+  aspect-ratio: 4 / 3;
+  min-height: 210px;
+  border-radius: 2px;
   overflow: hidden;
   background: #0E1A11;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
@@ -815,11 +876,11 @@ body::-webkit-scrollbar-thumb:active,
 
 .polaroid-tape {
   position: absolute;
-  top: -12px;
+  top: -10px;
   left: 50%;
   transform: translateX(-50%) rotate(2deg);
-  width: 84px;
-  height: 24px;
+  width: 74px;
+  height: 20px;
   background: rgba(228, 192, 126, 0.85);
   border-left: 2px dashed rgba(180, 140, 75, 0.6);
   border-right: 2px dashed rgba(180, 140, 75, 0.6);
@@ -830,11 +891,11 @@ body::-webkit-scrollbar-thumb:active,
 
 .polaroid-chin-text {
   font-family: var(--font-heading), 'Bricolage Grotesque', sans-serif;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   color: #121613;
   letter-spacing: -0.01em;
-  padding-top: 14px;
+  padding-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -846,23 +907,23 @@ body::-webkit-scrollbar-thumb:active,
 .notebook-review-card {
   position: relative;
   background-color: #FAF8F2;
-  background-image: repeating-linear-gradient(transparent, transparent 27px, rgba(59, 130, 246, 0.12) 28px);
+  background-image: repeating-linear-gradient(transparent, transparent 23px, rgba(59, 130, 246, 0.1) 24px);
   border-left: 3.5px solid rgba(239, 68, 68, 0.42);
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   border-right: 1px solid rgba(0, 0, 0, 0.08);
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px; /* Non-rounded sharp paper edge */
-  padding: 32px 26px 28px 28px;
+  border-radius: 3px;
+  padding: 20px 20px 18px 22px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08), 0 3px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   cursor: default;
 }
 
 .notebook-review-card:hover {
-  transform: translateY(-8px) rotate(0deg) !important;
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.14), 0 6px 14px rgba(0, 0, 0, 0.06);
+  transform: translateY(-5px) rotate(0deg) !important;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .notebook-binder-holes {
@@ -4793,7 +4854,7 @@ body.booking-modal-open {
    SERVICES PAGE — Buttons, Hover Effects, WhatsApp Logo
    ═══════════════════════════════════════════════════════════════════ */
 
-/* Gold gradient CTA — primary action */
+/* Gold solid CTA — primary action (no gradients) */
 .services-cta-gold {
   display: inline-flex;
   align-items: center;
@@ -4804,32 +4865,22 @@ body.booking-modal-open {
   border-radius: 999px;
   text-decoration: none;
   color: #0B150E;
-  background: linear-gradient(135deg, #E5A93B 0%, #D5ED55 100%);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 24px rgba(229, 169, 59, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-  position: relative;
-  overflow: hidden;
+  background: #E5A93B;
+  border: 1px solid #E5A93B;
+  box-shadow: 0 4px 14px rgba(229, 169, 59, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   cursor: pointer;
-}
-.services-cta-gold::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #D5ED55 0%, #E5A93B 100%);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  z-index: 0;
 }
 .services-cta-gold > * { position: relative; z-index: 1; }
 .services-cta-gold:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 36px rgba(229, 169, 59, 0.45);
+  background: #D5ED55;
+  border-color: #D5ED55;
+  box-shadow: 0 8px 24px rgba(213, 237, 85, 0.45);
 }
-.services-cta-gold:hover::before { opacity: 1; }
 .services-cta-gold:active { transform: translateY(0) scale(0.98); }
 
-/* WhatsApp CTA — green with WhatsApp logo */
+/* WhatsApp CTA — solid green with WhatsApp logo */
 .services-cta-whatsapp {
   display: inline-flex;
   align-items: center;
@@ -4840,32 +4891,22 @@ body.booking-modal-open {
   border-radius: 999px;
   text-decoration: none;
   color: #FFFFFF;
-  background: linear-gradient(135deg, #128C7E 0%, #25D366 100%);
-  border: 1px solid rgba(37, 211, 102, 0.4);
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-  position: relative;
-  overflow: hidden;
+  background: #25D366;
+  border: 1px solid #25D366;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
   cursor: pointer;
-}
-.services-cta-whatsapp::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  z-index: 0;
 }
 .services-cta-whatsapp > * { position: relative; z-index: 1; }
 .services-cta-whatsapp:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 36px rgba(37, 211, 102, 0.5);
+  background: #128C7E;
+  border-color: #128C7E;
+  box-shadow: 0 8px 24px rgba(18, 140, 126, 0.5);
 }
-.services-cta-whatsapp:hover::before { opacity: 1; }
 .services-cta-whatsapp:active { transform: translateY(0) scale(0.98); }
 
-/* Email CTA — secondary */
+/* Email CTA — secondary solid */
 .services-cta-email {
   display: inline-flex;
   align-items: center;
@@ -4876,15 +4917,15 @@ body.booking-modal-open {
   border-radius: 999px;
   text-decoration: none;
   color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 .services-cta-email:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #E5A93B;
+  border-color: #E5A93B;
+  color: #0B150E;
   transform: translateY(-2px);
 }
 .services-cta-email:active { transform: translateY(0); }
@@ -4962,3 +5003,105 @@ body.booking-modal-open {
   color: #E5A93B !important;
   border-color: rgba(229, 169, 59, 0.4) !important;
 }
+
+/* Wing card hover effects */
+.wing-card {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wing-card:hover {
+  border-color: var(--accent, #E5A93B) !important;
+  box-shadow: 0 32px 80px rgba(229, 169, 59, 0.22);
+}
+.wing-card:hover .wing-service-row {
+  background: #0F1E13 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(4px);
+}
+.wing-card:hover .wing-service-row > div:first-child {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.wing-service-row {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.wing-service-row > div:first-child {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+}
+
+/* ══ SERVICES PAGE EDITORIAL LAYOUTS ══ */
+.process-timeline-connector {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .process-timeline-connector {
+    display: block;
+    position: absolute;
+    top: 28px;
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: linear-gradient(to right, rgba(229,169,59,0.1) 0%, rgba(229,169,59,0.5) 50%, rgba(229,169,59,0.1) 100%);
+    z-index: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .services-hero-grid,
+  .cta-grid {
+    grid-template-columns: 1fr !important;
+    gap: 48px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-hero-grid h1 {
+    font-size: clamp(30px, 9vw, 36px) !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GLOBAL BOOKING-CENTRIC CONCIERGE & MOBILE STICKY ACTION BAR
+───────────────────────────────────────────────────────────── */
+.desktop-global-action-dock {
+  display: flex !important;
+}
+.desktop-global-action-dock.is-collapsed {
+  cursor: pointer;
+}
+.desktop-global-action-dock.is-collapsed:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(229, 169, 59, 0.45) !important;
+}
+.action-dock-pill-trigger:hover span:nth-child(2) {
+  color: #E5A93B !important;
+}
+.action-dock-btn:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  transform: translateY(-1px);
+}
+.action-dock-book-btn:hover {
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(229, 169, 59, 0.5) !important;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .desktop-global-action-dock {
+    display: none !important;
+  }
+  .mobile-sticky-action-bar {
+    display: flex !important;
+  }
+  body {
+    padding-bottom: 74px !important;
+  }
+}
+

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { 
     LayoutDashboard, ClipboardList, Tent, Calendar, Users, IndianRupee, 
     QrCode, BadgePercent, MessageSquareQuote, Settings, ScrollText, ChevronLeft, 
-    ChevronRight, X, ArrowUpRight, Smartphone, ShieldCheck, RefreshCw 
+    ChevronRight, X, ArrowUpRight, Smartphone, ShieldCheck, RefreshCw, Sparkles, ExternalLink,
+    Compass, BookOpen, FileText, Briefcase, PhoneCall, CreditCard
 } from 'lucide-react';
 import { 
     drawerWaveVariants, drawerStaggerVariants, drawerItemVariants 
@@ -28,29 +29,26 @@ export default function AdminSidebar({
 
     const navSections = [
         {
-            category: 'Operations',
+            category: 'Website Content & SEO',
             items: [
-                { id: 'overview', name: 'Overview', icon: LayoutDashboard },
-                { id: 'bookings', name: 'Bookings', icon: ClipboardList, count: bookingsCount },
-                { id: 'properties', name: 'Campsites', icon: Tent },
-                { id: 'events', name: 'Treks & Batches', icon: Calendar },
-                { id: 'marshals', name: 'Staff & Marshals', icon: Users }
+                { id: 'properties', name: 'Campsites & Pods', icon: Tent, desc: '6 Verified Camps' },
+                { id: 'destinations', name: 'Destination SEO', icon: Compass, desc: 'Munnar, Vagamon, Wayanad' },
+                { id: 'blog', name: 'Blog & Travel Guides', icon: BookOpen, desc: 'Published Articles' }
             ]
         },
         {
-            category: 'Financials',
+            category: 'Brand Pages & Copy',
             items: [
-                { id: 'financials', name: 'Revenue & Finance', icon: IndianRupee },
-                { id: 'payment', name: 'Payment Settings', icon: QrCode },
-                { id: 'discounts', name: 'Discounts & Promos', icon: BadgePercent }
+                { id: 'about', name: 'Brand Story & Charter', icon: FileText, desc: '/about Page' },
+                { id: 'services', name: 'Services & Packages', icon: Briefcase, desc: '/services Page' },
+                { id: 'contact', name: 'Hotline & Concierge', icon: PhoneCall, desc: '/contact Hotlines' },
+                { id: 'testimonials', name: 'Guest Reviews', icon: MessageSquareQuote, desc: 'Camper Testimonials' }
             ]
         },
         {
-            category: 'System',
+            category: 'Gateway & System Controls',
             items: [
-                { id: 'testimonials', name: 'Guest Reviews', icon: MessageSquareQuote },
-                { id: 'logs', name: 'Security & Audit', icon: ScrollText },
-                { id: 'settings', name: 'Notifications', icon: Settings }
+                { id: 'payments', name: 'Payment Gateway', icon: CreditCard, desc: 'Razorpay / Safe Mode Toggle' }
             ]
         }
     ];
@@ -243,7 +241,7 @@ export default function AdminSidebar({
                                 Aanandham Admin
                             </div>
                             <div style={{ fontSize: '9.5px', color: '#7D8880', fontWeight: '600' }}>
-                                All Kerala Sanctuaries
+                                All Kerala Camps
                             </div>
                         </div>
                     )}
@@ -251,28 +249,52 @@ export default function AdminSidebar({
 
                 <div style={{ display: 'flex', flexDirection: isCollapsed ? 'column' : 'row', gap: '6px' }}>
                     {!isCollapsed && (
-                        <Link
-                            href="/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                flex: 1,
-                                padding: '7px 8px',
-                                borderRadius: '8px',
-                                background: '#FFFFFF',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                textDecoration: 'none',
-                                fontSize: '11px',
-                                fontWeight: '700',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: '4px'
-                            }}
-                        >
-                            <span>Website <ArrowUpRight size={12} strokeWidth={2.5} /></span>
-                        </Link>
+                        <>
+                            <Link
+                                href="/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    flex: 1,
+                                    padding: '7px 8px',
+                                    borderRadius: '8px',
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                    color: '#121613',
+                                    textDecoration: 'none',
+                                    fontSize: '11px',
+                                    fontWeight: '700',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '4px'
+                                }}
+                            >
+                                <span>Website <ArrowUpRight size={12} strokeWidth={2.5} /></span>
+                            </Link>
+                            <a
+                                href="http://localhost:3001/admin"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    flex: 1,
+                                    padding: '7px 8px',
+                                    borderRadius: '8px',
+                                    background: '#101E13',
+                                    border: '1px solid rgba(213, 237, 85, 0.25)',
+                                    color: '#D5ED55',
+                                    textDecoration: 'none',
+                                    fontSize: '11px',
+                                    fontWeight: '800',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '4px'
+                                }}
+                            >
+                                <ShieldCheck size={12} /> <span>OpenPMS</span>
+                            </a>
+                        </>
                     )}
                     <button
                         onClick={handleLogout}

@@ -3,6 +3,7 @@ import crypto, { randomUUID } from 'crypto';
 import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked, blockIp, addToWaitlist, acquireSlotLock, releaseSlotLock, getIdempotentResponse, setIdempotentResponse } from '@/lib/redis';
 import { validateBookingPayload } from '@/lib/validation';
+import { verifyEmailServer } from '@/lib/emailValidatorServer';
 import { createRazorpayOrder } from '@/lib/razorpay';
 import { addServerBooking, getStoredBookings } from '@/lib/serverBookingStore';
 import { findCampAndRoom, computeBookingTotal, campGuestCapacity, parseRoomCapacity } from '@/lib/pricing';
@@ -128,6 +129,44 @@ export async function POST(request) {
             );
         }
 
+        // 4.2. Authoritative Live Email Verification (MX Record & Disposable Filter)
+        const emailVerification = await verifyEmailServer(validation.sanitized.email);
+        if (!emailVerification.isValid) {
+            return NextResponse.json(
+                { success: false, message: emailVerification.message || 'The provided email address is invalid or cannot receive mail.' },
+                { status: 400 }
+            );
+        }
+
+        // 4.5. Master Delegation: Forward booking creation & Razorpay Order to OpenPMS
+        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        try {
+            const pmsRes = await fetch(`${pmsUrl}/api/bookings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh'}`,
+                    'X-Internal-Token': process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh',
+                    'X-PMS-Tenant-Id': process.env.NEXT_PUBLIC_PMS_TENANT_ID || 't-aanandham-hq',
+                    'x-forwarded-for': ip
+                },
+                body: JSON.stringify(body),
+                signal: AbortSignal.timeout(4000)
+            });
+            if (pmsRes.ok) {
+                const pmsData = await pmsRes.json();
+                if (pmsData.success) {
+                    if (pmsData.booking) {
+                        await addServerBooking(pmsData.booking);
+                    }
+                    if (idempotencyKey) await setIdempotentResponse(idempotencyKey, pmsData);
+                    return NextResponse.json(pmsData);
+                }
+            }
+        } catch (pmsErr) {
+            console.warn('[OpenPMS Booking Delegation Failed, falling back to local engine]:', pmsErr.message);
+        }
+
         const data = validation.sanitized;
         const campsiteId = data.campsiteId || data.package.toLowerCase().replace(/[^a-z0-9]/g, '-');
         const roomId = data.roomType.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -196,6 +235,15 @@ export async function POST(request) {
         // 8. Handle Gateway Order only if Online Razorpay Checkout is selected
         let rzpOrder = null;
         if (isOnlineGateway) {
+            // Guard: Verify gateway is actively enabled (non-hackable server protection)
+            const isGatewayActive = process.env.NEXT_PUBLIC_PAYMENT_MODE !== 'coming_soon' && process.env.ENABLE_ONLINE_PAYMENTS !== 'false';
+            if (!isGatewayActive) {
+                return NextResponse.json({
+                    success: false,
+                    message: 'Online payment gateway is launching soon. Please reserve your campsite via WhatsApp Concierge.'
+                }, { status: 403 });
+            }
+
             if (serverTotal < 100) {
                 return NextResponse.json({ success: false, message: 'Invalid booking amount.' }, { status: 400 });
             }
@@ -265,10 +313,28 @@ export async function POST(request) {
 
         // Guarantees post-response completion on serverless lambdas
         after(async () => {
+            // For online Razorpay bookings: email is sent ONLY after payment is captured
+            // via /api/payments/webhook — not here (status is still "Payment Pending").
+            // For inquiry / manual / WhatsApp bookings: send the holding confirmation now.
+            if (!isOnlineGateway) {
+                try {
+                    await sendBookingConfirmationEmail(newBooking);
+                } catch (err) {
+                    console.error('[EMAIL DISPATCH ERROR]', err);
+                }
+            }
+
+            // Real-time broadcast of new booking into OpenPMS
+            const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
             try {
-                await sendBookingConfirmationEmail(newBooking);
-            } catch (err) {
-                console.error('[EMAIL DISPATCH ERROR]', err);
+                await fetch(`${pmsUrl}/api/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newBooking),
+                    signal: AbortSignal.timeout(3000)
+                });
+            } catch (pmsErr) {
+                // OpenPMS sync logged or safely completed via Postgres
             }
         });
 
@@ -291,28 +357,34 @@ export async function POST(request) {
             holdExpiresAt,
             ttlSeconds: 600,
             discountPercent,
-            keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
-            razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
+            keyId: rzpOrder?.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
+            razorpayKeyId: rzpOrder?.key_id || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID || null,
             order: {
-                id: rzpOrder.id,
-                amount: rzpOrder.amount,
-                currency: rzpOrder.currency || 'INR'
+                id: rzpOrder?.id || null,
+                amount: rzpOrder?.amount || null,
+                currency: rzpOrder?.currency || 'INR'
             },
             razorpayOrder: {
-                id: rzpOrder.id,
-                amount: rzpOrder.amount,
-                currency: rzpOrder.currency || 'INR'
+                id: rzpOrder?.id || null,
+                amount: rzpOrder?.amount || null,
+                currency: rzpOrder?.currency || 'INR'
             },
             message: 'Slot reserved for 10 minutes. Please complete payment.'
         };
         if (idempotencyKey) await setIdempotentResponse(idempotencyKey, resData);
         return NextResponse.json(resData);
-    } finally {
-        // Always release the lock regardless of success or failure
-        await releaseSlotLock(slotKey, lockId);
-    }
+        } finally {
+            // Always release the lock regardless of success or failure
+            await releaseSlotLock(slotKey, lockId);
+        }
     } catch (err) {
         console.error(sanitizeLogOutput(`[BOOKING INTENT ERROR] ${err.message}`));
-        return NextResponse.json({ success: false, message: 'Server error processing booking.' }, { status: 500 });
+        const isClientFriendly = err.message && (
+            err.message.includes('Payment gateway') ||
+            err.message.includes('Razorpay') ||
+            err.message.includes('temporarily unavailable')
+        );
+        const userMsg = isClientFriendly ? err.message : 'Server encountered an error processing your reservation. Please try again shortly or contact our 24/7 concierge.';
+        return NextResponse.json({ success: false, message: userMsg }, { status: 503 });
     }
 }

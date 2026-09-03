@@ -2,6 +2,7 @@ import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import Script from 'next/script';
 import SmoothScroll from '@/components/SmoothScroll';
+import GlobalActionHub from '@/components/common/GlobalActionHub';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SEO_KEYWORDS, SITE_RATING } from '@/lib/seoKeywords';
@@ -187,6 +188,7 @@ export default function RootLayout({ children }) {
       <body style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#F8F9F5', color: '#121613' }}>
         <SmoothScroll />
         {children}
+        <GlobalActionHub />
         <Analytics />
         <SpeedInsights />
 
@@ -208,6 +210,12 @@ export default function RootLayout({ children }) {
               });
             `,
           }}
+        />
+        {/* Razorpay Standard Checkout SDK */}
+        <Script
+          id="razorpay-checkout-sdk"
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="lazyOnload"
         />
       </body>
     </html>

@@ -26,9 +26,15 @@ export function parseRoomCapacity(capacity) {
 
 export function findCampAndRoom(campsiteId, roomId) {
     const camps = getAllCamps();
-    const camp = camps.find(c => c.id === campsiteId) || null;
+    const camp = camps.find(c => c.id === campsiteId || c.id?.toLowerCase() === String(campsiteId).toLowerCase()) || null;
     if (!camp) return { camp: null, room: null };
-    const room = camp.rooms.find(r => r.id === roomId || r.name === roomId) || null;
+    const roomClean = String(roomId || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const room = (camp.rooms || []).find(r => 
+        r.id === roomId || 
+        r.name === roomId || 
+        r.name.toLowerCase().replace(/[^a-z0-9]/g, '') === roomClean ||
+        r.id.toLowerCase().replace(/[^a-z0-9]/g, '') === roomClean
+    ) || (camp.rooms && camp.rooms[0]) || null;
     return { camp, room };
 }
 

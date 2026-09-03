@@ -198,6 +198,25 @@ export async function POST(request) {
                 } catch (e) {
                     console.error('Error sending confirmation email on webhook capture:', e);
                 }
+
+                // Real-time broadcast of confirmed booking & payment into OpenPMS
+                const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+                try {
+                    await fetch(`${pmsUrl}/api/bookings`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ...booking,
+                            status: 'Confirmed',
+                            paymentId: paymentEntity?.id,
+                            paidAmount: Number(paymentEntity?.amount || 0) / 100,
+                            paidAt: new Date().toISOString()
+                        }),
+                        signal: AbortSignal.timeout(3000)
+                    });
+                } catch (pmsErr) {
+                    console.error('[OpenPMS Webhook Sync Error]', pmsErr.message);
+                }
             });
 
             return NextResponse.json({ success: true, message: 'Booking confirmed' });

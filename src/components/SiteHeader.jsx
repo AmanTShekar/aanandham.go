@@ -176,19 +176,19 @@ export default function SiteHeader({
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go Wilderness Basecamps"
-                                width="48"
-                                height="48"
-                               
+                                width="56"
+                                height="56"
                                 className="site-brand-logo"
                                 style={{
-                                    width: 'clamp(42px, 3.4vw, 48px)',
-                                    height: 'clamp(42px, 3.4vw, 48px)',
+                                    width: 'clamp(46px, 3.8vw, 54px)',
+                                    height: 'clamp(46px, 3.8vw, 54px)',
                                     objectFit: 'contain',
-                                    borderRadius: '50%',
-                                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45))',
+                                    background: 'transparent',
                                     transition: 'transform 0.25s ease'
                                 }}
-                             loading="lazy" decoding="async"/>
+                                loading="eager" 
+                                decoding="async"
+                            />
                             <span className="marker-text site-brand-text" style={{
                                 fontSize: 'clamp(18px, 1.4vw, 21px)',
                                 fontWeight: '900',

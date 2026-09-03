@@ -51,7 +51,7 @@ export default function Step1CampsiteLodging({
                                         1. Select Destination Campsite
                                     </label>
                                     <span style={{ fontSize: '12px', color: '#166534', fontWeight: '800' }}>
-                                        {campsList.length} Verified Sanctuaries
+                                        {campsList.length} Verified Camps
                                     </span>
                                 </div>
                                 <div className="booking-pkgs-grid">

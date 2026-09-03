@@ -13,58 +13,37 @@ import AdminAuthModal from '@/components/admin/AdminAuthModal';
 import PropertyDetailInspector from '@/components/admin/PropertyDetailInspector';
 
 // Tab Submodules
-import AdminOverviewTab from '@/components/admin/tabs/AdminOverviewTab';
-import AdminBookingsTab from '@/components/admin/tabs/AdminBookingsTab';
 import AdminPropertiesTab from '@/components/admin/tabs/AdminPropertiesTab';
-import AdminEventsTab from '@/components/admin/tabs/AdminEventsTab';
-import AdminMarshalsTab from '@/components/admin/tabs/AdminMarshalsTab';
-import AdminFinancialsTab from '@/components/admin/tabs/AdminFinancialsTab';
-import AdminPaymentTab from '@/components/admin/tabs/AdminPaymentTab';
-import AdminDiscountsTab from '@/components/admin/tabs/AdminDiscountsTab';
 import AdminTestimonialsTab from '@/components/admin/tabs/AdminTestimonialsTab';
-import AdminSettingsTab from '@/components/admin/tabs/AdminSettingsTab';
-import AdminLogsTab from '@/components/admin/tabs/AdminLogsTab';
+import AdminPaymentGatewayTab from '@/components/admin/tabs/AdminPaymentGatewayTab';
+import AdminDestinationsCmsTab from '@/components/admin/tabs/cms/AdminDestinationsCmsTab';
+import AdminBlogCmsTab from '@/components/admin/tabs/cms/AdminBlogCmsTab';
+import AdminBrandStoryCmsTab from '@/components/admin/tabs/cms/AdminBrandStoryCmsTab';
+import AdminServicesCmsTab from '@/components/admin/tabs/cms/AdminServicesCmsTab';
+import AdminHotlinesCmsTab from '@/components/admin/tabs/cms/AdminHotlinesCmsTab';
 
 // Modal Submodules
-import AddBookingModal from '@/components/admin/modals/AddBookingModal';
 import PropertyEditModal from '@/components/admin/modals/PropertyEditModal';
-import EventEditModal from '@/components/admin/modals/EventEditModal';
-import MarshalEditModal from '@/components/admin/modals/MarshalEditModal';
 import DeleteConfirmModal from '@/components/admin/modals/DeleteConfirmModal';
 
-function AdminPortalInner() {
-    const admin = useAdminPortalState();
+export function AdminPortalInner({ initialTab = 'overview' }) {
+    const admin = useAdminPortalState(initialTab);
     const {
         isAuthenticated, passcode, setPasscode, passcodeError, rememberMe, setRememberMe, handleLogin,
         activeTab, setActiveTab, activePropertyDetailId, setActivePropertyDetailId,
-        properties, events, bookings, marshals, discounts, testimonials, dbLogs, authLogs, authStats,
-        adminProfile, adminScopeCamp, isSidebarCollapsed, setIsSidebarCollapsed,
+        properties, testimonials,
+        isSidebarCollapsed, setIsSidebarCollapsed,
         isMobileSidebarOpen, setIsMobileSidebarOpen, isMobile, scannerOverlayOpen, setScannerOverlayOpen,
-        toastMessage, handleLogout, showToast,
-        // Modals state
+        handleLogout,
+        // Property Inspector & Modals state
         isPropertyModalOpen, setIsPropertyModalOpen, editingProperty, setEditingProperty, propertyForm, setPropertyForm,
         imageUrlInput, setImageUrlInput, handleSaveProperty,
         isAddRoomModalOpen, setIsAddRoomModalOpen, editingRoom, setEditingRoom, roomForm, setRoomForm, handleSaveRoom, handleDeleteRoom, handleUploadPhoto,
-        isAddBookingModalOpen, setIsAddBookingModalOpen, newBookingForm, setNewBookingForm, handleSaveBooking,
-        isEventModalOpen, setIsEventModalOpen, editingEvent, setEditingEvent, eventForm, setEventForm, handleSaveEvent,
-        isMarshalModalOpen, setIsMarshalModalOpen, editingMarshal, setEditingMarshal, marshalForm, setMarshalForm, handleSaveMarshal,
-        deleteConfirmDialog, setDeleteConfirmDialog, closeDeleteConfirm,
+        deleteConfirmDialog, setDeleteConfirmDialog,
         // Tab specific
-        stats, filteredBookings, bookingSearch, setBookingSearch, bookingFilterStatus, setBookingFilterStatus,
-        bookingFilterCamp, setBookingFilterCamp, bookingSortBy, setBookingSortBy, copiedBookingId, isExportingCsv, handleExportBookingsCsv,
-        handleStatusChange, handleStatusUpdate, handleShareBookingWhatsApp, handleCopyBookingPassLink, openDeleteConfirm,
-        filteredProperties, propertyFilterRegion, setPropertyFilterRegion, handleDeleteProperty,
-        filteredEvents, handleDeleteEvent, filteredMarshals, handleDeleteMarshal,
-        paymentSettings, setPaymentSettings, handleSavePaymentSettings, settingsSavedToast,
-        setDiscounts, handleSaveDiscounts, discountsSaving, handleResetDiscounts, handleResetDefaultDiscounts,
-        setTestimonials, handleSaveTestimonials, testimonialsSaving, handleResetTestimonials, handleResetDefaultTestimonials, handleAddTestimonial, handleQuickAddRandomTestimonial,
-        adminPhone, setAdminPhone, adminTelegram, setAdminTelegram, handleSaveSettings, handleSaveGeneralSettings,
-        logViewTab, setLogViewTab, logSearch, setLogSearch, logFilterSeverity, setLogFilterSeverity,
-        filteredLogs, filteredInquiries,
-        // Data loading & actions
-        isLoadingBookings, fetchBookings, isOnlineMode, handleDeleteBooking, handleExportBookingsCSV,
-        handleQuickAddStaffPreset, handleExportLedgerCSV, auditLogs, isLoadingAudit, fetchAuditLogs, inquiries, fetchInquiries,
-        securityOverview
+        propertyFilterRegion, setPropertyFilterRegion,
+        setTestimonials, handleSaveTestimonials, testimonialsSaving, handleResetDefaultTestimonials, handleQuickAddRandomTestimonial,
+        fetchBookings, isOnlineMode
     } = admin;
 
     const currentDetailProperty = properties.find(p => p.id === activePropertyDetailId) || null;
@@ -95,45 +74,6 @@ function AdminPortalInner() {
             });
         }
         setIsPropertyModalOpen(true);
-    };
-
-    const openEventModal = (event = null) => {
-        if (event) {
-            setEditingEvent(event);
-            setEventForm({ ...event });
-        } else {
-            setEditingEvent(null);
-            setEventForm({
-                title: '',
-                location: 'Kolukkumalai Peak',
-                date: '',
-                duration: '2 Days',
-                price: 2499,
-                totalSlots: 20,
-                status: 'Active',
-                tag: 'Upcoming'
-            });
-        }
-        setIsEventModalOpen(true);
-    };
-
-    const openMarshalModal = (marshal = null) => {
-        if (marshal) {
-            setEditingMarshal(marshal);
-            setMarshalForm({ ...marshal });
-        } else {
-            setEditingMarshal(null);
-            setMarshalForm({
-                name: '',
-                role: 'Basecamp Guide',
-                campsite: 'Kolukkumalai',
-                phone: '',
-                status: 'Active',
-                rating: '4.9',
-                languages: 'English, Malayalam, Tamil'
-            });
-        }
-        setIsMarshalModalOpen(true);
     };
 
     const openAddRoomModal = () => {
@@ -198,31 +138,8 @@ function AdminPortalInner() {
         );
     }
 
-    const financialStats = {
-        totalRevenue: stats.totalRevenue,
-        estimatedDirectCosts: Math.round(stats.totalRevenue * 0.45),
-        estimatedNetProfit: stats.estimatedNetProfit,
-        profitMarginPercent: stats.profitMarginPercent,
-        paidBookingsCount: bookings.filter(b => b.status === 'Confirmed' || b.status === 'Checked In').length,
-        totalBookingsCount: bookings.length
-    };
-
-    const navItems = [
-        { id: 'overview', label: 'Overview' },
-        { id: 'bookings', label: 'Bookings' },
-        { id: 'properties', label: 'Campsites' },
-        { id: 'events', label: 'Expeditions' },
-        { id: 'marshals', label: 'Staff' },
-        { id: 'financials', label: 'Ledger' },
-        { id: 'payment', label: 'Payments' },
-        { id: 'discounts', label: 'Discounts' },
-        { id: 'testimonials', label: 'Reviews' },
-        { id: 'logs', label: 'Logs' },
-        { id: 'settings', label: 'Settings' }
-    ];
-
     return (
-        <div style={{ display: 'flex', minHeight: '100vh', background: '#F8F9F5', color: '#121613' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', background: '#F8F9F5', position: 'relative' }}>
             {/* Sidebar Navigation */}
             <AdminSidebar
                 activeTab={activeTab}
@@ -232,9 +149,9 @@ function AdminPortalInner() {
                 isMobileSidebarOpen={isMobileSidebarOpen}
                 setIsMobileSidebarOpen={setIsMobileSidebarOpen}
                 isMobile={isMobile}
-                navItems={navItems}
                 handleLogout={handleLogout}
                 setScannerOverlayOpen={setScannerOverlayOpen}
+                fetchBookings={fetchBookings}
             />
 
             {/* Main Content Area */}
@@ -251,7 +168,6 @@ function AdminPortalInner() {
             }}>
                 <AdminHeader
                     activeTab={activeTab}
-                    bookingsCount={bookings.length}
                     isMobile={isMobile}
                     isMobileSidebarOpen={isMobileSidebarOpen}
                     setIsMobileSidebarOpen={setIsMobileSidebarOpen}
@@ -260,51 +176,8 @@ function AdminPortalInner() {
                     isOnlineMode={isOnlineMode}
                 />
 
-                {/* Tab Views */}
-                {activeTab === 'overview' && (
-                    <AdminOverviewTab
-                        stats={stats}
-                        properties={properties}
-                        bookings={bookings}
-                        events={events}
-                        marshals={marshals}
-                        paymentSettings={paymentSettings}
-                        setActiveTab={setActiveTab}
-                        openPropertyModal={openPropertyModal}
-                        setIsAddBookingModalOpen={setIsAddBookingModalOpen}
-                        setIsMarshalModalOpen={setIsMarshalModalOpen}
-                        setScannerOverlayOpen={setScannerOverlayOpen}
-                        fetchBookings={fetchBookings}
-                        fetchAuditLogs={fetchAuditLogs}
-                        fetchInquiries={fetchInquiries}
-                        handleExportBookingsCSV={handleExportBookingsCSV}
-                    />
-                )}
-
-                {activeTab === 'bookings' && (
-                    <AdminBookingsTab
-                        bookings={bookings}
-                        filteredBookings={filteredBookings}
-                        bookingSearch={bookingSearch}
-                        setBookingSearch={setBookingSearch}
-                        bookingFilterStatus={bookingFilterStatus}
-                        setBookingFilterStatus={setBookingFilterStatus}
-                        bookingFilterCamp={bookingFilterCamp}
-                        setBookingFilterCamp={setBookingFilterCamp}
-                        bookingSortBy={bookingSortBy}
-                        setBookingSortBy={setBookingSortBy}
-                        properties={properties}
-                        isLoadingBookings={isLoadingBookings}
-                        fetchBookings={fetchBookings}
-                        setIsAddBookingModalOpen={setIsAddBookingModalOpen}
-                        handleStatusUpdate={handleStatusUpdate}
-                        handleDeleteBooking={handleDeleteBooking}
-                        handleExportBookingsCSV={handleExportBookingsCSV}
-                        isOnlineMode={isOnlineMode}
-                    />
-                )}
-
-                {activeTab === 'properties' && (
+                {/* Active CMS Tab Views */}
+                {(activeTab === 'properties' || activeTab === 'overview') && (
                     <AdminPropertiesTab
                         properties={properties}
                         propertyFilterRegion={propertyFilterRegion}
@@ -314,50 +187,24 @@ function AdminPortalInner() {
                     />
                 )}
 
-                {activeTab === 'events' && (
-                    <AdminEventsTab
-                        events={events}
-                        openEventModal={openEventModal}
-                        handleDeleteEvent={handleDeleteEvent}
-                    />
+                {(activeTab === 'cms' || activeTab === 'destinations') && (
+                    <AdminDestinationsCmsTab />
                 )}
 
-                {activeTab === 'marshals' && (
-                    <AdminMarshalsTab
-                        marshals={marshals}
-                        properties={properties}
-                        openMarshalModal={openMarshalModal}
-                        handleDeleteMarshal={handleDeleteMarshal}
-                        setScannerOverlayOpen={setScannerOverlayOpen}
-                        handleQuickAddStaffPreset={handleQuickAddStaffPreset}
-                    />
+                {activeTab === 'blog' && (
+                    <AdminBlogCmsTab />
                 )}
 
-                {activeTab === 'financials' && (
-                    <AdminFinancialsTab
-                        financialStats={financialStats}
-                        bookings={bookings}
-                        handleExportLedgerCSV={handleExportLedgerCSV}
-                    />
+                {activeTab === 'about' && (
+                    <AdminBrandStoryCmsTab />
                 )}
 
-                {activeTab === 'payment' && (
-                    <AdminPaymentTab
-                        paymentSettings={paymentSettings}
-                        setPaymentSettings={setPaymentSettings}
-                        handleSavePaymentSettings={handleSavePaymentSettings}
-                        settingsSavedToast={settingsSavedToast}
-                    />
+                {activeTab === 'services' && (
+                    <AdminServicesCmsTab />
                 )}
 
-                {activeTab === 'discounts' && (
-                    <AdminDiscountsTab
-                        discounts={discounts}
-                        setDiscounts={setDiscounts}
-                        handleSaveDiscounts={handleSaveDiscounts}
-                        discountsSaving={discountsSaving}
-                        handleResetDefaultDiscounts={handleResetDefaultDiscounts}
-                    />
+                {activeTab === 'contact' && (
+                    <AdminHotlinesCmsTab />
                 )}
 
                 {activeTab === 'testimonials' && (
@@ -371,49 +218,12 @@ function AdminPortalInner() {
                     />
                 )}
 
-                {activeTab === 'settings' && (
-                    <AdminSettingsTab
-                        adminPhone={adminPhone}
-                        setAdminPhone={setAdminPhone}
-                        adminTelegram={adminTelegram}
-                        setAdminTelegram={setAdminTelegram}
-                        handleSaveGeneralSettings={handleSaveGeneralSettings}
-                        settingsSavedToast={settingsSavedToast}
-                        isOnlineMode={isOnlineMode}
-                        bookings={bookings}
-                        fetchBookings={fetchBookings}
-                    />
-                )}
-
-                {activeTab === 'logs' && (
-                    <AdminLogsTab
-                        logViewTab={logViewTab}
-                        setLogViewTab={setLogViewTab}
-                        logSearch={logSearch}
-                        setLogSearch={setLogSearch}
-                        logFilterSeverity={logFilterSeverity}
-                        setLogFilterSeverity={setLogFilterSeverity}
-                        auditLogs={auditLogs}
-                        isLoadingAudit={isLoadingAudit}
-                        fetchAuditLogs={fetchAuditLogs}
-                        dbLogs={dbLogs}
-                        securityOverview={securityOverview}
-                        inquiries={inquiries}
-                        fetchInquiries={fetchInquiries}
-                    />
+                {activeTab === 'payments' && (
+                    <AdminPaymentGatewayTab />
                 )}
             </main>
 
             {/* Modals & Dialogs */}
-            <AddBookingModal
-                isAddBookingModalOpen={isAddBookingModalOpen}
-                setIsAddBookingModalOpen={setIsAddBookingModalOpen}
-                newBookingForm={newBookingForm}
-                setNewBookingForm={setNewBookingForm}
-                handleSaveManualBooking={handleSaveBooking}
-                properties={properties}
-            />
-
             <PropertyEditModal
                 isPropertyModalOpen={isPropertyModalOpen}
                 setIsPropertyModalOpen={setIsPropertyModalOpen}
@@ -430,27 +240,6 @@ function AdminPortalInner() {
                     next.splice(idx, 1);
                     setPropertyForm(prev => ({ ...prev, gallery: next }));
                 }}
-            />
-
-            <EventEditModal
-                isEventModalOpen={isEventModalOpen}
-                setIsEventModalOpen={setIsEventModalOpen}
-                editingEvent={editingEvent}
-                eventForm={eventForm}
-                setEventForm={setEventForm}
-                handleSaveEvent={handleSaveEvent}
-                properties={properties}
-            />
-
-            <MarshalEditModal
-                isMarshalModalOpen={isMarshalModalOpen}
-                setIsMarshalModalOpen={setIsMarshalModalOpen}
-                editingMarshal={editingMarshal}
-                marshalForm={marshalForm}
-                setMarshalForm={setMarshalForm}
-                handleSaveMarshal={handleSaveMarshal}
-                handleSaveMarshalForm={handleSaveMarshal}
-                properties={properties}
             />
 
             <DeleteConfirmModal
@@ -508,13 +297,13 @@ function AdminPortalInner() {
     );
 }
 
-export default function AdminPortal() {
+export default function AdminPortal({ initialTab = 'overview' }) {
     return (
         <ErrorBoundary
             title="Admin Command Station Glitch"
             description="The administrative dashboard encountered an unexpected state. Click retry to recover session state."
         >
-            <AdminPortalInner />
+            <AdminPortalInner initialTab={initialTab} />
         </ErrorBoundary>
     );
 }

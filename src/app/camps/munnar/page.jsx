@@ -5,7 +5,7 @@ import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 export const metadata = {
   title: 'Munnar Camping & Suryanelli Stays',
   description:
-    'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 Kolukkumalai sunrise treks, campfire BBQ & luxury dome pods with Aanandham.go.',
+    'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 Kolukkumalai sunrise treks, campfire BBQ & geodesic dome pods with Aanandham.go.',
   keywords: [
     'Munnar Camping',
     'Suryanelli Tent Stays',
@@ -45,7 +45,7 @@ export const metadata = {
 };
 
 export default function MunnarCampsPage() {
-  const munnarCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Munnar');
+  const munnarCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Munnar' || c.region === 'Suryanelli');
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
@@ -82,9 +82,9 @@ export default function MunnarCampsPage() {
       <CampsDirectoryClient
         initialCamps={munnarCamps}
         initialRegion="Munnar"
-        heroBadge="★ 4 SIGNATURE MUNNAR PEAKS"
+        heroBadge="★ 5 SIGNATURE MUNNAR CAMPS"
         heroTitle={<>Munnar High-Altitude <span style={{ color: '#D5ED55' }}>Camps & Ridge Stays</span></>}
-        heroSubtitle="Perched high above rolling cloud beds in Suryanelli and Kolukkumalai (7,900 FT). Enjoy 4x4 sunrise summit convoys, starlit campfire barbecues, and private luxury dome stays."
+        heroSubtitle="Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy 4x4 sunrise summit convoys, starlit campfire barbecues, and private geodesic dome stays."
       />
     </>
   );

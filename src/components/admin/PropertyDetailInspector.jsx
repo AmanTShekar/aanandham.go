@@ -264,7 +264,7 @@ Cover
                                         </div>
 
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-                                            {room.features && room.features.map((feat, idx) => (
+                                            {(Array.isArray(room.features) ? room.features : (typeof room.features === 'string' ? room.features.split(',').map(s => s.trim()).filter(Boolean) : (Array.isArray(room.amenities) ? room.amenities : []))).map((feat, idx) => (
                                                 <span key={idx} style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.06)', color: '#3A443E', fontSize: '11px', fontWeight: '700', padding: '3px 9px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                                                     <LucideAmenityIcon name={feat} size={11} color="#166534" />
                                                     <span>{feat}</span>
@@ -384,8 +384,8 @@ label: ' Single Tent (1P)',
                                                     image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-label: ' 2-Person Dome',
-                                                    name: 'Geodesic Luxury Dome Pod',
+                                                    label: '★ 2-Person Dome',
+                                                    name: 'Geodesic Dome Pod',
                                                     capacity: '2 Persons',
                                                     price: 2499,
                                                     totalUnits: 8,
@@ -411,12 +411,12 @@ label: ' 4-Person Quad',
                                                     image: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-label: ' Family Cottage',
-                                                    name: 'Private Cliffside Wooden Cottage',
-                                                    capacity: '4-6 Persons',
+                                                    label: '★ A-Frame Cabin',
+                                                    name: 'Wooden A-Frame Cabin',
+                                                    capacity: '2-4 Persons',
                                                     price: 3499,
                                                     totalUnits: 4,
-                                                    features: 'Panoramic Glass Window, Hot Shower Geyser, Private Fire Pit, Balcony Deck',
+                                                    features: 'Timber Balcony Deck, Panoramic Glass Window, Hot Shower Geyser, En-suite Restroom',
                                                     image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80'
                                                 }
                                             ].map((preset, pIdx) => (

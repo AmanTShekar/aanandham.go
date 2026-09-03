@@ -79,7 +79,7 @@ export function getCheckInLandmarkGuide(campsiteId = '', bookingOverrides = {}) 
         steps: [
             'Arrive at Basecamp Hub by 1:30 PM before 4x4 convoy departs.',
             'Park your vehicle in the reserved fenced parking zone.',
-            'Show your digital pass or QR to the camp marshal.',
+            'Show your digital pass or QR to the camp staff.',
             'Board your allocated 4x4 Jeep for the mountain ridge ascent.',
             'Check-in and tent handover with welcome tea on arrival.'
         ],

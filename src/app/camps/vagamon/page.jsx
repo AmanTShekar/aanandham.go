@@ -44,6 +44,7 @@ export const metadata = {
 
 export default function VagamonCampsPage() {
   const vagamonCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Vagamon');
+  const displayCamps = vagamonCamps.length > 0 ? vagamonCamps : INITIAL_ALL_CAMPS;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
@@ -78,8 +79,8 @@ export default function VagamonCampsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CampsDirectoryClient
-        initialCamps={vagamonCamps}
-        initialRegion="Vagamon"
+        initialCamps={displayCamps}
+        initialRegion={vagamonCamps.length > 0 ? 'Vagamon' : 'All'}
         heroBadge="★ SECLUDED PINE VALLEY"
         heroTitle={<>Vagamon Pine Forest <span style={{ color: '#D5ED55' }}>Glamping & Stays</span></>}
         heroSubtitle="Tucked away in the whispering pine groves of Vagamon (3,800 FT). Enjoy misty valley walks, private stream trails, and cozy alpine campfire nights."

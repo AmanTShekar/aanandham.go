@@ -99,13 +99,21 @@ function BookingEngineModalInner({
         };
     }, [isOpen]);
 
-    // Load active camps list from localStorage / default data
+    // Load active camps list from localStorage / default data and live OpenPMS feed
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const loaded = getAllCamps();
             if (loaded && loaded.length > 0) {
                 setCampsList(loaded);
             }
+            fetch('/api/admin/camps')
+                .then(r => r.json())
+                .then(data => {
+                    if (Array.isArray(data) && data.length > 0) {
+                        setCampsList(data);
+                    }
+                })
+                .catch(() => {});
         }
     }, [isOpen]);
 
@@ -149,34 +157,46 @@ function BookingEngineModalInner({
                 (targetTitle && targetTitle.includes(p.title.toLowerCase().slice(0, 12)))
             );
 
-            const activeId = matched ? matched.id : (campsList[0]?.id || 'pkg-kolukkumalai');
+            const activeId = matched ? matched.id : (initialPackage?.id || campsList[0]?.id || 'pkg-kolukkumalai');
             setSelectedPkgId(activeId);
 
-            const activePkg = campsList.find(p => p.id === activeId) || campsList[0];
+            const activePkg = matched || initialPackage || campsList.find(p => p.id === activeId) || campsList[0];
             const targetRoomName = String(typeof initialRoom === 'string' ? initialRoom : initialRoom?.name || '').toLowerCase();
             const targetRoomId = String(typeof initialRoomId === 'string' ? initialRoomId : initialRoom?.id || '').toLowerCase();
 
-            if (activePkg?.rooms?.length > 0) {
-                const roomMatch = activePkg.rooms.find(r => 
-                    (targetRoomId && r.id.toLowerCase() === targetRoomId) ||
-                    (targetRoomName && r.name.toLowerCase() === targetRoomName) ||
-                    (targetRoomName && r.name.toLowerCase().includes(targetRoomName)) ||
-                    (targetRoomName && targetRoomName.includes(r.name.toLowerCase()))
+            const roomsAvailable = activePkg?.rooms || initialPackage?.rooms || [];
+            if (roomsAvailable.length > 0) {
+                const roomMatch = roomsAvailable.find(r => 
+                    (targetRoomId && r.id?.toLowerCase() === targetRoomId) ||
+                    (targetRoomName && r.name?.toLowerCase() === targetRoomName) ||
+                    (targetRoomName && r.name?.toLowerCase().includes(targetRoomName)) ||
+                    (targetRoomName && targetRoomName.includes(r.name?.toLowerCase()))
                 );
-                setSelectedRoomId(roomMatch ? roomMatch.id : activePkg.rooms[0].id);
+                setSelectedRoomId(roomMatch ? roomMatch.id : roomsAvailable[0].id);
             }
         }
     }, [isOpen, initialPackage, initialRoom, initialRoomId, initialDate, initialGuests, initialAdults, initialChildren, initialCustomUnits, campsList]);
 
     // Re-synchronize selected room if package changes
     const selectedPkg = useMemo(() => {
-        return campsList.find(p => p.id === selectedPkgId) || campsList[0] || INITIAL_ALL_CAMPS[0];
-    }, [campsList, selectedPkgId]);
+        if (initialPackage && typeof initialPackage === 'object' && (initialPackage.id === selectedPkgId || !selectedPkgId)) {
+            return initialPackage;
+        }
+        return campsList.find(p => p.id === selectedPkgId) || initialPackage || campsList[0] || INITIAL_ALL_CAMPS[0];
+    }, [campsList, selectedPkgId, initialPackage]);
 
     const selectedRoom = useMemo(() => {
-        if (!selectedPkg?.rooms?.length) return null;
-        return selectedPkg.rooms.find(r => r.id === selectedRoomId) || selectedPkg.rooms[0];
-    }, [selectedPkg, selectedRoomId]);
+        const availableRooms = selectedPkg?.rooms || initialPackage?.rooms || [];
+        if (!availableRooms.length) {
+            return initialRoom || {
+                id: 'standard-tent',
+                name: 'Standard Geodesic Tent',
+                price: Number(selectedPkg?.price || initialPackage?.price || 2499),
+                capacity: '2 Adults'
+            };
+        }
+        return availableRooms.find(r => r.id === selectedRoomId) || initialRoom || availableRooms[0];
+    }, [selectedPkg, initialPackage, selectedRoomId, initialRoom]);
 
     // Load active discounts on open
     useEffect(() => {
@@ -187,18 +207,28 @@ function BookingEngineModalInner({
     }, [isOpen]);
 
     // Headcount math
-    const totalGuests = adults + children;
+    const totalGuests = Math.max(1, (Number(adults) || 1) + (Number(children) || 0));
     const roomCapacity = selectedRoom ? parseRoomCapacity(selectedRoom.capacity) : 2;
     const autoRequiredUnits = Math.max(1, Math.ceil(adults / roomCapacity));
     const totalUnits = customUnits !== null ? customUnits : autoRequiredUnits;
     const totalRoomCapacity = totalUnits * roomCapacity;
 
-    // Pricing calculation
+    // Pricing calculation — guaranteed non-zero, server-matched per-person calculation
     const baseLodgingAmount = useMemo(() => {
-        if (!selectedRoom) return 0;
-        const rate = selectedRoom.price || 0;
-        return rate * totalUnits;
-    }, [selectedRoom, totalUnits]);
+        const ratePerPerson = Number(
+            selectedRoom?.price || 
+            selectedRoom?.basePrice || 
+            selectedRoom?.pricePerPerson || 
+            selectedPkg?.price || 
+            selectedPkg?.basePrice || 
+            initialRoom?.price ||
+            initialPackage?.price ||
+            2499
+        );
+        const adultCount = Math.max(1, Number(adults) || 1);
+        const childCount = Math.max(0, Number(children) || 0);
+        return (ratePerPerson * adultCount) + Math.round(ratePerPerson * 0.5 * childCount);
+    }, [selectedRoom, selectedPkg, initialRoom, initialPackage, adults, children]);
 
     const addonsAmount = useMemo(() => {
         return selectedAddons.reduce((sum, addonId) => {
@@ -208,20 +238,24 @@ function BookingEngineModalInner({
         }, 0);
     }, [selectedAddons, adults]);
 
-    const rawTotal = baseLodgingAmount + addonsAmount;
+    const rawTotal = Math.max(0, baseLodgingAmount + addonsAmount);
 
     const discountSummary = useMemo(() => {
-        return applyDiscounts(rawTotal, discounts, {
-            stayDate: travelDate,
-            partySize: totalGuests,
-            campId: selectedPkgId,
-            advancePayment: paymentMode === 'advance'
-        });
-    }, [rawTotal, discounts, travelDate, totalGuests, selectedPkgId, paymentMode]);
+        try {
+            return applyDiscounts({
+                baseTotal: rawTotal,
+                guests: totalGuests,
+                campsiteId: selectedPkgId,
+                discounts
+            });
+        } catch (e) {
+            return { discountedTotal: rawTotal, discountAmount: 0 };
+        }
+    }, [rawTotal, discounts, totalGuests, selectedPkgId]);
 
-    const totalAmount = discountSummary.finalTotal;
+    const totalAmount = Math.max(100, Number(discountSummary?.discountedTotal ?? rawTotal) || Number(rawTotal) || 2499);
     const advanceAmount = Math.round(totalAmount * 0.3);
-    const balanceAmount = totalAmount - advanceAmount;
+    const balanceAmount = Math.max(0, totalAmount - advanceAmount);
 
     const currentStepPrice = useMemo(() => {
         if (step === 1) return baseLodgingAmount;
@@ -243,6 +277,16 @@ function BookingEngineModalInner({
         setStep(2);
     };
 
+    const isValidEmailAddress = (email) => {
+        if (!email || typeof email !== 'string') return false;
+        const trimmed = email.trim().toLowerCase();
+        if (trimmed.length < 6 || trimmed.length > 254) return false;
+        if (/\s/.test(trimmed)) return false;
+        if (trimmed.includes('..')) return false;
+        const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+$/;
+        return regex.test(trimmed);
+    };
+
     const handleStep3Next = () => {
         setValidationError('');
         if (!customerName.trim()) {
@@ -251,6 +295,14 @@ function BookingEngineModalInner({
         }
         if (!customerPhone.trim() || !isValidPhoneNumber(customerPhone)) {
             setValidationError('Please enter a valid 10-digit mobile / WhatsApp number.');
+            return;
+        }
+        if (!customerEmail.trim()) {
+            setValidationError('Email address is mandatory. Please enter your email to receive your official digital pass.');
+            return;
+        }
+        if (!isValidEmailAddress(customerEmail)) {
+            setValidationError('Invalid email format. Please enter a valid email address with domain (e.g. yourname@gmail.com).');
             return;
         }
         setStep(4);
@@ -307,28 +359,41 @@ function BookingEngineModalInner({
             const bookingRefId = orderData.bookingId || orderData.booking?.id;
 
             if (!window.Razorpay) {
-                const script = document.createElement('script');
-                script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-                script.async = true;
-                document.body.appendChild(script);
                 await new Promise((resolve, reject) => {
-                    script.onload = resolve;
-                    script.onerror = () => reject(new Error('Failed to load Razorpay payment SDK.'));
+                    if (window.Razorpay) return resolve();
+                    const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
+                    if (existing) {
+                        existing.addEventListener('load', () => resolve());
+                        existing.addEventListener('error', () => reject(new Error('Razorpay SDK failed to load. Please check your network or try WhatsApp Enquire.')));
+                        setTimeout(() => {
+                            if (window.Razorpay) resolve();
+                            else reject(new Error('Razorpay SDK connection timed out. Please check if an ad-blocker is blocking checkout.razorpay.com, or use WhatsApp Enquire.'));
+                        }, 3500);
+                        return;
+                    }
+
+                    const script = document.createElement('script');
+                    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                    script.async = true;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error('Failed to load Razorpay payment SDK. Please ensure ad-blockers are disabled for checkout, or use WhatsApp Enquire.'));
+                    document.body.appendChild(script);
                 });
             }
 
+            const cleanPhone = String(customerPhone || '').replace(/\D/g, '').slice(-10) || '9847011223';
             const options = {
                 key: orderKey,
                 amount: rzpOrder.amount || Math.round(amountToCharge * 100),
                 currency: rzpOrder.currency || 'INR',
                 name: paymentSettings.payeeName || 'Aanandham Wilderness Stays',
                 description: `${selectedPkg.title} - ${selectedRoom?.name || 'Camp Booking'}`,
-                image: '/icon.png',
+                image: typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' ? 'https://www.aanandham.in/logo.png' : undefined,
                 order_id: rzpOrder.id,
                 prefill: {
-                    name: customerName,
-                    email: customerEmail || 'guest@aanandham.in',
-                    contact: customerPhone
+                    name: customerName?.trim() || 'Wilderness Explorer',
+                    email: customerEmail?.trim() || 'camper@aanandham.in',
+                    contact: cleanPhone
                 },
                 theme: {
                     color: '#166534'
@@ -365,13 +430,14 @@ function BookingEngineModalInner({
                                 guests: totalGuests,
                                 roomType: selectedRoom?.name,
                                 status: 'Confirmed',
+                                isPaid: true,
                                 paymentId: response.razorpay_payment_id,
                                 paidAmount: amountToCharge,
                                 balanceDue: totalAmount - amountToCharge
                             });
                             setStep(5);
                         } else {
-                            setValidationError('Payment signature verification failed. Please contact our support.');
+                            setValidationError(verifyData.message || 'Payment signature verification failed. Please contact our support.');
                         }
                     } catch (err) {
                         setValidationError('Verification error. Please contact WhatsApp concierge.');
@@ -380,8 +446,12 @@ function BookingEngineModalInner({
                     }
                 },
                 modal: {
+                    backdropclose: true,
+                    escape: true,
+                    animation: true,
                     ondismiss: function() {
                         setIsSubmitting(false);
+                        setValidationError('Payment window was closed. Your campsite permit & booking details are preserved. Click "Pay Securely" to retry, or use "WhatsApp Enquire" below.');
                     }
                 }
             };
@@ -399,30 +469,57 @@ function BookingEngineModalInner({
         }
     };
 
-    // Direct WhatsApp Concierge Booking
+    // Direct WhatsApp Concierge Booking with Comprehensive Inquiry
     const handleDirectWhatsAppBooking = () => {
-        if (isSubmitting) return;
-        setValidationError('');
+        const amountToPayNow = paymentMode === 'advance' ? advanceAmount : totalAmount;
+        const balDue = paymentMode === 'advance' ? balanceAmount : 0;
+        const addonsListText = selectedAddons && selectedAddons.length > 0 ? selectedAddons.join(', ') : 'None';
+        const cleanDates = String(travelDate || '').replace(/–/g, '-');
 
-        const msg = `*🏕️ New Booking Inquiry - Aanandham Wilderness*
+        const msg = `*🏕️ Campsite Booking & Permit Inquiry - Aanandham Wilderness*
 
-*Guest:* ${customerName.trim() || 'Wilderness Explorer'}
-*Phone:* ${customerPhone.trim() || 'Not specified'}
-${customerEmail.trim() ? `*Email:* ${customerEmail.trim()}\n` : ''}*Sanctuary:* ${selectedPkg.title}
-*Stay Dates:* ${travelDate}
-*Camper Count:* ${totalGuests} (${adults} Adults, ${children} Kids)
-*Lodging:* ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} unit(s))
-*Dietary:* ${dietaryChoice} (${vegCount} Veg, ${nonVegCount} Non-Veg)
-${selectedAddons && selectedAddons.length > 0 ? `*Upgrades:* ${selectedAddons.join(', ')}\n` : ''}*Estimated Fare:* ₹${(totalAmount || 0).toLocaleString('en-IN')}
+*Explorer Details:*
+• *Name:* ${customerName.trim() || 'Wilderness Camper'}
+• *Phone:* ${customerPhone.trim() || 'Not provided'}
+${customerEmail.trim() ? `• *Email:* ${customerEmail.trim()}\n` : ''}
+*Sanctuary & Stay:*
+• *Campsite:* ${selectedPkg.title || selectedPkg.name}
+• *Dates / Batch:* ${cleanDates}
+• *Lodging:* ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} unit(s))
+• *Total Campers:* ${totalGuests} (${adults} Adults${children > 0 ? `, ${children} Children` : ''})
 
-_Please confirm availability and permit details for our expedition._`;
+*Food & Add-ons:*
+• *Meal Choice:* ${dietaryChoice} (${vegCount} Veg, ${nonVegCount} Non-Veg)
+• *Add-Ons / Upgrades:* ${addonsListText}
+${specialNotes?.trim() ? `• *Special Notes:* ${specialNotes.trim()}\n` : ''}
+*Pricing & Payment Choice:*
+• *Total Expedition Amount:* ₹${(totalAmount || 0).toLocaleString('en-IN')}
+• *Selected Payment Choice:* ${paymentMode === 'advance' ? `30% Advance (₹${amountToPayNow.toLocaleString('en-IN')} advance, ₹${balDue.toLocaleString('en-IN')} balance on arrival)` : `100% Full Payment (₹${totalAmount.toLocaleString('en-IN')})`}
 
-        // 1. Immediately open WhatsApp to connect directly with concierge
+_Hi Aanandham Basecamp Concierge! Please check availability and confirm permit details for our expedition._`;
+
+        // Log inquiry into CRM Pipeline in background
+        try {
+            fetch('/api/inquiries', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: customerName.trim() || 'Wilderness Camper',
+                    phone: customerPhone.trim() || 'Not provided',
+                    email: customerEmail.trim() || '',
+                    inquiryType: 'WhatsApp Concierge Inquiry',
+                    guests: totalGuests,
+                    travelDates: cleanDates,
+                    campsiteId: selectedPkgId,
+                    message: `Lodging: ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} units) | Meals: ${dietaryChoice} (${vegCount}V/${nonVegCount}NV) | Total: ₹${totalAmount} | ${addonsListText !== 'None' ? `Addons: ${addonsListText}` : ''}`,
+                    source: 'Booking Engine (WhatsApp Direct)',
+                    tenantId: 't-aanandham-hq',
+                    status: 'NEW_LEAD'
+                })
+            }).catch(() => {});
+        } catch (e) {}
+
         window.open(waLink(msg, paymentSettings.phone || '919074858014'), '_blank');
-        
-        // 2. Close modal immediately without generating any booking voucher
-        onClose();
-        setIsSubmitting(false);
     };
 
     const handleSharePassToWhatsApp = () => {
@@ -447,18 +544,15 @@ _Please confirm availability and permit details for our expedition._`;
             style={{
                 position: 'fixed',
                 inset: 0,
-                zIndex: 100025,
+                zIndex: 999,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '16px',
                 background: 'rgba(10, 15, 12, 0.75)',
                 backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                touchAction: 'none'
+                WebkitBackdropFilter: 'blur(8px)'
             }}
-            onWheel={(e) => e.stopPropagation()}
-            onTouchMove={(e) => e.stopPropagation()}
             onClick={(e) => {
                 if (e.target === e.currentTarget) onClose();
             }}
@@ -605,6 +699,7 @@ _Please confirm availability and permit details for our expedition._`;
                             paymentSettings={paymentSettings}
                             payeeName={payeeName}
                             isSubmitting={isSubmitting}
+                            validationError={validationError}
                             handleRazorpayCheckout={handleRazorpayCheckout}
                             handleDirectWhatsAppBooking={handleDirectWhatsAppBooking}
                             setStep={setStep}

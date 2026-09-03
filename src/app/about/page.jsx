@@ -60,41 +60,41 @@ const ELEVATION_TIERS = [
         altitude: '7,900 FT',
         elevationMeters: '2,408 M',
         name: 'Kolukkumalai Sunrise Peak',
-        badge: 'SUMMIT PINNACLE',
+        badge: 'SUMMIT PINNACLE · TIGER FACE ROCK',
         badgeColor: '#E5A93B',
         accentColor: '#E5A93B',
         accentBg: 'rgba(229, 169, 59, 0.12)',
         borderTint: 'rgba(229, 169, 59, 0.35)',
         glowColor: 'rgba(229, 169, 59, 0.25)',
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
-        stoneType: 'Black Granite & Gold Vein',
-        terrainType: 'Rugged Granite Crest',
-        access: '4x4 Off-Road Only',
-        atmosphere: 'Sea of Clouds · High Mist',
-        desc: 'World’s highest organic tea estate. Accessible exclusively via rugged 4x4 Jeep expeditions across granite boulder trails. Witness dawn floating above sea of clouds.',
-        temp: '10°C - 16°C',
+        image: '/images/kolukkumalai-sunrise-peak.jpg',
+        stoneType: 'Pre-Cambrian Charnockite Granite',
+        terrainType: 'Rugged High-Altitude Ridge Crest',
+        access: '14 km 4x4 Off-Road Jeep Expedition',
+        atmosphere: 'Sea of Clouds · High Cloud Inversion',
+        desc: 'World’s highest organic tea estate at 7,900 FT on the Kerala-Tamil Nadu crest. Accessible exclusively via rugged 4x4 Jeep convoys over jagged boulder tracks. Famous for dawn floating above endless cloud beds.',
+        temp: '8°C - 14°C',
         wind: '32 km/h Peak Gales',
         icon: Mountain,
-        coord: '10.0834° N, 77.2144° E'
+        coord: '10.0894° N, 77.2285° E'
     },
     {
         id: 'tier-6800',
         altitude: '6,800 FT',
         elevationMeters: '2,072 M',
         name: 'Phantom Head Cliffline',
-        badge: 'SUNSET CREST TRAIL',
+        badge: 'SUNSET CREST · 360° VISTA',
         badgeColor: '#FB923C',
         accentColor: '#F97316',
         accentBg: 'rgba(249, 115, 22, 0.12)',
         borderTint: 'rgba(249, 115, 22, 0.35)',
         glowColor: 'rgba(249, 115, 22, 0.25)',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
-        stoneType: 'Ironstone & Red Basalt',
-        terrainType: 'Precipitous Escarpment',
-        access: 'Guided Ridge Trek',
-        atmosphere: 'Golden Hour Silhouette',
-        desc: 'A secret high-altitude ridge formation resembling a skull in profile. Unobstructed 360° panoramic amphitheater overlooking wild elephant trails and valley mists.',
-        temp: '12°C - 18°C',
+        image: '/images/phantom-head-trekking.jpg',
+        stoneType: 'Ironstone & Weathered Basalt',
+        terrainType: 'Precipitous Escarpment & Shola',
+        access: 'Guided Ridge Trek from Basecamp',
+        atmosphere: 'Golden Hour Inversion & Twilight Mist',
+        desc: 'A distinct high-altitude monolithic formation overlooking Bison Valley and Suryanelli tea plateau. Offers unobstructed 360° sunset amphitheater and sweeping panoramas of Anayirangal Lake.',
+        temp: '11°C - 17°C',
         wind: '22 km/h Sunset Breeze',
         icon: Compass,
         coord: '10.0612° N, 77.1895° E'
@@ -103,20 +103,20 @@ const ELEVATION_TIERS = [
         id: 'tier-6500',
         altitude: '6,500 FT',
         elevationMeters: '1,981 M',
-        name: 'Aanandham Basecamp Pods',
-        badge: 'SANCTUARY DOME BASE',
+        name: 'Aanandham Suryanelli Basecamp',
+        badge: 'WEATHER-SEALED SANCTUARY',
         badgeColor: '#D5ED55',
         accentColor: '#D5ED55',
         accentBg: 'rgba(213, 237, 85, 0.12)',
         borderTint: 'rgba(213, 237, 85, 0.35)',
         glowColor: 'rgba(213, 237, 85, 0.22)',
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
-        stoneType: 'Highland Moss Slate',
-        terrainType: 'Insulated Meadow',
-        access: 'Direct Basecamp In',
-        atmosphere: 'Zero Light Stargazing',
-        desc: 'Our private weather-sealed geodesic dome sanctuary. Structurally insulated against mountain gusts, featuring private hot-water showers, campfire pit, and acoustic dining.',
-        temp: '14°C - 20°C',
+        image: '/images/high-altitude-ridge-tent.jpg',
+        stoneType: 'Highland Slate & Tea Loam',
+        terrainType: 'Insulated Meadow & Geodesic Ridge',
+        access: 'Direct Basecamp Approach',
+        atmosphere: 'Bortle Class 2 Zero-Light Sky',
+        desc: 'Our private weather-insulated geodesic dome sanctuary positioned directly above the night mist inversion line. Features en-suite hot water washrooms, live acoustic campfire pit, and starlit ridge deck.',
+        temp: '13°C - 19°C',
         wind: '16 km/h Valley Draft',
         icon: Tent,
         coord: '10.0521° N, 77.1789° E'
@@ -126,19 +126,19 @@ const ELEVATION_TIERS = [
         altitude: '5,500 FT',
         elevationMeters: '1,676 M',
         name: 'Anayirangal Lake Basin',
-        badge: 'EMERALD WATERWAY BASIN',
+        badge: 'FRESHWATER RESERVOIR BASIN',
         badgeColor: '#38BDF8',
         accentColor: '#38BDF8',
         accentBg: 'rgba(56, 189, 248, 0.12)',
         borderTint: 'rgba(56, 189, 248, 0.35)',
         glowColor: 'rgba(56, 189, 248, 0.22)',
-        image: 'https://images.unsplash.com/photo-1439853941329-a99ce045050a?auto=format&fit=crop&w=800&q=80',
-        stoneType: 'Fluvial Blue Shale',
-        terrainType: 'Lakebed & Tea Groves',
-        access: 'Kayak & Shore Walk',
-        atmosphere: 'Rainforest Mist & Fauna',
-        desc: 'The historic watering oasis for wild mountain elephants, surrounded by rolling green tea slopes, pine groves, and tranquil waters reflecting the Western Ghats mountain wall.',
-        temp: '16°C - 22°C',
+        image: '/images/anayirangal-elephant-lake.jpg',
+        stoneType: 'Fluvial Alluvium & Shola Soil',
+        terrainType: 'Lake Basin & Tata Tea Slopes',
+        access: 'Shoreline Walk & Scenic Drive',
+        atmosphere: 'Evergreen Mist & Pine Forest',
+        desc: 'Historic watering oasis where wild mountain elephant herds descend from the high rainforest. Bordered by mist-covered tea plantations, emerald pine groves, and tranquil waters reflecting the Western Ghats.',
+        temp: '15°C - 22°C',
         wind: '10 km/h Shoreline Calm',
         icon: Waves,
         coord: '10.0125° N, 77.1560° E'
@@ -233,31 +233,31 @@ const WILDERNESS_PILLARS = [
     }
 ];
 
-// ── 3. OUR EVOLUTION TIMELINE (2021 — 2026) ──
+// ── 3. OUR EVOLUTION TIMELINE (2024 — 2026) ──
 const TIMELINE_MILESTONES = [
     {
-        year: '2021',
-        title: 'Pitching the First Ridge Dome',
-        tag: 'THE SPARK',
-        desc: 'Frustrated by mass-market hotel tourism, founder Surya pitched the first prototype geodesic dome on a quiet Suryanelli cliffside to prove real wilderness camping could be comfortable.'
-    },
-    {
-        year: '2022',
-        title: 'Solar Power & Zero-Trace Protocol',
-        tag: 'ECO MILESTONE',
-        desc: 'Transformed the campsite into a self-sustaining eco-sanctuary with solar battery arrays, rainwater harvesting, and a strict ban on single-use plastics across all trails.'
+        year: '2024',
+        title: 'The High-Altitude Wilderness Vision',
+        tag: 'THE SPARK & IDEA',
+        desc: 'Born out of a deep passion for the Western Ghats. Frustrated by overpriced commercial resorts, we scouted off-grid Suryanelli ridges to conceptualize an authentic, safe, and transparent luxury wilderness platform.'
     },
     {
         year: '2024',
-        title: 'The Off-Road 4x4 Fleet Expansion',
-        tag: 'EXPEDITION FLEET',
-        desc: 'Assembled our dedicated fleet of custom 4x4 safari Jeeps and recruited veteran local tribal guides to lead sunrise expeditions up the rugged Kolukkumalai peak.'
+        title: '4x4 Trail Scouting & Native Marshals',
+        tag: 'EXPEDITION FOUNDATION',
+        desc: 'Partnered with native Suryanelli tribal guides, mapped private high-altitude boulder routes above the mist inversion line, and assembled our dedicated 4x4 Mahindra convoy fleet for Kolukkumalai dawn safaris.'
+    },
+    {
+        year: '2025',
+        title: 'Aanandham First Campsite Launch',
+        tag: 'FIRST RIDGE CAMP',
+        desc: 'Pitched our flagship weather-insulated dome camps and ridge tents in Suryanelli. Introduced live earthen-pot BBQs, verified mountain marshals, clean en-suite washrooms, and instant digital booking.'
     },
     {
         year: '2026',
-        title: '15,000+ Campers & Verified Standard',
-        tag: 'WHERE WE STAND',
-        desc: 'Over 15,000 explorers hosted with a 4.98 ★ expedition score. Aanandham is now recognized as Kerala’s premier high-altitude wilderness retreat.'
+        title: 'Kerala’s Premier Wilderness Platform',
+        tag: 'EXPEDITION ECOSYSTEM',
+        desc: 'Expanded into Kerala’s leading mountain camping and trekking network with multi-property reservations, automated QR gate check-ins, OpenZen tech integration, and thousands of 5-star camper stories.'
     }
 ];
 
@@ -267,61 +267,81 @@ const NEARBY_PLACES = [
         id: 'kolukkumalai',
         title: 'Kolukkumalai Sunrise Peak',
         category: 'High Peaks',
-        distance: '4.5 km · 25 mins by 4x4 Jeep',
-        altitude: '7,900 FT',
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1000&q=80',
-        desc: 'The highest organic tea plantation on Earth. Accessible strictly via 4x4 Jeep safari over rugged rock terrain, revealing the legendary golden sunrise over rolling cloud beds.',
+        badge: 'FLAGSHIP 4X4 EXPEDITION',
+        badgeColor: '#E5A93B',
+        accessType: '4x4 Off-Road Only',
+        distance: '14 km from Camp',
+        duration: '45 mins Jeep Convoy',
+        altitude: '7,900 FT · 2,408 M',
+        bestTime: '04:30 AM (Dawn)',
+        guideType: 'Tribal Marshal Led',
+        image: '/images/kolukkumalai-sunrise-peak.jpg',
+        desc: 'World’s highest organic tea estate situated on the razor-edge crest of Kerala and Tamil Nadu. Famous for the Tiger Face Rock formation and surreal dawn cloud inversions.',
         highlight: 'Cloud Bed Sunrise'
     },
     {
         id: 'phantom-head',
-        title: 'Phantom Head Ridge',
+        title: 'Phantom Head Cliffline',
         category: 'Trails',
-        distance: '1.2 km · 20 min ridge hike',
-        altitude: '6,800 FT',
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1000&q=80',
-        desc: 'A secret high-altitude ridge line resembling a phantom skull in silhouette. Offers an unobstructed 360-degree vista of the Suryanelli tea valleys and Anayirangal basin.',
-        highlight: 'Secret Sunset Point'
+        badge: 'GUIDED SUNSET TREK',
+        badgeColor: '#FB923C',
+        accessType: 'Guided Ridge Hike',
+        distance: '1.2 km from Camp',
+        duration: '25 min Ridge Walk',
+        altitude: '6,800 FT · 2,072 M',
+        bestTime: '05:00 PM (Sunset)',
+        guideType: 'Aanandham Guide Led',
+        image: '/images/phantom-head-trekking.jpg',
+        desc: 'Monolithic granite cliff line shaped like a phantom skull. Features an unobstructed 360° panoramic amphitheater overlooking the Bison Valley, Anayirangal Lake, and Suryanelli tea plateau.',
+        highlight: '360° Sunset Vista'
     },
     {
         id: 'anayirangal',
-        title: 'Anayirangal Lake & Meadows',
+        title: 'Anayirangal Lake Basin',
         category: 'Lakes & Waterfalls',
-        distance: '6.0 km · 15 mins drive',
-        altitude: '5,500 FT',
-        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
-        desc: 'Translated as "the place where wild elephants drink", this emerald reservoir is bordered by misty pine forests and tea estates. Ideal for evening shoreline walks.',
-        highlight: 'Wild Shoreline'
+        badge: 'WILDLIFE CORRIDOR',
+        badgeColor: '#38BDF8',
+        accessType: 'Shoreline Walk & Drive',
+        distance: '6.0 km from Camp',
+        duration: '15 min Scenic Drive',
+        altitude: '5,500 FT · 1,676 M',
+        bestTime: '03:30 PM (Fauna)',
+        guideType: 'Self / Guided Walk',
+        image: '/images/anayirangal-elephant-lake.jpg',
+        desc: 'Translated as "where wild elephants descend to drink", this emerald reservoir is bordered by Tata Tea plantations, misty pine forests, and historic mountain elephant corridors.',
+        highlight: 'Wild Elephant Shore'
     },
     {
         id: 'lockhart-gap',
         title: 'Lockhart Gap Valley Vista',
         category: 'High Peaks',
-        distance: '8.5 km · 20 mins drive',
-        altitude: '6,200 FT',
-        image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1000&q=80',
-        desc: 'A colossal natural mountain gap carved between two monolithic granite cliffs, providing dramatic sunset gradients over the Bison Valley.',
+        badge: 'NATURAL VALLEY CHASM',
+        badgeColor: '#A7F3D0',
+        accessType: 'Mountain Pass Drive',
+        distance: '8.5 km on NH-85',
+        duration: '20 min Scenic Drive',
+        altitude: '6,200 FT · 1,890 M',
+        bestTime: '06:30 AM & 05:30 PM',
+        guideType: 'Scenic Deck',
+        image: '/images/munnar-mist-valley-wide.jpg',
+        desc: 'Colossal natural mountain chasm carved between two monolithic granite precipices, creating a natural funnel for mist clouds rolling across the Bison Valley.',
         highlight: 'Granite Valley Gap'
     },
     {
         id: 'chinnakanal',
         title: 'Chinnakanal Spring Waterfalls',
         category: 'Lakes & Waterfalls',
-        distance: '5.0 km · 12 mins drive',
-        altitude: '5,900 FT',
-        image: 'https://images.unsplash.com/photo-1432405972618-c60b0225b8f9?auto=format&fit=crop&w=1000&q=80',
-        desc: 'Pure mountain spring water cascading from high granite shelves, surrounded by wild cardamom plantations, cinnamon groves, and silver oaks.',
-        highlight: 'Natural Spring Cascade'
-    },
-    {
-        id: 'papathy-shola',
-        title: 'Papathy Shola (Butterfly Sanctuary)',
-        category: 'Trails',
-        distance: '3.8 km · 15 mins by 4x4',
-        altitude: '6,400 FT',
-        image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1000&q=80',
-        desc: 'A conserved high-altitude Shola rainforest habitat home to migratory mountain butterflies, rare orchids, and wild Nilgiri tahr trails.',
-        highlight: 'Ancient Rainforest'
+        badge: 'NATURAL SPRING CASCADE',
+        badgeColor: '#D5ED55',
+        accessType: 'Roadside Trail Walk',
+        distance: '5.0 km from Camp',
+        duration: '12 min Drive',
+        altitude: '5,900 FT · 1,798 M',
+        bestTime: '08:00 AM – 04:00 PM',
+        guideType: 'Spring Cascade',
+        image: '/images/chinnakanal-waterfalls.jpg',
+        desc: 'Pure mountain spring water tumbling 800 FT over granite rock shelves, surrounded by wild cardamom plantations, silver oaks, and high-altitude mist.',
+        highlight: '800 FT Spring Falls'
     }
 ];
 
@@ -532,11 +552,11 @@ export default function AboutPage() {
                                 fontSize: 'clamp(16px, 2vw, 19px)',
                                 color: 'rgba(255, 255, 255, 0.88)',
                                 lineHeight: 1.65,
-                                maxWidth: '760px',
+                                maxWidth: '800px',
                                 margin: '0 auto clamp(24px, 4vh, 40px)'
                             }}
                         >
-                            We built Aanandham to trade lecture halls, cubicles, and fluorescent screens for the raw 7,900 FT ridges of Kerala. Experience real nature with safety, warmth, and zero compromises.
+                            Born from a bunch of students who fell in love with Kerala’s misty mountains, freshwater springs, and 7,900 FT sunrise cloud beds. Built to share real wilderness adventures with everyone at an honest, affordable rate.
                         </motion.p>
 
                         {/* Quick Action Button Cluster */}
@@ -583,7 +603,7 @@ export default function AboutPage() {
                                     transition: 'all 0.25s ease'
                                 }}
                             >
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><ScrollText size={15} /> Read Our Charter ↓</span>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><ScrollText size={15} /> Read Our Story ↓</span>
                             </a>
 
                             <a
@@ -651,7 +671,7 @@ export default function AboutPage() {
                                 variants={cardReveal}
                             >
                                 <div className="star-badge" style={{ marginBottom: '16px' }}>
-                                    <span className="star-icon">★</span> OUR FOUNDING ETHOS
+                                    <span className="star-icon">★</span> OUR FOUNDING STORY
                                 </div>
 
                                 <h2 style={{
@@ -663,15 +683,19 @@ export default function AboutPage() {
                                     color: '#0B150E',
                                     margin: '0 0 24px'
                                 }}>
-                                    From Textbook Theory to Living <span style={{ color: '#E5A93B' }}>Mountain Geography</span>
+                                    From Student Classrooms to <span style={{ color: '#E5A93B' }}>Sunrise Cloud Beds</span>
                                 </h2>
 
                                 <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '20px' }}>
-                                    In modern life, most of what we experience is second-hand: trapped inside slide decks, fluorescent lecture rooms, and endless phone notifications. We study weather systems, but never stand above a raging sea of morning mist. We read about stars, but haven’t looked into a crystal clear Milky Way in years.
+                                    It all began with a bunch of us studying in Kerala — surrounded by some of the most serene, untouched, and atmospheric mountain ranges in India. Between heavy textbooks, exams, and lecture halls, we took every chance to step outside into the wild.
+                                </p>
+
+                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '20px' }}>
+                                    We started exploring on foot: setting alarms for 4:30 AM in the bone-chilling cold, walking narrow tea trails, swimming in hidden mountain springs, and hiking up to ridges where nobody else went. Standing on a 7,900 FT summit watching an ocean of golden morning mist roll beneath our feet changed something inside us forever.
                                 </p>
 
                                 <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '32px' }}>
-                                    Aanandham was founded in 2021 with a simple mission: <strong style={{ color: '#0B150E' }}>reconnecting people with raw nature without compromising comfort</strong>. By engineering weather-sealed, insulated dome sanctuaries on private mountain ridges, we made the wild accessible to families, couples, and solo travelers alike.
+                                    Sitting around night campfires under billions of stars, we asked a simple question: <strong style={{ color: '#0B150E' }}>Why should experiencing this mountain magic cost a fortune?</strong> Commercial luxury resorts were charging ₹15,000/night for sterile rooms that isolated you from nature, while budget camping was often unsafe and poorly managed. We built Aanandham to give everyone — students, couples, solo wanderers, and families — the ultimate high-altitude experience with authentic warmth, safe 4x4 convoys, clean washrooms, and honest, affordable rates.
                                 </p>
 
                                 {/* Founder Quote Card with Spring Hover */}
@@ -695,15 +719,15 @@ export default function AboutPage() {
                                         lineHeight: 1.65,
                                         margin: '0 0 14px'
                                     }}>
-                                        “No screen or textbook can replicate the sensory awakening of standing above a rolling sea of clouds at 7,900 FT with hot cardamom tea in hand.”
+                                        “We didn’t start Aanandham in a boardroom. We started it around a crackling campfire with cold hands, hot cardamom tea, and a promise to make Kerala’s misty sunrise cloud beds accessible to everyone.”
                                     </p>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                         <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E5A93B', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '14px' }}>
                                             S
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>Suryanarayanan K.</div>
-                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Founder & Mountain Director · Aanandham.go</div>
+                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>Suryanarayanan & The Aanandham Squad</div>
+                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Co-Founders & Mountain Marshals · Aanandham.go</div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -721,8 +745,8 @@ export default function AboutPage() {
                                     <motion.img
                                         whileHover={{ scale: 1.05 }}
                                         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                                        src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=85"
-                                        alt="Aanandham Geodesic Dome Camp"
+                                        src="/images/munnar-mist-valley-wide.jpg"
+                                        alt="Aanandham Mountain Camp Story"
                                         style={{ width: '100%', height: '420px', objectFit: 'cover' }}
                                     />
                                     <div style={{
@@ -1343,7 +1367,7 @@ export default function AboutPage() {
                                 }}>Kerala's Premier Basecamp</span>
                             </h2>
                             <p style={{ fontSize: '15.5px', color: '#8A7A62', maxWidth: '580px', margin: '0 auto', lineHeight: 1.65 }}>
-                                Our 5-year evolution — carved in stone, one milestone at a time.
+                                Our authentic evolution — carved in stone, from the spark of an idea in 2024 to Kerala&apos;s premier wilderness platform.
                             </p>
                         </div>
 
@@ -1599,14 +1623,14 @@ export default function AboutPage() {
                             </div>
                         </div>
 
-                        {/* Landmarks Cards Grid */}
+                        {/* Landmarks Cards Grid with Clean Engineered Specs */}
                         <motion.div 
                             variants={staggerContainer}
                             className="about-landmarks-grid"
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
-                                gap: '28px'
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+                                gap: '24px'
                             }}
                         >
                             <AnimatePresence mode="popLayout">
@@ -1614,23 +1638,23 @@ export default function AboutPage() {
                                     <motion.div
                                         key={place.id}
                                         layout
-                                        initial={{ opacity: 0, scale: 0.92 }}
+                                        initial={{ opacity: 0, scale: 0.94 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.92 }}
-                                        transition={{ duration: 0.45 }}
-                                        whileHover={{ y: -8 }}
+                                        exit={{ opacity: 0, scale: 0.94 }}
+                                        transition={{ duration: 0.35 }}
+                                        whileHover={{ y: -6 }}
                                         style={{
-                                            background: '#101F13',
-                                            borderRadius: '28px',
+                                            background: '#0F1A12',
+                                            borderRadius: '24px',
                                             overflow: 'hidden',
-                                            border: '1px solid rgba(255, 255, 255, 0.08)',
+                                            border: '1px solid rgba(255, 255, 255, 0.09)',
                                             display: 'flex',
                                             flexDirection: 'column',
-                                            boxShadow: '0 18px 40px rgba(0,0,0,0.35)'
+                                            boxShadow: '0 16px 36px rgba(0,0,0,0.35)'
                                         }}
                                     >
                                         {/* Image Container */}
-                                        <div style={{ position: 'relative', height: '240px', width: '100%', overflow: 'hidden' }}>
+                                        <div style={{ position: 'relative', height: '210px', width: '100%', overflow: 'hidden' }}>
                                             <img
                                                 src={place.image}
                                                 alt={place.title}
@@ -1640,69 +1664,127 @@ export default function AboutPage() {
                                             />
                                             <div style={{
                                                 position: 'absolute',
-                                                top: '16px',
-                                                left: '16px',
-                                                background: 'rgba(11, 21, 14, 0.75)',
-                                                backdropFilter: 'blur(8px)',
-                                                border: '1px solid rgba(255, 255, 255, 0.15)',
-                                                color: '#E5A93B',
-                                                fontSize: '11px',
-                                                fontWeight: '800',
-                                                padding: '4px 12px',
-                                                borderRadius: '999px'
-                                            }}>
-                                                ✦ {place.highlight}
-                                            </div>
+                                                inset: 0,
+                                                background: 'linear-gradient(to top, #0F1A12 0%, transparent 60%)'
+                                            }} />
+                                            
+                                            {/* Badge on Top Left */}
                                             <div style={{
                                                 position: 'absolute',
-                                                bottom: '16px',
-                                                right: '16px',
-                                                background: 'rgba(0, 0, 0, 0.8)',
-                                                color: '#FFFFFF',
-                                                fontSize: '11.5px',
-                                                fontWeight: '700',
+                                                top: '14px',
+                                                left: '14px',
+                                                background: 'rgba(15, 26, 18, 0.85)',
+                                                backdropFilter: 'blur(10px)',
+                                                border: `1px solid ${place.badgeColor || '#E5A93B'}`,
+                                                color: place.badgeColor || '#E5A93B',
+                                                fontSize: '10.5px',
+                                                fontWeight: '800',
                                                 padding: '4px 10px',
-                                                borderRadius: '8px'
+                                                borderRadius: '999px',
+                                                letterSpacing: '0.6px',
+                                                textTransform: 'uppercase'
+                                            }}>
+                                                ✦ {place.badge}
+                                            </div>
+
+                                            {/* Altitude on Top Right */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '14px',
+                                                right: '14px',
+                                                background: 'rgba(0, 0, 0, 0.85)',
+                                                backdropFilter: 'blur(8px)',
+                                                color: '#FFFFFF',
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                padding: '4px 10px',
+                                                borderRadius: '8px',
+                                                border: '1px solid rgba(255, 255, 255, 0.15)'
                                             }}>
                                                 {place.altitude}
                                             </div>
                                         </div>
 
-                                        {/* Place Content */}
-                                        <div style={{ padding: '26px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                                            <div style={{ fontSize: '12px', color: '#E5A93B', fontWeight: '700', marginBottom: '8px' }}>
-                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {place.distance}</span>
-                                            </div>
-                                            
+                                        {/* Clean Structured Content */}
+                                        <div style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                            {/* Title */}
                                             <h3 style={{
                                                 fontFamily: 'var(--font-heading)',
-                                                fontSize: '22px',
+                                                fontSize: '21px',
                                                 fontWeight: '800',
                                                 color: '#FFFFFF',
-                                                margin: '0 0 12px'
+                                                margin: '0 0 10px',
+                                                lineHeight: 1.25
                                             }}>
                                                 {place.title}
                                             </h3>
 
-                                            <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 24px', flex: 1 }}>
+                                            {/* Structured 2x2 Specs Grid (Engineered Details) */}
+                                            <div style={{
+                                                display: 'grid',
+                                                gridTemplateColumns: '1fr 1fr',
+                                                gap: '8px',
+                                                background: 'rgba(255, 255, 255, 0.04)',
+                                                border: '1px solid rgba(255, 255, 255, 0.06)',
+                                                borderRadius: '12px',
+                                                padding: '10px 12px',
+                                                marginBottom: '14px'
+                                            }}>
+                                                <div>
+                                                    <div style={{ fontSize: '9.5px', color: '#7D8880', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Access Mode</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#E5A93B', fontWeight: '800', marginTop: '1px' }}>{place.accessType}</div>
+                                                </div>
+                                                <div>
+                                                    <div style={{ fontSize: '9.5px', color: '#7D8880', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Duration / Dist.</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#FFFFFF', fontWeight: '700', marginTop: '1px' }}>{place.duration}</div>
+                                                </div>
+                                                <div>
+                                                    <div style={{ fontSize: '9.5px', color: '#7D8880', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Prime Window</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '700', marginTop: '1px' }}>{place.bestTime}</div>
+                                                </div>
+                                                <div>
+                                                    <div style={{ fontSize: '9.5px', color: '#7D8880', textTransform: 'uppercase', fontWeight: '700', letterSpacing: '0.5px' }}>Guide Protocol</div>
+                                                    <div style={{ fontSize: '11.5px', color: '#FFFFFF', fontWeight: '700', marginTop: '1px' }}>{place.guideType}</div>
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            <p style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.55, margin: '0 0 18px', flex: 1 }}>
                                                 {place.desc}
                                             </p>
 
+                                            {/* Inquire Button */}
                                             <a
-                                                href={waLink(`Hi Aanandham Desk! I want to know how to visit ${place.title}`)}
+                                                href={waLink(`Hi Aanandham Concierge! I want to inquire about the ${place.title} (${place.badge}) itinerary and permits.`)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="btn-lime"
                                                 style={{
-                                                    padding: '12px 20px',
-                                                    fontSize: '13.5px',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '8px',
+                                                    padding: '11px 18px',
+                                                    fontSize: '13px',
                                                     fontWeight: '800',
+                                                    borderRadius: '12px',
+                                                    background: 'rgba(229, 169, 59, 0.15)',
+                                                    border: '1px solid rgba(229, 169, 59, 0.35)',
+                                                    color: '#E5A93B',
                                                     textDecoration: 'none',
-                                                    textAlign: 'center',
+                                                    transition: 'all 0.2s ease',
                                                     marginTop: 'auto'
                                                 }}
+                                                onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = '#E5A93B';
+                                                    e.currentTarget.style.color = '#121613';
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = 'rgba(229, 169, 59, 0.15)';
+                                                    e.currentTarget.style.color = '#E5A93B';
+                                                }}
                                             >
-                                                Inquire Trail Route →
+                                                <WhatsAppIcon size={15} />
+                                                <span>Inquire Corridor Route →</span>
                                             </a>
                                         </div>
                                     </motion.div>
@@ -2112,9 +2194,9 @@ export default function AboutPage() {
                             style={{
                                 position: 'absolute',
                                 inset: '-15%',
-                                backgroundImage: 'url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=95")',
+                                backgroundImage: 'url("/images/kolukkumalai-sunrise-peak.jpg")',
                                 backgroundSize: 'cover',
-                                backgroundPosition: 'center 38%',
+                                backgroundPosition: 'center 42%',
                                 scale: ctaBgScale,
                                 y: ctaBgY,
                                 zIndex: 0
@@ -2125,7 +2207,7 @@ export default function AboutPage() {
                         <div style={{
                             position: 'absolute',
                             inset: 0,
-                            background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.84) 0%, rgba(11, 21, 14, 0.88) 55%, rgba(7, 14, 8, 0.96) 100%), radial-gradient(circle at 80% 50%, rgba(229, 169, 59, 0.4) 0%, transparent 65%)',
+                            background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.78) 0%, rgba(11, 21, 14, 0.84) 55%, rgba(7, 14, 8, 0.94) 100%), radial-gradient(circle at 75% 50%, rgba(229, 169, 59, 0.35) 0%, transparent 65%)',
                             zIndex: 1
                         }} />
 
@@ -2141,10 +2223,30 @@ export default function AboutPage() {
                                 letterSpacing: '-0.03em',
                                 maxWidth: '840px',
                                 margin: '0 0 18px',
-                                lineHeight: 1.12,
+                                lineHeight: 1.15,
                                 textShadow: '0 8px 30px rgba(0,0,0,0.7)'
                             }}>
-                                Ready to Swap the Screen for the <span style={{ color: '#E5A93B' }}>Sunrise Cloud Bed</span>?
+                                Ready to Swap the Screen for the{' '}
+                                <span style={{
+                                    position: 'relative',
+                                    display: 'inline-block',
+                                    color: '#FFFFFF'
+                                }}>
+                                    <span style={{ position: 'relative', zIndex: 2 }}>Sunrise Cloud Bed</span>
+                                    {/* Clean Marker Underline Highlight (Preserves Text Color) */}
+                                    <span style={{
+                                        position: 'absolute',
+                                        bottom: '4px',
+                                        left: '-4px',
+                                        right: '-4px',
+                                        height: '11px',
+                                        background: 'linear-gradient(90deg, rgba(229, 169, 59, 0.6) 0%, rgba(213, 237, 85, 0.65) 100%)',
+                                        borderRadius: '6px',
+                                        zIndex: 1,
+                                        transform: 'rotate(-0.8deg)',
+                                        boxShadow: '0 0 16px rgba(229, 169, 59, 0.45)'
+                                    }} />
+                                </span>?
                             </h2>
                             <p style={{
                                 fontSize: '16.5px',

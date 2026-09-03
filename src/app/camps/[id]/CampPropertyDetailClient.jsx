@@ -18,7 +18,7 @@ import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
 import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2 } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
-import { INITIAL_ALL_CAMPS, getAllCamps, getCampById } from '../../../lib/campsData';
+import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink } from '../../../lib/whatsapp';
 import { CANCELLATION_TIERS } from '../../../lib/cancellation';
@@ -76,6 +76,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                 if (res.ok) {
                     const serverCamps = await res.json();
                     if (Array.isArray(serverCamps) && serverCamps.length > 0) {
+                        saveAllCamps(serverCamps);
                         setAllCamps(serverCamps);
                         const matched = serverCamps.find(c => c.id === campId);
                         if (matched) {
@@ -142,7 +143,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                             Wilderness Sanctuary Not Found
                         </h2>
                         <p style={{ fontSize: '14px', color: '#A2B6A6', lineHeight: 1.6, marginBottom: '28px' }}>
-                            The high-altitude campsite or expedition route you requested does not exist or has been relocated by forest marshals.
+                            The high-altitude campsite or expedition route you requested does not exist or has been relocated by forest staff.
                         </p>
                         <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
                             <Link href="/camps" className="btn-lime" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
@@ -503,16 +504,24 @@ return (
                                                     <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
                                                         {room.name}
                                                     </h3>
-                                                    {room.features && room.features.length > 0 && (
-                                                        <div className="room-feats" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                                            {room.features.map((feat, fidx) => (
-                                                                <span key={fidx} style={{ fontSize: '11px', color: '#59655D', background: '#F8F9F5', padding: '2px 8px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                                    <LucideAmenityIcon name={feat} size={11} color="#166534" />
-                                                                    <span>{feat}</span>
-                                                                </span>
-                                                            ))}
-                                                        </div>
-                                                    )}
+                                                    {(() => {
+                                                        const feats = Array.isArray(room.features) 
+                                                            ? room.features 
+                                                            : (typeof room.features === 'string' 
+                                                                ? room.features.split(',').map(s => s.trim()).filter(Boolean) 
+                                                                : (Array.isArray(room.amenities) ? room.amenities : []));
+                                                        if (!feats || feats.length === 0) return null;
+                                                        return (
+                                                            <div className="room-feats" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                                                {feats.map((feat, fidx) => (
+                                                                    <span key={fidx} style={{ fontSize: '11px', color: '#59655D', background: '#F8F9F5', padding: '2px 8px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                        <LucideAmenityIcon name={feat} size={11} color="#166534" />
+                                                                        <span>{feat}</span>
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        );
+                                                    })()}
                                                 </div>
 
                                                 <div className="room-price-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
@@ -645,7 +654,7 @@ return (
                                                 'Morning hot breakfast & tea/coffee',
                                                 'Stargazing campfire & live music setup',
                                                 '4x4 Jeep transfer to Kolukkumalai sunrise point',
-                                                'Certified trail marshals & wilderness first-aid kit'
+                                                'Certified camp staff & wilderness first-aid kit'
                                             ]).map((inc, iidx) => (
                                                 <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: '#3A443E', lineHeight: 1.5 }}>
                                                     <span style={{ color: '#166534', fontWeight: '800', marginTop: '2px' }}>✓</span>
@@ -873,7 +882,7 @@ return (
                                                 boxShadow: '0 4px 16px rgba(213,237,85,0.35)'
                                             }}
                                         >
-                                            <span className="cta-label-wide">Check Availability &amp; Book</span><span className="cta-label-narrow">Check &amp; Book</span>
+                                            <span className="cta-label-wide">Book Now (Zero Advance)</span><span className="cta-label-narrow">Book Now</span>
                                             <span style={{ whiteSpace: 'nowrap' }}>→</span>
                                         </button>
 
@@ -900,12 +909,14 @@ return (
                                             }}
                                         >
                                             <WhatsAppIcon size={16} color="#25D366" />
-                                            <span className="cta-label-wide">Quick Inquire on WhatsApp</span><span className="cta-label-narrow">WhatsApp</span>
+                                            <span className="cta-label-wide">WhatsApp Desk</span><span className="cta-label-narrow">WhatsApp</span>
                                         </a>
                                     </div>
 
-                                    <div style={{ textAlign: 'center', fontSize: '11px', color: '#7D8880', marginTop: '2px' }}>
-                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}><Lock size={11} /> 24/7 WhatsApp Concierge Support · Online Checkout Coming Soon</span>
+                                    <div style={{ textAlign: 'center', fontSize: '11.5px', color: '#166534', fontWeight: '700', marginTop: '4px' }}>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
+                                            <Lock size={11} /> No Login Required · Zero Upfront Fee · Pay on Arrival
+                                        </span>
                                     </div>
 
                                 </div>
@@ -1110,6 +1121,7 @@ return (
                 initialRoomId={selectedRoomId}
                 initialDate={selectedDate}
                 initialGuests={guestsCount}
+                initialAdults={guestsCount}
                 initialCustomUnits={customUnits}
             />
 

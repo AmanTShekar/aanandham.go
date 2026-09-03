@@ -1,10 +1,66 @@
 import crypto from 'crypto';
 
-const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
-const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
-const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
+// ─────────────────────────────────────────────────────────────────────────────
+// RAZORPAY CREDENTIALS — fetched from OpenPMS (single source of truth)
+//
+// The PMS stores credentials encrypted in PostgreSQL (AES-256-GCM).
+// The website fetches them once at runtime via a private server-to-server call
+// authenticated by a shared PMS_INTERNAL_TOKEN. Local env vars are fallback only.
+// ─────────────────────────────────────────────────────────────────────────────
 
-const HAS_RAZORPAY = Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET);
+// Module-level cache: populated on first createRazorpayOrder / verifyWebhook call
+let _cachedCreds = null;
+let _credsFetchedAt = 0;
+const CREDS_TTL_MS = 5 * 60 * 1000; // re-fetch from PMS every 5 minutes
+
+async function getRazorpayCreds() {
+    const now = Date.now();
+    if (_cachedCreds && (now - _credsFetchedAt) < CREDS_TTL_MS) {
+        return _cachedCreds;
+    }
+
+    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    const internalToken = process.env.PMS_INTERNAL_TOKEN;
+
+    // Attempt to fetch from PMS
+    if (internalToken) {
+        try {
+            const res = await fetch(`${pmsUrl}/api/payments/config`, {
+                headers: { Authorization: `Bearer ${internalToken}` },
+                signal: AbortSignal.timeout(3000),
+                cache: 'no-store'
+            });
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success && data.keyId && data.keySecret) {
+                    _cachedCreds = {
+                        keyId: data.keyId,
+                        keySecret: data.keySecret,
+                        webhookSecret: data.webhookSecret || process.env.RAZORPAY_WEBHOOK_SECRET || null,
+                        source: data.source
+                    };
+                    _credsFetchedAt = now;
+                    return _cachedCreds;
+                }
+            }
+        } catch (err) {
+            console.warn('[Razorpay] PMS credential fetch failed, using local env fallback:', err.message);
+        }
+    }
+
+    // Fallback: use local env vars (for dev or if PMS is unreachable)
+    const keyId = process.env.RAZORPAY_KEY_ID || null;
+    const keySecret = process.env.RAZORPAY_KEY_SECRET || null;
+    const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET || null;
+
+    if (keyId && keySecret) {
+        _cachedCreds = { keyId, keySecret, webhookSecret, source: 'env' };
+        _credsFetchedAt = now;
+        return _cachedCreds;
+    }
+
+    return null; // No credentials configured anywhere
+}
 
 /**
  * Create a Razorpay Order
@@ -14,8 +70,14 @@ const HAS_RAZORPAY = Boolean(RAZORPAY_KEY_ID && RAZORPAY_KEY_SECRET);
  * @param {object} params.notes - Metadata dictionary
  */
 export async function createRazorpayOrder({ amountInRupees, receiptId, notes = {} }) {
-    if (!HAS_RAZORPAY) {
-        // Fallback for development / demo mode when Razorpay credentials aren't set in env
+    const creds = await getRazorpayCreds();
+
+    if (!creds) {
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('Payment gateway service is temporarily unavailable. Please try again shortly or connect with our 24/7 WhatsApp Concierge.');
+        }
+        // Fallback for development / demo mode when no credentials are configured
+        console.warn('[Razorpay] No credentials found — returning mock dev order.');
         return {
             id: `order_dev_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
             amount: Math.round(amountInRupees * 100),
@@ -27,7 +89,7 @@ export async function createRazorpayOrder({ amountInRupees, receiptId, notes = {
     }
 
     try {
-        const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64');
+        const auth = Buffer.from(`${creds.keyId}:${creds.keySecret}`).toString('base64');
         const res = await fetch('https://api.razorpay.com/v1/orders', {
             method: 'POST',
             headers: {
@@ -47,7 +109,11 @@ export async function createRazorpayOrder({ amountInRupees, receiptId, notes = {
             throw new Error(`Razorpay Order creation failed: ${errData}`);
         }
 
-        return await res.json();
+        const orderJson = await res.json();
+        return {
+            ...orderJson,
+            key_id: creds.keyId
+        };
     } catch (err) {
         console.error('Error creating Razorpay Order:', err);
         throw err;
@@ -59,16 +125,19 @@ export async function createRazorpayOrder({ amountInRupees, receiptId, notes = {
  * @param {string} rawBody - Raw unparsed webhook request body string
  * @param {string} signature - Header 'x-razorpay-signature'
  */
-export function verifyWebhookSignature(rawBody, signature) {
-    if (!RAZORPAY_WEBHOOK_SECRET) {
-        console.warn('RAZORPAY_WEBHOOK_SECRET not set, signature verification skipped in dev.');
+export async function verifyWebhookSignature(rawBody, signature) {
+    const creds = await getRazorpayCreds();
+    const webhookSecret = creds?.webhookSecret || null;
+
+    if (!webhookSecret) {
+        console.warn('[Razorpay] RAZORPAY_WEBHOOK_SECRET not set, signature verification skipped in dev.');
         return process.env.NODE_ENV !== 'production';
     }
 
     if (!signature || !rawBody) return false;
 
     const expectedSignature = crypto
-        .createHmac('sha256', RAZORPAY_WEBHOOK_SECRET)
+        .createHmac('sha256', webhookSecret)
         .update(rawBody)
         .digest('hex');
 
@@ -86,13 +155,15 @@ export function verifyWebhookSignature(rawBody, signature) {
  * @param {string} reason - Refund reason notes
  */
 export async function triggerAutoRefund(paymentId, amountInRupees, reason = 'Slot expired before payment capture') {
-    if (!HAS_RAZORPAY) {
+    const creds = await getRazorpayCreds();
+
+    if (!creds) {
         console.log(`[Dev Mock Refund] Initiated refund for payment ${paymentId} of ₹${amountInRupees}. Reason: ${reason}`);
         return { id: `rfnd_dev_${Date.now()}`, status: 'processed', mock: true };
     }
 
     try {
-        const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString('base64');
+        const auth = Buffer.from(`${creds.keyId}:${creds.keySecret}`).toString('base64');
         const res = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}/refund`, {
             method: 'POST',
             headers: {

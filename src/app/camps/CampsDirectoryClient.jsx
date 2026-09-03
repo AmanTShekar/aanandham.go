@@ -9,8 +9,8 @@ import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
-import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf } from 'lucide-react';
-import { INITIAL_ALL_CAMPS, getAllCamps } from '../../lib/campsData';
+import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap } from 'lucide-react';
+import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 
 const SORT_OPTIONS = [
@@ -24,7 +24,7 @@ const SORT_OPTIONS = [
 export default function CampsDirectoryClient({ 
     initialCamps = INITIAL_ALL_CAMPS,
     initialRegion = 'All',
-    heroBadge = '★ 11 VERIFIED SANCTUARIES',
+    heroBadge = '★ 11 VERIFIED CAMPS',
     heroTitle = null,
     heroSubtitle = null
 }) {
@@ -49,12 +49,12 @@ export default function CampsDirectoryClient({
     useEffect(() => {
         const refreshCamps = async () => {
             try {
-                const res = await fetch('/api/admin/camps');
-                if (res.ok) {
+                const res = await fetch('/api/admin/camps', { cache: 'no-store' });
+                if (res && res.ok) {
                     const serverCamps = await res.json();
                     if (Array.isArray(serverCamps) && serverCamps.length > 0) {
+                        saveAllCamps(serverCamps);
                         setCamps(prev => {
-                            // Only update state if length or items actually changed to avoid layout re-render
                             if (JSON.stringify(prev) === JSON.stringify(serverCamps)) return prev;
                             return serverCamps;
                         });
@@ -638,28 +638,51 @@ export default function CampsDirectoryClient({
                                                     </span>
                                                 </div>
 
-                                                <button
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setSelectedPackageForBooking(camp);
-                                                        setIsBookingModalOpen(true);
-                                                    }}
-                                                    className="btn-lime"
-                                                    style={{
-                                                        padding: '12px 24px',
-                                                        borderRadius: '12px',
-                                                        fontSize: '13.5px',
-                                                        fontWeight: '800',
-                                                        cursor: 'pointer',
-                                                        border: 'none',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '6px',
-                                                        boxShadow: '0 4px 14px rgba(213, 237, 85, 0.35)'
-                                                    }}
-                                                >
-                                                    <span>Book Now</span>
-                                                </button>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <Link
+                                                        href={`/camps/${camp.id}`}
+                                                        onClick={(e) => e.stopPropagation()}
+                                                        style={{
+                                                            padding: '11px 16px',
+                                                            borderRadius: '12px',
+                                                            background: '#F1F3EC',
+                                                            border: '1px solid rgba(18, 22, 19, 0.08)',
+                                                            color: '#121613',
+                                                            fontSize: '13px',
+                                                            fontWeight: '800',
+                                                            textDecoration: 'none',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '4px'
+                                                        }}
+                                                    >
+                                                        <span>Details →</span>
+                                                    </Link>
+
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setSelectedPackageForBooking(camp);
+                                                            setIsBookingModalOpen(true);
+                                                        }}
+                                                        className="btn-lime"
+                                                        title="Direct Booking · No Login Required · Zero Upfront Advance"
+                                                        style={{
+                                                            padding: '11px 22px',
+                                                            borderRadius: '12px',
+                                                            fontSize: '13px',
+                                                            fontWeight: '800',
+                                                            cursor: 'pointer',
+                                                            border: 'none',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            boxShadow: '0 4px 14px rgba(213, 237, 85, 0.35)'
+                                                        }}
+                                                    >
+                                                        <span>Book</span>
+                                                    </button>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -688,25 +711,25 @@ export default function CampsDirectoryClient({
                         <div className="accommodation-types-grid" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                             {[
                                 {
-                                    title: 'Geodesic Luxury Dome Pods',
+                                    title: 'Geodesic Dome Pods',
                                     badge: 'Couples & Privacy',
                                     img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
                                     desc: 'Insulated 360-degree panoramic sky domes with private viewing deck, plush queen beds, and valley sunset vistas.',
                                     features: ['King / Queen Plush Bed', 'Panoramic Cloud Vista Window', 'Private Sit-Out Balcony', 'En-suite Washroom']
                                 },
                                 {
-                                    title: 'High-Altitude Alpine Ridge Tents',
+                                    title: 'Alpine Ridge Tents',
                                     badge: 'Trek & Adventure',
                                     img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
                                     desc: 'Dual-layered weatherproof Quechua tents with thermal sleeping bags and memory foam ground mattresses on elevated timber platforms.',
                                     features: ['2-Layer Weatherproof Shell', 'Thermal Cold-Weather Sleeping Bags', 'Elevated Timber Platform', 'Campfire Circle Access']
                                 },
                                 {
-                                    title: 'Cliffside Wooden Cottages',
+                                    title: 'Wooden A-Frame Cabins',
                                     badge: 'Family & Groups',
                                     img: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80',
-                                    desc: 'Rustic cedarwood family chalets nestled against mountain slopes with spacious bunk arrangements and private verandas.',
-                                    features: ['4-6 Bunk Capacity', 'Cedar Wood Interior', 'Dedicated Dining Bay', '24/7 Hot Water Facility']
+                                    desc: 'Rustic timber cabins nestled against mountain slopes with panoramic valley glass windows and private verandas.',
+                                    features: ['Timber Balcony Deck', 'Queen Plush Bed', 'En-suite Restroom', '24/7 Hot Water Facility']
                                 }
                             ].map((pod, pidx) => (
                                 <div key={pidx} style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '24px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
@@ -724,7 +747,7 @@ export default function CampsDirectoryClient({
                                             {pod.desc}
                                         </p>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                            {pod.features.map((feat, fidx) => (
+                                            {(Array.isArray(pod.features) ? pod.features : (typeof pod.features === 'string' ? pod.features.split(',').map(s => s.trim()).filter(Boolean) : [])).map((feat, fidx) => (
                                                 <span key={fidx} style={{ fontSize: '12px', color: '#D5ED55', fontWeight: '600' }}>
                                                     ✓ {feat}
                                                 </span>

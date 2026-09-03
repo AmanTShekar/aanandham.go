@@ -42,3 +42,10 @@ next-env.d.ts
 /src/app/login/
 /src/app/signup/
 /src/components/AuthPanel.jsx
+
+# scratch & test artifacts
+scratch/
+screenshot*.png
+screenshot*.js
+test-*.js
+*.log

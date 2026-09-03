@@ -9,23 +9,48 @@ export default function Step5ConfirmationPass({
     handleSharePassToWhatsApp,
     onClose
 }) {
+    const isPaidOnline = confirmedPass.status === 'Confirmed' || Boolean(confirmedPass.paymentId) || confirmedPass.isPaid;
+
     return (
-                                <div style={{ textAlign: 'center' }}>
-                                    {/* Success Icon */}
-                                    <div style={{ width: '54px', height: '54px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', fontSize: '26px' }}>
-                                        <Tent size={26} />
-                                    </div>
+        <div style={{ textAlign: 'center' }}>
+            {/* Success Icon */}
+            <div style={{
+                width: '58px',
+                height: '58px',
+                borderRadius: '50%',
+                background: isPaidOnline ? '#DCFCE7' : '#E0F2FE',
+                color: isPaidOnline ? '#166534' : '#0369A1',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 12px',
+                boxShadow: isPaidOnline ? '0 0 0 8px rgba(34, 197, 94, 0.15)' : undefined
+            }}>
+                {isPaidOnline ? <PartyPopper size={30} color="#166534" /> : <Tent size={26} />}
+            </div>
 
-                                    <span style={{ background: '#166534', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 12px', borderRadius: '999px', letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                                        WhatsApp Enquiry Forwarded
-                                    </span>
+            <span style={{
+                background: isPaidOnline ? '#166534' : '#0284C7',
+                color: isPaidOnline ? '#D5ED55' : '#FFFFFF',
+                fontSize: '11px',
+                fontWeight: '900',
+                padding: '4px 14px',
+                borderRadius: '999px',
+                letterSpacing: '0.8px',
+                textTransform: 'uppercase',
+                display: 'inline-block'
+            }}>
+                {isPaidOnline ? '💳 Payment Captured · Slot Confirmed' : 'WhatsApp Enquiry Forwarded'}
+            </span>
 
-                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', color: '#121613', margin: '10px 0 4px' }}>
-                                        Inquiry Sent for {confirmedPass.package}!
-                                    </h2>
-                                    <p style={{ fontSize: '12.5px', color: '#59655D', margin: '0 0 18px' }}>
-                                        Your booking request has opened on WhatsApp. Our 24/7 mountain concierge will confirm availability and coordinate your arrival.
-                                    </p>
+            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '23px', fontWeight: '800', color: '#121613', margin: '12px 0 6px' }}>
+                {isPaidOnline ? `Expedition Confirmed: ${confirmedPass.package}!` : `Inquiry Sent for ${confirmedPass.package}!`}
+            </h2>
+            <p style={{ fontSize: '13px', color: '#59655D', margin: '0 0 18px', maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto', lineHeight: '1.5' }}>
+                {isPaidOnline
+                    ? `Payment of ${inr(confirmedPass.paidAmount)} successfully captured (Txn ID: ${confirmedPass.paymentId || 'Verified'}). Your digital campsite pass and permit are activated.`
+                    : 'Your booking request has opened on WhatsApp. Our 24/7 mountain concierge will confirm availability and coordinate your arrival.'}
+            </p>
 
                                     {/* Digital Boarding Pass Ticket Card */}
                                     <div style={{
@@ -105,12 +130,37 @@ export default function Step5ConfirmationPass({
 
                                     {/* Pass Action Buttons */}
                                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                                        {isPaidOnline ? (
+                                            <a
+                                                href={`/pass/${confirmedPass.id}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="btn-lime"
+                                                style={{
+                                                    padding: '12px 22px',
+                                                    fontSize: '13px',
+                                                    fontWeight: '900',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    cursor: 'pointer',
+                                                    textDecoration: 'none'
+                                                }}
+                                            >
+                                                <ExternalLink size={16} />
+                                                <span>View & Download Official Pass →</span>
+                                            </a>
+                                        ) : null}
+
                                         <button
                                             type="button"
                                             onClick={handleSharePassToWhatsApp}
-                                            className="btn-lime"
                                             style={{
-                                                padding: '10px 20px',
+                                                padding: '12px 20px',
+                                                borderRadius: '999px',
+                                                background: '#25D366',
+                                                color: '#FFFFFF',
+                                                border: 'none',
                                                 fontSize: '13px',
                                                 fontWeight: '900',
                                                 display: 'inline-flex',
@@ -119,14 +169,15 @@ export default function Step5ConfirmationPass({
                                                 cursor: 'pointer'
                                             }}
                                         >
-                                            <span>Sync with Host on WhatsApp →</span>
+                                            <Share2 size={16} />
+                                            <span>Share Pass to WhatsApp →</span>
                                         </button>
                                         
                                         <button
                                             type="button"
                                             onClick={onClose}
                                             style={{
-                                                padding: '10px 18px',
+                                                padding: '12px 18px',
                                                 borderRadius: '999px',
                                                 background: '#ECEEE6',
                                                 border: 'none',
@@ -139,6 +190,12 @@ export default function Step5ConfirmationPass({
                                             Done & Close
                                         </button>
                                     </div>
+
+                                    {isPaidOnline && confirmedPass.paymentId && (
+                                        <div style={{ marginTop: '12px', fontSize: '11px', color: '#166534', fontWeight: '700' }}>
+                                            ✓ Captured via Razorpay · Ref: <code style={{ background: '#DCFCE7', padding: '2px 6px', borderRadius: '4px' }}>{confirmedPass.paymentId}</code>
+                                        </div>
+                                    )}
                                 </div>
     );
 }

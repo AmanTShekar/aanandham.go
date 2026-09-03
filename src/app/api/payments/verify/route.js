@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import crypto from 'crypto';
 import { checkRateLimit } from '@/lib/redis';
 import { getStoredBookings, updateServerBooking } from '@/lib/serverBookingStore';
 import { getClientIp } from '@/lib/authConfig';
+import { sendBookingConfirmationEmail } from '@/lib/email';
 
 // POST: verify a Razorpay checkout payment and confirm the booking.
 // Client calls this after the Razorpay checkout handler fires (payment success).
@@ -35,6 +36,60 @@ export async function POST(request) {
 
         const bookings = await getStoredBookings();
         const booking = bookings.find(b => b.id === bookingId);
+
+        // 1. Primary: Forward payment verification directly to OpenPMS
+        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        try {
+            const pmsRes = await fetch(`${pmsUrl}/api/payments/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh'}`,
+                    'X-Internal-Token': process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh'
+                },
+                body: JSON.stringify({
+                    ...body,
+                    bookingId,
+                    orderId,
+                    paymentId,
+                    signature,
+                    booking: booking || body.booking || null
+                }),
+                signal: AbortSignal.timeout(4000)
+            });
+            if (pmsRes.ok) {
+                const pmsData = await pmsRes.json();
+                if (pmsData.success) {
+                    const confirmedBooking = {
+                        ...(booking || {}),
+                        id: bookingId,
+                        status: 'Confirmed',
+                        paymentId,
+                        utrNumber: paymentId,
+                        paidAt: new Date().toISOString()
+                    };
+                    await updateServerBooking(bookingId, {
+                        status: 'Confirmed',
+                        paymentId,
+                        utrNumber: paymentId,
+                        paidAt: new Date().toISOString()
+                    });
+
+                    after(async () => {
+                        try {
+                            await sendBookingConfirmationEmail(confirmedBooking);
+                        } catch (mailErr) {
+                            console.error('[EMAIL DISPATCH ERROR]', mailErr.message);
+                        }
+                    });
+
+                    return NextResponse.json(pmsData);
+                }
+            }
+        } catch (pmsErr) {
+            console.warn('[OpenPMS Verify Delegation Failed, checking locally]:', pmsErr.message);
+        }
+
         if (!booking) {
             return NextResponse.json({ success: false, message: 'Booking not found' }, { status: 404 });
         }
@@ -48,7 +103,26 @@ export async function POST(request) {
         // directly — no real money moved in this mode.
         const isMockOrder = String(orderId).startsWith('order_dev_');
         if (!isMockOrder) {
-            const keySecret = process.env.RAZORPAY_KEY_SECRET;
+            // Fetch key secret from PMS (single source of truth)
+            let keySecret = null;
+            const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+            const internalToken = process.env.PMS_INTERNAL_TOKEN;
+            if (internalToken) {
+                try {
+                    const cfgRes = await fetch(`${pmsUrl}/api/payments/config`, {
+                        headers: { Authorization: `Bearer ${internalToken}` },
+                        signal: AbortSignal.timeout(3000),
+                        cache: 'no-store'
+                    });
+                    if (cfgRes.ok) {
+                        const cfgData = await cfgRes.json();
+                        if (cfgData.success) keySecret = cfgData.keySecret;
+                    }
+                } catch (_) {}
+            }
+            // Fallback: local env
+            keySecret = keySecret || process.env.RAZORPAY_KEY_SECRET;
+
             if (!keySecret) {
                 if (process.env.NODE_ENV === 'production') {
                     return NextResponse.json({ success: false, message: 'Payment gateway not configured' }, { status: 503 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import MobileMarshalScanner from '@/components/admin/MobileMarshalScanner';
+import MobileMarshalScanner from '@/components/scanner/MobileMarshalScanner';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 export const metadata = {

@@ -28,14 +28,43 @@ export default function Step4PaymentGateway({
     paymentSettings = {},
     payeeName,
     isSubmitting = false,
+    validationError = null,
     handleRazorpayCheckout = () => {},
     handleDirectWhatsAppBooking = () => {},
     setStep = () => {}
 }) {
-    const grandTotal = totalAmount || 0;
-    const payableNow = paymentMode === 'advance' ? advanceAmount : grandTotal;
+    const grandTotal = Number(totalAmount) || 2499;
+    const safeAdvance = Number(advanceAmount) || Math.round(grandTotal * 0.3);
+    const payableNow = paymentMode === 'advance' ? safeAdvance : grandTotal;
     return (
-                                <div>
+        <div>
+            {/* Auto-Cutoff Server Outage / Gateway Protection Banner */}
+            {validationError && (
+                <div style={{
+                    background: '#FEF2F2',
+                    border: '1.5px solid #F87171',
+                    borderRadius: '16px',
+                    padding: '14px 16px',
+                    marginBottom: '18px',
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: '12px',
+                    boxShadow: '0 4px 14px rgba(220, 38, 38, 0.08)'
+                }}>
+                    <AlertCircle size={20} color="#DC2626" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#991B1B', marginBottom: '3px' }}>
+                            Online Payment Gateway Auto-Protection Activated
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#7F1D1D', lineHeight: 1.5 }}>
+                            {validationError}
+                        </div>
+                        <div style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800', marginTop: '6px' }}>
+                            👉 Don’t worry! Your tent booking is safe. Please click "Reserve via WhatsApp (Zero Advance)" below to confirm your stay without paying online.
+                        </div>
+                    </div>
+                </div>
+            )}
                                     {paymentSettings.mode !== 'coming_soon' && (
                                         /* Payment Mode Selector for Razorpay mode */
                                         <div style={{ marginBottom: '18px' }}>
@@ -59,7 +88,7 @@ export default function Step4PaymentGateway({
                                                         <span style={{ background: '#D5ED55', color: '#121613', fontSize: '9.5px', fontWeight: '900', padding: '1px 6px', borderRadius: '999px' }}>POPULAR</span>
                                                     </div>
                                                     <div style={{ fontSize: '18px', fontWeight: '900', color: '#166534' }}>
-                                                        ₹{advanceAmount.toLocaleString('en-IN')}
+                                                        ₹{safeAdvance.toLocaleString('en-IN')}
                                                     </div>
                                                     <div style={{ fontSize: '10.5px', color: '#59655D', marginTop: '2px' }}>
                                                         Locks permits now. Balance on arrival.
@@ -192,49 +221,115 @@ export default function Step4PaymentGateway({
                                             ← Back
                                         </button>
 
-                                        {paymentSettings.mode === 'coming_soon' ? (
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                                                {/* WhatsApp Concierge Desk Inquiry */}
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                                            {paymentSettings.mode === 'coming_soon' ? (
+                                                /* Primary WhatsApp Reservation Button when Gateway is in Launching Soon Mode */
                                                 <button
                                                     type="button"
                                                     onClick={handleDirectWhatsAppBooking}
                                                     disabled={isSubmitting}
+                                                    title="Send this reservation inquiry with all campsite and camper details directly to our 24/7 Mountain Concierge on WhatsApp"
                                                     style={{
                                                         padding: '13px 26px',
                                                         fontSize: '14px',
                                                         fontWeight: '900',
-                                                        borderRadius: '14px',
-                                                        background: '#25D366',
-                                                        color: '#FFFFFF',
+                                                        borderRadius: '12px',
+                                                        background: '#E5A93B',
+                                                        color: '#121613',
                                                         border: 'none',
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         gap: '8px',
                                                         cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                        boxShadow: '0 4px 16px rgba(37, 211, 102, 0.35)',
+                                                        boxShadow: '0 4px 16px rgba(229, 169, 59, 0.4)',
                                                         transition: 'all 0.2s ease'
                                                     }}
                                                 >
-                                                    <WhatsAppIcon size={18} color="#FFFFFF" />
-                                                    <span>Enquire on WhatsApp →</span>
+                                                    <WhatsAppIcon size={18} color="#121613" />
+                                                    <span>Reserve via WhatsApp (Zero Advance) →</span>
                                                 </button>
-                                            </div>
-                                        ) : (
-                                            <button
-                                                type="button"
-                                                onClick={handleRazorpayCheckout}
-                                                disabled={isSubmitting}
-                                                className="btn-lime"
-                                                style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '900', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
-                                            >
-                                                <span>
-                                                    {isSubmitting 
-                                                        ? 'Opening Secure Checkout...' 
-                                                        : `Pay ₹${(paymentMode === 'advance' ? advanceAmount : totalAmount).toLocaleString('en-IN')} Securely →`}
-                                                </span>
-                                                <ShieldCheck size={16} />
-                                            </button>
-                                        )}
+                                            ) : (
+                                                /* Live Dual Option Mode (WhatsApp Inquiry or Instant Razorpay Gateway) */
+                                                <>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleDirectWhatsAppBooking}
+                                                        disabled={isSubmitting}
+                                                        title="Send reservation directly to 24/7 WhatsApp Concierge"
+                                                        style={validationError ? {
+                                                            padding: '13px 24px',
+                                                            fontSize: '13.5px',
+                                                            fontWeight: '900',
+                                                            borderRadius: '12px',
+                                                            background: '#25D366',
+                                                            border: 'none',
+                                                            color: '#0A2E14',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '8px',
+                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                            boxShadow: '0 4px 16px rgba(37, 211, 102, 0.4)',
+                                                            transition: 'all 0.2s ease'
+                                                        } : {
+                                                            padding: '12px 18px',
+                                                            fontSize: '13px',
+                                                            fontWeight: '800',
+                                                            borderRadius: '12px',
+                                                            background: 'rgba(37, 211, 102, 0.12)',
+                                                            border: '1px solid rgba(37, 211, 102, 0.3)',
+                                                            color: '#25D366',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '8px',
+                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                            transition: 'all 0.2s ease'
+                                                        }}
+                                                    >
+                                                        <WhatsAppIcon size={18} color={validationError ? '#0A2E14' : '#25D366'} />
+                                                        <span>{validationError ? 'Reserve via WhatsApp (Zero Advance) →' : 'WhatsApp Enquire'}</span>
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleRazorpayCheckout}
+                                                        disabled={isSubmitting}
+                                                        className={validationError ? 'btn-secondary' : 'btn-lime'}
+                                                        style={validationError ? {
+                                                            padding: '12px 20px',
+                                                            fontSize: '13px',
+                                                            fontWeight: '800',
+                                                            borderRadius: '12px',
+                                                            background: '#F1F3EC',
+                                                            border: '1px solid rgba(18, 22, 19, 0.15)',
+                                                            color: '#59655D',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '8px',
+                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                            opacity: isSubmitting ? 0.7 : 1
+                                                        } : {
+                                                            padding: '12px 26px',
+                                                            fontSize: '14px',
+                                                            fontWeight: '900',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '8px',
+                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                            opacity: isSubmitting ? 0.7 : 1
+                                                        }}
+                                                    >
+                                                        <span>
+                                                            {isSubmitting 
+                                                                ? 'Opening Secure Checkout...' 
+                                                                : (validationError 
+                                                                    ? `Retry Online Payment (₹${payableNow.toLocaleString('en-IN')}) ⟳` 
+                                                                    : `Pay ₹${payableNow.toLocaleString('en-IN')} Securely →`)}
+                                                        </span>
+                                                        <ShieldCheck size={16} />
+                                                    </button>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
     );

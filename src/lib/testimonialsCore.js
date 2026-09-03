@@ -7,7 +7,7 @@
 export const DEFAULT_TESTIMONIALS = [
     {
         id: 't-1',
-        quote: "Best decision I made this year. I was burnt out from work and needed a reset – this camp delivered exactly that. The mountain marshals really know their stuff, the vibe is super chill, and I made friends from all over the country. Experiencing the Kolukkumalai cloud sunrise above 7,900 FT was unforgettable.",
+        quote: "Best decision I made this year. I was burnt out from work and needed a reset – this camp delivered exactly that. The camp staff really know their stuff, the vibe is super chill, and I made friends from all over the country. Experiencing the Kolukkumalai cloud sunrise above 7,900 FT was unforgettable.",
         author: "Daniel Kim",
         campBadge: "camp '25",
         batchDate: "Aanandham, August 2025",

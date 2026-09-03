@@ -141,14 +141,16 @@ export default function AdminTestimonialsTab({
                                 <div>
                                     <input
                                         type="text"
-                                        value={t.name || ''}
-                                        onChange={(e) => handleUpdateTestimonial(t.id, { name: e.target.value })}
+                                        value={t.author || t.name || ''}
+                                        onChange={(e) => handleUpdateTestimonial(t.id, { author: e.target.value, name: e.target.value })}
+                                        placeholder="Guest Camper Name"
                                         style={{ fontWeight: '800', fontSize: '13.5px', color: '#121613', border: 'none', background: 'transparent', padding: 0, outline: 'none', width: '100%' }}
                                     />
                                     <input
                                         type="text"
-                                        value={t.role || ''}
-                                        onChange={(e) => handleUpdateTestimonial(t.id, { role: e.target.value })}
+                                        value={t.batchDate || t.role || ''}
+                                        onChange={(e) => handleUpdateTestimonial(t.id, { batchDate: e.target.value, role: e.target.value })}
+                                        placeholder="Batch / Season Date"
                                         style={{ fontSize: '11px', color: '#59655D', border: 'none', background: 'transparent', padding: 0, outline: 'none', width: '100%' }}
                                     />
                                 </div>

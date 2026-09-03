@@ -11,16 +11,81 @@ let campsOverride = null;
 // ── GET: Public read of the camps catalog (Edge-cached, rate-limited, DB fallback) ──
 export async function GET(request) {
     const ip = getClientIp(request);
-    const rateLimit = await checkRateLimit(`ratelimit:camps_read:${ip}`, 60, 60);
+    const rateLimit = await checkRateLimit(`ratelimit:camps_read:${ip}`, 240, 60);
     if (!rateLimit.allowed) {
         return NextResponse.json({ success: false, message: 'Too many requests. Please wait.' }, { status: 429 });
     }
 
     const cacheHeaders = {
-        'Cache-Control': 'public, max-age=300, s-maxage=600, stale-while-revalidate=3600',
-        'CDN-Cache-Control': 'public, s-maxage=600',
-        'Vercel-CDN-Cache-Control': 'public, s-maxage=600'
+        'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=600',
+        'CDN-Cache-Control': 'public, s-maxage=120',
+        'Vercel-CDN-Cache-Control': 'public, s-maxage=120'
     };
+
+    // 1. Query OpenPMS properties API for live rates & availability
+    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    try {
+        const pmsRes = await fetch(`${pmsUrl}/api/properties`, {
+            headers: { 'X-PMS-Tenant-Id': process.env.NEXT_PUBLIC_PMS_TENANT_ID || 't-aanandham-hq' },
+            cache: 'no-store',
+            signal: AbortSignal.timeout(2000)
+        });
+        if (pmsRes.ok) {
+            const pmsData = await pmsRes.json();
+            const pmsProps = pmsData.properties || pmsData.data || pmsData.camps;
+            if (Array.isArray(pmsProps) && pmsProps.length > 0) {
+                const base = getAllCamps();
+                const merged = pmsProps.map(pmsItem => {
+                    const matchingBase = base.find(b => b.id === pmsItem.id || (b.title || b.name || '').toLowerCase() === (pmsItem.title || pmsItem.name || '').toLowerCase());
+                    return {
+                        ...(matchingBase || {}),
+                        ...pmsItem,
+                        id: pmsItem.id,
+                        title: pmsItem.name || pmsItem.title || matchingBase?.title || 'Wilderness Camp',
+                        shortTitle: pmsItem.shortTitle || matchingBase?.shortTitle || pmsItem.name || pmsItem.title,
+                        name: pmsItem.name || pmsItem.title || matchingBase?.title,
+                        price: pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499,
+                        originalPrice: pmsItem.originalPrice || matchingBase?.originalPrice || (Math.round((pmsItem.price || 1499) * 1.3)),
+                        region: pmsItem.region || pmsItem.location?.split(',')[0] || matchingBase?.region || 'Munnar',
+                        location: pmsItem.location || matchingBase?.location || 'Kerala, India',
+                        altitude: pmsItem.altitude || matchingBase?.altitude || '6,500 FT',
+                        description: pmsItem.description || matchingBase?.description || 'Authentic mountain sanctuary glamping experience curated by certified camp staff.',
+                        highlights: Array.isArray(pmsItem.highlights) && pmsItem.highlights.length > 0
+                            ? pmsItem.highlights
+                            : (matchingBase?.highlights || ['Panoramic Sunrise View', 'Campfire & BBQ', 'Staff Guide Support', 'Solar Powered Stay']),
+                        image: (matchingBase?.image && !matchingBase.image.includes('unsplash.com')) ? matchingBase.image : (pmsItem.image || matchingBase?.image),
+                        gallery: (matchingBase?.gallery && matchingBase.gallery.length > 0 && !matchingBase.gallery[0].includes('unsplash.com')) ? matchingBase.gallery : (pmsItem.gallery || matchingBase?.gallery),
+                        isAvailable: pmsItem.isAvailable !== undefined ? pmsItem.isAvailable : (matchingBase?.isAvailable !== false),
+                        rooms: Array.isArray(pmsItem.roomTypes) && pmsItem.roomTypes.length > 0 ? pmsItem.roomTypes.map(rt => ({
+                            id: rt.id,
+                            name: rt.name,
+                            price: rt.basePrice || rt.price || pmsItem.price,
+                            capacity: rt.capacity || '2 Adults',
+                            totalUnits: rt.totalUnits || 8,
+                            features: Array.isArray(rt.amenities) && rt.amenities.length > 0
+                                ? rt.amenities
+                                : (Array.isArray(rt.features)
+                                    ? rt.features
+                                    : (typeof rt.features === 'string'
+                                        ? rt.features.split(',').map(s => s.trim()).filter(Boolean)
+                                        : ['Mountain View', 'Bedding', 'Campfire Access'])),
+                            image: rt.image || pmsItem.image
+                        })) : (matchingBase?.rooms || [])
+                    };
+                });
+
+                // Include any newly added camps from base catalog that aren't yet in OpenPMS microservice
+                const pmsIds = new Set(pmsProps.map(p => p.id));
+                const missingFromPms = base.filter(b => !pmsIds.has(b.id));
+                const completeCatalog = [...merged, ...missingFromPms];
+
+                campsOverride = completeCatalog;
+                return NextResponse.json(completeCatalog, { headers: { 'Cache-Control': 'no-store' } });
+            }
+        }
+    } catch (e) {
+        // Fallback to database or memory
+    }
 
     if (isPrismaConfigured && prisma) {
         try {
@@ -87,6 +152,21 @@ export async function POST(request) {
             }
         }
 
+        // 2-Way Sync: Forward update to OpenPMS microservice
+        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        try {
+            fetch(`${pmsUrl}/api/properties`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-PMS-Tenant-Id': process.env.NEXT_PUBLIC_PMS_TENANT_ID || 't-aanandham-hq',
+                    'Authorization': `Bearer ${process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh'}`
+                },
+                body: JSON.stringify({ properties: valid }),
+                signal: AbortSignal.timeout(3000)
+            }).catch(() => {});
+        } catch (pmsSyncErr) {}
+
         recordWalMutation({
             entityType: 'CAMPSITE',
             entityId: 'camps_catalog_v1',
@@ -94,7 +174,7 @@ export async function POST(request) {
             previousState: null,
             newState: { totalCamps: valid.length, campIds: valid.map(c => c.id) },
             actor: getAdminPayload(request)?.campName || 'Admin Coordinator (Master HQ)',
-            details: `Synchronized campsite catalog: ${valid.length} camps published`,
+            details: `Synchronized campsite catalog: ${valid.length} camps published (2-way sync active)`,
             request
         });
 

@@ -13,7 +13,7 @@ import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
 const BookingEngineModal = dynamic(() => import('../components/BookingEngineModal'), { ssr: false });
 import { useAuth } from '../hooks/useAuth';
-import { INITIAL_ALL_CAMPS, getAllCamps } from '../lib/campsData';
+import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
 import { GraduationCap, Building2, Tent, Flame, Check, ChevronLeft, ChevronRight, ChevronDown, Download, Play, ShieldCheck, Stethoscope, Truck, Heart, MapPin, Clock, Zap, Camera, Search, MessageCircle, Star, Sunrise, Footprints, PersonStanding, Telescope, Leaf, Mountain, Waves, Link2 } from 'lucide-react';
@@ -23,19 +23,22 @@ import { loadTestimonialsFromStorage } from '../lib/testimonialsCore';
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
 const OVERVIEW_HIGHLIGHTS = [
     {
-        img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1000&q=80',
+        img: '/images/high-altitude-ridge-tent.jpg',
         title: 'Live in a High-Altitude Ridge Tent',
-        sub: 'Stay options for solo travelers, couples, and groups'
+        sub: 'Stay options for solo travelers, couples, and groups',
+        objectPosition: 'center 60%'
     },
     {
-        img: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=1000&q=80',
+        img: '/images/sunrise-cloud-treks.jpg',
         title: 'Sunrise Peaks & Cloud Bed Treks',
-        sub: 'Guided ridge walks through misty tea valleys'
+        sub: 'Guided ridge walks through misty tea valleys',
+        objectPosition: 'center 70%'
     },
     {
-        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1000&q=80',
+        img: '/images/acoustic-campfires-bbq.jpg',
         title: 'Acoustic Campfires & Live BBQ',
-        sub: 'Starlit night sessions under pristine mountain skies'
+        sub: 'Starlit night sessions under pristine mountain skies',
+        objectPosition: 'center center'
     }
 ];
 
@@ -45,37 +48,37 @@ const PROGRAM_DAYS = [
         day: 'Day 1',
         title: 'Arrival & Meet the Crew',
         desc: 'Arrive at Suryanelli basecamp, welcome herbal drinks, check-in to high-altitude dome pods, sunset orientation, and welcome campfire barbecue dinner.',
-        img: 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-hero-landing.jpg'
     },
     {
         day: 'Day 2',
         title: 'First Waves & Cloud Ridge Vibes',
         desc: 'Dawn breathwork, 4x4 Jeep trail to Kolukkumalai tea estate sunrise, cliff-edge breakfast, and guided trek along the misty Tiger Rock ridge.',
-        img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-mist-ridge.jpg'
     },
     {
         day: 'Day 3',
         title: 'Trek Progress & Stargazing Deck',
         desc: 'Intermediate ridge navigation workshop, wilderness trail pacing, tea factory heritage tour, and starlit open-mic acoustic campfire circle.',
-        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-tea-valley.jpg'
     },
     {
         day: 'Day 4',
         title: 'Spice Valley & Culture Day',
         desc: 'Visit ancient mountain hamlets, spice plantation foraging, authentic forest-to-table lunch, and evening recovery yoga under the pine groves.',
-        img: 'https://images.unsplash.com/photo-1533240332313-0db49b459ad6?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-mist-trails.jpg'
     },
     {
         day: 'Day 5',
         title: 'Summit & Waterfall Rapids',
         desc: 'Full-day wilderness expedition to hidden rainforest waterfalls, natural rock pool swimming, bamboo raft rapid crossing, and celebration night BBQ.',
-        img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-emerald-hills.jpg'
     },
     {
         day: 'Day 6',
         title: 'Sunrise Breathwork & Farewell',
         desc: 'Final sunrise meditation over rolling clouds, hearty Kerala breakfast, gear wrap-up, and departure with lifetime memories and your new tribe.',
-        img: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=800&q=80'
+        img: '/images/services/munnar-vertical-plantation.jpg'
     }
 ];
 
@@ -90,7 +93,7 @@ const WHY_AANANDHAM_PILLARS = [
         title: '100% Female & Family-Safe',
         fullTitle: '100% Female & Family-Safe Campgrounds',
         desc: 'We eliminate the roughness from wilderness camping. Every campsite features private gated perimeters, dedicated on-site female & male coordinators, clean western washrooms with running hot water, and 24/7 power backup.',
-        image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/munnar-mist-valley-wide.jpg',
         stat: '350+ Solo Female Campers',
         statIcon: ShieldCheck,
         rotation: '-1.2deg',
@@ -107,7 +110,7 @@ const WHY_AANANDHAM_PILLARS = [
         title: 'High-Altitude 4x4 Convoys',
         fullTitle: 'High-Altitude 4x4 Off-Road Convoys',
         desc: 'Our fleet of verified 4x4 off-road Mahindra jeeps takes you through rugged private tea estate tracks, crossing rolling cloud valleys to untouched summit vistas where ordinary transport cannot go.',
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/high-altitude-4x4-convoy.jpg',
         stat: '7,900 FT Highest Camp',
         statIcon: Truck,
         rotation: '1.4deg',
@@ -117,37 +120,37 @@ const WHY_AANANDHAM_PILLARS = [
     },
     {
         id: 'marshals',
-        badge: 'Certified Mountain Guides',
+        badge: 'Experienced Mountain Guides',
         serial: 'EXP-TAG · 03',
-        seal: 'WFA MEDICAL',
-        tagline: '1:6 Guide-to-Camper Ratio',
-        title: 'WFA-Certified Local Guides',
-        fullTitle: 'WFA-Certified Local Mountain Guides',
-        desc: 'Led by Western Ghats natives who grew up traversing these mist valleys. They pace each group with small 1:6 ratios, carrying medical kits, pulse oximeters, and deep indigenous flora and mountain wisdom.',
-        image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80',
-        stat: '1:6 Guide-to-Camper Ratio',
-        statIcon: Stethoscope,
+        seal: 'LOCAL GUIDES',
+        tagline: 'Native Western Ghats Explorers',
+        title: 'Experienced Local Guides',
+        fullTitle: 'Experienced Local Mountain Guides',
+        desc: 'Led by Western Ghats natives who grew up traversing these mist valleys. They know every hidden viewpoint, weather shift, and tea trail, keeping the group comfortable, safe, and moving at an easy pace.',
+        image: '/images/experienced-local-guides.jpg',
+        stat: 'Native Valley Guides',
+        statIcon: Footprints,
         rotation: '-1.0deg',
         paperBg: '#F7FAF4',
         accentColor: '#047857',
-        highlights: ['Small 1:6 Guide Ratio', 'WFA & CPR First Aid Certified', 'Oxygen & Medical Kits on Trail', 'Local Cultural Storytelling']
+        highlights: ['Native Mountain Guides', 'Comfortable Trail Pacing', 'Basic First-Aid on Trail', 'Local Stories & Hidden Trails']
     },
     {
-        id: 'gastronomy',
-        badge: 'Live BBQ & Stargazing',
+        id: 'stargazing',
+        badge: 'Milky Way Stargazing',
         serial: 'EXP-TAG · 04',
-        seal: 'STARLIT BBQ',
-        tagline: 'Farm-to-Table Kerala Buffets',
-        title: 'Starlit Outdoor Gastronomy',
-        fullTitle: 'Starlit Outdoor Gastronomy & Telescopes',
-        desc: 'Warm up around roaring campfires at 10°C with smoking hot barbecue platters, traditional Kerala feasts, live acoustic open-mic jams, and zero-light-pollution telescope observation of celestial nebulas.',
-        image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-        stat: '4.98★ Food & Stargaze Rating',
-        statIcon: Flame,
+        seal: 'STARGAZING',
+        tagline: 'High-Altitude Night Skies',
+        title: 'Milky Way Stargazing',
+        fullTitle: 'Zero-Light-Pollution Milky Way Stargazing',
+        desc: 'Experience crystal-clear night skies above 6,500 FT. Away from city lights and smog, watch the Milky Way, meteor showers, and endless constellations right outside your tent.',
+        image: '/images/stargazing-night-skies.jpg',
+        stat: 'Zero Light Pollution',
+        statIcon: Telescope,
         rotation: '1.2deg',
-        paperBg: '#FEF6EE',
-        accentColor: '#C2410C',
-        highlights: ['Farm-to-Table Kerala Buffets', 'Live Campfire Barbecue', 'Telescope Stargazing Deck', 'Open-Mic Acoustic Vibe']
+        paperBg: '#F5F8FC',
+        accentColor: '#1E40AF',
+        highlights: ['Milky Way & Clear Constellations', 'Zero City Light Pollution', 'Telescope Moon Observation', 'High-Altitude Night Ridge Decks']
     }
 ];
 
@@ -187,7 +190,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Munnar, Kerala',
         altitude: '7,900 FT',
         category: 'High-Altitude 4x4 Safari',
-        img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80',
+        img: '/images/high-altitude-4x4-convoy.jpg',
         badge: 'Highest Organic Tea Camp'
     },
     {
@@ -196,7 +199,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Suryanelli, Idukki',
         altitude: '6,500 FT',
         category: 'Private Ridge Glamping',
-        img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
+        img: '/images/high-altitude-ridge-tent.jpg',
         badge: 'Starlit Pod Stays'
     },
     {
@@ -205,7 +208,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Munnar, Kerala',
         altitude: '6,800 FT',
         category: 'Guided Sunset Trek',
-        img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+        img: '/images/phantom-head-trekking.jpg',
         badge: '360° Mountain Vista'
     },
     {
@@ -214,7 +217,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Munnar Valley, Kerala',
         altitude: '5,500 FT',
         category: 'Lakeside Wilderness',
-        img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
+        img: '/images/anayirangal-elephant-lake.jpg',
         badge: 'Elephant Corridor Views'
     },
     {
@@ -223,7 +226,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Vagamon, Idukki',
         altitude: '4,800 FT',
         category: 'Pine Forest Glamping',
-        img: 'https://images.unsplash.com/photo-1470246973918-29a93221c455?auto=format&fit=crop&w=800&q=80',
+        img: '/images/services/munnar-emerald-hills.jpg',
         badge: 'Fog & Mist Trails'
     },
     {
@@ -232,7 +235,7 @@ const KERALA_WILDERNESS_GALLERY = [
         location: 'Wayanad, Kerala',
         altitude: '3,200 FT',
         category: 'Canopy & Treehouse Treks',
-        img: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80',
+        img: '/images/services/munnar-mist-ridge.jpg',
         badge: 'Deep Rainforest'
     }
 ];
@@ -500,7 +503,7 @@ function CtaParallaxBanner({ onOpenBooking, defaultPackage }) {
                         }}
                     >
                         <Image
-                            src="https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80"
+                            src="/images/services/munnar-hero-landing.jpg"
                             alt="Canopy Wilderness"
                             fill
                             priority
@@ -661,6 +664,75 @@ export default function HomePage() {
             })
             .catch(() => {});
     }, []);
+
+    // Live Instagram Dispatches (Dynamic /api/instagram sync with fallback)
+    const [instaPosts, setInstaPosts] = useState([
+        {
+            id: 'post-1',
+            title: 'Kolukkumalai Sunrise 4x4',
+            subtitle: '7,130 FT Golden Cloud Bed',
+            location: 'Kolukkumalai Peak',
+            media_url: '/images/high-altitude-4x4-convoy.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: '7,130 FT · KOLUKKUMALAI'
+        },
+        {
+            id: 'post-2',
+            title: 'Milky Way Ridge Camping',
+            subtitle: 'Zero-Light-Pollution Sky',
+            location: 'Suryanelli Basecamp',
+            media_url: '/images/stargazing-night-skies.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: 'STARLIT RIDGE'
+        },
+        {
+            id: 'post-3',
+            title: 'Live in High-Altitude Ridge Tent',
+            subtitle: 'Grassy Ridge Alpine Stay',
+            location: 'Suryanelli Valley',
+            media_url: '/images/high-altitude-ridge-tent.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: 'RIDGE TENT'
+        },
+        {
+            id: 'post-4',
+            title: 'Sunrise Cloud Bed Ridge Trek',
+            subtitle: 'Golden Horizon Trail Walk',
+            location: 'Phantom Hill, Munnar',
+            media_url: '/images/sunrise-cloud-treks.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: 'SUNRISE CLOUD BED'
+        },
+        {
+            id: 'post-5',
+            title: 'Munnar Misty Valley & Tea Hills',
+            subtitle: 'Cascading Green Slopes',
+            location: 'Munnar Hills',
+            media_url: '/images/munnar-mist-valley-wide.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: 'TEA HIGHLANDS'
+        },
+        {
+            id: 'post-6',
+            title: 'Acoustic Campfire & Live BBQ',
+            subtitle: 'Warm Embers & Spiced Tea',
+            location: 'Basecamp Circle',
+            media_url: '/images/acoustic-campfires-bbq.jpg',
+            permalink: 'https://www.instagram.com/aanandham.go/',
+            tag: 'CAMPFIRE BBQ'
+        }
+    ]);
+
+    useEffect(() => {
+        fetch('/api/instagram')
+            .then(res => res.json())
+            .then(data => {
+                if (data?.posts && Array.isArray(data.posts) && data.posts.length > 0) {
+                    setInstaPosts(data.posts);
+                }
+            })
+            .catch(() => {});
+    }, []);
     const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const openBookingModal = (pkg, opts = {}) => {
@@ -682,6 +754,7 @@ export default function HomePage() {
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data) && data.length > 0) {
+                    saveAllCamps(data);
                     setCampsList(data);
                 }
             })
@@ -943,24 +1016,27 @@ export default function HomePage() {
                 HERO SECTION (Defensive viewport units & short screen support)
             ───────────────────────────────────────────────────────────── */}
             <section 
-                className="hero-defensive-height"
                 style={{
                     position: 'relative',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     textAlign: 'center',
+                    minHeight: '100vh',
+                    minHeight: '100dvh',
                     padding: 'clamp(90px, 12dvh, 130px) 24px clamp(40px, 6dvh, 70px)',
-                    backgroundImage: 'url("https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1400&q=75")',
+                    backgroundImage: 'url("/images/home-hero-landing.png")',
                     backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    color: '#FFFFFF'
+                    backgroundPosition: 'center 38%',
+                    backgroundRepeat: 'no-repeat',
+                    color: '#FFFFFF',
+                    overflow: 'hidden'
                 }}
             >
                 <div style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.35) 0%, rgba(14, 24, 17, 0.85) 100%)'
+                    background: 'radial-gradient(ellipse at center, rgba(14, 24, 17, 0.22) 0%, rgba(14, 24, 17, 0.72) 100%)'
                 }} />
 
                 <motion.div 
@@ -1215,7 +1291,7 @@ export default function HomePage() {
                                         animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
                                         exit={{ opacity: 0, scale: 0.98, filter: 'blur(2px)' }}
                                         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                                        style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: OVERVIEW_HIGHLIGHTS[highlightIdx]?.objectPosition || 'center' }}
                                     />
                                 </AnimatePresence>
                             </div>
@@ -1281,15 +1357,23 @@ export default function HomePage() {
 
                             {/* Quote Card */}
                             <div className="hover-lift" style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '28px', boxShadow: '0 8px 30px rgba(0,0,0,0.03)' }}>
-                                <div style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '1.2px', marginBottom: '12px' }}>
-                                    Founder's Ethos
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                                    <div style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
+                                        Founder’s Ethos
+                                    </div>
+                                    <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.12)', padding: '3px 8px', borderRadius: '6px', letterSpacing: '0.5px' }}>
+                                        SURYANELLI · EST. 2024
+                                    </span>
                                 </div>
-                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.65, marginBottom: '20px', fontWeight: '500' }}>
-                                    It started as a trek.<br />
-                                    It became a movement. Now we're building a community of adventurers who choose authentic experiences over everything else.
+                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.65, marginBottom: '14px', fontWeight: '700' }}>
+                                    “It started as a trek.<br />
+                                    It became a movement. Now we’re building a community of adventurers who choose authentic experiences over everything else.”
+                                </p>
+                                <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.6, marginBottom: '20px', borderLeft: '2px solid #166534', paddingLeft: '12px' }}>
+                                    Born out of frustration with overpriced commercial resorts. We scouted off-grid mountain ridges with native tribal marshals to create Kerala’s most transparent, high-altitude wilderness sanctuary.
                                 </p>
                                 <Link href="/about" className="action-arrow-btn" style={{ width: '100%', justifyContent: 'space-between', textDecoration: 'none' }}>
-                                    <span>Read Our Story</span>
+                                    <span>Explore Our Journey &amp; Ethos</span>
                                     <div className="btn-arrow-circle">
                                         →
                                     </div>
@@ -1868,18 +1952,20 @@ export default function HomePage() {
                                             </p>
                                             
                                             {/* Key Highlights Chips */}
-                                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
-                                                {pkg.highlights.slice(0, 2).map((h, i) => (
-                                                    <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
-                                                        ✓ {h}
-                                                    </span>
-                                                ))}
-                                                {pkg.highlights.length > 2 && (
-                                                    <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
-                                                        +{pkg.highlights.length - 2} more
-                                                    </span>
-                                                )}
-                                            </div>
+                                            {Array.isArray(pkg.highlights) && pkg.highlights.length > 0 && (
+                                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
+                                                    {pkg.highlights.slice(0, 2).map((h, i) => (
+                                                        <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
+                                                            ✓ {h}
+                                                        </span>
+                                                    ))}
+                                                    {pkg.highlights.length > 2 && (
+                                                        <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
+                                                            +{pkg.highlights.length - 2} more
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
 
                                             {/* Bottom Price & 2-in-1 ⚡ Action Row (See Site ↗ + Book Spot ⚡) */}
                                             <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
@@ -1893,11 +1979,11 @@ export default function HomePage() {
                                                 </div>
                                                 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    {/* 1. See The Site ↗ */}
+                                                    {/* 1. Explore Details */}
                                                     <Link
                                                         href={`/camps/${pkg.id}`}
                                                         style={{
-                                                            padding: '7px 12px',
+                                                            padding: '8px 14px',
                                                             borderRadius: '10px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -1910,16 +1996,17 @@ export default function HomePage() {
                                                             gap: '3px'
                                                         }}
                                                     >
-                                                        <span>Explore →</span>
+                                                        <span>Details →</span>
                                                     </Link>
 
-                                                    {/* 2. Instant Book ⚡ */}
+                                                    {/* 2. Direct Book (Zero Advance / No Login Needed) */}
                                                     <button 
                                                         onClick={() => handleOpenBooking(pkg)} 
                                                         className="btn-lime" 
-                                                        style={{ padding: '7px 13px', borderRadius: '10px', fontSize: '12px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                                        title="Direct Booking · No Login Required · Zero Upfront Fee"
+                                                        style={{ padding: '8px 18px', borderRadius: '10px', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
                                                     >
-                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>Book <Zap size={12} /></span>
+                                                        <span>Book</span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -1946,7 +2033,6 @@ export default function HomePage() {
                                             }
                                             setActivePackageSlideIdx(idx);
                                         }}
-                                        aria-label={`Go to package ${idx + 1}`}
                                         style={{
                                             width: activePackageSlideIdx === idx ? '22px' : '7px',
                                             height: '7px',
@@ -1969,8 +2055,8 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                4. PROGRAM SECTION (Exact Match to media_1786657185483.png)
-                   "What we've planned for you:" + Interactive Mouse-Follow Hover Preview
+                4. PROGRAM SECTION (Compact Numbered Expedition Timeline)
+                   "What we've planned for you:"
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
                 id="program" 
@@ -1978,19 +2064,19 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={SECTION_PAD}
+                style={{ position: 'relative', padding: 'clamp(54px, 6vw, 76px) clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
-                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%', position: 'relative' }}>
+                <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     {/* Header Row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '60px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '36px' }}>
                         <div>
-                            <div className="star-badge">
-                                <span className="star-icon">★</span> PROGRAM
+                            <div className="star-badge" style={{ marginBottom: '10px' }}>
+                                <span className="star-icon">★</span> 6-DAY EXPEDITION SCHEDULE
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(34px, 5vw, 52px)',
+                                fontSize: 'clamp(28px, 4vw, 44px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
@@ -2000,188 +2086,88 @@ export default function HomePage() {
                             </h2>
                         </div>
 
-                        <a
-                            href="#packages"
-                            style={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                background: '#FFFFFF',
-                                border: '1px solid rgba(18, 22, 19, 0.12)',
-                                color: '#121613',
-                                padding: '10px 22px',
-                                borderRadius: '999px',
-                                fontSize: '13px',
-                                fontWeight: '700',
-                                textDecoration: 'none',
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
-                                transition: 'all 0.2s'
-                            }}
-                        >
-                            <Download size={12} /> Full Program
-                        </a>
+                        <p style={{ fontSize: '14px', color: '#59655D', margin: 0, maxWidth: '420px', lineHeight: 1.6 }}>
+                            A balanced rhythm of sunrise summit climbs, off-road 4x4 trails, starlit campfire nights, and recovery breathwork.
+                        </p>
                     </div>
 
-                    {/* Interactive Days List with Mouse Tracking Container */}
-                    <div 
-                        ref={programContainerRef}
-                        onMouseMove={handleProgramMouseMove}
-                        onMouseLeave={() => setHoveredProgramDay(null)}
-                        style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}
-                    >
-                        {/* Desktop Floating Mouse-Follow Preview Card */}
-                        <AnimatePresence>
-                            {hoveredProgramDay !== null && (
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.88, y: 10 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.88, y: 10 }}
-                                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                                    style={{
-                                        position: 'absolute',
-                                        top: 0,
-                                        left: 0,
-                                        x: smoothProgramX,
-                                        y: smoothProgramY,
-                                        translateX: 28,
-                                        translateY: '-50%'
-                                    }}
-                                    className="program-floating-preview"
-                                >
-                                    <img 
-                                        src={PROGRAM_DAYS[hoveredProgramDay].img} 
-                                        alt={PROGRAM_DAYS[hoveredProgramDay].title} 
-                                        loading="lazy"
-                                        decoding="async"
-                                        style={IMG_FILL} 
-                                    />
-                                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(11,21,14,0.92) 0%, rgba(11,21,14,0.25) 50%, transparent 100%)' }} />
-                                    <div style={{ position: 'absolute', bottom: '16px', left: '18px', right: '18px', color: '#FFFFFF' }}>
-                                        <span style={{ fontSize: '11px', fontWeight: '800', color: '#E5A93B', textTransform: 'uppercase', letterSpacing: '1.2px', display: 'block', marginBottom: '3px' }}>
-                                            {PROGRAM_DAYS[hoveredProgramDay].day}
-                                        </span>
-                                        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', lineHeight: 1.25 }}>
-                                            {PROGRAM_DAYS[hoveredProgramDay].title}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                    {/* Compact 6-Day Numbered Grid (2 rows x 3 cols on desktop, responsive) */}
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+                        gap: '20px'
+                    }}>
+                        {PROGRAM_DAYS.map((item, idx) => (
+                            <motion.div
+                                key={idx}
+                                variants={cardReveal}
+                                whileHover={{ y: -4, boxShadow: '0 16px 36px rgba(0,0,0,0.06)' }}
+                                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                                style={{
+                                    background: '#FFFFFF',
+                                    border: '1px solid rgba(18, 22, 19, 0.08)',
+                                    borderRadius: '20px',
+                                    padding: '24px 22px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    position: 'relative',
+                                    boxShadow: '0 4px 14px rgba(0,0,0,0.02)',
+                                    transition: 'border-color 0.25s ease'
+                                }}
+                            >
+                                {/* Top Header: Number Pill + Day Badge */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                                    <span style={{
+                                        fontFamily: 'monospace',
+                                        fontSize: '20px',
+                                        fontWeight: '900',
+                                        color: '#166534',
+                                        background: 'rgba(22, 101, 52, 0.08)',
+                                        padding: '4px 12px',
+                                        borderRadius: '10px',
+                                        letterSpacing: '-0.5px'
+                                    }}>
+                                        {`0${idx + 1}`}
+                                    </span>
 
-                        {PROGRAM_DAYS.map((item, idx) => {
-                            const isOpen = expandedDayIdx === idx;
+                                    <span style={{
+                                        fontSize: '11px',
+                                        fontWeight: '800',
+                                        color: '#E5A93B',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px',
+                                        background: 'rgba(229, 169, 59, 0.12)',
+                                        padding: '4px 10px',
+                                        borderRadius: '999px',
+                                        border: '1px solid rgba(229, 169, 59, 0.25)'
+                                    }}>
+                                        {item.day}
+                                    </span>
+                                </div>
 
-                            return (
-                                <motion.div
-                                    key={idx}
-                                    data-program-day-idx={idx}
-                                    variants={cardReveal}
-                                    onMouseEnter={() => {
-                                        setHoveredProgramDay(idx);
-                                    }}
-                                    onClick={() => setExpandedDayIdx(isOpen ? -1 : idx)}
-                                    style={{
-                                        borderTop: '1px solid rgba(18, 22, 19, 0.1)',
-                                        padding: '28px 0',
-                                        cursor: 'pointer',
-                                        position: 'relative',
-                                        transition: 'background-color 0.25s ease'
-                                    }}
-                                >
-                                    {/* Smooth Active Underline Bar (Zero stutter / Zero jumping) */}
-                                    <div 
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-1.5px',
-                                            left: 0,
-                                            width: isOpen ? '180px' : '0px',
-                                            height: '3px',
-                                            backgroundColor: '#E5A93B',
-                                            borderRadius: '999px',
-                                            boxShadow: isOpen ? '0 0 12px rgba(229, 169, 59, 0.6)' : 'none',
-                                            transition: 'width 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.35s ease',
-                                            opacity: isOpen ? 1 : 0
-                                        }} 
-                                    />
+                                {/* Title */}
+                                <h3 style={{
+                                    fontFamily: 'var(--font-heading)',
+                                    fontSize: '18px',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    margin: '0 0 10px',
+                                    lineHeight: 1.3
+                                }}>
+                                    {item.title}
+                                </h3>
 
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <div>
-                                            <span style={{ fontSize: '12px', fontWeight: '700', color: isOpen ? '#E5A93B' : '#8E9B92', display: 'block', marginBottom: '6px', transition: 'color 0.25s ease' }}>
-                                                {item.day}
-                                            </span>
-                                            <h3 style={{
-                                                fontFamily: 'var(--font-heading)',
-                                                fontSize: 'clamp(20px, 2.5vw, 30px)',
-                                                fontWeight: '700',
-                                                color: '#121613',
-                                                margin: 0
-                                            }}>
-                                                {item.title}
-                                            </h3>
-                                        </div>
-
-                                        <div style={{
-                                            width: '36px',
-                                            height: '36px',
-                                            borderRadius: '50%',
-                                            background: isOpen ? '#121613' : '#F1F3EC',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            fontSize: '12px',
-                                            color: isOpen ? '#E5A93B' : '#121613',
-                                            transform: isOpen ? 'rotate(180deg)' : 'none',
-                                            transition: 'all 0.35s cubic-bezier(0.22, 1, 0.36, 1)'
-                                        }}>
-                                            <ChevronDown size={14} />
-                                        </div>
-                                    </div>
-
-                                    <AnimatePresence initial={false}>
-                                        {isOpen && (
-                                            <motion.div 
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                                                style={{ overflow: 'hidden' }}
-                                            >
-                                                <div style={{ paddingTop: '16px', maxWidth: '720px' }}>
-                                                    <p style={{ fontSize: '14.5px', color: '#59655D', lineHeight: 1.7, margin: '0 0 14px' }}>
-                                                        {item.desc}
-                                                    </p>
-                                                    {/* In-line Image preview (shown cleanly with badges on active day) */}
-                                                    <div 
-                                                        className="program-day-inline-img"
-                                                        style={{ 
-                                                            height: 'clamp(190px, 28dvh, 250px)', 
-                                                            borderRadius: '18px', 
-                                                            overflow: 'hidden', 
-                                                            marginTop: '16px',
-                                                            position: 'relative',
-                                                            boxShadow: '0 8px 24px rgba(0,0,0,0.12)'
-                                                        }}
-                                                    >
-                                                        <img 
-                                                            src={item.img} 
-                                                            alt={item.title} 
-                                                            loading="lazy"
-                                                            decoding="async"
-                                                            style={IMG_FILL} 
-                                                        />
-                                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.75) 0%, transparent 50%)' }} />
-                                                        <div style={{ position: 'absolute', bottom: '12px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700' }}>
-                                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {item.altitude || 'Western Ghats Ridge'}</span>
-                                                            <span style={{ background: 'rgba(255,255,255,0.2)', padding: '3px 9px', borderRadius: '6px', backdropFilter: 'blur(4px)' }}>{item.terrain || 'Mountain Trail'}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                            );
-                        })}
+                                {/* Description */}
+                                <p style={{
+                                    fontSize: '13.5px',
+                                    color: '#59655D',
+                                    lineHeight: 1.65,
+                                    margin: 0
+                                }}>
+                                    {item.desc}
+                                </p>
+                            </motion.div>
+                        ))}
                     </div>
 
                 </div>
@@ -2851,25 +2837,25 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={SECTION_PAD}
+                style={{ position: 'relative', padding: 'clamp(44px, 5.5vw, 68px) clamp(20px, 4vw, 48px)' }}
             >
                 <div style={CONTAINER}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '50px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '28px' }}>
                         <div>
                             <div className="star-badge">
                                 <span className="star-icon">★</span> TESTIMONIALS
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
-                                fontSize: 'clamp(32px, 4.5vw, 48px)',
+                                fontSize: 'clamp(28px, 3.8vw, 42px)',
                                 fontWeight: '800',
                                 color: '#121613',
                                 letterSpacing: '-0.035em',
-                                margin: '0 0 8px'
+                                margin: '0 0 6px'
                             }}>
                                 Read the stories from <span style={{ color: '#8E9B92' }}>past campers</span>
                             </h2>
-                            <p style={{ color: '#59655D', fontSize: '15px', margin: 0 }}>
+                            <p style={{ color: '#59655D', fontSize: '14px', margin: 0 }}>
                                 A glimpse into life at our high-altitude basecamp
                             </p>
                         </div>
@@ -2879,21 +2865,21 @@ export default function HomePage() {
                             <button 
                                 onClick={prevTestimonial} 
                                 aria-label="Previous testimonial"
-                                style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
+                                style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
                             >
                                 <ChevronLeft size={13} />
                             </button>
                             <button 
                                 onClick={nextTestimonial} 
                                 aria-label="Next testimonial"
-                                style={{ width: '44px', height: '44px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
+                                style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.1)', color: '#121613', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}
                             >
                                 <ChevronRight size={13} />
                             </button>
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 330px), 1fr))', gap: '32px', alignItems: 'stretch' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '24px', alignItems: 'stretch' }}>
                         
                         {/* Authentic Real Polaroid Photo Card */}
                         <div 
@@ -2910,7 +2896,7 @@ export default function HomePage() {
                             {/* Sharp Authentic Photo Cutout */}
                             <div className="polaroid-inner-photo">
                                 <img 
-                                    src="https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=900&q=80" 
+                                    src="/images/acoustic-campfires-bbq.jpg" 
                                     alt="Aanandham Wilderness Campfire" 
                                     loading="lazy"
                                     decoding="async"
@@ -3354,62 +3340,21 @@ export default function HomePage() {
 
                     {/* Responsive Story Grid (Desktop: Grid, Mobile: Smooth Centered Carousel) */}
                     <div className="insta-stories-grid">
-                        {[
-                            {
-                                title: 'Kolukkumalai Sunrise 4x4',
-                                subtitle: '7,130 FT Golden Cloud Bed',
-                                location: 'Kolukkumalai Peak',
-                                img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-                                tag: '7,130 FT · KOLUKKUMALAI'
-                            },
-                            {
-                                title: 'Starlit Ridge Campfire',
-                                subtitle: 'Kerala Spiced BBQ & Jams',
-                                location: 'Suryanelli Basecamp',
-                                img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
-                                tag: 'SURYANELLI RIDGE'
-                            },
-                            {
-                                title: 'Geodesic Alpine Dome',
-                                subtitle: 'Misty Sunrise Pod View',
-                                location: 'Suryanelli Valley',
-                                img: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
-                                tag: 'ALPINE GLAMPING'
-                            },
-                            {
-                                title: 'Phantom Head Ridge Hike',
-                                subtitle: 'Panoramic Sunset Trek',
-                                location: 'Phantom Hill, Munnar',
-                                img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-                                tag: 'PHANTOM HEAD'
-                            },
-                            {
-                                title: 'Mountain Clay Pot Feast',
-                                subtitle: 'Authentic Kerala Camp Buffet',
-                                location: 'Basecamp Kitchen',
-                                img: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80',
-                                tag: 'MOUNTAIN FEAST'
-                            },
-                            {
-                                title: 'Wayanad Rainforest Stream',
-                                subtitle: 'Private Waterfall Dip',
-                                location: 'Wayanad Estate',
-                                img: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80',
-                                tag: 'WAYANAD CANOPY'
-                            }
-                        ].map((story, idx) => (
+                        {instaPosts.map((story, idx) => (
                             <a
-                                key={idx}
-                                href="https://www.instagram.com/aanandham.go/"
+                                key={story.id || idx}
+                                href={story.permalink || 'https://www.instagram.com/aanandham.go/'}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="insta-story-card"
                             >
                                 <img
-                                    src={story.img}
+                                    src={story.media_url || story.img}
                                     alt={story.title}
                                     className="story-card-img"
-                                 loading="lazy" decoding="async"/>
+                                    loading="lazy" 
+                                    decoding="async"
+                                />
                                 <div className="story-card-overlay">
                                     <div style={{
                                         display: 'flex',

@@ -50,15 +50,16 @@ export default function Footer() {
                 }}>
                     {/* Brand Column */}
                     <div>
-                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', textDecoration: 'none', marginBottom: '16px' }}>
+                        <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', textDecoration: 'none', marginBottom: '16px' }}>
                             <img
                                 src="/logo.png"
                                 alt="Aanandham.go Wilderness Basecamps"
-                                width="40"
-                                height="40"
-                               
-                                style={{ objectFit: 'contain' }}
-                             loading="lazy" decoding="async"/>
+                                width="50"
+                                height="50"
+                                style={{ width: '48px', height: '48px', objectFit: 'contain', background: 'transparent' }}
+                                loading="lazy" 
+                                decoding="async"
+                            />
                             <h3 style={{
                                 fontFamily: 'var(--font-heading)',
                                 fontSize: '20px',
@@ -174,10 +175,8 @@ export default function Footer() {
                                 { name: 'Munnar & Suryanelli Camps', href: '/camps/munnar' },
                                 { name: 'Vagamon Pine Glamping', href: '/camps/vagamon' },
                                 { name: 'Wayanad Forest Pods', href: '/camps/wayanad' },
-                                { name: 'All 11+ Kerala Campsites', href: '/camps' },
-                                { name: 'About Our Ethos & Team', href: '/about' },
-                                { name: 'Tech & Brand Services', href: '/services' },
-                                { name: 'Visit Expedition Concierge Desk', href: '/contact' }
+                                { name: 'All Verified Kerala Camps', href: '/camps' },
+                                { name: 'About Our Ethos & Charter', href: '/about' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>
@@ -187,17 +186,17 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Column 3: AANANDHAM.GO SUB-PAGES */}
+                    {/* Column 3: SYSTEM & OPERATIONS */}
                     <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            AANANDHAM.GO
+                            MANAGEMENT & SUPPORT
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
-                                { name: 'About Our Mission', href: '/about' },
-                                { name: 'Campsite Host & Admin', href: '/admin' },
-                                { name: 'Expedition Concierge Desk', href: '/contact' },
-                                { name: 'Privacy, Safety & Permits', href: '/about' }
+                                { name: 'Enterprise OpenPMS (Port 3001)', href: '/admin' },
+                                { name: 'Website Marketing CMS', href: '/cms' },
+                                { name: 'Services & Studio (OpenZen)', href: '/services' },
+                                { name: 'Expedition Concierge Desk', href: '/contact' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>

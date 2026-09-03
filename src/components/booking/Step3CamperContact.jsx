@@ -3,6 +3,7 @@ import React from 'react';
 import { User, Phone, Mail, FileText, ArrowRight, ArrowLeft, Leaf, Drumstick, Utensils, Minus, Plus } from 'lucide-react';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
+import { validateEmailClient } from '../../lib/emailValidatorCore';
 
 export default function Step3CamperContact({
     customerName,
@@ -30,6 +31,43 @@ export default function Step3CamperContact({
     setValidationError = () => {}
 }) {
     const totalGuests = propTotalGuests || (adults + children) || 2;
+    const [emailTouched, setEmailTouched] = React.useState(false);
+    const [liveCheckStatus, setLiveCheckStatus] = React.useState(null);
+
+    // Synchronous client-side check
+    const clientCheck = React.useMemo(() => {
+        if (!customerEmail || !customerEmail.trim()) return null;
+        return validateEmailClient(customerEmail);
+    }, [customerEmail]);
+
+    // Live DNS MX check with 450ms debounce
+    React.useEffect(() => {
+        const trimmed = String(customerEmail || '').trim();
+        if (!trimmed || !trimmed.includes('@') || !trimmed.includes('.')) {
+            setLiveCheckStatus(null);
+            return;
+        }
+
+        const timer = setTimeout(async () => {
+            setLiveCheckStatus('checking');
+            try {
+                const res = await fetch(`/api/validate-email?email=${encodeURIComponent(trimmed)}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setLiveCheckStatus(data);
+                } else {
+                    setLiveCheckStatus(null);
+                }
+            } catch {
+                setLiveCheckStatus(null);
+            }
+        }, 450);
+
+        return () => clearTimeout(timer);
+    }, [customerEmail]);
+
+    const isEmailError = emailTouched && Boolean(customerEmail) && ((clientCheck && !clientCheck.isValid) || (liveCheckStatus && liveCheckStatus !== 'checking' && !liveCheckStatus.isValid));
+    const isEmailVerified = Boolean(customerEmail) && clientCheck?.isValid && liveCheckStatus?.isValid;
 
     return (
                                 <div>
@@ -76,15 +114,73 @@ export default function Step3CamperContact({
                                             </div>
                                             <div>
                                                 <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
-                                                    Email Address (For Pass Sync)
+                                                    Email Address * <span style={{ color: '#166534', fontSize: '11px', fontWeight: '600' }}>(Mandatory for Official Pass)</span>
                                                 </label>
                                                 <input
                                                     type="email"
                                                     className="booking-modal-input"
                                                     placeholder="e.g. anand@gmail.com"
                                                     value={customerEmail}
-                                                    onChange={(e) => setCustomerEmail(e.target.value)}
+                                                    onChange={(e) => { 
+                                                        setCustomerEmail(e.target.value); 
+                                                        setValidationError(''); 
+                                                    }}
+                                                    onBlur={() => setEmailTouched(true)}
+                                                    style={{
+                                                        borderColor: isEmailError ? '#DC2626' : (isEmailVerified ? '#166534' : undefined),
+                                                        background: isEmailError ? '#FEF2F2' : undefined
+                                                    }}
+                                                    required
                                                 />
+
+                                                {/* Live Status and Typo Suggestion */}
+                                                {clientCheck && !clientCheck.isValid && (
+                                                    <div style={{ fontSize: '10.5px', color: '#DC2626', fontWeight: '700', marginTop: '4px' }}>
+                                                        ⚠️ {clientCheck.message}
+                                                        {clientCheck.suggestion && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    const parts = customerEmail.split('@');
+                                                                    const corrected = parts[0] + '@' + clientCheck.suggestion;
+                                                                    setCustomerEmail(corrected);
+                                                                    setValidationError('');
+                                                                }}
+                                                                style={{
+                                                                    marginLeft: '6px',
+                                                                    background: '#166534',
+                                                                    color: '#FFFFFF',
+                                                                    border: 'none',
+                                                                    borderRadius: '6px',
+                                                                    padding: '2px 6px',
+                                                                    fontSize: '10px',
+                                                                    fontWeight: '800',
+                                                                    cursor: 'pointer'
+                                                                }}
+                                                            >
+                                                                Use @{clientCheck.suggestion}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+
+                                                {clientCheck?.isValid && liveCheckStatus === 'checking' && (
+                                                    <div style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '600', marginTop: '4px' }}>
+                                                        🔍 Verifying live mail domain...
+                                                    </div>
+                                                )}
+
+                                                {clientCheck?.isValid && liveCheckStatus && liveCheckStatus !== 'checking' && !liveCheckStatus.isValid && (
+                                                    <div style={{ fontSize: '10.5px', color: '#DC2626', fontWeight: '700', marginTop: '4px' }}>
+                                                        ⚠️ {liveCheckStatus.message}
+                                                    </div>
+                                                )}
+
+                                                {isEmailVerified && (
+                                                    <div style={{ fontSize: '10.5px', color: '#166534', fontWeight: '800', marginTop: '4px' }}>
+                                                        ✓ Live Verified Email · Ready to receive pass
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 

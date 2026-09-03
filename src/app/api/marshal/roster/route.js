@@ -47,7 +47,7 @@ export async function GET(request) {
             const advance = Number(b.advancePaid || Math.round(total * 0.3));
             const isBalancePaid = Boolean(b.isBalancePaid || b.balanceDue === 0 || isFullyCheckedIn);
             const balanceDue = isBalancePaid ? 0 : Number(b.balanceDue !== undefined ? b.balanceDue : (total - advance));
-            const preassignedRoom = b.assignedTent || b.roomType || b.package || 'Geodesic Luxury Dome Pod';
+            const preassignedRoom = b.assignedTent || b.roomType || b.package || 'Geodesic Dome Pod';
 
             if (b.status !== 'Cancelled' && b.status !== 'Expired') {
                 totalExpectedCampers += totalGuests;

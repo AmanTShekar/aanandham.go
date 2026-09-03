@@ -43,14 +43,26 @@ const AVATAR_PRESETS = [
     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80'
 ];
 
-export function useAdminPortalState() {
+export function useAdminPortalState(initialTab = 'properties') {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [passcode, setPasscode] = useState('');
     const [passcodeError, setPasscodeError] = useState(false);
     const [rememberMe, setRememberMe] = useState(true);
 
-    // Active Navigation Tab
-    const [activeTab, setActiveTab] = useState('overview');
+    // Active Navigation Tab with URL & LocalStorage sync
+    const [activeTab, setActiveTabState] = useState(initialTab);
+
+    const setActiveTab = (tab) => {
+        setActiveTabState(tab);
+        if (typeof window !== 'undefined') {
+            try {
+                localStorage.setItem('aanandham_admin_active_tab', tab);
+                const url = new URL(window.location.href);
+                url.searchParams.set('tab', tab);
+                window.history.replaceState({}, '', url.toString());
+            } catch { /* ignore */ }
+        }
+    };
 
     // Dedicated Full-Page Property Details View State
     const [activePropertyDetailId, setActivePropertyDetailId] = useState(null);
@@ -153,7 +165,7 @@ export function useAdminPortalState() {
         guests: 2,
         groupType: 'Family',
         allocatedUnit: 'Tent #01',
-        roomType: 'Geodesic Luxury Dome Pod',
+        roomType: 'Geodesic Dome Pod',
         pricePerGuest: 2499,
         status: 'Confirmed',
         notes: ''
@@ -362,6 +374,16 @@ export function useAdminPortalState() {
             try {
                 if (localStorage.getItem('aanandham_admin_authenticated') === 'true') {
                     setIsAuthenticated(true);
+                }
+            } catch { /* ignore */ }
+
+            // Restore saved active tab on page refresh
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const urlTab = urlParams.get('tab');
+                const savedTab = urlTab || localStorage.getItem('aanandham_admin_active_tab');
+                if (savedTab && ['properties', 'destinations', 'blog', 'about', 'services', 'contact', 'testimonials', 'bookings', 'marshals', 'events', 'overview'].includes(savedTab)) {
+                    setActiveTabState(savedTab);
                 }
             } catch { /* ignore */ }
 

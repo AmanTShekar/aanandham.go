@@ -236,7 +236,7 @@ const TRAVEL_STEPS = [
         inkColor: '#2B1405',
         rotation: '-1.2deg',
         icon: SquareParking,
-        memo: 'Our marshals meet you at basecamp to assist with luggage and boarding badges.'
+        memo: 'Our camp staff meet you at basecamp to assist with luggage and boarding badges.'
     },
     {
         num: 'STAGE 04',
@@ -652,7 +652,7 @@ export default function ContactPage() {
                                 Instant Mountain Contact Channels
                             </h2>
                             <p style={{ fontSize: '15.5px', color: '#59655D', maxWidth: '600px', margin: '0 auto' }}>
-                                Direct connection to our ridge marshals, reservation desks, and emergency mountain logistics team.
+                                Direct connection to our camp staff, reservation desks, and emergency mountain logistics team.
                             </p>
                         </div>
 
@@ -906,7 +906,7 @@ export default function ContactPage() {
                                             {submissionMode === 'email' ? (
                                                 <>Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. A confirmation has been dispatched to <strong style={{ color: '#121613' }}>{formData.email}</strong>. Our mountain team will reply within 2 to 4 hours.</>
                                             ) : (
-                                                <>Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our mountain marshals.</>
+                                                <>Thank you, <strong style={{ color: '#121613' }}>{formData.name}</strong>. Your request has been routed directly to our camp staff.</>
                                             )}
                                         </p>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>

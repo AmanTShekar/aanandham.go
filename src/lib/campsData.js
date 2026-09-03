@@ -1,5 +1,3 @@
-// ── CENTRALIZED KERALA WILDERNESS CAMPS & PROPERTIES DATA ──
-
 export const INITIAL_ALL_CAMPS = [
     {
         id: 'pkg-kolukkumalai',
@@ -17,15 +15,19 @@ export const INITIAL_ALL_CAMPS = [
         duration: '2 Days / 1 Night',
         difficulty: 'Moderate Offroad',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/high-altitude-4x4-convoy.jpg',
         gallery: [
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'
+            '/images/high-altitude-4x4-convoy.jpg',
+            '/images/kolukkumalai-jeep-safari-primary.jpg',
+            '/images/kolukkumalai-jeep-trail-mist.jpg',
+            '/images/kolukkumalai-sunrise-peak-glow.jpg',
+            '/images/kolukkumalai-mountain-view.jpg',
+            '/images/kolukkumalai-cloudbed-dome.webp',
+            '/images/kolukkumalai-camping-area.jpg',
+            '/images/kolukkumalai-cozy-tent-stay.jpg',
+            '/images/kolukkumalai-ridge-camp-scenic.jpg'
         ],
-        faqs: [{ q: 'What time does the Kolukkumalai sunrise trek start?', a: 'You leave basecamp at 4:30–4:45 AM in a 4x4 jeep to reach the ridge before sunrise (5:45–6:15 AM depending on season).' }, { q: 'Is the Kolukkumalai trek difficult?', a: 'The jeep-and-summit version is easy to moderate — a 20–30 minute rocky climb to the top after the jeep drop. Full-hike versions are longer and best for experienced trekkers.' }, { q: 'Do I need a permit for Kolukkumalai?', a: 'No official permit is needed, but estate access is controlled; booked expeditions handle entry through the organised jeep route.' }, { q: 'What is included in the Kolukkumalai package?', a: 'The package includes 4x4 jeep transfers, summit sunrise trek, dome/alpine tent stay, dinner BBQ, breakfast, marshals, and forest permits.' }, { q: 'Can solo travelers join the Kolukkumalai sunrise trek?', a: 'Yes — the expedition runs in shared jeep batches with marshals and is popular with solo travelers; we host 350+ solo female campers annually.' }],
+        faqs: [{ q: 'What time does the Kolukkumalai sunrise trek start?', a: 'You leave basecamp at 4:30–4:45 AM in a 4x4 jeep to reach the ridge before sunrise (5:45–6:15 AM depending on season).' }, { q: 'Is the Kolukkumalai trek difficult?', a: 'The jeep-and-summit version is easy to moderate — a 20–30 minute rocky climb to the top after the jeep drop. Full-hike versions are longer and best for experienced trekkers.' }, { q: 'Do I need a permit for Kolukkumalai?', a: 'No official permit is needed, but estate access is controlled; booked expeditions handle entry through the organised jeep route.' }, { q: 'What is included in the Kolukkumalai package?', a: 'The package includes 4x4 jeep transfers, summit sunrise trek, dome/alpine tent stay, dinner BBQ, breakfast, camp staff guides, and forest permits.' }, { q: 'Can solo travelers join the Kolukkumalai sunrise trek?', a: 'Yes — the expedition runs in shared jeep batches with camp staff and is popular with solo travelers; we host 350+ solo female campers annually.' }],
         description: 'Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude Quechua dome pods, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.',
         highlights: [
             'Private 4x4 Rugged Jeep Convoy to World’s Highest Tea Estate',
@@ -53,7 +55,7 @@ export const INITIAL_ALL_CAMPS = [
                 title: 'Check-in, Sunset Ridge Walk & Campfire BBQ',
                 items: [
                     '02:00 PM – Arrival at Suryanelli Basecamp & welcome organic spiced tea.',
-                    '03:00 PM – Tent / Pod allocation and briefing by expedition marshals.',
+                    '03:00 PM – Tent / Pod allocation and briefing by camp staff.',
                     '04:30 PM – Guided sunset nature hike along Phantom Hill Ridge.',
                     '07:00 PM – Roaring campfire lighting with live acoustic jam session.',
                     '08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.',
@@ -76,36 +78,36 @@ export const INITIAL_ALL_CAMPS = [
         rooms: [
             {
                 id: 'r1',
-                name: 'Geodesic Luxury Dome Pod',
+                name: 'Geodesic Dome Pod',
                 capacity: '2 Adults',
                 price: 2499,
                 totalUnits: 8,
                 bookedUnits: 4,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80',
+                image: '/images/kolukkumalai-cloudbed-dome.webp',
                 features: ['Valley Facing Deck', 'King Size Bed', 'En-suite Restroom', 'Thermal Blankets', 'Charging Station']
             },
             {
                 id: 'r2',
-                name: 'Weatherproof Alpine 4-Person Tent',
+                name: 'Alpine Tent',
                 capacity: '4 Campers',
                 price: 1799,
                 totalUnits: 14,
                 bookedUnits: 6,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80',
+                image: '/images/kolukkumalai-camping-area.jpg',
                 features: ['Waterproof Flysheet', 'Foam Mattress & Sleeping Bag', 'Camping Lantern', 'Shared Modern Washrooms']
             },
             {
                 id: 'r3',
-                name: 'Private Cliffside Wooden Cottage',
+                name: 'Wooden A-Frame Cabin',
                 capacity: '3 Campers',
                 price: 3499,
                 totalUnits: 3,
                 bookedUnits: 1,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-                features: ['Panoramic Glass Window', 'Hot Shower Geyser', 'Private Fire Pit', 'Attendant on Call']
+                image: '/images/kolukkumalai-mountain-view.jpg',
+                features: ['Private Timber Deck', 'Panoramic Glass Window', 'En-suite Restroom', 'Hot Shower Geyser', 'Attendant on Call']
             }
         ],
         amenities: [
@@ -148,12 +150,12 @@ export const INITIAL_ALL_CAMPS = [
         duration: '2 Days / 1 Night',
         difficulty: 'Strenuous High Peak',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/sunrise-cloud-treks.jpg',
         gallery: [
-            'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80'
+            '/images/sunrise-cloud-treks.jpg',
+            '/images/munnar-mist-valley-wide.jpg',
+            '/images/high-altitude-ridge-tent.jpg',
+            '/images/stargazing-night-skies.jpg'
         ],
         faqs: [{ q: 'How difficult is the Meesapulimala trek?', a: 'Moderate — the Rhodo Valley route is an 8–13 km ridge trek with sustained ascents. Achievable for regular walkers with a guide, tougher than Kolukkumalai but easier than Anamudi.' }, { q: 'Do I need a permit for Meesapulimala?', a: 'Yes — an ecodevelopment committee permit is required; organised treks arrange it as part of the package.' }, { q: 'How long is the Meesapulimala trek?', a: 'Typically 4–7 hours depending on route and pace; sunrise expeditions start around 3:30–4:00 AM.' }, { q: 'Is Meesapulimala good for beginners?', a: 'With an organised guide and reasonable fitness (regular 5–8 km walks), yes — but it is not a casual stroll; do Kolukkumalai first if unsure.' }, { q: 'What altitude is Meesapulimala?', a: '8,660 ft — South India\'s second-highest peak after Anamudi.' }],
         description: 'South India’s 2nd highest peak expedition. Trek across 8 rolling high-altitude hills, traverse blooming rhododendron valleys, and sleep above dense oceans of white clouds in Silent Valley basecamps.',
@@ -167,7 +169,7 @@ export const INITIAL_ALL_CAMPS = [
         inclusions: [
             'Basecamp Alpine Tent Glamping',
             'Forest Entry & Trekking Permits',
-'Wilderness Guide & Host',
+            'Wilderness Guide & Host',
             'Dinner, Breakfast & Energy Trail Snacks',
             'Campfire Evening with Hot Tea'
         ],
@@ -204,7 +206,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 12,
                 bookedUnits: 5,
                 isAvailable: true,
-                image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
+                image: '/images/sunrise-cloud-treks.jpg',
                 features: ['Double Layer Windproof Fly', 'Thermal Sleeping Bags', 'Ridge Edge Pitch', 'Foam Mattress']
             }
         ],
@@ -242,11 +244,12 @@ export const INITIAL_ALL_CAMPS = [
         duration: '2 Days / 1 Night',
         difficulty: 'Easy Camp Stay',
         isAvailable: true,
-        image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+        image: '/images/high-altitude-ridge-tent.jpg',
         gallery: [
-            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=1200&q=80',
-            'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=1200&q=80'
+            '/images/high-altitude-ridge-tent.jpg',
+            '/images/services/munnar-vertical-plantation.jpg',
+            '/images/services/munnar-mist-trails.jpg',
+            '/images/acoustic-campfires-bbq.jpg'
         ],
         faqs: [
             { q: 'Where is Suryanelli?', a: 'Suryanelli is a hill village on the Munnar–Bodimettu road, about 45 minutes from Munnar town, at ~6,000 ft altitude.' },
@@ -367,15 +370,13 @@ export const INITIAL_ALL_CAMPS = [
         duration: '2 Days / 1 Night',
         difficulty: 'Easy Scenic',
         isAvailable: true,
-        image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
+        image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
         gallery: [
-            'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
-            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/465987105_18057887323850452_2330242188932491135_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ohyVrM7OLFcQ7kNvwFHrvdh&_nc_oc=AdqE2_YJJm71pcF68VtZNof72DxSOxPb1ddFus7AoVOfL1PhLTpOcxHNLzraKMqSfXg6AW_MziIHCTuKIip_RG0X&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=6cYlCpdBMoawWnqR1LVDXQ&_nc_ss=7b289&oh=00_AQHA0mAdDHrIxAqeuWqQTuehH-qovuz7XM-HZmDTznZVCw&oe=6A8E85B6',
-            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/491462294_18073377121850452_2329010786375635633_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PYDazogwLPsQ7kNvwG2GfOb&_nc_oc=Adrk7mQmJIOqPi_phzK7VgvF2QggQM0h4JH5KfyDqakHdAuw2vKm1XIuXMtMpuoLgM0lUloq7OBH9UE4Ywmej17W&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=yvhIkbSNYZa4o8MCP_1gbA&_nc_ss=7b289&oh=00_AQHPLgNieqBlFFzXWznmnYP0MzIXpR8bWFBzU9CyUT9e_A&oe=6A8E7AD9',
-            'https://scontent.fccj2-1.fna.fbcdn.net/v/t51.75761-15/491520082_18073531504850452_6388308843358970211_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=107&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=mIN-M0re9xMQ7kNvwFwcqWV&_nc_oc=AdryCtFd2CLUWmNYFcthuFPHZwdTWdy2MxbfDB7EqqHMSRuZmu5iL8KSdNQuC9lXeste7gmU4sTjgZxWQJmaiCOb&_nc_zt=23&_nc_ht=scontent.fccj2-1.fna&_nc_gid=LQvn5mT5n5vpg8DcfFxLYA&_nc_ss=7b289&oh=00_AQGOONw9pZw62I-9s4D9DrLHxgNWh4oMVdYFJL2wVQ0MUw&oe=6A8E6417',
-            'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.82787-15/657856773_18107793616850452_1148871301258396135_n.jpg?stp=dst-jpegr_tt6&cstp=mx1440x1920&ctp=s1440x1920&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=M1-75c17zYMQ7kNvwEdj-BK&_nc_oc=Adrz0g9mTdgIcZzTvpgS7-DLS7LTTgisDBmBfn4MfuHNBULyCVR1kmR4yW_pn_aTYOJMFttgMX3avoMoAMiYVvCy&_nc_zt=23&se=-1&_nc_ht=scontent.fccj2-3.fna&_nc_gid=chHb1zi7zctWGYAeBHL97w&_nc_ss=7b289&oh=00_AQEMYr8_kwT4Eqt6qGWz0YWfQ6DsuL7CJHfnGNwDK4SZrg&oe=6A8E8F50',
-            'https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnH8vlHaw3ERWDpX-_6ZvP-Cdhnz3Vk9bUy7gvLE8hQWkRqtDoGkC4MWdiC5Yq2Vlird1LvCjcf8bjcR3mHfFJLgypQD457k0IzHqoZhFVzspXjuS3ZrC3euEvTUVNlIb9jiTsS=s1360-w1360-h1020-rw',
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyte7Yo7rCOBCWHNFbuUFVSLrHxIGNWo5hEXNa27_Nw2F0L6lJmidpoXo&s=10'
+            'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1200&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1508873696983-2df5293cb39f?q=80&w=1200&auto=format&fit=crop'
         ],
         faqs: [
             { q: 'Where is Mini Mexico located?', a: 'Mini Mexico is nestled in the serene vegetable terraced valleys of Vattavada, approximately 42 km from Munnar town in Kerala.' },
@@ -447,7 +448,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 4,
                 bookedUnits: 1,
                 isAvailable: true,
-                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765',
+                image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop',
                 features: ['Private Wood House', 'Valley Deck', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly', 'Couple Deal ₹5,000 / Group ₹2,000 pp']
             },
             {
@@ -459,7 +460,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 4,
                 bookedUnits: 1,
                 isAvailable: true,
-                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/465987105_18057887323850452_2330242188932491135_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=105&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=ohyVrM7OLFcQ7kNvwFHrvdh&_nc_oc=AdqE2_YJJm71pcF68VtZNof72DxSOxPb1ddFus7AoVOfL1PhLTpOcxHNLzraKMqSfXg6AW_MziIHCTuKIip_RG0X&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=6cYlCpdBMoawWnqR1LVDXQ&_nc_ss=7b289&oh=00_AQHA0mAdDHrIxAqeuWqQTuehH-qovuz7XM-HZmDTznZVCw&oe=6A8E85B6',
+                image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=1200&auto=format&fit=crop',
                 features: ['Cozy Wooden Cabin', 'Balcony Mountain View', 'En-suite Restroom', 'Dinner & Breakfast Included', 'Pet Friendly']
             },
             {
@@ -470,7 +471,7 @@ export const INITIAL_ALL_CAMPS = [
                 totalUnits: 10,
                 bookedUnits: 2,
                 isAvailable: true,
-                image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t51.75761-15/491462294_18073377121850452_2329010786375635633_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=103&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=PYDazogwLPsQ7kNvwG2GfOb&_nc_oc=Adrk7mQmJIOqPi_phzK7VgvF2QggQM0h4JH5KfyDqakHdAuw2vKm1XIuXMtMpuoLgM0lUloq7OBH9UE4Ywmej17W&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=yvhIkbSNYZa4o8MCP_1gbA&_nc_ss=7b289&oh=00_AQHPLgNieqBlFFzXWznmnYP0MzIXpR8bWFBzU9CyUT9e_A&oe=6A8E7AD9',
+                image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1200&auto=format&fit=crop',
                 features: ['Weatherproof Alpine Tent', 'Foam Mattress & Warm Blankets', 'Dinner & Breakfast Included', 'Shared Clean Restrooms', 'Campfire Circle Access']
             }
         ],
@@ -658,6 +659,311 @@ export const INITIAL_ALL_CAMPS = [
             { id: 'rv-wl1', name: 'Siddharth & Ananya', location: 'Bengaluru', rating: 5, date: '1 week ago', comment: 'The 7-acre farm at 7,000 ft is pure magic. Sunset walk and South Indian breakfast with hot puttu and kadala was unmatchable!' },
             { id: 'rv-wl2', name: 'Gokul Krishna', location: 'Kochi', rating: 5, date: '2 weeks ago', comment: 'Peaceful tranquility bordering the Shola national park. Our dog had the best weekend of his life.' }
         ]
+    },
+    {
+        id: 'pkg-tentvilla-domes',
+        title: 'Tentvilla Resort — Kolukkumalai Luxurious Geodesic Domes',
+        shortTitle: 'Tentvilla Luxury Domes',
+        region: 'Munnar',
+        category: 'Luxury Dome Glamp',
+        tag: 'Couple’s Choice ⭐',
+        location: 'Phantom Hills / Suryanelli, Munnar, Kerala',
+        altitude: '6,800 FT',
+        price: 3299,
+        originalPrice: 4500,
+        rating: 4.99,
+        reviewsCount: 188,
+        duration: '2 Days / 1 Night',
+        difficulty: 'Easy Glamp',
+        isAvailable: true,
+        image: '/images/tentvilla/tentvilla-dome-1.jpeg',
+        gallery: [
+            '/images/tentvilla/tentvilla-dome-1.jpeg',
+            '/images/tentvilla/tentvilla-dome-2.jpeg',
+            '/images/tentvilla/tentvilla-dome-3.jpeg',
+            '/images/tentvilla/tentvilla-dome-4.jpeg',
+            '/images/tentvilla/tentvilla-dome-5.jpeg',
+            '/images/tentvilla/tentvilla-dome-6.jpeg',
+            '/images/tentvilla/tentvilla-dome-7.jpeg',
+            '/images/tentvilla/tentvilla-dome-8.jpeg',
+            '/images/tentvilla/tentvilla-dome-9.jpeg',
+            '/images/tentvilla/tentvilla-dome-10.jpeg',
+            '/images/tentvilla/tentvilla-dome-11.jpeg',
+            '/images/tentvilla/tentvilla-dome-12.jpeg',
+            '/images/tentvilla/tentvilla-dome-13.jpeg',
+            '/images/tentvilla/tentvilla-dome-14.jpeg',
+            '/images/tentvilla/tentvilla-dome-15.jpeg',
+            '/images/tentvilla/tentvilla-dome-16.jpeg',
+            '/images/tentvilla/tentvilla-dome-17.jpeg'
+        ],
+        faqs: [
+            { q: 'What is included in the Tentvilla Geodesic Dome stay?', a: 'Overnight stay in luxurious geodesic dome pod for a couple, evening tea and snacks, guided Phantom Hills sunset trek, tea plantation visit, photo point walk, evening campfire circle with music, stargazing, and authentic breakfast on Day 2.' },
+            { q: 'Is dinner included in the package?', a: 'Dinner is available on order / extra payment at the camp dining bay with traditional Kerala dishes and BBQ options.' },
+            { q: 'Is Kolukkumalai Sunrise 4x4 Jeep Safari available?', a: 'Yes! Kolukkumalai dawn 4x4 jeep safari to the sunrise viewpoint is available as a special add-on on extra payment.' },
+            { q: 'Are washrooms private and attached to the domes?', a: 'Yes, every geodesic dome pod at Tentvilla features an attached private en-suite western restroom with running hot water.' }
+        ],
+        description: 'Greetings from Tentvilla Resort Munnar! Introducing Kolukkumalai’s first luxurious geodesic dome pods perched atop the scenic Phantom Hills ridge. Experience romantic panoramic cloud vistas, guided sunset peak treks, lush tea plantation walks, roaring campfires with music, midnight stargazing, and optional dawn 4x4 Kolukkumalai sunrise convoys.',
+        highlights: [
+            'Kolukkumalai’s First Luxurious Geodesic Domes (Couple Sanctuary)',
+            'Guided Phantom Hills Sunset Trek & Tea Plantation Walk',
+            'Scenic Photo Point Visits with Panoramic Valley Backdrops',
+            'Evening Campfire Circle, Ambient Music & Stargazing',
+            'Complimentary Evening Spiced Tea, Snacks & Hot Breakfast',
+            'Optional Dawn 4x4 Jeep Safari to Kolukkumalai Sunrise Peak'
+        ],
+        inclusions: [
+            '1 Night Stay in Luxurious Geodesic Dome Pod (Couple / 2 Adults)',
+            'Evening Spiced Tea & Traditional Hot Snacks',
+            'Guided Phantom Hills Sunset Hike & Plantation Trail',
+            'Evening Campfire Circle & Ambient Music Session',
+            'Stargazing under Pristine High-Altitude Night Skies',
+            'Traditional Mountain Breakfast on Day 2'
+        ],
+        exclusions: [
+            'Dinner (Available on a la carte / extra payment)',
+            'Kolukkumalai 4x4 Jeep Safari & Sunrise Entry (Available on extra payment)',
+            'Personal transport to Tentvilla Basecamp in Suryanelli'
+        ],
+        itinerary: [
+            {
+                day: 'Day 1',
+                title: 'Check-in, Phantom Hills Sunset Trek & Campfire',
+                items: [
+                    '02:00 PM – Arrival at Tentvilla Resort Munnar & welcome check-in to Luxurious Geodesic Dome.',
+                    '04:00 PM – Evening hot tea, local snacks & campsite orientation.',
+                    '04:30 PM – Guided evening sunset hike to Phantom Hills & tea plantation visit.',
+                    '05:45 PM – Witness the breathtaking Phantom Hills sunset & photo point stops.',
+                    '07:30 PM – Campfire circle lighting, ambient music & midnight stargazing.',
+                    '08:30 PM – Dinner buffet / barbecue (available on extra payment).',
+                    '10:30 PM – Overnight romantic rest in insulated luxury dome pod.'
+                ]
+            },
+            {
+                day: 'Day 2',
+                title: 'Kolukkumalai Sunrise Safari & Hot Breakfast',
+                items: [
+                    '04:30 AM – Optional 4x4 Jeep Safari climb to Kolukkumalai Sunrise (extra payment).',
+                    '06:15 AM – Watch the legendary golden cloud bed sunrise from Kolukkumalai peak.',
+                    '08:30 AM – Return to Tentvilla for authentic hot mountain breakfast.',
+                    '11:00 AM – Check-out with unforgettable wilderness memories.'
+                ]
+            }
+        ],
+        rooms: [
+            {
+                id: 'r-tv-dome',
+                name: 'Luxurious Geodesic Dome Pod',
+                capacity: '2 Adults (1 Couple)',
+                price: 3299,
+                totalUnits: 6,
+                bookedUnits: 2,
+                isAvailable: true,
+                image: '/images/tentvilla/tentvilla-dome-1.jpeg',
+                features: ['Panoramic Cloud Vista Window', 'Plush King Size Bed', 'Private En-suite Restroom', 'Thermal Blankets', 'Charging Station', 'Private Deck']
+            }
+        ],
+        amenities: [
+            { id: 'am-tv1', name: 'Kolukkumalai Panoramic View', icon: '⛰️', enabled: true },
+            { id: 'am-tv2', name: 'Private En-suite Bathrooms', icon: '🚿', enabled: true },
+            { id: 'am-tv3', name: 'Evening Campfire & Music', icon: '🔥', enabled: true },
+            { id: 'am-tv4', name: 'Phantom Hills Sunset Trek', icon: '🌄', enabled: true },
+            { id: 'am-tv5', name: 'Tea Plantation Trail Walk', icon: '🍃', enabled: true },
+            { id: 'am-tv6', name: '24/7 Power Backup & Security', icon: '⚡', enabled: true }
+        ],
+        addons: [
+            { id: 'ad-tv-safari', name: 'Kolukkumalai 4x4 Sunrise Jeep Safari (Per Couple / Batch)', price: 2500, enabled: true },
+            { id: 'ad-tv-dinner', name: 'Campfire BBQ Dinner Buffet (Per Person)', price: 450, perPerson: true, enabled: true },
+            { id: 'ad-tv-drone', name: '4K Cinematic Drone Video Reel', price: 1500, enabled: true }
+        ],
+        policyNote: 'Couple friendly & family sanctuary. Check-in 02:00 PM, Check-out 11:00 AM. Dinner & Kolukkumalai Jeep Safari available on extra payment at basecamp.',
+        locationCoordinates: {
+            lat: '10.0336',
+            lng: '77.1624',
+            mapsUrl: 'https://maps.google.com/?q=Tentvilla+Resort+Munnar',
+            nearestTown: 'Suryanelli (4 km) / Munnar (24 km)'
+        },
+        reviews: [
+            { id: 'rv-tv1', name: 'Arjun & Sneha', location: 'Bengaluru', rating: 5, date: 'Last weekend', comment: 'The luxurious geodesic dome was surreal! Waking up to misty valleys from bed and the Phantom Hills sunset walk was pure magic. ₹6,000 for couple is totally worth it.' },
+            { id: 'rv-tv2', name: 'Rohit Verma', location: 'Hyderabad', rating: 5, date: '2 weeks ago', comment: 'Tentvilla is top-notch. Clean en-suite washrooms, great campfire and music vibes, and the Kolukkumalai jeep safari at dawn was unbelievable!' }
+        ]
+    },
+    {
+        id: 'pkg-kolukkumalai-teddy-domes',
+        title: 'Kolukkumalai Teddy Domes — Luxury Geodesic Domes & Phantom Hills Sunset',
+        shortTitle: 'Kolukkumalai Teddy Domes',
+        region: 'Munnar',
+        category: 'Luxury Dome Glamp',
+        tag: 'High Altitude Glamp ⭐',
+        location: 'Phantom Hills, Kolukkumalai / Suryanelli, Munnar, Kerala',
+        altitude: '7,100 FT',
+        price: 2300,
+        originalPrice: 3200,
+        rating: 4.99,
+        reviewsCount: 165,
+        duration: '2 Days / 1 Night',
+        difficulty: 'Easy Glamp',
+        isAvailable: true,
+        image: '/images/teddy/teddy-dome-1.jpg',
+        gallery: [
+            '/images/teddy/teddy-dome-1.jpg',
+            '/images/teddy/teddy-dome-2.jpg',
+            '/images/teddy/teddy-dome-3.jpg',
+            '/images/teddy/WhatsApp Image 2026-09-04 at 12.21.51 AM.jpeg',
+            '/images/teddy/WhatsApp Image 2026-09-04 at 12.21.55 AM.jpeg',
+            '/images/teddy/WhatsApp Image 2026-09-04 at 12.21.56 AM.jpeg',
+            '/images/teddy/teddy-dome-video-1.mp4',
+            '/images/teddy/teddy-dome-video-2.mp4',
+            '/images/teddy/teddy-dome-video-3.mp4'
+        ],
+        faqs: [
+            {
+                q: 'What is included in the ₹2,300 per person Teddy Domes package?',
+                a: 'The package includes overnight stay in high-altitude Luxurious Geodesic Domes, welcome evening tea & hot snacks, guided Phantom Hills sunset trek, tea plantation visit & photography stops, evening campfire circle with ambient music, starlight stargazing session, and delicious mountain breakfast on Day 2.'
+            },
+            {
+                q: 'How does dinner work at Kolukkumalai Teddy Domes?',
+                a: 'Dinner is available on extra payment at the camp dining deck. You can choose from authentic Kerala buffet meals and hot barbecue platters prepared fresh by local chefs.'
+            },
+            {
+                q: 'Is the dawn Kolukkumalai Sunrise 4x4 Jeep Safari included?',
+                a: 'The world-famous Kolukkumalai dawn 4x4 jeep safari and sunrise peak entry is an optional add-on available on extra payment (bookable directly or upon arrival at basecamp).'
+            },
+            {
+                q: 'What are the amenities inside the Luxurious Domes?',
+                a: 'Each geodesic dome features panoramic clear-view windows overlooking misty valleys, plush queen/king bedding, warm thermal blankets, en-suite western washrooms with running hot water, mobile charging stations, and private outdoor sit-outs.'
+            },
+            {
+                q: 'How do I reach the campsite from Suryanelli / Munnar?',
+                a: 'Campers report at the Suryanelli basecamp hub (approx. 24 km from Munnar town). From there, camp coordinators guide you to the Phantom Hills dome site. Accessible by private cars, bikes, or cabs.'
+            }
+        ],
+        description: 'Perched along the scenic mist-covered ridges of Phantom Hills in Kolukkumalai, Teddy Domes offers a breathtaking high-altitude luxury geodesic dome glamping experience. Enjoy panoramic tea estate vistas, guided sunset peak treks, estate photo spots, roaring evening campfires with ambient music, crystal-clear night stargazing, and optional dawn 4x4 off-road jeep expeditions to the legendary Kolukkumalai sunrise.',
+        highlights: [
+            'Luxurious Geodesic Dome Pods with Panoramic Mountain Views (₹2,300/person)',
+            'Guided Phantom Hills Sunset Trek above Valley Cloud Beds',
+            'Lush Tea Plantation Walk & Scenic Landscape Photo Point Stops',
+            'Evening Campfire Gathering with Ambient Acoustic Music & Stargazing',
+            'Complimentary Spiced Evening Tea, Fresh Hot Snacks & Day 2 Mountain Breakfast',
+            'Optional Dawn 4x4 Jeep Safari to Kolukkumalai Sunrise Peak (Extra Payment)'
+        ],
+        inclusions: [
+            '1 Night Accommodation in Luxurious Geodesic Dome Pod',
+            'Welcome Spiced Evening High-Altitude Tea & Hot Snacks',
+            'Guided Sunset Trek to Phantom Hills Viewpoint',
+            'Tea Plantation Estate Walk & Photography Tour',
+            'Evening Campfire Circle & Ambient Music Session',
+            'High-Altitude Stargazing under Crystal Clear Skies',
+            'Delicious Traditional Mountain Breakfast (Day 2)',
+            'Dedicated Camp Guide & 24/7 On-site Assistance'
+        ],
+        exclusions: [
+            'Dinner (Available on extra payment / a la carte dining)',
+            'Kolukkumalai 4x4 Dawn Jeep Safari & Sunrise Entry (Available on extra payment)',
+            'Personal snacks and personal transport to Suryanelli basecamp'
+        ],
+        itinerary: [
+            {
+                day: 'Day 1',
+                title: 'Check-In, Phantom Hills Sunset Trek, Tea Plantation Walk & Campfire Vibes',
+                items: [
+                    '02:00 PM – Arrival at Kolukkumalai / Suryanelli basecamp & check-in to Luxurious Geodesic Domes.',
+                    '04:00 PM – Evening hot spiced tea & freshly prepared local snacks with mountain breeze.',
+                    '04:30 PM – Embark on the guided Phantom Hills Sunset Trek through scenic mountain trails.',
+                    '05:45 PM – Experience the magical Phantom Hills golden sunset over the mist-covered Western Ghats.',
+                    '06:30 PM – Tea plantation walk & visit to signature panoramic photo points.',
+                    '07:30 PM – Roaring campfire lighting with ambient music session and cozy gathering.',
+                    '08:30 PM – Delicious camp dinner buffet & live BBQ (available on extra payment).',
+                    '10:00 PM – High-altitude stargazing under sparkling night skies & overnight rest in luxury domes.'
+                ]
+            },
+            {
+                day: 'Day 2',
+                title: 'Dawn Kolukkumalai Sunrise 4x4 Jeep Safari, Hot Breakfast & Departure',
+                items: [
+                    '04:30 AM – Wake up & hot black tea briefing.',
+                    '05:00 AM – Optional 4x4 Off-Road Jeep Safari climb to Kolukkumalai Sunrise Peak (extra payment).',
+                    '06:15 AM – Witness the world-famous golden cloud bed sunrise from Tiger Rock.',
+                    '08:30 AM – Return to basecamp for a hot, wholesome traditional Kerala breakfast.',
+                    '10:30 AM – 11:00 AM – Leisure morning photography, relaxation & smooth check-out.'
+                ]
+            }
+        ],
+        rooms: [
+            {
+                id: 'r-td-dome-std',
+                name: 'Luxurious Geodesic Dome Pod',
+                capacity: '2 - 3 Adults',
+                price: 2300,
+                totalUnits: 8,
+                bookedUnits: 2,
+                isAvailable: true,
+                image: '/images/teddy/teddy-dome-1.jpg',
+                features: [
+                    'Panoramic Mountain & Cloud Vista Window',
+                    'Plush King / Twin Bedding Setup',
+                    'Thermal Blankets & Cosy Linens',
+                    'Attached En-suite Restroom with Hot Water',
+                    'Charging Points & 24/7 Power Backup',
+                    'Private Viewing Deck Sit-out'
+                ]
+            },
+            {
+                id: 'r-td-dome-couple',
+                name: 'Exclusive Couple Geodesic Dome',
+                capacity: '2 Adults (1 Couple)',
+                price: 2300,
+                totalUnits: 4,
+                bookedUnits: 1,
+                isAvailable: true,
+                image: '/images/teddy/teddy-dome-2.jpg',
+                features: [
+                    'Romantic Mountain & Valley Deck View',
+                    'Luxury King Size Bed',
+                    'Private En-suite Western Restroom',
+                    'Thermal Warm Quilts & Blankets',
+                    'Ambient Dome Mood Lighting',
+                    'Evening Spiced Tea & Breakfast Included'
+                ]
+            }
+        ],
+        amenities: [
+            { id: 'am-td1', name: 'Phantom Hills Panoramic Ridge', icon: '⛰️', enabled: true },
+            { id: 'am-td2', name: 'Private En-suite Restrooms with Hot Water', icon: '🚿', enabled: true },
+            { id: 'am-td3', name: 'Evening Campfire & Music Session', icon: '🔥', enabled: true },
+            { id: 'am-td4', name: 'Guided Sunset Trek & Photo Point', icon: '🌄', enabled: true },
+            { id: 'am-td5', name: 'Tea Plantation Trail Walk', icon: '🍃', enabled: true },
+            { id: 'am-td6', name: '24/7 Power Backup & Free Parking', icon: '⚡', enabled: true }
+        ],
+        addons: [
+            { id: 'ad-td-safari', name: 'Kolukkumalai 4x4 Sunrise Jeep Safari (Per Vehicle / Batch)', price: 2500, enabled: true },
+            { id: 'ad-td-dinner', name: 'Campfire Buffet Dinner (Per Person)', price: 450, perPerson: true, enabled: true },
+            { id: 'ad-td-drone', name: '4K Cinematic Drone Video Reel', price: 1500, enabled: true }
+        ],
+        policyNote: 'Check-in: 02:00 PM | Check-out: 11:00 AM. High-altitude climate — warm thermal jackets and good walking shoes recommended. Dinner and Kolukkumalai 4x4 Sunrise Jeep Safari available on extra payment.',
+        locationCoordinates: {
+            lat: '10.0825',
+            lng: '77.2215',
+            mapsUrl: 'https://maps.google.com/?q=Phantom+Hills+Kolukkumalai+Munnar',
+            nearestTown: 'Suryanelli (5 km) / Munnar (26 km)'
+        },
+        reviews: [
+            {
+                id: 'rv-td1',
+                name: 'Karthik & Deepa',
+                location: 'Chennai',
+                rating: 5,
+                date: '3 days ago',
+                comment: 'The Phantom Hills sunset trek was unmatched! Watching the sunset above clouds, followed by evening tea, snacks, and campfire music in the dome was pure luxury for ₹2,300. Highly recommended!'
+            },
+            {
+                id: 'rv-td2',
+                name: 'Nikhil Raj',
+                location: 'Bengaluru',
+                rating: 5,
+                date: '1 week ago',
+                comment: 'Incredible experience at Teddy Domes! The geodesic domes are super cozy and clean with great views. The Kolukkumalai 4x4 jeep safari in the morning was thrilling.'
+            }
+        ]
     }
 ];
 
@@ -760,7 +1066,7 @@ export const INITIAL_EVENTS = [
         capacity: 30,
         booked: 24,
         status: 'Fast Filling',
-        guide: 'Vignesh Marshal',
+        guide: 'Vignesh (Senior Staff)',
         image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=800&q=80'
     },
     {
@@ -772,7 +1078,7 @@ export const INITIAL_EVENTS = [
         capacity: 25,
         booked: 19,
         status: 'Available',
-        guide: 'Anoop Marshal',
+        guide: 'Anoop (Senior Staff)',
         image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80'
     },
     {
@@ -785,7 +1091,7 @@ export const INITIAL_EVENTS = [
         booked: 14,
         status: 'Available',
         guide: 'Manoj Guide',
-        image: 'https://scontent.fccj2-3.fna.fbcdn.net/v/t39.30808-6/468139504_18059353645850452_887727965337578026_n.jpg?stp=dst-jpg_tt6&cstp=mx1440x1800&ctp=s1440x1800&_nc_cat=106&_nc_map=urlgen_bucketless&ccb=1-7&_nc_sid=127cfc&_nc_ohc=oC1xOL3QguUQ7kNvwExUaFi&_nc_oc=AdqHC_X7Trvkq4FymDxEGuL5oZYQ_A9Avvq4JYcMwUwlR0kVHjyBuxc1EWuN0nhJg0oZxJ8Gvn08-Q9V01vDu_rM&_nc_zt=23&_nc_ht=scontent.fccj2-3.fna&_nc_gid=YY__ZAhsYUPANNehc3z0Jg&_nc_ss=7b289&oh=00_AQE7X_fxETD23AMaMbFYVLsTixO75yepXPjVGAkk-ub32g&oe=6A8E7765'
+        image: 'https://images.unsplash.com/photo-1542718610-a1d656d1884c?q=80&w=1200&auto=format&fit=crop'
     }
 ];
 
@@ -795,7 +1101,7 @@ export const INITIAL_MARSHALS = [
         name: 'Vignesh Kumar',
         phone: '+91 98470 11223',
         pin: '2026',
-        role: 'Senior Camp Marshal',
+        role: 'Senior Camp Staff',
         campsite: 'Kolukkumalai Sunrise Glamping',
         stationId: 'kolukkumalai_gate',
         status: 'On Station',
@@ -806,7 +1112,7 @@ export const INITIAL_MARSHALS = [
         name: 'Anoop Chandran',
         phone: '+91 94471 99881',
         pin: '9000',
-        role: 'Summit Guide & Marshal',
+        role: 'Summit Guide & Staff',
         campsite: 'Meesapulimala Basecamp',
         stationId: 'meesapulimala_gate',
         status: 'On Station',

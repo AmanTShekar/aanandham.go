@@ -30,11 +30,14 @@ export default function AdminPropertiesTab({
                         <div style={ROW_SPACE_WRAP}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '4px' }}>
-<span className="star-icon">★</span> CAMPSITE INVENTORY
+                                    <span className="star-icon">★</span> LIVE OPENPMS MASTER FEED
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '26px', fontWeight: '800', margin: 0, color: '#121613' }}>
                                     Regional Campsites & Glamping Pods
                                 </h2>
+                                <p style={{ fontSize: '12.5px', color: '#59655D', margin: '4px 0 0', fontWeight: '500' }}>
+                                    Synced directly from OpenPMS operations inventory · {properties.length} Active Properties
+                                </p>
                             </div>
                             <button onClick={() => onOpenModal()} className="btn-lime" style={{ padding: '10px 22px', fontSize: '13.5px', fontWeight: '800' }}>
                                 + Add New Campsite

@@ -22,25 +22,26 @@ const securityHeaders = [
   },
   {
     key: 'Permissions-Policy',
-    value: 'camera=(self), microphone=(), geolocation=()',
+    value: 'camera=(self), microphone=(), geolocation=(), accelerometer=(self "https://api.razorpay.com" "https://checkout.razorpay.com" "https://*.razorpay.com"), gyroscope=(self "https://api.razorpay.com" "https://checkout.razorpay.com" "https://*.razorpay.com")',
   },
   {
     key: 'Cross-Origin-Opener-Policy',
-    value: 'same-origin',
+    value: 'same-origin-allow-popups',
   },
   {
     key: 'Cross-Origin-Resource-Policy',
-    value: 'same-origin',
+    value: 'cross-origin',
   },
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self';",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://*.vercel.live;",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://*.razorpay.com https://*.hcaptcha.com https://*.px-cloud.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://vercel.live https://*.vercel.live https://va.vercel-scripts.com https://*.vercel-scripts.com;",
       "style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://vercel.live;",
-      "img-src 'self' data: blob: https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://encrypted-tbn0.gstatic.com https://*.gstatic.com https://*.fbcdn.net https://*.googleusercontent.com https://aanandham.in https://*.aanandham.in https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live https://vercel.com https://assets.vercel.com;",
+      "img-src 'self' data: blob: https://*.razorpay.com https://*.hcaptcha.com https://images.unsplash.com https://*.unsplash.com https://*.supabase.co https://encrypted-tbn0.gstatic.com https://*.gstatic.com https://*.googleusercontent.com https://aanandham.in https://*.aanandham.in https://www.google-analytics.com https://www.googletagmanager.com https://vercel.live https://vercel.com https://assets.vercel.com;",
       "font-src 'self' data: https://cdnjs.cloudflare.com https://assets.vercel.com;",
-      "connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://vercel.live https://*.vercel.live wss://*.vercel.live;",
+      "connect-src 'self' https://api.razorpay.com https://*.razorpay.com https://checkout.razorpay.com https://lumberjack.razorpay.com https://*.px-cloud.net https://*.hcaptcha.com https://*.supabase.co https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://vercel.live https://*.vercel.live wss://*.vercel.live https://va.vercel-scripts.com https://*.vercel-scripts.com https://*.vercel-insights.com https://vitals.vercel-insights.com;",
+      "frame-src 'self' https://api.razorpay.com https://*.razorpay.com https://checkout.razorpay.com https://*.hcaptcha.com https://hcaptcha.com https://*.cardinalcommerce.com https://*.juspay.in https://vercel.live https://*.vercel.live;",
       "frame-ancestors 'none';",
       "form-action 'self' https://wa.me https://api.whatsapp.com;",
       "base-uri 'self';",
