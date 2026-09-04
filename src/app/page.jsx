@@ -42,43 +42,80 @@ const OVERVIEW_HIGHLIGHTS = [
     }
 ];
 
-// ── PROGRAM SCHEDULE DATA (Ref Screenshot 1 Batch 3 - media_1786657185483.png) ──
+// ── PROGRAM SCHEDULE DATA (2-Day / 1-Night Wilderness Expedition) ──
 const PROGRAM_DAYS = [
     {
         day: 'Day 1',
-        title: 'Arrival & Meet the Crew',
-        desc: 'Arrive at Suryanelli basecamp, welcome herbal drinks, check-in to high-altitude dome pods, sunset orientation, and welcome campfire barbecue dinner.',
-        img: '/images/services/munnar-hero-landing.jpg'
+        title: 'Check-in, Sunset Ridge Walk & Campfire BBQ',
+        subtitle: 'Basecamp Arrival, High-Altitude Ridge Exploration & Starlit Dinner',
+        badge: 'Day 01 · Afternoon to Night',
+        tags: ['Gated Basecamp', 'Sunset Ridge Hike', 'Live BBQ Dinner', 'Stargazing Deck'],
+        schedule: [
+            {
+                time: '02:00 PM',
+                title: 'Basecamp Check-in & Welcome Spiced Tea',
+                desc: 'Arrive at Suryanelli basecamp, welcome organic herbal drinks, and check-in to high-altitude dome pods or ridge tents.'
+            },
+            {
+                time: '04:30 PM',
+                title: 'Guided Sunset Ridge Hike',
+                desc: 'Panoramic nature hike along Phantom Hill Ridge overlooking the vast Anayirankal Dam and rolling tea valleys.'
+            },
+            {
+                time: '07:00 PM',
+                title: 'Roaring Campfire & Acoustic Circle',
+                desc: 'Gather around the open campfire under pristine, zero light-pollution mountain skies with music and storytelling.'
+            },
+            {
+                time: '08:30 PM',
+                title: 'Live Mountain BBQ & Authentic Kerala Dinner',
+                desc: 'Freshly prepared barbecue skewers followed by a warm, authentic Kerala buffet dinner.'
+            },
+            {
+                time: '10:30 PM',
+                title: 'Stargazing & Alpine Rest',
+                desc: 'Quiet hours with thermal blankets, clean en-suite washrooms with hot water, and peaceful alpine sleep.'
+            }
+        ]
     },
     {
         day: 'Day 2',
-        title: 'First Waves & Cloud Ridge Vibes',
-        desc: 'Dawn breathwork, 4x4 Jeep trail to Kolukkumalai tea estate sunrise, cliff-edge breakfast, and guided trek along the misty Tiger Rock ridge.',
-        img: '/images/services/munnar-mist-ridge.jpg'
-    },
-    {
-        day: 'Day 3',
-        title: 'Trek Progress & Stargazing Deck',
-        desc: 'Intermediate ridge navigation workshop, wilderness trail pacing, tea factory heritage tour, and starlit open-mic acoustic campfire circle.',
-        img: '/images/services/munnar-tea-valley.jpg'
-    },
-    {
-        day: 'Day 4',
-        title: 'Spice Valley & Culture Day',
-        desc: 'Visit ancient mountain hamlets, spice plantation foraging, authentic forest-to-table lunch, and evening recovery yoga under the pine groves.',
-        img: '/images/services/munnar-mist-trails.jpg'
-    },
-    {
-        day: 'Day 5',
-        title: 'Summit & Waterfall Rapids',
-        desc: 'Full-day wilderness expedition to hidden rainforest waterfalls, natural rock pool swimming, bamboo raft rapid crossing, and celebration night BBQ.',
-        img: '/images/services/munnar-emerald-hills.jpg'
-    },
-    {
-        day: 'Day 6',
-        title: 'Sunrise Breathwork & Farewell',
-        desc: 'Final sunrise meditation over rolling clouds, hearty Kerala breakfast, gear wrap-up, and departure with lifetime memories and your new tribe.',
-        img: '/images/services/munnar-vertical-plantation.jpg'
+        title: 'Kolukkumalai Sunrise 4x4 Safari & Tea Heritage',
+        subtitle: '7,900 FT Summit Access, Golden Cloud Bed Sunrise & Orthodox Tea Estate',
+        badge: 'Day 02 · Dawn to Departure',
+        tags: ['7,900 FT Summit Access', '4x4 Off-Road Safari', 'Cloud Bed Sunrise', 'Tea Factory Tour'],
+        schedule: [
+            {
+                time: '04:30 AM',
+                title: 'Dawn Wakeup & Hot Cardamom Tea',
+                desc: 'Crisp mountain morning wakeup call with steaming hot Kerala spiced black tea.'
+            },
+            {
+                time: '05:00 AM',
+                title: '4x4 Off-Road Jeep Convoy Climb',
+                desc: 'Rugged Mahindra 4x4 safari traversing private tea tracks to Kolukkumalai & Tiger Rock (7,900 FT).'
+            },
+            {
+                time: '06:15 AM',
+                title: 'Legendary Sunrise Above the Clouds',
+                desc: 'Witness the breathtaking golden cloud bed sunrise over the Tamil Nadu plains and Western Ghats.'
+            },
+            {
+                time: '08:00 AM',
+                title: 'Historic Orthodox Tea Factory Tour',
+                desc: 'Guided heritage walk through the world’s highest organic tea factory (est. 1935).'
+            },
+            {
+                time: '09:30 AM',
+                title: 'Traditional Basecamp Breakfast',
+                desc: 'Freshly prepared hot South Indian breakfast (Appam, Stew, Dosa, and fresh fruits).'
+            },
+            {
+                time: '11:00 AM',
+                title: 'Wrap-up & Checkout',
+                desc: 'Departure with unforgettable summit memories and your new wilderness tribe.'
+            }
+        ]
     }
 ];
 
@@ -154,31 +191,31 @@ const WHY_AANANDHAM_PILLARS = [
     }
 ];
 
-// ── HOLISTIC EXPERIENCE DATA (Ref Screenshot 2 Batch 2 - media_1786655245998.png) ──
+// ── HOLISTIC EXPERIENCE DATA (Authentic Aanandham Wilderness Pillars) ──
 const EXPERIENCE_ITEMS = [
     {
-        category: 'for body',
-        title: 'Yoga and Meditation',
-        desc: 'Stretch out your trek-tired muscles with sunset mountain yoga and start your mornings centered with guided meadow meditation sessions. Re-align your posture and breathe in fresh high-altitude pine air.',
-        icon: PersonStanding
+        category: 'Summit & Treks',
+        title: 'Sunrise Peaks & Cloud Bed Hikes',
+        desc: 'Hike along misty tea ridges to 7,900 FT summit viewpoints. Breathe in crisp alpine air as golden morning clouds roll beneath your feet at Kolukkumalai & Phantom Hill.',
+        icon: Sunrise
     },
     {
-        category: 'for soul',
-        title: 'Temples and Ceremonies',
-        desc: 'Experience Western Ghats spiritual side through ancient mountain folklore, temple walks, and evening campfire circles where we share what really matters under starlit cloud canopies.',
+        category: 'Campfire & Nights',
+        title: 'Acoustic Campfires & Stargazing',
+        desc: 'Gather around roaring woodfire pits under pristine, zero light-pollution dark skies. Enjoy live BBQ skewers, acoustic jam circles, and telescope stargazing.',
+        icon: Flame
+    },
+    {
+        category: 'Heritage & Culture',
+        title: '1935 Orthodox Tea & Spice Trails',
+        desc: 'Walk through the world’s highest organic tea gardens and historic 1935 factory. Forage wild cardamom with local guides and savor authentic forest-to-table Kerala dining.',
         icon: Leaf
     },
     {
-        category: 'for mind',
-        title: 'Culture and Growth',
-        desc: 'Learn the stories behind the spice hills at local tea plantations, meet indigenous valley farmers, and connect over authentic forest-to-table dinners designed for real, deep conversation.',
-        icon: Mountain
-    },
-    {
-        category: 'for fun',
-        title: 'Adventures Together',
-        desc: 'Discover hidden natural rock pools, wild river bamboo rafting rapids, and extreme off-road Jeep climbs to misty sunrise viewpoints. Make lifetime bonds with fellow mountain travelers.',
-        icon: Waves
+        category: '4x4 Off-Road Safari',
+        title: 'Rugged Mahindra 4x4 Convoys',
+        desc: 'Tackle rocky private tea estate tracks in certified 4x4 Mahindra jeeps. Traverse misty ridgelines, cross forest streams, and spot elephant corridor vistas near Anayirankal.',
+        icon: Truck
     }
 ];
 
@@ -2061,7 +2098,7 @@ export default function HomePage() {
             </motion.section>
 
             {/* ─────────────────────────────────────────────────────────────
-                4. PROGRAM SECTION (Compact Numbered Expedition Timeline)
+                4. PROGRAM SECTION (2-Day / 1-Night Expedition Schedule)
                    "What we've planned for you:"
             ───────────────────────────────────────────────────────────── */}
             <motion.section 
@@ -2070,15 +2107,15 @@ export default function HomePage() {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
                 variants={sectionReveal}
-                style={{ position: 'relative', padding: 'clamp(54px, 6vw, 76px) clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
+                style={{ position: 'relative', padding: 'clamp(54px, 6vw, 84px) clamp(20px, 4vw, 48px)', background: '#F8F9F5' }}
             >
                 <div style={{ maxWidth: '1440px', margin: '0 auto', width: '100%' }}>
                     
                     {/* Header Row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '36px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '40px' }}>
                         <div>
                             <div className="star-badge" style={{ marginBottom: '10px' }}>
-                                <span className="star-icon">★</span> 6-DAY EXPEDITION SCHEDULE
+                                <span className="star-icon">★</span> 2-DAY / 1-NIGHT EXPEDITION SCHEDULE
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -2092,88 +2129,230 @@ export default function HomePage() {
                             </h2>
                         </div>
 
-                        <p style={{ fontSize: '14px', color: '#59655D', margin: 0, maxWidth: '420px', lineHeight: 1.6 }}>
-                            A balanced rhythm of sunrise summit climbs, off-road 4x4 trails, starlit campfire nights, and recovery breathwork.
+                        <p style={{ fontSize: '14.5px', color: '#59655D', margin: 0, maxWidth: '460px', lineHeight: 1.65 }}>
+                            A complete, balanced 2-Day / 1-Night wilderness rhythm: from sunset ridge hikes and starlit campfire BBQ to 4:30 AM sunrise 4x4 Jeep convoys.
                         </p>
                     </div>
 
-                    {/* Compact 6-Day Numbered Grid (2 rows x 3 cols on desktop, responsive) */}
+                    {/* 2-Day Side-by-Side Detailed Schedule Grid */}
                     <div style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
-                        gap: '20px'
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 540px), 1fr))',
+                        gap: '24px'
                     }}>
                         {PROGRAM_DAYS.map((item, idx) => (
                             <motion.div
                                 key={idx}
                                 variants={cardReveal}
-                                whileHover={{ y: -4, boxShadow: '0 16px 36px rgba(0,0,0,0.06)' }}
-                                transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                                whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.06)' }}
+                                transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                                 style={{
                                     background: '#FFFFFF',
-                                    border: '1px solid rgba(18, 22, 19, 0.08)',
-                                    borderRadius: '20px',
-                                    padding: '24px 22px',
+                                    border: '1px solid rgba(18, 22, 19, 0.09)',
+                                    borderRadius: '24px',
+                                    padding: 'clamp(24px, 3.5vw, 34px)',
                                     display: 'flex',
                                     flexDirection: 'column',
                                     position: 'relative',
-                                    boxShadow: '0 4px 14px rgba(0,0,0,0.02)',
-                                    transition: 'border-color 0.25s ease'
+                                    boxShadow: '0 6px 20px rgba(0,0,0,0.03)',
+                                    transition: 'border-color 0.25s ease, box-shadow 0.25s ease'
                                 }}
                             >
                                 {/* Top Header: Number Pill + Day Badge */}
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                                    <span style={{
-                                        fontFamily: 'monospace',
-                                        fontSize: '20px',
-                                        fontWeight: '900',
-                                        color: '#166534',
-                                        background: 'rgba(22, 101, 52, 0.08)',
-                                        padding: '4px 12px',
-                                        borderRadius: '10px',
-                                        letterSpacing: '-0.5px'
-                                    }}>
-                                        {`0${idx + 1}`}
-                                    </span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <span style={{
+                                            fontFamily: 'monospace',
+                                            fontSize: '18px',
+                                            fontWeight: '900',
+                                            color: '#166534',
+                                            background: 'rgba(22, 101, 52, 0.08)',
+                                            padding: '4px 12px',
+                                            borderRadius: '10px',
+                                            letterSpacing: '-0.5px'
+                                        }}>
+                                            {`0${idx + 1}`}
+                                        </span>
+                                        <span style={{
+                                            fontSize: '12px',
+                                            fontWeight: '800',
+                                            color: '#166534',
+                                            letterSpacing: '0.5px',
+                                            textTransform: 'uppercase'
+                                        }}>
+                                            {item.day}
+                                        </span>
+                                    </div>
 
                                     <span style={{
                                         fontSize: '11px',
                                         fontWeight: '800',
-                                        color: '#E5A93B',
+                                        color: '#B45309',
                                         textTransform: 'uppercase',
-                                        letterSpacing: '1px',
-                                        background: 'rgba(229, 169, 59, 0.12)',
-                                        padding: '4px 10px',
+                                        letterSpacing: '0.8px',
+                                        background: 'rgba(229, 169, 59, 0.14)',
+                                        padding: '5px 12px',
                                         borderRadius: '999px',
-                                        border: '1px solid rgba(229, 169, 59, 0.25)'
+                                        border: '1px solid rgba(229, 169, 59, 0.3)'
                                     }}>
-                                        {item.day}
+                                        {item.badge}
                                     </span>
                                 </div>
 
-                                {/* Title */}
+                                {/* Title & Subtitle */}
                                 <h3 style={{
                                     fontFamily: 'var(--font-heading)',
-                                    fontSize: '18px',
+                                    fontSize: 'clamp(20px, 2.2vw, 24px)',
                                     fontWeight: '800',
                                     color: '#121613',
-                                    margin: '0 0 10px',
-                                    lineHeight: 1.3
+                                    margin: '0 0 6px',
+                                    lineHeight: 1.25,
+                                    letterSpacing: '-0.02em'
                                 }}>
                                     {item.title}
                                 </h3>
 
-                                {/* Description */}
                                 <p style={{
-                                    fontSize: '13.5px',
-                                    color: '#59655D',
-                                    lineHeight: 1.65,
-                                    margin: 0
+                                    fontSize: '13px',
+                                    fontWeight: '500',
+                                    color: '#71717A',
+                                    lineHeight: 1.5,
+                                    margin: '0 0 16px'
                                 }}>
-                                    {item.desc}
+                                    {item.subtitle}
                                 </p>
+
+                                {/* Tag Pills */}
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '22px' }}>
+                                    {item.tags.map((tag, tidx) => (
+                                        <span
+                                            key={tidx}
+                                            style={{
+                                                fontSize: '11px',
+                                                fontWeight: '700',
+                                                color: '#166534',
+                                                background: '#F0FDF4',
+                                                border: '1px solid #DCFCE7',
+                                                padding: '3px 9px',
+                                                borderRadius: '6px'
+                                            }}
+                                        >
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                {/* Divider */}
+                                <div style={{ height: '1px', background: 'rgba(18, 22, 19, 0.06)', margin: '0 0 20px' }} />
+
+                                {/* Step-by-Step Vertical Timeline */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative' }}>
+                                    {item.schedule.map((step, sidx) => (
+                                        <div 
+                                            key={sidx}
+                                            style={{
+                                                display: 'flex',
+                                                alignItems: 'flex-start',
+                                                gap: '14px',
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            {/* Time Pill Badge */}
+                                            <div style={{
+                                                flexShrink: 0,
+                                                minWidth: '78px',
+                                                background: '#F4F5F1',
+                                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                                borderRadius: '8px',
+                                                padding: '4px 8px',
+                                                textAlign: 'center',
+                                                fontSize: '11px',
+                                                fontWeight: '800',
+                                                color: '#121613',
+                                                letterSpacing: '-0.2px',
+                                                marginTop: '2px'
+                                            }}>
+                                                {step.time}
+                                            </div>
+
+                                            {/* Step Content */}
+                                            <div style={{ flex: 1 }}>
+                                                <div style={{
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '700',
+                                                    color: '#121613',
+                                                    marginBottom: '3px',
+                                                    lineHeight: 1.35
+                                                }}>
+                                                    {step.title}
+                                                </div>
+                                                <div style={{
+                                                    fontSize: '12.5px',
+                                                    color: '#59655D',
+                                                    lineHeight: 1.55
+                                                }}>
+                                                    {step.desc}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </motion.div>
                         ))}
+                    </div>
+
+                    {/* Bottom CTA Helper */}
+                    <div style={{
+                        marginTop: '32px',
+                        padding: '16px 24px',
+                        background: '#FFFFFF',
+                        border: '1px solid rgba(18, 22, 19, 0.08)',
+                        borderRadius: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexWrap: 'wrap',
+                        gap: '16px'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ fontSize: '18px' }}>🌲</span>
+                            <span style={{ fontSize: '13.5px', color: '#121613', fontWeight: '600' }}>
+                                Need a customized itinerary or private corporate batch?
+                            </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <a
+                                href={waLink('Hi Aanandham Concierge! Please share the 2-Day expedition itinerary options and slot availability.')}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    fontSize: '13px',
+                                    fontWeight: '800',
+                                    color: '#25D366',
+                                    textDecoration: 'none',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px'
+                                }}
+                            >
+                                <WhatsAppIcon size={15} color="#25D366" />
+                                <span>WhatsApp Concierge</span>
+                            </a>
+                            <Link
+                                href="/camps"
+                                style={{
+                                    fontSize: '12.5px',
+                                    fontWeight: '800',
+                                    color: '#121613',
+                                    background: '#E5A93B',
+                                    padding: '7px 16px',
+                                    borderRadius: '999px',
+                                    textDecoration: 'none'
+                                }}
+                            >
+                                Explore Camps & Stays →
+                            </Link>
+                        </div>
                     </div>
 
                 </div>
@@ -2204,7 +2383,7 @@ export default function HomePage() {
                             style={{ position: 'sticky', top: '100px' }}
                         >
                             <div className="star-badge" style={{ marginBottom: '14px' }}>
-                                <span className="star-icon">★</span> EXPERIENCE
+                                <span className="star-icon">★</span> WILDERNESS EXPERIENCES
                             </div>
                             <h2 style={{
                                 fontFamily: 'var(--font-heading)',
@@ -2218,7 +2397,7 @@ export default function HomePage() {
                                 Body, soul, mind, and connection — <span className="text-marker-3">we've got it all</span>
                             </h2>
                             <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.65, margin: 0, maxWidth: '420px' }}>
-                                This camp isn't just about trekking. It's about the whole wilderness reconnect experience.
+                                From sunrise summit treks and rugged 4x4 jeep safaris to starlit acoustic campfires and organic tea heritage, every moment is crafted for a true wilderness reconnect.
                             </p>
                         </motion.div>
 
