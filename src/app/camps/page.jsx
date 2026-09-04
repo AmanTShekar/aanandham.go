@@ -17,13 +17,13 @@ export const metadata = {
     'Safe Campsites for Couples'
   ],
   alternates: {
-    canonical: 'https://aanandham.in/camps',
+    canonical: 'https://www.aanandham.in/camps',
   },
   openGraph: {
     title: 'Wilderness Campsites & Tent Stays in Kerala',
     description:
       'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ.',
-    url: 'https://aanandham.in/camps',
+    url: 'https://www.aanandham.in/camps',
     siteName: 'Aanandham.go',
     images: [
       {

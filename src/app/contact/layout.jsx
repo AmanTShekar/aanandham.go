@@ -2,12 +2,12 @@ export const metadata = {
   title: 'Contact & Reservations',
   description: 'Connect with Aanandham.go coordinators. 24/7 WhatsApp concierge, instant booking reservations, and GPS directions to Suryanelli Ridge, Munnar.',
   alternates: {
-    canonical: 'https://aanandham.in/contact',
+    canonical: 'https://www.aanandham.in/contact',
   },
   openGraph: {
     title: 'Contact & Reservations',
     description: 'Instant WhatsApp booking support, trail coordinates, and direct camp reservations for Munnar & Western Ghats glamping.',
-    url: 'https://aanandham.in/contact',
+    url: 'https://www.aanandham.in/contact',
     siteName: 'Aanandham.go',
     images: [
       {
