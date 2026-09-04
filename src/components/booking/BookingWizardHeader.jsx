@@ -34,8 +34,8 @@ export default function BookingWizardHeader({
                     <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(18px, 3.2vw, 24px)', fontWeight: '800', margin: 0, color: '#121613' }}>
                         {step === 1 && '1. Select Campsite, Lodging & Dates'}
                         {step === 2 && '2. Choose Experiences & Add-Ons'}
-                        {step === 3 && '3. Camper & Contact Information'}
-                        {step === 4 && '4. Enquire & Payment Confirmation'}
+                        {step === 3 && '3. Camper Info & WhatsApp Enquiry'}
+                        {step === 4 && '4. Enquire & Payment Details'}
                         {step === 5 && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Expedition Boarding Pass Issued</span>}
                     </h2>
                 </div>
@@ -68,13 +68,12 @@ export default function BookingWizardHeader({
             </div>
 
             {/* ── BREADCRUMB PROGRESS STEPS ── */}
-            {step < 5 && (
+            {step < 4 && (
                 <div className="booking-steps-bar">
                     {[
                         { num: 1, label: 'Stay & Dates', shortLabel: 'Stays' },
                         { num: 2, label: 'Add-Ons', shortLabel: 'Add-Ons' },
-                        { num: 3, label: 'Explorer Info', shortLabel: 'Details' },
-                        { num: 4, label: paymentSettings?.mode === 'coming_soon' ? 'WhatsApp Pass' : 'Enquire & Pay', shortLabel: 'Enquire & Pay' }
+                        { num: 3, label: 'WhatsApp Enquiry', shortLabel: 'Enquire' }
                     ].map((s, idx) => {
                         const isActive = step === s.num;
                         const isCompleted = step > s.num;
@@ -117,7 +116,7 @@ export default function BookingWizardHeader({
                                         {s.shortLabel}
                                     </span>
                                 </div>
-                                {idx < 3 && <span className="booking-step-arrow">→</span>}
+                                {idx < 2 && <span className="booking-step-arrow">→</span>}
                             </React.Fragment>
                         );
                     })}

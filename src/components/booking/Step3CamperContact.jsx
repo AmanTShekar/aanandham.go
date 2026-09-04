@@ -71,6 +71,26 @@ export default function Step3CamperContact({
     const isEmailError = emailTouched && Boolean(customerEmail) && ((clientCheck && !clientCheck.isValid) || (liveCheckStatus && liveCheckStatus !== 'checking' && !liveCheckStatus.isValid));
     const isEmailVerified = Boolean(customerEmail) && clientCheck?.isValid && liveCheckStatus?.isValid;
 
+    const isValidPhoneNumber = (num) => {
+        const cleaned = String(num || '').replace(/\D/g, '');
+        return cleaned.length >= 10 && cleaned.length <= 13;
+    };
+
+    const handleWhatsAppSubmit = () => {
+        setValidationError('');
+        if (!customerName.trim()) {
+            setValidationError('Please enter your full name as on government ID.');
+            return;
+        }
+        if (!customerPhone.trim() || !isValidPhoneNumber(customerPhone)) {
+            setValidationError('Please enter a valid 10-digit mobile / WhatsApp number.');
+            return;
+        }
+        if (handleDirectWhatsAppBooking) {
+            handleDirectWhatsAppBooking();
+        }
+    };
+
     return (
                                 <div>
                                     <div style={{ marginBottom: '20px' }}>
@@ -308,47 +328,35 @@ export default function Step3CamperContact({
                                             type="button"
                                             onClick={() => setStep(2)}
                                             className="btn-secondary"
-                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px', borderRadius: '10px' }}
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 18px', borderRadius: '12px' }}
                                         >
                                             ← Back
                                         </button>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                                            {handleDirectWhatsAppBooking && (
-                                                <button
-                                                    type="button"
-                                                    onClick={handleDirectWhatsAppBooking}
-                                                    title="Send reservation inquiry with your details directly to WhatsApp Concierge"
-                                                    style={{
-                                                        padding: '12px 18px',
-                                                        fontSize: '13.5px',
-                                                        fontWeight: '800',
-                                                        borderRadius: '12px',
-                                                        background: '#25D366',
-                                                        border: 'none',
-                                                        color: '#0A2E14',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '8px',
-                                                        cursor: 'pointer',
-                                                        boxShadow: '0 4px 14px rgba(37, 211, 102, 0.28)',
-                                                        transition: 'all 0.2s ease'
-                                                    }}
-                                                >
-                                                    <WhatsAppIcon size={17} color="#0A2E14" />
-                                                    <span>Enquire via WhatsApp</span>
-                                                </button>
-                                            )}
-                                            <button
-                                                type="button"
-                                                onClick={handleStep3Next}
-                                                className="btn-lime"
-                                                style={{ padding: '12px 24px', fontSize: '14px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-                                            >
-                                                <span>Enquire & Pay</span>
-                                                <ArrowRight size={15} />
-                                            </button>
-                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleWhatsAppSubmit}
+                                            title="Send reservation inquiry with your selected campsite, lodging, dates & details directly to WhatsApp Concierge"
+                                            style={{
+                                                padding: '13px 26px',
+                                                fontSize: '14.5px',
+                                                fontWeight: '900',
+                                                borderRadius: '14px',
+                                                background: '#25D366',
+                                                border: 'none',
+                                                color: '#0A2E14',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '9px',
+                                                cursor: 'pointer',
+                                                boxShadow: '0 4px 18px rgba(37, 211, 102, 0.35)',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            <WhatsAppIcon size={19} color="#0A2E14" />
+                                            <span>Enquire via WhatsApp →</span>
+                                        </button>
                                     </div>
                                 </div>
     );
 }
+
