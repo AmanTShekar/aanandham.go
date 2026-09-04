@@ -137,6 +137,25 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // Cache static images, fonts and icons aggressively
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/:file(logo\\.png|logo-dark\\.png|logo-white\\.png|favicon.*|android-chrome.*|apple-touch-icon.*|site\\.webmanifest)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
         // Apply security headers across all application routes
         source: '/:path*',
         headers: securityHeaders,

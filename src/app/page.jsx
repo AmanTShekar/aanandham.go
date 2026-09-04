@@ -1491,6 +1491,7 @@ export default function HomePage() {
                                             <button
                                                 key={idx}
                                                 onClick={() => setActiveWhyIdx(idx)}
+                                                aria-label={`Go to pillar slide ${idx + 1}`}
                                                 style={{
                                                     width: activeWhyIdx === idx ? '24px' : '8px',
                                                     height: '8px',
@@ -2033,6 +2034,7 @@ export default function HomePage() {
                                             }
                                             setActivePackageSlideIdx(idx);
                                         }}
+                                        aria-label={`View package slide ${idx + 1}`}
                                         style={{
                                             width: activePackageSlideIdx === idx ? '22px' : '7px',
                                             height: '7px',

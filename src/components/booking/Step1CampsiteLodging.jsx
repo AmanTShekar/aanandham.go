@@ -269,6 +269,7 @@ export default function Step1CampsiteLodging({
                                                     <button
                                                         type="button"
                                                         onClick={() => { setAdults(Math.max(1, adults - 1)); setCustomUnits(null); }}
+                                                        aria-label="Decrease adult count"
                                                         style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         -
@@ -277,6 +278,7 @@ export default function Step1CampsiteLodging({
                                                     <button
                                                         type="button"
                                                         onClick={() => { setAdults(adults + 1); setCustomUnits(null); }}
+                                                        aria-label="Increase adult count"
                                                         style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         +
@@ -290,6 +292,7 @@ export default function Step1CampsiteLodging({
                                                     <button
                                                         type="button"
                                                         onClick={() => { setChildren(Math.max(0, children - 1)); setCustomUnits(null); }}
+                                                        aria-label="Decrease children count"
                                                         style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         -
@@ -298,6 +301,7 @@ export default function Step1CampsiteLodging({
                                                     <button
                                                         type="button"
                                                         onClick={() => { setChildren(children + 1); setCustomUnits(null); }}
+                                                        aria-label="Increase children count"
                                                         style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
                                                     >
                                                         +

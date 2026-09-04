@@ -130,6 +130,7 @@ export default function Footer() {
                                         href={soc.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        aria-label={`Follow Aanandham.go on ${soc.name}`}
                                         title={`Follow Aanandham.go on ${soc.name}`}
                                         style={{
                                             width: '38px',

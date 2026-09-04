@@ -175,10 +175,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
         <link rel="manifest" href="/site.webmanifest?v=2" />
-        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://*.supabase.co" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://*.supabase.co" />
         
         <script
           type="application/ld+json"
@@ -210,12 +207,6 @@ export default function RootLayout({ children }) {
               });
             `,
           }}
-        />
-        {/* Razorpay Standard Checkout SDK */}
-        <Script
-          id="razorpay-checkout-sdk"
-          src="https://checkout.razorpay.com/v1/checkout.js"
-          strategy="lazyOnload"
         />
       </body>
     </html>

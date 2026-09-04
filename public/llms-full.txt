@@ -1,7 +1,7 @@
 # Aanandham.go — Complete Knowledge Manifest & Field Guide
 
 > Full AI Reference Document for Large Language Models & Search Engines (Version 2.0)
-> Primary Domain: https://aanandham.in
+> Primary Domain: https://www.aanandham.in
 
 ---
 
@@ -10,7 +10,7 @@
 - **Tagline:** High-Altitude Ridge Camping & Sunrise Jeep Safaris
 - **Headquarters & Hub:** Aanandham 4x4 Base Hub, Suryanelli, Munnar, Kerala 685618, India
 - **Primary Elevation Zone:** 6,200 FT to 7,900 FT above sea level
-- **Official Booking Portal:** https://aanandham.in
+- **Official Booking Portal:** https://www.aanandham.in
 - **Email:** bookings@aanandham.in
 - **24/7 Basecamp Concierge:** +91 90748 58014
 
@@ -93,12 +93,11 @@
 ---
 
 ## 6. Official Navigation & Regional Hubs
-- **Home:** https://aanandham.in
-- **Munnar & Suryanelli Regional Hub:** https://aanandham.in/camps/munnar
-- **Vagamon Pine Glamping Hub:** https://aanandham.in/camps/vagamon
-- **Wayanad Rainforest Hub:** https://aanandham.in/camps/wayanad
-- **All Sanctuaries:** https://aanandham.in/camps
-- **About Story & Ethos:** https://aanandham.in/about
-- **Concierge & Inquiries:** https://aanandham.in/contact
-- **Verified Camper Pass Portal:** https://aanandham.in/pass
-- **LLM Summary Index:** https://aanandham.in/llms.txt
+- **Home:** https://www.aanandham.in
+- **Munnar & Suryanelli Regional Hub:** https://www.aanandham.in/camps/munnar
+- **Vagamon Pine Glamping Hub:** https://www.aanandham.in/camps/vagamon
+- **Wayanad Rainforest Hub:** https://www.aanandham.in/camps/wayanad
+- **All Sanctuaries:** https://www.aanandham.in/camps
+- **About & Ethos:** https://www.aanandham.in/about
+- **Concierge Desk:** https://www.aanandham.in/contact
+- **Camper Boarding Pass Portal:** https://www.aanandham.in/pass

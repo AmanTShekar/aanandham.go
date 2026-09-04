@@ -5,7 +5,7 @@
 ## Overview
 Aanandham.go is a premium wilderness camping and high-altitude glamping platform based in Suryanelli, Munnar, Kerala, India. It provides verified mountain stays, guided 4x4 sunrise jeep safaris to Kolukkumalai (7,900 FT), starlit campfire nights, live BBQ platters, and luxury weatherproof dome tents with en-suite western washrooms.
 
-- **Website:** https://aanandham.in
+- **Website:** https://www.aanandham.in
 - **Location:** Suryanelli & Kolukkumalai Ridge, Munnar, Kerala 685618, India
 - **Coordinates:** 10.0889° N, 77.0595° E
 - **Basecamp Concierge:** +91 90748 58014 | bookings@aanandham.in
@@ -45,10 +45,10 @@ Aanandham.go is a premium wilderness camping and high-altitude glamping platform
 - **Payment Methods:** 0% Fee Direct UPI (GPay, PhonePe, Paytm), Credit/Debit Cards, Netbanking via Razorpay.
 
 ## Direct Regional Hubs & Booking Links
-- Munnar & Suryanelli Camps (7,900 FT): https://aanandham.in/camps/munnar
-- Vagamon Pine Glamping (3,800 FT): https://aanandham.in/camps/vagamon
-- Wayanad Forest Pods (4,200 FT): https://aanandham.in/camps/wayanad
-- Explore All Campsites: https://aanandham.in/camps
-- About & Ethos: https://aanandham.in/about
-- Concierge & Inquiries: https://aanandham.in/contact
-- Camper Pass Portal: https://aanandham.in/pass
+- Munnar & Suryanelli Camps (7,900 FT): https://www.aanandham.in/camps/munnar
+- Vagamon Pine Glamping (3,800 FT): https://www.aanandham.in/camps/vagamon
+- Wayanad Forest Pods (4,200 FT): https://www.aanandham.in/camps/wayanad
+- Explore All Campsites: https://www.aanandham.in/camps
+- About & Ethos: https://www.aanandham.in/about
+- Concierge & Inquiries: https://www.aanandham.in/contact
+- Camper Pass Portal: https://www.aanandham.in/pass

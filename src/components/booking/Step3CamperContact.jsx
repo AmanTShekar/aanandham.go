@@ -233,6 +233,7 @@ export default function Step3CamperContact({
                                                                 setVegCount(newVeg);
                                                                 setNonVegCount(totalGuests - newVeg);
                                                             }}
+                                                            aria-label="Decrease vegetarian campers count"
                                                             style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
                                                         >
                                                             -
@@ -245,6 +246,7 @@ export default function Step3CamperContact({
                                                                 setVegCount(newVeg);
                                                                 setNonVegCount(totalGuests - newVeg);
                                                             }}
+                                                            aria-label="Increase vegetarian campers count"
                                                             style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
                                                         >
                                                             +
@@ -262,6 +264,7 @@ export default function Step3CamperContact({
                                                                 setNonVegCount(newNonVeg);
                                                                 setVegCount(totalGuests - newNonVeg);
                                                             }}
+                                                            aria-label="Decrease non-veg campers count"
                                                             style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
                                                         >
                                                             -
@@ -274,6 +277,7 @@ export default function Step3CamperContact({
                                                                 setNonVegCount(newNonVeg);
                                                                 setVegCount(totalGuests - newNonVeg);
                                                             }}
+                                                            aria-label="Increase non-veg campers count"
                                                             style={{ width: '26px', height: '26px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#F8F9F5', cursor: 'pointer', fontWeight: '800' }}
                                                         >
                                                             +
