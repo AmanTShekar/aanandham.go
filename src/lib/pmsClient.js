@@ -9,15 +9,24 @@
 import { INITIAL_ALL_CAMPS } from './campsData';
 import { DEFAULT_DESTINATION_CONTENT, DEFAULT_SITE_PAGES_CONTENT } from './cmsContent';
 
+export function getPmsBaseUrl() {
+  if (process.env.NEXT_PUBLIC_PMS_URL && process.env.NEXT_PUBLIC_PMS_URL !== "http://localhost:3001") {
+    return process.env.NEXT_PUBLIC_PMS_URL.replace(/\/$/, "");
+  }
+  if (process.env.PMS_BASE_URL) {
+    return process.env.PMS_BASE_URL.replace(/\/$/, "");
+  }
+  if (process.env.NODE_ENV === "production") {
+    return "https://aanandham-pms.onrender.com";
+  }
+  return "http://localhost:3001";
+}
+
 export class AanandhamPmsClient {
   constructor(config = {}) {
     this.tenantId = config.tenantId || process.env.NEXT_PUBLIC_PMS_TENANT_ID || "t-aanandham-hq";
     this.publishableKey = config.publishableKey || config.apiKey || null;
-    this.endpoint = (
-      config.endpoint ||
-      process.env.NEXT_PUBLIC_PMS_URL ||
-      "http://localhost:3001"
-    ).replace(/\/$/, "");
+    this.endpoint = (config.endpoint || getPmsBaseUrl()).replace(/\/$/, "");
     this.razorpayKeyId = config.razorpayKeyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_aanandham_hq";
 
     // 1. Namespaced Campsites Resource

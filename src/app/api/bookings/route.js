@@ -12,6 +12,7 @@ import { logLockContention } from '@/lib/monitoring';
 import { sendBookingConfirmationEmail } from '@/lib/email';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
 import { checkSecurityGate } from '@/lib/securityTracker';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 // Unique, collision-free human readable booking ID generator with cryptographic entropy
 function generateBookingId() {
@@ -139,7 +140,7 @@ export async function POST(request) {
         }
 
         // 4.5. Master Delegation: Forward booking creation & Razorpay Order to OpenPMS
-        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        const pmsUrl = getPmsBaseUrl();
         try {
             const pmsRes = await fetch(`${pmsUrl}/api/bookings`, {
                 method: 'POST',
@@ -325,7 +326,7 @@ export async function POST(request) {
             }
 
             // Real-time broadcast of new booking into OpenPMS
-            const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+            const pmsUrl = getPmsBaseUrl();
             try {
                 await fetch(`${pmsUrl}/api/bookings`, {
                     method: 'POST',

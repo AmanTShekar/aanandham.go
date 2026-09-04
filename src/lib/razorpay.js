@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { getPmsBaseUrl } from './pmsClient';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RAZORPAY CREDENTIALS — fetched from OpenPMS (single source of truth)
@@ -19,7 +20,7 @@ async function getRazorpayCreds() {
         return _cachedCreds;
     }
 
-    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    const pmsUrl = getPmsBaseUrl();
     const internalToken = process.env.PMS_INTERNAL_TOKEN;
 
     // Attempt to fetch from PMS

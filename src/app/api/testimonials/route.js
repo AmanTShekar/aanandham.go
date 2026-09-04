@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getTestimonials, getActiveTestimonials } from '@/lib/testimonials';
 import { getClientIp } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 // GET: public active testimonials (synced with OpenPMS)
 export async function GET(request) {
@@ -12,7 +13,7 @@ export async function GET(request) {
     }
 
     // Try live sync from OpenPMS first
-    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    const pmsUrl = getPmsBaseUrl();
     try {
         const pmsRes = await fetch(`${pmsUrl}/api/testimonials`, {
             cache: 'no-store',

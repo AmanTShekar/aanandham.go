@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/redis';
 import { getStoredBookings, updateServerBooking } from '@/lib/serverBookingStore';
 import { getClientIp } from '@/lib/authConfig';
 import { sendBookingConfirmationEmail } from '@/lib/email';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 // POST: verify a Razorpay checkout payment and confirm the booking.
 // Client calls this after the Razorpay checkout handler fires (payment success).
@@ -38,7 +39,7 @@ export async function POST(request) {
         const booking = bookings.find(b => b.id === bookingId);
 
         // 1. Primary: Forward payment verification directly to OpenPMS
-        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        const pmsUrl = getPmsBaseUrl();
         try {
             const pmsRes = await fetch(`${pmsUrl}/api/payments/verify`, {
                 method: 'POST',
@@ -105,7 +106,7 @@ export async function POST(request) {
         if (!isMockOrder) {
             // Fetch key secret from PMS (single source of truth)
             let keySecret = null;
-            const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+            const pmsUrl = getPmsBaseUrl();
             const internalToken = process.env.PMS_INTERNAL_TOKEN;
             if (internalToken) {
                 try {

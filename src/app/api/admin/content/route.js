@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAdminPayload, getClientIp } from '@/lib/authConfig';
 import { checkRateLimit } from '@/lib/redis';
 import { getCmsContent, setCmsContent } from '@/lib/cmsContent';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 // ── GET: Read CMS content with live OpenPMS auto-sync ──
 export async function GET(request) {
@@ -14,7 +15,7 @@ export async function GET(request) {
     let content = getCmsContent();
 
     // Live auto-sync from OpenPMS CMS endpoint
-    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    const pmsUrl = getPmsBaseUrl();
     try {
         const pmsRes = await fetch(`${pmsUrl}/api/cms?tenantId=t-aanandham-hq`, {
             cache: 'no-store',
@@ -62,7 +63,7 @@ export async function POST(request) {
         const updated = setCmsContent(body);
 
         // Asynchronously broadcast to OpenPMS CMS store
-        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        const pmsUrl = getPmsBaseUrl();
         try {
             const section = body.section || Object.keys(body)[0] || 'all';
             await fetch(`${pmsUrl}/api/cms`, {

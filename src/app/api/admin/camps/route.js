@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/redis';
 import { getAllCamps } from '@/lib/campsData';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
 import { recordWalMutation, logCrash } from '@/lib/auditLedger';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 // In-memory override cache for admin-saved camps fallback
 let campsOverride = null;
@@ -23,7 +24,7 @@ export async function GET(request) {
     };
 
     // 1. Query OpenPMS properties API for live rates & availability
-    const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+    const pmsUrl = getPmsBaseUrl();
     try {
         const pmsRes = await fetch(`${pmsUrl}/api/properties`, {
             headers: { 'X-PMS-Tenant-Id': process.env.NEXT_PUBLIC_PMS_TENANT_ID || 't-aanandham-hq' },
@@ -153,7 +154,7 @@ export async function POST(request) {
         }
 
         // 2-Way Sync: Forward update to OpenPMS microservice
-        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        const pmsUrl = getPmsBaseUrl();
         try {
             fetch(`${pmsUrl}/api/properties`, {
                 method: 'POST',

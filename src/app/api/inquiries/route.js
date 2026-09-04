@@ -4,6 +4,7 @@ import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { getStoredInquiries, addStoredInquiry } from '@/lib/inquiryStore';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
 import { checkSecurityGate } from '@/lib/securityTracker';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 export async function GET(request) {
     const admin = await getAdminPayload(request);
@@ -73,7 +74,7 @@ export async function POST(request) {
         await addStoredInquiry(newRecord);
 
         // Forward to OpenPMS CRM Inbound Pipeline
-        const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+        const pmsUrl = getPmsBaseUrl();
         try {
             fetch(`${pmsUrl}/api/inquiries`, {
                 method: 'POST',

@@ -5,6 +5,7 @@ import { isWebhookProcessed, markWebhookProcessed } from '@/lib/redis';
 import { getClientIp } from '@/lib/authConfig';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
 import { sendBookingConfirmationEmail } from '@/lib/email';
+import { getPmsBaseUrl } from '@/lib/pmsClient';
 
 export async function POST(request) {
     try {
@@ -200,7 +201,7 @@ export async function POST(request) {
                 }
 
                 // Real-time broadcast of confirmed booking & payment into OpenPMS
-                const pmsUrl = process.env.NEXT_PUBLIC_PMS_URL || 'http://localhost:3001';
+                const pmsUrl = getPmsBaseUrl();
                 try {
                     await fetch(`${pmsUrl}/api/bookings`, {
                         method: 'POST',
