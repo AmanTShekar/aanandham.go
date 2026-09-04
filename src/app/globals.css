@@ -5084,8 +5084,7 @@ body.booking-modal-open {
   cursor: pointer;
 }
 .desktop-global-action-dock.is-collapsed:hover {
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(229, 169, 59, 0.45) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(229, 169, 59, 0.55) !important;
 }
 .action-dock-pill-trigger:hover span:nth-child(2) {
   color: #E5A93B !important;
