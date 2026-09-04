@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Phone, Calendar, X, ChevronRight } from 'lucide-react';
-import { waLink, DEFAULT_WA_PHONE } from '@/lib/whatsapp';
+import { waLink, DEFAULT_WA_PHONE, logWhatsAppInquiry } from '@/lib/whatsapp';
 import { WhatsAppIcon } from './BrandIcons';
 
 const DOCK_SPRING = {
@@ -158,6 +158,10 @@ export default function GlobalActionHub() {
                                     href={whatsAppUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
+                                    onClick={() => logWhatsAppInquiry({
+                                        text: 'Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.',
+                                        source: 'Desktop Global Action Dock'
+                                    })}
                                     className="action-dock-btn"
                                     title="Chat on WhatsApp"
                                     style={{
@@ -308,6 +312,10 @@ export default function GlobalActionHub() {
                     href={whatsAppUrl}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => logWhatsAppInquiry({
+                        text: 'Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.',
+                        source: 'Mobile Sticky Action Bar'
+                    })}
                     aria-label="Chat with Mountain Concierge on WhatsApp"
                     style={{
                         flex: '0 0 68px',

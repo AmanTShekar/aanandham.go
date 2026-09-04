@@ -1,6 +1,41 @@
 export const DEFAULT_WA_PHONE = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
 
 /**
+ * Automatically log a WhatsApp inquiry click intent to the CRM / PMS pipeline
+ */
+export const logWhatsAppInquiry = async ({
+  text = '',
+  phone = DEFAULT_WA_PHONE,
+  source = 'Website WhatsApp Trigger',
+  campsiteId = null,
+  name = 'WhatsApp Visitor',
+  email = '',
+  guests = 2,
+  travelDates = 'Flexible'
+} = {}) => {
+  if (typeof window === 'undefined') return;
+  try {
+    fetch('/api/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        phone: 'WhatsApp Direct',
+        email,
+        inquiryType: 'WhatsApp Concierge Click',
+        guests,
+        travelDates,
+        campsiteId,
+        message: text ? `Pre-filled message: "${text.slice(0, 300)}"` : 'Direct WhatsApp Concierge Click',
+        source: source || 'Website WhatsApp Trigger',
+        tenantId: 't-aanandham-hq',
+        status: 'NEW_LEAD'
+      })
+    }).catch(() => {});
+  } catch (e) {}
+};
+
+/**
  * Format a phone number into an international numeric string without special chars
  */
 export const cleanPhone = (phone = '') => {

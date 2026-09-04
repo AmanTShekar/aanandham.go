@@ -20,7 +20,7 @@ import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Te
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
-import { waLink } from '../../../lib/whatsapp';
+import { waLink, logWhatsAppInquiry } from '../../../lib/whatsapp';
 import { CANCELLATION_TIERS } from '../../../lib/cancellation';
 import { loadDiscountsFromStorage, applyDiscounts } from '../../../lib/discountsCore';
 
@@ -890,6 +890,13 @@ return (
                                             href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            onClick={() => logWhatsAppInquiry({
+                                                text: `Check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}`,
+                                                source: `Camp Detail: ${camp.title}`,
+                                                campsiteId: camp.id,
+                                                guests: guestsCount,
+                                                travelDates: selectedDate
+                                            })}
                                             style={{
                                                 flex: '1',
                                                 minWidth: 0,
@@ -994,6 +1001,11 @@ return (
                                         href={waLink(`Hi Aanandham! I have questions regarding ${camp.title} facilities and group booking.`)}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        onClick={() => logWhatsAppInquiry({
+                                            text: `Questions regarding ${camp.title} facilities and group booking`,
+                                            source: `Camp Squad Questions: ${camp.title}`,
+                                            campsiteId: camp.id
+                                        })}
                                         style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
                                     >
                                         <span>Chat with Guide →</span>
