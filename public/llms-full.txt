@@ -93,11 +93,11 @@
 ---
 
 ## 6. Official Navigation & Regional Hubs
-- **Home:** https://www.aanandham.in
-- **Munnar & Suryanelli Regional Hub:** https://www.aanandham.in/camps/munnar
-- **Vagamon Pine Glamping Hub:** https://www.aanandham.in/camps/vagamon
-- **Wayanad Rainforest Hub:** https://www.aanandham.in/camps/wayanad
-- **All Sanctuaries:** https://www.aanandham.in/camps
-- **About & Ethos:** https://www.aanandham.in/about
-- **Concierge Desk:** https://www.aanandham.in/contact
-- **Camper Boarding Pass Portal:** https://www.aanandham.in/pass
+- [Home](https://www.aanandham.in)
+- [Munnar & Suryanelli Regional Hub](https://www.aanandham.in/camps/munnar)
+- [Vagamon Pine Glamping Hub](https://www.aanandham.in/camps/vagamon)
+- [Wayanad Rainforest Hub](https://www.aanandham.in/camps/wayanad)
+- [All Sanctuaries](https://www.aanandham.in/camps)
+- [About & Ethos](https://www.aanandham.in/about)
+- [Concierge Desk](https://www.aanandham.in/contact)
+- [Camper Boarding Pass Portal](https://www.aanandham.in/pass)

@@ -2,7 +2,6 @@
 
 > Official AI & LLM Knowledge Manifest for Aanandham.go (Kerala, India)
 
-## Overview
 Aanandham.go is a premium wilderness camping and high-altitude glamping platform based in Suryanelli, Munnar, Kerala, India. It provides verified mountain stays, guided 4x4 sunrise jeep safaris to Kolukkumalai (7,900 FT), starlit campfire nights, live BBQ platters, and luxury weatherproof dome tents with en-suite western washrooms.
 
 - **Website:** https://www.aanandham.in
@@ -44,11 +43,14 @@ Aanandham.go is a premium wilderness camping and high-altitude glamping platform
   - < 48 Hours: Non-refundable (Free date reschedule in case of extreme weather or road blockades)
 - **Payment Methods:** 0% Fee Direct UPI (GPay, PhonePe, Paytm), Credit/Debit Cards, Netbanking via Razorpay.
 
-## Direct Regional Hubs & Booking Links
-- Munnar & Suryanelli Camps (7,900 FT): https://www.aanandham.in/camps/munnar
-- Vagamon Pine Glamping (3,800 FT): https://www.aanandham.in/camps/vagamon
-- Wayanad Forest Pods (4,200 FT): https://www.aanandham.in/camps/wayanad
-- Explore All Campsites: https://www.aanandham.in/camps
-- About & Ethos: https://www.aanandham.in/about
-- Concierge & Inquiries: https://www.aanandham.in/contact
-- Camper Pass Portal: https://www.aanandham.in/pass
+## Core Links
+- [Munnar & Suryanelli Camps](https://www.aanandham.in/camps/munnar): 7,900 FT high-altitude ridge camping and Kolukkumalai sunrise safaris.
+- [Vagamon Pine Glamping](https://www.aanandham.in/camps/vagamon): 3,800 FT pine forest glamping with offroad jeep trails.
+- [Wayanad Forest Pods](https://www.aanandham.in/camps/wayanad): 4,200 FT cloud-level wooden ridge pods.
+- [Explore All Sanctuaries](https://www.aanandham.in/camps): Complete catalog of verified high-altitude campsites across Kerala.
+- [About & Ethos](https://www.aanandham.in/about): Conservation, local community guides, and wilderness charter.
+- [Expedition Concierge Desk](https://www.aanandham.in/contact): 24/7 mountain support and custom group expeditions.
+- [Camper Boarding Pass Portal](https://www.aanandham.in/pass): Digital verification and pass lookup.
+
+## Optional
+- [Full LLM Knowledge Manifest](https://www.aanandham.in/llms-full.txt): Complete detailed guide and operational data.
