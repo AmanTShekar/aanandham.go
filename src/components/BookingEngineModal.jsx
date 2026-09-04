@@ -476,25 +476,24 @@ function BookingEngineModalInner({
         const addonsListText = selectedAddons && selectedAddons.length > 0 ? selectedAddons.join(', ') : 'None';
         const cleanDates = String(travelDate || '').replace(/–/g, '-');
 
-        const msg = `*🏕️ Campsite Booking & Permit Inquiry - Aanandham Wilderness*
+        const msg = `*Aanandham Wilderness — Campsite Booking & Permit Inquiry*
 
 *Explorer Details:*
-• *Name:* ${customerName.trim() || 'Wilderness Camper'}
-• *Phone:* ${customerPhone.trim() || 'Not provided'}
-${customerEmail.trim() ? `• *Email:* ${customerEmail.trim()}\n` : ''}
+- *Name:* ${customerName.trim() || 'Wilderness Camper'}
+- *Phone:* ${customerPhone.trim() || 'Not provided'}
+${customerEmail.trim() ? `- *Email:* ${customerEmail.trim()}\n` : ''}
 *Sanctuary & Stay:*
-• *Campsite:* ${selectedPkg.title || selectedPkg.name}
-• *Dates / Batch:* ${cleanDates}
-• *Lodging:* ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} unit(s))
-• *Total Campers:* ${totalGuests} (${adults} Adults${children > 0 ? `, ${children} Children` : ''})
+- *Campsite:* ${selectedPkg.title || selectedPkg.name}
+- *Dates / Batch:* ${cleanDates}
+- *Lodging:* ${selectedRoom?.name || 'Standard Tent'} (${totalUnits} unit(s))
+- *Total Campers:* ${totalGuests} (${adults} Adults${children > 0 ? `, ${children} Children` : ''})
 
 *Food & Add-ons:*
-• *Meal Choice:* ${dietaryChoice} (${vegCount} Veg, ${nonVegCount} Non-Veg)
-• *Add-Ons / Upgrades:* ${addonsListText}
-${specialNotes?.trim() ? `• *Special Notes:* ${specialNotes.trim()}\n` : ''}
-*Pricing & Payment Choice:*
-• *Total Expedition Amount:* ₹${(totalAmount || 0).toLocaleString('en-IN')}
-• *Selected Payment Choice:* ${paymentMode === 'advance' ? `30% Advance (₹${amountToPayNow.toLocaleString('en-IN')} advance, ₹${balDue.toLocaleString('en-IN')} balance on arrival)` : `100% Full Payment (₹${totalAmount.toLocaleString('en-IN')})`}
+- *Meal Choice:* ${dietaryChoice} (${vegCount} Veg, ${nonVegCount} Non-Veg)
+- *Add-Ons / Upgrades:* ${addonsListText}
+${specialNotes?.trim() ? `- *Special Notes:* ${specialNotes.trim()}\n` : ''}
+*Pricing & Estimate:*
+- *Total Expedition Amount:* ₹${(totalAmount || 0).toLocaleString('en-IN')}
 
 _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit details for our expedition._`;
 
