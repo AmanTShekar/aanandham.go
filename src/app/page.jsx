@@ -1501,7 +1501,9 @@ export default function HomePage() {
                                                     cursor: 'pointer',
                                                     transition: 'all 0.25s ease'
                                                 }}
-                                            />
+                                            >
+                                                <span className="sr-only">Go to pillar slide {idx + 1}</span>
+                                            </button>
                                         ))}
                                     </div>
 
@@ -2045,7 +2047,9 @@ export default function HomePage() {
                                             cursor: 'pointer',
                                             transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
                                         }}
-                                    />
+                                    >
+                                        <span className="sr-only">View package slide {idx + 1}</span>
+                                    </button>
                                 ))}
                             </div>
                             <span style={{ fontSize: '11px', fontWeight: '700', color: '#8E9B92', display: 'block', textAlign: 'center', marginTop: '6px' }}>
