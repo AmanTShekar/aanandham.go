@@ -35,7 +35,7 @@ export default function BookingWizardHeader({
                         {step === 1 && '1. Select Campsite, Lodging & Dates'}
                         {step === 2 && '2. Choose Experiences & Add-Ons'}
                         {step === 3 && '3. Camper & Contact Information'}
-                        {step === 4 && '4. Payment & Reservation Details'}
+                        {step === 4 && '4. Enquire & Payment Confirmation'}
                         {step === 5 && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Expedition Boarding Pass Issued</span>}
                     </h2>
                 </div>
@@ -74,7 +74,7 @@ export default function BookingWizardHeader({
                         { num: 1, label: 'Stay & Dates', shortLabel: 'Stays' },
                         { num: 2, label: 'Add-Ons', shortLabel: 'Add-Ons' },
                         { num: 3, label: 'Explorer Info', shortLabel: 'Details' },
-                        { num: 4, label: paymentSettings?.mode === 'coming_soon' ? 'Voucher Pass' : 'Payment', shortLabel: 'Payment' }
+                        { num: 4, label: paymentSettings?.mode === 'coming_soon' ? 'WhatsApp Pass' : 'Enquire & Pay', shortLabel: 'Enquire & Pay' }
                     ].map((s, idx) => {
                         const isActive = step === s.num;
                         const isCompleted = step > s.num;

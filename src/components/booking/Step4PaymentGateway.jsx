@@ -256,10 +256,10 @@ export default function Step4PaymentGateway({
                                                         onClick={handleDirectWhatsAppBooking}
                                                         disabled={isSubmitting}
                                                         title="Send reservation directly to 24/7 WhatsApp Concierge"
-                                                        style={validationError ? {
-                                                            padding: '13px 24px',
+                                                        style={{
+                                                            padding: '12px 20px',
                                                             fontSize: '13.5px',
-                                                            fontWeight: '900',
+                                                            fontWeight: '800',
                                                             borderRadius: '12px',
                                                             background: '#25D366',
                                                             border: 'none',
@@ -268,25 +268,12 @@ export default function Step4PaymentGateway({
                                                             alignItems: 'center',
                                                             gap: '8px',
                                                             cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                            boxShadow: '0 4px 16px rgba(37, 211, 102, 0.4)',
-                                                            transition: 'all 0.2s ease'
-                                                        } : {
-                                                            padding: '12px 18px',
-                                                            fontSize: '13px',
-                                                            fontWeight: '800',
-                                                            borderRadius: '12px',
-                                                            background: 'rgba(37, 211, 102, 0.12)',
-                                                            border: '1px solid rgba(37, 211, 102, 0.3)',
-                                                            color: '#25D366',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '8px',
-                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                            boxShadow: '0 4px 14px rgba(37, 211, 102, 0.28)',
                                                             transition: 'all 0.2s ease'
                                                         }}
                                                     >
-                                                        <WhatsAppIcon size={18} color={validationError ? '#0A2E14' : '#25D366'} />
-                                                        <span>{validationError ? 'Reserve via WhatsApp (Zero Advance) →' : 'WhatsApp Enquire'}</span>
+                                                        <WhatsAppIcon size={18} color="#0A2E14" />
+                                                        <span>Enquire via WhatsApp</span>
                                                     </button>
 
                                                     <button
@@ -308,7 +295,7 @@ export default function Step4PaymentGateway({
                                                             cursor: isSubmitting ? 'not-allowed' : 'pointer',
                                                             opacity: isSubmitting ? 0.7 : 1
                                                         } : {
-                                                            padding: '12px 26px',
+                                                            padding: '12px 24px',
                                                             fontSize: '14px',
                                                             fontWeight: '900',
                                                             display: 'inline-flex',
@@ -323,7 +310,7 @@ export default function Step4PaymentGateway({
                                                                 ? 'Opening Secure Checkout...' 
                                                                 : (validationError 
                                                                     ? `Retry Online Payment (₹${payableNow.toLocaleString('en-IN')}) ⟳` 
-                                                                    : `Pay ₹${payableNow.toLocaleString('en-IN')} Securely →`)}
+                                                                    : `Enquire & Pay (₹${payableNow.toLocaleString('en-IN')}) →`)}
                                                         </span>
                                                         <ShieldCheck size={16} />
                                                     </button>

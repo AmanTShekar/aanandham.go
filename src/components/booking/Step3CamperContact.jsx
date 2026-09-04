@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { User, Phone, Mail, FileText, ArrowRight, ArrowLeft, Leaf, Drumstick, Utensils, Minus, Plus } from 'lucide-react';
+import { WhatsAppIcon } from '../common/BrandIcons';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
 import { validateEmailClient } from '../../lib/emailValidatorCore';
@@ -27,6 +28,7 @@ export default function Step3CamperContact({
     honeypot,
     setHoneypot,
     handleStep3Next,
+    handleDirectWhatsAppBooking,
     setStep,
     setValidationError = () => {}
 }) {
@@ -301,24 +303,51 @@ export default function Step3CamperContact({
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
                                         <button
                                             type="button"
                                             onClick={() => setStep(2)}
                                             className="btn-secondary"
-                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '8px 14px', borderRadius: '10px' }}
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px', borderRadius: '10px' }}
                                         >
                                             ← Back
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={handleStep3Next}
-                                            className="btn-lime"
-                                            style={{ padding: '12px 28px', fontSize: '14px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
-                                        >
-                                            <span>Continue to Payment</span>
-                                            <ArrowRight size={15} />
-                                        </button>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                                            {handleDirectWhatsAppBooking && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleDirectWhatsAppBooking}
+                                                    title="Send reservation inquiry with your details directly to WhatsApp Concierge"
+                                                    style={{
+                                                        padding: '12px 18px',
+                                                        fontSize: '13.5px',
+                                                        fontWeight: '800',
+                                                        borderRadius: '12px',
+                                                        background: '#25D366',
+                                                        border: 'none',
+                                                        color: '#0A2E14',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        cursor: 'pointer',
+                                                        boxShadow: '0 4px 14px rgba(37, 211, 102, 0.28)',
+                                                        transition: 'all 0.2s ease'
+                                                    }}
+                                                >
+                                                    <WhatsAppIcon size={17} color="#0A2E14" />
+                                                    <span>Enquire via WhatsApp</span>
+                                                </button>
+                                            )}
+                                            <button
+                                                type="button"
+                                                onClick={handleStep3Next}
+                                                className="btn-lime"
+                                                style={{ padding: '12px 24px', fontSize: '14px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}
+                                            >
+                                                <span>Enquire & Pay</span>
+                                                <ArrowRight size={15} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
     );

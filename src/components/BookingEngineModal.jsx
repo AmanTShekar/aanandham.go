@@ -670,6 +670,7 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
                             honeypot={honeypot}
                             setHoneypot={setHoneypot}
                             handleStep3Next={handleStep3Next}
+                            handleDirectWhatsAppBooking={handleDirectWhatsAppBooking}
                             setStep={setStep}
                             setValidationError={setValidationError}
                         />
