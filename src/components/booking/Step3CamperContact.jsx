@@ -336,29 +336,48 @@ export default function Step3CamperContact({
                                         >
                                             ← Back
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={handleWhatsAppSubmit}
-                                            title="Send reservation inquiry with your selected campsite, lodging, dates & details directly to WhatsApp Concierge"
-                                            style={{
-                                                padding: '13px 26px',
-                                                fontSize: '14.5px',
-                                                fontWeight: '900',
-                                                borderRadius: '14px',
-                                                background: '#25D366',
-                                                border: 'none',
-                                                color: '#0A2E14',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '9px',
-                                                cursor: 'pointer',
-                                                boxShadow: '0 4px 18px rgba(37, 211, 102, 0.35)',
-                                                transition: 'all 0.2s ease'
-                                            }}
-                                        >
-                                            <WhatsAppIcon size={19} color="#0A2E14" />
-                                            <span>Enquire via WhatsApp →</span>
-                                        </button>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                                            <button
+                                                type="button"
+                                                onClick={handleWhatsAppSubmit}
+                                                title="Send reservation inquiry with your selected campsite, lodging, dates & details directly to WhatsApp Concierge"
+                                                style={{
+                                                    padding: '12px 20px',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '800',
+                                                    borderRadius: '12px',
+                                                    background: '#25D366',
+                                                    border: 'none',
+                                                    color: '#0A2E14',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    cursor: 'pointer',
+                                                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
+                                                    transition: 'all 0.2s ease'
+                                                }}
+                                            >
+                                                <WhatsAppIcon size={18} color="#0A2E14" />
+                                                <span>Enquire via WhatsApp</span>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={handleStep3Next}
+                                                className="btn-lime"
+                                                style={{
+                                                    padding: '12px 24px',
+                                                    fontSize: '14px',
+                                                    fontWeight: '800',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <span>Proceed to Payment</span>
+                                                <ArrowRight size={15} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
     );

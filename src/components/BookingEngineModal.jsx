@@ -35,6 +35,7 @@ function BookingEngineModalInner({
     initialCustomUnits = null 
 }) {
     const modalRef = useRef(null);
+    const prevIsOpenRef = useRef(false);
     useFocusTrap(isOpen, modalRef);
     const [mounted, setMounted] = useState(false);
 
@@ -99,6 +100,23 @@ function BookingEngineModalInner({
         };
     }, [isOpen]);
 
+    // ── Live PMS Funnel Tracking Dispatches ──
+    useEffect(() => {
+        if (isOpen && typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('pms_track', { 
+                detail: { eventType: 'booking_start', campId: selectedPkgId } 
+            }));
+        }
+    }, [isOpen, selectedPkgId]);
+
+    useEffect(() => {
+        if (isOpen && step >= 3 && typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('pms_track', { 
+                detail: { eventType: 'checkout_init', campId: selectedPkgId } 
+            }));
+        }
+    }, [isOpen, step, selectedPkgId]);
+
     // Load active camps list from localStorage / default data and live OpenPMS feed
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -117,12 +135,13 @@ function BookingEngineModalInner({
         }
     }, [isOpen]);
 
-    // Synchronize props whenever modal opens or initialPackage updates
+    // Synchronize props ONLY when modal transitions from closed to open
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && !prevIsOpenRef.current) {
             setStep(1);
             setValidationError('');
             setConfirmedPass(null);
+            setSelectedAddons([]);
 
             if (initialDate) {
                 setTravelDate(initialDate);
@@ -173,9 +192,13 @@ function BookingEngineModalInner({
                     (targetRoomName && targetRoomName.includes(r.name?.toLowerCase()))
                 );
                 setSelectedRoomId(roomMatch ? roomMatch.id : roomsAvailable[0].id);
+            } else {
+                setSelectedRoomId('standard-tent');
             }
         }
-    }, [isOpen, initialPackage, initialRoom, initialRoomId, initialDate, initialGuests, initialAdults, initialChildren, initialCustomUnits, campsList]);
+
+        prevIsOpenRef.current = isOpen;
+    }, [isOpen]);
 
     // Re-synchronize selected room if package changes
     const selectedPkg = useMemo(() => {
@@ -190,7 +213,7 @@ function BookingEngineModalInner({
         if (!availableRooms.length) {
             return initialRoom || {
                 id: 'standard-tent',
-                name: 'Standard Geodesic Tent',
+                name: 'Standard Alpine Ridge Tent',
                 price: Number(selectedPkg?.price || initialPackage?.price || 2499),
                 capacity: '2 Adults'
             };
@@ -270,9 +293,15 @@ function BookingEngineModalInner({
 
     const handleStep1Next = () => {
         setValidationError('');
+        const effectiveDate = travelDate || initialDate || getDefaultUpcomingBatch();
         if (!travelDate) {
-            setValidationError('Please select your preferred stay dates / batch.');
-            return;
+            setTravelDate(effectiveDate);
+        }
+        if (!selectedPkgId) {
+            setSelectedPkgId(selectedPkg?.id || campsList[0]?.id || 'pkg-kolukkumalai');
+        }
+        if (!selectedRoomId && selectedRoom?.id) {
+            setSelectedRoomId(selectedRoom.id);
         }
         setStep(2);
     };
@@ -435,6 +464,11 @@ function BookingEngineModalInner({
                                 paidAmount: amountToCharge,
                                 balanceDue: totalAmount - amountToCharge
                             });
+                            if (typeof window !== 'undefined') {
+                                window.dispatchEvent(new CustomEvent('pms_track', {
+                                    detail: { eventType: 'booking_success', campId: selectedPkgId }
+                                }));
+                            }
                             setStep(5);
                         } else {
                             setValidationError(verifyData.message || 'Payment signature verification failed. Please contact our support.');

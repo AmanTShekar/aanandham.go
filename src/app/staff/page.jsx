@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ShieldCheck, RefreshCw, ExternalLink } from "lucide-react";
+import { QrCode, RefreshCw, ExternalLink } from "lucide-react";
 
-const PMS_ADMIN_URL =
+const PMS_STAFF_URL =
   process.env.NEXT_PUBLIC_PMS_URL
-    ? `${process.env.NEXT_PUBLIC_PMS_URL.replace(/\/$/, "")}/admin`
-    : "https://aanandham-pms.onrender.com/admin";
+    ? `${process.env.NEXT_PUBLIC_PMS_URL.replace(/\/$/, "")}/staff`
+    : "https://aanandham-pms.onrender.com/staff";
 
-export default function AdminPortalPage() {
+export default function StaffTerminalPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [iframeKey, setIframeKey] = useState(1);
@@ -17,7 +17,7 @@ export default function AdminPortalPage() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 4500);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [iframeKey]);
 
@@ -48,17 +48,17 @@ export default function AdminPortalPage() {
             flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "#0E1711",
+            backgroundColor: "#0B150E",
             zIndex: 10,
             transition: "opacity 0.3s ease",
             color: "#F8F9F5",
-            gap: "18px",
+            gap: "16px",
           }}
         >
           <div
             style={{
-              width: "46px",
-              height: "46px",
+              width: "44px",
+              height: "44px",
               borderRadius: "50%",
               border: "3px solid rgba(213, 237, 85, 0.18)",
               borderTopColor: "#D5ED55",
@@ -76,13 +76,13 @@ export default function AdminPortalPage() {
                 color: "#D5ED55",
                 letterSpacing: "0.5px",
                 textTransform: "uppercase",
-                marginBottom: "6px",
+                marginBottom: "4px",
               }}
             >
-              <ShieldCheck size={16} /> Aanandham PMS Command
+              <QrCode size={16} /> Camp Staff Terminal
             </div>
             <p style={{ margin: 0, fontSize: "12px", color: "#8E9E82" }}>
-              Connecting to secure management portal...
+              Initializing camera scanner & operations...
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@ export default function AdminPortalPage() {
           }}
         >
           <span style={{ fontSize: "13px" }}>
-            Connection took longer than expected.
+            Terminal took longer than expected to connect.
           </span>
           <button
             onClick={() => {
@@ -134,7 +134,7 @@ export default function AdminPortalPage() {
             <RefreshCw size={13} /> Retry
           </button>
           <a
-            href={PMS_ADMIN_URL}
+            href={PMS_STAFF_URL}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -151,11 +151,11 @@ export default function AdminPortalPage() {
         </div>
       )}
 
-      {/* Embedded Fullscreen PMS Suite */}
+      {/* Embedded Fullscreen Staff Terminal */}
       <iframe
         key={iframeKey}
-        src={PMS_ADMIN_URL}
-        title="Aanandham Central PMS Management Portal"
+        src={PMS_STAFF_URL}
+        title="Aanandham Camp Staff & Field Scanner Terminal"
         onLoad={() => setIsLoading(false)}
         onError={() => setHasError(true)}
         allow="camera; microphone; clipboard-write; geolocation; fullscreen;"

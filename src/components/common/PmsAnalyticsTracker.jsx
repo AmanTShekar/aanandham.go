@@ -1,11 +1,7 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-
-const PMS_URL =
-  process.env.NEXT_PUBLIC_PMS_URL ||
-  "https://aanandham-pms.onrender.com";
 
 const TENANT_ID =
   process.env.NEXT_PUBLIC_PMS_TENANT_ID || "t-aanandham-hq";
@@ -65,7 +61,7 @@ function detectChannel(searchParams) {
   }
 }
 
-function sendPing(eventType, path, searchParams) {
+function sendPing(eventType, path, searchParams, campOverride = null) {
   if (typeof window === "undefined") return;
   if (!path) return;
   if (path.startsWith("/admin") || path.startsWith("/api")) return;
@@ -74,7 +70,7 @@ function sendPing(eventType, path, searchParams) {
     const sessionId = getOrSetSessionId();
     const channel = detectChannel(searchParams);
     const campMatch = path.match(/\/camps\/([^/?]+)/);
-    const campId = campMatch ? campMatch[1] : "general";
+    const campId = campOverride || (campMatch ? campMatch[1] : "general");
 
     const payload = {
       tenantId: TENANT_ID,
@@ -85,15 +81,16 @@ function sendPing(eventType, path, searchParams) {
       path,
     };
 
-    const url = `${PMS_URL}/api/analytics`;
+    // Use same-origin proxy to guarantee 100% deliverability across all browsers & Incognito
+    const localUrl = "/api/analytics";
 
     if (navigator.sendBeacon) {
       const blob = new Blob([JSON.stringify(payload)], {
         type: "application/json",
       });
-      navigator.sendBeacon(url, blob);
+      navigator.sendBeacon(localUrl, blob);
     } else {
-      fetch(url, {
+      fetch(localUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -117,9 +114,15 @@ function PmsAnalyticsTrackerInner() {
 
     if (pathname.startsWith("/admin") || pathname.startsWith("/api")) return;
 
+    // Step 1: Pageview
     sendPing("pageview", pathname, searchParams);
 
-    if (pathname.startsWith("/camps/") || pathname.startsWith("/stay/")) {
+    // Step 2: Stays Viewed (Directory or individual camp)
+    if (
+      pathname.startsWith("/camps") ||
+      pathname.startsWith("/stay") ||
+      pathname.includes("/camps/")
+    ) {
       sendPing("detail_view", pathname, searchParams);
     }
 
@@ -129,6 +132,22 @@ function PmsAnalyticsTrackerInner() {
     }
   }, [pathname, searchParams]);
 
+  // Listen to in-modal events from BookingEngineModal
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleCustomTrack = (e) => {
+      const { eventType, campId } = e.detail || {};
+      if (eventType) {
+        sendPing(eventType, pathname || "/", searchParams, campId);
+      }
+    };
+
+    window.addEventListener("pms_track", handleCustomTrack);
+    return () => window.removeEventListener("pms_track", handleCustomTrack);
+  }, [pathname, searchParams]);
+
+  // Live visitor heartbeat every 45s
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (pathname?.startsWith("/admin") || pathname?.startsWith("/api")) return;

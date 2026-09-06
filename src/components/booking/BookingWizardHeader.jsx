@@ -68,12 +68,13 @@ export default function BookingWizardHeader({
             </div>
 
             {/* ── BREADCRUMB PROGRESS STEPS ── */}
-            {step < 4 && (
+            {step < 5 && (
                 <div className="booking-steps-bar">
                     {[
                         { num: 1, label: 'Stay & Dates', shortLabel: 'Stays' },
                         { num: 2, label: 'Add-Ons', shortLabel: 'Add-Ons' },
-                        { num: 3, label: 'WhatsApp Enquiry', shortLabel: 'Enquire' }
+                        { num: 3, label: 'Camper Info', shortLabel: 'Info' },
+                        { num: 4, label: 'Payment', shortLabel: 'Pay' }
                     ].map((s, idx) => {
                         const isActive = step === s.num;
                         const isCompleted = step > s.num;
@@ -116,7 +117,7 @@ export default function BookingWizardHeader({
                                         {s.shortLabel}
                                     </span>
                                 </div>
-                                {idx < 2 && <span className="booking-step-arrow">→</span>}
+                                {idx < 3 && <span className="booking-step-arrow">→</span>}
                             </React.Fragment>
                         );
                     })}
