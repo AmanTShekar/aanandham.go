@@ -46,20 +46,20 @@ const OVERVIEW_HIGHLIGHTS = [
 const PROGRAM_DAYS = [
     {
         day: 'Day 1',
-        title: 'Check-in, Sunset Ridge Walk & Campfire BBQ',
-        subtitle: 'Basecamp Arrival, High-Altitude Ridge Exploration & Starlit Dinner',
+        title: 'Check-in, Sunset Ridge Hike & Campfire BBQ',
+        subtitle: 'Sanctuary Arrival, Highland Ridge Exploration & Starlit Dinner',
         badge: 'Day 01 · Afternoon to Night',
-        tags: ['Gated Basecamp', 'Sunset Ridge Hike', 'Live BBQ Dinner', 'Stargazing Deck'],
+        tags: ['Gated Sanctuary', 'Sunset Ridge Hike', 'Live Mountain BBQ', 'Stargazing Deck'],
         schedule: [
             {
                 time: '02:00 PM',
-                title: 'Basecamp Check-in & Welcome Spiced Tea',
-                desc: 'Arrive at Suryanelli basecamp, welcome organic herbal drinks, and check-in to high-altitude dome pods or ridge tents.'
+                title: 'Sanctuary Check-in & Welcome Spiced Tea',
+                desc: 'Arrive at the mountain sanctuary basecamp, welcome organic herbal drinks, and check-in to high-altitude dome pods, glamping cabins, or ridge tents.'
             },
             {
                 time: '04:30 PM',
                 title: 'Guided Sunset Ridge Hike',
-                desc: 'Panoramic nature hike along Phantom Hill Ridge overlooking the vast Anayirankal Dam and rolling tea valleys.'
+                desc: 'Panoramic nature hike along scenic highland ridges overlooking expansive water bodies, misty peaks, and rolling tea valleys.'
             },
             {
                 time: '07:00 PM',
@@ -68,8 +68,8 @@ const PROGRAM_DAYS = [
             },
             {
                 time: '08:30 PM',
-                title: 'Live Mountain BBQ & Authentic Kerala Dinner',
-                desc: 'Freshly prepared barbecue skewers followed by a warm, authentic Kerala buffet dinner.'
+                title: 'Live Mountain BBQ & Authentic Regional Dinner',
+                desc: 'Freshly prepared barbecue skewers followed by a warm, authentic regional buffet dinner.'
             },
             {
                 time: '10:30 PM',
@@ -80,30 +80,30 @@ const PROGRAM_DAYS = [
     },
     {
         day: 'Day 2',
-        title: 'Kolukkumalai Sunrise 4x4 Safari & Tea Heritage',
-        subtitle: '7,900 FT Summit Access, Golden Cloud Bed Sunrise & Orthodox Tea Estate',
+        title: 'High-Altitude Sunrise Safari & Heritage Trail',
+        subtitle: 'Mountain Ridge Summit Access, Golden Cloud Bed Sunrise & Plantation Heritage',
         badge: 'Day 02 · Dawn to Departure',
-        tags: ['7,900 FT Summit Access', '4x4 Off-Road Safari', 'Cloud Bed Sunrise', 'Tea Factory Tour'],
+        tags: ['High-Altitude Summit Access', '4x4 Off-Road Safari', 'Cloud Bed Sunrise', 'Heritage Plantation Trail'],
         schedule: [
             {
                 time: '04:30 AM',
-                title: 'Dawn Wakeup & Hot Cardamom Tea',
-                desc: 'Crisp mountain morning wakeup call with steaming hot Kerala spiced black tea.'
+                title: 'Dawn Wakeup & Hot Spiced Tea',
+                desc: 'Crisp mountain morning wakeup call with steaming hot spiced hill tea.'
             },
             {
                 time: '05:00 AM',
                 title: '4x4 Off-Road Jeep Convoy Climb',
-                desc: 'Rugged Mahindra 4x4 safari traversing private tea tracks to Kolukkumalai & Tiger Rock (7,900 FT).'
+                desc: 'Rugged 4x4 mountain safari traversing scenic highland tracks to panoramic viewpoint peaks and ridge summits.'
             },
             {
                 time: '06:15 AM',
                 title: 'Legendary Sunrise Above the Clouds',
-                desc: 'Witness the breathtaking golden cloud bed sunrise over the Tamil Nadu plains and Western Ghats.'
+                desc: 'Witness the breathtaking golden cloud bed sunrise over infinite valleys and the Western Ghats mountain ridges.'
             },
             {
                 time: '08:00 AM',
-                title: 'Historic Orthodox Tea Factory Tour',
-                desc: 'Guided heritage walk through the world’s highest organic tea factory (est. 1935).'
+                title: 'Historic Mountain Estate & Heritage Trail',
+                desc: 'Guided plantation nature walk exploring historic tea, coffee & spice estates and heritage processing traditions.'
             },
             {
                 time: '09:30 AM',
@@ -153,7 +153,7 @@ const WHY_AANANDHAM_PILLARS = [
         rotation: '1.4deg',
         paperBg: '#FAF8EE',
         accentColor: '#B45309',
-        highlights: ['Verified 4x4 Convoy Fleet', 'Professional Mountain Drivers', 'Private Tea Ridge Permits', 'Sunrise Tiger Rock Access']
+        highlights: ['Verified 4x4 Convoy Fleet', 'Professional Mountain Drivers', 'Private Tea Ridge Permits', 'Sunrise Peak Access']
     },
     {
         id: 'marshals',
@@ -196,7 +196,7 @@ const EXPERIENCE_ITEMS = [
     {
         category: 'Summit & Treks',
         title: 'Sunrise Peaks & Cloud Bed Hikes',
-        desc: 'Hike along misty tea ridges to 7,900 FT summit viewpoints. Breathe in crisp alpine air as golden morning clouds roll beneath your feet at Kolukkumalai & Phantom Hill.',
+        desc: 'Hike along misty tea ridges to high-altitude summit viewpoints. Breathe in crisp alpine air as golden morning clouds roll beneath your feet across majestic mountain ridges.',
         icon: Sunrise
     },
     {
@@ -207,14 +207,14 @@ const EXPERIENCE_ITEMS = [
     },
     {
         category: 'Heritage & Culture',
-        title: '1935 Orthodox Tea & Spice Trails',
-        desc: 'Walk through the world’s highest organic tea gardens and historic 1935 factory. Forage wild cardamom with local guides and savor authentic forest-to-table Kerala dining.',
+        title: 'Estate Heritage & Spice Trails',
+        desc: 'Walk through lush high-altitude tea & spice estates. Learn heritage processing traditions with local guides and savor authentic forest-to-table dining.',
         icon: Leaf
     },
     {
         category: '4x4 Off-Road Safari',
         title: 'Rugged Mahindra 4x4 Convoys',
-        desc: 'Tackle rocky private tea estate tracks in certified 4x4 Mahindra jeeps. Traverse misty ridgelines, cross forest streams, and spot elephant corridor vistas near Anayirankal.',
+        desc: 'Tackle rugged mountain estate tracks in certified 4x4 jeeps. Traverse misty ridgelines, cross forest streams, and take in endless panoramic valley vistas.',
         icon: Truck
     }
 ];
@@ -294,7 +294,7 @@ const EVENT_ARRANGEMENTS = [
         paperBg: '#FFF9E8',
         borderTint: 'rgba(217, 119, 6, 0.3)',
         statPill: '✦ 10-80 Pax Capacity',
-        marginalNote: 'Direct 4x4 convoy pickup from Munnar town.',
+        marginalNote: 'Direct 4x4 convoy pickup from transit base points.',
         features: ['Discounted group rates', '4x4 Convoy coordination', 'Campfire & acoustic mic setup', 'Strict safety & medical support']
     },
     {
