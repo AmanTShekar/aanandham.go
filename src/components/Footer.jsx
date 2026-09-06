@@ -194,7 +194,7 @@ export default function Footer() {
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
-                                { name: 'Enterprise OpenPMS (Port 3001)', href: '/admin' },
+                                { name: 'Central PMS Admin Suite', href: '/admin' },
                                 { name: 'Website Marketing CMS', href: '/cms' },
                                 { name: 'Services & Studio (OpenZen)', href: '/services' },
                                 { name: 'Expedition Concierge Desk', href: '/contact' }
