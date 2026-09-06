@@ -7,6 +7,7 @@ export default function BookingWizardHeader({
     setStep,
     confirmedPass,
     validationError,
+    setValidationError = () => {},
     paymentSettings = {},
     onClose
 }) {
@@ -124,22 +125,83 @@ export default function BookingWizardHeader({
                 </div>
             )}
 
+            {/* ── CUSTOM ERROR POP-UP BANNER IN HEADER ── */}
             {validationError && step !== 5 && (
-                <div style={{
-                    background: 'rgba(255, 90, 95, 0.12)',
-                    border: '1px solid rgba(255, 90, 95, 0.35)',
-                    borderRadius: '14px',
-                    padding: '12px 18px',
-                    color: '#D9383D',
-                    fontSize: '13.5px',
-                    fontWeight: '700',
-                    marginTop: '16px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px'
-                }}>
-                    <AlertCircle size={18} color="#D9383D" />
-                    <span>{validationError}</span>
+                <div 
+                    className="booking-error-popup-card"
+                    style={{
+                        background: 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)',
+                        border: '2px solid #F43F5E',
+                        borderRadius: '16px',
+                        padding: '12px 18px',
+                        marginTop: '16px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        boxShadow: '0 8px 24px -4px rgba(225, 29, 72, 0.22)'
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+                        <div style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '10px',
+                            background: '#FFE4E6',
+                            border: '1.5px solid #FDA4AF',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#E11D48',
+                            flexShrink: 0
+                        }}>
+                            <AlertCircle size={18} strokeWidth={2.5} />
+                        </div>
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                <span style={{
+                                    background: '#E11D48',
+                                    color: '#FFFFFF',
+                                    fontSize: '9.5px',
+                                    fontWeight: '900',
+                                    padding: '1px 6px',
+                                    borderRadius: '999px',
+                                    letterSpacing: '0.4px',
+                                    textTransform: 'uppercase'
+                                }}>
+                                    Attention Required
+                                </span>
+                            </div>
+                            <div style={{ fontSize: '13px', fontWeight: '800', color: '#881337', lineHeight: 1.35 }}>
+                                {validationError}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => setValidationError('')}
+                        aria-label="Dismiss error notice"
+                        style={{
+                            width: '26px',
+                            height: '26px',
+                            borderRadius: '50%',
+                            border: '1px solid #FDA4AF',
+                            background: '#FFFFFF',
+                            color: '#BE123C',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            padding: 0,
+                            flexShrink: 0,
+                            fontSize: '12px',
+                            fontWeight: '800',
+                            transition: 'all 0.15s ease'
+                        }}
+                    >
+                        ✕
+                    </button>
                 </div>
             )}
         </div>

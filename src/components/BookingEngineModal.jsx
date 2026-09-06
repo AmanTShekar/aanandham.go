@@ -616,6 +616,7 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
                     setStep={setStep}
                     confirmedPass={confirmedPass}
                     validationError={validationError}
+                    setValidationError={setValidationError}
                     onClose={onClose}
                 />
 

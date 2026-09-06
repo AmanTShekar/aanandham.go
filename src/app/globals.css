@@ -1896,6 +1896,57 @@ body::-webkit-scrollbar-thumb:active,
   background: #FFFFFF;
   color: #121613;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.booking-modal-input:focus {
+  border-color: #166534;
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.15);
+}
+
+.booking-modal-input.is-invalid {
+  border-color: #DC2626 !important;
+  background-color: #FEF2F2 !important;
+  color: #991B1B !important;
+  box-shadow: 0 0 0 3.5px rgba(220, 38, 38, 0.2) !important;
+  animation: errorShakeSmall 0.35s ease-in-out;
+}
+
+.booking-modal-input.is-valid {
+  border-color: #166534 !important;
+  background-color: #F0FDF4 !important;
+}
+
+.custom-field-error-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: #FEF2F2;
+  border: 1px solid rgba(220, 38, 38, 0.35);
+  color: #DC2626;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.35;
+  animation: errorShakeSmall 0.35s ease-in-out;
+}
+
+@keyframes errorShakeSmall {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-4px); }
+  40%, 80% { transform: translateX(4px); }
+}
+
+@keyframes modalPopupBounce {
+  0% { transform: scale(0.94) translateY(-10px); opacity: 0; }
+  60% { transform: scale(1.02) translateY(2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.booking-error-popup-card {
+  animation: modalPopupBounce 0.3s cubic-bezier(0.16, 1, 0.3, 1), errorShakeSmall 0.4s ease-in-out;
 }
 
 .booking-step-actions {

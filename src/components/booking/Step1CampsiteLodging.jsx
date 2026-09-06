@@ -1,11 +1,12 @@
 "use client";
-import React from 'react';
-import { Users, Tent, Sparkles, ArrowRight, Minus, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle } from 'lucide-react';
 import CustomThemeCalendar from '../CustomThemeCalendar';
 import CustomDateBatchPicker from '../CustomDateBatchPicker';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
 import { inr } from '../../lib/utils';
 import { parseRoomCapacity } from './BookingConstants';
+import BookingValidationPopup from './BookingValidationPopup';
 
 export default function Step1CampsiteLodging({
     campsList = [],
@@ -32,6 +33,9 @@ export default function Step1CampsiteLodging({
     discountLabel = '',
     setValidationError = () => {}
 }) {
+    const [step1Errors, setStep1Errors] = useState([]);
+    const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+
     const currentPkg = selectedPkg || campsList.find(p => p.id === selectedPkgId) || campsList[0] || {};
     const availableRooms = currentPkg.rooms || [];
     const currentRoom = selectedRoom || availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0] || {};
@@ -39,21 +43,72 @@ export default function Step1CampsiteLodging({
     const autoUnits = autoRequiredUnits || Math.max(1, Math.ceil((adults + children) / roomCapacity));
     const allocatedUnits = totalUnits !== undefined && totalUnits !== null ? totalUnits : autoUnits;
     const totalMaxCapacity = totalRoomCapacity || (allocatedUnits * roomCapacity);
-    const handleProceedToStep2 = handleStep1Next;
     const activeDiscountLabel = typeof discountLabel === 'string' ? discountLabel : '';
 
+    const isCampsiteMissing = hasAttemptedSubmit && !selectedPkgId;
+    const isRoomMissing = hasAttemptedSubmit && (!selectedRoomId && !currentRoom?.id);
+    const isDateMissing = hasAttemptedSubmit && !travelDate;
+
+    const onProceedStep1 = () => {
+        const errs = [];
+        if (!selectedPkgId && !currentPkg?.id) {
+            errs.push({ field: 'campsite', label: 'Campsite Destination', message: 'Please select a destination campsite' });
+        }
+        if (!selectedRoomId && !currentRoom?.id) {
+            errs.push({ field: 'room', label: 'Lodging Style', message: 'Please select your lodging style (Tent / Dome)' });
+        }
+        if (!travelDate) {
+            errs.push({ field: 'date', label: 'Stay Date', message: 'Please select your check-in date' });
+        }
+        if (adults < 1) {
+            errs.push({ field: 'guests', label: 'Campers', message: 'At least 1 adult camper is required' });
+        }
+
+        if (errs.length > 0) {
+            setHasAttemptedSubmit(true);
+            setStep1Errors(errs);
+            setValidationError(errs.map(e => e.message).join(' · '));
+            return;
+        }
+
+        setStep1Errors([]);
+        setValidationError('');
+        handleStep1Next();
+    };
+
     return (
-                        <div>
+        <div>
+            {/* Live Error Notification Popup */}
+            {step1Errors.length > 0 && (
+                <BookingValidationPopup
+                    errors={step1Errors}
+                    title="Please Complete Your Stay Selection"
+                    onClose={() => setStep1Errors([])}
+                />
+            )}
                             {/* Section 1: Campsite Selector */}
-                            <div style={{ marginBottom: '24px' }}>
+                            <div style={{
+                                marginBottom: '24px',
+                                border: isCampsiteMissing ? '2px solid #DC2626' : '1px solid transparent',
+                                borderRadius: '18px',
+                                padding: isCampsiteMissing ? '12px' : 0,
+                                background: isCampsiteMissing ? '#FEF2F2' : 'transparent',
+                                transition: 'all 0.2s ease'
+                            }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                    <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        1. Select Destination Campsite
+                                    <label style={{ fontSize: '12.5px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                        1. Select Destination Campsite *
                                     </label>
-                                    <span style={{ fontSize: '12px', color: '#166534', fontWeight: '800' }}>
-                                        {campsList.length} Verified Camps
+                                    <span style={{ fontSize: '12px', color: isCampsiteMissing ? '#DC2626' : '#166534', fontWeight: '800' }}>
+                                        {isCampsiteMissing ? '⚠️ Selection Required' : `${campsList.length} Verified Camps`}
                                     </span>
                                 </div>
+                                {isCampsiteMissing && (
+                                    <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
+                                        <AlertCircle size={13} />
+                                        <span>Please click and select one destination campsite below</span>
+                                    </div>
+                                )}
                                 <div className="booking-pkgs-grid">
                                     {campsList.map((pkg) => {
                                         const isSelected = pkg.id === selectedPkgId;
@@ -117,20 +172,33 @@ export default function Step1CampsiteLodging({
                             </div>
 
                             {/* Section 2: Room Types / Lodging Selector */}
-                            <div style={{ marginBottom: '24px', padding: '18px 20px', background: '#F8F9F5', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)' }}>
+                            <div style={{
+                                marginBottom: '24px',
+                                padding: '18px 20px',
+                                background: isRoomMissing ? '#FEF2F2' : '#F8F9F5',
+                                borderRadius: '20px',
+                                border: isRoomMissing ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.08)',
+                                transition: 'all 0.2s ease'
+                            }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                                     <div>
-                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                            2. Choose Lodging Style & Accommodations
+                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: isRoomMissing ? '#DC2626' : '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                            2. Choose Lodging Style & Accommodations *
                                         </label>
-                                        <span style={{ fontSize: '12px', color: '#59655D' }}>
-                                            Available options at {currentPkg.shortTitle || currentPkg.title}
+                                        <span style={{ fontSize: '12px', color: isRoomMissing ? '#DC2626' : '#59655D' }}>
+                                            {isRoomMissing ? '⚠️ Please choose a tent or dome style' : `Available options at ${currentPkg.shortTitle || currentPkg.title}`}
                                         </span>
                                     </div>
-                                    <span style={{ background: '#121613', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                    <span style={{ background: isRoomMissing ? '#DC2626' : '#121613', color: isRoomMissing ? '#FFFFFF' : '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                         {availableRooms.length} Types
                                     </span>
                                 </div>
+                                {isRoomMissing && (
+                                    <div className="custom-field-error-pill" style={{ marginBottom: '12px' }}>
+                                        <AlertCircle size={13} />
+                                        <span>Please select an accommodation or tent style below</span>
+                                    </div>
+                                )}
 
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '12px' }}>
                                     {availableRooms.map((room) => {
@@ -204,9 +272,15 @@ export default function Step1CampsiteLodging({
 
                             {/* Section 3: Date & Guests Setup */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginBottom: '24px' }}>
-                                <div>
-                                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        3. Check-In Weekend Batch or Date
+                                <div style={{
+                                    border: isDateMissing ? '2px solid #DC2626' : '1px solid transparent',
+                                    borderRadius: '16px',
+                                    padding: isDateMissing ? '12px' : 0,
+                                    background: isDateMissing ? '#FEF2F2' : 'transparent',
+                                    transition: 'all 0.2s ease'
+                                }}>
+                                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isDateMissing ? '#DC2626' : '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                        3. Check-In Weekend Batch or Date *
                                     </label>
                                     <CustomDateBatchPicker
                                         label="Check-In Batch"
@@ -214,8 +288,15 @@ export default function Step1CampsiteLodging({
                                         onDateChange={(date) => {
                                             setTravelDate(date);
                                             setValidationError('');
+                                            setStep1Errors(prev => prev.filter(e => e.field !== 'date'));
                                         }}
                                     />
+                                    {isDateMissing && (
+                                        <div className="custom-field-error-pill" style={{ marginTop: '8px' }}>
+                                            <AlertCircle size={13} />
+                                            <span>Please select your stay check-in date</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -370,7 +451,7 @@ export default function Step1CampsiteLodging({
                                     <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
                                         <button
                                             type="button"
-                                            onClick={handleProceedToStep2}
+                                            onClick={onProceedStep1}
                                             className="btn-lime"
                                             style={{
                                                 padding: '12px 28px',

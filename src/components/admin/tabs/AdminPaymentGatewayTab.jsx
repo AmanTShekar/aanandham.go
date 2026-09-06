@@ -6,16 +6,36 @@ import { getPaymentSettings, savePaymentSettings, DEFAULT_PAYMENT_SETTINGS } fro
 export default function AdminPaymentGatewayTab() {
     const [settings, setSettings] = useState(DEFAULT_PAYMENT_SETTINGS);
     const [savedToast, setSavedToast] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
 
     useEffect(() => {
         const current = getPaymentSettings();
         setSettings(current);
     }, []);
 
+    const isPhoneMissing = !settings.phone || !settings.phone.trim();
+    const isPayeeMissing = !settings.payeeName || !settings.payeeName.trim();
+    const isKeyMissing = settings.mode === 'razorpay' && (!settings.razorpayKeyId || !settings.razorpayKeyId.trim());
+
     const handleSave = (e) => {
         e?.preventDefault();
+        setHasAttemptedSubmit(true);
+        setErrorMsg(null);
+
+        const errors = [];
+        if (isPayeeMissing) errors.push('Payee Business Name is required');
+        if (isPhoneMissing) errors.push('WhatsApp Concierge Phone is required');
+        if (isKeyMissing) errors.push('Razorpay Key ID is required when Live Online Gateway is enabled');
+
+        if (errors.length > 0) {
+            setErrorMsg(errors.join(' · '));
+            return;
+        }
+
         savePaymentSettings(settings);
         setSavedToast(true);
+        setErrorMsg(null);
         setTimeout(() => setSavedToast(false), 3000);
     };
 
@@ -38,6 +58,68 @@ export default function AdminPaymentGatewayTab() {
                 </div>
             </div>
 
+            {/* Custom Validation Error Alert Popup */}
+            {errorMsg && (
+                <div 
+                    className="booking-error-popup-card"
+                    style={{
+                        background: 'linear-gradient(135deg, #FEF2F2 0%, #FFF1F2 100%)',
+                        border: '2px solid #F43F5E',
+                        borderRadius: '16px',
+                        padding: '14px 18px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        boxShadow: '0 8px 24px -4px rgba(225, 29, 72, 0.22)'
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '10px',
+                            background: '#FFE4E6',
+                            border: '1.5px solid #FDA4AF',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#E11D48',
+                            flexShrink: 0
+                        }}>
+                            <AlertCircle size={18} strokeWidth={2.5} />
+                        </div>
+                        <div>
+                            <div style={{ fontSize: '11px', fontWeight: '900', color: '#BE123C', textTransform: 'uppercase' }}>
+                                Missing Required Parameters
+                            </div>
+                            <div style={{ fontSize: '13px', fontWeight: '800', color: '#881337', marginTop: '2px' }}>
+                                {errorMsg}
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={() => setErrorMsg(null)}
+                        style={{
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '50%',
+                            border: '1px solid #FDA4AF',
+                            background: '#FFFFFF',
+                            color: '#BE123C',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            padding: 0
+                        }}
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
+
             {/* Mode Switch Card */}
             <div style={{ background: '#FFFFFF', padding: '28px', borderRadius: '20px', border: '1px solid rgba(18, 22, 19, 0.08)', boxShadow: '0 2px 12px rgba(0,0,0,0.03)' }}>
                 <h3 style={{ fontSize: '16px', fontWeight: '900', color: '#121613', marginBottom: '16px' }}>
@@ -47,7 +129,7 @@ export default function AdminPaymentGatewayTab() {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '24px' }}>
                     {/* Option 1: Coming Soon / Maintenance */}
                     <div 
-                        onClick={() => setSettings(prev => ({ ...prev, mode: 'coming_soon' }))}
+                        onClick={() => { setSettings(prev => ({ ...prev, mode: 'coming_soon' })); setErrorMsg(null); }}
                         style={{
                             padding: '20px',
                             borderRadius: '16px',
@@ -66,7 +148,7 @@ export default function AdminPaymentGatewayTab() {
                                 type="radio" 
                                 name="paymentMode" 
                                 checked={settings.mode === 'coming_soon'} 
-                                onChange={() => setSettings(prev => ({ ...prev, mode: 'coming_soon' }))}
+                                onChange={() => { setSettings(prev => ({ ...prev, mode: 'coming_soon' })); setErrorMsg(null); }}
                                 style={{ accentColor: '#E5A93B', width: '18px', height: '18px' }}
                             />
                         </div>
@@ -80,7 +162,7 @@ export default function AdminPaymentGatewayTab() {
 
                     {/* Option 2: Live Razorpay Gateway */}
                     <div 
-                        onClick={() => setSettings(prev => ({ ...prev, mode: 'razorpay' }))}
+                        onClick={() => { setSettings(prev => ({ ...prev, mode: 'razorpay' })); setErrorMsg(null); }}
                         style={{
                             padding: '20px',
                             borderRadius: '16px',
@@ -99,7 +181,7 @@ export default function AdminPaymentGatewayTab() {
                                 type="radio" 
                                 name="paymentMode" 
                                 checked={settings.mode === 'razorpay'} 
-                                onChange={() => setSettings(prev => ({ ...prev, mode: 'razorpay' }))}
+                                onChange={() => { setSettings(prev => ({ ...prev, mode: 'razorpay' })); setErrorMsg(null); }}
                                 style={{ accentColor: '#166534', width: '18px', height: '18px' }}
                             />
                         </div>
@@ -119,43 +201,94 @@ export default function AdminPaymentGatewayTab() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                     <div>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                            Payee Business Name
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: (hasAttemptedSubmit && isPayeeMissing) ? '#DC2626' : '#121613', marginBottom: '6px' }}>
+                            Payee Business Name *
                         </label>
                         <input 
                             type="text" 
                             value={settings.payeeName || ''} 
-                            onChange={(e) => setSettings(prev => ({ ...prev, payeeName: e.target.value }))}
+                            onChange={(e) => {
+                                setSettings(prev => ({ ...prev, payeeName: e.target.value }));
+                                setErrorMsg(null);
+                            }}
                             placeholder="Aanandham Wilderness Stays"
-                            style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid rgba(18, 22, 19, 0.15)', fontSize: '13px', background: '#FAFAF7' }}
+                            className={(hasAttemptedSubmit && isPayeeMissing) ? 'booking-modal-input is-invalid' : ''}
+                            style={{
+                                width: '100%',
+                                padding: '11px 14px',
+                                borderRadius: '10px',
+                                border: (hasAttemptedSubmit && isPayeeMissing) ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.15)',
+                                background: (hasAttemptedSubmit && isPayeeMissing) ? '#FEF2F2' : '#FAFAF7',
+                                fontSize: '13px'
+                            }}
                         />
+                        {hasAttemptedSubmit && isPayeeMissing && (
+                            <div className="custom-field-error-pill" style={{ marginTop: '6px' }}>
+                                <AlertCircle size={13} />
+                                <span>Payee Business Name is required</span>
+                            </div>
+                        )}
                     </div>
 
                     <div>
-                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                            WhatsApp Concierge Phone (with country code)
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: (hasAttemptedSubmit && isPhoneMissing) ? '#DC2626' : '#121613', marginBottom: '6px' }}>
+                            WhatsApp Concierge Phone (with country code) *
                         </label>
                         <input 
                             type="text" 
                             value={settings.phone || ''} 
-                            onChange={(e) => setSettings(prev => ({ ...prev, phone: e.target.value }))}
+                            onChange={(e) => {
+                                setSettings(prev => ({ ...prev, phone: e.target.value }));
+                                setErrorMsg(null);
+                            }}
                             placeholder="919074858014"
-                            style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid rgba(18, 22, 19, 0.15)', fontSize: '13px', background: '#FAFAF7' }}
+                            className={(hasAttemptedSubmit && isPhoneMissing) ? 'booking-modal-input is-invalid' : ''}
+                            style={{
+                                width: '100%',
+                                padding: '11px 14px',
+                                borderRadius: '10px',
+                                border: (hasAttemptedSubmit && isPhoneMissing) ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.15)',
+                                background: (hasAttemptedSubmit && isPhoneMissing) ? '#FEF2F2' : '#FAFAF7',
+                                fontSize: '13px'
+                            }}
                         />
+                        {hasAttemptedSubmit && isPhoneMissing && (
+                            <div className="custom-field-error-pill" style={{ marginTop: '6px' }}>
+                                <AlertCircle size={13} />
+                                <span>WhatsApp Concierge Phone is required</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 <div style={{ marginBottom: '24px' }}>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: '#121613', marginBottom: '6px' }}>
-                        Razorpay Key ID
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '800', color: (hasAttemptedSubmit && isKeyMissing) ? '#DC2626' : '#121613', marginBottom: '6px' }}>
+                        Razorpay Key ID {settings.mode === 'razorpay' ? '*' : '(Optional for Coming Soon)'}
                     </label>
                     <input 
                         type="text" 
                         value={settings.razorpayKeyId || ''} 
-                        onChange={(e) => setSettings(prev => ({ ...prev, razorpayKeyId: e.target.value }))}
+                        onChange={(e) => {
+                            setSettings(prev => ({ ...prev, razorpayKeyId: e.target.value }));
+                            setErrorMsg(null);
+                        }}
                         placeholder="rzp_live_xxxxxxxx or rzp_test_xxxxxxxx"
-                        style={{ width: '100%', padding: '11px 14px', borderRadius: '10px', border: '1px solid rgba(18, 22, 19, 0.15)', fontSize: '13px', background: '#FAFAF7' }}
+                        className={(hasAttemptedSubmit && isKeyMissing) ? 'booking-modal-input is-invalid' : ''}
+                        style={{
+                            width: '100%',
+                            padding: '11px 14px',
+                            borderRadius: '10px',
+                            border: (hasAttemptedSubmit && isKeyMissing) ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.15)',
+                            background: (hasAttemptedSubmit && isKeyMissing) ? '#FEF2F2' : '#FAFAF7',
+                            fontSize: '13px'
+                        }}
                     />
+                    {hasAttemptedSubmit && isKeyMissing && (
+                        <div className="custom-field-error-pill" style={{ marginTop: '6px' }}>
+                            <AlertCircle size={13} />
+                            <span>Razorpay Key ID is required when Live Online Gateway is active</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Save Button */}
