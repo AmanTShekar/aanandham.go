@@ -1523,8 +1523,19 @@ export const DEPRECATED_CAMP_IDS = new Set([
   "pkg-wayanad"
 ]);
 
-// Helper to get all active verified camps
+// Helper to get all active verified camps with live PMS sync
 export function getAllCamps(bookings = null) {
+  if (typeof window !== 'undefined') {
+    try {
+      const saved = localStorage.getItem('aanandham_admin_properties_v2');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id));
+        }
+      }
+    } catch (e) {}
+  }
   return INITIAL_ALL_CAMPS.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id));
 }
 

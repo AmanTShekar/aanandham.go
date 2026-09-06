@@ -29,7 +29,7 @@ export async function GET(request) {
         const pmsRes = await fetch(`${pmsUrl}/api/properties`, {
             headers: { 'X-PMS-Tenant-Id': process.env.NEXT_PUBLIC_PMS_TENANT_ID || 't-aanandham-hq' },
             cache: 'no-store',
-            signal: AbortSignal.timeout(2000)
+            signal: AbortSignal.timeout(2500)
         });
         if (pmsRes.ok) {
             const pmsData = await pmsRes.json();
@@ -38,6 +38,12 @@ export async function GET(request) {
                 const base = getAllCamps();
                 const merged = pmsProps.map(pmsItem => {
                     const matchingBase = base.find(b => b.id === pmsItem.id || (b.title || b.name || '').toLowerCase() === (pmsItem.title || pmsItem.name || '').toLowerCase());
+                    const rawRooms = (Array.isArray(pmsItem.rooms) && pmsItem.rooms.length > 0)
+                        ? pmsItem.rooms
+                        : (Array.isArray(pmsItem.roomTypes) && pmsItem.roomTypes.length > 0)
+                            ? pmsItem.roomTypes
+                            : null;
+
                     return {
                         ...(matchingBase || {}),
                         ...pmsItem,
@@ -45,8 +51,9 @@ export async function GET(request) {
                         title: pmsItem.name || pmsItem.title || matchingBase?.title || 'Wilderness Camp',
                         shortTitle: pmsItem.shortTitle || matchingBase?.shortTitle || pmsItem.name || pmsItem.title,
                         name: pmsItem.name || pmsItem.title || matchingBase?.title,
-                        price: pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499,
-                        originalPrice: pmsItem.originalPrice || matchingBase?.originalPrice || (Math.round((pmsItem.price || 1499) * 1.3)),
+                        price: Number(pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499),
+                        basePrice: Number(pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499),
+                        originalPrice: pmsItem.originalPrice || matchingBase?.originalPrice || (Math.round(Number(pmsItem.price || pmsItem.basePrice || 1499) * 1.3)),
                         region: pmsItem.region || pmsItem.location?.split(',')[0] || matchingBase?.region || 'Munnar',
                         location: pmsItem.location || matchingBase?.location || 'Kerala, India',
                         altitude: pmsItem.altitude || matchingBase?.altitude || '6,500 FT',
@@ -57,20 +64,21 @@ export async function GET(request) {
                         image: (matchingBase?.image && !matchingBase.image.includes('unsplash.com')) ? matchingBase.image : (pmsItem.image || matchingBase?.image),
                         gallery: (matchingBase?.gallery && matchingBase.gallery.length > 0 && !matchingBase.gallery[0].includes('unsplash.com')) ? matchingBase.gallery : (pmsItem.gallery || matchingBase?.gallery),
                         isAvailable: pmsItem.isAvailable !== undefined ? pmsItem.isAvailable : (matchingBase?.isAvailable !== false),
-                        rooms: Array.isArray(pmsItem.roomTypes) && pmsItem.roomTypes.length > 0 ? pmsItem.roomTypes.map(rt => ({
+                        rooms: rawRooms ? rawRooms.map(rt => ({
                             id: rt.id,
                             name: rt.name,
-                            price: rt.basePrice || rt.price || pmsItem.price,
+                            price: Number(rt.price ?? rt.basePrice ?? pmsItem.price ?? 0),
+                            basePrice: Number(rt.price ?? rt.basePrice ?? pmsItem.price ?? 0),
                             capacity: rt.capacity || '2 Adults',
-                            totalUnits: rt.totalUnits || 8,
-                            features: Array.isArray(rt.amenities) && rt.amenities.length > 0
-                                ? rt.amenities
-                                : (Array.isArray(rt.features)
-                                    ? rt.features
-                                    : (typeof rt.features === 'string'
-                                        ? rt.features.split(',').map(s => s.trim()).filter(Boolean)
+                            totalUnits: Number(rt.totalUnits) || 8,
+                            features: Array.isArray(rt.features) && rt.features.length > 0
+                                ? rt.features
+                                : (Array.isArray(rt.amenities) && rt.amenities.length > 0
+                                    ? rt.amenities
+                                    : (typeof rt.description === 'string' && rt.description
+                                        ? rt.description.split(',').map(s => s.trim()).filter(Boolean)
                                         : ['Mountain View', 'Bedding', 'Campfire Access'])),
-                            image: rt.image || pmsItem.image
+                            image: rt.image || (Array.isArray(rt.images) && rt.images[0]) || pmsItem.image
                         })) : (matchingBase?.rooms || [])
                     };
                 });
@@ -85,10 +93,78 @@ export async function GET(request) {
             }
         }
     } catch (e) {
-        // Fallback to database or memory
+        // Fallback to direct DB query
     }
 
+    // 2. Query shared PostgreSQL database directly for live Property & RoomType models (PMS master tables)
     if (isPrismaConfigured && prisma) {
+        try {
+            const rawDbProps = await prisma.$queryRawUnsafe(`
+                SELECT p.id, p.title, p."shortTitle", p.slug, p.category, p.region, p.location, 
+                       p.altitude, p."basePrice", p.rating, p.image, p.gallery, p.description, 
+                       p.inclusions, p.exclusions, p.amenities, p."isActive",
+                       COALESCE(
+                           json_agg(
+                               json_build_object(
+                                   'id', rt.id, 
+                                   'name', rt.name, 
+                                   'price', rt."basePrice", 
+                                   'basePrice', rt."basePrice", 
+                                   'capacity', rt.capacity, 
+                                   'totalUnits', rt."totalUnits", 
+                                   'description', rt.description,
+                                   'images', rt.images
+                               )
+                           ) FILTER (WHERE rt.id IS NOT NULL), '[]'::json
+                       ) as rooms
+                FROM "Property" p
+                LEFT JOIN "RoomType" rt ON rt."propertyId" = p.id
+                WHERE p."isActive" = true
+                GROUP BY p.id
+            `);
+
+            if (Array.isArray(rawDbProps) && rawDbProps.length > 0) {
+                const base = getAllCamps();
+                const dbCatalog = rawDbProps.map(p => {
+                    const matchingBase = base.find(b => b.id === p.id || (b.title || b.name || '').toLowerCase() === (p.title || '').toLowerCase());
+                    const dbRooms = Array.isArray(p.rooms) && p.rooms.length > 0 ? p.rooms.map(r => ({
+                        id: r.id,
+                        name: r.name,
+                        price: Number(r.price ?? r.basePrice ?? p.basePrice ?? 0),
+                        basePrice: Number(r.price ?? r.basePrice ?? p.basePrice ?? 0),
+                        capacity: typeof r.capacity === 'number' ? `${r.capacity} Adults` : (r.capacity || '2 Adults'),
+                        totalUnits: Number(r.totalUnits) || 8,
+                        features: typeof r.description === 'string' ? r.description.split(',').map(s => s.trim()).filter(Boolean) : (matchingBase?.rooms?.[0]?.features || ['Mountain View', 'Bedding']),
+                        image: (Array.isArray(r.images) && r.images[0]) || (matchingBase?.rooms?.[0]?.image) || p.image
+                    })) : (matchingBase?.rooms || []);
+
+                    return {
+                        ...(matchingBase || {}),
+                        id: p.id,
+                        title: p.title || matchingBase?.title || 'Wilderness Camp',
+                        shortTitle: p.shortTitle || matchingBase?.shortTitle || p.title,
+                        name: p.title,
+                        price: Number(p.basePrice || matchingBase?.price || 1499),
+                        basePrice: Number(p.basePrice || matchingBase?.price || 1499),
+                        originalPrice: Math.round(Number(p.basePrice || 1499) * 1.3),
+                        region: p.region || matchingBase?.region || 'Munnar',
+                        location: p.location || matchingBase?.location || 'Kerala, India',
+                        altitude: p.altitude || matchingBase?.altitude || '6,500 FT',
+                        description: p.description || matchingBase?.description,
+                        image: p.image || matchingBase?.image,
+                        gallery: p.gallery || matchingBase?.gallery,
+                        isAvailable: p.isActive !== false,
+                        rooms: dbRooms
+                    };
+                });
+
+                campsOverride = dbCatalog;
+                return NextResponse.json(dbCatalog, { headers: { 'Cache-Control': 'no-store' } });
+            }
+        } catch (dbErr) {
+            console.error('Error reading live Property/RoomType from DB:', dbErr);
+        }
+
         try {
             const record = await prisma.campOverride.findUnique({
                 where: { id: 'camps_catalog_v1' }
