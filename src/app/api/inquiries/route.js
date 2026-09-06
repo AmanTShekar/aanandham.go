@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { getClientIp, getAdminPayload } from '@/lib/authConfig';
 import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { getStoredInquiries, addStoredInquiry } from '@/lib/inquiryStore';
@@ -96,9 +96,27 @@ export async function POST(request) {
             }).catch(() => {});
         } catch (pmsSyncErr) {}
 
+        // Fire booking_start analytics ping so the funnel captures this conversion
+        try {
+            fetch(pmsUrl + '/api/analytics', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tenantId: 't-aanandham-hq',
+                    campId: body.campsiteId || 'general',
+                    eventType: 'booking_start',
+                    sessionId: body.sessionId || null,
+                    channel: body.channel || 'direct',
+                    path: '/enquire',
+                }),
+                signal: AbortSignal.timeout(2000)
+            }).catch(() => {});
+        } catch {}
+
         return NextResponse.json({ success: true, inquiryId, message: 'Inquiry received.' });
     } catch (err) {
         console.error(sanitizeLogOutput(`[INQUIRY API ERROR] ${err.message}`));
         return NextResponse.json({ success: false, message: 'Server error processing inquiry.' }, { status: 500 });
     }
 }
+

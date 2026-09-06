@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 import { useAuth } from '../../hooks/useAuth';
 import { inr, generateBookingId } from '../../lib/utils';
-import { waLink } from '../../lib/whatsapp';
+import { waLink, buildInquiryWaText } from '../../lib/whatsapp';
 import { getSecurityHeaders } from '../../lib/securityClient';
 import { Phone, PhoneCall, Mail, Mountain, Plane, Car, SquareParking, Truck, Check, MapPin } from 'lucide-react';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
@@ -343,7 +343,7 @@ export default function ContactPage() {
         setIsModalOpen(false);
     };
 
-    const handleSend = async (e, mode = 'whatsapp') => {
+        const handleSend = async (e, mode = 'whatsapp') => {
         if (e) e.preventDefault();
 
         if (!formData.name || !formData.email) {
@@ -353,30 +353,44 @@ export default function ContactPage() {
 
         // 🛡️ BOT & HONEYPOT TRAP (B5)
         if (formData.honeypot && formData.honeypot.trim().length > 0) {
-            // Silently drop bot submission
             setSubmitted(true);
             return;
         }
 
         // Rapid submission cooldown
         const now = Date.now();
-        if (now - lastSubmitTime < 2500) {
+        if (now - lastSubmitTime < 2000) {
             return;
         }
         setLastSubmitTime(now);
         setLoading(true);
         setSubmissionMode(mode);
 
-        const summaryText = `*New Expedition Inquiry via Aanandham.go*\n` +
-            `Type: ${formData.inquiryType.toUpperCase()}\n` +
-            `Name: ${formData.name}\n` +
-            `Email: ${formData.email}\n` +
-            `Phone: ${formData.phone || 'N/A'}\n` +
-            `Guests: ${formData.guests}\n` +
-            `Dates: ${formData.travelDates || 'Flexible'}\n` +
-            `Message: ${formData.message || 'None'}`;
+        const summaryText = buildInquiryWaText({
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone ? formData.phone.trim() : 'N/A',
+            subject: `[${formData.inquiryType.toUpperCase()}] Stay Inquiry (${formData.guests} Campers · ${formData.travelDates || 'Flexible'})`,
+            message: formData.message.trim() || 'I would like to check availability and package details for this expedition.'
+        });
+
+        const link = waLink(summaryText);
+        setWaUrl(link);
 
         if (mode === 'whatsapp') {
+            // 🚀 INSTANT SPOT-ON DISPATCH: Trigger WhatsApp immediately before any async wait so browser never blocks popup
+            try {
+                const isMobile = typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                if (isMobile) {
+                    window.location.href = link;
+                } else {
+                    window.open(link, '_blank', 'noopener,noreferrer');
+                }
+            } catch (err) {
+                console.warn('[WHATSAPP OPEN TRIGGER]', err);
+            }
+
+            // Sync lead to CRM in background without blocking user
             const newInquiryRecord = {
                 id: generateBookingId(),
                 name: formData.name.trim(),
@@ -390,7 +404,7 @@ export default function ContactPage() {
                 addons: [],
                 total: (Number(formData.guests) || 2) * 2499,
                 status: 'Pending',
-                source: 'Contact Form (WhatsApp Mode)',
+                source: 'Contact Form (WhatsApp Direct)',
                 notes: formData.message.trim(),
                 inquiryType: formData.inquiryType,
                 travelDates: formData.travelDates || 'Flexible',
@@ -399,25 +413,20 @@ export default function ContactPage() {
                 mode: 'whatsapp'
             };
 
-            try {
-                fetch('/api/inquiries', {
-                    method: 'POST',
-                    headers: await getSecurityHeaders({ 'Content-Type': 'application/json' }),
-                    body: JSON.stringify(newInquiryRecord)
-                }).catch(err => console.error('Error syncing inquiry to server:', err));
+            fetch('/api/inquiries', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newInquiryRecord)
+            }).catch(() => {});
 
+            try {
                 const currentBookings = JSON.parse(localStorage.getItem('aanandham_admin_bookings_v2') || '[]');
                 localStorage.setItem('aanandham_admin_bookings_v2', JSON.stringify([newInquiryRecord, ...currentBookings]));
                 window.dispatchEvent(new Event('storage'));
-            } catch (e) {
-                console.error('Error persisting inquiry:', e);
-            }
+            } catch (e) {}
 
-            const link = waLink(summaryText);
-            setWaUrl(link);
-            try {
-                window.open(link, '_blank');
-            } catch (err) {}
+            setLoading(false);
+            setSubmitted(true);
         } else {
             // ✉️ EMAIL MODE: Send directly through Resend backend API (Zero external redirect)
             try {
@@ -443,10 +452,10 @@ export default function ContactPage() {
             } catch (err) {
                 console.error('[CONTACT DISPATCH ERROR]', err);
             }
-        }
 
-        setLoading(false);
-        setSubmitted(true);
+            setLoading(false);
+            setSubmitted(true);
+        }
     };
 
     return (

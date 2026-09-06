@@ -1,8 +1,9 @@
-import './globals.css';
+﻿import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import Script from 'next/script';
 import SmoothScroll from '@/components/SmoothScroll';
 import GlobalActionHub from '@/components/common/GlobalActionHub';
+import PmsAnalyticsTracker from '@/components/common/PmsAnalyticsTracker';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SEO_KEYWORDS, SITE_RATING } from '@/lib/seoKeywords';
@@ -186,6 +187,7 @@ export default function RootLayout({ children }) {
         <SmoothScroll />
         {children}
         <GlobalActionHub />
+        <PmsAnalyticsTracker />
         <Analytics />
         <SpeedInsights />
 
@@ -212,3 +214,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
