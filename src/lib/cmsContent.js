@@ -3,11 +3,11 @@ import { BLOG_POSTS } from './blogPosts';
 
 export const DEFAULT_DESTINATION_CONTENT = {
     munnar: {
-        badge: '★ 5 SIGNATURE MUNNAR CAMPS',
-        title: 'Munnar High-Altitude Camps & Ridge Stays',
+        badge: '★ TOP 5 VERIFIED CAMPS IN MUNNAR',
+        title: 'Top Camps in Munnar: Best Camp Stays & Ridge Glamping',
         subtitle: 'Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy 4x4 sunrise summit convoys, starlit campfire barbecues, and private ridge glamping stays.',
-        metaTitle: 'Munnar Camping & Suryanelli Stays | Aanandham.go',
-        metaDescription: 'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 sunrise treks, campfire BBQ & ridge glamping tents.'
+        metaTitle: 'Top Camps in Munnar (2026) · Best Camp Stays & Tent Glamping | Aanandham.go',
+        metaDescription: 'Looking for the best camps in Munnar? Discover top camp stays across Suryanelli & Kolukkumalai. 4x4 sunrise safari, campfire BBQ & verified luxury tents from ₹1,899.'
     },
     vagamon: {
         badge: '★ SECLUDED PINE VALLEY',

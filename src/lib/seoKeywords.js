@@ -4,6 +4,9 @@ export const SEO_KEYWORDS = [
   // Brand & core
   'Aanandham', 'Aanandham.go', 'Aanandham Wilderness Camps', 'aanandham munnar',
   // Munnar camping (money cluster)
+  'best camps in munnar', 'top camps in munnar', 'top camp stays in munnar', 'best camp stays in munnar',
+  'top 10 camps in munnar', 'best campsites in munnar', 'top rated camps in munnar', 'top camping sites in munnar',
+  'best tent stays in munnar', 'best glamping camps in munnar', 'top sunrise camps munnar', 'best camps in suryanelli',
   'munnar camping', 'camping in munnar', 'best camping in munnar', 'munnar tent camping',
   'munnar night camping', 'munnar camping packages', 'munnar camping price', 'budget camping in munnar',
   'munnar family camping', 'munnar group camping', 'couples camping in munnar', 'honeymoon camping munnar',
