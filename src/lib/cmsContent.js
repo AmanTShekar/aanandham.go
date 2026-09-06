@@ -5,16 +5,16 @@ export const DEFAULT_DESTINATION_CONTENT = {
     munnar: {
         badge: '★ 5 SIGNATURE MUNNAR CAMPS',
         title: 'Munnar High-Altitude Camps & Ridge Stays',
-        subtitle: 'Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy 4x4 sunrise summit convoys, starlit campfire barbecues, and private geodesic dome stays.',
+        subtitle: 'Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy 4x4 sunrise summit convoys, starlit campfire barbecues, and private ridge glamping stays.',
         metaTitle: 'Munnar Camping & Suryanelli Stays | Aanandham.go',
-        metaDescription: 'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 Kolukkumalai sunrise treks, campfire BBQ & geodesic dome pods.'
+        metaDescription: 'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 sunrise treks, campfire BBQ & ridge glamping tents.'
     },
     vagamon: {
         badge: '★ SECLUDED PINE VALLEY',
         title: 'Vagamon Pine Forest Glamping & Stays',
         subtitle: 'Tucked away in the whispering pine groves of Vagamon (3,800 FT). Enjoy misty valley walks, private stream trails, and cozy alpine campfire nights.',
         metaTitle: 'Vagamon Pine Forest Glamping & Stays | Aanandham.go',
-        metaDescription: 'Book secluded pine valley dome glamping & offroad jeep camping in Vagamon, Kerala with Aanandham.go.'
+        metaDescription: 'Book secluded pine valley ridge glamping & offroad jeep camping in Vagamon, Kerala with Aanandham.go.'
     },
     wayanad: {
         badge: '★ 900 KANDI & CHEMBRA PEAK',

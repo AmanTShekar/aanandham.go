@@ -232,7 +232,7 @@ export class AanandhamPmsClient {
   async openPaymentCheckout({
     campsiteId,
     packageName,
-    roomType = "Geodesic Dome Pod",
+    roomType = "Ridge Glamping Tent",
     dates,
     guests = 2,
     guest = { name: "", phone: "", email: "" },

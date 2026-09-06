@@ -18,7 +18,7 @@ export async function POST(request) {
                 campsiteId: 'pkg-kolukkumalai',
                 region: 'Munnar',
                 dates: 'This Weekend (2D / 1N)',
-                roomType: 'Geodesic Dome Pod',
+                roomType: 'Ridge Glamping Tent',
                 guests: 4,
                 checkedInCount: 0,
                 shortCount: 0,

@@ -384,8 +384,8 @@ label: ' Single Tent (1P)',
                                                     image: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80'
                                                 },
                                                 {
-                                                    label: '★ 2-Person Dome',
-                                                    name: 'Geodesic Dome Pod',
+                                                    label: '★ 2-Person Glamp',
+                                                    name: 'Ridge Glamping Tent',
                                                     capacity: '2 Persons',
                                                     price: 2499,
                                                     totalUnits: 8,

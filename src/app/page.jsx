@@ -358,7 +358,7 @@ const FOUR_STEPS = [
     {
         num: '01',
         title: 'Choose your signature campsite',
-        desc: 'Select from high-altitude geodesic dome pods, weatherproof alpine tents, or lakeside ridge glamps tailored for couples, solo travelers, and squads.'
+        desc: 'Select from high-altitude ridge glamping tents, weatherproof alpine tents, or lakeside ridge cabins tailored for couples, solo travelers, and squads.'
     },
     {
         num: '02',

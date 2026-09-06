@@ -230,7 +230,7 @@ export default function CampsDirectoryClient({
                                 lineHeight: 1.7,
                                 margin: '0 0 28px'
                             }}>
-                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury geodesic dome pods, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.'}
+                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury ridge glamping tents, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.'}
                             </p>
 
                             {/* Wishlist Bar Pill (Only shown if wishlist has items) */}
@@ -711,10 +711,10 @@ export default function CampsDirectoryClient({
                         <div className="accommodation-types-grid" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                             {[
                                 {
-                                    title: 'Geodesic Dome Pods',
+                                    title: 'Ridge Glamping Tents',
                                     badge: 'Couples & Privacy',
                                     img: 'https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80',
-                                    desc: 'Insulated 360-degree panoramic sky domes with private viewing deck, plush queen beds, and valley sunset vistas.',
+                                    desc: 'Insulated high-altitude ridge glamping tents with private viewing deck, plush queen beds, and valley sunset vistas.',
                                     features: ['King / Queen Plush Bed', 'Panoramic Cloud Vista Window', 'Private Sit-Out Balcony', 'En-suite Washroom']
                                 },
                                 {

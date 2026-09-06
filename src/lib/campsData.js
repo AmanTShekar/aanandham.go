@@ -43,23 +43,23 @@ export const INITIAL_ALL_CAMPS = [
       },
       {
         "q": "What is included in the Kolukkumalai package?",
-        "a": "The package includes 4x4 jeep transfers, summit sunrise trek, dome/alpine tent stay, dinner BBQ, breakfast, camp staff guides, and forest permits."
+        "a": "The package includes 4x4 jeep transfers, summit sunrise trek, ridge glamping/alpine tent stay, dinner BBQ, breakfast, camp staff guides, and forest permits."
       },
       {
         "q": "Can solo travelers join the Kolukkumalai sunrise trek?",
         "a": "Yes — the expedition runs in shared jeep batches with camp staff and is popular with solo travelers; we host 350+ solo female campers annually."
       }
     ],
-    "description": "Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude Quechua dome pods, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.",
+    "description": "Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude ridge glamping tents, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.",
     "highlights": [
       "Private 4x4 Rugged Jeep Convoy to World’s Highest Tea Estate",
       "Tiger Rock Sunrise Ridge Hike above endless cloud carpets",
       "Live Campfire BBQ Dinner with Kerala Spiced Marinades",
-      "Weatherproof Geodesic Dome Pods & Alpine Tents",
+      "Weatherproof Ridge Glamping Tents & Alpine Tents",
       "Certified Wilderness Guides & Forest Entry Permits Included"
     ],
     "inclusions": [
-      "1 Night Accommodation (Dome Pod / Alpine Tent)",
+      "1 Night Accommodation (Ridge Glamping / Alpine Tent)",
       "4x4 Off-Road Jeep Safari to Kolukkumalai Sunrise Point",
       "Evening Campfire with Live Barbecue (Chicken / Paneer)",
       "Buffet Dinner (Authentic Kerala Cuisine) & Hot Mountain Breakfast",
@@ -77,7 +77,7 @@ export const INITIAL_ALL_CAMPS = [
         "title": "Check-in, Sunset Ridge Walk & Campfire BBQ",
         "items": [
           "02:00 PM – Arrival at Suryanelli Basecamp & welcome organic spiced tea.",
-          "03:00 PM – Tent / Pod allocation and briefing by camp staff.",
+          "03:00 PM – Tent / Glamp allocation and briefing by camp staff.",
           "04:30 PM – Guided sunset nature hike along Phantom Hill Ridge.",
           "07:00 PM – Roaring campfire lighting with live acoustic jam session.",
           "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.",
@@ -100,13 +100,13 @@ export const INITIAL_ALL_CAMPS = [
     "rooms": [
       {
         "id": "r1",
-        "name": "Geodesic Dome Pod",
+        "name": "Ridge Glamping Tent",
         "capacity": "2 Adults",
         "price": 2899,
         "totalUnits": 8,
         "bookedUnits": 4,
         "isAvailable": true,
-        "image": "/images/kolukkumalai-cloudbed-dome.webp",
+        "image": "/images/high-altitude-ridge-tent.jpg",
         "features": [
           "Valley Facing Deck",
           "King Size Bed",
@@ -214,7 +214,7 @@ export const INITIAL_ALL_CAMPS = [
         "location": "Bengaluru",
         "rating": 5,
         "date": "Last weekend",
-        "comment": "The sunrise at Tiger Rock was pure magic! Sleeping in the Geodesic dome while watching stars was breathtaking. The barbecue was mouthwatering."
+        "comment": "The sunrise at Tiger Rock was pure magic! Sleeping in the ridge glamping tent while watching stars was breathtaking. The barbecue was mouthwatering."
       },
       {
         "id": "rv-2",

@@ -27,7 +27,7 @@ export async function POST(request) {
             phone = '+91 98471 23456',
             guests = 4,
             package: packageName = 'Kolukkumalai Sunrise Ridge Glamp (7,900 FT)',
-            roomType = 'Geodesic Dome Pod'
+            roomType = 'Ridge Glamping Tent'
         } = body;
 
         if (!email || !email.includes('@')) {

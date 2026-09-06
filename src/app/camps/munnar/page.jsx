@@ -5,7 +5,7 @@ import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 export const metadata = {
   title: 'Munnar Camping & Suryanelli Stays',
   description:
-    'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 Kolukkumalai sunrise treks, campfire BBQ & geodesic dome pods with Aanandham.go.',
+    'Explore verified high-altitude campsites in Munnar & Suryanelli. 4x4 sunrise treks, campfire BBQ & ridge glamping tents with Aanandham.go.',
   keywords: [
     'Munnar Camping',
     'Suryanelli Tent Stays',
@@ -13,7 +13,7 @@ export const metadata = {
     'Tiger Rock Camping Munnar',
     'Meesapulimala Basecamp',
     'Phantom Head Ridge Glamping',
-    'Munnar Geodesic Dome Pods',
+    'Munnar Ridge Glamping Tents',
     'Safe Couples Camping Munnar'
   ],
   alternates: {

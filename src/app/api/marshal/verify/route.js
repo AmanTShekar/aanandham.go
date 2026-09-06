@@ -114,7 +114,7 @@ export async function POST(request) {
 
         const checkedInCount = booking.checkedInCount !== undefined ? Number(booking.checkedInCount) : totalGuests;
         const shortCount = booking.shortCount !== undefined ? Number(booking.shortCount) : 0;
-        const preassignedRoom = booking.assignedTent || booking.roomType || booking.package || 'Geodesic Dome Pod';
+        const preassignedRoom = booking.assignedTent || booking.roomType || booking.package || 'Ridge Glamping Tent';
 
         return NextResponse.json({
             success: true,

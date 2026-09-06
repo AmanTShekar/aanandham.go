@@ -165,7 +165,7 @@ export function useAdminPortalState(initialTab = 'properties') {
         guests: 2,
         groupType: 'Family',
         allocatedUnit: 'Tent #01',
-        roomType: 'Geodesic Dome Pod',
+        roomType: 'Ridge Glamping Tent',
         pricePerGuest: 2499,
         status: 'Confirmed',
         notes: ''
