@@ -171,7 +171,7 @@ export default function Step1CampsiteLodging({
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                             <label style={{ fontSize: '12px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                1. Destination Campsite *
+                                Choose Campsite *
                             </label>
                             {currentPkg?.id && (
                                 <button
@@ -269,7 +269,7 @@ export default function Step1CampsiteLodging({
             }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isRoomMissing ? '#DC2626' : '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                        2. Choose Lodging Style *
+                        Lodging Style *
                     </label>
                     <span style={{ background: isRoomMissing ? '#DC2626' : '#121613', color: isRoomMissing ? '#FFFFFF' : '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '999px' }}>
                         {availableRooms.length} Types Available
@@ -362,7 +362,7 @@ export default function Step1CampsiteLodging({
                                     transition: 'all 0.2s ease'
                                 }}>
                                     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isDateMissing ? '#DC2626' : '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        3. Stay Date *
+                                        Stay Date *
                                     </label>
                                     <CustomDateBatchPicker
                                         label="Check-In Date"
@@ -385,7 +385,7 @@ export default function Step1CampsiteLodging({
                                     <div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                             <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                                4. Campers
+                                                Campers
                                             </label>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
                                                 {activeDiscountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {activeDiscountLabel}</span> : 'Standard Fare'}
@@ -474,57 +474,21 @@ export default function Step1CampsiteLodging({
                                         </div>
                                     </div>
 
-                                    {/* Smart Stay Unit Allocation Card */}
-                                    <div style={{ background: '#F4F7EB', borderRadius: '16px', padding: '12px 14px', border: '1px solid rgba(22, 101, 52, 0.2)' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                <Tent size={13} color="#166534" strokeWidth={2.5} />
-                                                <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                                    Smart Stay Allocation
-                                                </span>
-                                            </div>
-                                            {customUnits !== null && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCustomUnits(null)}
-                                                    style={{ background: 'none', border: 'none', fontSize: '10.5px', color: '#59655D', textDecoration: 'underline', cursor: 'pointer', padding: 0 }}
-                                                >
-                                                    Reset Auto
-                                                </button>
-                                            )}
-                                        </div>
-
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                            <div>
-                                                <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613' }}>
-                                                    {allocatedUnits} × {currentRoom?.name || 'Dome / Tent'}
-                                                </div>
-                                                <div style={{ fontSize: '10.5px', color: '#59655D' }}>
-                                                    Holds {totalMaxCapacity} Campers ({roomCapacity} pax / unit)
-                                                </div>
-                                            </div>
-
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', background: '#FFFFFF', padding: '2px 5px', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.1)' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCustomUnits(Math.max(autoUnits, allocatedUnits - 1))}
-                                                    disabled={allocatedUnits <= autoUnits}
-                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: allocatedUnits <= autoUnits ? 'not-allowed' : 'pointer', opacity: allocatedUnits <= autoUnits ? 0.3 : 1, fontWeight: '800', fontSize: '11px' }}
-                                                >
-                                                    -
-                                                </button>
-                                                <span style={{ fontSize: '11.5px', fontWeight: '800', minWidth: '14px', textAlign: 'center' }}>
-                                                    {allocatedUnits}
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCustomUnits(allocatedUnits + 1)}
-                                                    style={{ width: '20px', height: '20px', border: 'none', background: 'transparent', cursor: 'pointer', fontWeight: '800', fontSize: '11px' }}
-                                                >
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
+                                    {/* Auto Stay Allocation Info */}
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        background: '#F4F7EB',
+                                        borderRadius: '12px',
+                                        padding: '8px 12px',
+                                        border: '1px solid rgba(22, 101, 52, 0.15)',
+                                        fontSize: '11.5px',
+                                        color: '#166534',
+                                        fontWeight: '700'
+                                    }}>
+                                        <Tent size={14} color="#166534" strokeWidth={2.5} />
+                                        <span>{allocatedUnits} × {currentRoom?.name || 'Tent'} auto-allocated ({totalMaxCapacity} camper capacity)</span>
                                     </div>
                                 </div>
                             </div>

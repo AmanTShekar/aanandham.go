@@ -31,12 +31,16 @@ export default function BookingWizardHeader({
                             ✓ Verified Stay
                         </span>
                         <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
-                            {step === 5 ? 'Official Wilderness Pass' : 'Direct Booking · Zero Advance Option'}
+                            {step === 1 && 'Select lodging, dates & campers'}
+                            {step === 2 && 'Optional campfire, BBQ & treks'}
+                            {step === 3 && 'Primary explorer contact details'}
+                            {step === 4 && 'Review summary & pay securely'}
+                            {step === 5 && 'Official Wilderness Pass'}
                         </span>
                     </div>
                     <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 3vw, 22px)', fontWeight: '900', margin: 0, color: '#121613', letterSpacing: '-0.01em' }}>
-                        {step === 1 && '1. Choose Stay & Lodging'}
-                        {step === 2 && '2. Add-On Experiences'}
+                        {step === 1 && '1. Choose Stay'}
+                        {step === 2 && '2. Add-Ons'}
                         {step === 3 && '3. Camper Details'}
                         {step === 4 && '4. Review & Confirm'}
                         {step === 5 && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Boarding Pass Issued</span>}
