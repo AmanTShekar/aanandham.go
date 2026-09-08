@@ -799,6 +799,19 @@ export default function HomePage() {
         return () => window.removeEventListener('storage', syncCamps);
     }, []);
 
+    // Listen for global booking open trigger from sticky bar / dock
+    useEffect(() => {
+        const handleGlobalBooking = (e) => {
+            e.preventDefault();
+            if (e.detail?.camp) {
+                setSelectedPackage(e.detail.camp);
+            }
+            setIsBookingModalOpen(true);
+        };
+        window.addEventListener('aanandham_open_booking', handleGlobalBooking);
+        return () => window.removeEventListener('aanandham_open_booking', handleGlobalBooking);
+    }, []);
+
     const filteredPackages = useMemo(() => {
         if (!campsList || !Array.isArray(campsList)) return INITIAL_ALL_CAMPS;
         if (activeTab === 'All') return campsList;

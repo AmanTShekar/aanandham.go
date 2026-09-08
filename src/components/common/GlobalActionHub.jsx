@@ -1,11 +1,13 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Phone, Calendar, X, ChevronRight } from 'lucide-react';
 import { waLink, DEFAULT_WA_PHONE, logWhatsAppInquiry } from '@/lib/whatsapp';
 import { WhatsAppIcon } from './BrandIcons';
+
+const BookingEngineModal = dynamic(() => import('../BookingEngineModal'), { ssr: false });
 
 const DOCK_SPRING = {
     type: 'spring',
@@ -17,10 +19,33 @@ const DOCK_SPRING = {
 export default function GlobalActionHub() {
     const pathname = usePathname();
     const [isExpanded, setIsExpanded] = useState(false);
+    const [activeCampContext, setActiveCampContext] = useState(null);
+    const [isGlobalBookingModalOpen, setIsGlobalBookingModalOpen] = useState(false);
     const dockRef = useRef(null);
 
     // Hide on marshal scanner or dedicated admin pages
     const isScanner = pathname?.startsWith('/marshal') || pathname?.startsWith('/admin');
+
+    // Synchronize active stay context from current page
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.__AANANDHAM_ACTIVE_CAMP_CONTEXT__) {
+            setActiveCampContext(window.__AANANDHAM_ACTIVE_CAMP_CONTEXT__);
+        }
+
+        const handleContextChange = (e) => {
+            setActiveCampContext(e.detail || null);
+        };
+
+        window.addEventListener('aanandham_camp_context_change', handleContextChange);
+        return () => window.removeEventListener('aanandham_camp_context_change', handleContextChange);
+    }, []);
+
+    // Clear camp context if user navigates away from campsite detail pages
+    useEffect(() => {
+        if (!pathname?.startsWith('/camps/')) {
+            setActiveCampContext(null);
+        }
+    }, [pathname]);
 
     // Close on click outside (Desktop Dock)
     useEffect(() => {
@@ -35,9 +60,34 @@ export default function GlobalActionHub() {
 
     if (isScanner) return null;
 
+    const isCampPage = Boolean(activeCampContext?.camp && pathname?.startsWith('/camps/'));
+    const camp = activeCampContext?.camp;
+    const currentRoom = activeCampContext?.currentRoom;
+    const roomPrice = activeCampContext?.roomPrice || camp?.price || 2499;
+    const selectedDate = activeCampContext?.selectedDate || 'Upcoming Weekend Batch';
+    const guestsCount = activeCampContext?.guestsCount || 2;
+    const roomName = currentRoom?.name || activeCampContext?.selectedRoom?.name || 'Standard Tent';
+
     const adminPhone = DEFAULT_WA_PHONE || '919074858014';
     const formattedPhone = `+91 ${adminPhone.slice(-10, -5)} ${adminPhone.slice(-5)}`;
-    const whatsAppUrl = waLink('Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.');
+
+    const whatsAppCampMessage = `Hi Aanandham! I want to check availability & book ${camp?.title || 'Wilderness Camp'} on ${selectedDate} for ${guestsCount} campers in ${roomName}.`;
+    const whatsAppDefaultMessage = 'Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.';
+    const activeWaMessage = isCampPage ? whatsAppCampMessage : whatsAppDefaultMessage;
+    const whatsAppUrl = waLink(activeWaMessage, adminPhone);
+
+    const handleBookNowClick = (e) => {
+        if (e) e.preventDefault();
+        const event = new CustomEvent('aanandham_open_booking', {
+            cancelable: true,
+            detail: isCampPage ? activeCampContext : null
+        });
+        window.dispatchEvent(event);
+        if (!event.defaultPrevented) {
+            // No page intercepted; open fallback global modal
+            setIsGlobalBookingModalOpen(true);
+        }
+    };
 
     return (
         <>
@@ -107,7 +157,11 @@ export default function GlobalActionHub() {
                             textTransform: 'uppercase',
                             whiteSpace: 'nowrap'
                         }}>
-                            {isExpanded ? 'Live Desk' : 'Desk Live'}
+                            {isExpanded 
+                                ? 'Live Desk' 
+                                : (isCampPage && camp?.shortTitle 
+                                    ? `${camp.shortTitle.slice(0, 16)} Desk` 
+                                    : 'Desk Live')}
                         </span>
                     </motion.div>
 
@@ -159,8 +213,11 @@ export default function GlobalActionHub() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={() => logWhatsAppInquiry({
-                                        text: 'Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.',
-                                        source: 'Desktop Global Action Dock'
+                                        text: activeWaMessage,
+                                        source: 'Desktop Global Action Dock',
+                                        campsiteId: camp?.id,
+                                        guests: isCampPage ? guestsCount : undefined,
+                                        travelDates: isCampPage ? selectedDate : undefined
                                     })}
                                     className="action-dock-btn"
                                     title="Chat on WhatsApp"
@@ -187,36 +244,38 @@ export default function GlobalActionHub() {
                         )}
                     </AnimatePresence>
 
-                    {/* ── Persistent Primary Action Button (Smoothly glides into position) ── */}
+                    {/* ── Persistent Primary Action Button (Multi-Use: Leads to specific camp booking when viewing camp) ── */}
                     <motion.div 
                         layout="position" 
                         transition={DOCK_SPRING}
                         style={{ marginLeft: '10px', flexShrink: 0 }}
                     >
-                        <Link
-                            href="/camps"
+                        <button
+                            type="button"
+                            onClick={handleBookNowClick}
                             className="action-dock-book-btn"
                             style={{
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '5px',
+                                gap: '6px',
                                 padding: '7px 14px',
                                 borderRadius: '999px',
                                 background: '#E5A93B',
                                 color: '#121613',
-                                textDecoration: 'none',
+                                border: 'none',
                                 fontSize: '12px',
                                 fontWeight: '900',
                                 letterSpacing: '-0.01em',
                                 boxShadow: '0 4px 14px rgba(229, 169, 59, 0.4)',
                                 whiteSpace: 'nowrap',
+                                cursor: 'pointer',
                                 transition: 'all 0.2s ease'
                             }}
                         >
                             <Calendar size={13} strokeWidth={2.5} color="#121613" />
-                            <span>Book Now</span>
+                            <span>{isCampPage ? `Book Stay · ₹${roomPrice.toLocaleString('en-IN')}` : 'Book Now'}</span>
                             {!isExpanded && <ChevronRight size={12} strokeWidth={3} color="#121613" />}
-                        </Link>
+                        </button>
                     </motion.div>
 
                     {/* ── Close Button on Expanded State ── */}
@@ -283,7 +342,7 @@ export default function GlobalActionHub() {
                     boxShadow: '0 -8px 28px rgba(0, 0, 0, 0.55)'
                 }}
             >
-                {/* 1. Phone Call Button */}
+                {/* 1. Phone Call Button (Direct Phone Call, Unchanged) */}
                 <a
                     href={`tel:+${adminPhone}`}
                     aria-label="Call Aanandham Desk"
@@ -307,14 +366,17 @@ export default function GlobalActionHub() {
                     <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#E5A93B', letterSpacing: '0.3px' }}>Call</span>
                 </a>
 
-                {/* 2. WhatsApp Concierge Button */}
+                {/* 2. WhatsApp Concierge Button (Dynamic with campsite, dates, guests & stay) */}
                 <a
                     href={whatsAppUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => logWhatsAppInquiry({
-                        text: 'Hi Aanandham.go! I would like to book a wilderness camp / inquire about sunrise jeep trekking.',
-                        source: 'Mobile Sticky Action Bar'
+                        text: activeWaMessage,
+                        source: isCampPage ? `Mobile Sticky Action Bar (${camp?.title || 'Camp'})` : 'Mobile Sticky Action Bar',
+                        campsiteId: camp?.id,
+                        guests: isCampPage ? guestsCount : undefined,
+                        travelDates: isCampPage ? selectedDate : undefined
                     })}
                     aria-label="Chat with Mountain Concierge on WhatsApp"
                     style={{
@@ -337,33 +399,99 @@ export default function GlobalActionHub() {
                     <span style={{ fontSize: '9.5px', fontWeight: '800', color: '#25D366', letterSpacing: '0.3px' }}>WhatsApp</span>
                 </a>
 
-                {/* 3. Primary BOOK NOW Action Button */}
-                <Link
-                    href="/camps"
-                    aria-label="Book Now"
-                    style={{
-                        flex: 1,
-                        height: '44px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '6px',
-                        background: '#E5A93B',
-                        borderRadius: '10px',
-                        color: '#121613',
-                        textDecoration: 'none',
-                        fontWeight: '900',
-                        fontSize: '13.5px',
-                        letterSpacing: '-0.01em',
-                        boxShadow: '0 4px 16px rgba(229, 169, 59, 0.4)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)'
-                    }}
-                >
-                    <Calendar size={14} strokeWidth={2.5} color="#121613" />
-                    <span>BOOK NOW</span>
-                    <ChevronRight size={14} strokeWidth={3} color="#121613" />
-                </Link>
+                {/* 3. Primary Multi-Use Action Button (Directly opens booking modal with selected stay & details) */}
+                {isCampPage ? (
+                    <button
+                        type="button"
+                        onClick={handleBookNowClick}
+                        aria-label={`Book ${camp?.title || 'Stay'}`}
+                        style={{
+                            flex: 1,
+                            height: '44px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '0 10px 0 12px',
+                            background: '#E5A93B',
+                            borderRadius: '10px',
+                            color: '#121613',
+                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                            boxShadow: '0 4px 16px rgba(229, 169, 59, 0.45)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <div style={{ textAlign: 'left', minWidth: 0, lineHeight: 1.15 }}>
+                            <div style={{ fontSize: '13px', fontWeight: '900', whiteSpace: 'nowrap' }}>
+                                ₹{roomPrice.toLocaleString('en-IN')}{' '}
+                                <span style={{ fontSize: '9.5px', fontWeight: '700', color: '#3A331A' }}>/ camper</span>
+                            </div>
+                            <div style={{ fontSize: '9.5px', fontWeight: '700', color: '#3A331A', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', maxWidth: '120px' }}>
+                                {roomName}
+                            </div>
+                        </div>
+                        <div style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '3px',
+                            background: '#121613',
+                            color: '#D5ED55',
+                            padding: '5px 8px',
+                            borderRadius: '7px',
+                            fontSize: '11px',
+                            fontWeight: '900',
+                            letterSpacing: '0.3px',
+                            flexShrink: 0
+                        }}>
+                            <span>BOOK</span>
+                            <ChevronRight size={12} strokeWidth={3} />
+                        </div>
+                    </button>
+                ) : (
+                    <button
+                        type="button"
+                        onClick={handleBookNowClick}
+                        aria-label="Book Now"
+                        style={{
+                            flex: 1,
+                            height: '44px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px',
+                            background: '#E5A93B',
+                            borderRadius: '10px',
+                            color: '#121613',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            fontWeight: '900',
+                            fontSize: '13.5px',
+                            letterSpacing: '-0.01em',
+                            boxShadow: '0 4px 16px rgba(229, 169, 59, 0.4)',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        <Calendar size={14} strokeWidth={2.5} color="#121613" />
+                        <span>BOOK NOW</span>
+                        <ChevronRight size={14} strokeWidth={3} color="#121613" />
+                    </button>
+                )}
             </nav>
+
+            {/* ═════════════════════════════════════════════════════════════
+                3. FALLBACK GLOBAL BOOKING ENGINE MODAL (Multi-Use Everywhere)
+            ═════════════════════════════════════════════════════════════ */}
+            {isGlobalBookingModalOpen && (
+                <BookingEngineModal
+                    isOpen={isGlobalBookingModalOpen}
+                    onClose={() => setIsGlobalBookingModalOpen(false)}
+                    initialPackage={camp || null}
+                    initialRoom={currentRoom || null}
+                    initialRoomId={activeCampContext?.selectedRoomId || null}
+                    initialDate={activeCampContext?.selectedDate || null}
+                    initialGuests={activeCampContext?.guestsCount || 2}
+                    initialAdults={activeCampContext?.guestsCount || 2}
+                    initialCustomUnits={activeCampContext?.customUnits || null}
+                />
+            )}
         </>
     );
 }

@@ -80,6 +80,21 @@ export default function CampsDirectoryClient({
         return () => window.removeEventListener('storage', handleStorage);
     }, []);
 
+    // Listen for global booking open trigger from sticky bar / dock
+    useEffect(() => {
+        const handleGlobalBooking = (e) => {
+            e.preventDefault();
+            if (e.detail?.camp) {
+                setSelectedPackageForBooking(e.detail.camp);
+            } else if (camps && camps.length > 0) {
+                setSelectedPackageForBooking(camps[0]);
+            }
+            setIsBookingModalOpen(true);
+        };
+        window.addEventListener('aanandham_open_booking', handleGlobalBooking);
+        return () => window.removeEventListener('aanandham_open_booking', handleGlobalBooking);
+    }, [camps]);
+
     const showToast = (msg) => {
         setToastMessage(msg);
         setTimeout(() => setToastMessage(''), 3200);

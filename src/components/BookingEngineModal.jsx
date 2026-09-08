@@ -36,6 +36,10 @@ function BookingEngineModalInner({
 }) {
     const modalRef = useRef(null);
     const prevIsOpenRef = useRef(false);
+    const prevInitialRoomIdRef = useRef(initialRoomId);
+    const prevInitialPkgIdRef = useRef(initialPackage?.id);
+    const prevInitialDateRef = useRef(initialDate);
+    const prevInitialGuestsRef = useRef(initialGuests || initialAdults);
     useFocusTrap(isOpen, modalRef);
     const [mounted, setMounted] = useState(false);
 
@@ -45,10 +49,14 @@ function BookingEngineModalInner({
 
     const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
     const [discounts, setDiscounts] = useState(null);
-    const [selectedPkgId, setSelectedPkgId] = useState('pkg-kolukkumalai');
-    const [selectedRoomId, setSelectedRoomId] = useState('');
+    const [selectedPkgId, setSelectedPkgId] = useState(() => {
+        return initialPackage?.id || (typeof initialPackage === 'string' ? initialPackage : '') || 'pkg-kolukkumalai';
+    });
+    const [selectedRoomId, setSelectedRoomId] = useState(() => {
+        return initialRoomId || initialRoom?.id || initialPackage?.rooms?.[0]?.id || '';
+    });
     const [travelDate, setTravelDate] = useState(() => initialDate || getDefaultUpcomingBatch());
-    const [adults, setAdults] = useState(initialAdults || (typeof initialGuests === 'number' ? Math.max(1, initialGuests) : 2));
+    const [adults, setAdults] = useState(() => initialAdults || (typeof initialGuests === 'number' ? Math.max(1, initialGuests) : 2));
     const [children, setChildren] = useState(initialChildren || 0);
     const [customUnits, setCustomUnits] = useState(initialCustomUnits || null);
     const [selectedAddons, setSelectedAddons] = useState([]);
@@ -135,9 +143,22 @@ function BookingEngineModalInner({
         }
     }, [isOpen]);
 
-    // Synchronize props ONLY when modal transitions from closed to open
+    // Synchronize props when modal transitions to open or when initial stay parameters change
     useEffect(() => {
-        if (isOpen && !prevIsOpenRef.current) {
+        const justOpened = isOpen && !prevIsOpenRef.current;
+        const propsChanged = isOpen && (
+            prevInitialRoomIdRef.current !== initialRoomId ||
+            prevInitialPkgIdRef.current !== initialPackage?.id ||
+            prevInitialDateRef.current !== initialDate ||
+            prevInitialGuestsRef.current !== (initialGuests || initialAdults)
+        );
+
+        if (justOpened || propsChanged) {
+            prevInitialRoomIdRef.current = initialRoomId;
+            prevInitialPkgIdRef.current = initialPackage?.id;
+            prevInitialDateRef.current = initialDate;
+            prevInitialGuestsRef.current = initialGuests || initialAdults;
+
             setStep(1);
             setValidationError('');
             setConfirmedPass(null);
@@ -183,7 +204,7 @@ function BookingEngineModalInner({
             const targetRoomName = String(typeof initialRoom === 'string' ? initialRoom : initialRoom?.name || '').toLowerCase();
             const targetRoomId = String(typeof initialRoomId === 'string' ? initialRoomId : initialRoom?.id || '').toLowerCase();
 
-            const roomsAvailable = activePkg?.rooms || initialPackage?.rooms || [];
+            const roomsAvailable = (initialPackage?.rooms && initialPackage.rooms.length > 0) ? initialPackage.rooms : (activePkg?.rooms || []);
             if (roomsAvailable.length > 0) {
                 const roomMatch = roomsAvailable.find(r => 
                     (targetRoomId && r.id?.toLowerCase() === targetRoomId) ||
@@ -191,34 +212,36 @@ function BookingEngineModalInner({
                     (targetRoomName && r.name?.toLowerCase().includes(targetRoomName)) ||
                     (targetRoomName && targetRoomName.includes(r.name?.toLowerCase()))
                 );
-                setSelectedRoomId(roomMatch ? roomMatch.id : roomsAvailable[0].id);
+                setSelectedRoomId(roomMatch ? roomMatch.id : (initialRoomId || initialRoom?.id || roomsAvailable[0].id));
             } else {
-                setSelectedRoomId('standard-tent');
+                setSelectedRoomId(initialRoomId || initialRoom?.id || 'standard-tent');
             }
         }
 
         prevIsOpenRef.current = isOpen;
-    }, [isOpen]);
+    }, [isOpen, initialPackage, initialRoom, initialRoomId, initialDate, initialAdults, initialGuests, initialCustomUnits, campsList]);
 
     // Re-synchronize selected room if package changes
     const selectedPkg = useMemo(() => {
-        if (initialPackage && typeof initialPackage === 'object' && (initialPackage.id === selectedPkgId || !selectedPkgId)) {
+        if (initialPackage && typeof initialPackage === 'object' && (initialPackage.id === selectedPkgId || !selectedPkgId || selectedPkgId.includes(initialPackage.id) || (initialPackage.id && initialPackage.id.includes(selectedPkgId)))) {
             return initialPackage;
         }
         return campsList.find(p => p.id === selectedPkgId) || initialPackage || campsList[0] || INITIAL_ALL_CAMPS[0];
     }, [campsList, selectedPkgId, initialPackage]);
 
     const selectedRoom = useMemo(() => {
-        const availableRooms = selectedPkg?.rooms || initialPackage?.rooms || [];
+        const availableRooms = (selectedPkg?.rooms && selectedPkg.rooms.length > 0) 
+            ? selectedPkg.rooms 
+            : ((initialPackage?.rooms && initialPackage.rooms.length > 0) ? initialPackage.rooms : []);
         if (!availableRooms.length) {
             return initialRoom || {
-                id: 'standard-tent',
+                id: selectedRoomId || 'standard-tent',
                 name: 'Standard Alpine Ridge Tent',
                 price: Number(selectedPkg?.price || initialPackage?.price || 2499),
                 capacity: '2 Adults'
             };
         }
-        return availableRooms.find(r => r.id === selectedRoomId) || initialRoom || availableRooms[0];
+        return availableRooms.find(r => r.id === selectedRoomId || String(r.id).toLowerCase() === String(selectedRoomId).toLowerCase()) || initialRoom || availableRooms[0];
     }, [selectedPkg, initialPackage, selectedRoomId, initialRoom]);
 
     // Load active discounts on open

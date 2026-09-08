@@ -196,8 +196,53 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const estimatedTotal = discount.discountedTotal;
     const discountLabel = discount.discountLabel;
     const discountAmount = discount.discountAmount;
-
     const nearbyCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
+
+    // ── Synchronize active stay context for GlobalActionHub & Sticky Bar ──
+    useEffect(() => {
+        if (!camp) return;
+        const context = {
+            camp,
+            selectedRoomId,
+            currentRoom,
+            selectedDate,
+            guestsCount,
+            customUnits: effectiveUnits,
+            roomPrice,
+            estimatedTotal
+        };
+        window.__AANANDHAM_ACTIVE_CAMP_CONTEXT__ = context;
+        window.dispatchEvent(new CustomEvent('aanandham_camp_context_change', { detail: context }));
+
+        return () => {
+            if (window.__AANANDHAM_ACTIVE_CAMP_CONTEXT__?.camp?.id === camp?.id) {
+                window.__AANANDHAM_ACTIVE_CAMP_CONTEXT__ = null;
+                window.dispatchEvent(new CustomEvent('aanandham_camp_context_change', { detail: null }));
+            }
+        };
+    }, [camp, selectedRoomId, currentRoom, selectedDate, guestsCount, effectiveUnits, roomPrice, estimatedTotal]);
+
+    // ── Listen for Global Booking Open triggers (from Sticky Bar or Header) ──
+    useEffect(() => {
+        const handleOpenBooking = (e) => {
+            e.preventDefault();
+            if (e.detail?.selectedRoomId) {
+                setSelectedRoomId(e.detail.selectedRoomId);
+            }
+            if (e.detail?.selectedDate) {
+                setSelectedDate(e.detail.selectedDate);
+            }
+            if (e.detail?.guestsCount) {
+                setGuestsCount(e.detail.guestsCount);
+            }
+            if (e.detail?.customUnits !== undefined && e.detail?.customUnits !== null) {
+                setCustomUnits(e.detail.customUnits);
+            }
+            setIsBookingModalOpen(true);
+        };
+        window.addEventListener('aanandham_open_booking', handleOpenBooking);
+        return () => window.removeEventListener('aanandham_open_booking', handleOpenBooking);
+    }, []);
 
     const handleShare = async () => {
         const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
@@ -524,29 +569,61 @@ return (
                                                     })()}
                                                 </div>
 
-                                                <div className="room-price-row" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+                                                <div className="room-price-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                                                     <div style={{ textAlign: 'right' }}>
                                                         <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Per Person</span>
                                                         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap' }}>
                                                             ₹{(room.price || room.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
-                                                    <button
-                                                        type="button"
-                                                        style={{
-                                                            padding: '8px 16px',
-                                                            borderRadius: '10px',
-                                                            background: isSelected ? '#166534' : '#F1F3EC',
-                                                            color: isSelected ? '#FFFFFF' : '#121613',
-                                                            border: isSelected ? 'none' : '1px solid rgba(18,22,19,0.2)',
-                                                            fontSize: '12px',
-                                                            fontWeight: '800',
-                                                            cursor: 'pointer',
-                                                            whiteSpace: 'nowrap'
-                                                        }}
-                                                    >
-                                                        {isSelected ? '✓ Selected' : 'Select'}
-                                                    </button>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setSelectedRoomId(room.id);
+                                                                setCustomUnits(null);
+                                                            }}
+                                                            style={{
+                                                                padding: '8px 12px',
+                                                                borderRadius: '10px',
+                                                                background: isSelected ? 'rgba(22, 101, 52, 0.1)' : '#F1F3EC',
+                                                                color: isSelected ? '#166534' : '#121613',
+                                                                border: isSelected ? '1.5px solid #166534' : '1px solid rgba(18,22,19,0.15)',
+                                                                fontSize: '12px',
+                                                                fontWeight: '800',
+                                                                cursor: 'pointer',
+                                                                whiteSpace: 'nowrap'
+                                                            }}
+                                                        >
+                                                            {isSelected ? '✓ Selected' : 'Select'}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setSelectedRoomId(room.id);
+                                                                setCustomUnits(null);
+                                                                setIsBookingModalOpen(true);
+                                                            }}
+                                                            className="btn-lime"
+                                                            style={{
+                                                                padding: '8px 14px',
+                                                                borderRadius: '10px',
+                                                                fontSize: '12px',
+                                                                fontWeight: '900',
+                                                                cursor: 'pointer',
+                                                                whiteSpace: 'nowrap',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                gap: '4px',
+                                                                boxShadow: '0 2px 8px rgba(213,237,85,0.4)'
+                                                            }}
+                                                        >
+                                                            <span>Book Stay</span>
+                                                            <span>→</span>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         );
@@ -998,13 +1075,15 @@ return (
                                 <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '14px', paddingTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Have Squad Questions?</div>
                                     <a
-                                        href={waLink(`Hi Aanandham! I have questions regarding ${camp.title} facilities and group booking.`)}
+                                        href={waLink(`Hi Aanandham! I have questions regarding ${camp.title} (${currentRoom?.name || 'Standard Tent'}) on ${selectedDate} for ${guestsCount} campers.`)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={() => logWhatsAppInquiry({
-                                            text: `Questions regarding ${camp.title} facilities and group booking`,
+                                            text: `Questions regarding ${camp.title} (${currentRoom?.name || 'Standard Tent'}) on ${selectedDate} for ${guestsCount} campers`,
                                             source: `Camp Squad Questions: ${camp.title}`,
-                                            campsiteId: camp.id
+                                            campsiteId: camp.id,
+                                            guests: guestsCount,
+                                            travelDates: selectedDate
                                         })}
                                         style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
                                     >
