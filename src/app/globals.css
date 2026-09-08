@@ -626,80 +626,8 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* ── SIMILAR CAMPS 2-UP GRID ON MOBILE (COMPACT CARDS) ── */
-@media (max-width: 640px) {
-  .similar-camps-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
-    flex-wrap: nowrap !important;
-    overflow-x: visible !important;
-    scroll-snap-type: none !important;
-    overscroll-behavior-x: auto !important;
-    padding: 0 !important;
-    touch-action: auto !important;
-    scroll-padding: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-  }
+/* ── SIMILAR CAMPS GRID (HANDLED BY RESPONSIVE LUXURY SWIPE TRACK ON MOBILE & AUTO-FILL GRID ON DESKTOP) ── */
 
-  .similar-camps-grid > * {
-    flex: none !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    scroll-snap-align: none !important;
-    margin: 0 !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .similar-camp-card > div:first-child {
-    height: 110px !important;
-  }
-
-  .similar-camp-card > div:first-child span {
-    top: 8px;
-    left: 8px;
-    font-size: 10px;
-    padding: 3px 8px;
-  }
-
-  .similar-camp-card > div:last-child {
-    padding: 12px 14px !important;
-  }
-
-  .similar-camp-card h3 {
-    font-size: 14.5px !important;
-    margin: 0 0 8px !important;
-    line-height: 1.25;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .similar-camp-card > div:last-child > div:first-child {
-    margin-bottom: 4px !important;
-    font-size: 10px !important;
-  }
-
-  .similar-camp-card > div:last-child > div:first-child span:last-child {
-    font-size: 10.5px !important;
-  }
-
-  .similar-camp-card > div:last-child > div:last-child {
-    padding-top: 9px !important;
-    margin-top: auto;
-  }
-
-  .similar-camp-card > div:last-child > div:last-child > span:first-child {
-    font-size: 10px !important;
-  }
-
-  .similar-camp-card > div:last-child > div:last-child > span:last-child {
-    font-size: 11px !important;
-  }
-}
 
 /* ─────────────────────────────────────────────────────────────
    ROUTE NOTEBOOK NOTES (AUTHENTIC LUXURY TACTILE SHEETS)
@@ -1245,11 +1173,13 @@ body::-webkit-scrollbar-thumb:active,
 
 @media (max-width: 960px) {
   .package-card-img,
-  .camps-card-media {
+  .camps-card-media,
+  .similar-camp-card-media {
     height: 220px !important;
   }
   .package-card-body,
-  .camps-card-body {
+  .camps-card-body,
+  .similar-camp-card-body {
     padding: 18px 18px 20px !important;
   }
 }
