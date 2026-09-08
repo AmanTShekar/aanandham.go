@@ -35,6 +35,7 @@ export default function Step1CampsiteLodging({
 }) {
     const [step1Errors, setStep1Errors] = useState([]);
     const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+    const [isSwitchingCamp, setIsSwitchingCamp] = useState(false);
 
     const currentPkg = selectedPkg || campsList.find(p => p.id === selectedPkgId) || campsList[0] || {};
     const availableRooms = currentPkg.rooms || [];
@@ -86,90 +87,157 @@ export default function Step1CampsiteLodging({
                     onClose={() => setStep1Errors([])}
                 />
             )}
-                            {/* Section 1: Campsite Selector */}
-                            <div style={{
-                                marginBottom: '24px',
-                                border: isCampsiteMissing ? '2px solid #DC2626' : '1px solid transparent',
-                                borderRadius: '18px',
-                                padding: isCampsiteMissing ? '12px' : 0,
-                                background: isCampsiteMissing ? '#FEF2F2' : 'transparent',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                    <label style={{ fontSize: '12.5px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        1. Select Destination Campsite *
-                                    </label>
-                                    <span style={{ fontSize: '12px', color: isCampsiteMissing ? '#DC2626' : '#166534', fontWeight: '800' }}>
-                                        {isCampsiteMissing ? '⚠️ Selection Required' : `${campsList.length} Verified Camps`}
-                                    </span>
-                                </div>
-                                {isCampsiteMissing && (
-                                    <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
-                                        <AlertCircle size={13} />
-                                        <span>Please click and select one destination campsite below</span>
-                                    </div>
-                                )}
-                                <div className="booking-pkgs-grid">
-                                    {campsList.map((pkg) => {
-                                        const isSelected = pkg.id === selectedPkgId;
-                                        return (
-                                            <div
-                                                key={pkg.id}
-                                                onClick={() => {
-                                                    setSelectedPkgId(pkg.id);
-                                                    setCustomUnits(null);
-                                                    if (pkg.rooms && pkg.rooms.length > 0) {
-                                                        setSelectedRoomId(pkg.rooms[0].id);
-                                                    }
-                                                }}
-                                                style={{
-                                                    borderRadius: '16px',
-                                                    border: isSelected ? '2px solid #166534' : '1px solid rgba(0, 0, 0, 0.08)',
-                                                    background: isSelected ? '#F4F7EB' : '#FFFFFF',
-                                                    padding: '12px',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                                                    position: 'relative',
-                                                    boxShadow: isSelected ? '0 6px 20px rgba(22, 101, 52, 0.12)' : 'none'
-                                                }}
-                                            >
-                                                <div style={{
-                                                    height: '78px',
-                                                    borderRadius: '10px',
-                                                    backgroundImage: `url(${pkg.image})`,
-                                                    backgroundSize: 'cover',
-                                                    backgroundPosition: 'center',
-                                                    marginBottom: '10px',
-                                                    position: 'relative'
-                                                }}>
-                                                    <span style={{
-                                                        position: 'absolute',
-                                                        top: '6px',
-                                                        left: '6px',
-                                                        background: isSelected ? '#121613' : 'rgba(0,0,0,0.65)',
-                                                        color: isSelected ? '#D5ED55' : '#FFFFFF',
-                                                        fontSize: '9.5px',
-                                                        fontWeight: '800',
-                                                        padding: '2px 8px',
-                                                        borderRadius: '999px'
-                                                    }}>
-                                                        {pkg.altitude || pkg.badge || 'Verified'}
-                                                    </span>
-                                                </div>
-                                                <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '3px' }}>
-                                                    {pkg.shortTitle || pkg.title}
-                                                </div>
-                                                <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
-                                                    {pkg.location}
-                                                </div>
-                                                <div style={{ fontSize: '14px', fontWeight: '900', color: '#166534' }}>
-                                                    Starts ₹{pkg.price?.toLocaleString('en-IN')} <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+
+            {/* Section 1: Focused Selected Stay or Full Campsite Switcher */}
+            <div style={{
+                marginBottom: '18px',
+                border: isCampsiteMissing ? '2px solid #DC2626' : '1px solid transparent',
+                borderRadius: '18px',
+                padding: isCampsiteMissing ? '12px' : 0,
+                background: isCampsiteMissing ? '#FEF2F2' : 'transparent',
+                transition: 'all 0.2s ease'
+            }}>
+                {/* ── FOCUS MODE: Sleek compact card for the active stay ── */}
+                {currentPkg?.id && !isSwitchingCamp ? (
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        background: '#F4F7EB',
+                        border: '1.5px solid #166534',
+                        borderRadius: '16px',
+                        padding: '10px 14px'
+                    }}>
+                        <div style={{
+                            width: '54px',
+                            height: '54px',
+                            borderRadius: '10px',
+                            backgroundImage: `url(${currentPkg.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            flexShrink: 0
+                        }} />
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
+                                <span style={{ fontSize: '10px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 7px', borderRadius: '999px' }}>
+                                    {currentPkg.altitude || 'Verified Basecamp'}
+                                </span>
+                                <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>Selected Stay</span>
                             </div>
+                            <div style={{ fontSize: '14.5px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                {currentPkg.title || currentPkg.name}
+                            </div>
+                            <div style={{ fontSize: '11.5px', color: '#59655D' }}>
+                                {currentPkg.location || 'Munnar, Kerala'}
+                            </div>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setIsSwitchingCamp(true)}
+                            style={{
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.15)',
+                                borderRadius: '10px',
+                                padding: '6px 11px',
+                                fontSize: '11.5px',
+                                fontWeight: '700',
+                                color: '#121613',
+                                cursor: 'pointer',
+                                flexShrink: 0,
+                                boxShadow: '0 1px 4px rgba(0,0,0,0.05)'
+                            }}
+                        >
+                            Change ▾
+                        </button>
+                    </div>
+                ) : (
+                    /* ── EXPANDED MODE: Full Campsite Grid ── */
+                    <div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                            <label style={{ fontSize: '12.5px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                1. Select Destination Campsite *
+                            </label>
+                            {currentPkg?.id && (
+                                <button
+                                    type="button"
+                                    onClick={() => setIsSwitchingCamp(false)}
+                                    style={{ background: 'none', border: 'none', color: '#166534', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer', textDecoration: 'underline' }}
+                                >
+                                    Keep Current ▴
+                                </button>
+                            )}
+                        </div>
+                        {isCampsiteMissing && (
+                            <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
+                                <AlertCircle size={13} />
+                                <span>Please click and select one destination campsite below</span>
+                            </div>
+                        )}
+                        <div className="booking-pkgs-grid">
+                            {campsList.map((pkg) => {
+                                const isSelected = pkg.id === selectedPkgId;
+                                return (
+                                    <div
+                                        key={pkg.id}
+                                        onClick={() => {
+                                            setSelectedPkgId(pkg.id);
+                                            setCustomUnits(null);
+                                            setIsSwitchingCamp(false);
+                                            if (pkg.rooms && pkg.rooms.length > 0) {
+                                                setSelectedRoomId(pkg.rooms[0].id);
+                                            }
+                                        }}
+                                        style={{
+                                            borderRadius: '16px',
+                                            border: isSelected ? '2px solid #166534' : '1px solid rgba(0, 0, 0, 0.08)',
+                                            background: isSelected ? '#F4F7EB' : '#FFFFFF',
+                                            padding: '12px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                                            position: 'relative',
+                                            boxShadow: isSelected ? '0 6px 20px rgba(22, 101, 52, 0.12)' : 'none'
+                                        }}
+                                    >
+                                        <div style={{
+                                            height: '78px',
+                                            borderRadius: '10px',
+                                            backgroundImage: `url(${pkg.image})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                            marginBottom: '10px',
+                                            position: 'relative'
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute',
+                                                top: '6px',
+                                                left: '6px',
+                                                background: isSelected ? '#121613' : 'rgba(0,0,0,0.65)',
+                                                color: isSelected ? '#D5ED55' : '#FFFFFF',
+                                                fontSize: '9.5px',
+                                                fontWeight: '800',
+                                                padding: '2px 8px',
+                                                borderRadius: '999px'
+                                            }}>
+                                                {pkg.altitude || pkg.badge || 'Verified'}
+                                            </span>
+                                        </div>
+                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '3px' }}>
+                                            {pkg.shortTitle || pkg.title}
+                                        </div>
+                                        <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
+                                            {pkg.location}
+                                        </div>
+                                        <div style={{ fontSize: '14px', fontWeight: '900', color: '#166534' }}>
+                                            Starts ₹{pkg.price?.toLocaleString('en-IN')} <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+            </div>
 
                             {/* Section 2: Room Types / Lodging Selector */}
                             <div style={{

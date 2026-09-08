@@ -12,7 +12,7 @@ export default function BookingWizardHeader({
     onClose
 }) {
     return (
-        <div style={{ padding: '24px 28px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+        <div className="booking-modal-header" style={{ padding: '24px 28px 16px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '16px' }}>
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>

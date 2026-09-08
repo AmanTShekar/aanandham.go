@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 const CARD_WHITE = { background: '#FFFFFF', borderRadius: '24px', padding: '32px', border: '1px solid rgba(18, 22, 19, 0.08)', marginBottom: '32px', boxShadow: '0 2px 10px rgba(0,0,0,0.02)' };
 const IMG_FILL = { width: '100%', height: '100%', objectFit: 'cover' };
@@ -59,6 +59,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     // Wishlist & Share Toast
     const [wishlist, setWishlist] = useState([]);
     const [shareToast, setShareToast] = useState('');
+    const [activeTimelineDay, setActiveTimelineDay] = useState(0);
     const toastTimerRef = React.useRef(null);
 
     useEffect(() => {
@@ -197,6 +198,94 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const discountLabel = discount.discountLabel;
     const discountAmount = discount.discountAmount;
     const nearbyCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
+
+    // ── Robust normalization of Basecamp Perks (handles objects, strings, comma lists, fallbacks) ──
+    const normalizedAmenities = useMemo(() => {
+        let raw = camp?.amenities;
+        if (typeof raw === 'string') {
+            raw = raw.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        let list = [];
+        if (Array.isArray(raw) && raw.length > 0) {
+            list = raw
+                .filter(a => a && (typeof a === 'string' ? a.trim() : a.enabled !== false))
+                .map(a => {
+                    if (typeof a === 'string') {
+                        return { name: a.trim(), icon: '' };
+                    }
+                    return { name: a.name || a.title || 'Amenity', icon: a.icon || '' };
+                })
+                .filter(a => Boolean(a.name));
+        }
+        if (list.length === 0 && Array.isArray(camp?.highlights) && camp.highlights.length > 0) {
+            list = camp.highlights.slice(0, 6).map(h => ({ name: h, icon: '' }));
+        }
+        if (list.length === 0) {
+            list = [
+                { name: 'Campfire Circle & Acoustic Jams', icon: '🔥' },
+                { name: '4x4 Offroad Mountain Trail Access', icon: '🚙' },
+                { name: 'Western Restrooms with Running Hot Water', icon: '🚿' },
+                { name: '24/7 Power Backup & Mobile Charging', icon: '⚡' },
+                { name: 'Certified Mountain Guides & First Aid', icon: '🩺' },
+                { name: 'Authentic Kerala Spiced Buffet Dining', icon: '🍽️' }
+            ];
+        }
+        return list;
+    }, [camp?.amenities, camp?.highlights]);
+
+    // ── Robust normalization of 2-Day Expedition Timeline (guarantees complete schedule for every camp) ──
+    const normalizedItinerary = useMemo(() => {
+        if (Array.isArray(camp?.itinerary) && camp.itinerary.length > 0) {
+            const valid = camp.itinerary.filter(d => d && (Array.isArray(d.items) ? d.items.length > 0 : Boolean(d.title)));
+            if (valid.length > 0) return valid;
+        }
+
+        const titleLower = String(camp?.title || '').toLowerCase();
+        const isKolukkumalai = titleLower.includes('kolukkumalai') || String(camp?.location || '').toLowerCase().includes('kolukkumalai');
+        const isMeesapulimala = titleLower.includes('meesapulimala');
+        const isVattavada = titleLower.includes('vattavada') || String(camp?.region || '').toLowerCase().includes('vattavada');
+
+        let day2Morning = "06:00 AM – Early morning mist walk through mountain trails.";
+        let day2Highlight = "07:30 AM – Scenic ridge viewpoints and high-altitude photography.";
+        if (isKolukkumalai) {
+            day2Morning = "04:30 AM – Wake up & hot black tea briefing.";
+            day2Highlight = "05:00 AM – 4x4 Rugged Jeep climb to Kolukkumalai Tiger Rock (7,900 FT) for golden cloud bed sunrise.";
+        } else if (isMeesapulimala) {
+            day2Morning = "05:00 AM – Early morning summit trek across the 8 rolling ridges.";
+            day2Highlight = "08:30 AM – Stand atop Meesapulimala Summit (8,661 FT) above the sea of clouds.";
+        } else if (isVattavada) {
+            day2Morning = "06:30 AM – Organic strawberry farm stroll & crisp eucalyptus morning walk.";
+            day2Highlight = "07:30 AM – Pampadum Shola border exploration & birdwatching.";
+        }
+
+        return [
+            {
+                day: "Day 1",
+                title: "Basecamp Check-in, Sunset Ridge Walk & Campfire Barbecue",
+                subtitle: "Sanctuary Arrival & Starlit Evening",
+                items: [
+                    "02:00 PM – Arrival at basecamp, welcome mountain herbal tea & check-in.",
+                    "03:00 PM – Tent / Glamp allocation and briefing by certified camp guides.",
+                    "04:30 PM – Guided sunset nature hike along panoramic mountain ridges.",
+                    "07:00 PM – Roaring campfire lighting with acoustic music circle.",
+                    "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.",
+                    "10:30 PM – Stargazing under crystal-clear skies & overnight mountain rest."
+                ]
+            },
+            {
+                day: "Day 2",
+                title: isKolukkumalai ? "Kolukkumalai Sunrise 4x4 Safari & Tea Tasting" : (isMeesapulimala ? "Meesapulimala Summit Push & Return" : "Morning Sunrise Trail, Breakfast & Departure"),
+                subtitle: "Dawn High-Altitude Trail & Farewell",
+                items: [
+                    day2Morning,
+                    day2Highlight,
+                    "08:30 AM – Wholesome hot Kerala breakfast buffet (Appam / Puttu / Poori).",
+                    "10:00 AM – Leisure photography and peaceful basecamp relaxation.",
+                    "11:00 AM – Check-out with unforgettable wilderness memories."
+                ]
+            }
+        ];
+    }, [camp?.itinerary, camp?.title, camp?.location, camp?.region]);
 
     // ── Synchronize active stay context for GlobalActionHub & Sticky Bar ──
     useEffect(() => {
@@ -476,7 +565,7 @@ return (
                         <div>
                             
                             {/* SECTION 1: HIGHLIGHTS & DESCRIPTION */}
-                            <div style={CARD_WHITE}>
+                            <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> EXPEDITION OVERVIEW
                                 </div>
@@ -506,7 +595,7 @@ return (
                             </div>
 
                             {/* SECTION 2: LODGING ROOM TYPES & TENT SELECTION */}
-                            <div style={CARD_WHITE}>
+                            <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> LODGING INVENTORY
                                 </div>
@@ -536,7 +625,7 @@ return (
                                                     flexWrap: 'wrap'
                                                 }}
                                             >
-                                                <div className="room-card-main" style={{ flex: 1, minWidth: '220px' }}>
+                                                <div className="room-card-main" style={{ flex: 1, minWidth: 0 }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                                                         <span style={{ background: '#121613', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px' }}>
                                                             {room.type?.toUpperCase() || 'TENT'}
@@ -632,51 +721,44 @@ return (
                             </div>
 
                             {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (CRISP LUCIDE ICONS) */}
-                            <div style={CARD_WHITE}>
+                            <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> BASECAMP PERKS
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 8px', color: '#121613' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
                                     Included Amenities & Basecamp Facilities
                                 </h2>
-                                <p style={{ fontSize: '14px', color: '#59655D', margin: '0 0 22px' }}>
+                                <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 18px', lineHeight: 1.5 }}>
                                     Every Aanandham basecamp is verified for wilderness safety, hygienic washrooms, and curated culinary experiences.
                                 </p>
-                                <div className="amenities-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
-                                    {(camp.amenities && camp.amenities.length > 0 ? camp.amenities : [
-                                        { name: 'Campfire Circle & Acoustic Jams', icon: '🔥' },
-                                        { name: '4x4 Offroad Trail Access', icon: '🚙' },
-                                        { name: 'Western Washrooms & Hot Water', icon: '🚿' },
-                                        { name: 'Power Backup & Charging Points', icon: '⚡' },
-                                        { name: 'Wilderness Guides & First Aid', icon: '🩺' },
-                                        { name: 'Kerala Spiced Buffet Dining', icon: '🍽️' }
-                                    ]).map((amenity, aIdx) => (
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 150px), 1fr))', gap: '8px' }}>
+                                    {normalizedAmenities.map((amenity, aIdx) => (
                                         <div
                                             key={aIdx}
                                             className="amenity-module"
                                             style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
-                                                gap: '12px',
+                                                gap: '10px',
                                                 background: '#F8F9F5',
-                                                padding: '14px 16px',
-                                                borderRadius: '16px',
+                                                padding: '10px 12px',
+                                                borderRadius: '12px',
                                                 border: '1px solid rgba(18, 22, 19, 0.06)'
                                             }}
                                         >
                                             <div style={{
-                                                width: '38px',
-                                                height: '38px',
-                                                borderRadius: '10px',
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '8px',
                                                 background: '#121613',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 flexShrink: 0
                                             }}>
-                                                <LucideAmenityIcon name={amenity.name} icon={amenity.icon || ''} size={18} color="#D5ED55" />
+                                                <LucideAmenityIcon name={amenity.name} icon={amenity.icon || ''} size={15} color="#D5ED55" />
                                             </div>
-                                            <span style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
+                                            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#121613', lineHeight: 1.3 }}>
                                                 {amenity.name}
                                             </span>
                                         </div>
@@ -685,46 +767,119 @@ return (
                             </div>
 
                             {/* SECTION 4: 2-DAY DETAILED ITINERARY */}
-                            <div style={CARD_WHITE}>
-                                <div className="star-badge" style={{ marginBottom: '8px' }}>
-                                    <span className="star-icon">★</span> EXPEDITION TIMELINE
+                            <div className="camp-section-card">
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
+                                    <div className="star-badge">
+                                        <span className="star-icon">★</span> EXPEDITION TIMELINE
+                                    </div>
+                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 10px', borderRadius: '999px' }}>
+                                        2 Days / 1 Night Rhythm
+                                    </span>
                                 </div>
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 20px', color: '#121613' }}>
+                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', margin: '0 0 14px', color: '#121613' }}>
                                     Detailed 2-Day Schedule
                                 </h2>
 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                                    {camp.itinerary && camp.itinerary.map((dayPlan, didx) => (
-                                        <div key={didx} style={{ background: '#F8F9F5', borderRadius: '18px', padding: '24px', border: '1px solid rgba(18,22,19,0.04)' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px' }}>
-                                                <span style={{ background: '#121613', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '4px 10px', borderRadius: '8px' }}>
-                                                    {dayPlan.day}
+                                {/* Mobile / Desktop Day Selector Tabs */}
+                                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', background: '#F1F3EC', padding: '4px', borderRadius: '12px' }}>
+                                    {normalizedItinerary.map((dayPlan, didx) => {
+                                        const isDayActive = activeTimelineDay === didx;
+                                        return (
+                                            <button
+                                                key={didx}
+                                                type="button"
+                                                onClick={() => setActiveTimelineDay(didx)}
+                                                style={{
+                                                    flex: 1,
+                                                    padding: '9px 12px',
+                                                    borderRadius: '9px',
+                                                    border: 'none',
+                                                    background: isDayActive ? '#121613' : 'transparent',
+                                                    color: isDayActive ? '#D5ED55' : '#59655D',
+                                                    fontSize: '12.5px',
+                                                    fontWeight: '800',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.2s ease',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px'
+                                                }}
+                                            >
+                                                <span>{dayPlan.day}</span>
+                                                <span style={{ opacity: isDayActive ? 0.8 : 0.6, fontSize: '11px', fontWeight: '600' }}>
+                                                    {didx === 0 ? '· Afternoon & BBQ' : '· Dawn & Sunrise'}
                                                 </span>
-                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                                    {dayPlan.title}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Active Day Content - Compact Vertical Timeline */}
+                                {(() => {
+                                    const currentDay = normalizedItinerary[activeTimelineDay] || normalizedItinerary[0];
+                                    if (!currentDay) return null;
+                                    return (
+                                        <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '16px 14px', border: '1px solid rgba(18,22,19,0.05)' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                                                <span style={{ background: '#121613', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '3px 9px', borderRadius: '6px' }}>
+                                                    {currentDay.day}
+                                                </span>
+                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15.5px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                                    {currentDay.title}
                                                 </h3>
                                             </div>
-                                            <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                                {dayPlan.items.map((item, itemIdx) => (
-                                                    <li key={itemIdx} style={{ fontSize: '14px', color: '#3A443E', lineHeight: 1.55 }}>
-                                                        {item}
-                                                    </li>
-                                                ))}
-                                            </ul>
+
+                                            {/* Milestone Items List */}
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                {currentDay.items.map((item, itemIdx) => {
+                                                    const dashIndex = item.indexOf('–');
+                                                    const hasDash = dashIndex > -1;
+                                                    const timePart = hasDash ? item.slice(0, dashIndex).trim() : null;
+                                                    const descPart = hasDash ? item.slice(dashIndex + 1).trim() : item;
+
+                                                    return (
+                                                        <div key={itemIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                                                            {timePart ? (
+                                                                <span style={{
+                                                                    flexShrink: 0,
+                                                                    minWidth: '68px',
+                                                                    fontSize: '10.5px',
+                                                                    fontWeight: '800',
+                                                                    color: '#121613',
+                                                                    background: '#FFFFFF',
+                                                                    border: '1px solid rgba(18, 22, 19, 0.1)',
+                                                                    padding: '3px 6px',
+                                                                    borderRadius: '6px',
+                                                                    textAlign: 'center',
+                                                                    marginTop: '1px'
+                                                                }}>
+                                                                    {timePart}
+                                                                </span>
+                                                            ) : (
+                                                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#166534', flexShrink: 0, marginTop: '7px' }} />
+                                                            )}
+                                                            <div style={{ fontSize: '13px', color: '#2D3748', lineHeight: 1.45, fontWeight: '600' }}>
+                                                                {descPart}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
+                                    );
+                                })()}
                             </div>
 
                             {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
-                            <div style={CARD_WHITE}>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '32px' }}>
+                            <div className="camp-section-card">
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '24px' }}>
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#166534', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#DCFCE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>✓</span>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#166534', margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#DCFCE7', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px' }}>✓</span>
                                             What's Included
                                         </h3>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                                             {(camp.inclusions || [
                                                 'Welcome tea & hot snacks at basecamp check-in',
                                                 'Buffet dinner with chicken/veg barbecue platter',
@@ -733,8 +888,8 @@ return (
                                                 '4x4 Jeep transfer to Kolukkumalai sunrise point',
                                                 'Certified camp staff & wilderness first-aid kit'
                                             ]).map((inc, iidx) => (
-                                                <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: '#3A443E', lineHeight: 1.5 }}>
-                                                    <span style={{ color: '#166534', fontWeight: '800', marginTop: '2px' }}>✓</span>
+                                                <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#3A443E', lineHeight: 1.45 }}>
+                                                    <span style={{ color: '#166534', fontWeight: '800', marginTop: '1px' }}>✓</span>
                                                     <span>{inc}</span>
                                                 </div>
                                             ))}
@@ -742,11 +897,11 @@ return (
                                     </div>
 
                                     <div>
-                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#DC2626', margin: '0 0 16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            <span style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#FEE2E2', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px' }}>✕</span>
+                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', color: '#DC2626', margin: '0 0 14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#FEE2E2', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px' }}>✕</span>
                                             What's Not Included
                                         </h3>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
                                             {(camp.exclusions || [
                                                 'Personal vehicle fuel & highway toll charges',
                                                 'Personal trekking gear (shoes, jackets, torches)',
@@ -754,8 +909,8 @@ return (
                                                 'Entry tickets to commercial viewpoints outside itinerary',
                                                 'Medical evacuation expenses or insurance coverage'
                                             ]).map((exc, eidx) => (
-                                                <div key={eidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13.5px', color: '#59655D', lineHeight: 1.5 }}>
-                                                    <span style={{ color: '#DC2626', fontWeight: '800', marginTop: '2px' }}>✕</span>
+                                                <div key={eidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#59655D', lineHeight: 1.45 }}>
+                                                    <span style={{ color: '#DC2626', fontWeight: '800', marginTop: '1px' }}>✕</span>
                                                     <span>{exc}</span>
                                                 </div>
                                             ))}
@@ -766,7 +921,7 @@ return (
 
                             {/* SECTION 6: ROUTE & NAVIGATION GUIDE */}
                             {camp.routeGuide && (
-                                <div style={CARD_WHITE}>
+                                <div className="camp-section-card">
                                     <div className="star-badge" style={{ marginBottom: '8px' }}>
                                         <span className="star-icon">★</span> ROUTE & NAVIGATION GUIDE
                                     </div>
@@ -820,14 +975,7 @@ return (
 
                         {/* ── RIGHT COLUMN: SLEEK EXPANDED STICKY AVAILABILITY & BOOKING CARD ── */}
                         <div style={{ position: 'sticky', top: '90px' }}>
-                            <div style={{
-                                background: '#FFFFFF',
-                                borderRadius: '26px',
-                                padding: 'clamp(22px, 2.4vw, 32px)',
-                                border: '1px solid rgba(18, 22, 19, 0.1)',
-                                boxShadow: '0 14px 40px rgba(0, 0, 0, 0.07)',
-                                color: '#121613'
-                            }}>
+                            <div className="camp-booking-sidebar">
                                 
                                 {/* Header / Per-Camper Pricing Display */}
                                 <div style={{ borderBottom: '1px solid rgba(18, 22, 19, 0.08)', paddingBottom: '16px', marginBottom: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
