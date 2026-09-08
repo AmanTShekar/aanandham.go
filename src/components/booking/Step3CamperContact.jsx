@@ -275,7 +275,7 @@ export default function Step3CamperContact({
                                 }}
                             >
                                 <Phone size={13} color={isPhoneError ? '#DC2626' : '#166534'} />
-                                <span>WhatsApp Contact Number *</span>
+                                <span>WhatsApp Phone *</span>
                             </label>
                             {isPhoneError ? (
                                 <span style={{ color: '#DC2626', fontSize: '10.5px', fontWeight: '800' }}>⚠️ Invalid</span>
@@ -521,7 +521,7 @@ export default function Step3CamperContact({
                 {/* Special Notes */}
                 <div>
                     <label style={{ fontSize: '12px', fontWeight: '700', color: '#121613', display: 'block', marginBottom: '4px' }}>
-                        Special Requests / Pickup Logistics / Notes (Optional):
+                        Special Requests / Notes (Optional):
                     </label>
                     <textarea
                         rows={2}

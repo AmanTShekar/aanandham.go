@@ -600,12 +600,12 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
             style={{
                 position: 'fixed',
                 inset: 0,
-                zIndex: 999,
+                zIndex: 100005,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '16px',
-                background: 'rgba(10, 15, 12, 0.75)',
+                background: 'rgba(10, 15, 12, 0.8)',
                 backdropFilter: 'blur(8px)',
                 WebkitBackdropFilter: 'blur(8px)'
             }}
@@ -653,7 +653,7 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
                         overscrollBehavior: 'contain',
                         WebkitOverflowScrolling: 'touch',
                         touchAction: 'pan-y',
-                        padding: '24px'
+                        padding: 'clamp(14px, 3vw, 24px) clamp(14px, 3vw, 24px) clamp(60px, 10vw, 90px)'
                     }}
                     onWheel={(e) => e.stopPropagation()}
                     onTouchMove={(e) => e.stopPropagation()}

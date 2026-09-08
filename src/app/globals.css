@@ -5207,40 +5207,51 @@ body.booking-modal-open {
     margin-top: 4px;
   }
 
-  /* Booking Engine Modal Mobile Adaptations */
+  /* Booking Engine Modal Mobile Fullscreen & Safety Adaptations */
   .booking-modal-overlay {
     padding: 0 !important;
-    align-items: flex-end !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    z-index: 100005 !important;
   }
 
   .booking-modal-container {
-    border-radius: 24px 24px 0 0 !important;
-    max-height: 94vh !important;
+    border-radius: 0 !important;
+    max-height: 100% !important;
+    max-height: 100dvh !important;
+    height: 100% !important;
+    height: 100dvh !important;
     max-width: 100% !important;
-    height: 94vh !important;
+    width: 100% !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
   .booking-modal-header {
-    padding: 16px 16px 12px !important;
+    padding: 12px 14px 10px !important;
+    background: #FFFFFF !important;
+    border-bottom: 1px solid rgba(18, 22, 19, 0.08) !important;
   }
 
   .booking-modal-body {
-    padding: 16px 14px 24px !important;
-  }
-
-  .booking-steps-bar {
-    gap: 4px !important;
-    padding: 4px 6px !important;
-  }
-
-  .booking-step-badge {
-    width: 22px !important;
-    height: 22px !important;
-    font-size: 11px !important;
+    padding: 14px 12px clamp(80px, 14vw, 110px) !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   .booking-pkgs-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
-    gap: 10px !important;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 8px !important;
   }
+}
+
+/* Hide floating action dock and mobile sticky action bar when booking modal is active */
+body.booking-modal-open .mobile-sticky-action-bar,
+body.booking-modal-open .desktop-global-action-dock,
+body.booking-modal-open aside.desktop-global-action-dock,
+body.booking-modal-open nav.mobile-sticky-action-bar {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }

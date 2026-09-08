@@ -36,8 +36,8 @@ export default function Step2AddonsActivities({
                                 <div>
                                     <div style={{ marginBottom: '20px' }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                                            <label style={{ fontSize: '13px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                                Customize Your Mountain Journey (Optional Upgrades)
+                                            <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                                Optional Upgrades & Add-ons
                                             </label>
                                             <span style={{ fontSize: '12px', color: '#166534', fontWeight: '700' }}>
                                                 {selectedAddons.length} selected

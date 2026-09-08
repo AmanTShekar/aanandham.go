@@ -110,8 +110,8 @@ export default function Step1CampsiteLodging({
                         padding: '10px 14px'
                     }}>
                         <div style={{
-                            width: '54px',
-                            height: '54px',
+                            width: '52px',
+                            height: '52px',
                             borderRadius: '10px',
                             backgroundImage: `url(${currentPkg.image})`,
                             backgroundSize: 'cover',
@@ -119,16 +119,31 @@ export default function Step1CampsiteLodging({
                             flexShrink: 0
                         }} />
                         <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                                <span style={{ fontSize: '10px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 7px', borderRadius: '999px' }}>
-                                    {currentPkg.altitude || 'Verified Basecamp'}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px', flexWrap: 'wrap' }}>
+                                <span style={{
+                                    fontSize: '10px',
+                                    fontWeight: '800',
+                                    background: '#DCFCE7',
+                                    color: '#166534',
+                                    border: '1px solid rgba(22, 101, 52, 0.25)',
+                                    padding: '2px 7px',
+                                    borderRadius: '999px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px'
+                                }}>
+                                    ✓ Verified Stay
                                 </span>
-                                <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>Selected Stay</span>
+                                {currentPkg.altitude && (
+                                    <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 7px', borderRadius: '999px' }}>
+                                        {currentPkg.altitude}
+                                    </span>
+                                )}
                             </div>
-                            <div style={{ fontSize: '14.5px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <div style={{ fontSize: '14px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {currentPkg.title || currentPkg.name}
                             </div>
-                            <div style={{ fontSize: '11.5px', color: '#59655D' }}>
+                            <div style={{ fontSize: '11px', color: '#59655D' }}>
                                 {currentPkg.location || 'Munnar, Kerala'}
                             </div>
                         </div>
@@ -155,8 +170,8 @@ export default function Step1CampsiteLodging({
                     /* ── EXPANDED MODE: Full Campsite Grid ── */
                     <div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ fontSize: '12.5px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                1. Select Destination Campsite *
+                            <label style={{ fontSize: '12px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+                                1. Destination Campsite *
                             </label>
                             {currentPkg?.id && (
                                 <button
@@ -171,7 +186,7 @@ export default function Step1CampsiteLodging({
                         {isCampsiteMissing && (
                             <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
                                 <AlertCircle size={13} />
-                                <span>Please click and select one destination campsite below</span>
+                                <span>Please select one campsite below</span>
                             </div>
                         )}
                         <div className="booking-pkgs-grid">
@@ -212,24 +227,28 @@ export default function Step1CampsiteLodging({
                                                 position: 'absolute',
                                                 top: '6px',
                                                 left: '6px',
-                                                background: isSelected ? '#121613' : 'rgba(0,0,0,0.65)',
-                                                color: isSelected ? '#D5ED55' : '#FFFFFF',
+                                                background: '#DCFCE7',
+                                                color: '#166534',
+                                                border: '1px solid rgba(22, 101, 52, 0.2)',
                                                 fontSize: '9.5px',
                                                 fontWeight: '800',
-                                                padding: '2px 8px',
-                                                borderRadius: '999px'
+                                                padding: '2px 7px',
+                                                borderRadius: '999px',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '3px'
                                             }}>
-                                                {pkg.altitude || pkg.badge || 'Verified'}
+                                                ✓ Verified
                                             </span>
                                         </div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '3px' }}>
+                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '3px' }}>
                                             {pkg.shortTitle || pkg.title}
                                         </div>
                                         <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
                                             {pkg.location}
                                         </div>
-                                        <div style={{ fontSize: '14px', fontWeight: '900', color: '#166534' }}>
-                                            Starts ₹{pkg.price?.toLocaleString('en-IN')} <span style={{ fontSize: '10.5px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
+                                        <div style={{ fontSize: '13.5px', fontWeight: '900', color: '#166534' }}>
+                                            Starts ₹{pkg.price?.toLocaleString('en-IN')} <span style={{ fontSize: '10px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
                                         </div>
                                     </div>
                                 );
@@ -239,36 +258,31 @@ export default function Step1CampsiteLodging({
                 )}
             </div>
 
-                            {/* Section 2: Room Types / Lodging Selector */}
-                            <div style={{
-                                marginBottom: '24px',
-                                padding: '18px 20px',
-                                background: isRoomMissing ? '#FEF2F2' : '#F8F9F5',
-                                borderRadius: '20px',
-                                border: isRoomMissing ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.08)',
-                                transition: 'all 0.2s ease'
-                            }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                                    <div>
-                                        <label style={{ display: 'block', fontSize: '13px', fontWeight: '800', color: isRoomMissing ? '#DC2626' : '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                            2. Choose Lodging Style & Accommodations *
-                                        </label>
-                                        <span style={{ fontSize: '12px', color: isRoomMissing ? '#DC2626' : '#59655D' }}>
-                                            {isRoomMissing ? '⚠️ Please choose a tent or dome style' : `Available options at ${currentPkg.shortTitle || currentPkg.title}`}
-                                        </span>
-                                    </div>
-                                    <span style={{ background: isRoomMissing ? '#DC2626' : '#121613', color: isRoomMissing ? '#FFFFFF' : '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                        {availableRooms.length} Types
-                                    </span>
-                                </div>
-                                {isRoomMissing && (
-                                    <div className="custom-field-error-pill" style={{ marginBottom: '12px' }}>
-                                        <AlertCircle size={13} />
-                                        <span>Please select an accommodation or tent style below</span>
-                                    </div>
-                                )}
+            {/* Section 2: Room Types / Lodging Selector */}
+            <div style={{
+                marginBottom: '20px',
+                padding: 'clamp(12px, 2.5vw, 18px)',
+                background: isRoomMissing ? '#FEF2F2' : '#F8F9F5',
+                borderRadius: '18px',
+                border: isRoomMissing ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.08)',
+                transition: 'all 0.2s ease'
+            }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isRoomMissing ? '#DC2626' : '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                        2. Choose Lodging Style *
+                    </label>
+                    <span style={{ background: isRoomMissing ? '#DC2626' : '#121613', color: isRoomMissing ? '#FFFFFF' : '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '999px' }}>
+                        {availableRooms.length} Types Available
+                    </span>
+                </div>
+                {isRoomMissing && (
+                    <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
+                        <AlertCircle size={13} />
+                        <span>Please select a tent or dome style below</span>
+                    </div>
+                )}
 
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '10px' }}>
                                     {availableRooms.map((room) => {
                                         const isRoomSelected = room.id === selectedRoomId;
                                         const neededUnits = Math.max(1, Math.ceil(totalGuests / parseRoomCapacity(room.capacity)));
@@ -348,10 +362,10 @@ export default function Step1CampsiteLodging({
                                     transition: 'all 0.2s ease'
                                 }}>
                                     <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isDateMissing ? '#DC2626' : '#59655D', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                        3. Check-In Weekend Batch or Date *
+                                        3. Stay Date *
                                     </label>
                                     <CustomDateBatchPicker
-                                        label="Check-In Batch"
+                                        label="Check-In Date"
                                         selectedDate={travelDate || getDefaultUpcomingBatch()}
                                         onDateChange={(date) => {
                                             setTravelDate(date);
@@ -371,7 +385,7 @@ export default function Step1CampsiteLodging({
                                     <div>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                                             <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                                4. Number of Campers
+                                                4. Campers
                                             </label>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
                                                 {activeDiscountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {activeDiscountLabel}</span> : 'Standard Fare'}
