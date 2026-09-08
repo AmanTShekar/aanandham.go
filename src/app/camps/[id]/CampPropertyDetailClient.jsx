@@ -625,7 +625,57 @@ return (
                                                     flexWrap: 'wrap'
                                                 }}
                                             >
-                                                <div className="room-card-main" style={{ flex: 1, minWidth: 0 }}>
+                                                {/* Lodging Photo Showcase */}
+                                                {(room.image || camp.image) && (
+                                                    <div
+                                                        className="room-card-media card-img-zoom"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            const photoUrl = room.image || camp.image;
+                                                            const idx = gallery.findIndex(g => g === photoUrl);
+                                                            setActivePhotoIdx(idx >= 0 ? idx : 0);
+                                                            setIsLightboxOpen(true);
+                                                        }}
+                                                        style={{
+                                                            width: 'clamp(120px, 18vw, 150px)',
+                                                            height: '110px',
+                                                            borderRadius: '14px',
+                                                            overflow: 'hidden',
+                                                            position: 'relative',
+                                                            flexShrink: 0,
+                                                            cursor: 'pointer',
+                                                            background: '#EAECE4'
+                                                        }}
+                                                    >
+                                                        <img
+                                                            src={room.image || camp.image}
+                                                            alt={`${camp.title} - ${room.name}`}
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                            loading="lazy"
+                                                            decoding="async"
+                                                        />
+                                                        <div style={{
+                                                            position: 'absolute',
+                                                            bottom: '6px',
+                                                            right: '6px',
+                                                            background: 'rgba(0,0,0,0.65)',
+                                                            backdropFilter: 'blur(4px)',
+                                                            color: '#FFFFFF',
+                                                            fontSize: '10px',
+                                                            fontWeight: '700',
+                                                            padding: '2px 7px',
+                                                            borderRadius: '6px',
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '3px'
+                                                        }}>
+                                                            <Camera size={10} />
+                                                            <span>Photo</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                <div className="room-card-main" style={{ flex: 1, minWidth: '200px' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                                                         <span style={{ background: '#121613', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px' }}>
                                                             {room.type?.toUpperCase() || 'TENT'}

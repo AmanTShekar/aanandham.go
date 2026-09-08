@@ -52,11 +52,19 @@ export default function Step1CampsiteLodging({
 
     const onProceedStep1 = () => {
         const errs = [];
-        if (!selectedPkgId && !currentPkg?.id) {
+        const activePkgId = selectedPkgId || currentPkg?.id;
+        const activeRoomId = selectedRoomId || currentRoom?.id;
+
+        if (!activePkgId) {
             errs.push({ field: 'campsite', label: 'Campsite Destination', message: 'Please select a destination campsite' });
+        } else if (!selectedPkgId) {
+            setSelectedPkgId(activePkgId);
         }
-        if (!selectedRoomId && !currentRoom?.id) {
+
+        if (!activeRoomId) {
             errs.push({ field: 'room', label: 'Lodging Style', message: 'Please select your lodging style (Tent / Dome)' });
+        } else if (!selectedRoomId) {
+            setSelectedRoomId(activeRoomId);
         }
         if (!travelDate) {
             errs.push({ field: 'date', label: 'Stay Date', message: 'Please select your check-in date' });
@@ -88,271 +96,153 @@ export default function Step1CampsiteLodging({
                 />
             )}
 
-            {/* Section 1: Focused Selected Stay or Full Campsite Switcher */}
+            {/* Section 1: Sleek Confirmed Sanctuary & Lodging Card (Pure text & typography, zero images for fast frictionless booking) */}
             <div style={{
-                marginBottom: '18px',
-                border: isCampsiteMissing ? '2px solid #DC2626' : '1px solid transparent',
+                marginBottom: '20px',
+                background: '#F8FAF5',
+                border: isCampsiteMissing ? '2px solid #DC2626' : '1.5px solid #166534',
                 borderRadius: '18px',
-                padding: isCampsiteMissing ? '12px' : 0,
-                background: isCampsiteMissing ? '#FEF2F2' : 'transparent',
-                transition: 'all 0.2s ease'
+                padding: '14px 18px',
+                boxShadow: '0 2px 8px rgba(22, 101, 52, 0.06)'
             }}>
-                {/* ── FOCUS MODE: Sleek compact card for the active stay ── */}
-                {currentPkg?.id && !isSwitchingCamp ? (
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '12px',
-                        background: '#F4F7EB',
-                        border: '1.5px solid #166534',
-                        borderRadius: '16px',
-                        padding: '10px 14px'
-                    }}>
-                        <div style={{
-                            width: '52px',
-                            height: '52px',
-                            borderRadius: '10px',
-                            backgroundImage: `url(${currentPkg.image})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            flexShrink: 0
-                        }} />
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '3px', flexWrap: 'wrap' }}>
-                                <span style={{
-                                    fontSize: '10px',
-                                    fontWeight: '800',
-                                    background: '#DCFCE7',
-                                    color: '#166534',
-                                    border: '1px solid rgba(22, 101, 52, 0.25)',
-                                    padding: '2px 7px',
-                                    borderRadius: '999px',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '3px'
-                                }}>
-                                    ✓ Verified Stay
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: '220px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                            <span style={{
+                                fontSize: '10.5px',
+                                fontWeight: '800',
+                                background: '#DCFCE7',
+                                color: '#166534',
+                                border: '1px solid rgba(22, 101, 52, 0.25)',
+                                padding: '2px 8px',
+                                borderRadius: '999px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px'
+                            }}>
+                                ✓ Verified Stay
+                            </span>
+                            {currentPkg.altitude && (
+                                <span style={{ fontSize: '10px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 8px', borderRadius: '999px' }}>
+                                    {currentPkg.altitude}
                                 </span>
-                                {currentPkg.altitude && (
-                                    <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 7px', borderRadius: '999px' }}>
-                                        {currentPkg.altitude}
-                                    </span>
-                                )}
-                            </div>
-                            <div style={{ fontSize: '14px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {currentPkg.title || currentPkg.name}
-                            </div>
-                            <div style={{ fontSize: '11px', color: '#59655D' }}>
+                            )}
+                            <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
                                 {currentPkg.location || 'Munnar, Kerala'}
-                            </div>
+                            </span>
                         </div>
+
+                        <div style={{ fontSize: '16.5px', fontWeight: '900', color: '#121613', lineHeight: 1.3, marginBottom: '4px' }}>
+                            {currentPkg.title || currentPkg.name}
+                        </div>
+
+                        <div style={{ fontSize: '12.5px', color: '#166534', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                <Tent size={14} color="#166534" />
+                                <span>{currentRoom?.name || 'Alpine Tent'}</span>
+                            </span>
+                            <span style={{ color: '#7D8880', fontWeight: '600' }}>· {currentRoom?.capacity || '2 Campers'}</span>
+                            <span style={{ color: '#121613', fontWeight: '900' }}>· ₹{(currentRoom?.price || currentPkg?.price || 2499).toLocaleString('en-IN')} / camper</span>
+                        </div>
+                    </div>
+
+                    {/* Compact controls: Lodging Style selector & Switch Camp button */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                        {availableRooms.length > 1 && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <label htmlFor="booking-lodging-select" style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase' }}>
+                                    Style:
+                                </label>
+                                <select
+                                    id="booking-lodging-select"
+                                    value={selectedRoomId || currentRoom?.id}
+                                    onChange={(e) => {
+                                        setSelectedRoomId(e.target.value);
+                                        setCustomUnits(null);
+                                    }}
+                                    style={{
+                                        background: '#FFFFFF',
+                                        border: '1.5px solid rgba(22, 101, 52, 0.3)',
+                                        borderRadius: '10px',
+                                        padding: '6px 10px',
+                                        fontSize: '12px',
+                                        fontWeight: '800',
+                                        color: '#121613',
+                                        cursor: 'pointer',
+                                        boxShadow: '0 1px 4px rgba(0,0,0,0.04)'
+                                    }}
+                                >
+                                    {availableRooms.map(r => (
+                                        <option key={r.id} value={r.id}>
+                                            {r.name} — ₹{(r.price || r.pricePerPerson || currentPkg.price || 2499).toLocaleString('en-IN')}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
                         <button
                             type="button"
-                            onClick={() => setIsSwitchingCamp(true)}
+                            onClick={() => setIsSwitchingCamp(prev => !prev)}
                             style={{
                                 background: '#FFFFFF',
                                 border: '1px solid rgba(18, 22, 19, 0.15)',
                                 borderRadius: '10px',
-                                padding: '6px 11px',
+                                padding: '6px 12px',
                                 fontSize: '11.5px',
                                 fontWeight: '700',
                                 color: '#121613',
                                 cursor: 'pointer',
-                                flexShrink: 0,
                                 boxShadow: '0 1px 4px rgba(0,0,0,0.05)'
                             }}
                         >
-                            Change ▾
+                            {isSwitchingCamp ? 'Close ▴' : 'Change Sanctuary ▾'}
                         </button>
                     </div>
-                ) : (
-                    /* ── EXPANDED MODE: Full Campsite Grid ── */
-                    <div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                            <label style={{ fontSize: '12px', fontWeight: '800', color: isCampsiteMissing ? '#DC2626' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                                Choose Campsite *
-                            </label>
-                            {currentPkg?.id && (
-                                <button
-                                    type="button"
-                                    onClick={() => setIsSwitchingCamp(false)}
-                                    style={{ background: 'none', border: 'none', color: '#166534', fontSize: '11.5px', fontWeight: '800', cursor: 'pointer', textDecoration: 'underline' }}
-                                >
-                                    Keep Current ▴
-                                </button>
-                            )}
-                        </div>
-                        {isCampsiteMissing && (
-                            <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
-                                <AlertCircle size={13} />
-                                <span>Please select one campsite below</span>
-                            </div>
-                        )}
-                        <div className="booking-pkgs-grid">
-                            {campsList.map((pkg) => {
-                                const isSelected = pkg.id === selectedPkgId;
-                                return (
-                                    <div
-                                        key={pkg.id}
-                                        onClick={() => {
-                                            setSelectedPkgId(pkg.id);
-                                            setCustomUnits(null);
-                                            setIsSwitchingCamp(false);
-                                            if (pkg.rooms && pkg.rooms.length > 0) {
-                                                setSelectedRoomId(pkg.rooms[0].id);
-                                            }
-                                        }}
-                                        style={{
-                                            borderRadius: '16px',
-                                            border: isSelected ? '2px solid #166534' : '1px solid rgba(0, 0, 0, 0.08)',
-                                            background: isSelected ? '#F4F7EB' : '#FFFFFF',
-                                            padding: '12px',
-                                            cursor: 'pointer',
-                                            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                                            position: 'relative',
-                                            boxShadow: isSelected ? '0 6px 20px rgba(22, 101, 52, 0.12)' : 'none'
-                                        }}
-                                    >
-                                        <div style={{
-                                            height: '78px',
-                                            borderRadius: '10px',
-                                            backgroundImage: `url(${pkg.image})`,
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'center',
-                                            marginBottom: '10px',
-                                            position: 'relative'
-                                        }}>
-                                            <span style={{
-                                                position: 'absolute',
-                                                top: '6px',
-                                                left: '6px',
-                                                background: '#DCFCE7',
-                                                color: '#166534',
-                                                border: '1px solid rgba(22, 101, 52, 0.2)',
-                                                fontSize: '9.5px',
-                                                fontWeight: '800',
-                                                padding: '2px 7px',
-                                                borderRadius: '999px',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '3px'
-                                            }}>
-                                                ✓ Verified
-                                            </span>
-                                        </div>
-                                        <div style={{ fontSize: '13px', fontWeight: '800', color: '#121613', lineHeight: 1.3, marginBottom: '3px' }}>
-                                            {pkg.shortTitle || pkg.title}
-                                        </div>
-                                        <div style={{ fontSize: '11px', color: '#59655D', marginBottom: '6px' }}>
-                                            {pkg.location}
-                                        </div>
-                                        <div style={{ fontSize: '13.5px', fontWeight: '900', color: '#166534' }}>
-                                            Starts ₹{pkg.price?.toLocaleString('en-IN')} <span style={{ fontSize: '10px', fontWeight: '600', color: '#59655D' }}>/ camper</span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
+                </div>
+
+                {/* Collapsible Destination Sanctuary Switcher (clean dropdown, zero images) */}
+                {isSwitchingCamp && (
+                    <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px dashed rgba(22, 101, 52, 0.25)' }}>
+                        <label htmlFor="booking-campsite-select" style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+                            Choose Basecamp Destination:
+                        </label>
+                        <select
+                            id="booking-campsite-select"
+                            value={selectedPkgId || currentPkg?.id}
+                            onChange={(e) => {
+                                const newId = e.target.value;
+                                setSelectedPkgId(newId);
+                                const newCamp = campsList.find(c => c.id === newId);
+                                if (newCamp?.rooms?.[0]) {
+                                    setSelectedRoomId(newCamp.rooms[0].id);
+                                }
+                                setCustomUnits(null);
+                                setIsSwitchingCamp(false);
+                            }}
+                            style={{
+                                width: '100%',
+                                background: '#FFFFFF',
+                                border: '1.5px solid #166534',
+                                borderRadius: '10px',
+                                padding: '8px 12px',
+                                fontSize: '13px',
+                                fontWeight: '700',
+                                color: '#121613',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            {campsList.map(c => (
+                                <option key={c.id} value={c.id}>
+                                    {c.title || c.name} — Starts ₹{c.price?.toLocaleString('en-IN')} ({c.location})
+                                </option>
+                            ))}
+                        </select>
                     </div>
                 )}
             </div>
 
-            {/* Section 2: Room Types / Lodging Selector */}
-            <div style={{
-                marginBottom: '20px',
-                padding: 'clamp(12px, 2.5vw, 18px)',
-                background: isRoomMissing ? '#FEF2F2' : '#F8F9F5',
-                borderRadius: '18px',
-                border: isRoomMissing ? '2px solid #DC2626' : '1px solid rgba(18, 22, 19, 0.08)',
-                transition: 'all 0.2s ease'
-            }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                    <label style={{ display: 'block', fontSize: '12.5px', fontWeight: '800', color: isRoomMissing ? '#DC2626' : '#121613', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                        Lodging Style *
-                    </label>
-                    <span style={{ background: isRoomMissing ? '#DC2626' : '#121613', color: isRoomMissing ? '#FFFFFF' : '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '999px' }}>
-                        {availableRooms.length} Types Available
-                    </span>
-                </div>
-                {isRoomMissing && (
-                    <div className="custom-field-error-pill" style={{ marginBottom: '10px' }}>
-                        <AlertCircle size={13} />
-                        <span>Please select a tent or dome style below</span>
-                    </div>
-                )}
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '10px' }}>
-                                    {availableRooms.map((room) => {
-                                        const isRoomSelected = room.id === selectedRoomId;
-                                        const neededUnits = Math.max(1, Math.ceil(totalGuests / parseRoomCapacity(room.capacity)));
-                                        return (
-                                            <div
-                                                key={room.id}
-                                                onClick={() => {
-                                                    setSelectedRoomId(room.id);
-                                                    setCustomUnits(null);
-                                                }}
-                                                style={{
-                                                    borderRadius: '16px',
-                                                    border: isRoomSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.1)',
-                                                    background: '#FFFFFF',
-                                                    padding: '14px',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s ease',
-                                                    boxShadow: isRoomSelected ? '0 8px 24px rgba(22, 101, 52, 0.12)' : '0 2px 6px rgba(0,0,0,0.02)',
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                        <div style={{
-                                                            width: '18px',
-                                                            height: '18px',
-                                                            borderRadius: '50%',
-                                                            border: isRoomSelected ? '5px solid #166534' : '2px solid rgba(18, 22, 19, 0.25)',
-                                                            background: '#FFFFFF',
-                                                            boxSizing: 'border-box',
-                                                            flexShrink: 0
-                                                        }} />
-                                                        <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>
-                                                            {room.name}
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginTop: '6px' }}>
-                                                    {room.image && (
-                                                        <img
-                                                            src={room.image}
-                                                            alt={room.name}
-                                                            style={{ width: '56px', height: '56px', borderRadius: '10px', objectFit: 'cover', flexShrink: 0 }}
-                                                         loading="lazy" decoding="async"/>
-                                                    )}
-                                                    <div style={{ flex: 1, minWidth: 0 }}>
-                                                        <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                            <Users size={13} color="#59655D" />
-                                                            <span>{room.capacity || '2-4 Guests'}</span>
-                                                        </div>
-                                                        <div style={{ fontSize: '14.5px', fontWeight: '900', color: '#166534' }}>
-                                                            ₹{room.price?.toLocaleString('en-IN')} <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', marginTop: '10px' }}>
-                                                    <span style={{ fontSize: '10.5px', background: isRoomSelected ? '#D5ED55' : '#ECEEE6', color: '#121613', padding: '3px 8px', borderRadius: '999px', fontWeight: '800', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                        <Tent size={12} strokeWidth={2.5} />
-                                                        <span>{neededUnits} Unit(s) needed</span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-
-                            {/* Section 3: Date & Guests Setup */}
+            {/* Section 2: Date & Guests Setup */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: '20px', marginBottom: '24px' }}>
                                 <div style={{
                                     border: isDateMissing ? '2px solid #DC2626' : '1px solid transparent',

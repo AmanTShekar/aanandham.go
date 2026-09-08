@@ -31,7 +31,7 @@ export default function BookingWizardHeader({
                             ✓ Verified Stay
                         </span>
                         <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
-                            {step === 1 && 'Select lodging, dates & campers'}
+                            {step === 1 && 'Confirm dates, campers & lodging'}
                             {step === 2 && 'Optional campfire, BBQ & treks'}
                             {step === 3 && 'Primary explorer contact details'}
                             {step === 4 && 'Review summary & pay securely'}
@@ -39,7 +39,7 @@ export default function BookingWizardHeader({
                         </span>
                     </div>
                     <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 3vw, 22px)', fontWeight: '900', margin: 0, color: '#121613', letterSpacing: '-0.01em' }}>
-                        {step === 1 && '1. Choose Stay'}
+                        {step === 1 && '1. Stay & Dates'}
                         {step === 2 && '2. Add-Ons'}
                         {step === 3 && '3. Camper Details'}
                         {step === 4 && '4. Review & Confirm'}
@@ -78,7 +78,7 @@ export default function BookingWizardHeader({
             {step < 5 && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', width: '100%', marginTop: '4px' }}>
                     {[
-                        { num: 1, label: 'Stay' },
+                        { num: 1, label: 'Dates & Stay' },
                         { num: 2, label: 'Add-Ons' },
                         { num: 3, label: 'Campers' },
                         { num: 4, label: 'Confirm' }

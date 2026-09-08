@@ -1254,6 +1254,25 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
+@media (max-width: 640px) {
+  .room-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 14px !important;
+    gap: 14px !important;
+  }
+  .room-card .room-card-media {
+    width: 100% !important;
+    height: 160px !important;
+  }
+  .room-card .room-price-row {
+    width: 100% !important;
+    justify-content: space-between !important;
+    border-top: 1px solid rgba(18, 22, 19, 0.08) !important;
+    padding-top: 12px !important;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
    SINGLE-SCREEN CONTACT HUB RESPONSIVE LAYOUT
 ───────────────────────────────────────────────────────────── */
