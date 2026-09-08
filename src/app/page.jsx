@@ -1304,15 +1304,16 @@ export default function HomePage() {
                                 Western Ghats has drawn nature explorers for decades: a legendary destination with trails for every level. Trek every day, explore the cloud valleys, and connect with people from all around the world. This is the kind of trip that stays with you long after you leave.
                             </p>
 
-                            <button
-                                onClick={() => handleOpenBooking(INITIAL_ALL_CAMPS[0])}
+                            <Link
+                                href="/camps"
                                 className="action-arrow-btn"
+                                style={{ textDecoration: 'none' }}
                             >
-                                <span>Join The Camp</span>
+                                <span>Explore Camps</span>
                                 <div className="btn-arrow-circle">
                                     →
                                 </div>
-                            </button>
+                            </Link>
                         </motion.div>
 
                         {/* Center Highlight Image */}
@@ -1408,25 +1409,27 @@ export default function HomePage() {
                                 </div>
                             </div>
 
-                            {/* Quote Card */}
+                            {/* Our Story Card */}
                             <div className="hover-lift" style={{ background: '#FFFFFF', border: '1px solid rgba(18, 22, 19, 0.08)', borderRadius: '28px', padding: '28px', boxShadow: '0 8px 30px rgba(0,0,0,0.03)' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                                     <div style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '1.2px' }}>
-                                        Founder’s Ethos
+                                        Our Story · It Started with a Feeling
                                     </div>
                                     <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#E5A93B', background: 'rgba(229, 169, 59, 0.12)', padding: '3px 8px', borderRadius: '6px', letterSpacing: '0.5px' }}>
-                                        SURYANELLI · EST. 2024
+                                        EST. IN THE WESTERN GHATS
                                     </span>
                                 </div>
-                                <p style={{ fontSize: '15px', color: '#121613', lineHeight: 1.65, marginBottom: '14px', fontWeight: '700' }}>
-                                    “It started as a trek.<br />
-                                    It became a movement. Now we’re building a community of adventurers who choose authentic experiences over everything else.”
+                                <p style={{ fontSize: '15.5px', color: '#121613', lineHeight: 1.6, marginBottom: '14px', fontWeight: '800', fontFamily: 'var(--font-heading)' }}>
+                                    “We were engineering students asking ourselves: Is life really meant to be just about classes, deadlines, and waiting for the next break?”
                                 </p>
-                                <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.6, marginBottom: '20px', borderLeft: '2px solid #166534', paddingLeft: '12px' }}>
-                                    Born out of frustration with overpriced commercial resorts. We scouted off-grid mountain ridges with native tribal marshals to create Kerala’s most transparent, high-altitude wilderness sanctuary.
+                                <p style={{ fontSize: '13px', color: '#59655D', lineHeight: 1.65, marginBottom: '16px', borderLeft: '2px solid #E5A93B', paddingLeft: '12px' }}>
+                                    We took to the road to wake up surrounded by mountains, meet strangers, and feel truly alive. We discovered that happiness became easier to find when we were together — laughing by campfires and sharing stories we’d never planned. That is why we built <strong>Aanandham.go</strong>: a community where strangers become friends and happiness comes naturally.
                                 </p>
+                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#166534', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span>“Go somewhere. Meet someone. Feel something. Go with Aanandham.”</span>
+                                </div>
                                 <Link href="/about" className="action-arrow-btn" style={{ width: '100%', justifyContent: 'space-between', textDecoration: 'none' }}>
-                                    <span>Explore Our Journey &amp; Ethos</span>
+                                    <span>Read Our Full Story</span>
                                     <div className="btn-arrow-circle">
                                         →
                                     </div>
@@ -1478,14 +1481,14 @@ export default function HomePage() {
                                 </AnimatePresence>
                             </div>
 
-                            {/* Dark Gradient Overlay */}
-                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.95) 0%, rgba(14, 24, 17, 0.35) 50%, rgba(14, 24, 17, 0.65) 100%)', pointerEvents: 'none' }} />
+                            {/* Subtle Cinematic Gradient Overlay */}
+                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14, 24, 17, 0.88) 0%, rgba(14, 24, 17, 0.15) 50%, rgba(14, 24, 17, 0.35) 100%)', pointerEvents: 'none' }} />
 
-                            {/* Top Left Pillar Badge */}
+                            {/* Top Left Pillar Badge (Single clean badge, removed repeated top-right pill) */}
                             <div style={{
                                 position: 'absolute',
-                                top: 'clamp(14px, 3vw, 24px)',
-                                left: 'clamp(14px, 3vw, 24px)',
+                                top: 'clamp(14px, 2.5vw, 22px)',
+                                left: 'clamp(14px, 2.5vw, 22px)',
                                 background: 'rgba(0, 0, 0, 0.65)',
                                 color: '#E5A93B',
                                 fontSize: '12px',
@@ -1502,40 +1505,14 @@ export default function HomePage() {
                                 <span>{WHY_AANANDHAM_PILLARS[activeWhyIdx].badge}</span>
                             </div>
 
-                            {/* Top Right Live Stat Pill */}
-                            <div style={{
-                                position: 'absolute',
-                                top: 'clamp(14px, 3vw, 24px)',
-                                right: 'clamp(14px, 3vw, 24px)',
-                                background: 'rgba(0, 0, 0, 0.65)',
-                                color: '#FFFFFF',
-                                fontSize: '11.5px',
-                                fontWeight: '700',
-                                padding: '6px 14px',
-                                borderRadius: '999px',
-                                backdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(255, 255, 255, 0.15)'
-                            }}>
-                                {(() => { const StatIcon = WHY_AANANDHAM_PILLARS[activeWhyIdx].statIcon; return <StatIcon size={14} style={{ verticalAlign: '-2px' }} />; })()} {WHY_AANANDHAM_PILLARS[activeWhyIdx].stat}
-                            </div>
-
-                            {/* Bottom Content Card & Highlights */}
-                            <div className="why-showcase-content" style={{ position: 'absolute', bottom: '26px', left: '26px', right: '26px' }}>
+                            {/* Minimized Bottom Content Card — Clean title & controls so photography breathes */}
+                            <div className="why-showcase-content" style={{ position: 'absolute', bottom: '22px', left: '22px', right: '22px' }}>
                                 <div style={{ fontSize: '11px', color: '#E5A93B', fontWeight: '800', letterSpacing: '1.2px', textTransform: 'uppercase', marginBottom: '4px' }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].tagline}
                                 </div>
-                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 10px', lineHeight: 1.25 }}>
+                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(19px, 2.4vw, 24px)', fontWeight: '800', color: '#FFFFFF', margin: '0 0 12px', lineHeight: 1.25 }}>
                                     {WHY_AANANDHAM_PILLARS[activeWhyIdx].title}
                                 </h3>
-
-                                {/* Highlights Pills */}
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
-                                    {WHY_AANANDHAM_PILLARS[activeWhyIdx].highlights.map((h, idx) => (
-                                        <span key={idx} style={{ background: 'rgba(255, 255, 255, 0.14)', color: '#FFFFFF', fontSize: '11px', fontWeight: '600', padding: '4px 10px', borderRadius: '8px', backdropFilter: 'blur(6px)' }}>
-                                            ✓ {h}
-                                        </span>
-                                    ))}
-                                </div>
 
                                 {/* Carousel Controls & Indicator */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.18)' }}>

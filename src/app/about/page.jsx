@@ -10,7 +10,7 @@ import Footer from '../../components/Footer';
 import { useAuth } from '../../hooks/useAuth';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
-import { Mountain, Compass, Tent, Waves, ShieldCheck, Flame, Leaf, CloudSun, Plus, Minus, Star, Sunrise, Footprints, Telescope, MapPin, MessageCircle, Thermometer, Wind, ScrollText, Truck, PenLine, Hexagon } from 'lucide-react';
+import { Mountain, Compass, Tent, Waves, ShieldCheck, Flame, Leaf, CloudSun, Plus, Minus, Star, Sunrise, Footprints, Telescope, MapPin, MessageCircle, Thermometer, Wind, ScrollText, Truck, PenLine, Hexagon, Heart, Sparkles, Users } from 'lucide-react';
 import { InstagramIcon, WhatsAppIcon } from '../../components/common/BrandIcons';
 
 // ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
@@ -149,87 +149,91 @@ const ELEVATION_TIERS = [
 const WILDERNESS_PILLARS = [
     {
         id: '01',
-        title: 'Certified Native Mountain Guides',
-        tag: 'FIELD DISPATCH · 01',
-        stamp: '100% GUIDE LED',
+        title: '01 — Belong',
+        subtitle: 'Feel at home, wherever you are.',
+        tag: 'PILLAR · 01',
+        stamp: 'FEEL AT HOME',
         stampColor: '#1E3A1E',
         paperBg: '#FEF08A', // Sunlit Canary Yellow
         inkColor: '#1A1D0E',
         tapeColor: 'rgba(234, 179, 8, 0.9)',
         tapeRotation: '-2.5deg',
         rotation: '-1.6deg',
-        icon: ShieldCheck,
-        metric: '1:6 Guide-to-Camper Ratio',
-        desc: 'Every ridge trek, campfire session, and 4x4 ascent is supervised by certified local mountain guides trained in high-altitude topography, medical response, and wildlife tracking.',
+        icon: Heart,
+        metric: 'Part of Something',
+        desc: 'We create spaces where guests feel welcomed, comfortable and connected—not like visitors, but like part of something.',
         specs: [
-            '100% native Suryanelli ridge navigators',
-            'Real-time satellite & radio coordination',
-            'State Forest Department clearance & permits'
+            'Welcoming spaces where you are embraced like family',
+            'Comfort-first mountain stays with thoughtful details',
+            'Safe, inclusive sanctuary for solos, couples & squads'
         ],
-        memo: '“The mountain demands respect. We ensure you feel the raw power of the ridge with total peace of mind.”'
+        memo: '“You never arrive as just a visitor; you arrive as part of something.”'
     },
     {
         id: '02',
-        title: 'Thermal Insulated Pods & En-Suites',
-        tag: 'FIELD DISPATCH · 02',
-        stamp: 'ALL-WEATHER SEALED',
+        title: '02 — Experience',
+        subtitle: 'Stay for the place. Remember the feeling.',
+        tag: 'PILLAR · 02',
+        stamp: 'REMEMBER THE FEELING',
         stampColor: '#1A381E',
         paperBg: '#D9F99D', // Electric Mountain Lime
         inkColor: '#0F2414',
         tapeColor: 'rgba(132, 204, 22, 0.9)',
         tapeRotation: '2.4deg',
         rotation: '1.4deg',
-        icon: Tent,
-        metric: '12°C Weather Insulated',
-        desc: 'Engineered for true mountain comfort: double-walled waterproof canvas, premium pocket-spring mattresses, 300-threadcount duvets, and private hot-water washrooms.',
+        icon: Compass,
+        metric: 'Feel the Destination',
+        desc: 'From mountain mornings to local flavours and quiet evenings, we focus on experiences that let you genuinely feel the destination.',
         specs: [
-            'Double-wall insulated geodesic architecture',
-            'Sanitized en-suite washrooms with instant hot geysers',
-            '100% waterproof heavy-gauge storm canvas'
+            'Golden sunrise cloud beds above the mist line',
+            'Authentic local flavours & slow-cooked clay pot meals',
+            'Quiet ridge evenings listening to the mountain breeze'
         ],
-        memo: '“No damp sleeping bags. Step out into the clouds and return to a warm, hotel-grade bed.”'
+        memo: '“Stay for the place. Remember the feeling forever.”'
     },
     {
         id: '03',
-        title: 'Farm-to-Campfire Culinary Craft',
-        tag: 'FIELD DISPATCH · 03',
-        stamp: 'LIVE MOUNTAIN GRILL',
+        title: '03 — Connect',
+        subtitle: 'People make places memorable.',
+        tag: 'PILLAR · 03',
+        stamp: 'SHARED MOMENTS',
         stampColor: '#4A1D08',
         paperBg: '#FED7AA', // Warm Sunburst Amber / Peach
         inkColor: '#2D1406',
         tapeColor: 'rgba(251, 146, 60, 0.9)',
         tapeRotation: '-1.8deg',
         rotation: '-1.2deg',
-        icon: Flame,
-        metric: 'Live Earthen Pot BBQ',
-        desc: 'Live campfire grills, authentic Kerala earthen-pot curries cooked over open woodfire, and estate-plucked organic cardamom chai brewed fresh on the ridge.',
+        icon: Users,
+        metric: 'Meaningful Bonds',
+        desc: 'Our properties are designed to encourage conversations, shared moments and meaningful connections between travellers, locals and hosts.',
         specs: [
-            'Freshly grilled BBQ with veg and non-veg options',
-            'Slow-cooked traditional clay pot recipes',
-            'Estate-fresh organic cardamom & tea tastings'
+            'Campfire circles designed for spontaneous conversations',
+            'Bonds between travellers, native guides & hosts',
+            'Laughter and stories shared with people you just met'
         ],
-        memo: '“Hot food tastes twice as good under a blanket of stars at 7,900 FT.”'
+        memo: '“People make places memorable. Strangers become lifelong friends.”'
     },
     {
         id: '04',
-        title: '100% Zero-Trace Conservation Charter',
-        tag: 'FIELD DISPATCH · 04',
-        stamp: 'LEAVE NO TRACE',
+        title: '04 — Aanandham',
+        subtitle: 'Hospitality that brings happiness.',
+        tag: 'PILLAR · 04',
+        stamp: 'BRINGS HAPPINESS',
         stampColor: '#0A331E',
         paperBg: '#A7F3D0', // Fresh Alpine Mint
         inkColor: '#062817',
         tapeColor: 'rgba(52, 211, 153, 0.9)',
         tapeRotation: '2.0deg',
         rotation: '1.6deg',
-        icon: Leaf,
-        metric: '0g Single-Use Plastic',
-        desc: 'Strict environmental ethics: zero single-use plastics permitted, 100% solar ambient night lighting, organic composting, and direct reinvestment into local tribal youth employment.',
+        icon: Sparkles,
+        metric: 'Pure Mountain Joy',
+        desc: 'At the heart of everything is Aanandham—creating peaceful spaces, joyful moments and stays that leave you feeling a little lighter than when you arrived.',
         specs: [
-            'Complete ban on disposable plastic bottles',
-            'Low-voltage solar pathway illumination',
-            'Direct livelihood support for native families'
+            'Peaceful off-grid spaces to unplug and recharge',
+            'Joyful moments that unfold naturally without rush',
+            'Stays that leave you feeling lighter than when you arrived'
         ],
-        memo: '“We leave the ridgelines cleaner, quieter, and wilder than when we found them.”'
+        memo: '“At the heart of everything is Aanandham: hospitality that brings happiness.”'
     }
 ];
 
@@ -237,15 +241,15 @@ const WILDERNESS_PILLARS = [
 const TIMELINE_MILESTONES = [
     {
         year: '2024',
-        title: 'The High-Altitude Wilderness Vision',
-        tag: 'THE SPARK & IDEA',
-        desc: 'Born out of a deep passion for the Western Ghats. Frustrated by overpriced commercial resorts, we scouted off-grid Suryanelli ridges to conceptualize an authentic, safe, and transparent luxury wilderness platform.'
+        title: 'The Engineering Dorm Spark',
+        tag: 'WHERE IT STARTED',
+        desc: 'Living the usual college life of classes and deadlines, we asked: Is life really meant to be just about work and waiting for breaks? We packed our rucksacks for the Western Ghats to find a freer way of living.'
     },
     {
         year: '2024',
-        title: '4x4 Trail Scouting & Native Marshals',
+        title: '4x4 Trail Scouting & The Epiphany',
         tag: 'EXPEDITION FOUNDATION',
-        desc: 'Partnered with native Suryanelli tribal guides, mapped private high-altitude boulder routes above the mist inversion line, and assembled our dedicated 4x4 Mahindra convoy fleet for Kolukkumalai dawn safaris.'
+        desc: 'Partnered with Suryanelli marshals to map private cloud-inversion ridges. We discovered that the real magic wasn’t just the destination—it was the laughter, shared meals, and bonds formed with strangers.'
     },
     {
         year: '2025',
@@ -255,9 +259,9 @@ const TIMELINE_MILESTONES = [
     },
     {
         year: '2026',
-        title: 'Kerala’s Premier Wilderness Platform',
+        title: 'Kerala’s Premier Wilderness Community',
         tag: 'EXPEDITION ECOSYSTEM',
-        desc: 'Expanded into Kerala’s leading mountain camping and trekking network with multi-property reservations, automated QR gate check-ins, OpenZen tech integration, and thousands of 5-star camper stories.'
+        desc: 'Expanded into Kerala’s leading mountain travel community with multi-property reservations, automated QR check-ins, OpenZen tech integration, and thousands of travelers discovering Aanandham.'
     }
 ];
 
@@ -671,45 +675,81 @@ export default function AboutPage() {
                                 variants={cardReveal}
                             >
                                 <div className="star-badge" style={{ marginBottom: '16px' }}>
-                                    <span className="star-icon">★</span> OUR FOUNDING STORY
+                                    <span className="star-icon">★</span> OUR STORY · IT STARTED WITH A FEELING
                                 </div>
 
                                 <h2 style={{
                                     fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                    fontSize: 'clamp(32px, 4.5vw, 52px)',
+                                    fontSize: 'clamp(30px, 4.2vw, 48px)',
                                     fontWeight: '800',
-                                    lineHeight: 1.12,
+                                    lineHeight: 1.15,
                                     letterSpacing: '-0.03em',
                                     color: '#0B150E',
-                                    margin: '0 0 24px'
+                                    margin: '0 0 22px'
                                 }}>
-                                    From Student Classrooms to <span style={{ color: '#E5A93B' }}>Sunrise Cloud Beds</span>
+                                    We Were Engineering Students Asking One Question: <span style={{ color: '#E5A93B' }}>Is Life Just About Routines?</span>
                                 </h2>
 
-                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '20px' }}>
-                                    It all began with a bunch of us studying in Kerala — surrounded by some of the most serene, untouched, and atmospheric mountain ranges in India. Between heavy textbooks, exams, and lecture halls, we took every chance to step outside into the wild.
+                                <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.75, marginBottom: '18px' }}>
+                                    We were engineering students, living the usual life — classes, deadlines, assignments, and the constant thought of building a career. But somewhere along the way, we started asking ourselves a simple question: <strong style={{ color: '#0B150E' }}>Is life really meant to be just about work, routines, and waiting for the next break?</strong>
                                 </p>
 
-                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '20px' }}>
-                                    We started exploring on foot: setting alarms for 4:30 AM in the bone-chilling cold, walking narrow tea trails, swimming in hidden mountain springs, and hiking up to ridges where nobody else went. Standing on a 7,900 FT summit watching an ocean of golden morning mist roll beneath our feet changed something inside us forever.
+                                <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.75, marginBottom: '22px' }}>
+                                    We wanted to experience something different. We wanted to discover new places, get lost on unfamiliar roads, wake up surrounded by mountains, meet new people, and experience the kind of peace that you don’t find in everyday life.
                                 </p>
 
-                                <p style={{ fontSize: '16px', color: '#59655D', lineHeight: 1.75, marginBottom: '32px' }}>
-                                    Sitting around night campfires under billions of stars, we asked a simple question: <strong style={{ color: '#0B150E' }}>Why should experiencing this mountain magic cost a fortune?</strong> Commercial luxury resorts were charging ₹15,000/night for sterile rooms that isolated you from nature, while budget camping was often unsafe and poorly managed. We built Aanandham to give everyone — students, couples, solo wanderers, and families — the ultimate high-altitude experience with authentic warmth, safe 4x4 convoys, clean washrooms, and honest, affordable rates.
+                                {/* The 5 Moments of Human Connection */}
+                                <div style={{
+                                    background: 'rgba(240, 246, 242, 0.75)',
+                                    border: '1px solid rgba(22, 101, 52, 0.12)',
+                                    borderRadius: '20px',
+                                    padding: '20px 22px',
+                                    marginBottom: '24px'
+                                }}>
+                                    <div style={{ fontSize: '12px', fontWeight: '800', color: '#166534', letterSpacing: '0.8px', textTransform: 'uppercase', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <Sparkles size={15} style={{ color: '#E5A93B' }} />
+                                        And every time we travelled, we noticed something beautiful:
+                                    </div>
+                                    <div style={{ fontSize: '15px', fontWeight: '800', color: '#0B150E', marginBottom: '14px', fontStyle: 'italic' }}>
+                                        “Happiness became easier to find when we were together.”
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '10px' }}>
+                                        {[
+                                            { icon: '💬', text: 'A random conversation with a stranger' },
+                                            { icon: '🍲', text: 'A shared meal at a new place' },
+                                            { icon: '😄', text: 'Laughing with people we’d just met' },
+                                            { icon: '⛰️', text: 'Watching the mountains in silence' },
+                                            { icon: '📖', text: 'Coming back with stories we never planned to create' }
+                                        ].map((item, idx) => (
+                                            <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: '#2C3A30', fontWeight: '600', background: '#FFFFFF', padding: '9px 13px', borderRadius: '12px', border: '1px solid rgba(11, 21, 14, 0.06)' }}>
+                                                <span style={{ fontSize: '16px' }}>{item.icon}</span>
+                                                <span>{item.text}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.75, marginBottom: '18px' }}>
+                                    Those moments made us realize that travel isn’t only about the places we visit. It’s about the people we meet and the happiness we create along the way. That’s where <strong style={{ color: '#0B150E' }}>Aanandham.go</strong> began — a travel community built from our desire to explore, connect, and share that feeling with others.
+                                </p>
+
+                                <p style={{ fontSize: '15.5px', color: '#59655D', lineHeight: 1.75, marginBottom: '28px' }}>
+                                    The word <span style={{ color: '#166534', fontWeight: '800' }}>Aanandham</span> means <em>happiness</em> — and that’s exactly what we want to bring into people’s lives. We want to connect people through journeys, take them to places that make them feel alive, and create an environment where strangers can become friends, routines can be forgotten, and happiness can come naturally. Whether it’s a mountain escape, a new destination, a spontaneous road trip, or simply sitting around with people you’ve just met — we believe every journey has the potential to create a little more Aanandham.
                                 </p>
 
                                 {/* Founder Quote Card with Spring Hover */}
                                 <motion.div 
-                                    whileHover={{ y: -6, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
+                                    whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.08)' }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
                                         background: '#FFFFFF',
                                         border: '1px solid rgba(11, 21, 14, 0.08)',
                                         borderLeft: '4px solid #E5A93B',
                                         borderRadius: '0 20px 20px 0',
-                                        padding: '24px 28px',
+                                        padding: '24px 26px',
                                         boxShadow: '0 12px 30px rgba(0,0,0,0.04)',
-                                        cursor: 'default'
+                                        cursor: 'default',
+                                        marginBottom: '16px'
                                     }}
                                 >
                                     <p style={{
@@ -719,15 +759,33 @@ export default function AboutPage() {
                                         lineHeight: 1.65,
                                         margin: '0 0 14px'
                                     }}>
-                                        “We didn’t start Aanandham in a boardroom. We started it around a crackling campfire with cold hands, hot cardamom tea, and a promise to make Kerala’s misty sunrise cloud beds accessible to everyone.”
+                                        “We’re not here just to take you places. We’re here to bring people together, create experiences, and make happiness part of the journey. Because we started Aanandham.go for the same reason we started travelling in the first place: We wanted to live a little more freely. And now, we want you to experience that feeling with us.”
                                     </p>
+                                    
+                                    {/* Brand Credo Ribbon */}
+                                    <div style={{
+                                        background: 'rgba(229, 169, 59, 0.1)',
+                                        borderRadius: '12px',
+                                        padding: '10px 14px',
+                                        marginBottom: '16px',
+                                        border: '1px dashed #E5A93B',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}>
+                                        <Heart size={14} style={{ color: '#E5A93B', flexShrink: 0 }} />
+                                        <span style={{ fontSize: '13px', fontWeight: '800', color: '#0B150E' }}>
+                                            Go somewhere. Meet someone. Feel something. Go with Aanandham.
+                                        </span>
+                                    </div>
+
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                         <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E5A93B', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '14px' }}>
-                                            S
+                                            A
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>Suryanarayanan & The Aanandham Squad</div>
-                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Co-Founders & Mountain Marshals · Aanandham.go</div>
+                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>The Aanandham Student Founders & Mountain Marshals</div>
+                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Co-Founders & Community Curators · Aanandham.go</div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -792,10 +850,10 @@ export default function AboutPage() {
                                     </div>
                                     <div>
                                         <div style={{ fontSize: '14px', fontWeight: '800', color: '#FFFFFF' }}>
-                                            360° Cloud Bed Views
+                                            180° Panoramic Cloud Beds
                                         </div>
                                         <div style={{ fontSize: '12px', color: '#A2B6A6' }}>
-                                            Sunrise directly above cloud lines
+                                            Sunrise rolling across the misty valley
                                         </div>
                                     </div>
                                 </motion.div>
@@ -1076,7 +1134,7 @@ export default function AboutPage() {
                                 boxShadow: '0 0 24px rgba(229, 169, 59, 0.3)',
                                 marginBottom: '16px'
                             }}>
-                                <span style={{ color: '#E5A93B', fontSize: '15px' }}>★</span> EXPEDITION FIELD DISPATCHES
+                                <span style={{ color: '#E5A93B', fontSize: '15px' }}>★</span> CORE HOSPITALITY ETHOS
                             </div>
 
                             <h2 style={{
@@ -1090,7 +1148,7 @@ export default function AboutPage() {
                                 The 4 Pillars of <span style={{ color: '#E5A93B' }}>Aanandham Hospitality</span>
                             </h2>
                             <p style={{ fontSize: '16.5px', color: '#A2B6A6', maxWidth: '680px', margin: '0 auto' }}>
-                                Handcrafted wilderness standards written on the ridge. Hover or tap to inspect our unyielding comfort and safety protocols.
+                                Welcoming spaces, unforgettable memories, meaningful human connections, and pure happiness written into every stay.
                             </p>
                         </div>
 
@@ -1226,7 +1284,7 @@ export default function AboutPage() {
                                     </div>
 
                                     {/* Icon & Bold Headline */}
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '16px' }}>
                                         <div style={{
                                             width: '50px',
                                             height: '50px',
@@ -1242,17 +1300,30 @@ export default function AboutPage() {
                                         }}>
                                             <pillar.icon size={22} color={pillar.inkColor} />
                                         </div>
-                                        <h3 style={{
-                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                            fontSize: '23px',
-                                            fontWeight: '800',
-                                            lineHeight: 1.2,
-                                            margin: 0,
-                                            color: pillar.inkColor,
-                                            letterSpacing: '-0.02em'
-                                        }}>
-                                            {pillar.title}
-                                        </h3>
+                                        <div>
+                                            <h3 style={{
+                                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                                fontSize: '23px',
+                                                fontWeight: '800',
+                                                lineHeight: 1.2,
+                                                margin: 0,
+                                                color: pillar.inkColor,
+                                                letterSpacing: '-0.02em'
+                                            }}>
+                                                {pillar.title}
+                                            </h3>
+                                            {pillar.subtitle && (
+                                                <div style={{
+                                                    fontSize: '13px',
+                                                    fontWeight: '700',
+                                                    color: pillar.stampColor,
+                                                    marginTop: '4px',
+                                                    lineHeight: 1.35
+                                                }}>
+                                                    {pillar.subtitle}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                     {/* Description */}

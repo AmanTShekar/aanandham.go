@@ -12,65 +12,93 @@ export default function BookingWizardHeader({
     paymentSettings = {},
     onClose
 }) {
+    const stepTitles = {
+        1: 'Stay & Dates',
+        2: 'Add-Ons & Activities',
+        3: 'Camper Details',
+        4: 'Review & Enquire',
+        5: 'Boarding Pass Issued'
+    };
+
+    const steps = [
+        { num: 1, label: 'Stay & Dates' },
+        { num: 2, label: 'Add-Ons' },
+        { num: 3, label: 'Campers' },
+        { num: 4, label: 'Enquire' }
+    ];
+
     return (
-        <div className="booking-modal-header" style={{ padding: 'clamp(14px, 2.5vw, 20px) clamp(14px, 3vw, 24px) 12px', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
-                <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                        <VerifiedStayBadge size="sm" />
-                        <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
-                            {step === 1 && 'Confirm dates, campers & lodging'}
-                            {step === 2 && 'Optional campfire, BBQ & treks'}
-                            {step === 3 && 'Primary explorer contact details'}
-                            {step === 4 && 'Review summary & pay securely'}
-                            {step === 5 && 'Official Wilderness Pass'}
-                        </span>
-                    </div>
-                    <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(17px, 3vw, 22px)', fontWeight: '900', margin: 0, color: '#121613', letterSpacing: '-0.01em' }}>
-                        {step === 1 && '1. Stay & Dates'}
-                        {step === 2 && '2. Add-Ons'}
-                        {step === 3 && '3. Camper Details'}
-                        {step === 4 && '4. Review & Confirm'}
-                        {step === 5 && <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Boarding Pass Issued</span>}
+        <div 
+            className="booking-modal-header" 
+            style={{ 
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: 'clamp(14px, 2.5vw, 18px) clamp(14px, 3vw, 24px) 12px', 
+                borderBottom: '1px solid rgba(0,0,0,0.06)', 
+                background: '#FFFFFF' 
+            }}
+        >
+            {/* ── ROW 1: Title (Left) & Close Button (Top-Right) ── */}
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                width: '100%',
+                gap: '12px', 
+                marginBottom: step < 5 ? '12px' : '0' 
+            }}>
+                <div style={{ minWidth: 0, flex: 1 }}>
+                    <h2 id="booking-modal-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(16px, 2.5vw, 21px)', fontWeight: '900', margin: 0, color: '#121613', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {step === 5 ? (
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><PartyPopper size={18} /> Boarding Pass Issued</span>
+                        ) : (
+                            stepTitles[step]
+                        )}
                     </h2>
                 </div>
 
+                {/* Close Button on Top Right */}
                 <button
                     onClick={onClose}
                     aria-label="Close booking modal"
-                    className="modal-close-btn"
+                    className="modal-close-btn-light"
                     style={{
-                        width: '36px',
-                        height: '36px',
-                        minWidth: '36px',
-                        minHeight: '36px',
+                        width: '34px',
+                        height: '34px',
+                        minWidth: '34px',
+                        minHeight: '34px',
                         borderRadius: '50%',
                         background: 'rgba(18, 22, 19, 0.06)',
                         border: '1px solid rgba(18, 22, 19, 0.12)',
                         color: '#121613',
-                        fontSize: '15px',
+                        fontSize: '14px',
                         fontWeight: '800',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         transition: 'all 0.2s ease',
-                        flexShrink: 0
+                        flexShrink: 0,
+                        marginLeft: 'auto'
                     }}
                 >
                     ✕
                 </button>
             </div>
 
-            {/* ── SLEEK SEGMENTED PROGRESS TRACK ── */}
+            {/* ── ROW 2 (SEPARATE NEW LINE BELOW): 1-2-3-4 Progress Track ── */}
             {step < 5 && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', width: '100%', marginTop: '4px' }}>
-                    {[
-                        { num: 1, label: 'Dates & Stay' },
-                        { num: 2, label: 'Add-Ons' },
-                        { num: 3, label: 'Campers' },
-                        { num: 4, label: 'Confirm' }
-                    ].map((s) => {
+                <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(4, 1fr)', 
+                    gap: '6px', 
+                    width: '100%', 
+                    boxSizing: 'border-box',
+                    marginTop: '2px' 
+                }}>
+                    {steps.map((s) => {
                         const isActive = step === s.num;
                         const isCompleted = step > s.num;
                         return (
@@ -80,7 +108,7 @@ export default function BookingWizardHeader({
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    gap: '5px',
+                                    gap: '4px',
                                     cursor: isCompleted ? 'pointer' : 'default'
                                 }}
                             >
@@ -101,7 +129,10 @@ export default function BookingWizardHeader({
                                     <span style={{
                                         fontSize: '11px',
                                         fontWeight: isActive ? '900' : isCompleted ? '700' : '600',
-                                        color: isActive ? '#121613' : isCompleted ? '#166534' : '#7D8880'
+                                        color: isActive ? '#121613' : isCompleted ? '#166534' : '#7D8880',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis'
                                     }}>
                                         {s.num}. {s.label}
                                     </span>

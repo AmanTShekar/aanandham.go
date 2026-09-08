@@ -10,13 +10,16 @@ import { Check } from 'lucide-react';
 export default function VerifiedStayBadge({ 
     size = 'sm', 
     text = 'Verified Stay', 
+    iconOnly = false,
     style = {},
     className = ''
 }) {
     const isMd = size === 'md';
     const isLg = size === 'lg';
 
-    const padding = isLg ? '4px 10px 4px 7px' : isMd ? '3px 9px 3px 6px' : '2.5px 8px 2.5px 5.5px';
+    const padding = iconOnly
+        ? (isLg ? '3.5px 6px' : isMd ? '3px 5px' : '2px 4.5px')
+        : (isLg ? '4px 10px 4px 7px' : isMd ? '3px 9px 3px 6px' : '2.5px 8px 2.5px 5.5px');
     const fontSize = isLg ? '12px' : isMd ? '11px' : '10px';
     const iconWrapperSize = isLg ? '15px' : isMd ? '13px' : '11.5px';
     const checkIconSize = isLg ? 10.5 : isMd ? 9 : 8;
@@ -24,6 +27,7 @@ export default function VerifiedStayBadge({
     return (
         <span
             className={`verified-stay-sticker ${className}`}
+            title="Verified Stay"
             style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -60,9 +64,11 @@ export default function VerifiedStayBadge({
             >
                 <Check size={checkIconSize} strokeWidth={3.8} color="#064E3B" />
             </span>
-            <span style={{ fontStyle: 'italic', fontWeight: '900', letterSpacing: '0.2px' }}>
-                {text}
-            </span>
+            {!iconOnly && (
+                <span style={{ fontStyle: 'italic', fontWeight: '900', letterSpacing: '0.2px' }}>
+                    {text}
+                </span>
+            )}
         </span>
     );
 }

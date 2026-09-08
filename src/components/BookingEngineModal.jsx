@@ -653,7 +653,7 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
                         overscrollBehavior: 'contain',
                         WebkitOverflowScrolling: 'touch',
                         touchAction: 'pan-y',
-                        padding: 'clamp(14px, 3vw, 24px) clamp(14px, 3vw, 24px) clamp(60px, 10vw, 90px)'
+                        padding: 'clamp(14px, 3vw, 24px) clamp(14px, 3vw, 24px) clamp(16px, 3vw, 24px)'
                     }}
                     onWheel={(e) => e.stopPropagation()}
                     onTouchMove={(e) => e.stopPropagation()}

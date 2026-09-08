@@ -17,7 +17,8 @@ import {
     ShieldCheck, 
     ThermometerSun,
     CalendarDays,
-    Flag
+    Flag,
+    ArrowLeft
 } from 'lucide-react';
 import { generateUpcomingWeekendBatches } from '../lib/utils';
 import CustomThemeCalendar from './CustomThemeCalendar';
@@ -151,49 +152,47 @@ export default function CustomDateBatchPicker({
                 onClick={() => setIsModalOpen(true)}
                 style={{
                     width: '100%',
-                    padding: '13px 16px',
+                    padding: '12px 14px',
                     borderRadius: '16px',
-                    background: isDark ? 'rgba(255, 255, 255, 0.07)' : '#F8F9F5',
-                    border: isDark ? '1.5px solid rgba(229, 169, 59, 0.35)' : '1.5px solid rgba(18, 22, 19, 0.14)',
-                    color: isDark ? '#FFFFFF' : '#121613',
+                    background: isDark ? '#121613' : '#FFFFFF',
+                    border: isDark ? '1.5px solid rgba(213, 237, 85, 0.3)' : '1.5px solid rgba(18, 22, 19, 0.12)',
+                    boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.04)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
+                    gap: '10px',
                     cursor: 'pointer',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                    transition: 'all 0.25s ease',
-                    boxShadow: '0 4px 14px rgba(0,0,0,0.04)'
-                }}
-                onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = '#E5A93B';
-                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(229, 169, 59, 0.2)';
-                }}
-                onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = isDark ? 'rgba(229, 169, 59, 0.35)' : 'rgba(18, 22, 19, 0.14)';
-                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.04)';
+                    textAlign: 'left',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
             >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', overflow: 'hidden', width: '100%', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
                     <div style={{
                         width: '36px',
                         height: '36px',
                         borderRadius: '10px',
-                        background: isDark ? 'rgba(229, 169, 59, 0.15)' : '#E9EFE6',
+                        background: isDark ? 'rgba(213, 237, 85, 0.12)' : '#F4F7EB',
+                        border: isDark ? '1px solid rgba(213, 237, 85, 0.3)' : '1px solid rgba(22, 101, 52, 0.2)',
+                        color: isDark ? '#D5ED55' : '#166534',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: isDark ? '#E5A93B' : '#166534',
                         flexShrink: 0
                     }}>
-                        <CalendarIcon size={18} strokeWidth={2.2} />
+                        <CalendarIcon size={18} strokeWidth={2.4} />
                     </div>
-                    <div style={{ textAlign: 'left', overflow: 'hidden', flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '13.5px', fontWeight: '800', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{
+                            fontSize: '13px',
+                            fontWeight: '900',
+                            color: isDark ? '#FFFFFF' : '#121613',
+                            lineHeight: 1.25,
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis'
+                        }}>
                             {displayTitle}
-                        </div>
-                        <div style={{ fontSize: '11px', color: isDark ? '#D5ED55' : '#59655D', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {displaySubtitle}
                         </div>
                         <div style={{
                             fontSize: '10.5px',
@@ -231,23 +230,11 @@ export default function CustomDateBatchPicker({
                 </div>
             </button>
 
-            {/* ── EXPEDITION BATCH SELECTOR POPUP MODAL (PORTAL → body so it always stacks above the nav bar) ── */}
+            {/* ── EXPEDITION BATCH SELECTOR POPUP MODAL (PORTAL → body) ── */}
             {typeof document !== 'undefined' && createPortal(
             <AnimatePresence>
                 {isModalOpen && (
-                    <div style={{
-                        position: 'fixed',
-                        inset: 0,
-                        zIndex: 999999,
-                        background: 'rgba(5, 12, 8, 0.82)',
-                        backdropFilter: 'blur(14px)',
-                        WebkitBackdropFilter: 'blur(14px)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '16px',
-                        boxSizing: 'border-box'
-                    }}>
+                    <div className="batch-picker-overlay">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.94, y: 16 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -256,80 +243,67 @@ export default function CustomDateBatchPicker({
                             data-lenis-prevent="true"
                             data-lenis-prevent-wheel="true"
                             data-lenis-prevent-touch="true"
-                            style={{
-                                background: '#FFFFFF',
-                                border: '1.5px solid rgba(18, 22, 19, 0.12)',
-                                borderRadius: '28px',
-                                width: '100%',
-                                maxWidth: '780px',
-                                maxHeight: '90vh',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                overflow: 'hidden',
-                                boxShadow: '0 25px 80px rgba(0, 0, 0, 0.35), 0 0 40px rgba(18, 22, 19, 0.08)',
-                                color: '#121613',
-                                position: 'relative'
-                            }}
+                            className="batch-picker-modal"
                         >
-                            {/* Modal Header */}
+                            {/* Modal Header — Left: Title & Timings, Right: Single Back Button */}
                             <div style={{
-                                padding: '20px 24px 16px',
+                                padding: '16px 20px 14px',
                                 borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%)'
+                                background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%)',
+                                gap: '12px'
                             }}>
-                                <div>
-                                    <div style={{ fontSize: '10.5px', fontWeight: '900', color: '#E5A93B', letterSpacing: '1.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <Compass size={13} color="#E5A93B" />
-                                        <span>EXPEDITION BATCH SELECTOR & ITINERARY</span>
-                                    </div>
-                                    <h3 style={{ margin: '4px 0 0', fontSize: '19px', fontWeight: '800', color: '#121613', fontFamily: 'var(--font-heading)' }}>
-                                        Select Check-In Weekend Batch or Date
+                                <div style={{ minWidth: 0, flex: 1 }}>
+                                    <h3 style={{ margin: 0, fontSize: 'clamp(15px, 2.5vw, 17px)', fontWeight: '900', color: '#121613', fontFamily: 'var(--font-heading)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        Select Stay Batch or Date
                                     </h3>
-                                    <p style={{ margin: '3px 0 0', fontSize: '12px', color: '#59655D' }}>
-                                        Check-in: <strong>Saturday 2:00 PM</strong> · Check-out: <strong>Sunday 11:00 AM</strong> (2 Days / 1 Night)
+                                    <p style={{ margin: '2px 0 0', fontSize: '11.5px', color: '#59655D', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        Check-in <strong>Sat 2:00 PM</strong> · Check-out <strong>Sun 11:00 AM</strong>
                                     </p>
                                 </div>
 
+                                {/* ONLY ONE Go Back Button */}
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
+                                    aria-label="Back to booking"
                                     style={{
-                                        width: '36px',
-                                        height: '36px',
-                                        borderRadius: '50%',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '6px',
                                         background: 'rgba(18, 22, 19, 0.06)',
                                         border: '1px solid rgba(18, 22, 19, 0.12)',
+                                        borderRadius: '999px',
+                                        padding: '7px 15px',
                                         color: '#121613',
-                                        fontSize: '14px',
+                                        fontSize: '12.5px',
                                         fontWeight: '800',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
                                         cursor: 'pointer',
-                                        transition: 'all 0.2s ease'
+                                        transition: 'all 0.2s ease',
+                                        flexShrink: 0,
+                                        marginLeft: 'auto'
                                     }}
-                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(18,22,19,0.12)'}
-                                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(18,22,19,0.06)'}
                                 >
-                                    ✕
+                                    <ArrowLeft size={14} strokeWidth={2.5} />
+                                    <span>Back</span>
                                 </button>
-                            </div>
+                            </div>                   
 
-                            {/* View Switcher Tabs (Batches vs Calendar) — Responsive & Centered */}
+                            {/* View Switcher Toolbar — Left-Aligned Tabs & Duration */}
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
+                                justifyContent: 'flex-start',
                                 flexWrap: 'wrap',
-                                gap: '10px',
-                                padding: '10px 16px',
+                                gap: '12px',
+                                padding: '10px 20px',
                                 background: '#F6F8F2',
                                 borderBottom: '1px solid rgba(18, 22, 19, 0.06)'
                             }}>
-                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center' }}>
+                                {/* Switcher Tabs */}
+                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                                     <button
                                         type="button"
                                         onClick={() => setActiveTab('batches')}
@@ -375,53 +349,32 @@ export default function CustomDateBatchPicker({
                                     </button>
                                 </div>
 
-                                {/* Duration Toggle Tag */}
+                                {/* Subtle Divider */}
+                                <div style={{ width: '1px', height: '16px', background: 'rgba(18, 22, 19, 0.12)' }} />
+
+                                {/* Duration Badge — Left Aligned (Fixed 2D / 1N) */}
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                     <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '700' }}>Duration:</span>
-                                    <button
-                                        type="button"
-                                        onClick={() => setSelectedDuration(2)}
+                                    <span
                                         style={{
                                             padding: '4px 10px',
                                             borderRadius: '6px',
                                             fontSize: '11px',
                                             fontWeight: '800',
-                                            border: selectedDuration === 2 ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
-                                            background: selectedDuration === 2 ? 'rgba(22, 101, 52, 0.08)' : 'transparent',
-                                            color: selectedDuration === 2 ? '#166534' : '#7D8880',
-                                            cursor: 'pointer'
+                                            border: '1px solid #166534',
+                                            background: 'rgba(22, 101, 52, 0.08)',
+                                            color: '#166534',
+                                            display: 'inline-flex',
+                                            alignItems: 'center'
                                         }}
                                     >
                                         2D / 1N
-                                    </button>
-                                    <button
-                                        type="button"
-                                        onClick={() => setSelectedDuration(3)}
-                                        style={{
-                                            padding: '4px 10px',
-                                            borderRadius: '6px',
-                                            fontSize: '11px',
-                                            fontWeight: '800',
-                                            border: selectedDuration === 3 ? '1px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
-                                            background: selectedDuration === 3 ? 'rgba(22, 101, 52, 0.08)' : 'transparent',
-                                            color: selectedDuration === 3 ? '#166534' : '#7D8880',
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        3D / 2N
-                                    </button>
+                                    </span>
                                 </div>
                             </div>
 
                             {/* Modal Body Content */}
-                            <div style={{
-                                padding: '20px 24px',
-                                overflowY: 'auto',
-                                maxHeight: 'calc(90vh - 180px)',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '16px'
-                            }}>
+                            <div className="batch-picker-body">
                                 {activeTab === 'batches' ? (
                                     <div style={{
                                         display: 'grid',
@@ -560,18 +513,23 @@ export default function CustomDateBatchPicker({
                             </div>
 
                             {/* Modal Footer Summary */}
-                            <div style={{
-                                padding: '14px 24px',
-                                borderTop: '1px solid rgba(18, 22, 19, 0.08)',
-                                background: '#F8F9F5',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}>
-                                <div style={{ fontSize: '12.5px', color: '#59655D' }}>
-                                    <span>Selected: </span>
-                                    <strong style={{ color: '#121613' }}>{displayTitle}</strong>
-                                    <span style={{ color: '#166534', marginLeft: '6px' }}>({selectedDuration}D/{selectedDuration - 1}N)</span>
+                            <div 
+                                className="batch-picker-footer"
+                                style={{
+                                    padding: '14px 20px',
+                                    borderTop: '1px solid rgba(18, 22, 19, 0.08)',
+                                    background: '#F8F9F5',
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    gap: '12px'
+                                }}
+                            >
+                                <div style={{ fontSize: '12px', color: '#59655D', minWidth: 0, flex: 1 }}>
+                                    <span style={{ display: 'block', fontSize: '10.5px', color: '#7D8880', textTransform: 'uppercase', fontWeight: '800' }}>Selected Batch</span>
+                                    <div style={{ color: '#121613', fontWeight: '900', fontSize: '13px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                        {displayTitle} <span style={{ color: '#166534', fontWeight: '700', fontSize: '11px' }}>({selectedDuration}D/{selectedDuration - 1}N)</span>
+                                    </div>
                                 </div>
 
                                 <button
@@ -579,14 +537,15 @@ export default function CustomDateBatchPicker({
                                     onClick={() => setIsModalOpen(false)}
                                     className="btn-lime"
                                     style={{
-                                        padding: '10px 22px',
+                                        padding: '10px 20px',
                                         borderRadius: '12px',
                                         fontSize: '13px',
                                         fontWeight: '800',
                                         cursor: 'pointer',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: '6px'
+                                        gap: '6px',
+                                        flexShrink: 0
                                     }}
                                 >
                                     <span>Confirm Batch</span>

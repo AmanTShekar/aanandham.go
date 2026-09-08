@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { ShieldCheck, Lock, QrCode, ArrowLeft, Sparkles, AlertCircle, Tent, Hourglass } from 'lucide-react';
+import { ShieldCheck, Lock, QrCode, ArrowLeft, ArrowRight, Sparkles, AlertCircle, Tent, Hourglass } from 'lucide-react';
 import { WhatsAppIcon } from '../common/BrandIcons';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
@@ -60,7 +60,7 @@ export default function Step4PaymentGateway({
                             {validationError}
                         </div>
                         <div style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800', marginTop: '6px' }}>
-                            👉 Don’t worry! Your tent booking is safe. Please click "Reserve via WhatsApp (Zero Advance)" below to confirm your stay without paying online.
+                            👉 Don’t worry! Your tent booking is safe. Please click "Enquire via WhatsApp" below to confirm your stay without paying online.
                         </div>
                     </div>
                 </div>
@@ -210,113 +210,85 @@ export default function Step4PaymentGateway({
                                         </div>
                                     )}
 
+                                    {paymentSettings.mode !== 'coming_soon' && (
+                                        <div style={{ textAlign: 'center', margin: '14px 0 6px', fontSize: '12px', color: '#59655D' }}>
+                                            Prefer booking directly with our team?{' '}
+                                            <button
+                                                type="button"
+                                                onClick={handleDirectWhatsAppBooking}
+                                                style={{
+                                                    background: 'none',
+                                                    border: 'none',
+                                                    color: '#166534',
+                                                    fontWeight: '800',
+                                                    cursor: 'pointer',
+                                                    textDecoration: 'underline',
+                                                    padding: '0 2px'
+                                                }}
+                                            >
+                                                Enquire via WhatsApp Concierge
+                                            </button>
+                                        </div>
+                                    )}
+
                                     {/* Actions */}
-                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                                    <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
                                         <button
                                             type="button"
                                             onClick={() => setStep(3)}
                                             className="btn-secondary"
-                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 16px', borderRadius: '10px' }}
+                                            style={{ background: '#F1F3EC', border: 'none', fontSize: '13px', fontWeight: '700', color: '#59655D', cursor: 'pointer', padding: '10px 18px', borderRadius: '12px' }}
                                         >
                                             ← Back
                                         </button>
 
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                                            {paymentSettings.mode === 'coming_soon' ? (
-                                                /* Primary WhatsApp Reservation Button when Gateway is in Launching Soon Mode */
-                                                <button
-                                                    type="button"
-                                                    onClick={handleDirectWhatsAppBooking}
-                                                    disabled={isSubmitting}
-                                                    title="Send this reservation inquiry with all campsite and camper details directly to our 24/7 Mountain Concierge on WhatsApp"
-                                                    style={{
-                                                        padding: '13px 26px',
-                                                        fontSize: '14px',
-                                                        fontWeight: '900',
-                                                        borderRadius: '12px',
-                                                        background: '#E5A93B',
-                                                        color: '#121613',
-                                                        border: 'none',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        gap: '8px',
-                                                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                        boxShadow: '0 4px 16px rgba(229, 169, 59, 0.4)',
-                                                        transition: 'all 0.2s ease'
-                                                    }}
-                                                >
-                                                    <WhatsAppIcon size={18} color="#121613" />
-                                                    <span>Reserve via WhatsApp (Zero Advance) →</span>
-                                                </button>
-                                            ) : (
-                                                /* Live Dual Option Mode (WhatsApp Inquiry or Instant Razorpay Gateway) */
-                                                <>
-                                                    <button
-                                                        type="button"
-                                                        onClick={handleDirectWhatsAppBooking}
-                                                        disabled={isSubmitting}
-                                                        title="Send reservation directly to 24/7 WhatsApp Concierge"
-                                                        style={{
-                                                            padding: '12px 20px',
-                                                            fontSize: '13.5px',
-                                                            fontWeight: '800',
-                                                            borderRadius: '12px',
-                                                            background: '#25D366',
-                                                            border: 'none',
-                                                            color: '#0A2E14',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '8px',
-                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                            boxShadow: '0 4px 14px rgba(37, 211, 102, 0.28)',
-                                                            transition: 'all 0.2s ease'
-                                                        }}
-                                                    >
-                                                        <WhatsAppIcon size={18} color="#0A2E14" />
-                                                        <span>Enquire via WhatsApp</span>
-                                                    </button>
-
-                                                    <button
-                                                        type="button"
-                                                        onClick={handleRazorpayCheckout}
-                                                        disabled={isSubmitting}
-                                                        className={validationError ? 'btn-secondary' : 'btn-lime'}
-                                                        style={validationError ? {
-                                                            padding: '12px 20px',
-                                                            fontSize: '13px',
-                                                            fontWeight: '800',
-                                                            borderRadius: '12px',
-                                                            background: '#F1F3EC',
-                                                            border: '1px solid rgba(18, 22, 19, 0.15)',
-                                                            color: '#59655D',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '8px',
-                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                            opacity: isSubmitting ? 0.7 : 1
-                                                        } : {
-                                                            padding: '12px 24px',
-                                                            fontSize: '14px',
-                                                            fontWeight: '900',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '8px',
-                                                            cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                                                            opacity: isSubmitting ? 0.7 : 1
-                                                        }}
-                                                    >
-                                                        <span>
-                                                            {isSubmitting 
-                                                                ? 'Opening Secure Checkout...' 
-                                                                : (validationError 
-                                                                    ? `Retry Online Payment (₹${payableNow.toLocaleString('en-IN')}) ⟳` 
-                                                                    : `Enquire & Pay (₹${payableNow.toLocaleString('en-IN')}) →`)}
-                                                        </span>
-                                                        <ShieldCheck size={16} />
-                                                    </button>
-                                                </>
-                                            )}
-                                        </div>
+                                        {paymentSettings.mode === 'coming_soon' ? (
+                                            <button
+                                                type="button"
+                                                onClick={handleDirectWhatsAppBooking}
+                                                disabled={isSubmitting}
+                                                className="btn-lime"
+                                                style={{
+                                                    padding: '12px 28px',
+                                                    fontSize: '14px',
+                                                    fontWeight: '800',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                    opacity: isSubmitting ? 0.7 : 1
+                                                }}
+                                            >
+                                                <span>Enquire via WhatsApp</span>
+                                                <ArrowRight size={15} />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                onClick={handleRazorpayCheckout}
+                                                disabled={isSubmitting}
+                                                className={validationError ? 'btn-secondary' : 'btn-lime'}
+                                                style={{
+                                                    padding: '12px 28px',
+                                                    fontSize: '14px',
+                                                    fontWeight: '800',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px',
+                                                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                                                    opacity: isSubmitting ? 0.7 : 1
+                                                }}
+                                            >
+                                                <span>
+                                                    {isSubmitting 
+                                                        ? 'Opening Secure Checkout...' 
+                                                        : (validationError 
+                                                            ? `Retry Online Payment (₹${payableNow.toLocaleString('en-IN')}) ⟳` 
+                                                            : `Enquire & Pay (₹${payableNow.toLocaleString('en-IN')})`)}
+                                                </span>
+                                                <ArrowRight size={15} />
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
     );

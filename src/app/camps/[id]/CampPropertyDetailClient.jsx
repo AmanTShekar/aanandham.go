@@ -1272,21 +1272,39 @@ return (
 
                                 <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', marginTop: '14px', paddingTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <div style={{ fontSize: '11px', color: '#A2B6A6' }}>Have Squad Questions?</div>
-                                    <a
-                                        href={waLink(`Hi Aanandham! I have questions regarding ${camp.title} (${currentRoom?.name || 'Standard Tent'}) on ${selectedDate} for ${guestsCount} campers.`)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={() => logWhatsAppInquiry({
-                                            text: `Questions regarding ${camp.title} (${currentRoom?.name || 'Standard Tent'}) on ${selectedDate} for ${guestsCount} campers`,
-                                            source: `Camp Squad Questions: ${camp.title}`,
-                                            campsiteId: camp.id,
-                                            guests: guestsCount,
-                                            travelDates: selectedDate
-                                        })}
-                                        style={{ fontSize: '11.5px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
-                                    >
-                                        <span>Chat with Guide →</span>
-                                    </a>
+                                    {(() => {
+                                        const enquiryPhone = process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014';
+                                        const estPrice = (currentRoom?.price || camp.price || 2499) * guestsCount;
+                                        const squadInquiryMsg = `*Aanandham Wilderness — Campsite Inquiry*
+
+- *Campsite:* ${camp.title} (${camp.location || 'Munnar, Kerala'})
+- *Lodging:* ${currentRoom?.name || 'Standard Tent'}
+- *Travel Dates:* ${selectedDate}
+- *Campers:* ${guestsCount} guest(s)
+- *Est. Rate:* ₹${estPrice.toLocaleString('en-IN')}
+
+Hi Aanandham! I have questions regarding availability and squad booking for this stay.`;
+
+                                        return (
+                                            <a
+                                                href={waLink(squadInquiryMsg, enquiryPhone)}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={() => logWhatsAppInquiry({
+                                                    text: squadInquiryMsg,
+                                                    phone: enquiryPhone,
+                                                    source: `Camp Squad Questions: ${camp.title}`,
+                                                    campsiteId: camp.id,
+                                                    guests: guestsCount,
+                                                    travelDates: selectedDate
+                                                })}
+                                                style={{ fontSize: '12px', color: '#D5ED55', fontWeight: '800', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                                            >
+                                                <WhatsAppIcon size={14} color="#25D366" />
+                                                <span>Chat →</span>
+                                            </a>
+                                        );
+                                    })()}
                                 </div>
                             </div>
 

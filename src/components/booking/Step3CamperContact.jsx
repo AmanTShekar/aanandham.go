@@ -1,7 +1,6 @@
 "use client";
 import React from 'react';
 import { User, Phone, Mail, FileText, ArrowRight, ArrowLeft, Leaf, Drumstick, Utensils, Minus, Plus, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { WhatsAppIcon } from '../common/BrandIcons';
 import { inr } from '../../lib/utils';
 import { ROW_GAP_10 } from './BookingConstants';
 import { validateEmailClient } from '../../lib/emailValidatorCore';
@@ -152,30 +151,6 @@ export default function Step3CamperContact({
         setPopupErrors([]);
         setValidationError('');
         handleStep3Next();
-    };
-
-    // Direct WhatsApp Concierge submit with custom validation
-    const onWhatsAppSubmit = () => {
-        const errs = [];
-        if (isNameInvalid) {
-            errs.push({ field: 'name', label: 'Full Name', message: 'Full Name is required for WhatsApp reservation' });
-        }
-        if (isPhoneInvalid) {
-            errs.push({ field: 'phone', label: 'WhatsApp Number', message: 'Valid 10-digit WhatsApp number is required' });
-        }
-        if (errs.length > 0) {
-            setHasSubmitted(true);
-            setTouched(prev => ({ ...prev, name: true, phone: true }));
-            setPopupErrors(errs);
-            setValidationError(errs.map(e => e.message).join(' · '));
-            focusField(errs[0].field);
-            return;
-        }
-        setPopupErrors([]);
-        setValidationError('');
-        if (handleDirectWhatsAppBooking) {
-            handleDirectWhatsAppBooking();
-        }
     };
 
     return (
@@ -535,7 +510,7 @@ export default function Step3CamperContact({
             </div>
 
             {/* Actions */}
-            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+            <div className="booking-step-actions" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px' }}>
                 <button
                     type="button"
                     onClick={() => setStep(2)}
@@ -544,48 +519,23 @@ export default function Step3CamperContact({
                 >
                     ← Back
                 </button>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
-                    <button
-                        type="button"
-                        onClick={onWhatsAppSubmit}
-                        title="Send reservation inquiry with your selected campsite, lodging, dates & details directly to WhatsApp Concierge"
-                        style={{
-                            padding: '12px 20px',
-                            fontSize: '13.5px',
-                            fontWeight: '800',
-                            borderRadius: '12px',
-                            background: '#25D366',
-                            border: 'none',
-                            color: '#0A2E14',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 14px rgba(37, 211, 102, 0.25)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        <WhatsAppIcon size={18} color="#0A2E14" />
-                        <span>Enquire via WhatsApp</span>
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onProceedToPayment}
-                        className="btn-lime"
-                        style={{
-                            padding: '12px 24px',
-                            fontSize: '14px',
-                            fontWeight: '800',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <span>Proceed to Payment</span>
-                        <ArrowRight size={15} />
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={onProceedToPayment}
+                    className="btn-lime"
+                    style={{
+                        padding: '12px 28px',
+                        fontSize: '14px',
+                        fontWeight: '800',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        cursor: 'pointer'
+                    }}
+                >
+                    <span>Proceed</span>
+                    <ArrowRight size={15} />
+                </button>
             </div>
         </div>
     );

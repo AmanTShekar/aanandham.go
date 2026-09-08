@@ -37,7 +37,7 @@ export default function Footer() {
             <div style={{
                 maxWidth: '1560px',
                 margin: '0 auto',
-                padding: 'clamp(48px, 6vw, 80px) clamp(20px, 4vw, 48px) clamp(32px, 4vw, 48px)',
+                padding: 'clamp(48px, 6vw, 72px) clamp(20px, 4vw, 48px) calc(20px + env(safe-area-inset-bottom, 0px))',
                 position: 'relative',
                 zIndex: 2,
                 boxSizing: 'border-box'

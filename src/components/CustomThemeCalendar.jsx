@@ -53,7 +53,7 @@ export default function CustomThemeCalendar({
     theme = 'light', // 'light' | 'dark' | 'gold'
     inline = false,
     label = 'SELECT EXPEDITION DATE',
-    defaultDuration = 2 // 2 Days / 1 Night default, or 3 Days / 2 Nights
+    defaultDuration = 2 // Fixed 2 Days / 1 Night
 }) {
     const notifyDateSelect = onDateSelect || onSelectDate || (() => {});
     const today = useMemo(() => new Date(), []);
@@ -63,7 +63,7 @@ export default function CustomThemeCalendar({
     const [currentYear, setCurrentYear] = useState(initialDate.getFullYear());
     const [isOpen, setIsOpen] = useState(inline);
     const [stagedDate, setStagedDate] = useState(selectedDate || '');
-    const [durationDays, setDurationDays] = useState(defaultDuration);
+    const durationDays = 2; // Strictly 2 Days / 1 Night (no 3D)
 
     // Prevent background scroll when calendar modal dialog is open (if not inline)
     useEffect(() => {
@@ -331,14 +331,14 @@ export default function CustomThemeCalendar({
                 </div>
             </div>
 
-            {/* Trip Duration Selector (2 Days vs 3 Days) — Centered & Balanced */}
+            {/* Trip Duration Badge (Fixed 2 Days / 1 Night) — Centered & Balanced */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
                 background: isDark ? 'rgba(255, 255, 255, 0.05)' : '#F5F7EF',
-                padding: '6px 8px',
+                padding: '6px 12px',
                 borderRadius: '14px',
                 marginBottom: '12px',
                 flexWrap: 'wrap'
@@ -346,42 +346,22 @@ export default function CustomThemeCalendar({
                 <span style={{ fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
                     Duration:
                 </span>
-                <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                        type="button"
-                        onClick={() => setDurationDays(2)}
-                        style={{
-                            padding: '5px 12px',
-                            borderRadius: '8px',
-                            border: durationDays === 2 ? `1.5px solid ${accentColor}` : '1px solid transparent',
-                            background: durationDays === 2 ? (isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF') : 'transparent',
-                            color: durationDays === 2 ? (isDark ? accentColor : '#121613') : (isDark ? '#A2B6A6' : '#8E9B92'),
-                            fontSize: '11px',
-                            fontWeight: '800',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        2D / 1N
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setDurationDays(3)}
-                        style={{
-                            padding: '5px 12px',
-                            borderRadius: '8px',
-                            border: durationDays === 3 ? `1.5px solid ${accentColor}` : '1px solid transparent',
-                            background: durationDays === 3 ? (isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF') : 'transparent',
-                            color: durationDays === 3 ? (isDark ? accentColor : '#121613') : (isDark ? '#A2B6A6' : '#8E9B92'),
-                            fontSize: '11px',
-                            fontWeight: '800',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        3D / 2N
-                    </button>
-                </div>
+                <span
+                    style={{
+                        padding: '4px 12px',
+                        borderRadius: '8px',
+                        border: `1.5px solid ${accentColor}`,
+                        background: isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF',
+                        color: isDark ? accentColor : '#121613',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}
+                >
+                    2 Days / 1 Night
+                </span>
             </div>
 
             {/* Days of Week Header — Centered & Equal Width */}
@@ -606,7 +586,7 @@ export default function CustomThemeCalendar({
                             transition: 'all 0.2s ease'
                         }}
                     >
-                        <span>Confirm Selected Dates ({durationDays} Days) →</span>
+                        <span>Confirm Selected Dates (2D / 1N) →</span>
                     </button>
                 </motion.div>
             )}
