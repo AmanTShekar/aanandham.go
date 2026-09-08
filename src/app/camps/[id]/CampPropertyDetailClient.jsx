@@ -1359,7 +1359,7 @@ return (
                                         flexDirection: 'column'
                                     }}
                                 >
-                                    <div style={{ height: '200px', position: 'relative' }}>
+                                    <div className="similar-camp-card-media" style={{ height: '200px', position: 'relative' }}>
                                         <img
                                             src={nc.image}
                                             alt={nc.title}
@@ -1369,24 +1369,35 @@ return (
                                             decoding="async"
                                             style={IMG_FILL}
                                         />
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {nc.altitude}
-                                        </span>
+                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 40%, rgba(0,0,0,0.5) 100%)', pointerEvents: 'none' }} />
+                                        <div style={{ position: 'absolute', top: '12px', left: '12px', right: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', pointerEvents: 'none', zIndex: 3 }}>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                                {nc.altitude}
+                                            </span>
+                                            <span style={{ fontSize: '11px', fontWeight: '800', background: 'rgba(255,255,255,0.95)', color: '#121613', padding: '3px 8px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                ★ {nc.rating || 4.9}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                    <div className="similar-camp-card-body" style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                             <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase' }}>
                                                 {nc.region}
                                             </span>
-                                            <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#121613' }}>
-                                                ★ {nc.rating || 4.9}
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10.5px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '2px 8px', borderRadius: '999px' }}>
+                                                <span className="live-available-dot" style={{ width: '6px', height: '6px' }} />
+                                                Live Available
                                             </span>
                                         </div>
                                         <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '0 0 10px', color: '#121613' }}>
                                             {nc.title}
                                         </h3>
                                         <div style={{ borderTop: '1px solid rgba(18,22,19,0.06)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
-                                            <span style={{ fontSize: '11px', color: '#7D8880' }}>Starts at ₹{nc.price}/person</span>
+                                            <div>
+                                                <span style={{ fontSize: '10px', color: '#7D8880', display: 'block', fontWeight: '700', textTransform: 'uppercase' }}>Starts at</span>
+                                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#121613' }}>₹{nc.price?.toLocaleString('en-IN') || nc.price}</span>
+                                                <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}> / person</span>
+                                            </div>
                                             <span style={{ color: '#166534', fontWeight: '800', fontSize: '12.5px' }}>View Camp →</span>
                                         </div>
                                     </div>
