@@ -9,6 +9,7 @@ import CustomSelectDropdown from '../../components/CustomSelectDropdown';
 import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
+import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
 import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
@@ -659,15 +660,18 @@ export default function CampsDirectoryClient({
                                         <div className="camps-card-body" style={{ padding: '22px 22px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                             
                                             {/* Location & Live Availability Row */}
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
                                                 <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                                                     <MapPin size={13} color="#166534" strokeWidth={2.5} />
                                                     <span>{camp.location || camp.region}</span>
                                                 </span>
-                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 9px', borderRadius: '999px' }}>
-                                                    <span className="live-available-dot" />
-                                                    <span>Live Available</span>
-                                                </span>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 9px', borderRadius: '999px' }}>
+                                                        <span className="live-available-dot" />
+                                                        <span>Live Available</span>
+                                                    </span>
+                                                    <VerifiedStayBadge size="sm" />
+                                                </div>
                                             </div>
 
                                             {/* Campsite Title */}

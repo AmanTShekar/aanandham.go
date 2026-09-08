@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import { PartyPopper, AlertCircle } from 'lucide-react';
+import VerifiedStayBadge from '../common/VerifiedStayBadge';
 
 export default function BookingWizardHeader({
     step,
@@ -16,20 +17,7 @@ export default function BookingWizardHeader({
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '14px' }}>
                 <div style={{ minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                        <span style={{
-                            background: '#DCFCE7',
-                            color: '#166534',
-                            border: '1px solid rgba(22, 101, 52, 0.25)',
-                            fontSize: '11px',
-                            fontWeight: '800',
-                            padding: '2px 8px',
-                            borderRadius: '999px',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                        }}>
-                            ✓ Verified Stay
-                        </span>
+                        <VerifiedStayBadge size="sm" />
                         <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600' }}>
                             {step === 1 && 'Confirm dates, campers & lodging'}
                             {step === 2 && 'Optional campfire, BBQ & treks'}

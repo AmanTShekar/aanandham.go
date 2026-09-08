@@ -20,6 +20,7 @@ import { waLink } from '../lib/whatsapp';
 import { GraduationCap, Building2, Tent, Flame, Check, ChevronLeft, ChevronRight, ChevronDown, Download, Play, ShieldCheck, Stethoscope, Truck, Heart, MapPin, Clock, Zap, Camera, Search, MessageCircle, Star, Sunrise, Footprints, PersonStanding, Telescope, Leaf, Mountain, Waves, Link2 } from 'lucide-react';
 import { WhatsAppIcon, InstagramIcon } from '../components/common/BrandIcons';
 import { loadTestimonialsFromStorage } from '../lib/testimonialsCore';
+import VerifiedStayBadge from '../components/common/VerifiedStayBadge';
 
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
 const OVERVIEW_HIGHLIGHTS = [
@@ -2069,21 +2070,24 @@ export default function HomePage() {
                                         {/* Card Content — Booking-Focused Details */}
                                         <div className="package-card-body">
                                             {/* Live Availability & Duration Status */}
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                                <span style={{ 
-                                                    display: 'inline-flex', 
-                                                    alignItems: 'center', 
-                                                    gap: '5px', 
-                                                    fontSize: '11px', 
-                                                    fontWeight: '800', 
-                                                    color: '#166534', 
-                                                    background: '#DCFCE7', 
-                                                    padding: '3px 9px', 
-                                                    borderRadius: '999px' 
-                                                }}>
-                                                    <span className="live-available-dot" />
-                                                    <span>Live Available</span>
-                                                </span>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                    <span style={{ 
+                                                        display: 'inline-flex', 
+                                                        alignItems: 'center', 
+                                                        gap: '5px', 
+                                                        fontSize: '11px', 
+                                                        fontWeight: '800', 
+                                                        color: '#166534', 
+                                                        background: '#DCFCE7', 
+                                                        padding: '3px 9px', 
+                                                        borderRadius: '999px' 
+                                                    }}>
+                                                        <span className="live-available-dot" />
+                                                        <span>Live Available</span>
+                                                    </span>
+                                                    <VerifiedStayBadge size="sm" />
+                                                </div>
                                                 <span style={{ 
                                                     fontSize: '11px', 
                                                     fontWeight: '700', 

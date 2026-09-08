@@ -4,6 +4,7 @@ import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle } from 'luc
 import CustomThemeCalendar from '../CustomThemeCalendar';
 import CustomDateBatchPicker from '../CustomDateBatchPicker';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
+import VerifiedStayBadge from '../common/VerifiedStayBadge';
 import { inr } from '../../lib/utils';
 import { parseRoomCapacity } from './BookingConstants';
 import BookingValidationPopup from './BookingValidationPopup';
@@ -108,20 +109,7 @@ export default function Step1CampsiteLodging({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '14px', flexWrap: 'wrap' }}>
                     <div style={{ flex: 1, minWidth: '220px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px', flexWrap: 'wrap' }}>
-                            <span style={{
-                                fontSize: '10.5px',
-                                fontWeight: '800',
-                                background: '#DCFCE7',
-                                color: '#166534',
-                                border: '1px solid rgba(22, 101, 52, 0.25)',
-                                padding: '2px 8px',
-                                borderRadius: '999px',
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                gap: '4px'
-                            }}>
-                                ✓ Verified Stay
-                            </span>
+                            <VerifiedStayBadge size="sm" />
                             {currentPkg.altitude && (
                                 <span style={{ fontSize: '10px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '2px 8px', borderRadius: '999px' }}>
                                     {currentPkg.altitude}
