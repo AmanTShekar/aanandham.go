@@ -7,6 +7,7 @@ const SECTION_PAD = { position: 'relative', padding: '110px clamp(20px, 4vw, 48p
 
 import { motion, AnimatePresence, useScroll, useTransform, LayoutGroup, useMotionValue, useSpring, MotionConfig } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Footer from '../components/Footer';
@@ -677,6 +678,7 @@ function ScrollProgressBar() {
 }
 
 export default function HomePage() {
+    const router = useRouter();
     const [selectedLightboxImg, setSelectedLightboxImg] = useState(null);
     const [expandedPackageId, setExpandedPackageId] = useState(null);
     const [activeTab, setActiveTab] = useState('All');
@@ -1890,6 +1892,15 @@ export default function HomePage() {
                                         exit={{ opacity: 0, y: -10, scale: 0.98 }}
                                         transition={{ duration: 0.26, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
                                         className="hover-lift card-img-zoom" 
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={() => router.push(`/camps/${pkg.id}`)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                router.push(`/camps/${pkg.id}`);
+                                            }
+                                        }}
                                         style={{
                                             borderRadius: '26px',
                                             background: '#FFFFFF',
@@ -1899,103 +1910,210 @@ export default function HomePage() {
                                             flexDirection: 'column',
                                             boxShadow: '0 6px 24px rgba(0,0,0,0.03)',
                                             transition: 'box-shadow 0.25s ease, transform 0.25s ease',
-                                            position: 'relative'
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            textAlign: 'left'
                                         }}
                                     >
                                         {/* Image Container with Badges & Action Buttons */}
                                         <div className="package-card-img" style={{ position: 'relative' }}>
-                                            <Link href={`/camps/${pkg.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-                                                <img 
-                                                    src={pkg.image} 
-                                                    alt={pkg.title} 
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                    style={IMG_FILL} 
-                                                />
-                                            </Link>
-                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.65) 0%, transparent 45%)', pointerEvents: 'none' }} />
+                                            <img 
+                                                src={pkg.image} 
+                                                alt={pkg.title} 
+                                                loading="lazy"
+                                                decoding="async"
+                                                style={IMG_FILL} 
+                                            />
+                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.72) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.42) 100%)', pointerEvents: 'none' }} />
                                             
-                                            {/* Top Badges */}
-                                            <div style={{ position: 'absolute', top: '14px', left: '14px', display: 'flex', gap: '6px', flexWrap: 'wrap', pointerEvents: 'none' }}>
-                                                <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px', letterSpacing: '0.2px' }}>
-                                                    {pkg.tag}
-                                                </span>
-                                                <span style={{ background: 'rgba(0,0,0,0.65)', color: '#FFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(8px)' }}>
-                                                    {pkg.altitude}
-                                                </span>
-                                            </div>
+                                            {/* Unified Top Header Bar: Badges Left, Actions Right (Zero Overlap) */}
+                                            <div style={{ 
+                                                position: 'absolute', 
+                                                top: '12px', 
+                                                left: '12px', 
+                                                right: '12px', 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                alignItems: 'flex-start', 
+                                                gap: '8px', 
+                                                zIndex: 3, 
+                                                pointerEvents: 'none' 
+                                            }}>
+                                                {/* Left Badges */}
+                                                <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', maxWidth: 'calc(100% - 84px)', pointerEvents: 'auto' }}>
+                                                    {pkg.tag && (
+                                                        <span style={{ 
+                                                            background: '#E5A93B', 
+                                                            color: '#121613', 
+                                                            fontSize: '10.5px', 
+                                                            fontWeight: '800', 
+                                                            padding: '4px 9px', 
+                                                            borderRadius: '999px', 
+                                                            letterSpacing: '0.2px',
+                                                            boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                                                            whiteSpace: 'nowrap'
+                                                        }}>
+                                                            {pkg.tag}
+                                                        </span>
+                                                    )}
+                                                    {pkg.altitude && (
+                                                        <span style={{ 
+                                                            background: 'rgba(0,0,0,0.65)', 
+                                                            color: '#FFF', 
+                                                            fontSize: '10.5px', 
+                                                            fontWeight: '700', 
+                                                            padding: '4px 8px', 
+                                                            borderRadius: '999px', 
+                                                            backdropFilter: 'blur(8px)',
+                                                            whiteSpace: 'nowrap'
+                                                        }}>
+                                                            {pkg.altitude}
+                                                        </span>
+                                                    )}
+                                                </div>
 
-                                            {/* Top Right Actions: Wishlist ❤️ + Share 🔗 + Rating */}
-                                            <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                <button
-                                                    onClick={(e) => handleToggleWishlist(pkg.id, pkg.title, e)}
-                                                    aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
-                                                    style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        borderRadius: '50%',
-                                                        background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
-                                                        border: 'none',
-                                                        color: '#FFFFFF',
-                                                        fontSize: '13px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: 'pointer',
-                                                        backdropFilter: 'blur(6px)',
-                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                                                    }}
-                                                >
-                                                    {isLiked ? <Heart size={15} fill="#FFFFFF" /> : <Heart size={15} />}
-                                                </button>
+                                                {/* Right Actions: Wishlist ❤️ + Share 🔗 */}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, pointerEvents: 'auto' }}>
+                                                    <button
+                                                        onClick={(e) => handleToggleWishlist(pkg.id, pkg.title, e)}
+                                                        aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
+                                                        style={{
+                                                            width: '34px',
+                                                            height: '34px',
+                                                            borderRadius: '50%',
+                                                            background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                                                            color: '#FFFFFF',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            cursor: 'pointer',
+                                                            backdropFilter: 'blur(6px)',
+                                                            boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                                                            transition: 'transform 0.15s ease'
+                                                        }}
+                                                    >
+                                                        {isLiked ? <Heart size={15} fill="#FFFFFF" /> : <Heart size={15} strokeWidth={2.2} />}
+                                                    </button>
 
-                                                <button
-                                                    onClick={(e) => handleShareCamp(pkg, e)}
-                                                    aria-label="Share camp"
-                                                    style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        borderRadius: '50%',
-                                                        background: 'rgba(0, 0, 0, 0.55)',
-                                                        border: 'none',
-                                                        color: '#FFFFFF',
-                                                        fontSize: '12px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: 'pointer',
-                                                        backdropFilter: 'blur(6px)',
-                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-                                                    }}
-                                                >
-<Link2 size={14} />
-                                                </button>
-
-                                                <div style={{ background: 'rgba(255,255,255,0.92)', color: '#121613', fontSize: '11px', fontWeight: '800', padding: '4px 8px', borderRadius: '999px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                                                    ★ {pkg.rating}
+                                                    <button
+                                                        onClick={(e) => handleShareCamp(pkg, e)}
+                                                        aria-label="Share camp"
+                                                        style={{
+                                                            width: '34px',
+                                                            height: '34px',
+                                                            borderRadius: '50%',
+                                                            background: 'rgba(0, 0, 0, 0.55)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                                                            color: '#FFFFFF',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            cursor: 'pointer',
+                                                            backdropFilter: 'blur(6px)',
+                                                            boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                                                            transition: 'transform 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <Link2 size={15} strokeWidth={2.2} />
+                                                    </button>
                                                 </div>
                                             </div>
 
-                                            {/* Bottom Overlay Location & Duration */}
-                                            <div style={{ position: 'absolute', bottom: '12px', left: '14px', right: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '700', pointerEvents: 'none' }}>
-                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {pkg.location}</span>
-                                                <span style={{ background: 'rgba(255,255,255,0.2)', padding: '2px 7px', borderRadius: '6px', backdropFilter: 'blur(4px)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Clock size={11} /> {pkg.duration}</span>
+                                            {/* Unified Bottom Info Bar: Location Left, Rating Right */}
+                                            <div style={{ 
+                                                position: 'absolute', 
+                                                bottom: '10px', 
+                                                left: '12px', 
+                                                right: '12px', 
+                                                display: 'flex', 
+                                                justifyContent: 'space-between', 
+                                                alignItems: 'center', 
+                                                gap: '8px', 
+                                                zIndex: 3, 
+                                                pointerEvents: 'none' 
+                                            }}>
+                                                <span style={{ 
+                                                    color: '#FFFFFF', 
+                                                    fontSize: '11px', 
+                                                    fontWeight: '700', 
+                                                    display: 'inline-flex', 
+                                                    alignItems: 'center', 
+                                                    gap: '4px',
+                                                    textShadow: '0 1px 3px rgba(0,0,0,0.6)'
+                                                }}>
+                                                    <MapPin size={12} strokeWidth={2.5} />
+                                                    <span>{pkg.location?.split(',')[0] || pkg.region}</span>
+                                                </span>
+
+                                                <div style={{ 
+                                                    background: 'rgba(255,255,255,0.95)', 
+                                                    color: '#121613', 
+                                                    fontSize: '11px', 
+                                                    fontWeight: '800', 
+                                                    padding: '3px 8px', 
+                                                    borderRadius: '999px', 
+                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '4px',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <Star size={12} fill="#E5A93B" color="#E5A93B" />
+                                                    <span>{pkg.rating}</span>
+                                                    <span style={{ opacity: 0.65, fontWeight: '600', fontSize: '10px' }}>({pkg.reviewsCount || 342})</span>
+                                                </div>
                                             </div>
                                         </div>
 
-                                        {/* Card Content */}
+                                        {/* Card Content — Booking-Focused Details */}
                                         <div className="package-card-body">
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', marginBottom: '6px', lineHeight: 1.25 }}>
-                                                <Link href={`/camps/${pkg.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                                                    {pkg.title}
-                                                </Link>
+                                            {/* Live Availability & Duration Status */}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                                <span style={{ 
+                                                    display: 'inline-flex', 
+                                                    alignItems: 'center', 
+                                                    gap: '5px', 
+                                                    fontSize: '11px', 
+                                                    fontWeight: '800', 
+                                                    color: '#166534', 
+                                                    background: '#DCFCE7', 
+                                                    padding: '3px 9px', 
+                                                    borderRadius: '999px' 
+                                                }}>
+                                                    <span className="live-available-dot" />
+                                                    <span>Live Available</span>
+                                                </span>
+                                                <span style={{ 
+                                                    fontSize: '11px', 
+                                                    fontWeight: '700', 
+                                                    color: '#59655D', 
+                                                    display: 'inline-flex', 
+                                                    alignItems: 'center', 
+                                                    gap: '4px' 
+                                                }}>
+                                                    <Clock size={11} strokeWidth={2.5} />
+                                                    <span>{pkg.duration || '2D / 1N'}</span>
+                                                </span>
+                                            </div>
+
+                                            {/* Stay Title */}
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: '800', color: '#121613', marginBottom: '6px', lineHeight: 1.3 }}>
+                                                {pkg.title}
                                             </h3>
                                             
+                                            {/* Stay Accommodation Spec */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#4B5563', fontWeight: '600', marginBottom: '8px' }}>
+                                                <Tent size={13} color="#166534" />
+                                                <span>{pkg.category || 'High-Altitude Ridge Glamp'} · {pkg.altitude}</span>
+                                            </div>
+
+                                            {/* Description snippet */}
                                             <p style={{ 
                                                 fontSize: '13px', 
                                                 color: '#59655D', 
                                                 lineHeight: 1.45, 
-                                                marginBottom: '12px',
+                                                marginBottom: '10px',
                                                 display: '-webkit-box',
                                                 WebkitLineClamp: 2,
                                                 WebkitBoxOrient: 'vertical',
@@ -2004,61 +2122,86 @@ export default function HomePage() {
                                                 {pkg.description}
                                             </p>
                                             
-                                            {/* Key Highlights Chips */}
+                                            {/* In-Card Included Perks Chips */}
                                             {Array.isArray(pkg.highlights) && pkg.highlights.length > 0 && (
                                                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '14px' }}>
                                                     {pkg.highlights.slice(0, 2).map((h, i) => (
-                                                        <span key={i} style={{ fontSize: '10.5px', background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.08)', color: '#48544C', padding: '3px 8px', borderRadius: '999px', fontWeight: '600' }}>
-                                                            ✓ {h}
+                                                        <span key={i} style={{ fontSize: '11px', background: '#F4F6F0', border: '1px solid rgba(18,22,19,0.08)', color: '#374151', padding: '3px 9px', borderRadius: '999px', fontWeight: '600', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                            <Check size={11} color="#166534" strokeWidth={2.5} />
+                                                            <span>{h}</span>
                                                         </span>
                                                     ))}
                                                     {pkg.highlights.length > 2 && (
-                                                        <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 7px', borderRadius: '999px', fontWeight: '700' }}>
+                                                        <span style={{ fontSize: '10.5px', background: '#F1F3EC', color: '#121613', padding: '3px 8px', borderRadius: '999px', fontWeight: '700' }}>
                                                             +{pkg.highlights.length - 2} more
                                                         </span>
                                                     )}
                                                 </div>
                                             )}
 
-                                            {/* Bottom Price & 2-in-1 ⚡ Action Row (See Site ↗ + Book Spot ⚡) */}
-                                            <div style={{ marginTop: 'auto', paddingTop: '14px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                                            {/* Bottom Price & Booking Actions */}
+                                            <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid rgba(18, 22, 19, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                                                 <div>
-                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613' }}>
+                                                    <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>
+                                                        Starts at
+                                                    </span>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613' }}>
                                                             ₹{pkg.price.toLocaleString('en-IN')}
                                                         </span>
-                                                        <span style={{ fontSize: '11px', color: '#59655D' }}>/ camper</span>
+                                                        <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
                                                     </div>
+                                                    <span style={{ fontSize: '10px', color: '#166534', fontWeight: '700', display: 'block', marginTop: '1px' }}>
+                                                        Zero Advance · Pay at Camp
+                                                    </span>
                                                 </div>
                                                 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                                    {/* 1. Explore Details */}
-                                                    <Link
-                                                        href={`/camps/${pkg.id}`}
+                                                    {/* 1. Explore Details Button */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            router.push(`/camps/${pkg.id}`);
+                                                        }}
                                                         style={{
-                                                            padding: '8px 14px',
+                                                            padding: '8px 12px',
                                                             borderRadius: '10px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
                                                             color: '#121613',
                                                             fontSize: '12px',
                                                             fontWeight: '800',
-                                                            textDecoration: 'none',
+                                                            cursor: 'pointer',
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
                                                             gap: '3px'
                                                         }}
                                                     >
                                                         <span>Details →</span>
-                                                    </Link>
+                                                    </button>
 
-                                                    {/* 2. Direct Book (Zero Advance / No Login Needed) */}
+                                                    {/* 2. Direct Book Spot ⚡ */}
                                                     <button 
-                                                        onClick={() => handleOpenBooking(pkg)} 
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleOpenBooking(pkg);
+                                                        }}
                                                         className="btn-lime" 
                                                         title="Direct Booking · No Login Required · Zero Upfront Fee"
-                                                        style={{ padding: '8px 18px', borderRadius: '10px', fontSize: '12.5px', fontWeight: '800', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+                                                        style={{ 
+                                                            padding: '8px 16px', 
+                                                            borderRadius: '10px', 
+                                                            fontSize: '12.5px', 
+                                                            fontWeight: '800', 
+                                                            cursor: 'pointer', 
+                                                            display: 'inline-flex', 
+                                                            alignItems: 'center', 
+                                                            justifyContent: 'center',
+                                                            gap: '4px',
+                                                            boxShadow: '0 4px 12px rgba(213, 237, 85, 0.35)'
+                                                        }}
                                                     >
+                                                        <Zap size={12} fill="#121613" />
                                                         <span>Book</span>
                                                     </button>
                                                 </div>

@@ -463,7 +463,15 @@ export default function CampsDirectoryClient({
                                 return (
                                     <div
                                         key={camp.id}
+                                        role="button"
+                                        tabIndex={0}
                                         onClick={() => router.push(`/camps/${camp.id}`)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' || e.key === ' ') {
+                                                e.preventDefault();
+                                                router.push(`/camps/${camp.id}`);
+                                            }
+                                        }}
                                         className="hover-lift card-img-zoom camps-card"
                                         style={{
                                             background: '#FFFFFF',
@@ -474,10 +482,11 @@ export default function CampsDirectoryClient({
                                             display: 'flex',
                                             flexDirection: 'column',
                                             position: 'relative',
-                                            cursor: 'pointer'
+                                            cursor: 'pointer',
+                                            textAlign: 'left'
                                         }}
                                     >
-                                        {/* Top Image & Interactive Photo Carousel / Badges */}
+                                        {/* Top Image & Media Header */}
                                         <div className="camps-card-media" style={{ position: 'relative', height: '270px', overflow: 'hidden' }}>
                                             <img
                                                 src={camp.image || galleryList[0]}
@@ -489,95 +498,128 @@ export default function CampsDirectoryClient({
                                                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                             />
                                             
-                                            {/* Gradient Overlay */}
-                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 40%, rgba(0,0,0,0.6) 100%)' }} />
+                                            {/* Gradient Overlay for Readability */}
+                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 40%, rgba(0,0,0,0.65) 100%)', pointerEvents: 'none' }} />
 
-                                            {/* Altitude Badge Top Left */}
-                                            <div style={{ position: 'absolute', top: '16px', left: '16px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                                                <span style={{
-                                                    background: '#E5A93B',
-                                                    color: '#121613',
-                                                    fontSize: '11px',
-                                                    fontWeight: '800',
-                                                    padding: '5px 12px',
-                                                    borderRadius: '999px',
-                                                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
-                                                }}>
-                                                    {camp.altitude || 'Western Ghats'}
-                                                </span>
-                                                {camp.tag && (
+                                            {/* Unified Top Header Row: Badges Left, Actions Right (Zero Overlap) */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '14px',
+                                                left: '14px',
+                                                right: '14px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'flex-start',
+                                                gap: '8px',
+                                                zIndex: 3,
+                                                pointerEvents: 'none'
+                                            }}>
+                                                {/* Badges Left */}
+                                                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', maxWidth: 'calc(100% - 90px)', pointerEvents: 'auto' }}>
                                                     <span style={{
-                                                        background: '#121613',
-                                                        color: '#D5ED55',
-                                                        fontSize: '10.5px',
+                                                        background: '#E5A93B',
+                                                        color: '#121613',
+                                                        fontSize: '11px',
                                                         fontWeight: '800',
-                                                        padding: '5px 10px',
-                                                        borderRadius: '999px'
+                                                        padding: '4px 11px',
+                                                        borderRadius: '999px',
+                                                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+                                                        whiteSpace: 'nowrap'
                                                     }}>
-                                                        {camp.tag}
+                                                        {camp.altitude || 'Western Ghats'}
                                                     </span>
-                                                )}
+                                                    {camp.tag && (
+                                                        <span style={{
+                                                            background: '#121613',
+                                                            color: '#D5ED55',
+                                                            fontSize: '10.5px',
+                                                            fontWeight: '800',
+                                                            padding: '4px 10px',
+                                                            borderRadius: '999px',
+                                                            whiteSpace: 'nowrap'
+                                                        }}>
+                                                            {camp.tag}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {/* Action Buttons Right: Like ❤️ & Share 🔗 */}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, pointerEvents: 'auto' }}>
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleToggleWishlist(camp.id, camp.title, e);
+                                                        }}
+                                                        aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
+                                                        style={{
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            borderRadius: '50%',
+                                                            background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                                                            color: '#FFFFFF',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            cursor: 'pointer',
+                                                            backdropFilter: 'blur(6px)',
+                                                            boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                                                            transition: 'transform 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <Heart size={15} fill={isLiked ? '#FFFFFF' : 'none'} color="#FFFFFF" strokeWidth={2.5} />
+                                                    </button>
+
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            handleShare(camp, e);
+                                                        }}
+                                                        aria-label="Share campsite link"
+                                                        style={{
+                                                            width: '36px',
+                                                            height: '36px',
+                                                            borderRadius: '50%',
+                                                            background: 'rgba(0, 0, 0, 0.55)',
+                                                            border: '1px solid rgba(255, 255, 255, 0.25)',
+                                                            color: '#FFFFFF',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            cursor: 'pointer',
+                                                            backdropFilter: 'blur(6px)',
+                                                            boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                                                            transition: 'transform 0.15s ease'
+                                                        }}
+                                                    >
+                                                        <Share2 size={15} color="#FFFFFF" strokeWidth={2.2} />
+                                                    </button>
+                                                </div>
                                             </div>
 
-                                            {/* Action Buttons Top Right: Like & Share */}
-                                            <div style={{ position: 'absolute', top: '16px', right: '16px', display: 'flex', gap: '8px', zIndex: 2 }}>
-                                                <button
-                                                    onClick={(e) => handleToggleWishlist(camp.id, camp.title, e)}
-                                                    aria-label={isLiked ? 'Remove from wishlist' : 'Save to wishlist'}
-                                                    style={{
-                                                        width: '38px',
-                                                        height: '38px',
-                                                        borderRadius: '50%',
-                                                        background: isLiked ? '#EF4444' : 'rgba(0, 0, 0, 0.55)',
-                                                        border: 'none',
-                                                        color: '#FFFFFF',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: 'pointer',
-                                                        backdropFilter: 'blur(6px)',
-                                                        boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-                                                        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                                                    }}
-                                                >
-                                                    <Heart size={16} fill={isLiked ? '#FFFFFF' : 'none'} color="#FFFFFF" strokeWidth={2.5} />
-                                                </button>
-
-                                                <button
-                                                    onClick={(e) => handleShare(camp, e)}
-                                                    aria-label="Share campsite link"
-                                                    style={{
-                                                        width: '38px',
-                                                        height: '38px',
-                                                        borderRadius: '50%',
-                                                        background: 'rgba(0, 0, 0, 0.55)',
-                                                        border: 'none',
-                                                        color: '#FFFFFF',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: 'pointer',
-                                                        backdropFilter: 'blur(6px)',
-                                                        boxShadow: '0 4px 14px rgba(0,0,0,0.25)',
-                                                        transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                                                    }}
-                                                >
-                                                    <Share2 size={15} color="#FFFFFF" strokeWidth={2.2} />
-                                                </button>
-                                            </div>
-
-                                            {/* Bottom Overlay Info (Gallery Count & Rating) */}
-                                            <div style={{ position: 'absolute', bottom: '14px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#FFFFFF', zIndex: 2 }}>
+                                            {/* Unified Bottom Info Row: Photos Button Left, Rating Right */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                bottom: '12px',
+                                                left: '14px',
+                                                right: '14px',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                zIndex: 3,
+                                                pointerEvents: 'none'
+                                            }}>
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         setSelectedLightboxPhoto(camp.image);
                                                     }}
                                                     style={{
-                                                        background: 'rgba(0, 0, 0, 0.55)',
-                                                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                        background: 'rgba(0, 0, 0, 0.58)',
+                                                        border: '1px solid rgba(255, 255, 255, 0.25)',
                                                         color: '#FFFFFF',
-                                                        padding: '5px 12px',
+                                                        padding: '5px 11px',
                                                         borderRadius: '999px',
                                                         fontSize: '11px',
                                                         fontWeight: '700',
@@ -585,52 +627,80 @@ export default function CampsDirectoryClient({
                                                         backdropFilter: 'blur(6px)',
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        gap: '5px'
+                                                        gap: '5px',
+                                                        pointerEvents: 'auto'
                                                     }}
                                                 >
                                                     <Camera size={13} color="#FFFFFF" />
                                                     <span>{galleryList.length} Photos</span>
                                                 </button>
 
-                                                <span style={{ fontSize: '12px', fontWeight: '800', background: 'rgba(0,0,0,0.6)', padding: '5px 12px', borderRadius: '999px', backdropFilter: 'blur(6px)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                    <Star size={13} fill="#E5A93B" color="#E5A93B" />
+                                                <span style={{
+                                                    fontSize: '11.5px',
+                                                    fontWeight: '800',
+                                                    background: 'rgba(255, 255, 255, 0.95)',
+                                                    color: '#121613',
+                                                    padding: '4px 10px',
+                                                    borderRadius: '999px',
+                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    gap: '4px',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <Star size={12} fill="#E5A93B" color="#E5A93B" />
                                                     <span>{camp.rating || 4.98}</span>
-                                                    <span style={{ opacity: 0.75, fontWeight: '600', fontSize: '11px' }}>({camp.reviewsCount || 342})</span>
+                                                    <span style={{ opacity: 0.65, fontWeight: '600', fontSize: '10px' }}>({camp.reviewsCount || 342})</span>
                                                 </span>
                                             </div>
                                         </div>
 
-                                        {/* Card Body */}
-                                        <div className="camps-card-body" style={{ padding: '24px 24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                                        {/* Card Body — Booking-Focused Details */}
+                                        <div className="camps-card-body" style={{ padding: '22px 22px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                             
-                                            {/* Region & Duration */}
+                                            {/* Location & Live Availability Row */}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                <span style={{ fontSize: '11.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
                                                     <MapPin size={13} color="#166534" strokeWidth={2.5} />
                                                     <span>{camp.location || camp.region}</span>
                                                 </span>
-                                                <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#166534', background: 'rgba(22, 101, 52, 0.1)', padding: '3px 9px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                    <Clock size={12} strokeWidth={2.5} />
-                                                    <span>{camp.duration || '2D / 1N'}</span>
+                                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 9px', borderRadius: '999px' }}>
+                                                    <span className="live-available-dot" />
+                                                    <span>Live Available</span>
                                                 </span>
                                             </div>
 
                                             {/* Campsite Title */}
-                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '800', color: '#121613', margin: '0 0 10px', lineHeight: 1.35 }}>
+                                            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '19px', fontWeight: '800', color: '#121613', margin: '0 0 6px', lineHeight: 1.35 }}>
                                                 {camp.title}
                                             </h3>
 
+                                            {/* Stay Accommodation Spec */}
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#4B5563', fontWeight: '600', marginBottom: '10px' }}>
+                                                <Tent size={13} color="#166534" />
+                                                <span>{camp.category || 'High-Altitude Ridge Stay'} · {camp.altitude} · {camp.duration || '2D / 1N'}</span>
+                                            </div>
+
                                             {/* Description snippet */}
-                                            <p className="camps-card-desc" style={{ fontSize: '13.5px', color: '#59655D', lineHeight: 1.6, margin: '0 0 16px', flex: 1 }}>
-                                                {camp.description ? camp.description.slice(0, 115) + '...' : 'High-altitude ridge glamping, sunrise jeep convoy safari, campfire barbecue dinner, and certified trail guides.'}
+                                            <p className="camps-card-desc" style={{ 
+                                                fontSize: '13px', 
+                                                color: '#59655D', 
+                                                lineHeight: 1.5, 
+                                                margin: '0 0 12px',
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 2,
+                                                WebkitBoxOrient: 'vertical',
+                                                overflow: 'hidden'
+                                            }}>
+                                                {camp.description ? camp.description.slice(0, 125) + '...' : 'High-altitude ridge glamping, sunrise jeep convoy safari, campfire barbecue dinner, and certified trail guides.'}
                                             </p>
 
-                                            {/* Highlights Tags */}
+                                            {/* Included Highlights & Perks Chips */}
                                             {camp.highlights && (
-                                                <div className="camps-card-highlights" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
+                                                <div className="camps-card-highlights" style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
                                                     {camp.highlights.slice(0, 3).map((h, hidx) => (
-                                                        <span key={hidx} style={{ fontSize: '11.5px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '5px 12px', borderRadius: '9px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                                            <LucideAmenityIcon name={h} size={12} color="#166534" />
+                                                        <span key={hidx} style={{ fontSize: '11px', fontWeight: '700', background: '#F1F3EC', color: '#121613', padding: '4px 10px', borderRadius: '8px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                                            <LucideAmenityIcon name={h} size={11} color="#166534" />
                                                             <span>{h}</span>
                                                         </span>
                                                     ))}
@@ -638,42 +708,49 @@ export default function CampsDirectoryClient({
                                             )}
 
                                             {/* Price & Book Now Action Footer */}
-                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                            <div style={{ borderTop: '1px solid rgba(18, 22, 19, 0.08)', paddingTop: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto', gap: '8px' }}>
                                                 <div>
-                                                    <span style={{ fontSize: '10.5px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.6px', display: 'block', marginBottom: '2px' }}>
+                                                    <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block' }}>
                                                         Starts at
                                                     </span>
-                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '900', color: '#121613' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
+                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#121613' }}>
                                                             ₹{camp.price.toLocaleString('en-IN')}
                                                         </span>
+                                                        <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>
+                                                            / camper
+                                                        </span>
                                                     </div>
-                                                    <span style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '600', display: 'block', marginTop: '1px' }}>
-                                                        / camper
+                                                    <span style={{ fontSize: '10px', color: '#166534', fontWeight: '700', display: 'block', marginTop: '1px' }}>
+                                                        Zero Advance · Pay at Camp
                                                     </span>
                                                 </div>
 
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                    <Link
-                                                        href={`/camps/${camp.id}`}
-                                                        onClick={(e) => e.stopPropagation()}
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                    {/* Details Button */}
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            router.push(`/camps/${camp.id}`);
+                                                        }}
                                                         style={{
-                                                            padding: '11px 16px',
-                                                            borderRadius: '12px',
+                                                            padding: '9px 14px',
+                                                            borderRadius: '11px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
                                                             color: '#121613',
-                                                            fontSize: '13px',
+                                                            fontSize: '12.5px',
                                                             fontWeight: '800',
-                                                            textDecoration: 'none',
+                                                            cursor: 'pointer',
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
-                                                            gap: '4px'
+                                                            gap: '3px'
                                                         }}
                                                     >
                                                         <span>Details →</span>
-                                                    </Link>
+                                                    </button>
 
+                                                    {/* Direct Booking Modal Button */}
                                                     <button
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -683,18 +760,20 @@ export default function CampsDirectoryClient({
                                                         className="btn-lime"
                                                         title="Direct Booking · No Login Required · Zero Upfront Advance"
                                                         style={{
-                                                            padding: '11px 22px',
-                                                            borderRadius: '12px',
-                                                            fontSize: '13px',
+                                                            padding: '9px 18px',
+                                                            borderRadius: '11px',
+                                                            fontSize: '12.5px',
                                                             fontWeight: '800',
                                                             cursor: 'pointer',
                                                             border: 'none',
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
+                                                            gap: '4px',
                                                             boxShadow: '0 4px 14px rgba(213, 237, 85, 0.35)'
                                                         }}
                                                     >
+                                                        <Zap size={12} fill="#121613" />
                                                         <span>Book</span>
                                                     </button>
                                                 </div>

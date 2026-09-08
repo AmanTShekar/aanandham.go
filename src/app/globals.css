@@ -1244,11 +1244,13 @@ body::-webkit-scrollbar-thumb:active,
 }
 
 @media (max-width: 960px) {
-  .package-card-img {
-    height: 170px !important;
+  .package-card-img,
+  .camps-card-media {
+    height: 220px !important;
   }
-  .package-card-body {
-    padding: 16px 18px !important;
+  .package-card-body,
+  .camps-card-body {
+    padding: 18px 18px 20px !important;
   }
 }
 
@@ -2314,84 +2316,67 @@ body::-webkit-scrollbar-thumb:active,
   }
 }
 
-/* Campsite cards — Airbnb-style compact horizontal rows on phones */
+/* Campsite cards — Premium mobile-optimized vertical card layout */
 @media (max-width: 640px) {
   .camps-card {
-    flex-direction: row !important;
-    border-radius: 18px !important;
-    min-height: 158px !important;
+    flex-direction: column !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    min-height: auto !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.05) !important;
   }
   .camps-card-media {
-    width: 42% !important;
-    min-width: 42% !important;
-    height: auto !important;
-    min-height: 158px !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    height: 235px !important;
+    min-height: 235px !important;
     flex-shrink: 0 !important;
   }
   .camps-card-body {
-    padding: 12px 12px 12px 14px !important;
-    min-width: 0 !important;
+    padding: 20px 18px 22px !important;
+    min-width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   .camps-card-body h3 {
-    font-size: 15px !important;
-    line-height: 1.3 !important;
-    margin: 0 0 6px !important;
+    font-size: 19px !important;
+    line-height: 1.35 !important;
+    margin: 0 0 8px !important;
   }
-  .camps-card-desc,
+  .camps-card-desc {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #59655D !important;
+    margin: 0 0 12px !important;
+  }
   .camps-card-highlights {
-    display: none !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    margin-bottom: 16px !important;
   }
-  .camps-card-body > div:first-child {
-    margin-bottom: 4px !important;
-  }
-  .camps-card-body > div:first-child > span:last-child {
-    display: none !important;
-  }
-  .camps-card-body > div:first-child > span:first-child {
-    font-size: 10.5px !important;
-  }
-  .camps-card-body > div:last-child {
-    margin-top: 6px !important;
-    padding-top: 10px !important;
-  }
-  .camps-card-body > div:last-child > div > span {
-    display: none !important;
-  }
-  .camps-card-body > div:last-child > div > div > span:first-child {
-    font-size: 18px !important;
-  }
-  .camps-card-body > div:last-child > button {
-    padding: 9px 16px !important;
-    font-size: 12px !important;
-  }
-  .camps-card-media > div:last-child > button {
-    display: none !important;
-  }
-  .camps-card-media > div:last-child {
-    bottom: 8px !important;
-    left: 8px !important;
-    right: 8px !important;
-  }
-  .camps-card-media > div:last-child > span {
-    padding: 3px 8px !important;
-    font-size: 10.5px !important;
-  }
-  .camps-card-media > div:nth-child(3) {
-    top: 10px !important;
-    left: 10px !important;
-  }
-  .camps-card-media > div:nth-child(3) > span {
-    padding: 3px 8px !important;
-    font-size: 9.5px !important;
-  }
-  .camps-card-media > div:nth-child(4) {
-    top: 10px !important;
-    right: 10px !important;
-  }
-  .camps-card-media > div:nth-child(4) > button {
-    width: 30px !important;
-    height: 30px !important;
-  }
+}
+
+/* Live availability pulse badge indicator */
+@keyframes livePulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.live-available-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #16A34A;
+  border-radius: 50%;
+  display: inline-block;
+  animation: livePulse 2s infinite;
+  flex-shrink: 0;
 }
 
 /* Accommodation types — compact cards on phones */
