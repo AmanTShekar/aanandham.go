@@ -10,6 +10,7 @@ import dynamic from 'next/dynamic';
 const BookingEngineModal = dynamic(() => import('../../components/BookingEngineModal'), { ssr: false });
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
+import { SkeletonCampGrid, AssetImage } from '../../components/common/SkeletonLoader';
 import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
@@ -30,7 +31,8 @@ export default function CampsDirectoryClient({
     heroSubtitle = null
 }) {
     const router = useRouter();
-    const [camps, setCamps] = useState(initialCamps);
+    const [camps, setCamps] = useState(initialCamps || []);
+    const [isLoading, setIsLoading] = useState(!initialCamps || initialCamps.length === 0);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedRegion, setSelectedRegion] = useState(initialRegion);
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -61,7 +63,10 @@ export default function CampsDirectoryClient({
                         });
                     }
                 }
-            } catch (e) {}
+            } catch (e) {
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         refreshCamps();
@@ -435,7 +440,11 @@ export default function CampsDirectoryClient({
                         )}
                     </div>
 
-                    {filteredCamps.length === 0 ? (
+                    {isLoading && camps.length === 0 ? (
+                        <div style={{ padding: '12px 0 40px' }}>
+                            <SkeletonCampGrid count={6} />
+                        </div>
+                    ) : filteredCamps.length === 0 ? (
                         <div style={{ background: '#FFFFFF', borderRadius: '24px', padding: '60px 20px', textAlign: 'center', border: '1px solid rgba(18,22,19,0.08)' }}>
                             <div style={{ fontSize: '42px', marginBottom: '14px', display: 'inline-flex' }}><Tent size={42} strokeWidth={1.6} /></div>
                             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '800', margin: '0 0 8px' }}>
@@ -489,20 +498,17 @@ export default function CampsDirectoryClient({
                                             textAlign: 'left'
                                         }}
                                     >
-                                        {/* Top Image & Media Header */}
+                                        {/* Top Image & Media Header with Shimmer Skeleton */}
                                         <div className="camps-card-media" style={{ position: 'relative', height: '270px', overflow: 'hidden' }}>
-                                            <img
+                                            <AssetImage
                                                 src={camp.image || galleryList[0]}
                                                 alt={camp.title}
-                                                width="400"
-                                                height="270"
-                                                loading="lazy"
-                                                decoding="async"
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             />
                                             
                                             {/* Gradient Overlay for Readability */}
-                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 40%, rgba(0,0,0,0.65) 100%)', pointerEvents: 'none' }} />
+                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 40%, rgba(0,0,0,0.65) 100%)', pointerEvents: 'none', zIndex: 2 }} />
 
                                             {/* Unified Top Header Row: Badges Left, Actions Right (Zero Overlap) */}
                                             <div style={{

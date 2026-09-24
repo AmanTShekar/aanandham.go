@@ -16,6 +16,7 @@ const BookingEngineModal = dynamic(() => import('../../../components/BookingEngi
 import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
+import { SkeletonPropertyDetail, AssetImage } from '../../../components/common/SkeletonLoader';
 import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2 } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
@@ -220,11 +221,12 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
     if (!camp) {
         return (
-            <div style={{ minHeight: '100vh', background: '#0B150E', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '32px', marginBottom: '12px', display: 'inline-flex' }}><Trees size={32} strokeWidth={1.6} /></div>
-                    <p style={{ color: '#D5ED55', fontWeight: '700' }}>Loading Basecamp Sanctuary...</p>
-                </div>
+            <div style={{ minHeight: '100vh', background: '#F8F9F5', color: '#121613' }}>
+                <SiteHeader transparentOnTop={false} activePage="camps" />
+                <main style={{ paddingBottom: '120px' }}>
+                    <SkeletonPropertyDetail />
+                </main>
+                <Footer />
             </div>
         );
     }
@@ -581,17 +583,16 @@ return (
                         <div
                             onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
                             className="gallery-tile-main card-img-zoom"
+                            style={{ position: 'relative' }}
                         >
-                            <img
+                            <AssetImage
                                 src={gallery[0]}
                                 alt={`${camp.title} Main View`}
-                                width="800"
-                                height="500"
-                               
-                                fetchPriority="high"
-                                style={IMG_FILL}
-                             loading="lazy" decoding="async"/>
-                            <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800' }}>
+                                fill
+                                priority
+                                sizes="(max-width: 768px) 100vw, 60vw"
+                            />
+                            <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', zIndex: 2 }}>
                                 <span style={ROW_GAP_6}><Camera size={13} /> View Gallery ({gallery.length} photos)</span>
                             </div>
                         </div>
@@ -600,15 +601,13 @@ return (
                         <div
                             onClick={() => { setActivePhotoIdx(1 % gallery.length); setIsLightboxOpen(true); }}
                             className="gallery-tile-top card-img-zoom"
+                            style={{ position: 'relative' }}
                         >
-                            <img
+                            <AssetImage
                                 src={gallery[1] || gallery[0]}
                                 alt={`${camp.title} Ridge Tent`}
-                                width="400"
-                                height="250"
-                                loading="lazy"
-                                decoding="async"
-                                style={IMG_FILL}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
                             />
                         </div>
 
@@ -616,15 +615,13 @@ return (
                         <div
                             onClick={() => { setActivePhotoIdx(2 % gallery.length); setIsLightboxOpen(true); }}
                             className="gallery-tile-bot-1 card-img-zoom"
+                            style={{ position: 'relative' }}
                         >
-                            <img
+                            <AssetImage
                                 src={gallery[2] || gallery[0]}
                                 alt={`${camp.title} Campfire Area`}
-                                width="400"
-                                height="250"
-                                loading="lazy"
-                                decoding="async"
-                                style={IMG_FILL}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
                             />
                         </div>
 
@@ -632,17 +629,16 @@ return (
                         <div
                             onClick={() => { setActivePhotoIdx(3 % gallery.length); setIsLightboxOpen(true); }}
                             className="gallery-tile-bot-2 card-img-zoom"
+                            style={{ position: 'relative' }}
                         >
-                            <img
+                            <AssetImage
                                 src={gallery[3] || gallery[0]}
                                 alt={`${camp.title} Valley Sunset`}
-                                width="400"
-                                height="250"
-                                loading="lazy"
-                                decoding="async"
-                                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
+                                style={{ opacity: 0.8 }}
                             />
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px' }}>
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px', zIndex: 2, background: 'rgba(0,0,0,0.35)' }}>
                                 +{Math.max(1, gallery.length - 3)} More
                             </div>
                         </div>
