@@ -1,4 +1,4 @@
-import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
+import { INITIAL_ALL_CAMPS, DEPRECATED_CAMP_IDS } from '@/lib/campsData';
 import { getAllBlogSlugs } from '@/lib/blogPosts';
 
 export default function sitemap() {
@@ -51,13 +51,15 @@ export default function sitemap() {
     },
   ];
 
-  // Dynamic Campsite Detail Booking Pages (High Priority)
-  const campRoutes = INITIAL_ALL_CAMPS.map((camp) => ({
-    url: `${siteUrl}/camps/${camp.id}`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly',
-    priority: 0.9,
-  }));
+  // Dynamic Campsite Detail Booking Pages (High Priority, active camps only)
+  const campRoutes = INITIAL_ALL_CAMPS
+    .filter((camp) => !camp.archived && !DEPRECATED_CAMP_IDS.has(camp.id))
+    .map((camp) => ({
+      url: `${siteUrl}/camps/${camp.id}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    }));
 
   // Blog posts — the long-tail keyword engine (weekly crawl, mid priority)
   const blogRoutes = getAllBlogSlugs().map((slug) => ({

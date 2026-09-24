@@ -91,6 +91,19 @@ function BookingEngineModalInner({
         return () => window.removeEventListener('aanandham_payment_settings_updated', syncSettings);
     }, [isOpen]);
 
+    // Synchronize dynamic camps list on modal open
+    useEffect(() => {
+        const syncCamps = () => {
+            const list = getAllCamps();
+            if (Array.isArray(list) && list.length > 0) {
+                setCampsList(list);
+            }
+        };
+        syncCamps();
+        window.addEventListener('storage', syncCamps);
+        return () => window.removeEventListener('storage', syncCamps);
+    }, [isOpen]);
+
     // Freeze background body scrolling while modal is open
     useEffect(() => {
         if (isOpen && typeof document !== 'undefined') {

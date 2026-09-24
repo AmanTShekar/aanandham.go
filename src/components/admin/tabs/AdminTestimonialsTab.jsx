@@ -6,14 +6,7 @@ import {
     ROW_SPACE_10, H2_STYLE, ROW_SPACE_WRAP, ROW_SPACE_14, FORM_INPUT_STYLE, FIELD_LABEL_STYLE,
     IMG_FILL_STYLE, compressImageFile, uploadImageMedia
 } from '../AdminSharedStyles';
-
-const AVATAR_PRESETS = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80',
-    'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=160&q=80',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80',
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=160&q=80'
-];
+import InitialsAvatar from '../../InitialsAvatar';
 
 export default function AdminTestimonialsTab({
     testimonials = [],
@@ -31,7 +24,7 @@ export default function AdminTestimonialsTab({
             quote: 'An unforgettable sunrise experience above the cloud beds of Kolukkumalai. The staff hospitality was top-notch.',
             rating: 5,
             campsite: 'Kolukkumalai Sunrise Glamping',
-            avatar: AVATAR_PRESETS[Math.floor(Math.random() * AVATAR_PRESETS.length)],
+            avatar: '',
             active: true
         };
         setTestimonials(prev => [newT, ...(prev || [])]);
@@ -135,9 +128,13 @@ export default function AdminTestimonialsTab({
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', background: '#F1F3EC', border: '1px solid rgba(18,22,19,0.1)', flexShrink: 0 }}>
-                                    <img src={t.avatar || AVATAR_PRESETS[0]} alt={t.name} style={IMG_FILL_STYLE} loading="lazy" decoding="async" />
-                                </div>
+                                {t.avatar ? (
+                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', overflow: 'hidden', background: '#F1F3EC', border: '1px solid rgba(18,22,19,0.1)', flexShrink: 0 }}>
+                                        <img src={t.avatar} alt={t.name} style={IMG_FILL_STYLE} loading="lazy" decoding="async" />
+                                    </div>
+                                ) : (
+                                    <InitialsAvatar name={t.author || t.name || 'Camper'} size={40} fontSize={14} borderColor="rgba(18,22,19,0.15)" />
+                                )}
                                 <div>
                                     <input
                                         type="text"
@@ -173,26 +170,24 @@ export default function AdminTestimonialsTab({
                             />
                         </div>
 
-                        {/* Avatar Picker / Upload */}
+                        {/* Avatar Upload (Optional — defaults to initials-based avatar) */}
                         <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
                                 <label style={{ cursor: 'pointer', padding: '4px 10px', borderRadius: '6px', background: '#F1F3EC', fontSize: '11px', fontWeight: '800', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                     <Upload size={12} />
                                     <span>Upload Photo</span>
                                     <input type="file" accept="image/*" onChange={(e) => handleAvatarUpload(t.id, e)} style={{ display: 'none' }} />
                                 </label>
-                                <div style={{ display: 'flex', gap: '4px' }}>
-                                    {AVATAR_PRESETS.map((u, pIdx) => (
-                                        <button
-                                            key={pIdx}
-                                            type="button"
-                                            onClick={() => handleUpdateTestimonial(t.id, { avatar: u })}
-                                            style={{ width: '26px', height: '26px', borderRadius: '50%', overflow: 'hidden', padding: 0, border: t.avatar === u ? '2px solid #166534' : '2px solid transparent', cursor: 'pointer' }}
-                                        >
-                                            <img src={u} alt="" style={IMG_FILL_STYLE} loading="lazy" decoding="async" />
-                                        </button>
-                                    ))}
-                                </div>
+                                {t.avatar && (
+                                    <button
+                                        type="button"
+                                        onClick={() => handleUpdateTestimonial(t.id, { avatar: '' })}
+                                        style={{ padding: '4px 10px', borderRadius: '6px', background: '#FEE2E2', fontSize: '11px', fontWeight: '800', color: '#DC2626', border: 'none', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                    >
+                                        <Trash2 size={11} /> Remove Photo
+                                    </button>
+                                )}
+                                <span style={{ fontSize: '10.5px', color: '#7D8880' }}>{t.avatar ? 'Custom photo' : 'Using auto-generated initials avatar'}</span>
                             </div>
                         </div>
 

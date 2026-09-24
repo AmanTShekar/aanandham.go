@@ -7,6 +7,7 @@ import {
     AlertCircle, ListFilter, UserCheck, ShieldCheck, Sunrise, Mountain, Trees, Leaf, ArrowRight, Drumstick
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, StationGlyph, AANANDHAM_CAMPS, getCleanWhatsAppPhone } from './ScannerShared';
+import { telLink } from '@/lib/whatsapp';
 
 export default function ScannerRosterView({ state = {} }) {
     const {
@@ -346,7 +347,7 @@ export default function ScannerRosterView({ state = {} }) {
                                                             <span>WhatsApp</span>
                                                         </a>
                                                         <a
-                                                            href={`tel:${guest.phone.replace(/[^\d+]/g, '')}`}
+                                                            href={telLink(guest.phone)}
                                                             style={{
                                                                 display: 'inline-flex',
                                                                 alignItems: 'center',

@@ -82,7 +82,7 @@ export const BLOG_POSTS = [
       { q: 'Which are the best camps in Munnar for sunrise views?', a: 'Kolukkumalai Sunrise Ridge Glamp is the top-rated camp for sunrise, situated at 7,900 FT with direct 4x4 jeep departures to the Tiger Rock cloud bed viewpoint.' },
       { q: 'How much does a camp stay in Munnar cost?', a: 'Quality all-inclusive camp stays in Munnar start from ₹1,899 to ₹2,899 per person, covering accommodation, dinner BBQ, breakfast, campfire, and guided treks.' },
       { q: 'Is camping in Munnar safe for solo female travelers and couples?', a: 'Yes. Aanandham verified camps maintain 100% gated perimeters, separate male and female coordinators on-site 24/7, and modern en-suite western washrooms with hot water.' },
-      { q: 'How do I book top camp stays in Munnar directly?', a: 'You can book directly on Aanandham.go with zero advance payment needed — select your camp, choose dates and room style, and receive your instant digital camp pass.' }
+      { q: 'How do I book top camp stays in Munnar directly?', a: 'You can book directly on Aanandham.go — select your camp, choose dates and room style, and receive your instant digital camp pass.' }
     ]
   },
   {

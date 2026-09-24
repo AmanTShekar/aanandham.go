@@ -383,35 +383,43 @@ const FOUR_STEPS = [
 const TESTIMONIALS = [
     {
         id: 1,
-        quote: "Best decision I made this year. I was burnt out from work and needed a reset – this camp delivered exactly that. The mountain marshals really know their stuff, the vibe is super chill, and I made friends from all over the country. Experiencing the Kolukkumalai cloud sunrise above 7,900 FT was unforgettable.",
-        author: "Daniel Kim",
+        quote: "Coming from Kochi, I needed a complete escape from work stress. Watching the 7,900 FT Kolukkumalai cloud sunrise with a hot cup of black tea and the campfire vibes was pure peace. The marshals managed everything seamlessly — from the bumpy 4x4 trail to tent safety.",
+        author: "Arjun Varma",
         campBadge: "camp '25",
         batchDate: "Aanandham, August 2025",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
+        avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=ArjunVarma&backgroundColor=b6e3f4"
     },
     {
         id: 2,
-        quote: "I was nervous about traveling alone as a female solo camper, but this crew made me feel safe and at home immediately. We trekked every morning, explored the peaks, and had the kind of deep conversations around the campfire you remember for life.",
-        author: "Emma Rodriguez",
+        quote: "I was hesitant about traveling solo as a woman, but the Aanandham camp staff made me feel comfortable immediately. Gated perimeter, clean western washrooms with hot water, and great conversations around the campfire. Will definitely return with my college gang.",
+        author: "Anjali Menon",
         campBadge: "camp '25",
         batchDate: "Aanandham, March 2025",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"
+        avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=AnjaliMenon&backgroundColor=ffd5dc"
     },
     {
         id: 3,
-        quote: "Unmatched wilderness comfort. We organized a 24-member corporate team offsite at the Suryanelli ridge. Clean private western washrooms, delicious hot barbecue at 12°C, and the 4x4 jeep safari was pure adrenaline. Outstanding organization.",
-        author: "Karthik & Tribe",
+        quote: "We booked a 16-person team offsite from Infopark Kochi to Suryanelli ridge. Live campfire BBQ at 12°C, starlit acoustic jamming, and morning mist rolling over the tents. Far better than any generic resort stay.",
+        author: "Gokul Krishnan & Squad",
         campBadge: "camp '25",
         batchDate: "Aanandham, November 2025",
-        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+        avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=GokulKrishnan&backgroundColor=c0aede"
     },
     {
         id: 4,
-        quote: "The heart-shaped lake at Chembra Peak took my breath away. Our trek leader paced the entire group patiently, carried medical kits, and pointed out endemic bird species. The food at basecamp felt just like home-cooked Kerala Sadhya.",
+        quote: "Took my parents and sister to Suryanelli basecamp. The hosts were incredibly respectful and attentive. Authentic Kerala meals, warm insulated bedding, and the 4:30 AM jeep convoy to see the sunrise above the clouds was unforgettable.",
         author: "Dr. Sneha Pillai",
         campBadge: "camp '26",
         batchDate: "Aanandham, January 2026",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+        avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=SnehaPillai&backgroundColor=d1d4f9"
+    },
+    {
+        id: 5,
+        quote: "The night sky at Suryanelli was unreal — zero light pollution and millions of stars above the ridge. The private dome tent was cozy and the camp team handled forest permits and trail guides without any hassle. 10/10 experience.",
+        author: "Nikhil & Devika",
+        campBadge: "camp '26",
+        batchDate: "Aanandham, February 2026",
+        avatar: "https://api.dicebear.com/7.x/adventurer/svg?seed=NikhilDevika&backgroundColor=ffdfbf"
     }
 ];
 
@@ -1205,7 +1213,7 @@ export default function HomePage() {
                             color: '#FFFFFF',
                             letterSpacing: '-0.5px'
                         }}>
-                            15,000+
+                            1,500+
                         </span>
                         <span style={{
                             fontSize: '14px',
@@ -1581,7 +1589,7 @@ export default function HomePage() {
                             </h2>
 
                             <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.7, marginBottom: '22px' }}>
-                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 15,000+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham.go</span></span>.
+                                We believe nature should be experienced with <span className="text-highlight-subtle">absolute safety</span>, deep local knowledge, and zero compromise on comfort. From <span className="text-highlight-subtle">7,900 FT cloud ridges</span> to <span className="text-highlight-subtle">private en-suite washrooms</span>, here is why 1,500+ adventurers trust <span className="text-hover-marker" style={{ cursor: 'pointer' }}><span className="marker-text">Aanandham.go</span></span>.
                             </p>
 
                             {/* 4 Interactive Expedition Tag Note Cards (2x2 Grid on Desktop / Smooth Swipe Track on Mobile) */}
@@ -2132,12 +2140,9 @@ export default function HomePage() {
                                                         </span>
                                                         <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
                                                     </div>
-                                                    <span style={{ fontSize: '10px', color: '#166534', fontWeight: '700', display: 'block', marginTop: '1px' }}>
-                                                        Zero Advance · Pay at Camp
-                                                    </span>
                                                 </div>
                                                 
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     {/* 1. Explore Details Button */}
                                                     <button
                                                         onClick={(e) => {
@@ -2145,7 +2150,8 @@ export default function HomePage() {
                                                             router.push(`/camps/${pkg.id}`);
                                                         }}
                                                         style={{
-                                                            padding: '8px 12px',
+                                                            padding: '8px 16px',
+                                                            minHeight: '36px',
                                                             borderRadius: '10px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -2155,13 +2161,14 @@ export default function HomePage() {
                                                             cursor: 'pointer',
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
+                                                            justifyContent: 'center',
                                                             gap: '3px'
                                                         }}
                                                     >
                                                         <span>Details →</span>
                                                     </button>
 
-                                                    {/* 2. Direct Book Spot ⚡ */}
+                                                    {/* 2. Direct Book Spot */}
                                                     <button 
                                                         onClick={(e) => {
                                                             e.stopPropagation();
@@ -2171,18 +2178,17 @@ export default function HomePage() {
                                                         title="Direct Booking · No Login Required · Zero Upfront Fee"
                                                         style={{ 
                                                             padding: '8px 16px', 
+                                                            minHeight: '36px',
                                                             borderRadius: '10px', 
-                                                            fontSize: '12.5px', 
+                                                            fontSize: '12px', 
                                                             fontWeight: '800', 
                                                             cursor: 'pointer', 
                                                             display: 'inline-flex', 
                                                             alignItems: 'center', 
                                                             justifyContent: 'center',
-                                                            gap: '4px',
                                                             boxShadow: '0 4px 12px rgba(213, 237, 85, 0.35)'
                                                         }}
                                                     >
-                                                        <Zap size={12} fill="#121613" />
                                                         <span>Book</span>
                                                     </button>
                                                 </div>
@@ -2271,24 +2277,40 @@ export default function HomePage() {
                         </p>
                     </div>
 
-                    {/* 2-Day Side-by-Side Detailed Schedule Grid */}
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 540px), 1fr))',
-                        gap: '24px'
-                    }}>
+                    {/* Mobile Day Selector Tabs */}
+                    <div className="schedule-mobile-tabs">
+                        {PROGRAM_DAYS.map((item, idx) => {
+                            const isDayActive = activeDayIdx === idx;
+                            return (
+                                <button
+                                    key={idx}
+                                    type="button"
+                                    onClick={() => setActiveDayIdx(idx)}
+                                    className={`schedule-tab-pill ${isDayActive ? 'is-active' : ''}`}
+                                >
+                                    <span className="tab-pill-day">{item.day}</span>
+                                    <span className="tab-pill-sub">
+                                        {idx === 0 ? '· Afternoon & BBQ' : '· Sunrise Safari'}
+                                    </span>
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* 2-Day Schedule Grid: Side-by-Side on desktop, selectable active tab on mobile */}
+                    <div className="schedule-grid-desktop">
                         {PROGRAM_DAYS.map((item, idx) => (
                             <motion.div
                                 key={idx}
                                 variants={cardReveal}
                                 whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0,0,0,0.06)' }}
                                 transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                                className={`schedule-day-card ${activeDayIdx === idx ? 'is-active-day' : ''}`}
                                 style={{
                                     background: '#FFFFFF',
                                     border: '1px solid rgba(18, 22, 19, 0.09)',
                                     borderRadius: '24px',
                                     padding: 'clamp(24px, 3.5vw, 34px)',
-                                    display: 'flex',
                                     flexDirection: 'column',
                                     position: 'relative',
                                     boxShadow: '0 6px 20px rgba(0,0,0,0.03)',
@@ -2438,58 +2460,24 @@ export default function HomePage() {
                         ))}
                     </div>
 
-                    {/* Bottom CTA Helper */}
-                    <div style={{
-                        marginTop: '32px',
-                        padding: '16px 24px',
-                        background: '#FFFFFF',
-                        border: '1px solid rgba(18, 22, 19, 0.08)',
-                        borderRadius: '16px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        flexWrap: 'wrap',
-                        gap: '16px'
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ fontSize: '18px' }}>🌲</span>
-                            <span style={{ fontSize: '13.5px', color: '#121613', fontWeight: '600' }}>
+                    {/* Bottom CTA Helper (Responsive Mobile + Single Connect Button) */}
+                    <div className="custom-itinerary-banner">
+                        <div className="custom-itinerary-text-wrap">
+                            <span className="custom-itinerary-icon">🌲</span>
+                            <span className="custom-itinerary-text">
                                 Need a customized itinerary or private corporate batch?
                             </span>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <a
-                                href={waLink('Hi Aanandham Concierge! Please share the 2-Day expedition itinerary options and slot availability.')}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    fontSize: '13px',
-                                    fontWeight: '800',
-                                    color: '#25D366',
-                                    textDecoration: 'none',
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: '6px'
-                                }}
-                            >
-                                <WhatsAppIcon size={15} color="#25D366" />
-                                <span>WhatsApp Concierge</span>
-                            </a>
-                            <Link
-                                href="/camps"
-                                style={{
-                                    fontSize: '12.5px',
-                                    fontWeight: '800',
-                                    color: '#121613',
-                                    background: '#E5A93B',
-                                    padding: '7px 16px',
-                                    borderRadius: '999px',
-                                    textDecoration: 'none'
-                                }}
-                            >
-                                Explore Camps & Stays →
-                            </Link>
-                        </div>
+                        <a
+                            href={waLink('Hi Aanandham Team! I would like to enquire about a customized itinerary or private corporate batch.')}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="custom-itinerary-btn"
+                        >
+                            <WhatsAppIcon size={14} color="#121613" />
+                            <span>Connect</span>
+                            <span style={{ fontSize: '12px', marginLeft: '1px' }}>→</span>
+                        </a>
                     </div>
 
                 </div>

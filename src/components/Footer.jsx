@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { waLink } from '../lib/whatsapp';
+import { waLink, telLink } from '../lib/whatsapp';
 import { Mail, Phone } from 'lucide-react';
 import { WhatsAppIcon, InstagramIcon, YouTubeIcon, FacebookIcon, LinkedInIcon } from './common/BrandIcons';
 
@@ -93,7 +93,7 @@ export default function Footer() {
                                 </div>
                                 <span>{emailCopied ? 'Email Copied! ✓' : 'bookings@aanandham.in'}</span>
                             </a>
-                            <a href={`tel:+${adminPhone}`} className="footer-contact-link">
+                            <a href={telLink(adminPhone)} className="footer-contact-link">
                                 <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <Phone size={13} />
                                 </div>

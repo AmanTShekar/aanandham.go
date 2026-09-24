@@ -62,6 +62,62 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const [activeTimelineDay, setActiveTimelineDay] = useState(0);
     const toastTimerRef = React.useRef(null);
 
+    // Defensive array normalizers (handles arrays, comma-delimited strings, or JSON strings from PMS)
+    const safeInclusions = React.useMemo(() => {
+        if (Array.isArray(camp?.inclusions)) return camp.inclusions.filter(Boolean);
+        if (typeof camp?.inclusions === 'string' && camp.inclusions.trim()) {
+            try {
+                const parsed = JSON.parse(camp.inclusions);
+                if (Array.isArray(parsed)) return parsed.filter(Boolean);
+            } catch {}
+            return camp.inclusions.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        return [
+            'Welcome tea & hot snacks at basecamp check-in',
+            'Buffet dinner with chicken/veg barbecue platter',
+            'Morning hot breakfast & tea/coffee',
+            'Stargazing campfire & live music setup',
+            '4x4 Jeep transfer to Kolukkumalai sunrise point',
+            'Certified camp staff & wilderness first-aid kit'
+        ];
+    }, [camp?.inclusions]);
+
+    const safeExclusions = React.useMemo(() => {
+        if (Array.isArray(camp?.exclusions)) return camp.exclusions.filter(Boolean);
+        if (typeof camp?.exclusions === 'string' && camp.exclusions.trim()) {
+            try {
+                const parsed = JSON.parse(camp.exclusions);
+                if (Array.isArray(parsed)) return parsed.filter(Boolean);
+            } catch {}
+            return camp.exclusions.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        return [
+            'Personal vehicle fuel & highway toll charges',
+            'Personal trekking gear (shoes, jackets, torches)',
+            'Extra barbecue meat portions (order on site)',
+            'Entry tickets to commercial viewpoints outside itinerary',
+            'Medical evacuation expenses or insurance coverage'
+        ];
+    }, [camp?.exclusions]);
+
+    const safeHighlights = React.useMemo(() => {
+        const raw = camp?.highlights || camp?.amenities;
+        if (Array.isArray(raw)) return raw.filter(Boolean);
+        if (typeof raw === 'string' && raw.trim()) {
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) return parsed.filter(Boolean);
+            } catch {}
+            return raw.split(',').map(s => s.trim()).filter(Boolean);
+        }
+        return [
+            'Panoramic Sunrise View',
+            'Campfire & BBQ',
+            'Staff Guide Support',
+            'Solar Powered Stay'
+        ];
+    }, [camp?.highlights, camp?.amenities]);
+
     useEffect(() => {
         const refreshCampData = async () => {
             const campsList = getAllCamps();
@@ -199,39 +255,70 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const discountAmount = discount.discountAmount;
     const nearbyCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
 
-    // ── Robust normalization of Basecamp Perks (handles objects, strings, comma lists, fallbacks) ──
+    // ── Official Basecamp Inclusions (Curated Wilderness Amenities) ──
+    const OFFICIAL_BASECAMP_PERKS = [
+        {
+            num: '01',
+            tag: 'Scenic Ridge',
+            title: 'Panoramic Mountain View Ridge',
+            desc: 'Unobstructed sunrise & mist valley vistas directly from the campsite ridge.'
+        },
+        {
+            num: '02',
+            tag: 'Sanitized Comfort',
+            title: 'Private En-suite Restrooms with Hot Water',
+            desc: 'Modern western fixtures, running hot water geysers & regular wilderness sanitation.'
+        },
+        {
+            num: '03',
+            tag: 'Campfire Vibe',
+            title: 'Evening Campfire & Music Session',
+            desc: 'Starlit acoustic campfire circle with warm barbecue appetizers & music.'
+        },
+        {
+            num: '04',
+            tag: 'Wilderness Hike',
+            title: 'Guided Sunset Trek & Photo Point',
+            desc: 'Led by certified local trail guides to high-altitude sunset vantage points.'
+        },
+        {
+            num: '05',
+            tag: 'Estate Trails',
+            title: 'Tea Plantation Trail Walk',
+            desc: 'Morning guided walks winding through rolling cloud beds and heritage tea gardens.'
+        },
+        {
+            num: '06',
+            tag: 'Camp Utilities',
+            title: '24/7 Power Backup & Free Parking',
+            desc: 'Silent power generator backup, camper device charging hubs & secure parking.'
+        }
+    ];
+
+    // ── Robust normalization of Basecamp Perks (defaults to the 6 official basecamp inclusions) ──
     const normalizedAmenities = useMemo(() => {
         let raw = camp?.amenities;
         if (typeof raw === 'string') {
             raw = raw.split(',').map(s => s.trim()).filter(Boolean);
         }
-        let list = [];
         if (Array.isArray(raw) && raw.length > 0) {
-            list = raw
+            const valid = raw
                 .filter(a => a && (typeof a === 'string' ? a.trim() : a.enabled !== false))
-                .map(a => {
-                    if (typeof a === 'string') {
-                        return { name: a.trim(), icon: '' };
-                    }
-                    return { name: a.name || a.title || 'Amenity', icon: a.icon || '' };
+                .map((a, idx) => {
+                    const name = typeof a === 'string' ? a.trim() : (a.name || a.title || 'Amenity');
+                    const num = String(idx + 1).padStart(2, '0');
+                    return {
+                        num,
+                        tag: a.tag || OFFICIAL_BASECAMP_PERKS[idx % OFFICIAL_BASECAMP_PERKS.length]?.tag || 'Basecamp Perk',
+                        title: name,
+                        desc: a.desc || OFFICIAL_BASECAMP_PERKS[idx % OFFICIAL_BASECAMP_PERKS.length]?.desc || 'Verified basecamp amenity & comfort facility.'
+                    };
                 })
-                .filter(a => Boolean(a.name));
+                .filter(a => Boolean(a.title));
+            if (valid.length > 0) return valid;
         }
-        if (list.length === 0 && Array.isArray(camp?.highlights) && camp.highlights.length > 0) {
-            list = camp.highlights.slice(0, 6).map(h => ({ name: h, icon: '' }));
-        }
-        if (list.length === 0) {
-            list = [
-                { name: 'Campfire Circle & Acoustic Jams', icon: '🔥' },
-                { name: '4x4 Offroad Mountain Trail Access', icon: '🚙' },
-                { name: 'Western Restrooms with Running Hot Water', icon: '🚿' },
-                { name: '24/7 Power Backup & Mobile Charging', icon: '⚡' },
-                { name: 'Certified Mountain Guides & First Aid', icon: '🩺' },
-                { name: 'Authentic Kerala Spiced Buffet Dining', icon: '🍽️' }
-            ];
-        }
-        return list;
-    }, [camp?.amenities, camp?.highlights]);
+        return OFFICIAL_BASECAMP_PERKS;
+    }, [camp?.amenities]);
 
     // ── Robust normalization of 2-Day Expedition Timeline (guarantees complete schedule for every camp) ──
     const normalizedItinerary = useMemo(() => {
@@ -411,6 +498,11 @@ return (
                                             {camp.tag}
                                         </span>
                                     )}
+                                    {camp.archived && (
+                                        <span className="camp-hero-badge" style={{ background: '#EF4444', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.4px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                            ⚠️ ARCHIVED SANCTUARY · EXPEDITIONS SUSPENDED
+                                        </span>
+                                    )}
                                 </div>
 
                                 <h1 className="camp-hero-title" style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(28px, 4.5vw, 44px)', fontWeight: '800', margin: '0 0 12px', color: '#FFFFFF', letterSpacing: '-0.025em', lineHeight: 1.15 }}>
@@ -577,13 +669,13 @@ return (
                                 </p>
 
                                 {/* Highlights Chips (Lucide Icons) */}
-                                {camp.highlights && camp.highlights.length > 0 && (
+                                {safeHighlights.length > 0 && (
                                     <div>
                                         <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px', margin: '0 0 12px' }}>
                                             Key Highlights & Experiences
                                         </h3>
                                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                                            {camp.highlights.map((hl, hidx) => (
+                                            {safeHighlights.map((hl, hidx) => (
                                                 <div key={hidx} style={{ background: '#F1F3EC', padding: '8px 14px', borderRadius: '10px', fontSize: '13px', fontWeight: '700', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
                                                     <LucideAmenityIcon name={hl} size={14} color="#166534" />
                                                     <span>{hl}</span>
@@ -770,7 +862,7 @@ return (
                                 </div>
                             </div>
 
-                            {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (CRISP LUCIDE ICONS) */}
+                            {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (SWIPEABLE ON MOBILE, CLEAN LOGO-FREE) */}
                             <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> BASECAMP PERKS
@@ -781,38 +873,35 @@ return (
                                 <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 18px', lineHeight: 1.5 }}>
                                     Every Aanandham basecamp is verified for wilderness safety, hygienic washrooms, and curated culinary experiences.
                                 </p>
-                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 150px), 1fr))', gap: '8px' }}>
-                                    {normalizedAmenities.map((amenity, aIdx) => (
+                                
+                                {/* Responsive Basecamp Inclusions: 3-Col Grid on Desktop / Smooth Swipeable Rail on Mobile */}
+                                <div className="basecamp-perks-container">
+                                    {normalizedAmenities.map((perk, aIdx) => (
                                         <div
                                             key={aIdx}
-                                            className="amenity-module"
-                                            style={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                gap: '10px',
-                                                background: '#F8F9F5',
-                                                padding: '10px 12px',
-                                                borderRadius: '12px',
-                                                border: '1px solid rgba(18, 22, 19, 0.06)'
-                                            }}
+                                            className="basecamp-perk-card"
                                         >
-                                            <div style={{
-                                                width: '32px',
-                                                height: '32px',
-                                                borderRadius: '8px',
-                                                background: '#121613',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                flexShrink: 0
-                                            }}>
-                                                <LucideAmenityIcon name={amenity.name} icon={amenity.icon || ''} size={15} color="#D5ED55" />
+                                            <div className="basecamp-perk-header">
+                                                <span className="basecamp-perk-num">
+                                                    {perk.num || String(aIdx + 1).padStart(2, '0')}
+                                                </span>
+                                                <span className="basecamp-perk-tag">
+                                                    {perk.tag || 'Basecamp Perk'}
+                                                </span>
                                             </div>
-                                            <span style={{ fontSize: '12.5px', fontWeight: '700', color: '#121613', lineHeight: 1.3 }}>
-                                                {amenity.name}
-                                            </span>
+                                            <h3 className="basecamp-perk-title">
+                                                {perk.title || perk.name}
+                                            </h3>
+                                            <p className="basecamp-perk-desc">
+                                                {perk.desc}
+                                            </p>
                                         </div>
                                     ))}
+                                </div>
+
+                                {/* Mobile Horizontal Swipe Hint */}
+                                <div className="basecamp-perks-swipe-hint">
+                                    <span>← Swipe to explore all 6 inclusions →</span>
                                 </div>
                             </div>
 
@@ -930,14 +1019,7 @@ return (
                                             What's Included
                                         </h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                                            {(camp.inclusions || [
-                                                'Welcome tea & hot snacks at basecamp check-in',
-                                                'Buffet dinner with chicken/veg barbecue platter',
-                                                'Morning hot breakfast & tea/coffee',
-                                                'Stargazing campfire & live music setup',
-                                                '4x4 Jeep transfer to Kolukkumalai sunrise point',
-                                                'Certified camp staff & wilderness first-aid kit'
-                                            ]).map((inc, iidx) => (
+                                            {safeInclusions.map((inc, iidx) => (
                                                 <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#3A443E', lineHeight: 1.45 }}>
                                                     <span style={{ color: '#166534', fontWeight: '800', marginTop: '1px' }}>✓</span>
                                                     <span>{inc}</span>
@@ -952,13 +1034,7 @@ return (
                                             What's Not Included
                                         </h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                                            {(camp.exclusions || [
-                                                'Personal vehicle fuel & highway toll charges',
-                                                'Personal trekking gear (shoes, jackets, torches)',
-                                                'Extra barbecue meat portions (order on site)',
-                                                'Entry tickets to commercial viewpoints outside itinerary',
-                                                'Medical evacuation expenses or insurance coverage'
-                                            ]).map((exc, eidx) => (
+                                            {safeExclusions.map((exc, eidx) => (
                                                 <div key={eidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#59655D', lineHeight: 1.45 }}>
                                                     <span style={{ color: '#DC2626', fontWeight: '800', marginTop: '1px' }}>✕</span>
                                                     <span>{exc}</span>
@@ -1038,10 +1114,17 @@ return (
                                             <span style={{ fontSize: '13px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
                                         </div>
                                     </div>
-                                    <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '11px', fontWeight: '800', padding: '5px 11px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E' }} />
-                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Zap size={11} /> Live Available</span>
-                                    </span>
+                                    {camp.archived ? (
+                                        <span style={{ background: 'rgba(239, 68, 68, 0.12)', color: '#DC2626', fontSize: '11px', fontWeight: '800', padding: '5px 11px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '5px', border: '1px solid rgba(239,68,68,0.2)' }}>
+                                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#EF4444' }} />
+                                            <span>Archived · Bookings Closed</span>
+                                        </span>
+                                    ) : (
+                                        <span style={{ background: '#DCFCE7', color: '#166534', fontSize: '11px', fontWeight: '800', padding: '5px 11px', borderRadius: '999px', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                                            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E' }} />
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}><Zap size={11} /> Live Available</span>
+                                        </span>
+                                    )}
                                 </div>
 
                                 {/* Form Inputs */}
@@ -1139,27 +1222,52 @@ return (
 
                                     {/* Primary Booking Button */}
                                     <div style={{ display: 'flex', gap: '10px' }}>
-                                        <button
-                                            onClick={() => setIsBookingModalOpen(true)}
-                                            className="btn-lime"
-                                            style={{
-                                                flex: '1.45',
-                                                minWidth: 0,
-                                                padding: '13px 12px',
-                                                fontSize: '13.5px',
-                                                fontWeight: '900',
-                                                borderRadius: '14px',
-                                                cursor: 'pointer',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: '6px',
-                                                boxShadow: '0 4px 16px rgba(213,237,85,0.35)'
-                                            }}
-                                        >
-                                            <span className="cta-label-wide">Book Now (Zero Advance)</span><span className="cta-label-narrow">Book Now</span>
-                                            <span style={{ whiteSpace: 'nowrap' }}>→</span>
-                                        </button>
+                                        {camp.archived ? (
+                                            <button
+                                                type="button"
+                                                disabled
+                                                style={{
+                                                    flex: '1.45',
+                                                    minWidth: 0,
+                                                    padding: '13px 12px',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '800',
+                                                    borderRadius: '14px',
+                                                    background: 'rgba(18, 22, 19, 0.08)',
+                                                    color: '#7D8880',
+                                                    cursor: 'not-allowed',
+                                                    border: '1px solid rgba(18, 22, 19, 0.12)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px'
+                                                }}
+                                            >
+                                                <span>Archived — Bookings Closed</span>
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() => setIsBookingModalOpen(true)}
+                                                className="btn-lime"
+                                                style={{
+                                                    flex: '1.45',
+                                                    minWidth: 0,
+                                                    padding: '13px 12px',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '900',
+                                                    borderRadius: '14px',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    boxShadow: '0 4px 16px rgba(213,237,85,0.35)'
+                                                }}
+                                            >
+                                                <span>Book Now</span>
+                                                <span style={{ whiteSpace: 'nowrap' }}>→</span>
+                                            </button>
+                                        )}
 
                                         <a
                                             href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
@@ -1197,7 +1305,7 @@ return (
 
                                     <div style={{ textAlign: 'center', fontSize: '11.5px', color: '#166534', fontWeight: '700', marginTop: '4px' }}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', justifyContent: 'center' }}>
-                                            <Lock size={11} /> No Login Required · Zero Upfront Fee · Pay on Arrival
+                                            <Lock size={11} /> No Login Required · Instant Confirmation · Transparent Pricing
                                         </span>
                                     </div>
 

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Phone, Calendar, X, ChevronRight } from 'lucide-react';
-import { waLink, DEFAULT_WA_PHONE, logWhatsAppInquiry } from '@/lib/whatsapp';
+import { waLink, DEFAULT_WA_PHONE, logWhatsAppInquiry, telLink } from '@/lib/whatsapp';
 import { WhatsAppIcon } from './BrandIcons';
 
 const BookingEngineModal = dynamic(() => import('../BookingEngineModal'), { ssr: false });
@@ -184,7 +184,7 @@ export default function GlobalActionHub() {
                             >
                                 {/* Direct Phone Call Button */}
                                 <a
-                                    href={`tel:+${adminPhone}`}
+                                    href={telLink(adminPhone)}
                                     className="action-dock-btn"
                                     title={`Call Desk: ${formattedPhone}`}
                                     style={{
@@ -344,7 +344,7 @@ export default function GlobalActionHub() {
             >
                 {/* 1. Phone Call Button (Direct Phone Call, Unchanged) */}
                 <a
-                    href={`tel:+${adminPhone}`}
+                    href={telLink(adminPhone)}
                     aria-label="Call Aanandham Desk"
                     style={{
                         flex: '0 0 52px',

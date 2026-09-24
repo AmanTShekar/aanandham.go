@@ -9,6 +9,7 @@ import {
     ChevronDown, Edit2, ShieldAlert, Smartphone, Crown, Drumstick, Leaf, Sunrise, Mountain, Trees, ChefHat
 } from 'lucide-react';
 import { ROW_GAP_8, ROW_GAP_10, ROW_GAP_6, ROW_SPACE, getCleanWhatsAppPhone } from './ScannerShared';
+import { telLink } from '@/lib/whatsapp';
 
 function CustomDropdown({ label, value, options = [], onChange }) {
     return (
@@ -294,7 +295,7 @@ export default function ScannerCheckInModal({ state = {}, embedded = false }) {
                                                 <span>WhatsApp ({leadPhone})</span>
                                             </a>
                                             <a
-                                                href={`tel:${leadPhone.replace(/[^\d+]/g, '')}`}
+                                                href={telLink(leadPhone)}
                                                 style={{
                                                     padding: isEmbedded ? '12px 18px' : '10px 16px',
                                                     borderRadius: '12px',

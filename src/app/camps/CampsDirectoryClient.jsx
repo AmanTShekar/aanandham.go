@@ -11,7 +11,7 @@ const BookingEngineModal = dynamic(() => import('../../components/BookingEngineM
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
 import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap } from 'lucide-react';
-import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../../lib/campsData';
+import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 
 const SORT_OPTIONS = [
@@ -149,6 +149,8 @@ export default function CampsDirectoryClient({
     // Filter & Sort Logic
     const filteredCamps = useMemo(() => {
         return camps.filter(camp => {
+            if (camp.archived || DEPRECATED_CAMP_IDS.has(camp.id)) return false;
+
             // Search query filter
             const q = searchQuery.toLowerCase().trim();
             const matchesSearch = !q || 
@@ -725,9 +727,6 @@ export default function CampsDirectoryClient({
                                                             / camper
                                                         </span>
                                                     </div>
-                                                    <span style={{ fontSize: '10px', color: '#166534', fontWeight: '700', display: 'block', marginTop: '1px' }}>
-                                                        Zero Advance · Pay at Camp
-                                                    </span>
                                                 </div>
 
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -738,7 +737,8 @@ export default function CampsDirectoryClient({
                                                             router.push(`/camps/${camp.id}`);
                                                         }}
                                                         style={{
-                                                            padding: '9px 14px',
+                                                            padding: '9px 16px',
+                                                            minHeight: '38px',
                                                             borderRadius: '11px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -748,6 +748,7 @@ export default function CampsDirectoryClient({
                                                             cursor: 'pointer',
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
+                                                            justifyContent: 'center',
                                                             gap: '3px'
                                                         }}
                                                     >
@@ -762,9 +763,10 @@ export default function CampsDirectoryClient({
                                                             setIsBookingModalOpen(true);
                                                         }}
                                                         className="btn-lime"
-                                                        title="Direct Booking · No Login Required · Zero Upfront Advance"
+                                                        title="Direct Booking · Instant Confirmation"
                                                         style={{
-                                                            padding: '9px 18px',
+                                                            padding: '9px 16px',
+                                                            minHeight: '38px',
                                                             borderRadius: '11px',
                                                             fontSize: '12.5px',
                                                             fontWeight: '800',
@@ -773,11 +775,9 @@ export default function CampsDirectoryClient({
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
                                                             justifyContent: 'center',
-                                                            gap: '4px',
                                                             boxShadow: '0 4px 14px rgba(213, 237, 85, 0.35)'
                                                         }}
                                                     >
-                                                        <Zap size={12} fill="#121613" />
                                                         <span>Book</span>
                                                     </button>
                                                 </div>

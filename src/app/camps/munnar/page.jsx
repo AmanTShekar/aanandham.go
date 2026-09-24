@@ -1,6 +1,6 @@
 import React from 'react';
 import CampsDirectoryClient from '../CampsDirectoryClient';
-import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
+import { INITIAL_ALL_CAMPS, DEPRECATED_CAMP_IDS } from '@/lib/campsData';
 
 export const metadata = {
   title: 'Top Camps in Munnar (2026) · Best Camp Stays & Tent Glamping | Aanandham.go',
@@ -52,7 +52,7 @@ export const metadata = {
 };
 
 export default function MunnarCampsPage() {
-  const munnarCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Munnar' || c.region === 'Suryanelli');
+  const munnarCamps = INITIAL_ALL_CAMPS.filter(c => (c.region === 'Munnar' || c.region === 'Suryanelli') && !c.archived && !DEPRECATED_CAMP_IDS.has(c.id));
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   // 1. Google Structured Data: Breadcrumbs
@@ -171,7 +171,7 @@ export default function MunnarCampsPage() {
       <CampsDirectoryClient
         initialCamps={munnarCamps}
         initialRegion="Munnar"
-        heroBadge="★ TOP 5 VERIFIED CAMPS IN MUNNAR"
+        heroBadge="★ TOP 4 VERIFIED CAMPS IN MUNNAR"
         heroTitle={<>Top Camps in Munnar: <span style={{ color: '#D5ED55' }}>Best Camp Stays & Ridge Glamping</span></>}
         heroSubtitle="Ranked #1 for high-altitude wilderness stays. Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy private 4x4 sunrise summit convoys, starlit campfire barbecues, and premium ridge glamping tents."
       />

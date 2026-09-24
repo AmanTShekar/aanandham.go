@@ -249,7 +249,9 @@ export const INITIAL_ALL_CAMPS = [
     "reviewsCount": 264,
     "duration": "2 Days / 1 Night",
     "difficulty": "Strenuous High Peak",
-    "isAvailable": true,
+    "isAvailable": false,
+    "archived": true,
+    "status": "Archived",
     "image": "/images/sunrise-cloud-treks.jpg",
     "gallery": [
       "/images/sunrise-cloud-treks.jpg",
@@ -1287,19 +1289,19 @@ export const INITIAL_ALL_CAMPS = [
   },
   {
     "id": "pkg-kolukkumalai-teddy-domes",
-    "title": "Kolukkumalai Teddy Domes — Luxury Geodesic Domes & Phantom Hills Sunset",
-    "shortTitle": "Kolukkumalai Teddy Domes",
+    "title": "Kolukkumalai Teddy's Campsite — Sky Deck & Kolukkumalai Sunrise",
+    "shortTitle": "Kolukkumalai Teddy's",
     "region": "Munnar",
-    "category": "Luxury Dome Glamp",
-    "tag": "High Altitude Glamp ⭐",
-    "location": "Phantom Hills, Kolukkumalai / Suryanelli, Munnar, Kerala",
+    "category": "Sky Deck & Mountain Dome",
+    "tag": "Kolukkumalai Sunrise ⭐",
+    "location": "Suryanelli / Kolukkumalai, Munnar, Kerala",
     "altitude": "7,100 FT",
-    "price": 2300,
+    "price": 2299,
     "originalPrice": 3200,
     "rating": 4.99,
     "reviewsCount": 165,
     "duration": "2 Days / 1 Night",
-    "difficulty": "Easy Glamp",
+    "difficulty": "Easy Camp",
     "isAvailable": true,
     "image": "/images/teddy/teddy-dome-1.jpg",
     "gallery": [
@@ -1315,119 +1317,115 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "faqs": [
       {
-        "q": "What is included in the ₹2,300 per person Teddy Domes package?",
-        "a": "The package includes overnight stay in high-altitude Luxurious Geodesic Domes, welcome evening tea & hot snacks, guided Phantom Hills sunset trek, tea plantation visit & photography stops, evening campfire circle with ambient music, starlight stargazing session, and delicious mountain breakfast on Day 2."
+        "q": "What is included in the 2D1N Kolukkumalai Package by Aanandham.go?",
+        "a": "The package includes campsite check-in & welcome tea/coffee, guided sunset trek, campfire with music, dinner, overnight stay in Sky Deck (₹2,300) or Adventure Dome (₹1,800), early morning tea/coffee, 4x4 Jeep safari to Kolukkumalai sunrise experience, and morning breakfast."
       },
       {
-        "q": "How does dinner work at Kolukkumalai Teddy Domes?",
-        "a": "Dinner is available on extra payment at the camp dining deck. You can choose from authentic Kerala buffet meals and hot barbecue platters prepared fresh by local chefs."
+        "q": "What accommodation options are available at Teddy's Campsite?",
+        "a": "Teddy's offers two authentic lodging options: the elevated scenic Sky Deck (₹2,300/person) and the weather-insulated Adventure Dome (₹1,800/person)."
       },
       {
-        "q": "Is the dawn Kolukkumalai Sunrise 4x4 Jeep Safari included?",
-        "a": "The world-famous Kolukkumalai dawn 4x4 jeep safari and sunrise peak entry is an optional add-on available on extra payment (bookable directly or upon arrival at basecamp)."
+        "q": "Is the Kolukkumalai Sunrise Jeep Safari included in the package?",
+        "a": "Yes! The package includes the early morning 4x4 jeep safari to Kolukkumalai and the breathtaking sunrise experience above the cloud beds."
       },
       {
-        "q": "What are the amenities inside the Luxurious Domes?",
-        "a": "Each geodesic dome features panoramic clear-view windows overlooking misty valleys, plush queen/king bedding, warm thermal blankets, en-suite western washrooms with running hot water, mobile charging stations, and private outdoor sit-outs."
-      },
-      {
-        "q": "How do I reach the campsite from Suryanelli / Munnar?",
-        "a": "Campers report at the Suryanelli basecamp hub (approx. 24 km from Munnar town). From there, camp coordinators guide you to the Phantom Hills dome site. Accessible by private cars, bikes, or cabs."
+        "q": "How do I reach Teddy's Campsite from Munnar?",
+        "a": "Guests arrive at the Suryanelli basecamp hub (approx. 24 km from Munnar town). From there, camp coordinators guide you to the campsite. Accessible by private cars, bikes, or cabs."
       }
     ],
-    "description": "Perched along the scenic mist-covered ridges of Phantom Hills in Kolukkumalai, Teddy Domes offers a breathtaking high-altitude luxury geodesic dome glamping experience. Enjoy panoramic tea estate vistas, guided sunset peak treks, estate photo spots, roaring evening campfires with ambient music, crystal-clear night stargazing, and optional dawn 4x4 off-road jeep expeditions to the legendary Kolukkumalai sunrise.",
+    "description": "2 Days / 1 Night Kolukkumalai Package by Aanandham.go at Teddy's Campsite, Suryanelli. Day 1 kicks off with welcome tea/coffee, a guided mountain sunset trek, evening campfire with music, delicious dinner, and an overnight stay in the Sky Deck or Adventure Dome. On Day 2, wake up to early morning tea, head out on an exhilarating 4x4 jeep safari to Kolukkumalai for the sunrise experience, return for breakfast, relax at the camp, and check out refreshed.",
     "highlights": [
-      "Luxurious Geodesic Dome Pods with Panoramic Mountain Views (₹2,300/person)",
-      "Guided Phantom Hills Sunset Trek above Valley Cloud Beds",
-      "Lush Tea Plantation Walk & Scenic Landscape Photo Point Stops",
-      "Evening Campfire Gathering with Ambient Acoustic Music & Stargazing",
-      "Complimentary Spiced Evening Tea, Fresh Hot Snacks & Day 2 Mountain Breakfast",
-      "Optional Dawn 4x4 Jeep Safari to Kolukkumalai Sunrise Peak (Extra Payment)"
+      "Overnight Stay in Sky Deck (₹2,300) or Adventure Dome (₹1,800)",
+      "Guided Mountain Sunset Trek with Panoramic Valley Views",
+      "Roaring Evening Campfire & Music Gathering with Welcome Tea/Coffee",
+      "Wholesome Traditional Campfire Dinner Included",
+      "Dawn 4x4 Jeep Safari to Kolukkumalai Sunrise Peak Experience",
+      "Wholesome Day 2 Mountain Breakfast & Camp Relaxation"
     ],
     "inclusions": [
-      "1 Night Accommodation in Luxurious Geodesic Dome Pod",
-      "Welcome Spiced Evening High-Altitude Tea & Hot Snacks",
-      "Guided Sunset Trek to Phantom Hills Viewpoint",
-      "Tea Plantation Estate Walk & Photography Tour",
-      "Evening Campfire Circle & Ambient Music Session",
-      "High-Altitude Stargazing under Crystal Clear Skies",
-      "Delicious Traditional Mountain Breakfast (Day 2)",
-      "Dedicated Camp Guide & 24/7 On-site Assistance"
+      "1 Night Stay in Sky Deck or Adventure Dome",
+      "Welcome Tea / Coffee on Arrival",
+      "Guided Mountain Sunset Trek",
+      "Evening Campfire Circle & Music Session",
+      "Wholesome Campfire Dinner",
+      "Early Morning Wake-up Tea / Coffee",
+      "4x4 Jeep Safari to Kolukkumalai Sunrise Peak",
+      "Day 2 Mountain Breakfast & Freshen Up",
+      "Camp Relaxation & Dedicated Mountain Marshals"
     ],
     "exclusions": [
-      "Dinner (Available on extra payment / a la carte dining)",
-      "Kolukkumalai 4x4 Dawn Jeep Safari & Sunrise Entry (Available on extra payment)",
-      "Personal snacks and personal transport to Suryanelli basecamp"
+      "Personal transportation to Suryanelli campsite",
+      "Personal snacks, beverages, and extra items not in the itinerary"
     ],
     "itinerary": [
       {
         "day": "Day 1",
-        "title": "Check-In, Phantom Hills Sunset Trek, Tea Plantation Walk & Campfire Vibes",
+        "title": "Arrival & Sunset",
         "items": [
-          "02:00 PM – Arrival at Kolukkumalai / Suryanelli basecamp & check-in to Luxurious Geodesic Domes.",
-          "04:00 PM – Evening hot spiced tea & freshly prepared local snacks with mountain breeze.",
-          "04:30 PM – Embark on the guided Phantom Hills Sunset Trek through scenic mountain trails.",
-          "05:45 PM – Experience the magical Phantom Hills golden sunset over the mist-covered Western Ghats.",
-          "06:30 PM – Tea plantation walk & visit to signature panoramic photo points.",
-          "07:30 PM – Roaring campfire lighting with ambient music session and cozy gathering.",
-          "08:30 PM – Delicious camp dinner buffet & live BBQ (available on extra payment).",
-          "10:00 PM – High-altitude stargazing under sparkling night skies & overnight rest in luxury domes."
+          "Check-in at the campsite & welcome tea/coffee",
+          "Sunset trek",
+          "Return to campsite & freshen up",
+          "Campfire, music",
+          "Dinner",
+          "Overnight stay in sky deck / adventure dome"
         ]
       },
       {
         "day": "Day 2",
-        "title": "Dawn Kolukkumalai Sunrise 4x4 Jeep Safari, Hot Breakfast & Departure",
+        "title": "Kolukkumalai Sunrise",
         "items": [
-          "04:30 AM – Wake up & hot black tea briefing.",
-          "05:00 AM – Optional 4x4 Off-Road Jeep Safari climb to Kolukkumalai Sunrise Peak (extra payment).",
-          "06:15 AM – Witness the world-famous golden cloud bed sunrise from Tiger Rock.",
-          "08:30 AM – Return to basecamp for a hot, wholesome traditional Kerala breakfast.",
-          "10:30 AM – 11:00 AM – Leisure morning photography, relaxation & smooth check-out."
+          "Early morning wake-up with tea/coffee",
+          "Jeep safari to Kolukkumalai",
+          "Sunrise experience",
+          "Return to campsite",
+          "Breakfast & freshen up",
+          "Relax at the campsite",
+          "Check-out"
         ]
       }
     ],
     "rooms": [
       {
-        "id": "r-td-dome-std",
-        "name": "Luxurious Geodesic Dome Pod",
+        "id": "r-td-sky-deck",
+        "name": "Sky Deck",
         "capacity": "2 - 3 Adults",
         "price": 2300,
-        "totalUnits": 8,
-        "bookedUnits": 2,
+        "totalUnits": 6,
+        "bookedUnits": 1,
         "isAvailable": true,
         "image": "/images/teddy/teddy-dome-1.jpg",
         "features": [
-          "Panoramic Mountain & Cloud Vista Window",
-          "Plush King / Twin Bedding Setup",
-          "Thermal Blankets & Cosy Linens",
-          "Attached En-suite Restroom with Hot Water",
-          "Charging Points & 24/7 Power Backup",
-          "Private Viewing Deck Sit-out"
+          "Elevated High-Altitude Sky Deck Platform",
+          "Panoramic Mountain & Cloud Vista Views",
+          "Cozy Premium Mattresses & Warm Quilts",
+          "Welcome Tea, Dinner & Day 2 Breakfast Included",
+          "Kolukkumalai 4x4 Jeep Safari & Sunrise Included",
+          "Campfire with Music & Clean Restrooms"
         ]
       },
       {
-        "id": "r-td-dome-couple",
-        "name": "Exclusive Couple Geodesic Dome",
-        "capacity": "2 Adults (1 Couple)",
-        "price": 2300,
-        "totalUnits": 4,
-        "bookedUnits": 1,
+        "id": "r-td-adv-dome",
+        "name": "Adventure Dome",
+        "capacity": "2 - 3 Adults",
+        "price": 1800,
+        "totalUnits": 8,
+        "bookedUnits": 2,
         "isAvailable": true,
         "image": "/images/teddy/teddy-dome-2.jpg",
         "features": [
-          "Romantic Mountain & Valley Deck View",
-          "Luxury King Size Bed",
-          "Private En-suite Western Restroom",
-          "Thermal Warm Quilts & Blankets",
-          "Ambient Dome Mood Lighting",
-          "Evening Spiced Tea & Breakfast Included"
+          "High-Altitude Weatherproof Adventure Dome",
+          "Misty Valley Vista & Natural Mountain Breeze",
+          "Warm Sleeping Setup & Thermal Blankets",
+          "Welcome Tea, Dinner & Day 2 Breakfast Included",
+          "Kolukkumalai 4x4 Jeep Safari & Sunrise Included",
+          "Campfire with Music & Clean Restrooms"
         ]
       }
     ],
     "amenities": [
       {
         "id": "am-td1",
-        "name": "Phantom Hills Panoramic Ridge",
+        "name": "Panoramic Mountain View Ridge",
         "icon": "⛰️",
         "enabled": true
       },
@@ -1464,30 +1462,17 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "addons": [
       {
-        "id": "ad-td-safari",
-        "name": "Kolukkumalai 4x4 Sunrise Jeep Safari (Per Vehicle / Batch)",
-        "price": 2500,
-        "enabled": true
-      },
-      {
-        "id": "ad-td-dinner",
-        "name": "Campfire Buffet Dinner (Per Person)",
-        "price": 450,
-        "perPerson": true,
-        "enabled": true
-      },
-      {
         "id": "ad-td-drone",
         "name": "4K Cinematic Drone Video Reel",
         "price": 1500,
         "enabled": true
       }
     ],
-    "policyNote": "Check-in: 02:00 PM | Check-out: 11:00 AM. High-altitude climate — warm thermal jackets and good walking shoes recommended. Dinner and Kolukkumalai 4x4 Sunrise Jeep Safari available on extra payment.",
+    "policyNote": "Check-in: 02:00 PM | Check-out: 11:00 AM. High-altitude climate — warm thermal jackets and good walking shoes recommended. Includes welcome tea/coffee, sunset trek, campfire with music, dinner, overnight stay, early morning tea/coffee, Kolukkumalai Jeep safari & sunrise, and morning breakfast.",
     "locationCoordinates": {
       "lat": "10.0825",
       "lng": "77.2215",
-      "mapsUrl": "https://maps.google.com/?q=Phantom+Hills+Kolukkumalai+Munnar",
+      "mapsUrl": "https://maps.google.com/?q=Suryanelli+Kolukkumalai+Munnar",
       "nearestTown": "Suryanelli (5 km) / Munnar (26 km)"
     },
     "reviews": [
@@ -1497,7 +1482,7 @@ export const INITIAL_ALL_CAMPS = [
         "location": "Chennai",
         "rating": 5,
         "date": "3 days ago",
-        "comment": "The Phantom Hills sunset trek was unmatched! Watching the sunset above clouds, followed by evening tea, snacks, and campfire music in the dome was pure luxury for ₹2,300. Highly recommended!"
+        "comment": "The mountain sunset trek was unmatched! Watching the sunset above clouds, followed by evening tea, campfire music, and dinner in the sky deck was pure magic for ₹2,300. Highly recommended!"
       },
       {
         "id": "rv-td2",
@@ -1505,7 +1490,7 @@ export const INITIAL_ALL_CAMPS = [
         "location": "Bengaluru",
         "rating": 5,
         "date": "1 week ago",
-        "comment": "Incredible experience at Teddy Domes! The geodesic domes are super cozy and clean with great views. The Kolukkumalai 4x4 jeep safari in the morning was thrilling."
+        "comment": "Incredible experience at Teddy's! The sky deck is super cozy and clean with great views. The Kolukkumalai 4x4 jeep safari in the morning was thrilling."
       }
     ]
   }
@@ -1520,7 +1505,8 @@ export const DEPRECATED_CAMP_IDS = new Set([
   "pkg-chembra",
   "pkg-vagamon",
   "pkg-phantom",
-  "pkg-wayanad"
+  "pkg-wayanad",
+  "pkg-meesapulimala"
 ]);
 
 // Helper to get all active verified camps with live PMS sync
@@ -1531,32 +1517,41 @@ export function getAllCamps(bookings = null) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id));
+          return parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived);
         }
       }
     } catch (e) {}
   }
-  return INITIAL_ALL_CAMPS.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id));
+  return INITIAL_ALL_CAMPS.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived);
 }
 
-// Helper to find a specific camp by ID
+// Helper to find a specific camp by ID (supports active and archived)
 export function getCampById(id) {
-  const all = getAllCamps();
-  if (!id) return all[0];
+  if (!id) {
+    const all = getAllCamps();
+    return all[0] || INITIAL_ALL_CAMPS[0];
+  }
   const cleanTarget = String(id).toLowerCase().replace("pkg-", "").trim();
-  return (
-    all.find((c) => {
-      const cleanId = String(c.id).toLowerCase().replace("pkg-", "").trim();
-      return cleanId === cleanTarget || c.id === id;
-    }) || all[0]
-  );
+  const all = getAllCamps();
+  const foundActive = all.find((c) => {
+    const cleanId = String(c.id).toLowerCase().replace("pkg-", "").trim();
+    return cleanId === cleanTarget || c.id === id;
+  });
+  if (foundActive) return foundActive;
+
+  // Search initial all camps (including archived/deprecated so direct links load properly)
+  const foundAny = INITIAL_ALL_CAMPS.find((c) => {
+    const cleanId = String(c.id).toLowerCase().replace("pkg-", "").trim();
+    return cleanId === cleanTarget || c.id === id;
+  });
+  return foundAny || all[0] || INITIAL_ALL_CAMPS[0];
 }
 
 // Helper to save all camps to localStorage
 export function saveAllCamps(camps) {
   if (typeof window !== 'undefined') {
     try {
-      const valid = Array.isArray(camps) ? camps.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id)) : [];
+      const valid = Array.isArray(camps) ? camps.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived) : [];
       localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(valid));
       window.dispatchEvent(new Event('storage'));
     } catch (e) {
@@ -1614,7 +1609,7 @@ export const INITIAL_STAFFS = [
     "campsite": "Kolukkumalai Sunrise Glamping",
     "stationId": "kolukkumalai_gate",
     "status": "On Station",
-    "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80"
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=VigneshKumar&backgroundColor=b6e3f4"
   },
   {
     "id": "msh-2",
@@ -1625,7 +1620,7 @@ export const INITIAL_STAFFS = [
     "campsite": "Meesapulimala Basecamp",
     "stationId": "meesapulimala_gate",
     "status": "On Station",
-    "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80"
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=AnoopChandran&backgroundColor=c0aede"
   },
   {
     "id": "msh-3",
@@ -1636,7 +1631,7 @@ export const INITIAL_STAFFS = [
     "campsite": "Mini Mexico Vattavada Sanctuary",
     "stationId": "vattavada_gate",
     "status": "Active",
-    "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80"
+    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=ManojVarghese&backgroundColor=d1d4f9"
   }
 ];
 export const INITIAL_MARSHALS = INITIAL_STAFFS;

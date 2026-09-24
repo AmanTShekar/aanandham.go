@@ -9,6 +9,135 @@ import { getPmsBaseUrl } from '@/lib/pmsClient';
 // In-memory override cache for admin-saved camps fallback
 let campsOverride = null;
 
+// Helper to safely parse inclusions, exclusions, and highlights into guaranteed string arrays
+function ensureArray(val, fallback = []) {
+    if (Array.isArray(val)) return val.filter(Boolean);
+    if (typeof val === 'string' && val.trim()) {
+        try {
+            const parsed = JSON.parse(val);
+            if (Array.isArray(parsed)) return parsed.filter(Boolean);
+        } catch {}
+        return val.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    return fallback;
+}
+
+// Helper to decode PMS metadata from room descriptions
+function decodeRoomDescription(desc) {
+    if (desc && typeof desc === 'string' && desc.startsWith('__PMS_META__:')) {
+        try {
+            const parsed = JSON.parse(desc.slice(13));
+            return {
+                features: Array.isArray(parsed.features) ? parsed.features : [],
+                inventoryType: parsed.inventoryType || 'PRIVATE_UNIT',
+                bedConfig: parsed.bedConfig || 'King Bed',
+                roomSizeSqFt: Number(parsed.roomSizeSqFt) || 350,
+                bathroomType: parsed.bathroomType || 'Ensuite Private Bathroom',
+                pricingModel: parsed.pricingModel || 'PER_ROOM',
+            };
+        } catch {}
+    }
+    const features = desc && typeof desc === 'string'
+        ? desc.split(',').map(s => s.trim()).filter(Boolean)
+        : [];
+    return {
+        features,
+        inventoryType: 'PRIVATE_UNIT',
+        bedConfig: 'King Bed',
+        roomSizeSqFt: 350,
+        bathroomType: 'Ensuite Private Bathroom',
+        pricingModel: 'PER_ROOM',
+    };
+}
+
+function normalizeCampItem(item, matchingBase) {
+    const rawRooms = (Array.isArray(item.rooms) && item.rooms.length > 0)
+        ? item.rooms
+        : (Array.isArray(item.roomTypes) && item.roomTypes.length > 0)
+            ? item.roomTypes
+            : null;
+
+    const basePrice = Number(item.price ?? item.basePrice ?? matchingBase?.price ?? 1499);
+    const origPrice = Number(item.originalPrice || matchingBase?.originalPrice || Math.round(basePrice * 1.3));
+
+    const normInclusions = ensureArray(item.inclusions, matchingBase?.inclusions || [
+        'Welcome tea & hot snacks at basecamp check-in',
+        'Buffet dinner with chicken/veg barbecue platter',
+        'Morning hot breakfast & tea/coffee',
+        'Stargazing campfire & live music setup',
+        '4x4 Jeep transfer to Kolukkumalai sunrise point',
+        'Certified camp staff & wilderness first-aid kit'
+    ]);
+
+    const normExclusions = ensureArray(item.exclusions, matchingBase?.exclusions || [
+        'Personal vehicle fuel & highway toll charges',
+        'Personal trekking gear (shoes, jackets, torches)',
+        'Extra barbecue meat portions (order on site)',
+        'Entry tickets to commercial viewpoints outside itinerary',
+        'Medical evacuation expenses or insurance coverage'
+    ]);
+
+    const normHighlights = ensureArray(item.highlights || item.amenities, matchingBase?.highlights || [
+        'Panoramic Sunrise View',
+        'Campfire & BBQ',
+        'Staff Guide Support',
+        'Solar Powered Stay'
+    ]);
+
+    const rooms = rawRooms ? rawRooms.map(rt => {
+        const meta = decodeRoomDescription(rt.description);
+        const features = meta.features && meta.features.length > 0
+            ? meta.features
+            : (Array.isArray(rt.features) && rt.features.length > 0
+                ? rt.features
+                : (Array.isArray(rt.amenities) && rt.amenities.length > 0
+                    ? rt.amenities
+                    : (typeof rt.description === 'string' && rt.description
+                        ? rt.description.split(',').map(s => s.trim()).filter(Boolean)
+                        : ['Mountain View', 'Bedding', 'Campfire Access'])));
+
+        return {
+            id: rt.id,
+            name: rt.name || 'Accommodation Unit',
+            price: Number(rt.price ?? rt.basePrice ?? basePrice),
+            basePrice: Number(rt.price ?? rt.basePrice ?? basePrice),
+            capacity: typeof rt.capacity === 'number' ? `${rt.capacity} Persons` : (rt.capacity || '2 Adults'),
+            totalUnits: Number(rt.totalUnits) || 8,
+            features,
+            inventoryType: meta.inventoryType,
+            bedConfig: meta.bedConfig,
+            bathroomType: meta.bathroomType,
+            pricingModel: meta.pricingModel,
+            image: rt.image || (Array.isArray(rt.images) && rt.images[0]) || item.image || matchingBase?.image
+        };
+    }) : (matchingBase?.rooms || []);
+
+    return {
+        ...(matchingBase || {}),
+        ...item,
+        id: item.id,
+        title: item.title || item.name || matchingBase?.title || 'Wilderness Camp',
+        shortTitle: item.shortTitle || matchingBase?.shortTitle || item.title || item.name,
+        name: item.title || item.name || matchingBase?.title,
+        category: item.category || matchingBase?.category || 'Campsite',
+        price: basePrice,
+        basePrice: basePrice,
+        originalPrice: origPrice,
+        region: item.region || (item.location ? item.location.split(',')[0].trim() : '') || matchingBase?.region || 'Munnar',
+        location: item.location || matchingBase?.location || 'Kerala, India',
+        altitude: item.altitude || matchingBase?.altitude || '6,500 FT',
+        rating: Number(item.rating || matchingBase?.rating || 4.95),
+        description: (item.description && item.description.trim()) ? item.description : (matchingBase?.description || 'Authentic mountain sanctuary glamping experience curated by certified camp staff.'),
+        highlights: normHighlights,
+        inclusions: normInclusions,
+        exclusions: normExclusions,
+        image: (matchingBase?.image && !matchingBase.image.includes('unsplash.com')) ? matchingBase.image : (item.image || matchingBase?.image),
+        gallery: (matchingBase?.gallery && matchingBase.gallery.length > 0 && !matchingBase.gallery[0].includes('unsplash.com')) ? matchingBase.gallery : ensureArray(item.gallery, matchingBase?.gallery || []),
+        isAvailable: item.isActive !== false && item.isAvailable !== false,
+        rooms
+    };
+}
+
 // ── GET: Public read of the camps catalog (Edge-cached, rate-limited, DB fallback) ──
 export async function GET(request) {
     const ip = getClientIp(request);
@@ -38,49 +167,7 @@ export async function GET(request) {
                 const base = getAllCamps();
                 const merged = pmsProps.map(pmsItem => {
                     const matchingBase = base.find(b => b.id === pmsItem.id || (b.title || b.name || '').toLowerCase() === (pmsItem.title || pmsItem.name || '').toLowerCase());
-                    const rawRooms = (Array.isArray(pmsItem.rooms) && pmsItem.rooms.length > 0)
-                        ? pmsItem.rooms
-                        : (Array.isArray(pmsItem.roomTypes) && pmsItem.roomTypes.length > 0)
-                            ? pmsItem.roomTypes
-                            : null;
-
-                    return {
-                        ...(matchingBase || {}),
-                        ...pmsItem,
-                        id: pmsItem.id,
-                        title: pmsItem.name || pmsItem.title || matchingBase?.title || 'Wilderness Camp',
-                        shortTitle: pmsItem.shortTitle || matchingBase?.shortTitle || pmsItem.name || pmsItem.title,
-                        name: pmsItem.name || pmsItem.title || matchingBase?.title,
-                        price: Number(pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499),
-                        basePrice: Number(pmsItem.price || pmsItem.basePrice || matchingBase?.price || 1499),
-                        originalPrice: pmsItem.originalPrice || matchingBase?.originalPrice || (Math.round(Number(pmsItem.price || pmsItem.basePrice || 1499) * 1.3)),
-                        region: pmsItem.region || pmsItem.location?.split(',')[0] || matchingBase?.region || 'Munnar',
-                        location: pmsItem.location || matchingBase?.location || 'Kerala, India',
-                        altitude: pmsItem.altitude || matchingBase?.altitude || '6,500 FT',
-                        description: pmsItem.description || matchingBase?.description || 'Authentic mountain sanctuary glamping experience curated by certified camp staff.',
-                        highlights: Array.isArray(pmsItem.highlights) && pmsItem.highlights.length > 0
-                            ? pmsItem.highlights
-                            : (matchingBase?.highlights || ['Panoramic Sunrise View', 'Campfire & BBQ', 'Staff Guide Support', 'Solar Powered Stay']),
-                        image: (matchingBase?.image && !matchingBase.image.includes('unsplash.com')) ? matchingBase.image : (pmsItem.image || matchingBase?.image),
-                        gallery: (matchingBase?.gallery && matchingBase.gallery.length > 0 && !matchingBase.gallery[0].includes('unsplash.com')) ? matchingBase.gallery : (pmsItem.gallery || matchingBase?.gallery),
-                        isAvailable: pmsItem.isAvailable !== undefined ? pmsItem.isAvailable : (matchingBase?.isAvailable !== false),
-                        rooms: rawRooms ? rawRooms.map(rt => ({
-                            id: rt.id,
-                            name: rt.name,
-                            price: Number(rt.price ?? rt.basePrice ?? pmsItem.price ?? 0),
-                            basePrice: Number(rt.price ?? rt.basePrice ?? pmsItem.price ?? 0),
-                            capacity: rt.capacity || '2 Adults',
-                            totalUnits: Number(rt.totalUnits) || 8,
-                            features: Array.isArray(rt.features) && rt.features.length > 0
-                                ? rt.features
-                                : (Array.isArray(rt.amenities) && rt.amenities.length > 0
-                                    ? rt.amenities
-                                    : (typeof rt.description === 'string' && rt.description
-                                        ? rt.description.split(',').map(s => s.trim()).filter(Boolean)
-                                        : ['Mountain View', 'Bedding', 'Campfire Access'])),
-                            image: rt.image || (Array.isArray(rt.images) && rt.images[0]) || pmsItem.image
-                        })) : (matchingBase?.rooms || [])
-                    };
+                    return normalizeCampItem(pmsItem, matchingBase);
                 });
 
                 // Include any newly added camps from base catalog that aren't yet in OpenPMS microservice
@@ -127,35 +214,7 @@ export async function GET(request) {
                 const base = getAllCamps();
                 const dbCatalog = rawDbProps.map(p => {
                     const matchingBase = base.find(b => b.id === p.id || (b.title || b.name || '').toLowerCase() === (p.title || '').toLowerCase());
-                    const dbRooms = Array.isArray(p.rooms) && p.rooms.length > 0 ? p.rooms.map(r => ({
-                        id: r.id,
-                        name: r.name,
-                        price: Number(r.price ?? r.basePrice ?? p.basePrice ?? 0),
-                        basePrice: Number(r.price ?? r.basePrice ?? p.basePrice ?? 0),
-                        capacity: typeof r.capacity === 'number' ? `${r.capacity} Adults` : (r.capacity || '2 Adults'),
-                        totalUnits: Number(r.totalUnits) || 8,
-                        features: typeof r.description === 'string' ? r.description.split(',').map(s => s.trim()).filter(Boolean) : (matchingBase?.rooms?.[0]?.features || ['Mountain View', 'Bedding']),
-                        image: (Array.isArray(r.images) && r.images[0]) || (matchingBase?.rooms?.[0]?.image) || p.image
-                    })) : (matchingBase?.rooms || []);
-
-                    return {
-                        ...(matchingBase || {}),
-                        id: p.id,
-                        title: p.title || matchingBase?.title || 'Wilderness Camp',
-                        shortTitle: p.shortTitle || matchingBase?.shortTitle || p.title,
-                        name: p.title,
-                        price: Number(p.basePrice || matchingBase?.price || 1499),
-                        basePrice: Number(p.basePrice || matchingBase?.price || 1499),
-                        originalPrice: Math.round(Number(p.basePrice || 1499) * 1.3),
-                        region: p.region || matchingBase?.region || 'Munnar',
-                        location: p.location || matchingBase?.location || 'Kerala, India',
-                        altitude: p.altitude || matchingBase?.altitude || '6,500 FT',
-                        description: p.description || matchingBase?.description,
-                        image: p.image || matchingBase?.image,
-                        gallery: p.gallery || matchingBase?.gallery,
-                        isAvailable: p.isActive !== false,
-                        rooms: dbRooms
-                    };
+                    return normalizeCampItem(p, matchingBase);
                 });
 
                 campsOverride = dbCatalog;

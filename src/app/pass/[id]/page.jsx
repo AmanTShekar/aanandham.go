@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { getStoredBookings } from '@/lib/serverBookingStore';
 import { generateGatePin, getCheckInLandmarkGuide, generatePassToken, verifyPassToken } from '@/lib/accessControl';
 import { inr } from '@/lib/utils';
-import { waLink } from '@/lib/whatsapp';
+import { waLink, telLink } from '@/lib/whatsapp';
 import { buildGoogleCalendarUrl } from '@/lib/calendarLink';
 import { generateQrDataUri } from '@/lib/qrGenerator';
 import { calculateRefundAmount } from '@/lib/cancellation';
@@ -338,7 +338,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                                 <div style={ROW_SPACE_BOTTOM}>
                                     <span style={{ color: '#A2B6A6' }}>Contact Phone:</span>
                                     {isTokenVerified ? (
-                                        <a href={`tel:${data.phone}`} style={{ fontWeight: '800', color: '#D5ED55', textDecoration: 'none' }}>{data.phone}</a>
+                                        <a href={telLink(data.phone)} style={{ fontWeight: '800', color: '#D5ED55', textDecoration: 'none' }}>{data.phone}</a>
                                     ) : (
                                         <span style={{ fontWeight: '800', color: '#A2B6A6', fontFamily: 'monospace' }}>{maskedPhone}</span>
                                     )}
@@ -404,7 +404,7 @@ export default async function PassDetailPage({ params, searchParams }) {
                         {/* ── HOST / CAMPER 1-TAP ACTION BUTTONS ── */}
                         <div className="no-print" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px' }}>
                             <a
-                                href={`tel:${cleanGuestPhone || adminPhone}`}
+                                href={telLink(cleanGuestPhone || adminPhone)}
                                 style={{
                                     padding: '12px',
                                     borderRadius: '12px',

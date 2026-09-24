@@ -86,8 +86,8 @@ export default function AdminPropertiesTab({
                                         style={{ position: 'relative', height: '190px', cursor: 'pointer' }}
                                     >
                                         <img src={prop.image} alt={prop.title} style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
-                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.isAvailable ? '#121613' : '#EF4444', color: prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
-                                            {prop.isAvailable ? 'Available' : 'Sold Out'}
+                                        <span style={{ position: 'absolute', top: '12px', left: '12px', background: prop.archived ? '#4B5563' : prop.isAvailable ? '#121613' : '#EF4444', color: prop.archived ? '#FFFFFF' : prop.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
+                                            {prop.archived ? 'Archived' : prop.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
                                         <span style={{ position: 'absolute', top: '12px', right: '12px', background: 'rgba(0,0,0,0.65)', color: '#FFFFFF', fontSize: '10.5px', fontWeight: '700', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
                                             {prop.altitude}

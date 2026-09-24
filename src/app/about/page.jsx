@@ -10,8 +10,10 @@ import Footer from '../../components/Footer';
 import { useAuth } from '../../hooks/useAuth';
 import { inr } from '../../lib/utils';
 import { waLink } from '../../lib/whatsapp';
-import { Mountain, Compass, Tent, Waves, ShieldCheck, Flame, Leaf, CloudSun, Plus, Minus, Star, Sunrise, Footprints, Telescope, MapPin, MessageCircle, Thermometer, Wind, ScrollText, Truck, PenLine, Hexagon, Heart, Sparkles, Users } from 'lucide-react';
+import { Mountain, Compass, Tent, Waves, ShieldCheck, Flame, Leaf, CloudSun, Plus, Minus, Star, Sunrise, Footprints, Telescope, MapPin, MessageCircle, Thermometer, Wind, ScrollText, Truck, PenLine, Hexagon, Heart, Sparkles, Users, ChevronLeft, ChevronRight } from 'lucide-react';
 import { InstagramIcon, WhatsAppIcon } from '../../components/common/BrandIcons';
+import { loadTestimonialsFromStorage, DEFAULT_TESTIMONIALS } from '../../lib/testimonialsCore';
+import InitialsAvatar from '../../components/InitialsAvatar';
 
 // ── HIGH-PERFORMANCE CLEAN REVEAL VARIANTS (Fast & Silky 60FPS) ──
 const sectionReveal = {
@@ -265,6 +267,95 @@ const TIMELINE_MILESTONES = [
     }
 ];
 
+// ── 3.5 THE EXPEDITION CREATORS & FOUNDING TEAM ──
+const FOUNDING_MEMBERS = [
+    {
+        id: 'lino',
+        name: 'Lino',
+        role: 'Creator & Founder',
+        badge: 'FOUNDER & CREATOR',
+        initial: 'L',
+        isFounder: true,
+        accent: '#B45309',
+        glow: 'rgba(229, 169, 59, 0.25)',
+        bg: 'rgba(229, 169, 59, 0.12)',
+        border: 'rgba(229, 169, 59, 0.55)',
+        tagBg: 'rgba(229, 169, 59, 0.16)',
+        tagColor: '#92400E',
+        tagline: 'The visionary spark that turned routine life into a wild mountain movement.'
+    },
+    {
+        id: 'jishan',
+        name: 'Jishan',
+        role: 'Media & Production',
+        badge: 'MEDIA & VISUALS',
+        initial: 'J',
+        accent: '#166534',
+        glow: 'rgba(22, 101, 52, 0.15)',
+        bg: 'rgba(22, 101, 52, 0.08)',
+        border: 'rgba(22, 101, 52, 0.28)',
+        tagBg: '#DCFCE7',
+        tagColor: '#166534',
+        tagline: 'Expedition cinematography, brand visuals, and wild ridge storytelling.'
+    },
+    {
+        id: 'aman',
+        name: 'Aman',
+        role: 'Lead Dev & Tech',
+        badge: 'TECH & PLATFORM',
+        initial: 'A',
+        accent: '#0369A1',
+        glow: 'rgba(2, 132, 199, 0.15)',
+        bg: 'rgba(2, 132, 199, 0.08)',
+        border: 'rgba(2, 132, 199, 0.28)',
+        tagBg: '#E0F2FE',
+        tagColor: '#0369A1',
+        tagline: 'Architecting digital passes, automated check-ins, and booking systems.'
+    },
+    {
+        id: 'aditya',
+        name: 'Aditya',
+        role: 'Creative',
+        badge: 'CREATIVE',
+        initial: 'A',
+        accent: '#BE185D',
+        glow: 'rgba(190, 24, 93, 0.15)',
+        bg: 'rgba(190, 24, 93, 0.08)',
+        border: 'rgba(190, 24, 93, 0.28)',
+        tagBg: '#FCE7F3',
+        tagColor: '#BE185D',
+        tagline: 'Designing immersive guest journeys, brand identity, and camp aesthetics.'
+    },
+    {
+        id: 'vishnu',
+        name: 'Vishnu',
+        role: 'Operations & Trails',
+        badge: 'OPERATIONS & LOGISTICS',
+        initial: 'V',
+        accent: '#C2410C',
+        glow: 'rgba(194, 65, 12, 0.15)',
+        bg: 'rgba(194, 65, 12, 0.08)',
+        border: 'rgba(194, 65, 12, 0.28)',
+        tagBg: '#FFEDD5',
+        tagColor: '#C2410C',
+        tagline: 'Managing 4x4 convoys, wilderness safety protocols, and campsite grounds.'
+    },
+    {
+        id: 'prithvi',
+        name: 'Prithvi',
+        role: 'PR & Community',
+        badge: 'PR & OUTREACH',
+        initial: 'P',
+        accent: '#6D28D9',
+        glow: 'rgba(109, 40, 217, 0.15)',
+        bg: 'rgba(109, 40, 217, 0.08)',
+        border: 'rgba(109, 40, 217, 0.28)',
+        tagBg: '#EDE9FE',
+        tagColor: '#6D28D9',
+        tagline: 'Connecting travelers, community relations, and outdoor culture.'
+    }
+];
+
 // ── 4. NEARBY LANDMARKS & TRAILS ──
 const NEARBY_PLACES = [
     {
@@ -349,61 +440,8 @@ const NEARBY_PLACES = [
     }
 ];
 
-// ── 5. EXPEDITION CREATORS & MOUNTAIN MARSHALS ──
-const TEAM_CREATORS = [
-    {
-        name: 'Suryanarayanan K.',
-        role: 'Founder & Wilderness Architect',
-        handle: '@surya.ridge',
-        img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1000&q=85',
-        specialty: 'High-Altitude Navigation & 4x4 Offroading',
-        exp: '14+ Years in Western Ghats'
-    },
-    {
-        name: 'Ananya Menon',
-        role: 'Lead Expedition Host & Camp Guide',
-        handle: '@ananya.wildlife',
-        img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=85',
-        specialty: 'Camper Care & High-Altitude Safety',
-        exp: 'Wilderness Safety Specialist'
-    },
-    {
-        name: 'Muthuvel Pandian',
-        role: 'Chief 4x4 Trail Master',
-        handle: '@muthuvel.kolukkumalai',
-        img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=85',
-        specialty: 'Rugged Rock Ascent & Cloud Bed Lead',
-        exp: '20+ Years Kolukkumalai Safari'
-    }
-];
 
-// ── 6. VERIFIED EXPLORER REVIEWS & CHRONICLES ──
-const CAMPER_REVIEWS = [
-    {
-        name: 'Dr. Arvind & Shweta',
-        type: 'Couple · Dome Stay',
-        rating: 5,
-        date: 'Hosted Dec 2025',
-        quote: 'Waking up inside the geodesic dome with the morning mist drifting right outside the panoramic window is something we will never forget. The hot showers and campfire BBQ were extraordinary.',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80'
-    },
-    {
-        name: 'Karthik Raja',
-        type: 'Solo Trekker · Jeep Safari',
-        rating: 5,
-        date: 'Hosted Jan 2026',
-        quote: 'Muthuvel’s 4x4 Jeep driving to Kolukkumalai peak at 4:30 AM is peak adrenaline. You literally watch the sun ignite the clouds from 7,900 FT. 10/10 safety and hospitality.',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80'
-    },
-    {
-        name: 'Meera Nambiar & Family',
-        type: 'Family of 4 · Private Sanctuary',
-        rating: 5,
-        date: 'Hosted Jan 2026',
-        quote: 'We brought our two kids (8 and 11) for their first real camping trip. Clean washrooms, cozy blankets, zero plastic, and safe trails. The kids didn’t ask for an iPad once!',
-        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80'
-    }
-];
+
 
 // ── 7. ABOUT & BASECAMP FAQS ──
 const ABOUT_FAQS = [
@@ -432,7 +470,30 @@ const ABOUT_FAQS = [
 export default function AboutPage() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [activeFaq, setActiveFaq] = useState(0);
+    const [testimonials, setTestimonials] = useState(DEFAULT_TESTIMONIALS);
     const { user: currentUser, logout: handleLogout } = useAuth();
+    const testimonialScrollRef = useRef(null);
+
+    const scrollTestimonials = (direction) => {
+        if (testimonialScrollRef.current) {
+            const scrollAmount = direction === 'next' ? 380 : -380;
+            testimonialScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    };
+
+    // Load admin-managed PMS testimonials (server authoritative, localStorage fallback)
+    useEffect(() => {
+        const saved = loadTestimonialsFromStorage();
+        if (Array.isArray(saved) && saved.length > 0) setTestimonials(saved);
+        fetch('/api/testimonials', { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (data && Array.isArray(data.testimonials) && data.testimonials.length > 0) {
+                    setTestimonials(data.testimonials);
+                }
+            })
+            .catch(() => {});
+    }, []);
 
     const ctaRef = useRef(null);
     const { scrollYProgress: ctaScrollProgress } = useScroll({
@@ -781,11 +842,11 @@ export default function AboutPage() {
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                         <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#E5A93B', color: '#0B150E', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '14px' }}>
-                                            A
+                                            L
                                         </div>
                                         <div>
-                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>The Aanandham Student Founders & Mountain Marshals</div>
-                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Co-Founders & Community Curators · Aanandham.go</div>
+                                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#0B150E' }}>Lino & The Founding Crew</div>
+                                            <div style={{ fontSize: '11.5px', color: '#E5A93B' }}>Creator, Co-Founders & Mountain Marshals · Aanandham.go</div>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -861,6 +922,7 @@ export default function AboutPage() {
                         </div>
                     </div>
                 </motion.section>
+
 
                 {/* ─────────────────────────────────────────────────────────────
                     3. SURYANELLI RIDGE GEOGRAPHY & ELEVATION METER (Staggered Cascade)
@@ -1866,7 +1928,7 @@ export default function AboutPage() {
                 </motion.section>
 
                 {/* ─────────────────────────────────────────────────────────────
-                    7. THE CREATORS & MOUNTAIN MARSHALS (Photo-First Portrait Showcase)
+                    7. THE CREATORS & EXPEDITION LEADS (Clean Cards, Zero Clutter)
                 ───────────────────────────────────────────────────────────── */}
                 <motion.section 
                     initial="hidden"
@@ -1874,13 +1936,13 @@ export default function AboutPage() {
                     viewport={{ once: true, margin: "-80px" }}
                     variants={sectionReveal}
                     style={{
-                        padding: '120px clamp(20px, 4vw, 48px)',
+                        padding: '110px clamp(20px, 4vw, 48px)',
                         background: '#F8F9F5',
                         position: 'relative'
                     }}
                 >
                     <div style={CONTAINER}>
-                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+                        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
                             <div className="star-badge" style={{ margin: '0 auto 16px' }}>
                                 <span className="star-icon">★</span> EXPEDITION CREATORS
                             </div>
@@ -1892,134 +1954,154 @@ export default function AboutPage() {
                                 letterSpacing: '-0.03em',
                                 margin: '0 0 14px'
                             }}>
-                                The Creators & <span style={{ color: '#E5A93B' }}>Mountain Guides</span>
+                                The Creators & <span style={{ color: '#166534' }}>Expedition Leads</span>
                             </h2>
                             <p style={{ fontSize: '16px', color: '#59655D', maxWidth: '640px', margin: '0 auto' }}>
                                 The wilderness architects, expedition leads, and local ridge masters who live here and craft your Aanandham mountain journeys.
                             </p>
                         </div>
 
-                        {/* Large Photo-First Portrait Cards */}
+                        {/* Clean Minimalist Cards Grid */}
                         <motion.div 
                             variants={staggerContainer}
-                            className="about-team-grid"
                             style={{
                                 display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
-                                gap: '28px'
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
+                                gap: '22px',
+                                maxWidth: '1200px',
+                                margin: '0 auto'
                             }}
                         >
-                            {TEAM_CREATORS.map((member, i) => (
-                                <motion.div
-                                    key={i}
-                                    variants={cardReveal}
-                                    whileHover={{ 
-                                        y: -12,
-                                        boxShadow: '0 30px 70px rgba(0,0,0,0.22)' 
-                                    }}
-                                    transition={{ type: 'spring', stiffness: 350, damping: 22 }}
-                                    style={{
-                                        position: 'relative',
-                                        height: 'clamp(420px, 58vh, 520px)',
-                                        borderRadius: '32px',
-                                        overflow: 'hidden',
-                                        border: '1px solid rgba(11, 21, 14, 0.12)',
-                                        boxShadow: '0 24px 60px rgba(0,0,0,0.14)',
-                                        background: '#070E08',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    <img
-                                        src={member.img}
-                                        alt={member.name}
-                                        loading="lazy"
-                                        decoding="async"
-                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                    />
-
-                                    {/* Gradient Dark Scrim Overlay */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        background: 'linear-gradient(180deg, rgba(7, 14, 8, 0.15) 0%, rgba(7, 14, 8, 0.4) 45%, rgba(7, 14, 8, 0.95) 90%)',
-                                        pointerEvents: 'none'
-                                    }} />
-
-                                    {/* Top Corner Experience Pill */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        top: '20px',
-                                        left: '20px',
-                                        background: 'rgba(7, 14, 8, 0.75)',
-                                        border: '1px solid rgba(229, 169, 59, 0.4)',
-                                        color: '#E5A93B',
-                                        fontSize: '12px',
-                                        fontWeight: '800',
-                                        padding: '6px 14px',
-                                        borderRadius: '999px',
-                                        backdropFilter: 'blur(12px)',
-                                        WebkitBackdropFilter: 'blur(12px)'
-                                    }}>
-                                        ★ {member.exp}
-                                    </div>
-
-                                    {/* Bottom Content Container */}
-                                    <div style={{
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        right: 0,
-                                        padding: '32px 28px',
-                                        zIndex: 2,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: '6px'
-                                    }}>
-                                        <div style={{
-                                            fontSize: '13px',
-                                            fontWeight: '800',
-                                            color: '#D5ED55',
-                                            letterSpacing: '0.5px'
-                                        }}>
-                                            {member.handle}
-                                        </div>
-
-                                        <h3 style={{
-                                            fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                            fontSize: '28px',
-                                            fontWeight: '800',
-                                            color: '#FFFFFF',
-                                            lineHeight: 1.15,
-                                            margin: '2px 0 4px',
-                                            textShadow: '0 4px 12px rgba(0,0,0,0.6)'
-                                        }}>
-                                            {member.name}
-                                        </h3>
-
-                                        <div style={{
-                                            fontSize: '15px',
-                                            color: '#E5A93B',
-                                            fontWeight: '800',
-                                            marginBottom: '6px'
-                                        }}>
-                                            {member.role}
-                                        </div>
-
-                                        <div style={{
-                                            fontSize: '13px',
-                                            color: '#C8D8CB',
-                                            lineHeight: 1.5,
+                            {FOUNDING_MEMBERS.map((member) => {
+                                const isFounder = member.isFounder || member.id === 'lino';
+                                return (
+                                    <motion.div
+                                        key={member.id}
+                                        variants={cardReveal}
+                                        whileHover={{ 
+                                            y: -5,
+                                            boxShadow: isFounder 
+                                                ? '0 20px 40px rgba(229, 169, 59, 0.16)' 
+                                                : '0 20px 40px rgba(18, 22, 19, 0.08)' 
+                                        }}
+                                        transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                                        style={{
+                                            background: '#FFFFFF',
+                                            border: `1.5px solid ${isFounder ? 'rgba(229, 169, 59, 0.6)' : 'rgba(18, 22, 19, 0.08)'}`,
+                                            borderRadius: '24px',
+                                            padding: '28px 24px',
                                             display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '8px'
-                                        }}>
-                                            <span style={{ color: '#D5ED55' }}>✦</span>
-                                            <span>{member.specialty}</span>
+                                            flexDirection: 'column',
+                                            justifyContent: 'space-between',
+                                            boxShadow: isFounder 
+                                                ? '0 10px 28px rgba(229, 169, 59, 0.1)' 
+                                                : '0 4px 18px rgba(18, 22, 19, 0.04)',
+                                            position: 'relative',
+                                            transition: 'border-color 0.25s ease, box-shadow 0.25s ease'
+                                        }}
+                                    >
+                                        <div>
+                                            {/* Top Row: Avatar Initial Pill + Tag */}
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', marginBottom: '18px' }}>
+                                                <div style={{
+                                                    width: '46px',
+                                                    height: '46px',
+                                                    borderRadius: '14px',
+                                                    background: member.bg,
+                                                    border: `1.5px solid ${member.accent}`,
+                                                    color: member.accent,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    fontSize: '20px',
+                                                    fontWeight: '900',
+                                                    fontFamily: 'var(--font-heading)',
+                                                    flexShrink: 0
+                                                }}>
+                                                    {member.initial}
+                                                </div>
+
+                                                <span style={{
+                                                    fontSize: '11px',
+                                                    fontWeight: '800',
+                                                    color: member.tagColor,
+                                                    background: member.tagBg,
+                                                    padding: '5px 12px',
+                                                    borderRadius: '999px',
+                                                    letterSpacing: '0.4px',
+                                                    textTransform: 'uppercase',
+                                                    whiteSpace: 'nowrap'
+                                                }}>
+                                                    {member.badge}
+                                                </span>
+                                            </div>
+
+                                            {/* Name & Role */}
+                                            <div style={{ marginBottom: '12px' }}>
+                                                <h3 style={{
+                                                    fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                                    fontSize: '24px',
+                                                    fontWeight: '800',
+                                                    color: '#121613',
+                                                    margin: '0 0 5px',
+                                                    letterSpacing: '-0.02em',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '8px'
+                                                }}>
+                                                    <span>{member.name}</span>
+                                                    {isFounder && (
+                                                        <span style={{ fontSize: '14px', color: '#E5A93B' }}>★</span>
+                                                    )}
+                                                </h3>
+                                                <div style={{
+                                                    fontSize: '14px',
+                                                    fontWeight: '700',
+                                                    color: member.accent,
+                                                    letterSpacing: '0.2px'
+                                                }}>
+                                                    {member.role}
+                                                </div>
+                                            </div>
+
+                                            {/* Description */}
+                                            <p style={{
+                                                fontSize: '14px',
+                                                color: '#59655D',
+                                                lineHeight: 1.6,
+                                                margin: 0,
+                                                fontWeight: '500'
+                                            }}>
+                                                {member.tagline}
+                                            </p>
                                         </div>
-                                    </div>
-                                </motion.div>
-                            ))}
+                                    </motion.div>
+                                );
+                            })}
                         </motion.div>
+
+                        {/* Bottom Credo Strip */}
+                        <div style={{
+                            marginTop: '44px',
+                            textAlign: 'center'
+                        }}>
+                            <div style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                background: '#FFFFFF',
+                                border: '1px solid rgba(18, 22, 19, 0.08)',
+                                borderRadius: '999px',
+                                padding: '10px 24px',
+                                color: '#59655D',
+                                fontSize: '13.5px',
+                                fontWeight: '600',
+                                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+                            }}>
+                                <Heart size={15} style={{ color: '#E5A93B' }} />
+                                <span>No corporate hierarchy. Just six friends building a community where happiness comes naturally.</span>
+                            </div>
+                        </div>
                     </div>
                 </motion.section>
 
@@ -2038,47 +2120,139 @@ export default function AboutPage() {
                         color: '#FFFFFF'
                     }}
                 >
-                    <div style={{ maxWidth: '1240px', margin: '0 auto', width: '100%' }}>
-                        <div style={{ textAlign: 'center', marginBottom: '64px' }}>
-                            <div className="star-badge" style={{ margin: '0 auto 16px' }}>
-                                <span className="star-icon">★</span> VERIFIED CAMPER TESTIMONIALS
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+                        {/* Section Header with Navigation Controls */}
+                        <div style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            alignItems: 'flex-end',
+                            justifyContent: 'space-between',
+                            gap: '24px',
+                            marginBottom: '40px'
+                        }}>
+                            <div>
+                                <div className="star-badge" style={{ margin: '0 0 14px' }}>
+                                    <span className="star-icon">★</span> VERIFIED CAMPER TESTIMONIALS
+                                </div>
+                                <h2 style={{
+                                    fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
+                                    fontSize: 'clamp(28px, 4.2vw, 48px)',
+                                    fontWeight: '800',
+                                    color: '#FFFFFF',
+                                    letterSpacing: '-0.03em',
+                                    margin: '0 0 12px',
+                                    lineHeight: 1.15
+                                }}>
+                                    High-Altitude <span style={{ color: '#E5A93B' }}>Camper Chronicles</span>
+                                </h2>
+                                <p style={{ fontSize: '15.5px', color: '#A2B6A6', maxWidth: '620px', margin: 0, lineHeight: 1.6 }}>
+                                    Direct stories from solo adventurers, couples, and families who slept on our Suryanelli ridge.
+                                </p>
                             </div>
-                            <h2 style={{
-                                fontFamily: 'var(--font-heading), "Bricolage Grotesque", sans-serif',
-                                fontSize: 'clamp(32px, 4.5vw, 50px)',
-                                fontWeight: '800',
-                                color: '#FFFFFF',
-                                letterSpacing: '-0.03em',
-                                margin: '0 0 14px'
-                            }}>
-                                High-Altitude <span style={{ color: '#E5A93B' }}>Camper Chronicles</span>
-                            </h2>
-                            <p style={{ fontSize: '16px', color: '#A2B6A6', maxWidth: '640px', margin: '0 auto' }}>
-                                Direct stories from solo adventurers, couples, and families who slept on our Suryanelli ridge.
-                            </p>
+
+                            {/* Prev & Next Slide Buttons */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <button
+                                    type="button"
+                                    onClick={() => scrollTestimonials('prev')}
+                                    aria-label="Previous testimonial"
+                                    style={{
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '50%',
+                                        background: '#121F14',
+                                        border: '1px solid rgba(255, 255, 255, 0.16)',
+                                        color: '#FFFFFF',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = '#E5A93B';
+                                        e.currentTarget.style.color = '#0B150E';
+                                        e.currentTarget.style.borderColor = '#E5A93B';
+                                        e.currentTarget.style.transform = 'scale(1.08)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = '#121F14';
+                                        e.currentTarget.style.color = '#FFFFFF';
+                                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                    }}
+                                >
+                                    <ChevronLeft size={22} />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => scrollTestimonials('next')}
+                                    aria-label="Next testimonial"
+                                    style={{
+                                        width: '48px',
+                                        height: '48px',
+                                        borderRadius: '50%',
+                                        background: '#121F14',
+                                        border: '1px solid rgba(255, 255, 255, 0.16)',
+                                        color: '#FFFFFF',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        boxShadow: '0 6px 18px rgba(0,0,0,0.35)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = '#E5A93B';
+                                        e.currentTarget.style.color = '#0B150E';
+                                        e.currentTarget.style.borderColor = '#E5A93B';
+                                        e.currentTarget.style.transform = 'scale(1.08)';
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = '#121F14';
+                                        e.currentTarget.style.color = '#FFFFFF';
+                                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                    }}
+                                >
+                                    <ChevronRight size={22} />
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Review Cards Grid */}
-                        <motion.div 
-                            variants={staggerContainer}
-                            className="about-reviews-grid"
+                        {/* Single-Row Horizontal Scroll Track (Swipe on Mobile, Button on Desktop) */}
+                        <div 
+                            ref={testimonialScrollRef}
+                            className="horizontal-scroll testimonial-horizontal-track"
                             style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 290px), 1fr))',
-                                gap: '28px'
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: '24px',
+                                overflowX: 'auto',
+                                overflowY: 'hidden',
+                                scrollSnapType: 'x mandatory',
+                                WebkitOverflowScrolling: 'touch',
+                                scrollbarWidth: 'none',
+                                msOverflowStyle: 'none',
+                                padding: '12px 4px 28px',
+                                scrollBehavior: 'smooth'
                             }}
                         >
-                            {CAMPER_REVIEWS.map((rev, rIdx) => (
+                            {(testimonials && testimonials.length > 0 ? testimonials : DEFAULT_TESTIMONIALS).map((rev, rIdx) => (
                                 <motion.div
-                                    key={rIdx}
+                                    key={rev.id || rIdx}
                                     variants={cardReveal}
                                     whileHover={{ 
-                                        y: -10, 
-                                        borderColor: 'rgba(229, 169, 59, 0.4)',
+                                        y: -6, 
+                                        borderColor: 'rgba(229, 169, 59, 0.45)',
                                         boxShadow: '0 25px 55px rgba(0,0,0,0.6)' 
                                     }}
                                     transition={{ type: 'spring', stiffness: 350, damping: 22 }}
                                     style={{
+                                        flex: '0 0 clamp(300px, 82vw, 380px)',
+                                        scrollSnapAlign: 'start',
+                                        scrollSnapStop: 'always',
                                         background: '#0E1B11',
                                         border: '1px solid rgba(255, 255, 255, 0.1)',
                                         borderRadius: '28px',
@@ -2090,11 +2264,11 @@ export default function AboutPage() {
                                     }}
                                 >
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-                                        <div style={{ color: '#E5A93B', fontSize: '15px' }}>
-                                            {'★'.repeat(rev.rating)}
+                                        <div style={{ color: '#E5A93B', fontSize: '15px', letterSpacing: '2px' }}>
+                                            {'★'.repeat(rev.rating || 5)}
                                         </div>
                                         <span style={{ fontSize: '11.5px', color: '#8E9B92' }}>
-                                            {rev.date}
+                                            {rev.batchDate || rev.date || "Verified Camper"}
                                         </span>
                                     </div>
 
@@ -2103,21 +2277,33 @@ export default function AboutPage() {
                                     </p>
 
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '14px', paddingTop: '16px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                                        <img
-                                            src={rev.avatar}
-                                            alt={rev.name}
-                                            loading="lazy"
-                                            decoding="async"
-                                            style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #E5A93B' }}
-                                        />
+                                        <InitialsAvatar name={rev.author || rev.name || 'Camper'} size={44} fontSize={16} borderColor="#E5A93B" />
                                         <div>
-                                            <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF' }}>{rev.name}</div>
-                                            <div style={{ fontSize: '12px', color: '#D5ED55' }}>✓ {rev.type}</div>
+                                            <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#FFFFFF' }}>{rev.author || rev.name}</div>
+                                            <div style={{ fontSize: '12px', color: '#D5ED55' }}>✓ {rev.campBadge || rev.type || "Verified Stay"}</div>
+                                            {rev.instagram && (
+                                                <div style={{ fontSize: '11px', color: '#7EB0D5', marginTop: '1px' }}>@{String(rev.instagram).replace(/^@/, '')}</div>
+                                            )}
                                         </div>
                                     </div>
                                 </motion.div>
                             ))}
-                        </motion.div>
+                        </div>
+
+                        {/* Mobile Swipe Guidance Note */}
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            gap: '8px', 
+                            marginTop: '4px', 
+                            fontSize: '12.5px', 
+                            color: '#768B7A' 
+                        }}>
+                            <span>←</span>
+                            <span>Swipe to explore camper stories</span>
+                            <span>→</span>
+                        </div>
                     </div>
                 </motion.section>
 

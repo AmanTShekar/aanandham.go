@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 import CustomThemeCalendar from '../../components/CustomThemeCalendar';
 import { useAuth } from '../../hooks/useAuth';
 import { inr, generateBookingId } from '../../lib/utils';
-import { waLink, buildInquiryWaText } from '../../lib/whatsapp';
+import { waLink, buildInquiryWaText, telLink } from '../../lib/whatsapp';
 import { getSecurityHeaders } from '../../lib/securityClient';
 import { Phone, PhoneCall, Mail, Mountain, Plane, Car, SquareParking, Truck, Check, MapPin } from 'lucide-react';
 import { WhatsAppIcon } from '../../components/common/BrandIcons';
@@ -57,7 +57,7 @@ const CONTACT_CHANNELS = [
         val: formattedAdminPhone,
         sub: 'Live basecamp coordinators on ridge',
         icon: Phone,
-        href: `tel:+${adminPhone}`,
+        href: telLink(adminPhone),
         actionLabel: 'Call Concierge',
         accent: '#E5A93B'
     },

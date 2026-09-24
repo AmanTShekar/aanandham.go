@@ -11,7 +11,7 @@ export const DEFAULT_PAYMENT_SETTINGS = {
     razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || '',
     phone: process.env.NEXT_PUBLIC_ADMIN_WHATSAPP || '919074858014',
     comingSoonTitle: 'Online Payment Gateway · Launching Soon',
-    comingSoonMessage: 'Our automated instant payment checkout is launching soon. Reserve your campsite with zero upfront advance payment via our 24/7 Mountain Concierge Desk on WhatsApp.'
+    comingSoonMessage: 'Our automated instant payment checkout is launching soon. Reserve your campsite via our 24/7 Mountain Concierge Desk on WhatsApp.'
 };
 
 export function getPaymentSettings() {

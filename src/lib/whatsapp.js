@@ -46,6 +46,21 @@ export const cleanPhone = (phone = '') => {
 };
 
 /**
+ * Format an Indian phone number for direct dialing with international +91 prefix
+ * e.g. "9074858014" -> "+919074858014", "919074858014" -> "+919074858014"
+ */
+export const cleanIndianCallNumber = (phone = DEFAULT_WA_PHONE) => {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (!digits) return '+919074858014';
+  const last10 = digits.slice(-10);
+  return `+91${last10}`;
+};
+
+export const telLink = (phone = DEFAULT_WA_PHONE) => {
+  return `tel:${cleanIndianCallNumber(phone)}`;
+};
+
+/**
  * Validate phone number has at least 10 valid numeric digits
  */
 export const isValidPhoneNumber = (phone = '') => {

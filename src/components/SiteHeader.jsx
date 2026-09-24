@@ -1,38 +1,38 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 
-const HERO_LINK = { fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 5.5vw, 28px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.08)' };
+const HERO_LINK = { fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 4.8vw, 26px)', fontWeight: '800', color: '#FFFFFF', textDecoration: 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'clamp(10px, 1.8vh, 13px) 0', borderBottom: '1px solid rgba(255,255,255,0.08)' };
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { waLink } from '../lib/whatsapp';
 import { WhatsAppIcon } from './common/BrandIcons';
 
-// ── SHARED LIQUID WAVE DRAWER VARIANTS ──
+// ── FULL-WIDTH FLUID DRAWER VARIANTS (NO SIDEBAR / SCROLLBAR FLASH) ──
 const drawerWaveVariants = {
     hidden: { 
         opacity: 0,
-        y: -6,
-        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        y: -10,
+        clipPath: 'inset(0% 0% 100% 0%)',
+        WebkitClipPath: 'inset(0% 0% 100% 0%)',
     },
     visible: { 
         opacity: 1,
         y: 0,
-        clipPath: 'circle(260% at calc(100% - 42px) 36px)',
-        WebkitClipPath: 'circle(260% at calc(100% - 42px) 36px)',
+        clipPath: 'inset(0% 0% 0% 0%)',
+        WebkitClipPath: 'inset(0% 0% 0% 0%)',
         transition: { 
-            duration: 0.42, 
-            ease: [0.22, 1, 0.36, 1] 
+            duration: 0.32, 
+            ease: [0.16, 1, 0.3, 1] 
         }
     },
     exit: { 
         opacity: 0,
-        y: -6,
-        clipPath: 'circle(0% at calc(100% - 42px) 36px)',
-        WebkitClipPath: 'circle(0% at calc(100% - 42px) 36px)',
+        y: -8,
+        clipPath: 'inset(0% 0% 100% 0%)',
+        WebkitClipPath: 'inset(0% 0% 100% 0%)',
         transition: { 
-            duration: 0.3, 
+            duration: 0.24, 
             ease: [0.4, 0, 0.2, 1] 
         }
     }
@@ -43,14 +43,14 @@ const drawerStaggerVariants = {
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.035,
-            delayChildren: 0.06
+            staggerChildren: 0.03,
+            delayChildren: 0.04
         }
     },
     exit: {
-        opacity: 1,
+        opacity: 0,
         transition: {
-            duration: 0.38
+            duration: 0.18
         }
     }
 };
@@ -262,22 +262,7 @@ export default function SiteHeader({
                                     padding: '4px 6px'
                                 }}
                             >
-                                <span className="marker-text">The Camps</span>
-                            </Link>
-                            <Link 
-                                href="/#program" 
-                                className="text-hover-marker text-hover-marker-dark" 
-                                style={{ 
-                                    fontFamily: 'var(--font-heading)',
-                                    color: '#FFFFFF', 
-                                    textDecoration: 'none', 
-                                    fontSize: '15px', 
-                                    fontWeight: '700', 
-                                    letterSpacing: '-0.01em',
-                                    padding: '4px 6px'
-                                }}
-                            >
-                                <span className="marker-text">Events</span>
+                                <span className="marker-text">Camps</span>
                             </Link>
                             <Link 
                                 href="/blog" 
@@ -418,13 +403,15 @@ export default function SiteHeader({
                             color: '#FFFFFF',
                             display: 'flex',
                             flexDirection: 'column',
-                            padding: 'calc(80px + 16px) 24px 36px',
+                            padding: 'calc(80px + 12px) 24px 24px',
                             overflowY: 'auto',
                             overflowX: 'hidden',
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none',
                             boxSizing: 'border-box',
                             transform: 'translateZ(0)',
                             WebkitTransform: 'translateZ(0)',
-                            willChange: 'clip-path'
+                            willChange: 'clip-path, opacity'
                         }}
                     >
                         {/* Unified Exit-Synchronized Drawer Body */}
@@ -433,7 +420,7 @@ export default function SiteHeader({
                             initial="hidden"
                             animate="visible"
                             exit="exit"
-                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: '100%', width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}
+                            style={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, width: '100%', maxWidth: '100%', boxSizing: 'border-box', overflowX: 'hidden' }}
                         >
                             <nav style={{ display: 'flex', flexDirection: 'column', padding: '10px 0' }}>
                                 <motion.div variants={drawerItemVariants}>
@@ -479,19 +466,7 @@ export default function SiteHeader({
                                         className={`mobile-nav-link-item text-hover-marker text-hover-marker-dark ${activePage === 'camps' ? 'is-active-link' : ''}`} 
                                         style={HERO_LINK}
                                     >
-                                        <span className="marker-text">The Camps</span>
-                                        <span className="drawer-arrow">→</span>
-                                    </Link>
-                                </motion.div>
-
-                                <motion.div variants={drawerItemVariants}>
-                                    <Link 
-                                        href="/#program" 
-                                        onClick={() => setIsMobileMenuOpen(false)} 
-                                        className="mobile-nav-link-item text-hover-marker text-hover-marker-dark" 
-                                        style={HERO_LINK}
-                                    >
-                                        <span className="marker-text">Events & Trails</span>
+                                        <span className="marker-text">Camps</span>
                                         <span className="drawer-arrow">→</span>
                                     </Link>
                                 </motion.div>

@@ -52,7 +52,7 @@ export default function AdminPaymentGatewayTab() {
                             Payment Gateway & Maintenance Controls
                         </h2>
                         <p style={{ fontSize: '13px', color: '#59655D', margin: '3px 0 0 0' }}>
-                            Toggle between automated Razorpay checkout and zero-advance WhatsApp concierge booking.
+                            Toggle between automated Razorpay checkout and direct WhatsApp concierge booking.
                         </p>
                     </div>
                 </div>
@@ -156,7 +156,7 @@ export default function AdminPaymentGatewayTab() {
                             Launching Soon / Maintenance Mode
                         </div>
                         <div style={{ fontSize: '12.5px', color: '#59655D', lineHeight: 1.5 }}>
-                            Hides the online Razorpay checkout button. Customers reserve tents with <strong>Zero Advance directly via WhatsApp</strong>. Zero money deduction risks.
+                            Hides the online Razorpay checkout button. Customers reserve tents <strong>directly via WhatsApp</strong>. Zero money deduction risks.
                         </div>
                     </div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import CampsDirectoryClient from './CampsDirectoryClient';
-import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
+import { INITIAL_ALL_CAMPS, DEPRECATED_CAMP_IDS } from '@/lib/campsData';
 
 export const metadata = {
   title: 'Wilderness Campsites & Tent Stays in Kerala',
@@ -45,12 +45,14 @@ export const metadata = {
 };
 
 export default function CampsPage() {
+  const activeCamps = INITIAL_ALL_CAMPS.filter(camp => !camp.archived && !DEPRECATED_CAMP_IDS.has(camp.id));
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Aanandham.go Verified Kerala Wilderness Campsites',
     description: 'Verified high-altitude camping, tent stays, and ridge dome glamping sites in Kerala.',
-    itemListElement: INITIAL_ALL_CAMPS.map((camp, index) => ({
+    itemListElement: activeCamps.map((camp, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       item: {
@@ -76,7 +78,7 @@ export default function CampsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CampsDirectoryClient initialCamps={INITIAL_ALL_CAMPS} />
+      <CampsDirectoryClient initialCamps={activeCamps} />
     </>
   );
 }

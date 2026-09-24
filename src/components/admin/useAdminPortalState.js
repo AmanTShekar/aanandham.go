@@ -15,7 +15,7 @@ const INITIAL_MARSHALS = [
         phone: '+91 91886 85831',
         passcode: 'KOLU7900',
         status: 'On Duty',
-        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+        avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=AnoopKochi&backgroundColor=b6e3f4',
         notes: 'Lead 4x4 off-road convoy pilot & high-altitude ridge coordinator.'
     },
     {
@@ -26,7 +26,7 @@ const INITIAL_MARSHALS = [
         phone: '+91 94471 23456',
         passcode: 'MEESA8600',
         status: 'On Duty',
-        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+        avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=VipinKumar&backgroundColor=c0aede',
         notes: 'Trek guide & basecamp safety coordinator.'
     }
 ];
@@ -36,12 +36,7 @@ const INITIAL_DB_LOGS = [
     { id: 'log-seed-2', action: 'SECURITY_CHECK', details: 'Rate limit rules verified active', recordId: 'SEC_01', timestamp: '2026-08-21T08:00:00.000Z', actor: 'Security Engine' }
 ];
 
-const AVATAR_PRESETS = [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80'
-];
+
 
 export function useAdminPortalState(initialTab = 'properties') {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -761,8 +756,8 @@ export function useAdminPortalState(initialTab = 'properties') {
     };
 
     const handleRandomTestimonialAvatar = (id) => {
-        const pick = AVATAR_PRESETS[Math.floor(Math.random() * AVATAR_PRESETS.length)];
-        handleUpdateTestimonial(id, { avatar: pick });
+        // Reset to initials-based avatar (clear uploaded photo)
+        handleUpdateTestimonial(id, { avatar: '' });
     };
 
     const handleTestimonialAvatarUpload = async (id, file) => {
