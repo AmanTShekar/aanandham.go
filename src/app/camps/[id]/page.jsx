@@ -17,12 +17,6 @@ function ensureArray(val, fallback = []) {
 
 async function resolveCamp(id) {
     if (!id) return null;
-    const directMatch = INITIAL_ALL_CAMPS.find(c => {
-        const cleanTarget = String(id).toLowerCase().replace('pkg-', '').trim();
-        const cleanId = String(c.id).toLowerCase().replace('pkg-', '').trim();
-        return cleanId === cleanTarget || c.id === id;
-    });
-    if (directMatch) return directMatch;
 
     if (isPrismaConfigured && prisma) {
         try {
@@ -112,7 +106,12 @@ async function resolveCamp(id) {
         }
     }
 
-    return getCampById(id) || INITIAL_ALL_CAMPS[0];
+    const cleanTarget = String(id).toLowerCase().replace('pkg-', '').trim();
+    const fallbackMatch = INITIAL_ALL_CAMPS.find(c => {
+        const cleanId = String(c.id).toLowerCase().replace('pkg-', '').trim();
+        return cleanId === cleanTarget || c.id === id;
+    });
+    return fallbackMatch || null;
 }
 
 export async function generateStaticParams() {

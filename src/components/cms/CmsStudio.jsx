@@ -537,7 +537,7 @@ export default function CmsStudio({ isMobile = false }) {
                                 Destination SEO Landing Pages
                             </h2>
                             <p style={{ fontSize: '12.5px', color: '#59655D', margin: 0 }}>
-                                Customize headlines, subheadings, and metadata for `/camps/munnar`, `/camps/vagamon`, and `/camps/wayanad`.
+                                Customize headlines, subheadings, and metadata for `/camps/munnar`, `/camps/vagamon`, `/camps/wayanad` and `/camps/himachal`.
                             </p>
                         </div>
                         <button

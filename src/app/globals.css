@@ -5649,5 +5649,83 @@ body.booking-modal-open nav.mobile-sticky-action-bar {
   }
 }
 
+/* ─────────────────────────────────────────────────────────────
+   MOBILE-FIRST PATCH (Sep 2026) — large mobile user base
+   - sticky action bar never covers footer CTAs
+   - 16px inputs stop iOS auto-zoom, 44px touch targets
+   - single-column camps grid, no horizontal scroll
+   - lighter motion on low-end devices
+───────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 76px !important; /* room for .mobile-sticky-action-bar */
+  }
+  .site-main-footer {
+    padding-bottom: 8px !important;
+  }
+  input, select, textarea {
+    font-size: 16px !important; /* prevents iOS zoom-on-focus */
+  }
+  button, a {
+    min-height: 0; /* inline styles keep 44px where it matters */
+  }
+  .camps-filter-card {
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+  .camps-filter-search {
+    flex-basis: 100% !important;
+    min-width: 100% !important;
+  }
+  .camps-filter-sort {
+    width: 100% !important;
+  }
+  .camps-filter-sort > div {
+    flex: 1 !important;
+  }
+  .camps-pills-row {
+    display: flex !important;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+  .camps-pills-row::-webkit-scrollbar {
+    display: none !important;
+  }
+  .camps-pills-row button {
+    flex-shrink: 0 !important;
+    min-height: 40px !important;
+  }
+  .camps-card-body {
+    padding: 18px 18px 20px !important;
+  }
+  .camps-card-desc {
+    -webkit-line-clamp: 3 !important;
+  }
+  .camps-card-highlights {
+    gap: 6px !important;
+  }
+  img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .mobile-sticky-action-bar {
+    gap: 6px !important;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
 

@@ -47,10 +47,10 @@ function BookingEngineModalInner({
         setMounted(true);
     }, []);
 
-    const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
+    const [campsList, setCampsList] = useState(initialPackage && typeof initialPackage === 'object' ? [initialPackage] : []);
     const [discounts, setDiscounts] = useState(null);
     const [selectedPkgId, setSelectedPkgId] = useState(() => {
-        return initialPackage?.id || (typeof initialPackage === 'string' ? initialPackage : '') || 'pkg-kolukkumalai';
+        return initialPackage?.id || (typeof initialPackage === 'string' ? initialPackage : '') || '';
     });
     const [selectedRoomId, setSelectedRoomId] = useState(() => {
         return initialRoomId || initialRoom?.id || initialPackage?.rooms?.[0]?.id || '';
@@ -239,7 +239,7 @@ function BookingEngineModalInner({
         if (initialPackage && typeof initialPackage === 'object' && (initialPackage.id === selectedPkgId || !selectedPkgId || selectedPkgId.includes(initialPackage.id) || (initialPackage.id && initialPackage.id.includes(selectedPkgId)))) {
             return initialPackage;
         }
-        return campsList.find(p => p.id === selectedPkgId) || initialPackage || campsList[0] || INITIAL_ALL_CAMPS[0];
+        return campsList.find(p => p.id === selectedPkgId) || (initialPackage && typeof initialPackage === 'object' ? initialPackage : null) || campsList[0] || null;
     }, [campsList, selectedPkgId, initialPackage]);
 
     const selectedRoom = useMemo(() => {

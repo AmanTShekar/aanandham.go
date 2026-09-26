@@ -18,7 +18,6 @@ export async function generateMetadata({ params }) {
   return {
     title: post.metaTitle,
     description: post.metaDescription,
-    keywords: post.keywords,
     alternates: {
       canonical: `${siteUrl}/blog/${post.slug}`,
     },

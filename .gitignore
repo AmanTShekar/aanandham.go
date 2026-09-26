@@ -1,0 +1,40 @@
+# ── Dependencies ──
+node_modules/
+
+# ── Next.js build output & cache ──
+.next/
+out/
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# ── Secrets & local env (NEVER commit real keys) ──
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ── Local operational data (bookings, inquiries, snapshots) ──
+.data/
+
+# ── Vercel ──
+.vercel/
+
+# ── Logs & temp ──
+*.log
+*.tmp
+*.temp
+*.bak
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS junk ──
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ── Misc ──
+coverage/
+dist/
+*.pem
+*.key

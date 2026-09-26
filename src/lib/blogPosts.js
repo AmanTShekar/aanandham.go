@@ -746,6 +746,264 @@ export const BLOG_POSTS = [
       { q: 'Do group camping packages include food?', a: 'Yes — dinner BBQ and breakfast are included, with veg/non-veg counts finalised before arrival.' },
       { q: 'Can a college group book Kolukkumalai as part of the trip?', a: 'Yes — the sunrise 4x4 expedition runs in jeep batches, comfortably scaling to full group sizes.' }
     ]
+  },
+  {
+    slug: 'affordable-dorm-stays-kasol-kalga-himachal-guide',
+    title: 'Affordable Stays in Kasol & Kalga: Dorm Beds, Budget Rooms & What They Really Cost (2026)',
+    metaTitle: 'Affordable Stays in Kasol & Kalga (2026) — Dorm Beds from ₹249',
+    metaDescription: 'Backpacking Parvati Valley on a budget? Real prices for dorm stays, budget rooms and affordable camps in Kasol–Kalga, plus what is actually included — meals, hot showers, Wi-Fi and treks.',
+    date: '2026-09-22',
+    readMinutes: 7,
+    category: 'Camping Guides',
+    image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Affordable dorm stay bunk beds for backpackers in Himachal',
+    excerpt: 'Parvati Valley does not have to be expensive. Here is what dorm beds and budget rooms in Kasol–Kalga really cost in 2026 — and how to pick an affordable stay that still includes hot showers, meals and mountain views.',
+    keywords: [
+      'affordable stays in himachal',
+      'budget stays in kasol',
+      'dorm stay kasol',
+      'kalga dorm bed price',
+      'cheap stays parvati valley',
+      'backpacker stay himachal',
+      'hostel vs dorm kasol'
+    ],
+    sections: [
+      {
+        h2: 'What “Affordable” Actually Means in Parvati Valley',
+        paragraphs: [
+          'Kasol town fills up fast in season, and riverside-cafe prices have crept up year after year. The trick seasoned backpackers learned long ago: walk uphill. Villages like Kalga, Pulga and Tosh sit above the crowds with the same pine forests and bigger views — usually at half the price of a Kasol high-street room.',
+          'An affordable stay in Himachal in 2026 means roughly ₹249–₹500 for a dorm bed, ₹1,000–₹1,500 for a private room with bathroom, and meals bundled rather than billed separately. Anything charging dorm prices without hot water or breakfast is not actually cheap — it is just cheap-looking.'
+        ],
+        lists: [
+          'Dorm bed benchmark: ₹249–₹500 per night in Kalga–Kasol',
+          'Private room benchmark: ₹1,199–₹1,499 with ensuite bathroom',
+          'Always check: hot water, meals included, Wi-Fi for workation days',
+          'Quieter = cheaper: Kalga and Pulga beat Kasol high-street rates'
+        ]
+      },
+      {
+        h2: 'Dorm Stays: The ₹249 Mountain Bed That Started Our Himachal Chapter',
+        paragraphs: [
+          'Our own Himalayan basecamp, The Nest Kalga, runs a 10-bed mountain dorm at ₹249 per bed — bunk reading lights with USB charging, shared hot showers, Wi-Fi, a smart TV corner and hot-water geysers, all wrapped in a solar-powered stay with a panoramic sunrise deck. A welcome drink, dinner and breakfast plus a guided ridge trek come with the bed, which is why it works out cheaper than most “cheap” hostels once you add up food.',
+          'Dorm life suits solo backpackers, college groups and workation travellers who want company in the evenings and silence in the mornings. If you have never tried a mountain dorm, Kalga is a gentle first one: small village, short trails, and staff who know every shortcut.'
+        ],
+        internalLinks: [
+          { href: '/camps/cmu7f7c7q0001jf2bn12igi66', text: 'Check live dorm bed availability at The Nest Kalga' },
+          { href: '/camps/himachal', text: 'Explore all Himachal stays & upcoming circuits' }
+        ]
+      },
+      {
+        h2: 'Private Budget Rooms: When to Upgrade from the Dorm',
+        paragraphs: [
+          'Travelling as a couple, carrying camera gear, or just light-sensitive? The Deluxe Suite (₹1,199, sleeps 3, ensuite bathroom, daily housekeeping) and the Deluxe Balcony Room (₹1,499, mountain-view window and scenic balcony) are the natural step up — still firmly in affordable-stay territory by Himachal standards, with the same meals, campfire evenings and trek support as the dorm.',
+          'A good rule of thumb: dorms for trips longer than 4 nights where the savings compound, private rooms for long weekends where comfort matters more than the difference of a few hundred rupees.'
+        ]
+      },
+      {
+        h2: 'How to Reach Kalga on a Backpacker Budget',
+        paragraphs: [
+          'Overnight buses from Delhi and Chandigarh to Kasol are the standard budget route, followed by a shared cab to Barshaini and the short pine-trail walk up to Kalga village at 7,900 FT. The walk itself is part of the experience — 20 to 30 minutes through apple orchards with the valley opening up behind you.',
+          'Carry cash for the last stretch, download offline maps, and arrive before dark if it is your first time. Our coordinators share live location pins on booking confirmation, so even first-timers find the trail easily.'
+        ],
+        internalLinks: [
+          { href: '/blog/best-scenic-stays-parvati-valley-himachal', text: 'Read next: the most scenic stays in Parvati Valley' }
+        ]
+      }
+    ],
+    faq: [
+      { q: 'What is the cheapest stay in Kasol–Kalga with meals?', a: 'The 10-bed mountain dorm at The Nest Kalga starts at ₹249 per bed and includes a welcome drink, dinner, breakfast and a guided ridge trek — cheaper than most hostels once food is counted.' },
+      { q: 'Are dorm stays in Himachal safe for solo travellers?', a: 'Yes — look for staffed properties with on-site coordinators, secure dorm layouts and well-lit common areas. Our Kalga basecamp has staff support around the clock.' },
+      { q: 'Dorm or private room for a Parvati Valley workation?', a: 'Private rooms (₹1,199–₹1,499) win for calls and deep work thanks to the desk and ensuite quiet; dorms win for trips over 4 nights where savings compound.' },
+      { q: 'How do I reach Kalga village?', a: 'Bus to Kasol, shared cab to Barshaini, then a 20–30 minute pine-trail walk up to Kalga at 7,900 FT. Booking confirmation includes live location pins.' }
+    ]
+  },
+  {
+    slug: 'best-scenic-stays-parvati-valley-himachal',
+    title: 'Most Scenic Stays in Parvati Valley: Sunrise Decks, Balconies & Stargazing Beds',
+    metaTitle: 'Most Scenic Stays in Parvati Valley (2026) — Sunrise & Starbeds',
+    metaDescription: 'Chasing sunrise decks and Milky Way nights? A local guide to the most scenic stays in Parvati Valley — Kalga sunrise views, balcony rooms, campfire skies and what “scenic” should actually include.',
+    date: '2026-09-21',
+    readMinutes: 6,
+    category: 'Camping Guides',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Scenic Himalayan sunrise over pine valleys in Parvati Valley Himachal',
+    excerpt: 'Everyone photographs the Parvati Valley — few stays actually face the sunrise. Here is how to pick a genuinely scenic stay: sunrise orientation, balcony math, stargazing darkness and the Kalga benchmark.',
+    keywords: [
+      'scenic stays in himachal',
+      'best stays in parvati valley',
+      'sunrise view stay kasol',
+      'kalga scenic homestay',
+      'stargazing stay himachal',
+      'balcony room parvati valley',
+      'best stays in kalga'
+    ],
+    sections: [
+      {
+        h2: 'What Makes a Stay Genuinely “Scenic” (Not Just Marketed That Way)',
+        paragraphs: [
+          'Half the listings in the valley call themselves scenic. On the ground, only three things matter: which direction your windows face (east for sunrise, west for sunset glow), how dark the night sky gets (Kalga’s altitude and distance from Kasol’s lights win here), and whether there is actually somewhere to sit outside and watch it all happen.',
+          'Our test is simple — can you see the sunrise from bed, or at least from a deck with morning chai in hand? The Nest Kalga was picked for exactly that: a panoramic sunrise deck above the pine line, balcony rooms with mountain-view windows, and campfire nights under genuinely dark skies.'
+        ],
+        lists: [
+          'East-facing rooms and decks for Parvati sunrises',
+          'Dark-sky location away from Kasol market lights',
+          'A real sit-out: deck, balcony or campfire circle',
+          'Altitude bonus: 7,900 FT puts you above the valley haze'
+        ]
+      },
+      {
+        h2: 'The Kalga Benchmark: Sunrise Deck, Balcony Rooms & Campfire Skies',
+        paragraphs: [
+          'The Deluxe Balcony Room (₹1,499) is our most-booked scenic stay — twin beds, a mountain-view window, a private scenic balcony and a work desk for slow mornings. The Deluxe Suite (₹1,199) trades the balcony for a king bed and ensuite quiet, while even the ₹249 dorm gets the same sunrise deck and campfire circle.',
+          'Evenings follow the mountain routine: guided ridge walk at golden hour, campfire with music as the light drops, and some of the clearest Milky Way skies in North India. No filters needed — though your Instagram will suggest otherwise.'
+        ],
+        internalLinks: [
+          { href: '/camps/cmu7f7c7q0001jf2bn12igi66', text: 'See live photos & book The Nest Kalga' },
+          { href: '/camps/himachal', text: 'All Himachal stays & the Manali–Spiti waitlist' }
+        ]
+      },
+      {
+        h2: 'Stargazing, Workation & Slow Mornings: Matching Stay to Trip',
+        paragraphs: [
+          'Astrophotographers and stargazers should prioritise new-moon weeks and carry a tripod — the valley rewards patience. Workation travellers do best in balcony rooms with desks and daytime Wi-Fi, keeping dorms for weekends. Honeymoon-style slow trips? Two balcony-room nights plus one guided trek day is the sweet spot most couples rebook.',
+          'Whatever you pick, confirm hot water and heating for October–March. A scenic view loses its charm fast when the shower runs cold — our geysers and insulated rooms exist precisely because Himalayan mornings are honest.'
+        ],
+        internalLinks: [
+          { href: '/blog/affordable-dorm-stays-kasol-kalga-himachal-guide', text: 'Compare: affordable dorm stays in Kasol–Kalga' }
+        ]
+      }
+    ],
+    faq: [
+      { q: 'Which is the most scenic stay in Parvati Valley for sunrise?', a: 'East-facing stays above the valley haze — The Nest Kalga pairs a panoramic sunrise deck with balcony rooms at 7,900 FT, purpose-picked for morning light.' },
+      { q: 'Can you see the Milky Way from Kalga?', a: 'Yes — Kalga sits away from Kasol market lights at high altitude, and clear nights regularly show the Milky Way over the campfire circle.' },
+      { q: 'Best scenic stay in Parvati Valley for couples?', a: 'The Deluxe Balcony Room (₹1,499) with mountain-view windows and a private balcony is the most-booked couples pick, with campfire evenings and guided treks included.' }
+    ]
+  },
+  {
+    slug: 'munnar-campfire-bbq-food-guide',
+    title: 'What You Actually Eat at a Munnar Camp: Campfire BBQ, Kerala Buffet & Mountain Breakfast',
+    metaTitle: 'Munnar Camp Food Guide (2026) — Campfire BBQ, Buffet & Breakfast',
+    metaDescription: 'Live BBQ skewers, Kerala dinner buffet, appam–puttu breakfasts and evening chai — an honest guide to food at Munnar camps: what is included, veg options and what costs extra.',
+    date: '2026-09-20',
+    readMinutes: 6,
+    category: 'Planning Guides',
+    image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Live campfire barbecue grill with skewers at a Munnar mountain camp',
+    excerpt: 'The campfire gets the photos, but the food wins the reviews. Here is exactly what lands on your plate at a verified Munnar camp — BBQ, buffet, breakfast — and how to eat well as a vegetarian.',
+    keywords: [
+      'munnar camp food',
+      'campfire bbq munnar',
+      'kerala dinner buffet camping',
+      'munnar camping meals included',
+      'veg food munnar camps',
+      'mountain breakfast munnar'
+    ],
+    sections: [
+      {
+        h2: 'The Evening Arc: Chai, BBQ, Buffet, Campfire',
+        paragraphs: [
+          'A verified Munnar camp day runs on a delicious rhythm. You arrive to evening tea and hot snacks after the sunset ridge walk, then the campfire is lit and live barbecue skewers — chicken and paneer/veg — start coming off the grill while the sky does its colour show. Dinner follows as an authentic Kerala buffet, and the night settles into acoustic campfire time with stargazing.',
+          'This is all included in Aanandham all-inclusive packages (tent stays from ₹1,899) — unlike roadside operators who advertise a low stay price and then charge separately for food, firewood and “BBQ access”. When comparing the best camps in Munnar, compare the plate, not just the tent.'
+        ],
+        lists: [
+          'Evening tea & snacks on arrival from the ridge walk',
+          'Live campfire BBQ: chicken + veg/paneer skewers',
+          'Kerala dinner buffet: rice, curries, chapatis, salads',
+          'Acoustic campfire circle & Milky Way stargazing after dinner'
+        ]
+      },
+      {
+        h2: 'Morning: Appam, Puttu, Poori & Mountain Tea',
+        paragraphs: [
+          'Mountain mornings start early — especially on Kolukkumalai sunrise days when the 4:30 AM jeep convoy rolls before dawn. On return (or on slow mornings at valley camps like Suryanelli), breakfast is a hot Kerala spread: appam with stew, puttu with kadala, poori-masala and endless mountain tea with mist views.',
+          'Suryanelli Valley campers get a farm-to-table slant with local produce, while dome stays like Tentvilla add plated breakfast options on Day 2. Either way, nobody treks hungry here.'
+        ],
+        internalLinks: [
+          { href: '/camps/pkg-suryanelli', text: 'See Suryanelli Valley food & stay inclusions' },
+          { href: '/camps/munnar', text: 'Compare all best camps in Munnar' }
+        ]
+      },
+      {
+        h2: 'Vegetarians, Spice Levels & What Costs Extra',
+        paragraphs: [
+          'Vegetarians eat very well at our camps — paneer BBQ, veg curries, dal, salads and the full breakfast spread are standard, not an afterthought. Share dietary counts (veg/non-veg, Jain, allergies) before arrival and the kitchen plans portions accordingly; group bookings of 20+ do this as routine.',
+          'What can cost extra: premium BBQ platters per person at select ridge camps, dining-bay à la carte dinners at resort-style domes, and personal snacks or beverages. The rule is simple — if it is in your package inclusions list, it is on the house. Read that list, not just the headline price.'
+        ],
+        internalLinks: [
+          { href: '/blog/top-camps-in-munnar-best-camp-stays-guide', text: 'Rankings: 7 best camp stays in Munnar (2026)' },
+          { href: '/blog/munnar-stay-guide-tent-dome-pod-cabin', text: 'Stay types: tent vs dome vs pod vs cabin' }
+        ]
+      }
+    ],
+    faq: [
+      { q: 'Is food included in Munnar camping packages?', a: 'Yes — verified packages include evening tea and snacks, live campfire BBQ, Kerala dinner buffet and hot mountain breakfast alongside the stay, campfire and guided treks.' },
+      { q: 'Do Munnar camps have vegetarian BBQ and food options?', a: 'Yes — paneer and veg skewers on the grill plus veg curries, dal and full breakfast spreads are standard. Share dietary needs before arrival.' },
+      { q: 'What does a mountain breakfast in Munnar include?', a: 'Appam with stew, puttu with kadala curry, poori-masala and hot mountain tea — served after sunrise treks or slow valley mornings.' }
+    ]
+  },
+  {
+    slug: 'munnar-stay-guide-tent-dome-pod-cabin',
+    title: 'Munnar Stay Guide: Tent vs Dome vs Pod vs Cabin — Which One Should You Book?',
+    metaTitle: 'Munnar Stay Types (2026) — Tent vs Dome vs Pod vs Cabin Prices',
+    metaDescription: 'Alpine tents from ₹1,899, valley pods from ₹2,399, geodesic domes from ₹2,300 and timber cabins for groups — an honest Munnar stay guide matching each stay type to couples, families, solos and squads.',
+    date: '2026-09-19',
+    readMinutes: 7,
+    category: 'Camping Guides',
+    image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Alpine tent stay glowing at dusk in a Munnar mountain camp',
+    excerpt: 'Tent, dome, pod or cabin? Each Munnar stay type has a different price, view and vibe. Here is the honest breakdown — with real 2026 prices — so couples, families, solos and groups book right the first time.',
+    keywords: [
+      'tent stay munnar',
+      'dome stay munnar',
+      'pod stay munnar',
+      'munnar tent stay price',
+      'glamping tent munnar',
+      'best stay in munnar for couples',
+      'family stay munnar camping'
+    ],
+    sections: [
+      {
+        h2: 'The Four Munnar Stay Types at a Glance',
+        paragraphs: [
+          'Every “best camps in Munnar” list mixes four very different products. Alpine tents are classic camping with weatherproof flysheets and foam bedding. Geodesic domes are the glamping icons — panoramic windows, stargazing from bed. Valley pods are the middle path: solid walls, decks, proper doors. Timber cabins are full rooms for families and groups.',
+          'Prices move with season, but the ladder holds: tents from ₹1,899, domes ₹2,300–₹3,299, pods from ₹2,399, cabins priced per group. All verified options include campfire evenings, meals and guided treks — the stay type changes how you sleep, not what the mountain gives you.'
+        ],
+        lists: [
+          'Alpine tent stay: from ₹1,899 — backpackers, solos, college squads',
+          'Geodesic dome glamping: ₹2,300–₹3,299 — couples & honeymooners',
+          'Valley mountain pod: from ₹2,399 — families & comfort-first campers',
+          'Timber cabin: group pricing — families & corporate squads'
+        ]
+      },
+      {
+        h2: 'Couples: Book the Dome. Families: Book the Pod.',
+        paragraphs: [
+          'Couples consistently rate dome stays highest — the Kolukkumalai Teddy Domes (₹2,300) and Tentvilla geodesic domes (₹3,299) pair panoramic cloud views with sunset treks and campfire music built for two. Ask for upper-ridge placement when you book; ten metres of elevation is the difference between a good photo and a great one.',
+          'Families with kids do better in valley pods — solid walls, decks, attached modern washrooms with hot water, and no tent-zip wrestling at midnight. Suryanelli’s valley pods (₹2,399) keep you close to the campfire circle and the breakfast spread, which matters more than it sounds with young campers.'
+        ],
+        internalLinks: [
+          { href: '/camps/pkg-suryanelli', text: 'Family pick: Suryanelli Valley pods & tents' },
+          { href: '/camps/munnar', text: 'Compare every verified Munnar stay type' }
+        ]
+      },
+      {
+        h2: 'Solos, Squads & the Himachal Alternative',
+        paragraphs: [
+          'Solo travellers: alpine tents at valley camps give you the full expedition (sunrise convoy, BBQ, treks) at the lowest price, with dorm-style company at the campfire. College and corporate squads mix tents with a couple of pods for organisers — and should book 3–4 weeks ahead for 20+ groups.',
+          'And if your heart is set on Himalayan rather than Western Ghats views, the same logic travels north: our Himachal basecamp in Kalga runs dorm beds from ₹249 up to balcony rooms at ₹1,499. Different mountains, same honest pricing.'
+        ],
+        internalLinks: [
+          { href: '/camps/himachal', text: 'Himachal stays: dorms from ₹249 & scenic rooms' },
+          { href: '/blog/top-camps-in-munnar-best-camp-stays-guide', text: 'Rankings: 7 best camp stays in Munnar (2026)' }
+        ]
+      }
+    ],
+    faq: [
+      { q: 'What is the price of a tent stay in Munnar?', a: 'Verified alpine tent stays start from ₹1,899 per camper including BBQ dinner, breakfast, campfire and guided treks. Valley pods start ₹2,399; domes ₹2,300–₹3,299.' },
+      { q: 'Which Munnar stay is best for couples?', a: 'Geodesic dome glamping — panoramic views, sunset treks and campfire evenings built for two. Teddy Domes (₹2,300) and Tentvilla domes (₹3,299) are the top picks.' },
+      { q: 'Which Munnar stay is best for families with kids?', a: 'Valley pods with solid walls, decks and attached hot-water washrooms — Suryanelli pods from ₹2,399 keep families close to food and fire.' },
+      { q: 'Tent vs dome vs pod — what is the real difference?', a: 'Tents are classic camping (lowest price), domes are panoramic glamping icons, pods are solid-wall comfort with decks, cabins are full rooms for groups. All include meals, campfire and treks.' }
+    ]
   }
 ];
 

@@ -6,16 +6,6 @@ export const metadata = {
   title: 'Wilderness Campsites & Tent Stays in Kerala',
   description:
     'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ. Book with Aanandham.go.',
-  keywords: [
-    'Kerala Campsites',
-    'Munnar Tent Stays',
-    'Suryanelli Camping',
-    'Vagamon Pine Glamping',
-    'Wayanad Forest Camps',
-    'Kolukkumalai Tent Booking',
-    'High-Altitude Ridge Pods Kerala',
-    'Safe Campsites for Couples'
-  ],
   alternates: {
     canonical: 'https://www.aanandham.in/camps',
   },
@@ -78,7 +68,7 @@ export default function CampsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CampsDirectoryClient initialCamps={activeCamps} />
+      <CampsDirectoryClient initialCamps={[]} />
     </>
   );
 }

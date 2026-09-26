@@ -24,17 +24,25 @@ const SORT_OPTIONS = [
 ];
 
 export default function CampsDirectoryClient({ 
-    initialCamps = INITIAL_ALL_CAMPS,
+    initialCamps = null,
     initialRegion = 'All',
-    heroBadge = '★ 11 VERIFIED CAMPS',
+    heroBadge = null,
     heroTitle = null,
-    heroSubtitle = null
+    heroSubtitle = null,
+    comingSoon = false,
+    comingSoonRegion = null,
+    comingSoonTitle = null,
+    comingSoonSubtitle = null,
+    comingSoonPoints = null,
+    extraContent = null
 }) {
     const router = useRouter();
-    const [camps, setCamps] = useState(initialCamps || []);
+    const [camps, setCamps] = useState(initialCamps && initialCamps.length > 0 ? initialCamps : []);
     const [isLoading, setIsLoading] = useState(!initialCamps || initialCamps.length === 0);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedRegion, setSelectedRegion] = useState(initialRegion);
+    // In coming-soon mode the grid shows live Kerala basecamps, so default filter to All
+    // to avoid an empty/confusing listing that mismatches the page metadata.
+    const [selectedRegion, setSelectedRegion] = useState(comingSoon ? 'All' : initialRegion);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [sortBy, setSortBy] = useState('recommended'); // 'recommended' | 'price-asc' | 'price-desc' | 'altitude' | 'rating'
     const [onlyWishlisted, setOnlyWishlisted] = useState(false);
@@ -230,7 +238,7 @@ export default function CampsDirectoryClient({
                     <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
                         <div style={{ maxWidth: '820px' }}>
                             <div className="star-badge" style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', marginBottom: '16px' }}>
-                                <span className="star-icon">★</span> {heroBadge}
+                                <span className="star-icon">★</span> {heroBadge || (isLoading ? 'VERIFIED CAMPSITES' : `${camps.length} VERIFIED CAMPSITES`)}
                             </div>
                             
                             <h1 style={{
@@ -253,7 +261,7 @@ export default function CampsDirectoryClient({
                                 lineHeight: 1.7,
                                 margin: '0 0 28px'
                             }}>
-                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury ridge glamping tents, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Wayanad, Vagamon, and Athirappilly.'}
+                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury ridge glamping tents, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Vagamon, Wayanad — plus new Himalayan stays in Himachal.'}
                             </p>
 
                             {/* Wishlist Bar Pill (Only shown if wishlist has items) */}
@@ -420,8 +428,59 @@ export default function CampsDirectoryClient({
                     </div>
                 </section>
 
+                {/* ── COMING-SOON NOTICE (honest mismatch fix: no fake inventory) ── */}
+                {comingSoon && (
+                    <section style={{ maxWidth: '1440px', margin: '0 auto 36px', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                        <div style={{
+                            background: 'linear-gradient(135deg, #FFF7E6 0%, #FFFDF5 100%)',
+                            border: '1.5px dashed rgba(229, 169, 59, 0.6)',
+                            borderRadius: '24px',
+                            padding: 'clamp(24px, 4vw, 36px)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '14px'
+                        }}>
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', alignSelf: 'flex-start', background: '#121613', color: '#D5ED55', fontSize: '11.5px', fontWeight: '900', letterSpacing: '1px', padding: '6px 14px', borderRadius: '999px', textTransform: 'uppercase' }}>
+                                <span>●</span> {comingSoonRegion ? `${comingSoonRegion} · Coming Soon` : 'Coming Soon'}
+                            </div>
+                            <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 3vw, 28px)', fontWeight: '800', margin: 0, color: '#121613', letterSpacing: '-0.02em', lineHeight: 1.25 }}>
+                                {comingSoonTitle || 'We are scouting verified basecamps here.'}
+                            </h2>
+                            <p style={{ fontSize: '14.5px', lineHeight: 1.7, color: '#59655D', margin: 0, maxWidth: '760px' }}>
+                                {comingSoonSubtitle || 'Our crew is on-ground verifying stays, trails and safety. Join the WhatsApp waitlist and we will ping you the day bookings open — meanwhile explore our live Kerala basecamps below.'}
+                            </p>
+                            {comingSoonPoints && comingSoonPoints.length > 0 && (
+                                <ul style={{ margin: '4px 0 0', padding: 0, listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                    {comingSoonPoints.map((pt, i) => (
+                                        <li key={i} style={{ fontSize: '12.5px', fontWeight: '700', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', padding: '7px 14px', borderRadius: '999px', color: '#121613' }}>
+                                            ✓ {pt}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '6px' }}>
+                                <a
+                                    href={waLink(`Hi Aanandham! Notify me when ${comingSoonRegion || 'new'} camps launch. I want early-bird access.`)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#25D366', color: '#fff', fontWeight: '900', fontSize: '14px', padding: '12px 22px', minHeight: '44px', borderRadius: '12px', textDecoration: 'none', boxShadow: '0 4px 16px rgba(37,211,102,0.35)' }}
+                                >
+                                    Notify Me on WhatsApp
+                                </a>
+                                <a
+                                    href="/camps"
+                                    onClick={(e) => { e.preventDefault(); setSelectedRegion('All'); setSearchQuery(''); document.getElementById('live-basecamps-grid')?.scrollIntoView({ behavior: 'smooth' }); }}
+                                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#121613', color: '#D5ED55', fontWeight: '800', fontSize: '14px', padding: '12px 22px', minHeight: '44px', borderRadius: '12px', textDecoration: 'none' }}
+                                >
+                                    Explore Live Kerala Camps ↓
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
                 {/* ── CAMPSITES LISTING GRID ── */}
-                <section style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                <section id="live-basecamps-grid" style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px)', scrollMarginTop: '90px' }}>
                     
                     {/* Header showing count */}
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
@@ -744,7 +803,7 @@ export default function CampsDirectoryClient({
                                                         }}
                                                         style={{
                                                             padding: '9px 16px',
-                                                            minHeight: '38px',
+                                                            minHeight: '44px',
                                                             borderRadius: '11px',
                                                             background: '#F1F3EC',
                                                             border: '1px solid rgba(18, 22, 19, 0.08)',
@@ -772,7 +831,7 @@ export default function CampsDirectoryClient({
                                                         title="Direct Booking · Instant Confirmation"
                                                         style={{
                                                             padding: '9px 16px',
-                                                            minHeight: '38px',
+                                                            minHeight: '44px',
                                                             borderRadius: '11px',
                                                             fontSize: '12.5px',
                                                             fontWeight: '800',
@@ -865,6 +924,9 @@ export default function CampsDirectoryClient({
                 </section>
 
             </main>
+
+            {/* ── OPTIONAL PAGE-SPECIFIC SEO GUIDE (renders before footer) ── */}
+            {extraContent}
 
             {/* ── FOOTER ── */}
             <Footer />

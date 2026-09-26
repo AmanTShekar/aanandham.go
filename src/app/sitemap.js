@@ -32,6 +32,18 @@ export default function sitemap() {
       priority: 0.9,
     },
     {
+      url: `${siteUrl}/camps/vagamon`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${siteUrl}/camps/himachal`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
       url: `${siteUrl}/blog`,
       lastModified: currentDate,
       changeFrequency: 'weekly',

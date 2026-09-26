@@ -31,10 +31,10 @@ export function parseRoomCapacity(capacityStr) {
     return match ? Math.max(1, parseInt(match[0], 10)) : 2;
 }
 
-export default function CampPropertyDetailClient({ campId, initialCamp, initialAllCamps = INITIAL_ALL_CAMPS }) {
+export default function CampPropertyDetailClient({ campId, initialCamp, initialAllCamps = [] }) {
     const [camp, setCamp] = useState(initialCamp || null);
-    const [allCamps, setAllCamps] = useState(initialAllCamps);
-    const [isLoaded, setIsLoaded] = useState(true);
+    const [allCamps, setAllCamps] = useState(initialAllCamps || []);
+    const [isLoaded, setIsLoaded] = useState(!!initialCamp);
     const [activePhotoIdx, setActivePhotoIdx] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     
@@ -120,24 +120,22 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     }, [camp?.highlights, camp?.amenities]);
 
     useEffect(() => {
+        let isMounted = true;
         const refreshCampData = async () => {
-            const campsList = getAllCamps();
-            setAllCamps(campsList);
-            let currentCamp = getCampById(campId) || initialCamp;
-            setCamp(currentCamp);
-            if (currentCamp?.rooms && currentCamp.rooms.length > 0) {
-                setSelectedRoomId(prev => prev || currentCamp.rooms[0].id);
-            }
-
             try {
-                const res = await fetch('/api/admin/camps');
+                const res = await fetch('/api/admin/camps', { cache: 'no-store' });
                 if (res.ok) {
                     const serverCamps = await res.json();
                     if (Array.isArray(serverCamps) && serverCamps.length > 0) {
                         saveAllCamps(serverCamps);
-                        setAllCamps(serverCamps);
-                        const matched = serverCamps.find(c => c.id === campId);
-                        if (matched) {
+                        if (isMounted) setAllCamps(serverCamps);
+                        const cleanTarget = String(campId).toLowerCase().replace('pkg-', '').trim();
+                        const matched = serverCamps.find(c => {
+                            const cleanC = String(c.id).toLowerCase().replace('pkg-', '').trim();
+                            const cleanSlug = String(c.slug || '').toLowerCase().trim();
+                            return c.id === campId || cleanC === cleanTarget || cleanSlug === cleanTarget;
+                        });
+                        if (matched && isMounted) {
                             setCamp(matched);
                             if (matched.rooms && matched.rooms.length > 0) {
                                 setSelectedRoomId(prev => prev || matched.rooms[0].id);
@@ -145,16 +143,16 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (e) {
+            } finally {
+                if (isMounted) setIsLoaded(true);
+            }
         };
-
-        refreshCampData();
 
         try {
             const savedWishlist = JSON.parse(localStorage.getItem('aanandham_user_wishlist') || '[]');
-            setWishlist(savedWishlist);
+            if (isMounted) setWishlist(savedWishlist);
         } catch (e) {}
-        setIsLoaded(true);
 
         const handleStorage = () => {
             refreshCampData();
@@ -162,6 +160,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         window.addEventListener('storage', handleStorage);
 
         return () => {
+            isMounted = false;
             if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
             window.removeEventListener('storage', handleStorage);
         };

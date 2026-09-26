@@ -174,8 +174,9 @@ export default function Footer() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
                                 { name: 'Munnar & Suryanelli Camps', href: '/camps/munnar' },
-                                { name: 'Vagamon Pine Glamping', href: '/camps/vagamon' },
-                                { name: 'Wayanad Forest Pods', href: '/camps/wayanad' },
+                                { name: 'Vagamon Pine Glamping · Soon', href: '/camps/vagamon' },
+                                { name: 'Wayanad Forest Pods · Soon', href: '/camps/wayanad' },
+                                { name: 'Himachal Himalayan Stays · Soon', href: '/camps/himachal' },
                                 { name: 'All Verified Kerala Camps', href: '/camps' },
                                 { name: 'About Our Ethos & Charter', href: '/about' }
                             ].map((item, idx) => (
@@ -187,17 +188,17 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* Column 3: SYSTEM & OPERATIONS */}
+                    {/* Column 3: SUPPORT — internal tools removed from public nav for SEO/security hygiene */}
                     <div>
                         <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '1.5px', color: '#A2B6A6', textTransform: 'uppercase', display: 'block', marginBottom: '20px' }}>
-                            MANAGEMENT & SUPPORT
+                            SUPPORT & STUDIO
                         </span>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                             {[
-                                { name: 'Central PMS Admin Suite', href: '/admin' },
-                                { name: 'Website Marketing CMS', href: '/cms' },
                                 { name: 'Services & Studio (OpenZen)', href: '/services' },
-                                { name: 'Expedition Concierge Desk', href: '/contact' }
+                                { name: 'Expedition Concierge Desk', href: '/contact' },
+                                { name: 'Field Guides & Journal', href: '/blog' },
+                                { name: 'All Verified Camps', href: '/camps' }
                             ].map((item, idx) => (
                                 <Link key={idx} href={item.href} className="interactive-arrow-link" style={{ color: '#A2B6A6', paddingBottom: '10px', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontSize: '14.5px', fontWeight: '600', textDecoration: 'none' }}>
                                     <span>{item.name}</span>

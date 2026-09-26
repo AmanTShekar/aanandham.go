@@ -447,8 +447,8 @@ const NEARBY_PLACES = [
 const ABOUT_FAQS = [
     {
         num: '01',
-        q: 'Where is Aanandham Basecamp located, and how do we reach it?',
-        a: 'Aanandham is located in Suryanelli, near Munnar, perched at 6,500 FT along the Western Ghats ridgeline. We provide safe parking for standard vehicles at our Suryanelli base point, from where our dedicated 4x4 Jeeps transport you up to the private sanctuary ridge.'
+        q: 'Where is Aanandham located, and how do we reach the campsites?',
+        a: 'Our office and expedition desk is in Kochi, Kerala. Aanandham does not own a single basecamp — we partner with verified campsite properties across Suryanelli, Munnar, Vagamon, Wayanad and Himachal, and each partner property runs its own basecamp and base point. After booking, our coordinators share your exact meeting point, safe parking for standard vehicles, and 4x4 Jeep transfer details for your chosen stay.'
     },
     {
         num: '02',

@@ -2,11 +2,6 @@
 export const metadata = {
   title: 'Services & Studio — Aanandham × OpenZen',
   description: 'High-altitude mountain sanctuaries, 4x4 sunrise safaris, and production software engineering. OpenZen tech division and Aanandham creative studio under one roof.',
-  keywords: [
-    'Aanandham services', 'OpenZen', 'Aanandham Studio', 'Kolukkumalai sunrise 4x4 jeep safari',
-    'Munnar camping packages', 'custom software development Kerala', 'Next.js agency India',
-    'hospitality PMS', 'Suryanelli glamping dome', 'Meesapulimala trek permit', 'drone cinematography Kerala'
-  ],
   alternates: {
     canonical: 'https://www.aanandham.in/services'
   },

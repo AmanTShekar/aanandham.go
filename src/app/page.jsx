@@ -21,6 +21,7 @@ import { GraduationCap, Building2, Tent, Flame, Check, ChevronLeft, ChevronRight
 import { WhatsAppIcon, InstagramIcon } from '../components/common/BrandIcons';
 import { loadTestimonialsFromStorage } from '../lib/testimonialsCore';
 import VerifiedStayBadge from '../components/common/VerifiedStayBadge';
+import { SkeletonCampGrid, AssetImage } from '../components/common/SkeletonLoader';
 
 // ── OVERVIEW HIGHLIGHTS DATA (Ref Screenshot 3 Batch 2 - media_1786655246018.png) ──
 const OVERVIEW_HIGHLIGHTS = [
@@ -787,27 +788,25 @@ export default function HomePage() {
         if (pkg) setSelectedPackage(pkg);
         setIsBookingModalOpen(true);
     };
-    const [selectedPackage, setSelectedPackage] = useState(INITIAL_ALL_CAMPS[0]);
+    const [selectedPackage, setSelectedPackage] = useState(null);
     const { user: currentUser, logout } = useAuth();
-    const [campsList, setCampsList] = useState(INITIAL_ALL_CAMPS);
+    const [campsList, setCampsList] = useState([]);
+    const [isLoadingCamps, setIsLoadingCamps] = useState(true);
 
     useEffect(() => {
-        const syncCamps = () => {
-            const camps = getAllCamps();
-            setCampsList(camps);
-        };
-        syncCamps();
-        window.addEventListener('storage', syncCamps);
-        fetch('/api/admin/camps')
+        fetch('/api/admin/camps', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data) && data.length > 0) {
                     saveAllCamps(data);
                     setCampsList(data);
+                    setSelectedPackage(prev => prev || data[0]);
                 }
             })
-            .catch(() => {});
-        return () => window.removeEventListener('storage', syncCamps);
+            .catch(() => {})
+            .finally(() => {
+                setIsLoadingCamps(false);
+            });
     }, []);
 
     // Listen for global booking open trigger from sticky bar / dock
@@ -824,7 +823,7 @@ export default function HomePage() {
     }, []);
 
     const filteredPackages = useMemo(() => {
-        if (!campsList || !Array.isArray(campsList)) return INITIAL_ALL_CAMPS;
+        if (!campsList || !Array.isArray(campsList)) return [];
         if (activeTab === 'All') return campsList;
         if (activeTab === 'Treks') return campsList.filter(p => p.category?.toLowerCase().includes('trek') || p.title?.toLowerCase().includes('summit') || p.tags?.some(t => t?.toLowerCase().includes('trek')));
         if (activeTab === 'Glamping') return campsList.filter(p => p.category?.toLowerCase().includes('glamp') || p.tags?.some(t => t?.toLowerCase().includes('glamp')) || p.title?.toLowerCase().includes('ridge'));
@@ -1867,8 +1866,13 @@ export default function HomePage() {
                         onScroll={handlePackageSliderScroll}
                         className="packages-cards-grid"
                     >
-                        <AnimatePresence mode="popLayout">
-                            {filteredPackages.map((pkg, idx) => {
+                        {isLoadingCamps && campsList.length === 0 ? (
+                            <div style={{ gridColumn: '1 / -1', width: '100%', padding: '10px 0 30px' }}>
+                                <SkeletonCampGrid count={3} />
+                            </div>
+                        ) : (
+                            <AnimatePresence mode="popLayout">
+                                {filteredPackages.map((pkg, idx) => {
                                 const isLiked = wishlist.includes(pkg.id);
                                 return (
                                     <motion.div 
@@ -1902,15 +1906,14 @@ export default function HomePage() {
                                         }}
                                     >
                                         {/* Image Container with Badges & Action Buttons */}
-                                        <div className="package-card-img" style={{ position: 'relative' }}>
-                                            <img 
+                                        <div className="package-card-img" style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                                            <AssetImage 
                                                 src={pkg.image} 
                                                 alt={pkg.title} 
-                                                loading="lazy"
-                                                decoding="async"
-                                                style={IMG_FILL} 
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 33vw"
                                             />
-                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.72) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.42) 100%)', pointerEvents: 'none' }} />
+                                            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.72) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.42) 100%)', pointerEvents: 'none', zIndex: 2 }} />
                                             
                                             {/* Unified Top Header Bar: Badges Left, Actions Right (Zero Overlap) */}
                                             <div style={{ 
@@ -2198,6 +2201,7 @@ export default function HomePage() {
                                 );
                             })}
                         </AnimatePresence>
+                    )}
                     </div>
 
                     {/* Mobile Swipe Pagination Dots */}

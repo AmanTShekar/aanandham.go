@@ -6,7 +6,7 @@ import GlobalActionHub from '@/components/common/GlobalActionHub';
 import PmsAnalyticsTracker from '@/components/common/PmsAnalyticsTracker';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import { SEO_KEYWORDS, SITE_RATING } from '@/lib/seoKeywords';
+import { SITE_RATING } from '@/lib/seoKeywords';
 
 const bricolage = Bricolage_Grotesque({
   subsets: ['latin'],
@@ -38,7 +38,6 @@ export const metadata = {
     template: '%s | Aanandham.go'
   },
   description: 'Book verified high-altitude camping, Suryanelli tent stays & 4x4 Kolukkumalai sunrise treks in Munnar, Kerala with Aanandham.go.',
-  keywords: SEO_KEYWORDS,
   authors: [{ name: 'Aanandham Wilderness Platform' }],
   creator: 'Aanandham.go',
   publisher: 'Aanandham.go',

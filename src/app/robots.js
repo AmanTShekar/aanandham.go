@@ -6,12 +6,12 @@ export default function robots() {
       {
         userAgent: '*',
         allow: ['/', '/llms.txt', '/llms-full.txt'],
-        disallow: ['/admin', '/api/', '/login', '/signup', '/pass/'],
+        disallow: ['/admin', '/admin/*', '/cms', '/cms/*', '/api/', '/login', '/signup', '/pass/'],
       },
       {
         userAgent: ['GPTBot', 'ChatGPT-User', 'PerplexityBot', 'ClaudeBot', 'Google-Extended', 'Applebot-Extended'],
         allow: ['/', '/camps', '/camps/*', '/about', '/contact', '/llms.txt', '/llms-full.txt'],
-        disallow: ['/admin', '/api/', '/login', '/signup', '/pass/'],
+        disallow: ['/admin', '/admin/*', '/cms', '/cms/*', '/api/', '/login', '/signup', '/pass/'],
       }
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

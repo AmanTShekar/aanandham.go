@@ -10,18 +10,25 @@ export const DEFAULT_DESTINATION_CONTENT = {
         metaDescription: 'Looking for the best camps in Munnar? Discover top camp stays across Suryanelli & Kolukkumalai. 4x4 sunrise safari, campfire BBQ & verified luxury tents from ₹1,899.'
     },
     vagamon: {
-        badge: '★ SECLUDED PINE VALLEY',
-        title: 'Vagamon Pine Forest Glamping & Stays',
-        subtitle: 'Tucked away in the whispering pine groves of Vagamon (3,800 FT). Enjoy misty valley walks, private stream trails, and cozy alpine campfire nights.',
-        metaTitle: 'Vagamon Pine Forest Glamping & Stays | Aanandham.go',
-        metaDescription: 'Book secluded pine valley ridge glamping & offroad jeep camping in Vagamon, Kerala with Aanandham.go.'
+        badge: '★ VAGAMON · COMING SOON',
+        title: 'Vagamon Pine Forest Glamping — Coming Soon',
+        subtitle: 'Pine-valley basecamps are being verified. Join the waitlist — live Kerala camps are open below.',
+        metaTitle: 'Vagamon Pine Forest Glamping & Stays · Coming Soon | Aanandham.go',
+        metaDescription: 'Vagamon pine glamping launching soon with Aanandham.go. Join the waitlist — explore live Munnar camps meanwhile.'
     },
     wayanad: {
-        badge: '★ 900 KANDI & CHEMBRA PEAK',
-        title: 'Wayanad Rainforest Camping & Pod Stays',
-        subtitle: 'Immerse yourself in deep mist-covered rainforest canopies, glass bridge trails, and private mountain stream pools with 24/7 Aanandham concierge.',
-        metaTitle: 'Wayanad Forest Camping & Pod Stays | Aanandham.go',
-        metaDescription: 'Discover rainforest treehouses & Chembra cloud-level wooden pods in Wayanad with Aanandham.go.'
+        badge: '★ WAYANAD · COMING SOON',
+        title: 'Wayanad Rainforest Camping — Coming Soon',
+        subtitle: 'Rainforest basecamps are being verified. Join the waitlist — live Kerala camps are open below.',
+        metaTitle: 'Wayanad Forest Camping & Pod Stays · Coming Soon | Aanandham.go',
+        metaDescription: 'Wayanad rainforest stays launching soon with Aanandham.go. Join the waitlist — explore live Munnar camps meanwhile.'
+    },
+    himachal: {
+        badge: '★ HIMACHAL HIMALAYAS · COMING SOON',
+        title: 'Himachal Himalayan Camping — Coming Soon',
+        subtitle: 'Kalga–Kasol live today; Manali & Spiti circuits being verified. Join the waitlist for early-bird dates.',
+        metaTitle: 'Himachal Himalayan Camping & Homestays · Coming Soon | Aanandham.go',
+        metaDescription: 'Himachal camps launching soon with Aanandham.go — Kalga live, Manali & Spiti on the way. Join the waitlist.'
     }
 };
 

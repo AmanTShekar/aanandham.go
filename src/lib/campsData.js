@@ -1,389 +1,6 @@
 // ── CENTRALIZED KERALA WILDERNESS CAMPS & PROPERTIES DATA ──
 export const INITIAL_ALL_CAMPS = [
   {
-    "id": "pkg-kolukkumalai",
-    "title": "Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp",
-    "shortTitle": "Kolukkumalai Sunrise Ridge",
-    "region": "Munnar",
-    "category": "Summit Trek & Glamp",
-    "tag": "Bestseller ⭐",
-    "location": "Suryanelli / Kolukkumalai, Munnar, Kerala",
-    "altitude": "7,900 FT",
-    "price": 2899,
-    "originalPrice": 3600,
-    "rating": 4.98,
-    "reviewsCount": 342,
-    "duration": "2 Days / 1 Night",
-    "difficulty": "Moderate Offroad",
-    "isAvailable": true,
-    "image": "/images/high-altitude-4x4-convoy.jpg",
-    "gallery": [
-      "/images/high-altitude-4x4-convoy.jpg",
-      "/images/kolukkumalai-jeep-safari-primary.jpg",
-      "/images/kolukkumalai-jeep-trail-mist.jpg",
-      "/images/kolukkumalai-sunrise-peak-glow.jpg",
-      "/images/kolukkumalai-mountain-view.jpg",
-      "/images/kolukkumalai-cloudbed-dome.webp",
-      "/images/kolukkumalai-camping-area.jpg",
-      "/images/kolukkumalai-cozy-tent-stay.jpg",
-      "/images/kolukkumalai-ridge-camp-scenic.jpg"
-    ],
-    "faqs": [
-      {
-        "q": "What time does the Kolukkumalai sunrise trek start?",
-        "a": "You leave basecamp at 4:30–4:45 AM in a 4x4 jeep to reach the ridge before sunrise (5:45–6:15 AM depending on season)."
-      },
-      {
-        "q": "Is the Kolukkumalai trek difficult?",
-        "a": "The jeep-and-summit version is easy to moderate — a 20–30 minute rocky climb to the top after the jeep drop. Full-hike versions are longer and best for experienced trekkers."
-      },
-      {
-        "q": "Do I need a permit for Kolukkumalai?",
-        "a": "No official permit is needed, but estate access is controlled; booked expeditions handle entry through the organised jeep route."
-      },
-      {
-        "q": "What is included in the Kolukkumalai package?",
-        "a": "The package includes 4x4 jeep transfers, summit sunrise trek, ridge glamping/alpine tent stay, dinner BBQ, breakfast, camp staff guides, and forest permits."
-      },
-      {
-        "q": "Can solo travelers join the Kolukkumalai sunrise trek?",
-        "a": "Yes — the expedition runs in shared jeep batches with camp staff and is popular with solo travelers; we host 350+ solo female campers annually."
-      }
-    ],
-    "description": "Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude ridge glamping tents, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.",
-    "highlights": [
-      "Private 4x4 Rugged Jeep Convoy to World’s Highest Tea Estate",
-      "Tiger Rock Sunrise Ridge Hike above endless cloud carpets",
-      "Live Campfire BBQ Dinner with Kerala Spiced Marinades",
-      "Weatherproof Ridge Glamping Tents & Alpine Tents",
-      "Certified Wilderness Guides & Forest Entry Permits Included"
-    ],
-    "inclusions": [
-      "1 Night Accommodation (Ridge Glamping / Alpine Tent)",
-      "4x4 Off-Road Jeep Safari to Kolukkumalai Sunrise Point",
-      "Evening Campfire with Live Barbecue (Chicken / Paneer)",
-      "Buffet Dinner (Authentic Kerala Cuisine) & Hot Mountain Breakfast",
-      "Forest Department Permits & Certified Trek Guides",
-      "Clean Western Washrooms with Hot Water Facilities"
-    ],
-    "exclusions": [
-      "Transportation to reporting basecamp (Suryanelli town)",
-      "Personal trekking gear and personal snacking",
-      "Tips and gratuities for safari drivers & camp crew"
-    ],
-    "itinerary": [
-      {
-        "day": "Day 1",
-        "title": "Check-in, Sunset Ridge Walk & Campfire BBQ",
-        "items": [
-          "02:00 PM – Arrival at Suryanelli Basecamp & welcome organic spiced tea.",
-          "03:00 PM – Tent / Glamp allocation and briefing by camp staff.",
-          "04:30 PM – Guided sunset nature hike along Phantom Hill Ridge.",
-          "07:00 PM – Roaring campfire lighting with live acoustic jam session.",
-          "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.",
-          "10:30 PM – Stargazing under zero light pollution skies & overnight rest."
-        ]
-      },
-      {
-        "day": "Day 2",
-        "title": "Kolukkumalai Sunrise 4x4 Safari & Tea Tasting",
-        "items": [
-          "04:30 AM – Wake up & hot black tea briefing.",
-          "05:00 AM – 4x4 Rugged Jeep climb to Kolukkumalai Tiger Rock (7,900 FT).",
-          "06:15 AM – Witness the legendary golden cloud bed sunrise over Tamil Nadu plains.",
-          "08:00 AM – Visit the historic 1935 orthodox tea factory for tasting.",
-          "09:30 AM – Return to basecamp for traditional Kerala breakfast.",
-          "11:00 AM – Check-out with unforgettable wilderness memories."
-        ]
-      }
-    ],
-    "rooms": [
-      {
-        "id": "r1",
-        "name": "Ridge Glamping Tent",
-        "capacity": "2 Adults",
-        "price": 2899,
-        "totalUnits": 8,
-        "bookedUnits": 4,
-        "isAvailable": true,
-        "image": "/images/high-altitude-ridge-tent.jpg",
-        "features": [
-          "Valley Facing Deck",
-          "King Size Bed",
-          "En-suite Restroom",
-          "Thermal Blankets",
-          "Charging Station"
-        ]
-      },
-      {
-        "id": "r2",
-        "name": "Alpine Tent",
-        "capacity": "4 Campers",
-        "price": 2199,
-        "totalUnits": 14,
-        "bookedUnits": 6,
-        "isAvailable": true,
-        "image": "/images/kolukkumalai-camping-area.jpg",
-        "features": [
-          "Waterproof Flysheet",
-          "Foam Mattress & Sleeping Bag",
-          "Camping Lantern",
-          "Shared Modern Washrooms"
-        ]
-      },
-      {
-        "id": "r3",
-        "name": "Wooden A-Frame Cabin",
-        "capacity": "3 Campers",
-        "price": 3899,
-        "totalUnits": 3,
-        "bookedUnits": 1,
-        "isAvailable": true,
-        "image": "/images/kolukkumalai-mountain-view.jpg",
-        "features": [
-          "Private Timber Deck",
-          "Panoramic Glass Window",
-          "En-suite Restroom",
-          "Hot Shower Geyser",
-          "Attendant on Call"
-        ]
-      }
-    ],
-    "amenities": [
-      {
-        "id": "am-1",
-        "name": "Campfire Circle & Acoustic Jams",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-2",
-        "name": "4x4 Offroad Trail Access",
-        "icon": "🚙",
-        "enabled": true
-      },
-      {
-        "id": "am-3",
-        "name": "Western Washrooms & Running Hot Water",
-        "icon": "🚿",
-        "enabled": true
-      },
-      {
-        "id": "am-4",
-        "name": "Power Backup & Charging Stations",
-        "icon": "⚡",
-        "enabled": true
-      },
-      {
-        "id": "am-5",
-        "name": "Wilderness First Aid & Oxygen Kits",
-        "icon": "🩺",
-        "enabled": true
-      }
-    ],
-    "addons": [
-      {
-        "id": "ad-1",
-        "name": "Live Campfire BBQ Platter (Chicken / Paneer)",
-        "price": 450,
-        "enabled": true
-      },
-      {
-        "id": "ad-2",
-        "name": "Private 4x4 Jeep Safari Upgrade",
-        "price": 1200,
-        "enabled": true
-      },
-      {
-        "id": "ad-3",
-        "name": "4K Cinematic Drone Video Reel",
-        "price": 1500,
-        "enabled": true
-      }
-    ],
-    "locationCoordinates": {
-      "lat": "10.0892",
-      "lng": "77.2189",
-      "mapsUrl": "https://maps.google.com/?q=Kolukkumalai+Tea+Estate",
-      "nearestTown": "Suryanelli (8 km) / Munnar (28 km)"
-    },
-    "reviews": [
-      {
-        "id": "rv-1",
-        "name": "Ananya Sharma",
-        "location": "Bengaluru",
-        "rating": 5,
-        "date": "Last weekend",
-        "comment": "The sunrise at Tiger Rock was pure magic! Sleeping in the ridge glamping tent while watching stars was breathtaking. The barbecue was mouthwatering."
-      },
-      {
-        "id": "rv-2",
-        "name": "Gokul Krishnan",
-        "location": "Kochi",
-        "rating": 5,
-        "date": "2 weeks ago",
-        "comment": "Aanandham’s team made everything seamless. The 4x4 ride is bumpy and thrilling, and the guides are extremely professional. 10/10 recommendation!"
-      },
-      {
-        "id": "rv-3",
-        "name": "Dr. Siddharth & Squad",
-        "location": "Chennai",
-        "rating": 5,
-        "date": "3 weeks ago",
-        "comment": "Best camping experience in South India. Clean washrooms, great crowd, and very safe for family and couples."
-      }
-    ]
-  },
-  {
-    "id": "pkg-meesapulimala",
-    "title": "Meesapulimala 8,661 FT Summit Cloud Bed Trek",
-    "shortTitle": "Meesapulimala Summit Trek",
-    "region": "Munnar",
-    "category": "Summit Trek",
-    "tag": "High Peak Challenge",
-    "location": "Silent Valley, Munnar, Kerala",
-    "altitude": "8,661 FT",
-    "price": 3599,
-    "originalPrice": 4600,
-    "rating": 4.99,
-    "reviewsCount": 264,
-    "duration": "2 Days / 1 Night",
-    "difficulty": "Strenuous High Peak",
-    "isAvailable": false,
-    "archived": true,
-    "status": "Archived",
-    "image": "/images/sunrise-cloud-treks.jpg",
-    "gallery": [
-      "/images/sunrise-cloud-treks.jpg",
-      "/images/munnar-mist-valley-wide.jpg",
-      "/images/high-altitude-ridge-tent.jpg",
-      "/images/stargazing-night-skies.jpg"
-    ],
-    "faqs": [
-      {
-        "q": "How difficult is the Meesapulimala trek?",
-        "a": "Moderate — the Rhodo Valley route is an 8–13 km ridge trek with sustained ascents. Achievable for regular walkers with a guide, tougher than Kolukkumalai but easier than Anamudi."
-      },
-      {
-        "q": "Do I need a permit for Meesapulimala?",
-        "a": "Yes — an ecodevelopment committee permit is required; organised treks arrange it as part of the package."
-      },
-      {
-        "q": "How long is the Meesapulimala trek?",
-        "a": "Typically 4–7 hours depending on route and pace; sunrise expeditions start around 3:30–4:00 AM."
-      },
-      {
-        "q": "Is Meesapulimala good for beginners?",
-        "a": "With an organised guide and reasonable fitness (regular 5–8 km walks), yes — but it is not a casual stroll; do Kolukkumalai first if unsure."
-      },
-      {
-        "q": "What altitude is Meesapulimala?",
-        "a": "8,660 ft — South India's second-highest peak after Anamudi."
-      }
-    ],
-    "description": "South India’s 2nd highest peak expedition. Trek across 8 rolling high-altitude hills, traverse blooming rhododendron valleys, and sleep above dense oceans of white clouds in Silent Valley basecamps.",
-    "highlights": [
-      "8-Peak High-Altitude Ridge Crossing with Certified Guides",
-      "Wilderness Basecamp Tent Glamping in Silent Valley",
-      "Official Kerala Forest Department Trek Permits Included",
-      "Campfire Acoustic Session under Milky Way Stars",
-      "Endless Rhododendron & Shola Grassland Valleys"
-    ],
-    "inclusions": [
-      "Basecamp Alpine Tent Glamping",
-      "Forest Entry & Trekking Permits",
-      "Wilderness Guide & Host",
-      "Dinner, Breakfast & Energy Trail Snacks",
-      "Campfire Evening with Hot Tea"
-    ],
-    "exclusions": [
-      "Transportation to Silent Valley pickup point",
-      "Personal trekking backpack and shoes"
-    ],
-    "itinerary": [
-      {
-        "day": "Day 1",
-        "title": "Basecamp Trek, Shola Trails & Night Camp",
-        "items": [
-          "01:00 PM – Meet at Munnar Silent Valley checkpost.",
-          "02:30 PM – Hike to basecamp with views of cascading streams.",
-          "07:00 PM – Campfire briefing & hot stew dinner."
-        ]
-      },
-      {
-        "day": "Day 2",
-        "title": "Summit Push to 8,661 FT & Return",
-        "items": [
-          "05:00 AM – Early morning summit trek across the 8 rolling ridges.",
-          "08:30 AM – Stand atop Meesapulimala Summit above the sea of clouds.",
-          "12:30 PM – Descent back to basecamp for farewell lunch."
-        ]
-      }
-    ],
-    "rooms": [
-      {
-        "id": "r4",
-        "name": "Summit Expedition Weatherproof Tent",
-        "capacity": "2 Campers",
-        "price": 3599,
-        "totalUnits": 12,
-        "bookedUnits": 5,
-        "isAvailable": true,
-        "image": "/images/sunrise-cloud-treks.jpg",
-        "features": [
-          "Double Layer Windproof Fly",
-          "Thermal Sleeping Bags",
-          "Ridge Edge Pitch",
-          "Foam Mattress"
-        ]
-      }
-    ],
-    "amenities": [
-      {
-        "id": "am-10",
-        "name": "Forest Permit & Entry Passes",
-        "icon": "🎫",
-        "enabled": true
-      },
-      {
-        "id": "am-11",
-        "name": "Wilderness Guide & Host",
-        "icon": "🧭",
-        "enabled": true
-      },
-      {
-        "id": "am-12",
-        "name": "Western Washrooms at Basecamp",
-        "icon": "🚿",
-        "enabled": true
-      }
-    ],
-    "addons": [
-      {
-        "id": "ad-5",
-        "name": "Trekking Pole & Thermal Kit Rental",
-        "price": 350,
-        "enabled": true
-      }
-    ],
-    "locationCoordinates": {
-      "lat": "10.0970",
-      "lng": "77.2023",
-      "mapsUrl": "https://maps.google.com/?q=Meesapulimala+Peak",
-      "nearestTown": "Munnar (24 km)"
-    },
-    "reviews": [
-      {
-        "id": "rv-4",
-        "name": "Karthik Rao",
-        "location": "Hyderabad",
-        "rating": 5,
-        "date": "1 month ago",
-        "comment": "Standing on peak 8 feeling the mountain breeze was an unforgettable feeling. Guides were supportive every step of the way."
-      }
-    ]
-  },
-  {
     "id": "pkg-suryanelli",
     "title": "Suryanelli Valley Tea Plantation Camping & Tent Stay",
     "shortTitle": "Suryanelli Valley Camping",
@@ -430,11 +47,10 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "description": "Immerse yourself in authentic mountain camping surrounded by cascading green tea slopes and misty sunset valleys. Enjoy clean weatherproof alpine tent stays, cozy mountain pods, campfire barbecue, guided tea trail walks, clean modern washrooms, and farm-to-table Kerala dining.",
     "highlights": [
-      "Clean Weatherproof Alpine Tents & Mountain Pods",
-      "Tea Plantation Sunset Ridge Nature Walk",
-      "Evening Campfire with Live Barbecue Grill",
-      "Hygienic Modern Washrooms with Hot Water",
-      "Farm-to-table Traditional Kerala Dinner & Breakfast"
+      "Clean Modern Washrooms",
+      "Campfire Circle",
+      "Tea Plantation Trail",
+      "Charging Stations"
     ],
     "inclusions": [
       "1 Night Tent Stay / Mountain Pod Accommodation",
@@ -474,77 +90,66 @@ export const INITIAL_ALL_CAMPS = [
       {
         "id": "r6_tent",
         "name": "Clean Alpine Camping Tent",
-        "capacity": "2-3 Campers",
         "price": 1899,
+        "basePrice": 1899,
+        "capacity": "2 Persons",
         "totalUnits": 16,
-        "bookedUnits": 5,
-        "isAvailable": true,
-        "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80",
         "features": [
           "Weatherproof Flysheet",
           "Clean Foam Mattresses & Blankets",
           "Camping Lantern",
           "Clean Modern Washrooms with Hot Water"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=600&q=80"
       },
       {
         "id": "r6_pod",
         "name": "Cozy Valley Mountain Pod",
-        "capacity": "2 Adults",
         "price": 2399,
+        "basePrice": 2399,
+        "capacity": "2 Persons",
         "totalUnits": 8,
-        "bookedUnits": 3,
-        "isAvailable": true,
-        "image": "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80",
         "features": [
           "Valley View Deck",
           "Comfortable Plush Bed",
           "Charging Points",
           "Attached Modern Clean Washroom"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80"
       },
       {
         "id": "r6_quad",
         "name": "Group Alpine Quad Tent",
-        "capacity": "4 Campers",
         "price": 1699,
+        "basePrice": 1699,
+        "capacity": "4 Persons",
         "totalUnits": 10,
-        "bookedUnits": 4,
-        "isAvailable": true,
-        "image": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80",
         "features": [
           "Spacious 4-Person Tent",
           "4 Foam Mattresses & Pillows",
           "Thermal Blankets",
           "Modern Shared Restrooms"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?auto=format&fit=crop&w=600&q=80"
       }
     ],
     "amenities": [
-      {
-        "id": "am-20",
-        "name": "Clean Modern Washrooms",
-        "icon": "🚿",
-        "enabled": true
-      },
-      {
-        "id": "am-21",
-        "name": "Campfire Circle",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-22",
-        "name": "Tea Plantation Trail",
-        "icon": "🌿",
-        "enabled": true
-      },
-      {
-        "id": "am-23",
-        "name": "Charging Stations",
-        "icon": "⚡",
-        "enabled": true
-      }
+      "Clean Modern Washrooms",
+      "Campfire Circle",
+      "Tea Plantation Trail",
+      "Charging Stations"
     ],
     "addons": [
       {
@@ -569,7 +174,194 @@ export const INITIAL_ALL_CAMPS = [
         "date": "3 weeks ago",
         "comment": "The tents were exceptionally clean and comfortable. Loved the campfire and the morning tea walk through the tea gardens!"
       }
-    ]
+    ],
+    "slug": "suryanelli",
+    "basePrice": 1899,
+    "isActive": true,
+    "name": "Suryanelli Valley Tea Plantation Camping & Tent Stay"
+  },
+  {
+    "id": "pkg-tentvilla-domes",
+    "title": "Tentvilla Resort — Kolukkumalai Luxurious Geodesic Domes",
+    "shortTitle": "Tentvilla Luxury Domes",
+    "region": "Munnar",
+    "category": "Luxury Dome Glamp",
+    "tag": "Couple’s Choice ⭐",
+    "location": "Phantom Hills / Suryanelli, Munnar, Kerala",
+    "altitude": "6,800 FT",
+    "price": 3299,
+    "originalPrice": 4500,
+    "rating": 4.99,
+    "reviewsCount": 188,
+    "duration": "2 Days / 1 Night",
+    "difficulty": "Easy Glamp",
+    "isAvailable": true,
+    "image": "/images/tentvilla/tentvilla-dome-1.jpeg",
+    "gallery": [
+      "/images/tentvilla/tentvilla-dome-1.jpeg",
+      "/images/tentvilla/tentvilla-dome-2.jpeg",
+      "/images/tentvilla/tentvilla-dome-3.jpeg",
+      "/images/tentvilla/tentvilla-dome-4.jpeg",
+      "/images/tentvilla/tentvilla-dome-5.jpeg",
+      "/images/tentvilla/tentvilla-dome-6.jpeg",
+      "/images/tentvilla/tentvilla-dome-7.jpeg",
+      "/images/tentvilla/tentvilla-dome-8.jpeg",
+      "/images/tentvilla/tentvilla-dome-9.jpeg",
+      "/images/tentvilla/tentvilla-dome-10.jpeg",
+      "/images/tentvilla/tentvilla-dome-11.jpeg",
+      "/images/tentvilla/tentvilla-dome-12.jpeg",
+      "/images/tentvilla/tentvilla-dome-13.jpeg",
+      "/images/tentvilla/tentvilla-dome-14.jpeg",
+      "/images/tentvilla/tentvilla-dome-15.jpeg",
+      "/images/tentvilla/tentvilla-dome-16.jpeg",
+      "/images/tentvilla/tentvilla-dome-17.jpeg"
+    ],
+    "faqs": [
+      {
+        "q": "What is included in the Tentvilla Geodesic Dome stay?",
+        "a": "Overnight stay in luxurious geodesic dome pod for a couple, evening tea and snacks, guided Phantom Hills sunset trek, tea plantation visit, photo point walk, evening campfire circle with music, stargazing, and authentic breakfast on Day 2."
+      },
+      {
+        "q": "Is dinner included in the package?",
+        "a": "Dinner is available on order / extra payment at the camp dining bay with traditional Kerala dishes and BBQ options."
+      },
+      {
+        "q": "Is Kolukkumalai Sunrise 4x4 Jeep Safari available?",
+        "a": "Yes! Kolukkumalai dawn 4x4 jeep safari to the sunrise viewpoint is available as a special add-on on extra payment."
+      },
+      {
+        "q": "Are washrooms private and attached to the domes?",
+        "a": "Yes, every geodesic dome pod at Tentvilla features an attached private en-suite western restroom with running hot water."
+      }
+    ],
+    "description": "Greetings from Tentvilla Resort Munnar! Introducing Kolukkumalai’s first luxurious geodesic dome pods perched atop the scenic Phantom Hills ridge. Experience romantic panoramic cloud vistas, guided sunset peak treks, lush tea plantation walks, roaring campfires with music, midnight stargazing, and optional dawn 4x4 Kolukkumalai sunrise convoys.",
+    "highlights": [
+      "Kolukkumalai Panoramic View",
+      "Private En-suite Bathrooms",
+      "Evening Campfire & Music",
+      "Phantom Hills Sunset Trek",
+      "Tea Plantation Trail Walk",
+      "24/7 Power Backup & Security"
+    ],
+    "inclusions": [
+      "1 Night Stay in Luxurious Geodesic Dome Pod (Couple / 2 Adults)",
+      "Evening Spiced Tea & Traditional Hot Snacks",
+      "Guided Phantom Hills Sunset Hike & Plantation Trail",
+      "Evening Campfire Circle & Ambient Music Session",
+      "Stargazing under Pristine High-Altitude Night Skies",
+      "Traditional Mountain Breakfast on Day 2"
+    ],
+    "exclusions": [
+      "Dinner (Available on a la carte / extra payment)",
+      "Kolukkumalai 4x4 Jeep Safari & Sunrise Entry (Available on extra payment)",
+      "Personal transport to Tentvilla Basecamp in Suryanelli"
+    ],
+    "itinerary": [
+      {
+        "day": "Day 1",
+        "title": "Check-in, Phantom Hills Sunset Trek & Campfire",
+        "items": [
+          "02:00 PM – Arrival at Tentvilla Resort Munnar & welcome check-in to Luxurious Geodesic Dome.",
+          "04:00 PM – Evening hot tea, local snacks & campsite orientation.",
+          "04:30 PM – Guided evening sunset hike to Phantom Hills & tea plantation visit.",
+          "05:45 PM – Witness the breathtaking Phantom Hills sunset & photo point stops.",
+          "07:30 PM – Campfire circle lighting, ambient music & midnight stargazing.",
+          "08:30 PM – Dinner buffet / barbecue (available on extra payment).",
+          "10:30 PM – Overnight romantic rest in insulated luxury dome pod."
+        ]
+      },
+      {
+        "day": "Day 2",
+        "title": "Kolukkumalai Sunrise Safari & Hot Breakfast",
+        "items": [
+          "04:30 AM – Optional 4x4 Jeep Safari climb to Kolukkumalai Sunrise (extra payment).",
+          "06:15 AM – Watch the legendary golden cloud bed sunrise from Kolukkumalai peak.",
+          "08:30 AM – Return to Tentvilla for authentic hot mountain breakfast.",
+          "11:00 AM – Check-out with unforgettable wilderness memories."
+        ]
+      }
+    ],
+    "rooms": [
+      {
+        "id": "r-tv-dome",
+        "name": "Luxurious Geodesic Dome Pod",
+        "price": 3299,
+        "basePrice": 3299,
+        "capacity": "2 Persons",
+        "totalUnits": 6,
+        "features": [
+          "Panoramic Cloud Vista Window",
+          "Plush King Size Bed",
+          "Private En-suite Restroom",
+          "Thermal Blankets",
+          "Charging Station",
+          "Private Deck"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/tentvilla/tentvilla-dome-1.jpeg"
+      }
+    ],
+    "amenities": [
+      "Kolukkumalai Panoramic View",
+      "Private En-suite Bathrooms",
+      "Evening Campfire & Music",
+      "Phantom Hills Sunset Trek",
+      "Tea Plantation Trail Walk",
+      "24/7 Power Backup & Security"
+    ],
+    "addons": [
+      {
+        "id": "ad-tv-safari",
+        "name": "Kolukkumalai 4x4 Sunrise Jeep Safari (Per Couple / Batch)",
+        "price": 2500,
+        "enabled": true
+      },
+      {
+        "id": "ad-tv-dinner",
+        "name": "Campfire BBQ Dinner Buffet (Per Person)",
+        "price": 450,
+        "perPerson": true,
+        "enabled": true
+      },
+      {
+        "id": "ad-tv-drone",
+        "name": "4K Cinematic Drone Video Reel",
+        "price": 1500,
+        "enabled": true
+      }
+    ],
+    "policyNote": "Couple friendly & family sanctuary. Check-in 02:00 PM, Check-out 11:00 AM. Dinner & Kolukkumalai Jeep Safari available on extra payment at basecamp.",
+    "locationCoordinates": {
+      "lat": "10.0336",
+      "lng": "77.1624",
+      "mapsUrl": "https://maps.google.com/?q=Tentvilla+Resort+Munnar",
+      "nearestTown": "Suryanelli (4 km) / Munnar (24 km)"
+    },
+    "reviews": [
+      {
+        "id": "rv-tv1",
+        "name": "Arjun & Sneha",
+        "location": "Bengaluru",
+        "rating": 5,
+        "date": "Last weekend",
+        "comment": "The luxurious geodesic dome was surreal! Waking up to misty valleys from bed and the Phantom Hills sunset walk was pure magic. ₹6,000 for couple is totally worth it."
+      },
+      {
+        "id": "rv-tv2",
+        "name": "Rohit Verma",
+        "location": "Hyderabad",
+        "rating": 5,
+        "date": "2 weeks ago",
+        "comment": "Tentvilla is top-notch. Clean en-suite washrooms, great campfire and music vibes, and the Kolukkumalai jeep safari at dawn was unbelievable!"
+      }
+    ],
+    "slug": "tentvilla-domes",
+    "basePrice": 3299,
+    "isActive": true,
+    "name": "Tentvilla Resort — Kolukkumalai Luxurious Geodesic Domes"
   },
   {
     "id": "pkg-mini-mexico",
@@ -618,12 +410,12 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "description": "Escape to the serene hills of Vattavada and experience nature at its purest. Whether you are looking for cozy cabin stays, pet-friendly tent camping, or off-road mountain adventure, Mini Mexico offers an unforgettable retreat amidst vegetable-terraced valleys, strawberry farms, and misty eucalyptus ridges. All base packages include dinner and breakfast, with access to panoramic view points and complimentary campfire.",
     "highlights": [
-      "100% Pet-Friendly Wilderness Sanctuary & Mountain Retreat",
-      "Cozy Rustic Wood House & Alpine Cabin Stays with Valley Views",
-      "Complimentary Hilltop View Point & Organic Farm Visit",
-      "Included Dinner (Ghee Rice / Chapati with Chicken Curry) & Hot Breakfast",
-      "Complimentary 1-Hour Campfire with Extra Duration Options",
-      "Shola National Park Forest Walks & 4x4 Off-Road Trail Rides on Request"
+      "100% Pet Friendly Property 🐾",
+      "Hilltop View Point & Farm Visit",
+      "Complimentary Campfire (1 Hour)",
+      "Western Washrooms with Hot Water",
+      "On-Site 2WD & 4WD Parking",
+      "Shola National Park Access Nearby"
     ],
     "inclusions": [
       "1 Night Stay (Wood House / Cabin / Alpine Tent)",
@@ -673,95 +465,74 @@ export const INITIAL_ALL_CAMPS = [
       {
         "id": "r-vattavada-woodhouse",
         "name": "Rustic Wood House (Couple Deal: ₹5,400 | Group: ₹2,400/head)",
-        "capacity": "2 - 6 Guests",
         "price": 2400,
-        "couplePrice": 5400,
+        "basePrice": 2400,
+        "capacity": "2 Persons",
         "totalUnits": 4,
-        "bookedUnits": 1,
-        "isAvailable": true,
-        "image": "/images/mini-mexico/mini-mexico-main.jpg",
         "features": [
           "Private Wood House",
           "Valley Deck",
           "En-suite Restroom",
           "Dinner & Breakfast Included",
           "Pet Friendly",
-          "Couple Deal ₹5,400 / Group ₹2,400 pp"
-        ]
+          "Couple Deal ₹5",
+          "400 / Group ₹2",
+          "400 pp"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/mini-mexico/mini-mexico-main.jpg"
       },
       {
         "id": "r-vattavada-cabin",
         "name": "Cozy Mountain Cabin (Couple Deal: ₹5,400 | Group: ₹2,400/head)",
-        "capacity": "2 - 4 Guests",
         "price": 2400,
-        "couplePrice": 5400,
+        "basePrice": 2400,
+        "capacity": "2 Persons",
         "totalUnits": 4,
-        "bookedUnits": 1,
-        "isAvailable": true,
-        "image": "/images/mini-mexico/mini-mexico-sunset-gazebo.jpg",
         "features": [
           "Cozy Wooden Cabin",
           "Balcony Mountain View",
           "En-suite Restroom",
           "Dinner & Breakfast Included",
           "Pet Friendly"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/mini-mexico/mini-mexico-sunset-gazebo.jpg"
       },
       {
         "id": "r-vattavada-tent",
         "name": "Alpine Tent Camping (₹1,900 per head)",
-        "capacity": "2 - 4 Campers",
         "price": 1900,
+        "basePrice": 1900,
+        "capacity": "2 Persons",
         "totalUnits": 10,
-        "bookedUnits": 2,
-        "isAvailable": true,
-        "image": "/images/mini-mexico/mini-mexico-alpine-tent.jpg",
         "features": [
           "Weatherproof Alpine Tent",
           "Foam Mattress & Warm Blankets",
           "Dinner & Breakfast Included",
           "Shared Clean Restrooms",
           "Campfire Circle Access"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/mini-mexico/mini-mexico-alpine-tent.jpg"
       }
     ],
     "amenities": [
-      {
-        "id": "am-v1",
-        "name": "100% Pet Friendly Property 🐾",
-        "icon": "🐾",
-        "enabled": true
-      },
-      {
-        "id": "am-v2",
-        "name": "Hilltop View Point & Farm Visit",
-        "icon": "🌿",
-        "enabled": true
-      },
-      {
-        "id": "am-v3",
-        "name": "Complimentary Campfire (1 Hour)",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-v4",
-        "name": "Western Washrooms with Hot Water",
-        "icon": "🚿",
-        "enabled": true
-      },
-      {
-        "id": "am-v5",
-        "name": "On-Site 2WD & 4WD Parking",
-        "icon": "🚗",
-        "enabled": true
-      },
-      {
-        "id": "am-v6",
-        "name": "Shola National Park Access Nearby",
-        "icon": "🌲",
-        "enabled": true
-      }
+      "100% Pet Friendly Property 🐾",
+      "Hilltop View Point & Farm Visit",
+      "Complimentary Campfire (1 Hour)",
+      "Western Washrooms with Hot Water",
+      "On-Site 2WD & 4WD Parking",
+      "Shola National Park Access Nearby"
     ],
     "addons": [
       {
@@ -822,7 +593,115 @@ export const INITIAL_ALL_CAMPS = [
         "date": "2 weeks ago",
         "comment": "Vattavada is untouched beauty. The farm walk and hilltop sunset view were peaceful. Excellent host hospitality."
       }
-    ]
+    ],
+    "slug": "mini-mexico",
+    "basePrice": 1900,
+    "isActive": true,
+    "name": "Mini Mexico — Vattavada Cabins, Wood House & Tent Camp"
+  },
+  {
+    "id": "cmu7f7c7q0001jf2bn12igi66",
+    "title": "The Nest Kalga by Aanandham.Go",
+    "shortTitle": "The Nest Kalga by Aanandham.Go",
+    "slug": null,
+    "category": "Cottage",
+    "region": "Himachal",
+    "location": "Kalga, Kasol, Himachal",
+    "altitude": "7,900 FT",
+    "basePrice": 249,
+    "rating": 5,
+    "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
+    "gallery": [
+      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "description": "Authentic mountain sanctuary glamping experience curated by certified camp staff.",
+    "inclusions": [
+      "Welcome Drink",
+      "Dinner & Breakfast",
+      "Guided Ridge Trek",
+      "Tent Stay"
+    ],
+    "exclusions": [
+      "Personal transport to basecamp"
+    ],
+    "amenities": "",
+    "isActive": true,
+    "rooms": [
+      {
+        "id": "cmuaweojn004uig2aslbw88li",
+        "name": "Deluxe Suite",
+        "price": 1199,
+        "basePrice": 1199,
+        "capacity": "3 Persons",
+        "totalUnits": 3,
+        "features": [
+          "Single Bed",
+          "High-Speed Wi-Fi",
+          "Hot Water Geyser",
+          "Daily Housekeeping"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        "id": "cmuaweojn004vig2ajjgp2uld",
+        "name": "Deluxe Balcony Room",
+        "price": 1499,
+        "basePrice": 1499,
+        "capacity": "3 Persons",
+        "totalUnits": 2,
+        "features": [
+          "2 Twin Beds",
+          "Mountain View Window",
+          "Hot Shower Geyser",
+          "Wi-Fi",
+          "Work Desk",
+          "Hot Water Geyser",
+          "Scenic Mountain View",
+          "Scenic Balcony",
+          "High-Speed Wi-Fi"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "2 Twin Beds (2 Guests)",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        "id": "cmuaweojn004wig2a498i1pso",
+        "name": "10-Bed Mixed Mountain Dorm",
+        "price": 249,
+        "basePrice": 249,
+        "capacity": "12 Persons",
+        "totalUnits": 1,
+        "features": [
+          "Bunk Reading Lights & USB",
+          "Shared Hot Showers",
+          "Wi-Fi",
+          "Smart TV",
+          "Hot Water Geyser",
+          "High-Speed Wi-Fi"
+        ],
+        "inventoryType": "DORM_BED",
+        "bedConfig": "1 Single Bed (1 Guest)",
+        "bathroomType": "Shared / Common Restroom",
+        "pricingModel": "PER_BED",
+        "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80"
+      }
+    ],
+    "name": "The Nest Kalga by Aanandham.Go",
+    "price": 249,
+    "originalPrice": 324,
+    "highlights": [
+      "Panoramic Sunrise View",
+      "Campfire & BBQ",
+      "Staff Guide Support",
+      "Solar Powered Stay"
+    ],
+    "isAvailable": true
   },
   {
     "id": "pkg-wildlink",
@@ -887,12 +766,12 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "description": "Experience sustainable farm camping perched at 7,000 ft above MSL in Pazhathottam, Vattavada, bordered by the lush greens of Pampadum Shola National Park. A 7-acre eco-friendly community haven crafted for authentic mountain living, tranquility, and nature immersion.",
     "highlights": [
-      "Sustainable 7-Acre Farm Camping Sanctuary at 7,000 FT MSL",
-      "Bordering Pristine Pampadum Shola National Park Forest",
-      "Hilltop Viewpoint & Sunset Walk across Organic Farmlands",
-      "Included Veg Dinner (Chapathi + Curries) & South Indian Breakfast",
-      "Farm-to-Table Experience (Strawberries, Garlic, Cabbage Orchards)",
-      "100% Pet-Friendly Community Grounds with Campfire Circle"
+      "7-Acre Eco Farm Sanctuary",
+      "100% Pet Friendly Grounds 🐾",
+      "Evening Community Campfire",
+      "Sunrise Mountain Peak Trek",
+      "Pampadum Shola Exploration",
+      "Safe 2WD / 4WD Parking On-Site"
     ],
     "inclusions": [
       "1 Night Accommodation (Standard Camping Tent / Wood Cabin)",
@@ -939,93 +818,71 @@ export const INITIAL_ALL_CAMPS = [
       {
         "id": "r-wildlink-tent",
         "name": "Standard Farm Tent Camping (₹1,899 per head)",
-        "capacity": "2 - 4 Campers",
         "price": 1899,
+        "basePrice": 1899,
+        "capacity": "2 Persons",
         "totalUnits": 12,
-        "bookedUnits": 2,
-        "isAvailable": true,
-        "image": "/images/wildlinks/wildlink_7.jpg",
         "features": [
           "High-Altitude Camping Tent",
           "Foam Mattress & Warm Blankets",
           "Dinner & Breakfast Included",
           "Campfire Circle Access",
           "Pet Friendly"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/wildlinks/wildlink_7.jpg"
       },
       {
         "id": "r-wildlink-cabin",
         "name": "Shola View Wood Cabin (Couple Deal: ₹5,400 | Group: ₹2,400/head)",
-        "capacity": "2 - 4 Guests",
         "price": 2400,
-        "couplePrice": 5400,
+        "basePrice": 2400,
+        "capacity": "2 Persons",
         "totalUnits": 4,
-        "bookedUnits": 1,
-        "isAvailable": true,
-        "image": "/images/wildlinks/wildlink_1.jpg",
         "features": [
           "Rustic Wood Cabin",
           "Shola Forest Views",
           "En-suite Restroom",
           "Dinner & Breakfast Included",
           "Pet Friendly"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/wildlinks/wildlink_1.jpg"
       },
       {
         "id": "r-wildlink-cottage",
         "name": "Panoramic Farm Cottage (₹2,900 per head)",
-        "capacity": "2 - 6 Guests",
         "price": 2900,
+        "basePrice": 2900,
+        "capacity": "2 Persons",
         "totalUnits": 2,
-        "bookedUnits": 0,
-        "isAvailable": true,
-        "image": "/images/wildlinks/wildlink_16.jpg",
         "features": [
           "Panoramic Deck Overlook",
           "Spacious Living Area",
           "En-suite Hot Shower",
           "Dinner & Breakfast Included",
           "Couple & Family Friendly"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/wildlinks/wildlink_16.jpg"
       }
     ],
     "amenities": [
-      {
-        "id": "am-wl1",
-        "name": "7-Acre Eco Farm Sanctuary",
-        "icon": "🌿",
-        "enabled": true
-      },
-      {
-        "id": "am-wl2",
-        "name": "100% Pet Friendly Grounds 🐾",
-        "icon": "🐾",
-        "enabled": true
-      },
-      {
-        "id": "am-wl3",
-        "name": "Evening Community Campfire",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-wl4",
-        "name": "Sunrise Mountain Peak Trek",
-        "icon": "⛰️",
-        "enabled": true
-      },
-      {
-        "id": "am-wl5",
-        "name": "Pampadum Shola Exploration",
-        "icon": "🌲",
-        "enabled": true
-      },
-      {
-        "id": "am-wl6",
-        "name": "Safe 2WD / 4WD Parking On-Site",
-        "icon": "🚗",
-        "enabled": true
-      }
+      "7-Acre Eco Farm Sanctuary",
+      "100% Pet Friendly Grounds 🐾",
+      "Evening Community Campfire",
+      "Sunrise Mountain Peak Trek",
+      "Pampadum Shola Exploration",
+      "Safe 2WD / 4WD Parking On-Site"
     ],
     "addons": [
       {
@@ -1079,220 +936,307 @@ export const INITIAL_ALL_CAMPS = [
         "date": "2 weeks ago",
         "comment": "Peaceful tranquility bordering the Shola national park. Our dog had the best weekend of his life."
       }
-    ]
+    ],
+    "slug": "wildlink",
+    "basePrice": 1899,
+    "isActive": true,
+    "name": "Camp Wildlink — 7-Acre Sustainable Farm Camping & Shola Wilderness"
   },
   {
-    "id": "pkg-tentvilla-domes",
-    "title": "Tentvilla Resort — Kolukkumalai Luxurious Geodesic Domes",
-    "shortTitle": "Tentvilla Luxury Domes",
+    "id": "pkg-meesapulimala",
+    "title": "Meesapulimala 8,661 FT Summit Cloud Bed Trek",
+    "shortTitle": "Meesapulimala Summit Trek",
+    "slug": "meesapulimala",
+    "category": "Summit Trek",
     "region": "Munnar",
-    "category": "Luxury Dome Glamp",
-    "tag": "Couple’s Choice ⭐",
-    "location": "Phantom Hills / Suryanelli, Munnar, Kerala",
-    "altitude": "6,800 FT",
-    "price": 3299,
-    "originalPrice": 4500,
+    "location": "Silent Valley, Munnar, Kerala",
+    "altitude": "8,661 FT",
+    "basePrice": 3599,
     "rating": 4.99,
-    "reviewsCount": 188,
-    "duration": "2 Days / 1 Night",
-    "difficulty": "Easy Glamp",
-    "isAvailable": true,
-    "image": "/images/tentvilla/tentvilla-dome-1.jpeg",
+    "image": "/images/sunrise-cloud-treks.jpg",
     "gallery": [
-      "/images/tentvilla/tentvilla-dome-1.jpeg",
-      "/images/tentvilla/tentvilla-dome-2.jpeg",
-      "/images/tentvilla/tentvilla-dome-3.jpeg",
-      "/images/tentvilla/tentvilla-dome-4.jpeg",
-      "/images/tentvilla/tentvilla-dome-5.jpeg",
-      "/images/tentvilla/tentvilla-dome-6.jpeg",
-      "/images/tentvilla/tentvilla-dome-7.jpeg",
-      "/images/tentvilla/tentvilla-dome-8.jpeg",
-      "/images/tentvilla/tentvilla-dome-9.jpeg",
-      "/images/tentvilla/tentvilla-dome-10.jpeg",
-      "/images/tentvilla/tentvilla-dome-11.jpeg",
-      "/images/tentvilla/tentvilla-dome-12.jpeg",
-      "/images/tentvilla/tentvilla-dome-13.jpeg",
-      "/images/tentvilla/tentvilla-dome-14.jpeg",
-      "/images/tentvilla/tentvilla-dome-15.jpeg",
-      "/images/tentvilla/tentvilla-dome-16.jpeg",
-      "/images/tentvilla/tentvilla-dome-17.jpeg"
+      "/images/sunrise-cloud-treks.jpg",
+      "/images/munnar-mist-valley-wide.jpg",
+      "/images/high-altitude-ridge-tent.jpg",
+      "/images/stargazing-night-skies.jpg"
+    ],
+    "description": "South India’s 2nd highest peak expedition. Trek across 8 rolling high-altitude hills, traverse blooming rhododendron valleys, and sleep above dense oceans of white clouds in Silent Valley basecamps.",
+    "inclusions": [
+      "Basecamp Alpine Tent Glamping",
+      "Forest Entry & Trekking Permits",
+      "Wilderness Guide & Host",
+      "Dinner, Breakfast & Energy Trail Snacks",
+      "Campfire Evening with Hot Tea"
+    ],
+    "exclusions": [
+      "Transportation to Silent Valley pickup point",
+      "Personal trekking backpack and shoes"
+    ],
+    "amenities": [
+      "Forest Permit & Entry Passes",
+      "Wilderness Guide & Host",
+      "Western Washrooms at Basecamp"
+    ],
+    "isActive": true,
+    "rooms": [
+      {
+        "id": "r4",
+        "name": "Summit Expedition Weatherproof Tent",
+        "price": 3599,
+        "basePrice": 3599,
+        "capacity": "2 Persons",
+        "totalUnits": 12,
+        "features": [
+          "Double Layer Windproof Fly",
+          "Thermal Sleeping Bags",
+          "Ridge Edge Pitch",
+          "Foam Mattress"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/sunrise-cloud-treks.jpg"
+      }
+    ],
+    "name": "Meesapulimala 8,661 FT Summit Cloud Bed Trek",
+    "price": 3599,
+    "originalPrice": 4679,
+    "highlights": [
+      "Forest Permit & Entry Passes",
+      "Wilderness Guide & Host",
+      "Western Washrooms at Basecamp"
+    ],
+    "isAvailable": true
+  },
+  {
+    "id": "pkg-kolukkumalai",
+    "title": "Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp",
+    "shortTitle": "Kolukkumalai Sunrise Ridge",
+    "region": "Munnar",
+    "category": "Summit Trek & Glamp",
+    "tag": "Bestseller ⭐",
+    "location": "Suryanelli / Kolukkumalai, Munnar, Kerala",
+    "altitude": "7,900 FT",
+    "price": 2899,
+    "originalPrice": 3600,
+    "rating": 4.98,
+    "reviewsCount": 342,
+    "duration": "2 Days / 1 Night",
+    "difficulty": "Moderate Offroad",
+    "isAvailable": true,
+    "image": "/images/high-altitude-4x4-convoy.jpg",
+    "gallery": [
+      "/images/high-altitude-4x4-convoy.jpg",
+      "/images/kolukkumalai-jeep-safari-primary.jpg",
+      "/images/kolukkumalai-jeep-trail-mist.jpg",
+      "/images/kolukkumalai-sunrise-peak-glow.jpg",
+      "/images/kolukkumalai-mountain-view.jpg",
+      "/images/kolukkumalai-cloudbed-dome.webp",
+      "/images/kolukkumalai-camping-area.jpg",
+      "/images/kolukkumalai-cozy-tent-stay.jpg",
+      "/images/kolukkumalai-ridge-camp-scenic.jpg"
     ],
     "faqs": [
       {
-        "q": "What is included in the Tentvilla Geodesic Dome stay?",
-        "a": "Overnight stay in luxurious geodesic dome pod for a couple, evening tea and snacks, guided Phantom Hills sunset trek, tea plantation visit, photo point walk, evening campfire circle with music, stargazing, and authentic breakfast on Day 2."
+        "q": "What time does the Kolukkumalai sunrise trek start?",
+        "a": "You leave basecamp at 4:30–4:45 AM in a 4x4 jeep to reach the ridge before sunrise (5:45–6:15 AM depending on season)."
       },
       {
-        "q": "Is dinner included in the package?",
-        "a": "Dinner is available on order / extra payment at the camp dining bay with traditional Kerala dishes and BBQ options."
+        "q": "Is the Kolukkumalai trek difficult?",
+        "a": "The jeep-and-summit version is easy to moderate — a 20–30 minute rocky climb to the top after the jeep drop. Full-hike versions are longer and best for experienced trekkers."
       },
       {
-        "q": "Is Kolukkumalai Sunrise 4x4 Jeep Safari available?",
-        "a": "Yes! Kolukkumalai dawn 4x4 jeep safari to the sunrise viewpoint is available as a special add-on on extra payment."
+        "q": "Do I need a permit for Kolukkumalai?",
+        "a": "No official permit is needed, but estate access is controlled; booked expeditions handle entry through the organised jeep route."
       },
       {
-        "q": "Are washrooms private and attached to the domes?",
-        "a": "Yes, every geodesic dome pod at Tentvilla features an attached private en-suite western restroom with running hot water."
+        "q": "What is included in the Kolukkumalai package?",
+        "a": "The package includes 4x4 jeep transfers, summit sunrise trek, ridge glamping/alpine tent stay, dinner BBQ, breakfast, camp staff guides, and forest permits."
+      },
+      {
+        "q": "Can solo travelers join the Kolukkumalai sunrise trek?",
+        "a": "Yes — the expedition runs in shared jeep batches with camp staff and is popular with solo travelers; we host 350+ solo female campers annually."
       }
     ],
-    "description": "Greetings from Tentvilla Resort Munnar! Introducing Kolukkumalai’s first luxurious geodesic dome pods perched atop the scenic Phantom Hills ridge. Experience romantic panoramic cloud vistas, guided sunset peak treks, lush tea plantation walks, roaring campfires with music, midnight stargazing, and optional dawn 4x4 Kolukkumalai sunrise convoys.",
+    "description": "Perched high above the legendary rolling cloud beds of Suryanelli, Kolukkumalai is home to the world’s highest organic tea plantations. This signature glamping expedition combines high-altitude ridge glamping tents, a private 4x4 rugged Jeep climb at dawn to Tiger Rock, roaring campfire barbecues, and starlit midnight acoustic jams.",
     "highlights": [
-      "Kolukkumalai’s First Luxurious Geodesic Domes (Couple Sanctuary)",
-      "Guided Phantom Hills Sunset Trek & Tea Plantation Walk",
-      "Scenic Photo Point Visits with Panoramic Valley Backdrops",
-      "Evening Campfire Circle, Ambient Music & Stargazing",
-      "Complimentary Evening Spiced Tea, Snacks & Hot Breakfast",
-      "Optional Dawn 4x4 Jeep Safari to Kolukkumalai Sunrise Peak"
+      "Campfire Circle & Acoustic Jams",
+      "4x4 Offroad Trail Access",
+      "Western Washrooms & Running Hot Water",
+      "Power Backup & Charging Stations",
+      "Wilderness First Aid & Oxygen Kits"
     ],
     "inclusions": [
-      "1 Night Stay in Luxurious Geodesic Dome Pod (Couple / 2 Adults)",
-      "Evening Spiced Tea & Traditional Hot Snacks",
-      "Guided Phantom Hills Sunset Hike & Plantation Trail",
-      "Evening Campfire Circle & Ambient Music Session",
-      "Stargazing under Pristine High-Altitude Night Skies",
-      "Traditional Mountain Breakfast on Day 2"
+      "1 Night Accommodation (Ridge Glamping / Alpine Tent)",
+      "4x4 Off-Road Jeep Safari to Kolukkumalai Sunrise Point",
+      "Evening Campfire with Live Barbecue (Chicken / Paneer)",
+      "Buffet Dinner (Authentic Kerala Cuisine) & Hot Mountain Breakfast",
+      "Forest Department Permits & Certified Trek Guides",
+      "Clean Western Washrooms with Hot Water Facilities"
     ],
     "exclusions": [
-      "Dinner (Available on a la carte / extra payment)",
-      "Kolukkumalai 4x4 Jeep Safari & Sunrise Entry (Available on extra payment)",
-      "Personal transport to Tentvilla Basecamp in Suryanelli"
+      "Transportation to reporting basecamp (Suryanelli town)",
+      "Personal trekking gear and personal snacking",
+      "Tips and gratuities for safari drivers & camp crew"
     ],
     "itinerary": [
       {
         "day": "Day 1",
-        "title": "Check-in, Phantom Hills Sunset Trek & Campfire",
+        "title": "Check-in, Sunset Ridge Walk & Campfire BBQ",
         "items": [
-          "02:00 PM – Arrival at Tentvilla Resort Munnar & welcome check-in to Luxurious Geodesic Dome.",
-          "04:00 PM – Evening hot tea, local snacks & campsite orientation.",
-          "04:30 PM – Guided evening sunset hike to Phantom Hills & tea plantation visit.",
-          "05:45 PM – Witness the breathtaking Phantom Hills sunset & photo point stops.",
-          "07:30 PM – Campfire circle lighting, ambient music & midnight stargazing.",
-          "08:30 PM – Dinner buffet / barbecue (available on extra payment).",
-          "10:30 PM – Overnight romantic rest in insulated luxury dome pod."
+          "02:00 PM – Arrival at Suryanelli Basecamp & welcome organic spiced tea.",
+          "03:00 PM – Tent / Glamp allocation and briefing by camp staff.",
+          "04:30 PM – Guided sunset nature hike along Phantom Hill Ridge.",
+          "07:00 PM – Roaring campfire lighting with live acoustic jam session.",
+          "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.",
+          "10:30 PM – Stargazing under zero light pollution skies & overnight rest."
         ]
       },
       {
         "day": "Day 2",
-        "title": "Kolukkumalai Sunrise Safari & Hot Breakfast",
+        "title": "Kolukkumalai Sunrise 4x4 Safari & Tea Tasting",
         "items": [
-          "04:30 AM – Optional 4x4 Jeep Safari climb to Kolukkumalai Sunrise (extra payment).",
-          "06:15 AM – Watch the legendary golden cloud bed sunrise from Kolukkumalai peak.",
-          "08:30 AM – Return to Tentvilla for authentic hot mountain breakfast.",
+          "04:30 AM – Wake up & hot black tea briefing.",
+          "05:00 AM – 4x4 Rugged Jeep climb to Kolukkumalai Tiger Rock (7,900 FT).",
+          "06:15 AM – Witness the legendary golden cloud bed sunrise over Tamil Nadu plains.",
+          "08:00 AM – Visit the historic 1935 orthodox tea factory for tasting.",
+          "09:30 AM – Return to basecamp for traditional Kerala breakfast.",
           "11:00 AM – Check-out with unforgettable wilderness memories."
         ]
       }
     ],
     "rooms": [
       {
-        "id": "r-tv-dome",
-        "name": "Luxurious Geodesic Dome Pod",
-        "capacity": "2 Adults (1 Couple)",
-        "price": 3299,
-        "totalUnits": 6,
-        "bookedUnits": 2,
-        "isAvailable": true,
-        "image": "/images/tentvilla/tentvilla-dome-1.jpeg",
+        "id": "r1",
+        "name": "Ridge Glamping Tent",
+        "price": 2899,
+        "basePrice": 2899,
+        "capacity": "2 Persons",
+        "totalUnits": 8,
         "features": [
-          "Panoramic Cloud Vista Window",
-          "Plush King Size Bed",
-          "Private En-suite Restroom",
+          "Valley Facing Deck",
+          "King Size Bed",
+          "En-suite Restroom",
           "Thermal Blankets",
-          "Charging Station",
-          "Private Deck"
-        ]
+          "Charging Station"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/high-altitude-ridge-tent.jpg"
+      },
+      {
+        "id": "r2",
+        "name": "Alpine Tent",
+        "price": 2199,
+        "basePrice": 2199,
+        "capacity": "4 Persons",
+        "totalUnits": 14,
+        "features": [
+          "Waterproof Flysheet",
+          "Foam Mattress & Sleeping Bag",
+          "Camping Lantern",
+          "Shared Modern Washrooms"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/kolukkumalai-camping-area.jpg"
+      },
+      {
+        "id": "r3",
+        "name": "Wooden A-Frame Cabin",
+        "price": 3899,
+        "basePrice": 3899,
+        "capacity": "3 Persons",
+        "totalUnits": 3,
+        "features": [
+          "Private Timber Deck",
+          "Panoramic Glass Window",
+          "En-suite Restroom",
+          "Hot Shower Geyser",
+          "Attendant on Call"
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/kolukkumalai-mountain-view.jpg"
       }
     ],
     "amenities": [
-      {
-        "id": "am-tv1",
-        "name": "Kolukkumalai Panoramic View",
-        "icon": "⛰️",
-        "enabled": true
-      },
-      {
-        "id": "am-tv2",
-        "name": "Private En-suite Bathrooms",
-        "icon": "🚿",
-        "enabled": true
-      },
-      {
-        "id": "am-tv3",
-        "name": "Evening Campfire & Music",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-tv4",
-        "name": "Phantom Hills Sunset Trek",
-        "icon": "🌄",
-        "enabled": true
-      },
-      {
-        "id": "am-tv5",
-        "name": "Tea Plantation Trail Walk",
-        "icon": "🍃",
-        "enabled": true
-      },
-      {
-        "id": "am-tv6",
-        "name": "24/7 Power Backup & Security",
-        "icon": "⚡",
-        "enabled": true
-      }
+      "Campfire Circle & Acoustic Jams",
+      "4x4 Offroad Trail Access",
+      "Western Washrooms & Running Hot Water",
+      "Power Backup & Charging Stations",
+      "Wilderness First Aid & Oxygen Kits"
     ],
     "addons": [
       {
-        "id": "ad-tv-safari",
-        "name": "Kolukkumalai 4x4 Sunrise Jeep Safari (Per Couple / Batch)",
-        "price": 2500,
-        "enabled": true
-      },
-      {
-        "id": "ad-tv-dinner",
-        "name": "Campfire BBQ Dinner Buffet (Per Person)",
+        "id": "ad-1",
+        "name": "Live Campfire BBQ Platter (Chicken / Paneer)",
         "price": 450,
-        "perPerson": true,
         "enabled": true
       },
       {
-        "id": "ad-tv-drone",
+        "id": "ad-2",
+        "name": "Private 4x4 Jeep Safari Upgrade",
+        "price": 1200,
+        "enabled": true
+      },
+      {
+        "id": "ad-3",
         "name": "4K Cinematic Drone Video Reel",
         "price": 1500,
         "enabled": true
       }
     ],
-    "policyNote": "Couple friendly & family sanctuary. Check-in 02:00 PM, Check-out 11:00 AM. Dinner & Kolukkumalai Jeep Safari available on extra payment at basecamp.",
     "locationCoordinates": {
-      "lat": "10.0336",
-      "lng": "77.1624",
-      "mapsUrl": "https://maps.google.com/?q=Tentvilla+Resort+Munnar",
-      "nearestTown": "Suryanelli (4 km) / Munnar (24 km)"
+      "lat": "10.0892",
+      "lng": "77.2189",
+      "mapsUrl": "https://maps.google.com/?q=Kolukkumalai+Tea+Estate",
+      "nearestTown": "Suryanelli (8 km) / Munnar (28 km)"
     },
     "reviews": [
       {
-        "id": "rv-tv1",
-        "name": "Arjun & Sneha",
+        "id": "rv-1",
+        "name": "Ananya Sharma",
         "location": "Bengaluru",
         "rating": 5,
         "date": "Last weekend",
-        "comment": "The luxurious geodesic dome was surreal! Waking up to misty valleys from bed and the Phantom Hills sunset walk was pure magic. ₹6,000 for couple is totally worth it."
+        "comment": "The sunrise at Tiger Rock was pure magic! Sleeping in the ridge glamping tent while watching stars was breathtaking. The barbecue was mouthwatering."
       },
       {
-        "id": "rv-tv2",
-        "name": "Rohit Verma",
-        "location": "Hyderabad",
+        "id": "rv-2",
+        "name": "Gokul Krishnan",
+        "location": "Kochi",
         "rating": 5,
         "date": "2 weeks ago",
-        "comment": "Tentvilla is top-notch. Clean en-suite washrooms, great campfire and music vibes, and the Kolukkumalai jeep safari at dawn was unbelievable!"
+        "comment": "Aanandham’s team made everything seamless. The 4x4 ride is bumpy and thrilling, and the guides are extremely professional. 10/10 recommendation!"
+      },
+      {
+        "id": "rv-3",
+        "name": "Dr. Siddharth & Squad",
+        "location": "Chennai",
+        "rating": 5,
+        "date": "3 weeks ago",
+        "comment": "Best camping experience in South India. Clean washrooms, great crowd, and very safe for family and couples."
       }
-    ]
+    ],
+    "slug": "kolukkumalai",
+    "basePrice": 2899,
+    "isActive": true,
+    "name": "Kolukkumalai Sunrise 4x4 & High-Altitude Ridge Glamp"
   },
   {
     "id": "pkg-kolukkumalai-teddy-domes",
     "title": "Kolukkumalai Teddy's Campsite — Sky Deck & Kolukkumalai Sunrise",
     "shortTitle": "Kolukkumalai Teddy's",
     "region": "Munnar",
-    "category": "Sky Deck & Mountain Dome",
+    "category": "Campsite",
     "tag": "Kolukkumalai Sunrise ⭐",
     "location": "Suryanelli / Kolukkumalai, Munnar, Kerala",
     "altitude": "7,100 FT",
@@ -1355,7 +1299,9 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "exclusions": [
       "Personal transportation to Suryanelli campsite",
-      "Personal snacks, beverages, and extra items not in the itinerary"
+      "Personal snacks",
+      "beverages",
+      "and extra items not in the itinerary"
     ],
     "itinerary": [
       {
@@ -1386,80 +1332,51 @@ export const INITIAL_ALL_CAMPS = [
     ],
     "rooms": [
       {
-        "id": "r-td-sky-deck",
+        "id": "cmu28kbr5000yh12bzeykmsku",
         "name": "Sky Deck",
-        "capacity": "2 - 3 Adults",
         "price": 2300,
+        "basePrice": 2300,
+        "capacity": "2 Persons",
         "totalUnits": 6,
-        "bookedUnits": 1,
-        "isAvailable": true,
-        "image": "/images/teddy/teddy-dome-1.jpg",
         "features": [
           "Elevated High-Altitude Sky Deck Platform",
           "Panoramic Mountain & Cloud Vista Views",
           "Cozy Premium Mattresses & Warm Quilts",
-          "Welcome Tea, Dinner & Day 2 Breakfast Included",
+          "Welcome Tea",
+          "Dinner & Day 2 Breakfast Included",
           "Kolukkumalai 4x4 Jeep Safari & Sunrise Included",
           "Campfire with Music & Clean Restrooms"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/teddy/teddy-dome-1.jpg"
       },
       {
-        "id": "r-td-adv-dome",
+        "id": "cmu28kbr5000zh12b2gmqsnso",
         "name": "Adventure Dome",
-        "capacity": "2 - 3 Adults",
         "price": 1800,
+        "basePrice": 1800,
+        "capacity": "2 Persons",
         "totalUnits": 8,
-        "bookedUnits": 2,
-        "isAvailable": true,
-        "image": "/images/teddy/teddy-dome-2.jpg",
         "features": [
           "High-Altitude Weatherproof Adventure Dome",
           "Misty Valley Vista & Natural Mountain Breeze",
           "Warm Sleeping Setup & Thermal Blankets",
-          "Welcome Tea, Dinner & Day 2 Breakfast Included",
+          "Welcome Tea",
+          "Dinner & Day 2 Breakfast Included",
           "Kolukkumalai 4x4 Jeep Safari & Sunrise Included",
           "Campfire with Music & Clean Restrooms"
-        ]
+        ],
+        "inventoryType": "PRIVATE_UNIT",
+        "bedConfig": "King Bed",
+        "bathroomType": "Ensuite Private Bathroom",
+        "pricingModel": "PER_ROOM",
+        "image": "/images/teddy/teddy-dome-2.jpg"
       }
     ],
-    "amenities": [
-      {
-        "id": "am-td1",
-        "name": "Panoramic Mountain View Ridge",
-        "icon": "⛰️",
-        "enabled": true
-      },
-      {
-        "id": "am-td2",
-        "name": "Private En-suite Restrooms with Hot Water",
-        "icon": "🚿",
-        "enabled": true
-      },
-      {
-        "id": "am-td3",
-        "name": "Evening Campfire & Music Session",
-        "icon": "🔥",
-        "enabled": true
-      },
-      {
-        "id": "am-td4",
-        "name": "Guided Sunset Trek & Photo Point",
-        "icon": "🌄",
-        "enabled": true
-      },
-      {
-        "id": "am-td5",
-        "name": "Tea Plantation Trail Walk",
-        "icon": "🍃",
-        "enabled": true
-      },
-      {
-        "id": "am-td6",
-        "name": "24/7 Power Backup & Free Parking",
-        "icon": "⚡",
-        "enabled": true
-      }
-    ],
+    "amenities": "",
     "addons": [
       {
         "id": "ad-td-drone",
@@ -1492,7 +1409,11 @@ export const INITIAL_ALL_CAMPS = [
         "date": "1 week ago",
         "comment": "Incredible experience at Teddy's! The sky deck is super cozy and clean with great views. The Kolukkumalai 4x4 jeep safari in the morning was thrilling."
       }
-    ]
+    ],
+    "slug": "kolukkumalai-teddy-domes",
+    "basePrice": 2299,
+    "isActive": true,
+    "name": "Kolukkumalai Teddy's Campsite — Sky Deck & Kolukkumalai Sunrise"
   }
 ];
 
@@ -1506,7 +1427,6 @@ export const DEPRECATED_CAMP_IDS = new Set([
   "pkg-vagamon",
   "pkg-phantom",
   "pkg-wayanad",
-  "pkg-meesapulimala"
 ]);
 
 // Helper to get all active verified camps with live PMS sync

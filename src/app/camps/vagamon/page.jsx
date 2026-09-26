@@ -1,19 +1,10 @@
 import React from 'react';
 import CampsDirectoryClient from '../CampsDirectoryClient';
-import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Vagamon Pine Forest Glamping & Stays',
+  title: 'Vagamon Pine Forest Glamping & Stays · Coming Soon',
   description:
-    'Book secluded pine valley dome glamping & offroad jeep camping in Vagamon, Kerala. Private stream treks & live campfire BBQ with Aanandham.go.',
-  keywords: [
-    'Vagamon Camping',
-    'Vagamon Pine Forest Glamping',
-    'Vagamon Dome Stays',
-    'Vagamon Offroad Camp',
-    'Vagamon Weekend Stays',
-    'Couples Glamping Vagamon'
-  ],
+    'Vagamon pine valley dome glamping is launching soon with Aanandham.go. Join the WhatsApp waitlist — meanwhile explore verified live camps in Munnar & Suryanelli.',
   alternates: {
     canonical: 'https://www.aanandham.in/camps/vagamon',
   },
@@ -43,8 +34,6 @@ export const metadata = {
 };
 
 export default function VagamonCampsPage() {
-  const vagamonCamps = INITIAL_ALL_CAMPS.filter(c => c.region === 'Vagamon');
-  const displayCamps = vagamonCamps.length > 0 ? vagamonCamps : INITIAL_ALL_CAMPS;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
@@ -79,11 +68,16 @@ export default function VagamonCampsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CampsDirectoryClient
-        initialCamps={displayCamps}
-        initialRegion={vagamonCamps.length > 0 ? 'Vagamon' : 'All'}
-        heroBadge="★ SECLUDED PINE VALLEY"
-        heroTitle={<>Vagamon Pine Forest <span style={{ color: '#D5ED55' }}>Glamping & Stays</span></>}
-        heroSubtitle="Tucked away in the whispering pine groves of Vagamon (3,800 FT). Enjoy misty valley walks, private stream trails, and cozy alpine campfire nights."
+        initialCamps={[]}
+        initialRegion="All"
+        comingSoon={true}
+        comingSoonRegion="Vagamon"
+        comingSoonTitle="Vagamon pine-valley basecamps are launching soon."
+        comingSoonSubtitle="We are verifying pine-grove sites, stream trails and washroom standards before opening bookings. Join the waitlist for early-bird dates — meanwhile our Munnar & Suryanelli ridge camps below are live and bookable today."
+        comingSoonPoints={['Pine forest domes', 'Stream trails', 'Campfire BBQ', 'Early-bird alerts']}
+        heroBadge="★ VAGAMON · COMING SOON"
+        heroTitle={<>Vagamon Pine Forest <span style={{ color: '#D5ED55' }}>Glamping — Coming Soon</span></>}
+        heroSubtitle="Mist, pines and meadows at 3,800 FT. We are setting up verified Aanandham basecamps — live Kerala camps are open for booking below."
       />
     </>
   );
