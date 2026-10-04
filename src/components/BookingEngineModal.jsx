@@ -35,6 +35,7 @@ function BookingEngineModalInner({
     initialCustomUnits = null 
 }) {
     const modalRef = useRef(null);
+    const bookingIntentRef = useRef(null);
     const prevIsOpenRef = useRef(false);
     const prevInitialRoomIdRef = useRef(initialRoomId);
     const prevInitialPkgIdRef = useRef(initialPackage?.id);
@@ -382,27 +383,22 @@ function BookingEngineModalInner({
         try {
             const amountToCharge = paymentMode === 'advance' ? advanceAmount : totalAmount;
             
-            const orderRes = await fetch('/api/bookings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...getSecurityHeaders()
-                },
-                body: JSON.stringify({
+            const bookingPayload = {
                     name: customerName.trim(),
                     phone: customerPhone.trim(),
                     email: customerEmail.trim(),
                     package: selectedPkg.title,
                     campsiteId: selectedPkg.id,
                     dates: travelDate,
+                    nights: 1,
                     guests: totalGuests,
                     adults,
                     children,
+                    roomId: selectedRoom?.id,
                     roomType: selectedRoom?.name || 'Standard Tent',
+                    totalUnits,
                     addons: selectedAddons,
                     total: totalAmount,
-                    paidAmount: amountToCharge,
-                    balanceDue: totalAmount - amountToCharge,
                     paymentMode: paymentMode === 'advance' ? 'Advance 30% via Razorpay' : 'Full 100% via Razorpay',
                     dietaryChoice,
                     vegCount,
@@ -410,7 +406,19 @@ function BookingEngineModalInner({
                     notes: specialNotes,
                     honeypot,
                     paymentGateway: 'razorpay'
-                })
+                };
+            const fingerprint = JSON.stringify(bookingPayload);
+            if (bookingIntentRef.current?.fingerprint !== fingerprint) {
+                bookingIntentRef.current = { fingerprint, key: window.crypto.randomUUID() };
+            }
+            const orderRes = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Idempotency-Key': bookingIntentRef.current.key,
+                    ...getSecurityHeaders()
+                },
+                body: fingerprint
             });
 
             const orderData = await orderRes.json();
@@ -420,8 +428,11 @@ function BookingEngineModalInner({
             }
 
             const rzpOrder = orderData.order || orderData.razorpayOrder || {};
-            const orderKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || orderData.keyId || orderData.razorpayKeyId || 'rzp_test_placeholder';
+            const orderKey = orderData.razorpayKeyId;
             const bookingRefId = orderData.bookingId || orderData.booking?.id;
+            if (!orderKey || !rzpOrder.id || !Number.isInteger(Number(rzpOrder.amount)) || Number(rzpOrder.amount) <= 0 || !bookingRefId) {
+                throw new Error('PMS did not return a valid payment order. No payment was started.');
+            }
 
             if (!window.Razorpay) {
                 await new Promise((resolve, reject) => {
@@ -449,7 +460,7 @@ function BookingEngineModalInner({
             const cleanPhone = String(customerPhone || '').replace(/\D/g, '').slice(-10) || '9847011223';
             const options = {
                 key: orderKey,
-                amount: rzpOrder.amount || Math.round(amountToCharge * 100),
+                amount: rzpOrder.amount,
                 currency: rzpOrder.currency || 'INR',
                 name: paymentSettings.payeeName || 'Aanandham Wilderness Stays',
                 description: `${selectedPkg.title} - ${selectedRoom?.name || 'Camp Booking'}`,
@@ -469,6 +480,7 @@ function BookingEngineModalInner({
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                'Idempotency-Key': `${bookingIntentRef.current.key}:verify`,
                                 ...getSecurityHeaders()
                             },
                             body: JSON.stringify({
@@ -483,7 +495,7 @@ function BookingEngineModalInner({
                         });
 
                         const verifyData = await verifyRes.json();
-                        if (verifyData.success) {
+                        if (verifyRes.ok && verifyData.success && verifyData.status === 'Confirmed') {
                             setConfirmedPass({
                                 ...(orderData.booking || {}),
                                 id: bookingRefId,
@@ -500,11 +512,6 @@ function BookingEngineModalInner({
                                 paidAmount: amountToCharge,
                                 balanceDue: totalAmount - amountToCharge
                             });
-                            if (typeof window !== 'undefined') {
-                                window.dispatchEvent(new CustomEvent('pms_track', {
-                                    detail: { eventType: 'booking_success', campId: selectedPkgId }
-                                }));
-                            }
                             setStep(5);
                         } else {
                             setValidationError(verifyData.message || 'Payment signature verification failed. Please contact our support.');

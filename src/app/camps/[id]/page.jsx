@@ -1,6 +1,7 @@
 import React from 'react';
 import { INITIAL_ALL_CAMPS, getCampById, getAllCamps } from '../../../lib/campsData';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
+import { requestPms, pmsTenantId } from '@/lib/pmsServerBridge';
 import CampPropertyDetailClient from './CampPropertyDetailClient';
 
 function ensureArray(val, fallback = []) {
@@ -17,6 +18,21 @@ function ensureArray(val, fallback = []) {
 
 async function resolveCamp(id) {
     if (!id) return null;
+
+    try {
+        const pmsRes = await requestPms(`/api/properties?tenantId=${pmsTenantId()}`);
+        if (pmsRes && pmsRes.payload && Array.isArray(pmsRes.payload.properties)) {
+            const cleanTarget = String(id).toLowerCase().replace('pkg-', '').trim();
+            const liveMatch = pmsRes.payload.properties.find(p => {
+                const cleanPId = String(p.id).toLowerCase().replace('pkg-', '').trim();
+                const cleanPSlug = String(p.slug || '').toLowerCase().replace('pkg-', '').trim();
+                return p.id === id || p.slug === id || cleanPId === cleanTarget || cleanPSlug === cleanTarget;
+            });
+            if (liveMatch) return liveMatch;
+        }
+    } catch (e) {
+        // Fall back gracefully if PMS is unreachable
+    }
 
     if (isPrismaConfigured && prisma) {
         try {
@@ -86,7 +102,7 @@ async function resolveCamp(id) {
                     highlights: normHighlights,
                     inclusions: normInclusions,
                     exclusions: normExclusions,
-                    image: dbProp.image || 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
+                    image: dbProp.image || '',
                     gallery: ensureArray(dbProp.gallery, []),
                     isAvailable: dbProp.isActive !== false,
                     rooms: (Array.isArray(dbProp.rooms) ? dbProp.rooms : []).map(rt => ({
@@ -97,7 +113,7 @@ async function resolveCamp(id) {
                         capacity: typeof rt.capacity === 'number' ? `${rt.capacity} Persons` : (rt.capacity || '2 Adults'),
                         totalUnits: Number(rt.totalUnits) || 8,
                         features: ['Mountain View', 'Bedding', 'Campfire Access'],
-                        image: (Array.isArray(rt.images) && rt.images[0]) || dbProp.image
+                        image: (Array.isArray(rt.images) && rt.images[0]) ? rt.images[0] : (typeof rt.images === 'string' ? rt.images : (rt.image || ''))
                     }))
                 };
             }

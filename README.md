@@ -2,6 +2,8 @@
 
 A modern Next.js web platform for **Aanandham.go** featuring high-altitude mountain glamping, 4x4 sunrise peak safaris, starlit campfire gatherings, and guided tea ridge treks across Suryanelli & Munnar, Kerala.
 
+For PMS setup, server environment variables, booking/payment ownership, and known limitations, read the [PMS website integration guide](docs/PMS_WEBSITE_INTEGRATION.md) before deployment.
+
 ## ✨ Features
 - **Hero & Camp Overview**: Immersive typography with Bricolage Grotesque & Plus Jakarta Sans, live badge indicators, and atmospheric photography.
 - **Skill Levels**: Interactive skill cards with active badge states.

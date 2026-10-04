@@ -17,13 +17,14 @@ import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
 import { SkeletonPropertyDetail, AssetImage } from '../../../components/common/SkeletonLoader';
-import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2 } from 'lucide-react';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2, Building2, Home, Bed, Landmark, Bath, BedDouble, Maximize2, ImageOff } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
 import { waLink, logWhatsAppInquiry } from '../../../lib/whatsapp';
 import { CANCELLATION_TIERS } from '../../../lib/cancellation';
 import { loadDiscountsFromStorage, applyDiscounts } from '../../../lib/discountsCore';
+import { resolvePropertyType, getPricingUnitLabel, getInventoryTypeMeta } from '../../../lib/propertyStayTypes';
 
 export function parseRoomCapacity(capacityStr) {
     if (!capacityStr) return 2;
@@ -42,6 +43,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const [selectedRoomId, setSelectedRoomId] = useState(initialCamp?.rooms?.[0]?.id || null);
     const [selectedDate, setSelectedDate] = useState(() => getDefaultUpcomingBatch());
     const [guestsCount, setGuestsCount] = useState(2);
+    const [capacityWarning, setCapacityWarning] = useState(false);
     const [customUnits, setCustomUnits] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [discounts, setDiscounts] = useState(null);
@@ -231,32 +233,114 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     }
 
     const isLiked = wishlist.includes(camp.id);
-    const gallery = camp.gallery && camp.gallery.length > 0 ? camp.gallery : [camp.image];
+    const gallery = camp.gallery && camp.gallery.length > 0 ? camp.gallery : (camp.image ? [camp.image] : []);
+    const typeMeta = resolvePropertyType(camp.propertyTypeSlug || camp.propertyType?.slug || camp.category, camp.title);
     const availableRooms = camp.rooms && camp.rooms.length > 0 ? camp.rooms : [
         {
-            id: 'room-std',
-            name: 'Standard Alpine Ridge Tent',
-            type: 'tent',
-            capacity: '2 Adults',
+            id: `${camp.id}-primary-unit`,
+            name: `${camp.title} · ${typeMeta.unitTerm}`,
+            type: typeMeta.slug,
+            capacity: '2 Guests',
+            price: camp.price,
             pricePerPerson: camp.price,
-            features: ['Double Layer Waterproof', 'Sleeping Bag Included', 'Ground Mat'],
-            availableUnits: 10
+            features: typeMeta.defaultAmenities.slice(0, 3),
+            inventoryType: typeMeta.id === 'campsite' ? 'GLAMP_DOME' : 'PRIVATE_UNIT',
+            bedConfig: typeMeta.id === 'hostel' ? '1 Single Bed' : '1 King Bed',
+            bathroomType: 'Ensuite Private Bathroom',
+            pricingModel: typeMeta.id === 'hostel' ? 'PER_BED' : (typeMeta.id === 'campsite' ? 'per_guest_night' : 'PER_ROOM'),
+            availableUnits: 1
         }
     ];
 
+    const isDormRoom = (r) => {
+        if (!r) return false;
+        const name = String(r.name || r.title || '').toLowerCase();
+        const inv = String(r.inventoryType || '').toUpperCase();
+        const model = String(r.pricingModel || '').toUpperCase();
+        return (
+            inv === 'DORM_BED' ||
+            inv === 'DORM' ||
+            model === 'PER_BED' ||
+            name.includes('dorm') ||
+            name.includes('bunk') ||
+            name.includes('bed in')
+        );
+    };
+
     const currentRoom = availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0];
+    const currentRoomIsDorm = isDormRoom(currentRoom);
     const roomPrice = currentRoom?.price || currentRoom?.pricePerPerson || camp.price || 2499;
-    const capacityNum = parseRoomCapacity(currentRoom?.capacity);
-    const calculatedUnits = Math.ceil(guestsCount / capacityNum);
+    const capacityNum = parseRoomCapacity(currentRoom?.capacity || currentRoom?.guestCapacity);
+
+    // Dynamic maximum capacity calculation based on live room inventory and configuration
+    const maxAllowedCapacity = useMemo(() => {
+        if (!currentRoom) return 10;
+        if (currentRoomIsDorm) {
+            // Dorm room: Each unit represents 1 bed
+            const units = Number(currentRoom.totalUnits) || 0;
+            const capDigits = parseInt(String(currentRoom.capacity || '').match(/\d+/)?.[0] || '0', 10);
+            const nameDigits = parseInt(String(currentRoom.name || '').match(/(\d+)\s*[- ]*(bed|bunk|person|sharing)/i)?.[1] || String(currentRoom.name || '').match(/\d+/)?.[0] || '0', 10);
+            if (units > 1) return units;
+            if (capDigits > 0) return capDigits;
+            if (nameDigits > 0) return nameDigits;
+            return 10;
+        } else {
+            // Private room / cabin / suite / tent
+            const unitCap = parseRoomCapacity(currentRoom.capacity || currentRoom.guestCapacity || 2);
+            const availableUnits = Math.max(1, Number(currentRoom.totalUnits) || 3);
+            return unitCap * availableUnits;
+        }
+    }, [currentRoom, currentRoomIsDorm]);
+
+    // Enforce dynamic capacity clamp whenever selected room changes or guest count exceeds capacity
+    useEffect(() => {
+        if (guestsCount > maxAllowedCapacity) {
+            setGuestsCount(maxAllowedCapacity);
+            setCapacityWarning(true);
+        } else if (guestsCount < maxAllowedCapacity) {
+            setCapacityWarning(false);
+        }
+    }, [selectedRoomId, maxAllowedCapacity, guestsCount]);
+
+    const handleIncrementGuests = () => {
+        if (guestsCount >= maxAllowedCapacity) {
+            setCapacityWarning(true);
+            return;
+        }
+        const next = Math.min(maxAllowedCapacity, guestsCount + 1);
+        setGuestsCount(next);
+        setCustomUnits(null);
+        if (next >= maxAllowedCapacity) {
+            setCapacityWarning(true);
+        }
+    };
+
+    const handleDecrementGuests = () => {
+        const next = Math.max(1, guestsCount - 1);
+        setGuestsCount(next);
+        setCustomUnits(null);
+        setCapacityWarning(false);
+    };
+
+    const calculatedUnits = currentRoomIsDorm ? 1 : Math.ceil(guestsCount / capacityNum);
     const effectiveUnits = customUnits !== null ? customUnits : calculatedUnits;
     const totalCapacity = effectiveUnits * capacityNum;
-    const discount = applyDiscounts({ baseTotal: guestsCount * roomPrice, guests: guestsCount, campsiteId: camp?.id, discounts });
+    const isPerRoomPricing = !currentRoomIsDorm && (
+        currentRoom?.pricingModel === 'PER_ROOM' ||
+        currentRoom?.pricingModel === 'per_room_night' ||
+        (typeMeta.id !== 'campsite' && typeMeta.id !== 'hostel' && currentRoom?.pricingModel !== 'PER_BED')
+    );
+    const baseTotalCalculated = isPerRoomPricing ? (effectiveUnits * roomPrice) : (guestsCount * roomPrice);
+    const discount = applyDiscounts({ baseTotal: baseTotalCalculated, guests: guestsCount, campsiteId: camp?.id, discounts });
     const estimatedTotal = discount.discountedTotal;
     const discountLabel = discount.discountLabel;
     const discountAmount = discount.discountAmount;
     const nearbyCamps = allCamps.filter(c => c.id !== camp.id).slice(0, 3);
 
-    // ── Official Basecamp Inclusions (Curated Wilderness Amenities) ──
+    const locLower = `${camp?.location || ''} ${camp?.region || ''} ${camp?.title || ''}`.toLowerCase();
+    const isHimachal = locLower.includes('kasol') || locLower.includes('himachal') || locLower.includes('manali') || locLower.includes('jibhi') || locLower.includes('tirthan') || locLower.includes('spiti') || locLower.includes('parvati') || locLower.includes('kalga');
+
+    // ── Official Basecamp Inclusions (Curated Regional Amenities) ──
     const OFFICIAL_BASECAMP_PERKS = [
         {
             num: '01',
@@ -284,9 +368,11 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         },
         {
             num: '05',
-            tag: 'Estate Trails',
-            title: 'Tea Plantation Trail Walk',
-            desc: 'Morning guided walks winding through rolling cloud beds and heritage tea gardens.'
+            tag: isHimachal ? 'Alpine Trails' : 'Estate Trails',
+            title: isHimachal ? 'Pine Forest & Mountain Trail Walk' : 'Tea Plantation Trail Walk',
+            desc: isHimachal
+                ? 'Morning guided walks winding through aromatic deodar pine forests and alpine trails.'
+                : 'Morning guided walks winding through rolling cloud beds and heritage tea gardens.'
         },
         {
             num: '06',
@@ -319,9 +405,9 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
             if (valid.length > 0) return valid;
         }
         return OFFICIAL_BASECAMP_PERKS;
-    }, [camp?.amenities]);
+    }, [camp?.amenities, isHimachal]);
 
-    // ── Robust normalization of 2-Day Expedition Timeline (guarantees complete schedule for every camp) ──
+    // ── Robust normalization of 2-Day Expedition Timeline (guarantees complete schedule for every stay) ──
     const normalizedItinerary = useMemo(() => {
         if (Array.isArray(camp?.itinerary) && camp.itinerary.length > 0) {
             const valid = camp.itinerary.filter(d => d && (Array.isArray(d.items) ? d.items.length > 0 : Boolean(d.title)));
@@ -329,12 +415,19 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         }
 
         const titleLower = String(camp?.title || '').toLowerCase();
-        const isKolukkumalai = titleLower.includes('kolukkumalai') || String(camp?.location || '').toLowerCase().includes('kolukkumalai');
+        const isKolukkumalai = titleLower.includes('kolukkumalai') || locLower.includes('kolukkumalai');
         const isMeesapulimala = titleLower.includes('meesapulimala');
-        const isVattavada = titleLower.includes('vattavada') || String(camp?.region || '').toLowerCase().includes('vattavada');
+        const isVattavada = titleLower.includes('vattavada') || locLower.includes('vattavada');
 
         let day2Morning = "06:00 AM – Early morning mist walk through mountain trails.";
         let day2Highlight = "07:30 AM – Scenic ridge viewpoints and high-altitude photography.";
+        const day1Dinner = isHimachal
+            ? "08:30 PM – Live BBQ skewers followed by hearty mountain dinner & local delicacies."
+            : "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.";
+        const day2Breakfast = isHimachal
+            ? "08:30 AM – Wholesome hot mountain breakfast & freshly brewed tea."
+            : "08:30 AM – Wholesome hot Kerala breakfast buffet (Appam / Puttu / Poori).";
+
         if (isKolukkumalai) {
             day2Morning = "04:30 AM – Wake up & hot black tea briefing.";
             day2Highlight = "05:00 AM – 4x4 Rugged Jeep climb to Kolukkumalai Tiger Rock (7,900 FT) for golden cloud bed sunrise.";
@@ -344,6 +437,9 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         } else if (isVattavada) {
             day2Morning = "06:30 AM – Organic strawberry farm stroll & crisp eucalyptus morning walk.";
             day2Highlight = "07:30 AM – Pampadum Shola border exploration & birdwatching.";
+        } else if (isHimachal) {
+            day2Morning = "06:30 AM – Crisp morning walk through apple orchards and deodar pine groves.";
+            day2Highlight = "07:30 AM – Panoramic viewpoint trek overlooking the snow-capped Himalayan ranges.";
         }
 
         return [
@@ -356,7 +452,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                     "03:00 PM – Tent / Glamp allocation and briefing by certified camp guides.",
                     "04:30 PM – Guided sunset nature hike along panoramic mountain ridges.",
                     "07:00 PM – Roaring campfire lighting with acoustic music circle.",
-                    "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.",
+                    day1Dinner,
                     "10:30 PM – Stargazing under crystal-clear skies & overnight mountain rest."
                 ]
             },
@@ -367,13 +463,13 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                 items: [
                     day2Morning,
                     day2Highlight,
-                    "08:30 AM – Wholesome hot Kerala breakfast buffet (Appam / Puttu / Poori).",
+                    day2Breakfast,
                     "10:00 AM – Leisure photography and peaceful basecamp relaxation.",
                     "11:00 AM – Check-out with unforgettable wilderness memories."
                 ]
             }
         ];
-    }, [camp?.itinerary, camp?.title, camp?.location, camp?.region]);
+    }, [camp?.itinerary, camp?.title, camp?.location, camp?.region, locLower, isHimachal]);
 
     // ── Synchronize active stay context for GlobalActionHub & Sticky Bar ──
     useEffect(() => {
@@ -576,73 +672,95 @@ return (
                 </section>
 
                 {/* ── PHOTO GALLERY MOSAIC SECTION (RESPONSIVE) ── */}
-                <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
-                    <div className="camp-gallery-mosaic">
-                        {/* Main Featured Photo (Left Large) */}
-                        <div
-                            onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
-                            className="gallery-tile-main card-img-zoom"
-                            style={{ position: 'relative' }}
-                        >
-                            <AssetImage
-                                src={gallery[0]}
-                                alt={`${camp.title} Main View`}
-                                fill
-                                priority
-                                sizes="(max-width: 768px) 100vw, 60vw"
-                            />
-                            <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', zIndex: 2 }}>
-                                <span style={ROW_GAP_6}><Camera size={13} /> View Gallery ({gallery.length} photos)</span>
+                {/* ── PHOTO GALLERY MOSAIC SECTION (RESPONSIVE) ── */}
+                {gallery.length === 0 ? (
+                    <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                        <div style={{
+                            height: '200px',
+                            borderRadius: '24px',
+                            background: '#F1F3EC',
+                            border: '1.5px dashed rgba(18, 22, 19, 0.15)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '8px',
+                            color: '#7D8880'
+                        }}>
+                            <ImageOff size={32} color="#9CA3AF" />
+                            <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>No property photos uploaded yet</div>
+                            <div style={{ fontSize: '11.5px', color: '#6A7D6E' }}>Photos for this sanctuary will be available soon</div>
+                        </div>
+                    </section>
+                ) : (
+                    <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                        <div className="camp-gallery-mosaic">
+                            {/* Main Featured Photo (Left Large) */}
+                            <div
+                                onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
+                                className="gallery-tile-main card-img-zoom"
+                                style={{ position: 'relative' }}
+                            >
+                                <AssetImage
+                                    src={gallery[0]}
+                                    alt={`${camp.title} Main View`}
+                                    fill
+                                    priority
+                                    sizes="(max-width: 768px) 100vw, 60vw"
+                                />
+                                <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', zIndex: 2 }}>
+                                    <span style={ROW_GAP_6}><Camera size={13} /> View Gallery ({gallery.length} photos)</span>
+                                </div>
+                            </div>
+
+                            {/* Sub Photo 1 (Top Right) */}
+                            <div
+                                onClick={() => { setActivePhotoIdx(1 % gallery.length); setIsLightboxOpen(true); }}
+                                className="gallery-tile-top card-img-zoom"
+                                style={{ position: 'relative' }}
+                            >
+                                <AssetImage
+                                    src={gallery[1] || gallery[0]}
+                                    alt={`${camp.title} Ridge Tent`}
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                />
+                            </div>
+
+                            {/* Sub Photo 2 (Bottom Right 1) */}
+                            <div
+                                onClick={() => { setActivePhotoIdx(2 % gallery.length); setIsLightboxOpen(true); }}
+                                className="gallery-tile-bot-1 card-img-zoom"
+                                style={{ position: 'relative' }}
+                            >
+                                <AssetImage
+                                    src={gallery[2] || gallery[0]}
+                                    alt={`${camp.title} Campfire Area`}
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                />
+                            </div>
+
+                            {/* Sub Photo 3 (Bottom Right 2 with View All overlay) */}
+                            <div
+                                onClick={() => { setActivePhotoIdx(3 % gallery.length); setIsLightboxOpen(true); }}
+                                className="gallery-tile-bot-2 card-img-zoom"
+                                style={{ position: 'relative' }}
+                            >
+                                <AssetImage
+                                    src={gallery[3] || gallery[0]}
+                                    alt={`${camp.title} Valley Sunset`}
+                                    fill
+                                    sizes="(max-width: 768px) 50vw, 25vw"
+                                    style={{ opacity: 0.8 }}
+                                />
+                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px', zIndex: 2, background: 'rgba(0,0,0,0.35)' }}>
+                                    +{Math.max(1, gallery.length - 3)} More
+                                </div>
                             </div>
                         </div>
-
-                        {/* Sub Photo 1 (Top Right) */}
-                        <div
-                            onClick={() => { setActivePhotoIdx(1 % gallery.length); setIsLightboxOpen(true); }}
-                            className="gallery-tile-top card-img-zoom"
-                            style={{ position: 'relative' }}
-                        >
-                            <AssetImage
-                                src={gallery[1] || gallery[0]}
-                                alt={`${camp.title} Ridge Tent`}
-                                fill
-                                sizes="(max-width: 768px) 50vw, 25vw"
-                            />
-                        </div>
-
-                        {/* Sub Photo 2 (Bottom Right 1) */}
-                        <div
-                            onClick={() => { setActivePhotoIdx(2 % gallery.length); setIsLightboxOpen(true); }}
-                            className="gallery-tile-bot-1 card-img-zoom"
-                            style={{ position: 'relative' }}
-                        >
-                            <AssetImage
-                                src={gallery[2] || gallery[0]}
-                                alt={`${camp.title} Campfire Area`}
-                                fill
-                                sizes="(max-width: 768px) 50vw, 25vw"
-                            />
-                        </div>
-
-                        {/* Sub Photo 3 (Bottom Right 2 with View All overlay) */}
-                        <div
-                            onClick={() => { setActivePhotoIdx(3 % gallery.length); setIsLightboxOpen(true); }}
-                            className="gallery-tile-bot-2 card-img-zoom"
-                            style={{ position: 'relative' }}
-                        >
-                            <AssetImage
-                                src={gallery[3] || gallery[0]}
-                                alt={`${camp.title} Valley Sunset`}
-                                fill
-                                sizes="(max-width: 768px) 50vw, 25vw"
-                                style={{ opacity: 0.8 }}
-                            />
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px', zIndex: 2, background: 'rgba(0,0,0,0.35)' }}>
-                                +{Math.max(1, gallery.length - 3)} More
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                    </section>
+                )}
 
                 {/* ── TWO-COLUMN EXPEDITION DETAILS & SMART STAY BOOKING ENGINE ── */}
                 <section style={{ maxWidth: '1560px', margin: '48px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
@@ -684,15 +802,27 @@ return (
                             {/* SECTION 2: LODGING ROOM TYPES & TENT SELECTION */}
                             <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
-                                    <span className="star-icon">★</span> LODGING INVENTORY
+                                    <span className="star-icon">★</span> {typeMeta.badge?.toUpperCase() || 'ACCOMMODATION'}
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', fontWeight: '800', margin: '0 0 20px', color: '#121613' }}>
-                                    Available Lodging & Room Types
+                                    {typeMeta.unitsPlural || 'Available Rooms & Suites'}
                                 </h2>
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     {availableRooms.map((room) => {
                                         const isSelected = selectedRoomId === room.id;
+                                        const roomIsDorm = isDormRoom(room);
+                                        const invMeta = getInventoryTypeMeta(room.inventoryType, room.name);
+                                        const roomBadge = roomIsDorm ? 'Shared Dorm' : (invMeta?.badge || room.type?.toUpperCase() || typeMeta.unitTerm);
+                                        const isRoomLevel = !roomIsDorm && (
+                                            room.pricingModel === 'PER_ROOM' ||
+                                            room.pricingModel === 'per_room_night' ||
+                                            (typeMeta.id !== 'campsite' && typeMeta.id !== 'hostel' && room.pricingModel !== 'PER_BED')
+                                        );
+                                        const priceSubtext = roomIsDorm
+                                            ? 'Per Bed / Night'
+                                            : (isRoomLevel ? 'Per Room / Night' : (typeMeta.id === 'campsite' ? 'Per Camper' : 'Per Night'));
+
                                         return (
                                             <div
                                                 key={room.id}
@@ -713,12 +843,12 @@ return (
                                                 }}
                                             >
                                                 {/* Lodging Photo Showcase */}
-                                                {(room.image || camp.image) && (
+                                                {room.image ? (
                                                     <div
                                                         className="room-card-media card-img-zoom"
                                                         onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            const photoUrl = room.image || camp.image;
+                                                             e.stopPropagation();
+                                                            const photoUrl = room.image;
                                                             const idx = gallery.findIndex(g => g === photoUrl);
                                                             setActivePhotoIdx(idx >= 0 ? idx : 0);
                                                             setIsLightboxOpen(true);
@@ -735,11 +865,21 @@ return (
                                                         }}
                                                     >
                                                         <img
-                                                            src={room.image || camp.image}
+                                                            src={room.image}
                                                             alt={`${camp.title} - ${room.name}`}
                                                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                                                             loading="lazy"
                                                             decoding="async"
+                                                            onError={(e) => {
+                                                                e.currentTarget.style.display = 'none';
+                                                                if (e.currentTarget.nextElementSibling) {
+                                                                    e.currentTarget.nextElementSibling.style.display = 'none';
+                                                                }
+                                                                const fallback = document.createElement('div');
+                                                                fallback.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#7D8880;gap:4px;background:#F1F3EC;';
+                                                                fallback.innerHTML = '<span style="font-size:11px;font-weight:700;">No preview</span>';
+                                                                e.currentTarget.parentElement.appendChild(fallback);
+                                                            }}
                                                         />
                                                         <div style={{
                                                             position: 'absolute',
@@ -760,17 +900,57 @@ return (
                                                             <span>Photo</span>
                                                         </div>
                                                     </div>
+                                                ) : (
+                                                    <div
+                                                        className="room-card-media"
+                                                        style={{
+                                                            width: 'clamp(120px, 18vw, 150px)',
+                                                            height: '110px',
+                                                            borderRadius: '14px',
+                                                            background: '#F1F3EC',
+                                                            border: '1px dashed rgba(18, 22, 19, 0.15)',
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '6px',
+                                                            flexShrink: 0,
+                                                            color: '#7D8880'
+                                                        }}
+                                                        title="No room photo provided"
+                                                    >
+                                                        <ImageOff size={22} color="#9CA3AF" />
+                                                        <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.2px' }}>No preview</span>
+                                                    </div>
                                                 )}
 
                                                 <div className="room-card-main" style={{ flex: 1, minWidth: '200px' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
                                                         <span style={{ background: '#121613', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px' }}>
-                                                            {room.type?.toUpperCase() || 'TENT'}
+                                                            {roomBadge}
                                                         </span>
                                                         <span style={{ fontSize: '12px', fontWeight: '700', color: '#59655D', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                                             <Users size={13} color="#166534" />
-                                                            <span>Capacity: {room.capacity || '2 Persons'}</span>
+                                                            <span>{roomIsDorm ? (room.capacity && room.capacity.toLowerCase().includes('bed') ? room.capacity : '10 Beds') : `Capacity: ${room.guestCapacity || room.capacity || '2 Persons'}`}</span>
                                                         </span>
+                                                        {room.bedConfig && (
+                                                            <span style={{ fontSize: '11px', fontWeight: '700', color: '#166534', background: '#DCFCE7', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <BedDouble size={11} color="#166534" />
+                                                                <span>{room.bedConfig}</span>
+                                                            </span>
+                                                        )}
+                                                        {room.bathroomType && (
+                                                            <span style={{ fontSize: '11px', fontWeight: '600', color: '#4B5563', background: '#F1F3EC', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <Bath size={11} color="#4B5563" />
+                                                                <span>{room.bathroomType}</span>
+                                                            </span>
+                                                        )}
+                                                        {(room.roomSize || (!roomIsDorm && invMeta?.defaultSizeSqFt)) && (
+                                                            <span style={{ fontSize: '11px', fontWeight: '600', color: '#4B5563', background: '#F1F3EC', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <Maximize2 size={11} color="#4B5563" />
+                                                                <span>{room.roomSize || `${invMeta.defaultSizeSqFt} sq ft`}</span>
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '17px', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
                                                         {room.name}
@@ -797,9 +977,9 @@ return (
 
                                                 <div className="room-price-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                                                     <div style={{ textAlign: 'right' }}>
-                                                        <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>Per Person</span>
+                                                        <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>{priceSubtext}</span>
                                                         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap' }}>
-                                                            ₹{(room.price || room.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}
+                                                            ₹{(room.price || room.pricePerPerson || camp.price || 0).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -1106,7 +1286,9 @@ return (
                                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '28px', fontWeight: '900', color: '#121613' }}>
                                                 ₹{roomPrice.toLocaleString('en-IN')}
                                             </span>
-                                            <span style={{ fontSize: '13px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                            <span style={{ fontSize: '13px', color: '#59655D', fontWeight: '600' }}>
+                                                {currentRoomIsDorm ? '/ bed / night' : (isPerRoomPricing ? '/ room / night' : (typeMeta.pricingSuffix || '/ night'))}
+                                            </span>
                                         </div>
                                     </div>
                                     {camp.archived ? (
@@ -1145,51 +1327,126 @@ return (
                                         <CustomSelectDropdown
                                             value={selectedRoomId}
                                             onChange={(val) => { setSelectedRoomId(val); setCustomUnits(null); }}
-                                            options={availableRooms.map(r => ({
-                                                value: r.id,
-                                                label: `${r.name} (${r.capacity}) — ₹${(r.price || r.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}`
-                                            }))}
+                                            options={availableRooms.map(r => {
+                                                const dorm = isDormRoom(r);
+                                                const capLabel = dorm ? (r.capacity && r.capacity.toLowerCase().includes('bed') ? r.capacity : '10 Beds') : (r.capacity || '2 Guests');
+                                                return {
+                                                    value: r.id,
+                                                    label: `${r.name} (${capLabel}) — ₹${(r.price || r.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}`
+                                                };
+                                            })}
                                         />
                                     </div>
 
-                                    {/* 3. Campers Counter */}
+                                    {/* 3. Campers / Guests Counter */}
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                                            <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                                3. Total Campers
-                                            </label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px', flexWrap: 'wrap', gap: '6px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                                <label style={{ fontSize: '11.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                                    {currentRoomIsDorm ? '3. Total Dorm Beds' : (typeMeta.id === 'campsite' ? '3. Total Campers' : '3. Total Guests')}
+                                                </label>
+                                                <span style={{
+                                                    fontSize: '10px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 7px',
+                                                    borderRadius: '6px',
+                                                    background: guestsCount >= maxAllowedCapacity ? '#FEF2F2' : '#F0FDF4',
+                                                    color: guestsCount >= maxAllowedCapacity ? '#DC2626' : '#166534',
+                                                    border: `1px solid ${guestsCount >= maxAllowedCapacity ? '#FECACA' : '#BBF7D0'}`
+                                                }}>
+                                                    {currentRoomIsDorm ? `${maxAllowedCapacity} Beds Dorm Limit` : `Max ${maxAllowedCapacity} Guests`}
+                                                </span>
+                                            </div>
                                             <span style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800' }}>
-                                                {discountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel}</span> : `${effectiveUnits} Unit(s)`}
+                                                {discountLabel ? (
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {discountLabel}</span>
+                                                ) : (
+                                                    currentRoomIsDorm
+                                                        ? `${guestsCount} ${guestsCount === 1 ? 'Dorm Bed' : 'Dorm Beds'}`
+                                                        : `${effectiveUnits} ${effectiveUnits === 1 ? typeMeta.unitTerm : typeMeta.unitsPlural}`
+                                                )}
                                             </span>
                                         </div>
 
-                                        <div style={{ display: 'flex', alignItems: 'center', background: '#F8F9F5', borderRadius: '14px', border: '1px solid rgba(18, 22, 19, 0.1)', padding: '5px 8px' }}>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            background: '#F8F9F5',
+                                            borderRadius: '14px',
+                                            border: guestsCount >= maxAllowedCapacity ? '1.5px solid #FCA5A5' : '1px solid rgba(18, 22, 19, 0.1)',
+                                            padding: '5px 8px',
+                                            transition: 'border-color 0.2s ease'
+                                        }}>
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    const next = Math.max(1, guestsCount - 1);
-                                                    setGuestsCount(next);
-                                                    setCustomUnits(null);
+                                                onClick={handleDecrementGuests}
+                                                disabled={guestsCount <= 1}
+                                                style={{
+                                                    width: '36px',
+                                                    height: '36px',
+                                                    borderRadius: '10px',
+                                                    background: '#FFFFFF',
+                                                    border: '1px solid rgba(18,22,19,0.1)',
+                                                    color: guestsCount <= 1 ? '#9CA3AF' : '#121613',
+                                                    fontSize: '18px',
+                                                    fontWeight: '800',
+                                                    cursor: guestsCount <= 1 ? 'not-allowed' : 'pointer',
+                                                    opacity: guestsCount <= 1 ? 0.4 : 1,
+                                                    transition: 'all 0.15s ease'
                                                 }}
-                                                style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
+                                                aria-label="Decrease count"
                                             >
                                                 −
                                             </button>
                                             <div style={{ flex: 1, textAlign: 'center', fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '800' }}>
-                                                {guestsCount} {guestsCount === 1 ? 'Camper' : 'Campers'}
+                                                {guestsCount} {currentRoomIsDorm ? (guestsCount === 1 ? 'Bed' : 'Beds') : (guestsCount === 1 ? (typeMeta.id === 'campsite' ? 'Camper' : 'Guest') : (typeMeta.id === 'campsite' ? 'Campers' : 'Guests'))}
                                             </div>
                                             <button
                                                 type="button"
-                                                onClick={() => {
-                                                    const next = guestsCount + 1;
-                                                    setGuestsCount(next);
-                                                    setCustomUnits(null);
+                                                onClick={handleIncrementGuests}
+                                                disabled={guestsCount >= maxAllowedCapacity}
+                                                style={{
+                                                    width: '36px',
+                                                    height: '36px',
+                                                    borderRadius: '10px',
+                                                    background: guestsCount >= maxAllowedCapacity ? '#F3F4F6' : '#FFFFFF',
+                                                    border: '1px solid rgba(18,22,19,0.1)',
+                                                    color: guestsCount >= maxAllowedCapacity ? '#9CA3AF' : '#121613',
+                                                    fontSize: '18px',
+                                                    fontWeight: '800',
+                                                    cursor: guestsCount >= maxAllowedCapacity ? 'not-allowed' : 'pointer',
+                                                    opacity: guestsCount >= maxAllowedCapacity ? 0.45 : 1,
+                                                    transition: 'all 0.15s ease'
                                                 }}
-                                                style={{ width: '36px', height: '36px', borderRadius: '10px', background: '#FFFFFF', border: '1px solid rgba(18,22,19,0.1)', color: '#121613', fontSize: '18px', fontWeight: '800', cursor: 'pointer' }}
+                                                title={guestsCount >= maxAllowedCapacity ? `Maximum capacity reached (${maxAllowedCapacity} beds max)` : 'Add more'}
+                                                aria-label="Increase count"
                                             >
                                                 +
                                             </button>
                                         </div>
+
+                                        {/* Dynamic Capacity Notification & Alert */}
+                                        {(guestsCount >= maxAllowedCapacity || capacityWarning) && (
+                                            <div style={{
+                                                marginTop: '8px',
+                                                padding: '9px 12px',
+                                                borderRadius: '11px',
+                                                background: '#FEF2F2',
+                                                border: '1px solid #FCA5A5',
+                                                color: '#991B1B',
+                                                fontSize: '11.5px',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '8px',
+                                                lineHeight: 1.35
+                                            }}>
+                                                <TriangleAlert size={14} color="#DC2626" style={{ flexShrink: 0 }} />
+                                                <span>
+                                                    <strong>{currentRoomIsDorm ? 'Dorm Bed Limit Reached:' : 'Room Capacity Limit Reached:'}</strong> Maximum <strong>{maxAllowedCapacity} {currentRoomIsDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : (maxAllowedCapacity === 1 ? 'guest' : 'guests')}</strong> for {currentRoom?.name || 'this room'}. Further selections have been capped.
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Price & Summary Box */}
@@ -1211,7 +1468,7 @@ return (
                                             </div>
                                         )}
                                         <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>
-                                            ✓ Includes {effectiveUnits} × {currentRoom.name}, Dinner BBQ & Guided Trek
+                                            ✓ Includes {currentRoomIsDorm ? `${guestsCount} × ${currentRoom.name} Bed${guestsCount > 1 ? 's' : ''}` : `${effectiveUnits} × ${currentRoom.name}`}, Dinner BBQ & Guided Trek
                                         </div>
                                     </div>
 
@@ -1265,7 +1522,7 @@ return (
                                         )}
 
                                         <a
-                                            href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} campers in ${currentRoom.name}.`)}
+                                            href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} ${currentRoomIsDorm ? 'dorm bed(s)' : 'campers'} in ${currentRoom.name}.`)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={() => logWhatsAppInquiry({
@@ -1333,8 +1590,8 @@ return (
                                         <span style={{ fontWeight: '800', color: '#121613' }}>08:00 PM</span>
                                     </div>
                                     <div style={ROW_SPACE_12}>
-                                        <span style={{ color: '#59655D' }}>4x4 Sunrise Jeep Safari:</span>
-                                        <span style={{ fontWeight: '800', color: '#166534' }}>04:30 AM (Peak Sunrise)</span>
+                                        <span style={{ color: '#59655D' }}>{locLower.includes('kolukkumalai') ? '4x4 Sunrise Jeep Safari:' : 'Morning Sunrise View:'}</span>
+                                        <span style={{ fontWeight: '800', color: '#166534' }}>{locLower.includes('kolukkumalai') ? '04:30 AM (Peak Sunrise)' : '06:30 AM (Scenic Ridge)'}</span>
                                     </div>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Breakfast & Checkout:</span>
@@ -1452,19 +1709,23 @@ Hi Aanandham! I have questions regarding availability and squad booking for this
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>
                             <div>
                                 <div className="star-badge" style={{ marginBottom: '6px' }}>
-                                    <span className="star-icon">★</span> SIMILAR SANCTUARIES
+                                    <span className="star-icon">★</span> SIMILAR RETREATS
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(24px, 3.5vw, 32px)', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                    Explore Other Kerala Wilderness Camps
+                                    Explore Other {camp?.region || typeMeta.label || 'Wilderness'} Stays
                                 </h2>
                             </div>
                             <Link href="/camps" style={{ color: '#166534', fontWeight: '800', fontSize: '13.5px', textDecoration: 'underline' }}>
-                                View All Campsites →
+                                View All Stays →
                             </Link>
                         </div>
 
                         <div className="similar-camps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 320px), 1fr))', gap: '24px' }}>
-                            {nearbyCamps.map((nc) => (
+                            {nearbyCamps.map((nc) => {
+                                const ncTypeMeta = resolvePropertyType(nc.propertyTypeSlug || nc.propertyType?.slug || nc.category, nc.title);
+                                const ncPricingUnit = getPricingUnitLabel(nc);
+
+                                return (
                                 <Link
                                     key={nc.id}
                                     href={`/camps/${nc.id}`}
@@ -1503,7 +1764,7 @@ Hi Aanandham! I have questions regarding availability and squad booking for this
                                     <div className="similar-camp-card-body" style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
                                             <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', textTransform: 'uppercase' }}>
-                                                {nc.region}
+                                                {ncTypeMeta.badge || nc.region}
                                             </span>
                                             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '10.5px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '2px 8px', borderRadius: '999px' }}>
                                                 <span className="live-available-dot" style={{ width: '6px', height: '6px' }} />
@@ -1517,13 +1778,14 @@ Hi Aanandham! I have questions regarding availability and squad booking for this
                                             <div>
                                                 <span style={{ fontSize: '10px', color: '#7D8880', display: 'block', fontWeight: '700', textTransform: 'uppercase' }}>Starts at</span>
                                                 <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: '900', color: '#121613' }}>₹{nc.price?.toLocaleString('en-IN') || nc.price}</span>
-                                                <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}> / person</span>
+                                                <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}> {ncPricingUnit}</span>
                                             </div>
-                                            <span style={{ color: '#166534', fontWeight: '800', fontSize: '12.5px' }}>View Camp →</span>
+                                            <span style={{ color: '#166534', fontWeight: '800', fontSize: '12.5px' }}>View Stay →</span>
                                         </div>
                                     </div>
                                 </Link>
-                            ))}
+                                );
+                            })}
                         </div>
                     </section>
                 )}

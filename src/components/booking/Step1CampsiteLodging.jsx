@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from 'react';
-import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle, Building2, Home, Compass, Bed, Trees, Mountain, Landmark, BedDouble, Bath, ImageOff } from 'lucide-react';
 import CustomThemeCalendar from '../CustomThemeCalendar';
 import CustomDateBatchPicker from '../CustomDateBatchPicker';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
@@ -8,6 +8,7 @@ import VerifiedStayBadge from '../common/VerifiedStayBadge';
 import { inr } from '../../lib/utils';
 import { parseRoomCapacity } from './BookingConstants';
 import BookingValidationPopup from './BookingValidationPopup';
+import { resolvePropertyType, getPricingUnitLabel, getInventoryTypeMeta } from '../../lib/propertyStayTypes';
 
 export default function Step1CampsiteLodging({
     campsList = [],
@@ -39,9 +40,52 @@ export default function Step1CampsiteLodging({
     const [isSwitchingCamp, setIsSwitchingCamp] = useState(false);
 
     const currentPkg = selectedPkg || campsList.find(p => p.id === selectedPkgId) || campsList[0] || {};
-    const availableRooms = currentPkg.rooms || [];
+    const typeMeta = resolvePropertyType(currentPkg.propertyTypeSlug || currentPkg.propertyType?.slug || currentPkg.category, currentPkg.title);
+    const availableRooms = (currentPkg.rooms && currentPkg.rooms.length > 0) ? currentPkg.rooms : [
+        {
+            id: `${currentPkg.id || 'stay'}-primary`,
+            name: `${currentPkg.title || 'Selected Stay'} · ${typeMeta.unitTerm}`,
+            capacity: '2 Guests',
+            price: currentPkg.price,
+            features: typeMeta.defaultAmenities.slice(0, 2),
+            inventoryType: typeMeta.id === 'campsite' ? 'GLAMP_DOME' : 'PRIVATE_UNIT',
+            bedConfig: typeMeta.id === 'hostel' ? '1 Single Bed' : '1 King Bed',
+            pricingModel: typeMeta.id === 'hostel' ? 'PER_BED' : (typeMeta.id === 'campsite' ? 'per_guest_night' : 'PER_ROOM')
+        }
+    ];
     const currentRoom = selectedRoom || availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0] || {};
     const roomCapacity = currentRoom?.capacity ? parseRoomCapacity(currentRoom.capacity) : 2;
+
+    const isCurrentRoomDorm = String(currentRoom?.name || '').toLowerCase().includes('dorm') ||
+        String(currentRoom?.name || '').toLowerCase().includes('bunk') ||
+        String(currentRoom?.inventoryType || '').toUpperCase() === 'DORM_BED' ||
+        String(currentRoom?.pricingModel || '').toUpperCase() === 'PER_BED';
+
+    const maxAllowedCapacity = useMemo(() => {
+        if (!currentRoom) return 10;
+        if (isCurrentRoomDorm) {
+            const units = Number(currentRoom.totalUnits) || 0;
+            const capDigits = parseInt(String(currentRoom.capacity || '').match(/\d+/)?.[0] || '0', 10);
+            const nameDigits = parseInt(String(currentRoom.name || '').match(/(\d+)\s*[- ]*(bed|bunk|person|sharing)/i)?.[1] || String(currentRoom.name || '').match(/\d+/)?.[0] || '0', 10);
+            if (units > 1) return units;
+            if (capDigits > 0) return capDigits;
+            if (nameDigits > 0) return nameDigits;
+            return 10;
+        } else {
+            const unitCap = parseRoomCapacity(currentRoom.capacity || currentRoom.guestCapacity || 2);
+            const availableUnits = Math.max(1, Number(currentRoom.totalUnits) || 3);
+            return unitCap * availableUnits;
+        }
+    }, [currentRoom, isCurrentRoomDorm]);
+
+    // Enforce dynamic capacity ceiling in booking modal
+    useEffect(() => {
+        if ((adults + children) > maxAllowedCapacity) {
+            const newAdults = Math.max(1, maxAllowedCapacity - children);
+            setAdults(newAdults);
+        }
+    }, [selectedRoomId, maxAllowedCapacity, adults, children, setAdults]);
+
     const autoUnits = autoRequiredUnits || Math.max(1, Math.ceil((adults + children) / roomCapacity));
     const allocatedUnits = totalUnits !== undefined && totalUnits !== null ? totalUnits : autoUnits;
     const totalMaxCapacity = totalRoomCapacity || (allocatedUnits * roomCapacity);
@@ -57,13 +101,13 @@ export default function Step1CampsiteLodging({
         const activeRoomId = selectedRoomId || currentRoom?.id;
 
         if (!activePkgId) {
-            errs.push({ field: 'campsite', label: 'Campsite Destination', message: 'Please select a destination campsite' });
+            errs.push({ field: 'campsite', label: 'Property / Sanctuary', message: 'Please select a destination property' });
         } else if (!selectedPkgId) {
             setSelectedPkgId(activePkgId);
         }
 
         if (!activeRoomId) {
-            errs.push({ field: 'room', label: 'Lodging Style', message: 'Please select your lodging style (Tent / Dome)' });
+            errs.push({ field: 'room', label: typeMeta.unitTerm, message: `Please select your ${typeMeta.unitTerm.toLowerCase()}` });
         } else if (!selectedRoomId) {
             setSelectedRoomId(activeRoomId);
         }
@@ -71,7 +115,7 @@ export default function Step1CampsiteLodging({
             errs.push({ field: 'date', label: 'Stay Date', message: 'Please select your check-in date' });
         }
         if (adults < 1) {
-            errs.push({ field: 'guests', label: 'Campers', message: 'At least 1 adult camper is required' });
+            errs.push({ field: 'guests', label: typeMeta.id === 'campsite' ? 'Campers' : 'Guests', message: `At least 1 adult ${typeMeta.id === 'campsite' ? 'camper' : 'guest'} is required` });
         }
 
         if (errs.length > 0) {
@@ -124,8 +168,11 @@ export default function Step1CampsiteLodging({
                         <div style={{ minWidth: 0, flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px', flexWrap: 'wrap' }}>
                                 <VerifiedStayBadge size="sm" iconOnly={true} />
+                                <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '1px 7px', borderRadius: '999px' }}>
+                                    {currentPkg.propertyType?.label || typeMeta.badge || typeMeta.label}
+                                </span>
                                 {currentPkg.altitude && (
-                                    <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '1px 7px', borderRadius: '999px' }}>
+                                    <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#E5A93B', color: '#121613', padding: '1px 7px', borderRadius: '999px' }}>
                                         {currentPkg.altitude}
                                     </span>
                                 )}
@@ -246,7 +293,7 @@ export default function Step1CampsiteLodging({
                 <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                         <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            Choose Lodging Style ({availableRooms.length} Options)
+                            Choose {typeMeta.unitTerm} ({availableRooms.length} Available)
                         </span>
                     </div>
 
@@ -254,6 +301,17 @@ export default function Step1CampsiteLodging({
                         {availableRooms.map((room) => {
                             const isRoomSelected = (selectedRoomId || currentRoom?.id) === room.id;
                             const roomCap = room.capacity ? parseRoomCapacity(room.capacity) : 2;
+                            const isDorm = String(room?.name || '').toLowerCase().includes('dorm') ||
+                                           String(room?.name || '').toLowerCase().includes('bunk') ||
+                                           room.pricingModel === 'PER_BED' ||
+                                           room.inventoryType === 'DORM_BED';
+                            const isRoomLevel = !isDorm && (
+                                room.pricingModel === 'PER_ROOM' ||
+                                room.pricingModel === 'per_room_night' ||
+                                (typeMeta.id !== 'campsite' && typeMeta.id !== 'hostel' && room.pricingModel !== 'PER_BED')
+                            );
+                            const priceSuffix = isDorm ? '/ bed' : (isRoomLevel ? '/ room' : (typeMeta.id === 'campsite' ? '/ camper' : '/ night'));
+
                             return (
                                 <div
                                     key={room.id}
@@ -285,26 +343,55 @@ export default function Step1CampsiteLodging({
                                             transition: 'all 0.15s ease'
                                         }} />
 
-                                        {room.image && (
+                                        {room.image ? (
                                             <img
                                                 src={room.image}
                                                 alt={room.name}
                                                 style={{ width: '42px', height: '42px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
                                                 loading="lazy"
                                                 decoding="async"
+                                                onError={(e) => {
+                                                    e.currentTarget.style.display = 'none';
+                                                    if (e.currentTarget.nextElementSibling) {
+                                                        e.currentTarget.nextElementSibling.style.display = 'flex';
+                                                    }
+                                                }}
                                             />
+                                        ) : (
+                                            <div
+                                                style={{
+                                                    width: '42px',
+                                                    height: '42px',
+                                                    borderRadius: '8px',
+                                                    background: '#F1F3EC',
+                                                    border: '1px dashed rgba(18,22,19,0.15)',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    color: '#9CA3AF',
+                                                    flexShrink: 0
+                                                }}
+                                                title="No preview available"
+                                            >
+                                                <ImageOff size={16} />
+                                            </div>
                                         )}
 
                                         <div style={{ flex: 1, minWidth: 0 }}>
                                             <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                                 {room.name}
                                             </div>
-                                            <div style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                            <div style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
                                                 <Users size={11} color="#59655D" />
-                                                <span>{room.capacity || `${roomCap} Campers`}</span>
+                                                <span>{room.guestCapacity ? `${room.guestCapacity} Guests` : (room.capacity || `${roomCap} Guests`)}</span>
+                                                {room.bedConfig && (
+                                                    <span style={{ fontSize: '9.5px', color: '#166534', background: '#DCFCE7', padding: '1px 5px', borderRadius: '4px' }}>
+                                                        {room.bedConfig}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div style={{ fontSize: '13px', fontWeight: '900', color: '#166534' }}>
-                                                ₹{(room.price || room.pricePerPerson || currentPkg.price || 2499).toLocaleString('en-IN')} <span style={{ fontSize: '10px', color: '#59655D', fontWeight: '600' }}>/ camper</span>
+                                                ₹{(room.price || room.pricePerPerson || currentPkg.price || 2499).toLocaleString('en-IN')} <span style={{ fontSize: '10px', color: '#59655D', fontWeight: '600' }}>{priceSuffix}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -354,10 +441,23 @@ export default function Step1CampsiteLodging({
 
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                                     <div>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                            <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
-                                                Campers
-                                            </label>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', flexWrap: 'wrap', gap: '6px' }}>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <label style={{ fontSize: '12.5px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', margin: 0 }}>
+                                                    {isCurrentRoomDorm ? 'Dorm Beds' : 'Campers'}
+                                                </label>
+                                                <span style={{
+                                                    fontSize: '10px',
+                                                    fontWeight: '800',
+                                                    padding: '2px 7px',
+                                                    borderRadius: '6px',
+                                                    background: (adults + children) >= maxAllowedCapacity ? '#FEF2F2' : '#F0FDF4',
+                                                    color: (adults + children) >= maxAllowedCapacity ? '#DC2626' : '#166534',
+                                                    border: `1px solid ${(adults + children) >= maxAllowedCapacity ? '#FECACA' : '#BBF7D0'}`
+                                                }}>
+                                                    {isCurrentRoomDorm ? `${maxAllowedCapacity} Beds Dorm Limit` : `Max ${maxAllowedCapacity} Guests`}
+                                                </span>
+                                            </div>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
                                                 {activeDiscountLabel ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Sparkles size={11} /> {activeDiscountLabel}</span> : 'Standard Fare'}
                                             </span>
@@ -370,79 +470,127 @@ export default function Step1CampsiteLodging({
                                                 { count: 4, label: '4 Squad' },
                                                 { count: 6, label: '6 Friends' },
                                                 { count: 8, label: '8 Tribe' }
-                                            ].map(preset => (
-                                                <button
-                                                    key={preset.count}
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setAdults(preset.count);
-                                                        setChildren(0);
-                                                        setCustomUnits(null);
-                                                    }}
-                                                    style={{
-                                                        flex: 1,
-                                                        padding: '5px 0',
-                                                        borderRadius: '8px',
-                                                        border: (adults === preset.count && children === 0) ? '1px solid #166534' : '1px solid rgba(18,22,19,0.1)',
-                                                        background: (adults === preset.count && children === 0) ? '#166534' : '#FFFFFF',
-                                                        color: (adults === preset.count && children === 0) ? '#FFFFFF' : '#121613',
-                                                        fontSize: '11px',
-                                                        fontWeight: '800',
-                                                        cursor: 'pointer'
-                                                    }}
-                                                >
-                                                    {preset.label}
-                                                </button>
-                                            ))}
+                                            ].map(preset => {
+                                                const isPresetExceeding = preset.count > maxAllowedCapacity;
+                                                return (
+                                                    <button
+                                                        key={preset.count}
+                                                        type="button"
+                                                        disabled={isPresetExceeding}
+                                                        onClick={() => {
+                                                            if (!isPresetExceeding) {
+                                                                setAdults(preset.count);
+                                                                setChildren(0);
+                                                                setCustomUnits(null);
+                                                            }
+                                                        }}
+                                                        style={{
+                                                            flex: 1,
+                                                            padding: '5px 0',
+                                                            borderRadius: '8px',
+                                                            border: (adults === preset.count && children === 0) ? '1px solid #166534' : '1px solid rgba(18,22,19,0.1)',
+                                                            background: (adults === preset.count && children === 0) ? '#166534' : (isPresetExceeding ? '#F3F4F6' : '#FFFFFF'),
+                                                            color: (adults === preset.count && children === 0) ? '#FFFFFF' : (isPresetExceeding ? '#9CA3AF' : '#121613'),
+                                                            fontSize: '11px',
+                                                            fontWeight: '800',
+                                                            cursor: isPresetExceeding ? 'not-allowed' : 'pointer',
+                                                            opacity: isPresetExceeding ? 0.45 : 1,
+                                                            transition: 'all 0.15s ease'
+                                                        }}
+                                                        title={isPresetExceeding ? `Exceeds room capacity (${maxAllowedCapacity} max)` : ''}
+                                                    >
+                                                        {preset.label}
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
 
                                         <div style={{ display: 'flex', gap: '12px' }}>
-                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: (adults + children) >= maxAllowedCapacity ? '1px solid #FCA5A5' : '1px solid rgba(0,0,0,0.06)' }}>
                                                 <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Adults (12+ yrs)</div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <button
                                                         type="button"
                                                         onClick={() => { setAdults(Math.max(1, adults - 1)); setCustomUnits(null); }}
                                                         aria-label="Decrease adult count"
-                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        disabled={adults <= 1}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: adults <= 1 ? 'not-allowed' : 'pointer', fontWeight: '800', opacity: adults <= 1 ? 0.4 : 1 }}
                                                     >
                                                         -
                                                     </button>
                                                     <span style={{ fontSize: '15px', fontWeight: '800' }}>{adults}</span>
                                                     <button
                                                         type="button"
-                                                        onClick={() => { setAdults(adults + 1); setCustomUnits(null); }}
+                                                        onClick={() => {
+                                                            if ((adults + children) < maxAllowedCapacity) {
+                                                                setAdults(adults + 1);
+                                                                setCustomUnits(null);
+                                                            }
+                                                        }}
+                                                        disabled={(adults + children) >= maxAllowedCapacity}
                                                         aria-label="Increase adult count"
-                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: (adults + children) >= maxAllowedCapacity ? '#F3F4F6' : '#FFFFFF', color: (adults + children) >= maxAllowedCapacity ? '#9CA3AF' : '#121613', cursor: (adults + children) >= maxAllowedCapacity ? 'not-allowed' : 'pointer', fontWeight: '800', opacity: (adults + children) >= maxAllowedCapacity ? 0.45 : 1 }}
+                                                        title={(adults + children) >= maxAllowedCapacity ? `Capacity reached (${maxAllowedCapacity} max)` : ''}
                                                     >
                                                         +
                                                     </button>
                                                 </div>
                                             </div>
 
-                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: '1px solid rgba(0,0,0,0.06)' }}>
+                                            <div style={{ flex: 1, padding: '10px 12px', background: '#F8F9F5', borderRadius: '16px', border: (adults + children) >= maxAllowedCapacity ? '1px solid #FCA5A5' : '1px solid rgba(0,0,0,0.06)' }}>
                                                 <div style={{ fontSize: '11.5px', color: '#59655D', fontWeight: '700', marginBottom: '4px' }}>Kids (5–11 yrs)</div>
                                                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                                     <button
                                                         type="button"
                                                         onClick={() => { setChildren(Math.max(0, children - 1)); setCustomUnits(null); }}
                                                         aria-label="Decrease children count"
-                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        disabled={children <= 0}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: children <= 0 ? 'not-allowed' : 'pointer', fontWeight: '800', opacity: children <= 0 ? 0.4 : 1 }}
                                                     >
                                                         -
                                                     </button>
                                                     <span style={{ fontSize: '15px', fontWeight: '800' }}>{children}</span>
                                                     <button
                                                         type="button"
-                                                        onClick={() => { setChildren(children + 1); setCustomUnits(null); }}
+                                                        onClick={() => {
+                                                            if ((adults + children) < maxAllowedCapacity) {
+                                                                setChildren(children + 1);
+                                                                setCustomUnits(null);
+                                                            }
+                                                        }}
+                                                        disabled={(adults + children) >= maxAllowedCapacity}
                                                         aria-label="Increase children count"
-                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: '#FFFFFF', cursor: 'pointer', fontWeight: '800' }}
+                                                        style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid rgba(0,0,0,0.15)', background: (adults + children) >= maxAllowedCapacity ? '#F3F4F6' : '#FFFFFF', color: (adults + children) >= maxAllowedCapacity ? '#9CA3AF' : '#121613', cursor: (adults + children) >= maxAllowedCapacity ? 'not-allowed' : 'pointer', fontWeight: '800', opacity: (adults + children) >= maxAllowedCapacity ? 0.45 : 1 }}
+                                                        title={(adults + children) >= maxAllowedCapacity ? `Capacity reached (${maxAllowedCapacity} max)` : ''}
                                                     >
                                                         +
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Dynamic Capacity Ceiling Alert */}
+                                        {(adults + children) >= maxAllowedCapacity && (
+                                            <div style={{
+                                                marginTop: '8px',
+                                                padding: '8px 12px',
+                                                borderRadius: '10px',
+                                                background: '#FEF2F2',
+                                                border: '1px solid #FCA5A5',
+                                                color: '#991B1B',
+                                                fontSize: '11px',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                lineHeight: 1.3
+                                            }}>
+                                                <AlertCircle size={13} color="#DC2626" style={{ flexShrink: 0 }} />
+                                                <span>
+                                                    <strong>Capacity Reached:</strong> Maximum capacity is <strong>{maxAllowedCapacity} {isCurrentRoomDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : (maxAllowedCapacity === 1 ? 'guest' : 'guests')}</strong> for {currentRoom?.name || 'this room'}. Further selections have stopped.
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Auto Stay Allocation Info */}

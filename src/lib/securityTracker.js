@@ -246,8 +246,8 @@ export function checkSecurityGate(request, fingerprint = null) {
 
     const authHeader = request.headers.get('authorization');
     const internalToken = request.headers.get('x-internal-token');
-    const validToken = process.env.PMS_INTERNAL_TOKEN || 'pms_int_aanandham_hq_j4j0yrc1valjk3ajy30chh';
-    if (authHeader === `Bearer ${validToken}` || internalToken === validToken) {
+    const validToken = process.env.PMS_INTERNAL_TOKEN;
+    if (validToken && (authHeader === `Bearer ${validToken}` || internalToken === validToken)) {
         return { allowed: true };
     }
 

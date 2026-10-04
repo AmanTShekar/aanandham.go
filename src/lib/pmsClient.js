@@ -4,7 +4,7 @@
  * Enterprise headless client SDK for connecting the marketing website
  * to the central Aanandham OpenPMS backend.
  *
- * Includes built-in graceful local fallback resilience.
+ * Static content may fall back locally; transactional actions fail closed.
  */
 import { INITIAL_ALL_CAMPS } from './campsData';
 import { DEFAULT_DESTINATION_CONTENT, DEFAULT_SITE_PAGES_CONTENT } from './cmsContent';
@@ -17,7 +17,7 @@ export function getPmsBaseUrl() {
     return process.env.PMS_BASE_URL.replace(/\/$/, "");
   }
   if (process.env.NODE_ENV === "production") {
-    return "https://aanandham-pms.onrender.com";
+    return "https://pms.aanandham.in";
   }
   return "http://localhost:3001";
 }
@@ -27,7 +27,6 @@ export class AanandhamPmsClient {
     this.tenantId = config.tenantId || process.env.NEXT_PUBLIC_PMS_TENANT_ID || "t-aanandham-hq";
     this.publishableKey = config.publishableKey || config.apiKey || null;
     this.endpoint = (config.endpoint || getPmsBaseUrl()).replace(/\/$/, "");
-    this.razorpayKeyId = config.razorpayKeyId || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_aanandham_hq";
 
     // 1. Namespaced Campsites Resource
     this.campsites = {
@@ -187,22 +186,10 @@ export class AanandhamPmsClient {
   }
 
   async checkAvailability({ campsiteId, date, guests = 2 }) {
-    if (!campsiteId) return { available: true, remainingUnits: 8 };
-    try {
-      const query = new URLSearchParams({
-        tenantId: this.tenantId,
-        campsiteId,
-        ...(date ? { date } : {}),
-        guests: String(guests),
-      }).toString();
-      return await this._request(`/api/bookings/availability?${query}`);
-    } catch {
-      return { available: true, campsiteId, date, remainingUnits: 8 };
-    }
+    throw new Error('Live availability API is not implemented; do not display unverified vacancy.');
   }
 
   async createInquiry(data) {
-    try {
       return await this._request("/api/inquiries", {
         method: "POST",
         body: JSON.stringify({
@@ -210,9 +197,6 @@ export class AanandhamPmsClient {
           ...data,
         }),
       });
-    } catch {
-      return { success: true, message: "Inquiry registered in local queue." };
-    }
   }
 
   async createBooking(bookingData) {
@@ -226,65 +210,11 @@ export class AanandhamPmsClient {
   }
 
   async getBooking(bookingId) {
-    return await this._request(`/api/bookings/status?id=${encodeURIComponent(bookingId)}`);
+    throw new Error('Public booking-status lookup is not implemented; use the authenticated PMS admin API.');
   }
 
-  async openPaymentCheckout({
-    campsiteId,
-    packageName,
-    roomType = "Ridge Glamping Tent",
-    dates,
-    guests = 2,
-    guest = { name: "", phone: "", email: "" },
-    total,
-    themeColor = "#166534",
-    onSuccess,
-    onError,
-    onDismiss,
-  }) {
-    if (typeof window === "undefined") return;
-
-    try {
-      if (!window.Razorpay) {
-        await new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = "https://checkout.razorpay.com/v1/checkout.js";
-          script.async = true;
-          script.onload = resolve;
-          script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
-          document.body.appendChild(script);
-        });
-      }
-
-      const rzp = new window.Razorpay({
-        key: this.razorpayKeyId,
-        amount: Math.round(total * 100),
-        currency: "INR",
-        name: packageName || "Aanandham Mountain Glamping",
-        description: `${guests} Campers · ${dates || "Selected Dates"}`,
-        prefill: {
-          name: guest.name,
-          contact: guest.phone,
-          email: guest.email,
-        },
-        theme: { color: themeColor },
-        handler: (response) => {
-          if (typeof onSuccess === "function") {
-            onSuccess(response);
-          }
-        },
-        modal: {
-          ondismiss: () => {
-            if (typeof onDismiss === "function") onDismiss();
-          },
-        },
-      });
-
-      rzp.open();
-    } catch (err) {
-      if (typeof onError === "function") onError(err);
-      else console.error("Checkout Error:", err);
-    }
+  async openPaymentCheckout() {
+    throw new Error('This legacy checkout has no PMS-backed payment order. Use BookingEngineModal or the PMS SDK checkout.');
   }
 }
 
@@ -292,7 +222,6 @@ export class AanandhamPmsClient {
 export const pms = new AanandhamPmsClient({
   endpoint: process.env.NEXT_PUBLIC_PMS_URL || "http://localhost:3001",
   tenantId: process.env.NEXT_PUBLIC_PMS_TENANT_ID || "t-aanandham-hq",
-  razorpayKeyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_aanandham_hq",
 });
 
 export default pms;

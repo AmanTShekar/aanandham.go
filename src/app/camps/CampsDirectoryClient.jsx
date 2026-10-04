@@ -11,9 +11,22 @@ const BookingEngineModal = dynamic(() => import('../../components/BookingEngineM
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
 import { SkeletonCampGrid, AssetImage } from '../../components/common/SkeletonLoader';
-import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap } from 'lucide-react';
+import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap, Building2, Home, Compass, Bed, Trees, Mountain, Landmark } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
+import { resolvePropertyType, getPricingUnitLabel, PROPERTY_STAY_CATEGORIES } from '../../lib/propertyStayTypes';
+
+function PropertyTypeIcon({ typeMeta, size = 13, color = "#166534" }) {
+    const iconName = typeMeta?.icon;
+    if (iconName === 'Building2') return <Building2 size={size} color={color} />;
+    if (iconName === 'Home') return <Home size={size} color={color} />;
+    if (iconName === 'Compass') return <Compass size={size} color={color} />;
+    if (iconName === 'Bed') return <Bed size={size} color={color} />;
+    if (iconName === 'Mountain') return <Mountain size={size} color={color} />;
+    if (iconName === 'Trees') return <Trees size={size} color={color} />;
+    if (iconName === 'Landmark') return <Landmark size={size} color={color} />;
+    return <Tent size={size} color={color} />;
+}
 
 const SORT_OPTIONS = [
     { value: 'recommended', label: 'Recommended', icon: 'Sparkles' },
@@ -177,6 +190,8 @@ export default function CampsDirectoryClient({
 
             // Category filter
             const matchesCategory = selectedCategory === 'All' || 
+                (camp.propertyTypeSlug && camp.propertyTypeSlug.toLowerCase() === selectedCategory.toLowerCase()) ||
+                (camp.propertyType?.slug && camp.propertyType.slug.toLowerCase() === selectedCategory.toLowerCase()) ||
                 (camp.category && camp.category.toLowerCase().includes(selectedCategory.toLowerCase())) ||
                 (camp.tag && camp.tag.toLowerCase().includes(selectedCategory.toLowerCase()));
 
@@ -393,13 +408,18 @@ export default function CampsDirectoryClient({
                                 })}
                             </div>
 
-                            {/* Category Filter Pills */}
+                            {/* Category Filter Pills (PMS Taxonomy) */}
                             <div className="camps-pills-row" data-lenis-prevent="true" data-lenis-prevent-wheel="true" data-lenis-prevent-touch="true">
                                 {[
-                                    { id: 'All', label: 'All Styles' },
-                                    { id: 'Glamp', label: 'Glamping' },
-                                    { id: 'Summit', label: 'Summit Treks' },
-                                    { id: 'Forest', label: 'Rainforest & Pine' }
+                                    { id: 'All', label: 'All Stays' },
+                                    { id: 'resorts', label: 'Resorts' },
+                                    { id: 'villas', label: 'Villas' },
+                                    { id: 'camps', label: 'Glamp & Camps' },
+                                    { id: 'cottages-and-cabins', label: 'Cottages' },
+                                    { id: 'mountain-stays', label: 'Mountain Stays' },
+                                    { id: 'homestays', label: 'Homestays' },
+                                    { id: 'houseboats', label: 'Houseboats' },
+                                    { id: 'hotels', label: 'Hotels' }
                                 ].map(cat => {
                                     const isSelected = selectedCategory === cat.id;
                                     return (
@@ -409,13 +429,14 @@ export default function CampsDirectoryClient({
                                             style={{
                                                 padding: '7px 14px',
                                                 borderRadius: '999px',
-                                                background: isSelected ? '#E5A93B' : 'transparent',
-                                                color: isSelected ? '#121613' : '#59655D',
-                                                border: isSelected ? '1px solid #E5A93B' : '1px solid rgba(18, 22, 19, 0.12)',
+                                                background: isSelected ? '#121613' : 'transparent',
+                                                color: isSelected ? '#D5ED55' : '#59655D',
+                                                border: isSelected ? '1px solid #121613' : '1px solid rgba(18, 22, 19, 0.12)',
                                                 fontSize: '12px',
                                                 fontWeight: '800',
                                                 cursor: 'pointer',
-                                                transition: 'all 0.2s ease'
+                                                transition: 'all 0.2s ease',
+                                                whiteSpace: 'nowrap'
                                             }}
                                         >
                                             {cat.label}
@@ -530,6 +551,8 @@ export default function CampsDirectoryClient({
                             {filteredCamps.map((camp) => {
                                 const isLiked = wishlist.includes(camp.id);
                                 const galleryList = camp.gallery && camp.gallery.length > 0 ? camp.gallery : [camp.image];
+                                const typeMeta = resolvePropertyType(camp.propertyTypeSlug || camp.propertyType?.slug || camp.category, camp.title);
+                                const pricingUnit = getPricingUnitLabel(camp);
 
                                 return (
                                     <div
@@ -585,24 +608,41 @@ export default function CampsDirectoryClient({
                                                 {/* Badges Left */}
                                                 <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', maxWidth: 'calc(100% - 90px)', pointerEvents: 'auto' }}>
                                                     <span style={{
-                                                        background: '#E5A93B',
-                                                        color: '#121613',
+                                                        background: '#121613',
+                                                        color: '#D5ED55',
                                                         fontSize: '11px',
                                                         fontWeight: '800',
                                                         padding: '4px 11px',
                                                         borderRadius: '999px',
-                                                        boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-                                                        whiteSpace: 'nowrap'
+                                                        boxShadow: '0 2px 10px rgba(0,0,0,0.25)',
+                                                        whiteSpace: 'nowrap',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        gap: '4px'
                                                     }}>
-                                                        {camp.altitude || 'Western Ghats'}
+                                                        <PropertyTypeIcon typeMeta={typeMeta} size={11} color="#D5ED55" />
+                                                        <span>{camp.propertyType?.label || typeMeta.badge || typeMeta.label}</span>
                                                     </span>
-                                                    {camp.tag && (
+                                                    {camp.altitude && (
                                                         <span style={{
-                                                            background: '#121613',
-                                                            color: '#D5ED55',
+                                                            background: '#E5A93B',
+                                                            color: '#121613',
                                                             fontSize: '10.5px',
                                                             fontWeight: '800',
                                                             padding: '4px 10px',
+                                                            borderRadius: '999px',
+                                                            whiteSpace: 'nowrap'
+                                                        }}>
+                                                            {camp.altitude}
+                                                        </span>
+                                                    )}
+                                                    {camp.tag && (
+                                                        <span style={{
+                                                            background: 'rgba(255, 255, 255, 0.92)',
+                                                            color: '#121613',
+                                                            fontSize: '10px',
+                                                            fontWeight: '800',
+                                                            padding: '4px 9px',
                                                             borderRadius: '999px',
                                                             whiteSpace: 'nowrap'
                                                         }}>
@@ -748,8 +788,8 @@ export default function CampsDirectoryClient({
 
                                             {/* Stay Accommodation Spec */}
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#4B5563', fontWeight: '600', marginBottom: '10px' }}>
-                                                <Tent size={13} color="#166534" />
-                                                <span>{camp.category || 'High-Altitude Ridge Stay'} · {camp.altitude} · {camp.duration || '2D / 1N'}</span>
+                                                <PropertyTypeIcon typeMeta={typeMeta} size={13} color="#166534" />
+                                                <span>{camp.propertyType?.label || typeMeta.label} · {typeMeta.unitTerm}{camp.altitude ? ` · ${camp.altitude}` : ''} · {camp.duration || '1 Night Stay'}</span>
                                             </div>
 
                                             {/* Description snippet */}
@@ -763,7 +803,7 @@ export default function CampsDirectoryClient({
                                                 WebkitBoxOrient: 'vertical',
                                                 overflow: 'hidden'
                                             }}>
-                                                {camp.description ? camp.description.slice(0, 125) + '...' : 'High-altitude ridge glamping, sunrise jeep convoy safari, campfire barbecue dinner, and certified trail guides.'}
+                                                {camp.description ? camp.description.slice(0, 125) + '...' : 'Verified sanctuary stay with panoramic views, curated culinary dining, and dedicated local host guidance.'}
                                             </p>
 
                                             {/* Included Highlights & Perks Chips */}
@@ -785,12 +825,20 @@ export default function CampsDirectoryClient({
                                                         Starts at
                                                     </span>
                                                     <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
-                                                        <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#121613' }}>
-                                                            ₹{camp.price.toLocaleString('en-IN')}
-                                                        </span>
-                                                        <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>
-                                                            / camper
-                                                        </span>
+                                                        {camp.price != null ? (
+                                                            <>
+                                                                <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#121613' }}>
+                                                                    ₹{Number(camp.price).toLocaleString('en-IN')}
+                                                                </span>
+                                                                <span style={{ fontSize: '11px', color: '#59655D', fontWeight: '600' }}>
+                                                                    {pricingUnit}
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '15px', fontWeight: '800', color: '#121613' }}>
+                                                                Contact for Rates
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 </div>
 

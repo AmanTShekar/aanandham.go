@@ -1,31 +1,25 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import { requestPms, pmsTenantId } from '@/lib/pmsServerBridge';
 
-const PMS_URL =
-  process.env.NEXT_PUBLIC_PMS_URL ||
-  process.env.PMS_BASE_URL ||
-  "https://aanandham-pms.onrender.com";
+const allowedEvents = new Set(['pageview', 'unique_visit', 'detail_view', 'booking_start', 'date_picker', 'checkout_init', 'checkout_started']);
 
 export async function POST(request) {
+  const body = await request.json().catch(() => null);
+  if (!body || !allowedEvents.has(body.eventType || 'pageview')) {
+    return NextResponse.json({ success: false, message: 'Invalid analytics event' }, { status: 400 });
+  }
   try {
-    const payload = await request.json().catch(() => ({}));
-
-    // Forward to Central PMS backend (Server-to-Server, 100% bypasses browser CSP & ad-blockers)
-    const targetUrl = `${PMS_URL.replace(/\/$/, "")}/api/analytics`;
-
-    fetch(targetUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }).catch((err) => {
-      console.error("PMS Analytics proxy forward error:", err?.message || err);
+    const result = await requestPms('/api/analytics', {
+      method: 'POST',
+      body: { ...body, tenantId: pmsTenantId() },
+      timeoutMs: 5000,
     });
-
-    return NextResponse.json({ success: true });
-  } catch (err) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 400 });
+    return NextResponse.json(result.payload, { status: result.status });
+  } catch {
+    return NextResponse.json({ success: false, message: 'Analytics unavailable' }, { status: 503 });
   }
 }
 
 export async function GET() {
-  return NextResponse.json({ status: "analytics-proxy-active" });
+  return NextResponse.json({ success: false, message: 'Analytics are available in the PMS admin API' }, { status: 405 });
 }

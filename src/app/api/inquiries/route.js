@@ -4,7 +4,7 @@ import { checkRateLimit, isIpBlocked } from '@/lib/redis';
 import { getStoredInquiries, addStoredInquiry } from '@/lib/inquiryStore';
 import { sanitizeLogOutput } from '@/lib/dlpSanitizer';
 import { checkSecurityGate } from '@/lib/securityTracker';
-import { getPmsBaseUrl } from '@/lib/pmsClient';
+import { requestPms, pmsTenantId } from '@/lib/pmsServerBridge';
 
 export async function GET(request) {
     const admin = await getAdminPayload(request);
@@ -56,10 +56,7 @@ export async function POST(request) {
             return NextResponse.json({ success: false, message: 'Name is required.' }, { status: 400 });
         }
 
-        const inquiryId = `INQ-${Date.now().toString(36).toUpperCase()}${Math.random().toString(36).slice(2, 4).toUpperCase()}`;
-
         const newRecord = {
-            id: inquiryId,
             name,
             phone,
             email: String(body.email || '').trim().slice(0, 200),
@@ -71,48 +68,34 @@ export async function POST(request) {
             createdAt: new Date().toISOString()
         };
 
-        await addStoredInquiry(newRecord);
-
-        // Forward to OpenPMS CRM Inbound Pipeline
-        const pmsUrl = getPmsBaseUrl();
+        // PMS owns the lead; never acknowledge a local-only inquiry as delivered.
+        let pmsResult;
         try {
-            fetch(`${pmsUrl}/api/inquiries`, {
+            pmsResult = await requestPms('/api/inquiries', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
+                body: {
                     name,
                     phone,
-                    email: body.email || '',
+                    email: newRecord.email,
                     inquiryType,
                     guests,
                     travelDates,
                     message,
                     source: source || 'Aanandham.go Website',
-                    tenantId: 't-aanandham-hq',
+                    tenantId: pmsTenantId(),
                     campsiteId: body.campsiteId || null,
                     status: 'NEW_LEAD'
-                }),
-                signal: AbortSignal.timeout(3000)
-            }).catch(() => {});
-        } catch (pmsSyncErr) {}
+                },
+                timeoutMs: 10000
+            });
+        } catch {
+            return NextResponse.json({ success: false, message: 'Inquiry service is temporarily unavailable. Please contact the property directly.' }, { status: 503 });
+        }
+        if (!pmsResult.payload.success) return NextResponse.json(pmsResult.payload, { status: pmsResult.status });
 
-        // Fire booking_start analytics ping so the funnel captures this conversion
-        try {
-            fetch(pmsUrl + '/api/analytics', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tenantId: 't-aanandham-hq',
-                    campId: body.campsiteId || 'general',
-                    eventType: 'booking_start',
-                    sessionId: body.sessionId || null,
-                    channel: body.channel || 'direct',
-                    path: '/enquire',
-                }),
-                signal: AbortSignal.timeout(2000)
-            }).catch(() => {});
-        } catch {}
-
+        // Compatibility mirror for the existing website admin view; it is not authoritative.
+        const inquiryId = pmsResult.payload.inquiryId || pmsResult.payload.inquiry?.id;
+        await addStoredInquiry({ ...newRecord, id: inquiryId }).catch((error) => console.error(sanitizeLogOutput(`[INQUIRY MIRROR ERROR] ${error.message}`)));
         return NextResponse.json({ success: true, inquiryId, message: 'Inquiry received.' });
     } catch (err) {
         console.error(sanitizeLogOutput(`[INQUIRY API ERROR] ${err.message}`));

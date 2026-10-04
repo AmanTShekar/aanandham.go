@@ -624,16 +624,18 @@ export const INITIAL_ALL_CAMPS = [
     "exclusions": [
       "Personal transport to basecamp"
     ],
-    "amenities": "",
+    "amenities": "Campfire & BBQ, Panoramic Sunrise View, Staff Guide Support",
     "isActive": true,
     "rooms": [
       {
-        "id": "cmuaweojn004uig2aslbw88li",
+        "id": "cmuslu0pj000aw0w82jl8fpu8",
         "name": "Deluxe Suite",
         "price": 1199,
         "basePrice": 1199,
         "capacity": "3 Persons",
-        "totalUnits": 3,
+        "guestCapacity": 3,
+        "totalUnits": 5,
+        "roomSizeSqFt": 350,
         "features": [
           "Single Bed",
           "High-Speed Wi-Fi",
@@ -641,18 +643,20 @@ export const INITIAL_ALL_CAMPS = [
           "Daily Housekeeping"
         ],
         "inventoryType": "PRIVATE_UNIT",
-        "bedConfig": "King Bed",
+        "bedConfig": "1 King Bed",
         "bathroomType": "Ensuite Private Bathroom",
         "pricingModel": "PER_ROOM",
-        "image": "https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=600&q=80"
+        "image": ""
       },
       {
-        "id": "cmuaweojn004vig2ajjgp2uld",
+        "id": "cmuslu0pj000bw0w8hkh2sl8e",
         "name": "Deluxe Balcony Room",
         "price": 1499,
         "basePrice": 1499,
         "capacity": "3 Persons",
-        "totalUnits": 2,
+        "guestCapacity": 3,
+        "totalUnits": 5,
+        "roomSizeSqFt": 320,
         "features": [
           "2 Twin Beds",
           "Mountain View Window",
@@ -665,18 +669,20 @@ export const INITIAL_ALL_CAMPS = [
           "High-Speed Wi-Fi"
         ],
         "inventoryType": "PRIVATE_UNIT",
-        "bedConfig": "2 Twin Beds (2 Guests)",
+        "bedConfig": "2 Twin Beds",
         "bathroomType": "Ensuite Private Bathroom",
         "pricingModel": "PER_ROOM",
-        "image": "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=600&q=80"
+        "image": ""
       },
       {
-        "id": "cmuaweojn004wig2a498i1pso",
+        "id": "cmuslu0pj0009w0w851q5h0vq",
         "name": "10-Bed Mixed Mountain Dorm",
         "price": 249,
         "basePrice": 249,
-        "capacity": "12 Persons",
-        "totalUnits": 1,
+        "capacity": "10 Beds",
+        "guestCapacity": 10,
+        "totalUnits": 10,
+        "roomSizeSqFt": 450,
         "features": [
           "Bunk Reading Lights & USB",
           "Shared Hot Showers",
@@ -686,10 +692,10 @@ export const INITIAL_ALL_CAMPS = [
           "High-Speed Wi-Fi"
         ],
         "inventoryType": "DORM_BED",
-        "bedConfig": "1 Single Bed (1 Guest)",
+        "bedConfig": "1 Single Bed",
         "bathroomType": "Shared / Common Restroom",
         "pricingModel": "PER_BED",
-        "image": "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80"
+        "image": ""
       }
     ],
     "name": "The Nest Kalga by Aanandham.Go",

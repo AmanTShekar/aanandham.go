@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { ImageOff } from 'lucide-react';
 
 /**
  * Base Skeleton Box with pulsing shimmer gradient
@@ -190,12 +191,42 @@ export function AssetImage({
     priority = false,
     sizes,
     objectFit = 'cover',
-    fallbackSrc = '/images/services/munnar-emerald-hills.jpg',
+    fallbackSrc = null,
     ...props
 }) {
     const [isImageLoaded, setIsImageLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
-    const targetSrc = hasError ? fallbackSrc : (src || fallbackSrc);
+
+    // If no valid image is provided, or image failed to load without an explicit fallback
+    if (!src || (hasError && !fallbackSrc)) {
+        return (
+            <div 
+                className={`asset-image-container ${className}`}
+                style={{
+                    position: fill ? 'absolute' : 'relative',
+                    inset: fill ? 0 : 'auto',
+                    width: fill ? '100%' : (width ? `${width}px` : '100%'),
+                    height: fill ? '100%' : (height ? `${height}px` : '100%'),
+                    overflow: 'hidden',
+                    backgroundColor: '#F1F3EC',
+                    border: '1px dashed rgba(18, 22, 19, 0.15)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    color: '#7D8880',
+                    ...style
+                }}
+                aria-label="No image preview available"
+            >
+                <ImageOff size={fill ? 26 : 18} color="#9CA3AF" />
+                <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.2px' }}>No preview</span>
+            </div>
+        );
+    }
+
+    const targetSrc = hasError ? fallbackSrc : src;
 
     return (
         <div 

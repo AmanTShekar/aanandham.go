@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
     ChevronLeft, Plus, Tent, Mountain, Users, ShowerHead, Trees, Sparkles, 
-    Trash2, Upload, Camera, Save, RefreshCw, AlertCircle, IndianRupee, MapPin, X 
+    Trash2, Upload, Camera, Save, RefreshCw, AlertCircle, IndianRupee, MapPin, X, ImageOff 
 } from 'lucide-react';
 import { inr } from '../../lib/utils';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
@@ -241,7 +241,14 @@ Cover
                                     }}
                                 >
                                     <div style={{ position: 'relative', height: '170px' }}>
-                                        <img src={room.image || currentDetailProperty.image} alt={room.name} style={IMG_FILL_STYLE}  loading="lazy" decoding="async"/>
+                                        {room.image ? (
+                                            <img src={room.image} alt={room.name} style={IMG_FILL_STYLE} loading="lazy" decoding="async"/>
+                                        ) : (
+                                            <div style={{ width: '100%', height: '100%', background: '#F1F3EC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', color: '#7D8880' }}>
+                                                <ImageOff size={24} color="#9CA3AF" />
+                                                <span style={{ fontSize: '11px', fontWeight: '700' }}>No preview</span>
+                                            </div>
+                                        )}
                                         <span style={{ position: 'absolute', top: '12px', left: '12px', background: room.isAvailable ? '#121613' : '#EF4444', color: room.isAvailable ? '#E5A93B' : '#FFFFFF', fontSize: '10.5px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>
                                             {room.isAvailable ? 'Available' : 'Sold Out'}
                                         </span>
