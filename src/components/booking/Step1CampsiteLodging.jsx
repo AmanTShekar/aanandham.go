@@ -38,8 +38,30 @@ export default function Step1CampsiteLodging({
     const [step1Errors, setStep1Errors] = useState([]);
     const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
     const [isSwitchingCamp, setIsSwitchingCamp] = useState(false);
+    const [liveInventory, setLiveInventory] = useState({});
+    const [isCheckingInventory, setIsCheckingInventory] = useState(false);
+    const [liveCapAlert, setLiveCapAlert] = useState(false);
 
     const currentPkg = selectedPkg || campsList.find(p => p.id === selectedPkgId) || campsList[0] || {};
+
+    // Fetch live PMS availability whenever the selected camp or travel date changes
+    useEffect(() => {
+        const campId = currentPkg?.id;
+        if (!campId || !travelDate) return;
+        let isMounted = true;
+        setIsCheckingInventory(true);
+        fetch(`/api/camps/${encodeURIComponent(campId)}/availability?date=${encodeURIComponent(travelDate)}`, { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                if (isMounted && data.success && data.rooms) {
+                    setLiveInventory(data.rooms);
+                }
+            })
+            .catch(err => console.warn('[Step1] Failed to load live availability:', err))
+            .finally(() => { if (isMounted) setIsCheckingInventory(false); });
+        return () => { isMounted = false; };
+    }, [currentPkg?.id, travelDate]);
+
     const typeMeta = resolvePropertyType(currentPkg.propertyTypeSlug || currentPkg.propertyType?.slug || currentPkg.category, currentPkg.title);
     const availableRooms = (currentPkg.rooms && currentPkg.rooms.length > 0) ? currentPkg.rooms : [
         {
@@ -63,7 +85,12 @@ export default function Step1CampsiteLodging({
 
     const maxAllowedCapacity = useMemo(() => {
         if (!currentRoom) return 10;
+        const liveRoom = liveInventory?.[currentRoom.id];
         if (isCurrentRoomDorm) {
+            // Dorm: each unit = 1 bed, use live remaining count if available
+            if (liveRoom && typeof liveRoom.availableUnits === 'number') {
+                return Math.max(0, liveRoom.availableUnits);
+            }
             const units = Number(currentRoom.totalUnits) || 0;
             const capDigits = parseInt(String(currentRoom.capacity || '').match(/\d+/)?.[0] || '0', 10);
             const nameDigits = parseInt(String(currentRoom.name || '').match(/(\d+)\s*[- ]*(bed|bunk|person|sharing)/i)?.[1] || String(currentRoom.name || '').match(/\d+/)?.[0] || '0', 10);
@@ -73,10 +100,12 @@ export default function Step1CampsiteLodging({
             return 10;
         } else {
             const unitCap = parseRoomCapacity(currentRoom.capacity || currentRoom.guestCapacity || 2);
-            const availableUnits = Math.max(1, Number(currentRoom.totalUnits) || 3);
+            const availableUnits = liveRoom && typeof liveRoom.availableUnits === 'number'
+                ? liveRoom.availableUnits
+                : Math.max(1, Number(currentRoom.totalUnits) || 3);
             return unitCap * availableUnits;
         }
-    }, [currentRoom, isCurrentRoomDorm]);
+    }, [currentRoom, isCurrentRoomDorm, liveInventory]);
 
     // Enforce dynamic capacity ceiling in booking modal
     useEffect(() => {
@@ -451,11 +480,15 @@ export default function Step1CampsiteLodging({
                                                     fontWeight: '800',
                                                     padding: '2px 7px',
                                                     borderRadius: '6px',
-                                                    background: (adults + children) >= maxAllowedCapacity ? '#FEF2F2' : '#F0FDF4',
-                                                    color: (adults + children) >= maxAllowedCapacity ? '#DC2626' : '#166534',
-                                                    border: `1px solid ${(adults + children) >= maxAllowedCapacity ? '#FECACA' : '#BBF7D0'}`
+                                                    background: isCheckingInventory ? '#F9FAFB' : ((adults + children) >= maxAllowedCapacity || maxAllowedCapacity === 0 ? '#FEF2F2' : '#F0FDF4'),
+                                                    color: isCheckingInventory ? '#9CA3AF' : ((adults + children) >= maxAllowedCapacity || maxAllowedCapacity === 0 ? '#DC2626' : '#166534'),
+                                                    border: `1px solid ${isCheckingInventory ? '#E5E7EB' : ((adults + children) >= maxAllowedCapacity || maxAllowedCapacity === 0 ? '#FECACA' : '#BBF7D0')}`
                                                 }}>
-                                                    {isCurrentRoomDorm ? `${maxAllowedCapacity} Beds Remaining` : `${currentRoom?.totalUnits || maxAllowedCapacity} Units Remaining`}
+                                                    {isCheckingInventory
+                                                        ? 'Checking…'
+                                                        : (isCurrentRoomDorm
+                                                            ? `${maxAllowedCapacity} Bed${maxAllowedCapacity === 1 ? '' : 's'} Remaining`
+                                                            : `${maxAllowedCapacity} Unit${maxAllowedCapacity === 1 ? '' : 's'} Remaining`)}
                                                 </span>
                                             </div>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
@@ -570,7 +603,7 @@ export default function Step1CampsiteLodging({
                                         </div>
 
                                         {/* Dynamic Capacity Ceiling Alert */}
-                                        {(adults + children) >= maxAllowedCapacity && (
+                                        {((adults + children) >= maxAllowedCapacity || maxAllowedCapacity === 0) && !isCheckingInventory && (
                                             <div style={{
                                                 marginTop: '8px',
                                                 padding: '8px 12px',
