@@ -1354,7 +1354,7 @@ return (
                                                     color: guestsCount >= maxAllowedCapacity ? '#DC2626' : '#166534',
                                                     border: `1px solid ${guestsCount >= maxAllowedCapacity ? '#FECACA' : '#BBF7D0'}`
                                                 }}>
-                                                    {currentRoomIsDorm ? `${maxAllowedCapacity} Beds Dorm Limit` : `Max ${maxAllowedCapacity} Guests`}
+                                                    {currentRoomIsDorm ? `${maxAllowedCapacity} Beds Remaining` : `${currentRoom?.totalUnits || maxAllowedCapacity} Units Remaining`}
                                                 </span>
                                             </div>
                                             <span style={{ fontSize: '11.5px', color: '#166534', fontWeight: '800' }}>
@@ -1418,7 +1418,7 @@ return (
                                                     opacity: guestsCount >= maxAllowedCapacity ? 0.45 : 1,
                                                     transition: 'all 0.15s ease'
                                                 }}
-                                                title={guestsCount >= maxAllowedCapacity ? `Maximum capacity reached (${maxAllowedCapacity} beds max)` : 'Add more'}
+                                                title={guestsCount >= maxAllowedCapacity ? `Maximum remaining reached (${maxAllowedCapacity} beds max)` : 'Add more'}
                                                 aria-label="Increase count"
                                             >
                                                 +
@@ -1443,7 +1443,7 @@ return (
                                             }}>
                                                 <TriangleAlert size={14} color="#DC2626" style={{ flexShrink: 0 }} />
                                                 <span>
-                                                    <strong>{currentRoomIsDorm ? 'Dorm Bed Limit Reached:' : 'Room Capacity Limit Reached:'}</strong> Maximum <strong>{maxAllowedCapacity} {currentRoomIsDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : (maxAllowedCapacity === 1 ? 'guest' : 'guests')}</strong> for {currentRoom?.name || 'this room'}. Further selections have been capped.
+                                                    <strong>{currentRoomIsDorm ? 'Remaining Beds Reached:' : 'Remaining Units Reached:'}</strong> All <strong>{maxAllowedCapacity} {currentRoomIsDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : 'units'}</strong> for {currentRoom?.name || 'this room'} have been selected. Further selections are capped.
                                                 </span>
                                             </div>
                                         )}

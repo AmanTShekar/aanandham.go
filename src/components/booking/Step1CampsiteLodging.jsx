@@ -455,7 +455,7 @@ export default function Step1CampsiteLodging({
                                                     color: (adults + children) >= maxAllowedCapacity ? '#DC2626' : '#166534',
                                                     border: `1px solid ${(adults + children) >= maxAllowedCapacity ? '#FECACA' : '#BBF7D0'}`
                                                 }}>
-                                                    {isCurrentRoomDorm ? `${maxAllowedCapacity} Beds Dorm Limit` : `Max ${maxAllowedCapacity} Guests`}
+                                                    {isCurrentRoomDorm ? `${maxAllowedCapacity} Beds Remaining` : `${currentRoom?.totalUnits || maxAllowedCapacity} Units Remaining`}
                                                 </span>
                                             </div>
                                             <span style={{ fontSize: '11px', color: '#166534', fontWeight: '800' }}>
@@ -587,7 +587,7 @@ export default function Step1CampsiteLodging({
                                             }}>
                                                 <AlertCircle size={13} color="#DC2626" style={{ flexShrink: 0 }} />
                                                 <span>
-                                                    <strong>Capacity Reached:</strong> Maximum capacity is <strong>{maxAllowedCapacity} {isCurrentRoomDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : (maxAllowedCapacity === 1 ? 'guest' : 'guests')}</strong> for {currentRoom?.name || 'this room'}. Further selections have stopped.
+                                                    <strong>{isCurrentRoomDorm ? 'Remaining Beds Reached:' : 'Remaining Units Reached:'}</strong> All <strong>{maxAllowedCapacity} {isCurrentRoomDorm ? (maxAllowedCapacity === 1 ? 'bed' : 'beds') : 'units'}</strong> for {currentRoom?.name || 'this room'} have been selected. Further selections are capped.
                                                 </span>
                                             </div>
                                         )}
