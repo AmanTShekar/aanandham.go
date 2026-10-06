@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSecurityHeaders } from '@/lib/securityClient';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
-import { inr, generateBookingId, getDefaultUpcomingBatch, parseStayNights } from '../lib/utils';
+import { inr, generateBookingId, getDefaultUpcomingBatch, parseStayNights, parseStayDates } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { getPaymentSettings } from '../lib/paymentSettings';
@@ -426,26 +426,35 @@ function BookingEngineModalInner({
         try {
             const amountToCharge = paymentMode === 'advance' ? advanceAmount : totalAmount;
             
+            const stayDatesInfo = parseStayDates(travelDate);
             const bookingPayload = {
+                    tenantId: 't-aanandham-hq',
+                    campsiteId: selectedPkg.id,
+                    package: selectedPkg.title,
+                    roomId: selectedRoom?.id,
+                    roomType: selectedRoom?.name || 'Standard Tent',
                     name: customerName.trim(),
                     phone: customerPhone.trim(),
                     email: customerEmail.trim(),
-                    package: selectedPkg.title,
-                    campsiteId: selectedPkg.id,
+                    checkIn: stayDatesInfo.checkIn || undefined,
+                    checkOut: stayDatesInfo.checkOut || undefined,
                     dates: travelDate,
-                    nights: stayNights || 1,
-                    guests: totalGuests,
+                    nights: stayNights || stayDatesInfo.nights || 1,
                     adults,
                     children,
-                    roomId: selectedRoom?.id,
-                    roomType: selectedRoom?.name || 'Standard Tent',
+                    guests: totalGuests,
                     totalUnits,
-                    addons: selectedAddons,
-                    total: totalAmount,
-                    paymentMode: paymentMode === 'advance' ? 'Advance 30% via Razorpay' : 'Full 100% via Razorpay',
-                    dietaryChoice,
+                    ratePlan: 'CP',
                     vegCount,
                     nonVegCount,
+                    dietaryChoice,
+                    mealSummary: dietaryChoice ? `${dietaryChoice} (${vegCount || 0} Veg / ${nonVegCount || 0} Non-Veg)` : 'Dinner BBQ & Alpine Breakfast Included',
+                    addons: selectedAddons,
+                    addonIds: selectedAddons,
+                    mode: 'razorpay',
+                    paymentMode: paymentMode === 'advance' ? 'Advance 30% via Razorpay' : 'Full 100% via Razorpay',
+                    total: totalAmount,
+                    source: 'Website Booking Engine',
                     notes: specialNotes,
                     honeypot,
                     paymentGateway: 'razorpay'

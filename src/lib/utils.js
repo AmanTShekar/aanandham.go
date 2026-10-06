@@ -200,3 +200,41 @@ export const parseStayNights = (dateStr) => {
 
   return 1;
 };
+
+/**
+ * Parse checkIn, checkOut, and nights from stay date string
+ */
+export const parseStayDates = (dateStr) => {
+  if (!dateStr) return { checkIn: null, checkOut: null, nights: 1 };
+  const str = String(dateStr).trim();
+  const formatIso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    const start = new Date(str);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+    return { checkIn: str, checkOut: formatIso(end), nights: 1 };
+  }
+
+  const monthNamesRx = 'Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?';
+  const rxRange = new RegExp(`(${monthNamesRx})\\s+(\\d{1,2})(?:,\\s*(\\d{4}))?\\s*[–—-]\\s*(?:(${monthNamesRx})\\s+)?(\\d{1,2})(?:,\\s*(\\d{4}))?`, 'i');
+  const match = str.match(rxRange);
+  if (match) {
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const currentYear = new Date().getFullYear();
+    const m1Idx = months.findIndex(m => match[1].toLowerCase().startsWith(m));
+    const d1 = parseInt(match[2], 10);
+    const y1 = parseInt(match[3] || match[6] || currentYear, 10);
+    const m2Idx = match[4] ? months.findIndex(m => match[4].toLowerCase().startsWith(m)) : m1Idx;
+    const d2 = parseInt(match[5], 10);
+    const y2 = parseInt(match[6] || y1, 10);
+    if (m1Idx >= 0 && m2Idx >= 0 && d1 > 0 && d2 > 0) {
+      const start = new Date(y1, m1Idx, d1);
+      const end = new Date(y2, m2Idx, d2);
+      const diff = Math.max(1, Math.round((end - start) / 86400000));
+      return { checkIn: formatIso(start), checkOut: formatIso(end), nights: diff };
+    }
+  }
+
+  return { checkIn: null, checkOut: null, nights: parseStayNights(dateStr) };
+};
