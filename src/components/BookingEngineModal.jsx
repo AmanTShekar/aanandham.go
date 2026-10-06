@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getSecurityHeaders } from '@/lib/securityClient';
 import { getAllCamps, INITIAL_ALL_CAMPS } from '../lib/campsData';
-import { inr, generateBookingId, getDefaultUpcomingBatch } from '../lib/utils';
+import { inr, generateBookingId, getDefaultUpcomingBatch, parseStayNights } from '../lib/utils';
 import { waLink, isValidPhoneNumber } from '../lib/whatsapp';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { getPaymentSettings } from '../lib/paymentSettings';
@@ -300,12 +300,10 @@ function BookingEngineModalInner({
 
     const stayNights = useMemo(() => {
         if (!travelDate) return 1;
-        const match = String(travelDate).match(/(\d+)\s*Nights?/i);
-        if (match) return Math.max(1, parseInt(match[1], 10));
-        return 1;
+        return parseStayNights(travelDate);
     }, [travelDate]);
 
-    // Pricing calculation — guaranteed non-zero, server-matched per-person calculation
+    // Pricing calculation — guaranteed non-zero, server-matched calculation
     const baseLodgingAmount = useMemo(() => {
         const ratePerPerson = Number(
             selectedRoom?.price || 
@@ -317,11 +315,23 @@ function BookingEngineModalInner({
             initialPackage?.price ||
             2499
         );
+        const isDorm = selectedRoom ? (
+            String(selectedRoom?.inventoryType || '').toUpperCase().includes('DORM') ||
+            String(selectedRoom?.pricingModel || '').toUpperCase() === 'PER_BED' ||
+            String(selectedRoom?.name || '').toLowerCase().includes('dorm')
+        ) : false;
+        const isPerRoomPricing = selectedRoom && !isDorm && (
+            selectedRoom?.pricingModel === 'PER_ROOM' ||
+            selectedRoom?.pricingModel === 'per_room_night' ||
+            (selectedPkg?.category !== 'campsite' && selectedPkg?.category !== 'hostel' && selectedRoom?.pricingModel !== 'PER_BED')
+        );
         const adultCount = Math.max(1, Number(adults) || 1);
         const childCount = Math.max(0, Number(children) || 0);
-        const perNight = (ratePerPerson * adultCount) + Math.round(ratePerPerson * 0.5 * childCount);
+        const perNight = isPerRoomPricing
+            ? (ratePerPerson * totalUnits)
+            : ((ratePerPerson * adultCount) + Math.round(ratePerPerson * 0.5 * childCount));
         return perNight * stayNights;
-    }, [selectedRoom, selectedPkg, initialRoom, initialPackage, adults, children, stayNights]);
+    }, [selectedRoom, selectedPkg, initialRoom, initialPackage, adults, children, stayNights, totalUnits]);
 
     const addonsAmount = useMemo(() => {
         return selectedAddons.reduce((sum, addonId) => {
@@ -423,7 +433,7 @@ function BookingEngineModalInner({
                     package: selectedPkg.title,
                     campsiteId: selectedPkg.id,
                     dates: travelDate,
-                    nights: 1,
+                    nights: stayNights || 1,
                     guests: totalGuests,
                     adults,
                     children,

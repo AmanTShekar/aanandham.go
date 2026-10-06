@@ -40,11 +40,18 @@ export function findCampAndRoom(campsiteId, roomId) {
 
 // Recompute the exact total the customer must pay (in rupees)
 // Squad-off and all other campaigns are applied from the admin-managed discount store.
-export function computeBookingTotal({ camp, room, adults, children, addonIds = [], discounts = null }) {
+export function computeBookingTotal({ camp, room, adults, children, addonIds = [], discounts = null, units = 1, nights = 1 }) {
     const pricePerPerson = room?.price || camp?.price || 2499;
     const totalGuests = adults + children;
-
-    const baseTotal = (pricePerPerson * adults) + (Math.round(pricePerPerson * 0.5) * children);
+    const isPerRoomPricing = room && (
+        room.pricingModel === 'PER_ROOM' ||
+        room.pricingModel === 'per_room_night' ||
+        (camp?.propertyTypeSlug !== 'campsite' && camp?.propertyTypeSlug !== 'hostel' && room?.pricingModel !== 'PER_BED')
+    );
+    const baseLodging = isPerRoomPricing
+        ? (Number(units) || 1) * pricePerPerson
+        : ((pricePerPerson * adults) + (Math.round(pricePerPerson * 0.5) * children));
+    const baseTotal = baseLodging * Math.max(1, Number(nights) || 1);
     const discount = applyDiscounts({ baseTotal, guests: totalGuests, campsiteId: camp?.id || null, discounts });
     const discounted = discount.discountedTotal;
 
@@ -60,7 +67,9 @@ export function computeBookingTotal({ camp, room, adults, children, addonIds = [
         discountAmount: discount.discountAmount,
         discountLabel: discount.discountLabel,
         baseTotal,
-        pricePerPerson
+        pricePerPerson,
+        units: Math.max(1, Math.trunc(Number(units) || 1)),
+        nights: Math.max(1, Math.trunc(Number(nights) || 1))
     };
 }
 

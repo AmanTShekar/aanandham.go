@@ -20,7 +20,7 @@ import { SkeletonPropertyDetail, AssetImage } from '../../../components/common/S
 import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2, Building2, Home, Bed, Landmark, Bath, BedDouble, Maximize2, ImageOff } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
-import { inr, getDefaultUpcomingBatch } from '../../../lib/utils';
+import { inr, getDefaultUpcomingBatch, parseStayNights } from '../../../lib/utils';
 import { waLink, logWhatsAppInquiry } from '../../../lib/whatsapp';
 import { CANCELLATION_TIERS } from '../../../lib/cancellation';
 import { loadDiscountsFromStorage, applyDiscounts } from '../../../lib/discountsCore';
@@ -379,7 +379,8 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         currentRoom?.pricingModel === 'per_room_night' ||
         (typeMeta.id !== 'campsite' && typeMeta.id !== 'hostel' && currentRoom?.pricingModel !== 'PER_BED')
     );
-    const baseTotalCalculated = isPerRoomPricing ? (effectiveUnits * roomPrice) : (guestsCount * roomPrice);
+    const stayNights = parseStayNights(selectedDate);
+    const baseTotalCalculated = (isPerRoomPricing ? (effectiveUnits * roomPrice) : (guestsCount * roomPrice)) * stayNights;
     const discount = applyDiscounts({ baseTotal: baseTotalCalculated, guests: guestsCount, campsiteId: camp?.id, discounts });
     const estimatedTotal = discount.discountedTotal;
     const discountLabel = discount.discountLabel;
@@ -1542,7 +1543,7 @@ return (
                                             <span style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#166534' }}>
                                                 {discountAmount > 0 && (
                                                     <span style={{ textDecoration: 'line-through', fontSize: '14px', fontWeight: '700', color: '#8A938B', marginRight: '8px' }}>
-                                                        ₹{(guestsCount * roomPrice).toLocaleString('en-IN')}
+                                                        ₹{((isPerRoomPricing ? effectiveUnits * roomPrice : guestsCount * roomPrice) * stayNights).toLocaleString('en-IN')}
                                                     </span>
                                                 )}
                                                 ₹{estimatedTotal.toLocaleString('en-IN')}
@@ -1554,7 +1555,7 @@ return (
                                             </div>
                                         )}
                                         <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>
-                                            ✓ Includes {currentRoomIsDorm ? `${guestsCount} × ${currentRoom.name} Bed${guestsCount > 1 ? 's' : ''}` : `${effectiveUnits} × ${currentRoom.name}`}, Dinner BBQ & Guided Trek
+                                            ✓ Includes {currentRoomIsDorm ? `${guestsCount} × ${currentRoom.name} Bed${guestsCount > 1 ? 's' : ''}` : `${effectiveUnits} × ${currentRoom.name}`} for {stayNights} Night{stayNights > 1 ? 's' : ''}, Dinner BBQ & Guided Trek
                                         </div>
                                     </div>
 
@@ -1608,7 +1609,7 @@ return (
                                         )}
 
                                         <a
-                                            href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} ${currentRoomIsDorm ? 'dorm bed(s)' : 'campers'} in ${currentRoom.name}.`)}
+                                            href={waLink(`Hi Aanandham Team! I want to check availability for ${camp.title} on ${selectedDate} for ${guestsCount} ${currentRoomIsDorm ? 'dorm bed(s)' : 'campers'} in ${currentRoom.name}. Estimated total: ₹${estimatedTotal.toLocaleString('en-IN')}.`)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             onClick={() => logWhatsAppInquiry({

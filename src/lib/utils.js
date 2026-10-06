@@ -152,3 +152,51 @@ export const getDefaultUpcomingBatch = () => {
   const batches = generateUpcomingWeekendBatches(1);
   return batches[0]?.title || 'Upcoming Weekend Batch';
 };
+
+/**
+ * Parse number of stay nights from date batch string or custom range
+ * Handles:
+ *   - "Oct 14 – 16, 2026 (2 Nights)" -> 2
+ *   - "2 Nights" or "(3 Nights)" -> 2 or 3
+ *   - "3D / 2N" -> 2
+ *   - "Oct 14 – 16, 2026" (computed from date difference) -> 2
+ */
+export const parseStayNights = (dateStr) => {
+  if (!dateStr) return 1;
+  const str = String(dateStr).trim();
+
+  // 1. Explicit "(N Nights)" or "N Nights" or "N Night"
+  const nightsMatch = str.match(/(\d+)\s*Nights?/i);
+  if (nightsMatch) {
+    return Math.max(1, parseInt(nightsMatch[1], 10));
+  }
+
+  // 2. Pattern like "3D / 2N"
+  const xdYnMatch = str.match(/\d+D\s*\/\s*(\d+)N/i);
+  if (xdYnMatch) {
+    return Math.max(1, parseInt(xdYnMatch[1], 10));
+  }
+
+  // 3. Date range like "Oct 14 – 16, 2026"
+  const monthNamesRx = 'Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?';
+  const rxRange = new RegExp(`(${monthNamesRx})\\s+(\\d{1,2})(?:,\\s*(\\d{4}))?\\s*[–—-]\\s*(?:(${monthNamesRx})\\s+)?(\\d{1,2})(?:,\\s*(\\d{4}))?`, 'i');
+  const match = str.match(rxRange);
+  if (match) {
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    const currentYear = new Date().getFullYear();
+    const m1Idx = months.findIndex(m => match[1].toLowerCase().startsWith(m));
+    const d1 = parseInt(match[2], 10);
+    const y1 = parseInt(match[3] || match[6] || currentYear, 10);
+    const m2Idx = match[4] ? months.findIndex(m => match[4].toLowerCase().startsWith(m)) : m1Idx;
+    const d2 = parseInt(match[5], 10);
+    const y2 = parseInt(match[6] || y1, 10);
+    if (m1Idx >= 0 && m2Idx >= 0 && d1 > 0 && d2 > 0) {
+      const start = new Date(y1, m1Idx, d1);
+      const end = new Date(y2, m2Idx, d2);
+      const diff = Math.round((end - start) / 86400000);
+      if (diff > 0) return diff;
+    }
+  }
+
+  return 1;
+};
