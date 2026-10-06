@@ -788,12 +788,17 @@ export default function HomePage() {
         if (pkg) setSelectedPackage(pkg);
         setIsBookingModalOpen(true);
     };
-    const [selectedPackage, setSelectedPackage] = useState(null);
+    const [selectedPackage, setSelectedPackage] = useState(() => getAllCamps()[0] || null);
     const { user: currentUser, logout } = useAuth();
-    const [campsList, setCampsList] = useState([]);
-    const [isLoadingCamps, setIsLoadingCamps] = useState(true);
+    const [campsList, setCampsList] = useState(() => getAllCamps());
+    const [isLoadingCamps, setIsLoadingCamps] = useState(false);
 
     useEffect(() => {
+        const localCamps = getAllCamps();
+        if (localCamps && localCamps.length > 0) {
+            setCampsList(localCamps);
+            setSelectedPackage(prev => prev || localCamps[0]);
+        }
         fetch('/api/admin/camps', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
@@ -806,6 +811,7 @@ export default function HomePage() {
             .catch(() => {})
             .finally(() => {
                 setIsLoadingCamps(false);
+                setCampsList(prev => (Array.isArray(prev) && prev.length > 0 ? prev : getAllCamps()));
             });
     }, []);
 

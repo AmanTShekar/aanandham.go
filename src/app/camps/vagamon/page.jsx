@@ -1,5 +1,6 @@
 import React from 'react';
 import CampsDirectoryClient from '../CampsDirectoryClient';
+import { INITIAL_ALL_CAMPS } from '@/lib/campsData';
 
 export const metadata = {
   title: 'Vagamon Pine Forest Glamping & Stays · Coming Soon',
@@ -34,6 +35,8 @@ export const metadata = {
 };
 
 export default function VagamonCampsPage() {
+  const activeCamps = INITIAL_ALL_CAMPS.filter(c => !c.archived);
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
   const breadcrumbJsonLd = {
@@ -68,7 +71,7 @@ export default function VagamonCampsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <CampsDirectoryClient
-        initialCamps={[]}
+        initialCamps={activeCamps}
         initialRegion="All"
         comingSoon={true}
         comingSoonRegion="Vagamon"

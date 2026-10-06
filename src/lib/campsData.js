@@ -1441,7 +1441,8 @@ export function getAllCamps(bookings = null) {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived);
+          const active = parsed.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived);
+          if (active.length > 0) return active;
         }
       }
     } catch (e) {}

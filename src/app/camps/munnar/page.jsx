@@ -168,7 +168,7 @@ export default function MunnarCampsPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <CampsDirectoryClient
-        initialCamps={[]}
+        initialCamps={munnarCamps}
         initialRegion="Munnar"
         heroTitle={<>Top Camps in Munnar: <span style={{ color: '#D5ED55' }}>Best Camp Stays & Ridge Glamping</span></>}
         heroSubtitle="Ranked #1 for high-altitude wilderness stays. Perched high above rolling cloud beds in Suryanelli, Kolukkumalai & Vattavada (6,000–7,900 FT). Enjoy private 4x4 sunrise summit convoys, starlit campfire barbecues, and premium ridge glamping tents."

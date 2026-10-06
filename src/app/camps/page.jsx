@@ -68,7 +68,7 @@ export default function CampsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <CampsDirectoryClient initialCamps={[]} />
+      <CampsDirectoryClient initialCamps={activeCamps} />
     </>
   );
 }

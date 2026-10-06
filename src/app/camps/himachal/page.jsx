@@ -127,6 +127,7 @@ function HimachalStayGuide() {
 }
 
 export default function HimachalCampsPage() {
+  const activeCamps = INITIAL_ALL_CAMPS.filter(c => !c.archived);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
   const liveHimachal = INITIAL_ALL_CAMPS.filter((c) => c.region === 'Himachal' && !c.archived);
 
@@ -225,7 +226,7 @@ export default function HimachalCampsPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <CampsDirectoryClient
-        initialCamps={[]}
+        initialCamps={activeCamps}
         initialRegion="Himachal"
         comingSoon={true}
         comingSoonRegion="Himachal"

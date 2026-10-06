@@ -50,8 +50,8 @@ export default function CampsDirectoryClient({
     extraContent = null
 }) {
     const router = useRouter();
-    const [camps, setCamps] = useState(initialCamps && initialCamps.length > 0 ? initialCamps : []);
-    const [isLoading, setIsLoading] = useState(!initialCamps || initialCamps.length === 0);
+    const [camps, setCamps] = useState(() => (initialCamps && initialCamps.length > 0 ? initialCamps : getAllCamps()));
+    const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     // In coming-soon mode the grid shows live Kerala basecamps, so default filter to All
     // to avoid an empty/confusing listing that mismatches the page metadata.
@@ -78,16 +78,15 @@ export default function CampsDirectoryClient({
                     const serverCamps = await res.json();
                     if (Array.isArray(serverCamps) && serverCamps.length > 0) {
                         saveAllCamps(serverCamps);
-                        setCamps(prev => {
-                            if (JSON.stringify(prev) === JSON.stringify(serverCamps)) return prev;
-                            return serverCamps;
-                        });
+                        setCamps(serverCamps);
+                        return;
                     }
                 }
             } catch (e) {
             } finally {
                 setIsLoading(false);
             }
+            setCamps(prev => (prev && prev.length > 0 ? prev : getAllCamps()));
         };
 
         refreshCamps();
