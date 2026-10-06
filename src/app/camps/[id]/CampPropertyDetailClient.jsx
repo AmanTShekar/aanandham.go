@@ -180,7 +180,17 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         } catch (e) {}
 
         const handleStorage = () => {
-            refreshCampData();
+            const cached = getAllCamps();
+            if (Array.isArray(cached) && cached.length > 0) {
+                if (isMounted) setAllCamps(cached);
+                const cleanTarget = String(campId).toLowerCase().replace('pkg-', '').trim();
+                const matched = cached.find(c => {
+                    const cleanC = String(c.id).toLowerCase().replace('pkg-', '').trim();
+                    const cleanSlug = String(c.slug || '').toLowerCase().trim();
+                    return c.id === campId || cleanC === cleanTarget || cleanSlug === cleanTarget;
+                });
+                if (matched && isMounted) setCamp(matched);
+            }
         };
         window.addEventListener('storage', handleStorage);
 

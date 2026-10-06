@@ -99,7 +99,10 @@ export default function CampsDirectoryClient({
         }
 
         const handleStorage = () => {
-            refreshCamps();
+            const cached = getAllCamps();
+            if (Array.isArray(cached) && cached.length > 0) {
+                setCamps(cached);
+            }
         };
 
         window.addEventListener('storage', handleStorage);
