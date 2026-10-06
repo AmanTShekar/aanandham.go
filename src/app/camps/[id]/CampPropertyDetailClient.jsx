@@ -899,6 +899,7 @@ return (
                                     {availableRooms.map((room) => {
                                         const isSelected = selectedRoomId === room.id;
                                         const roomIsDorm = isDormRoom(room);
+                                        const liveRoom = liveInventory?.[room.id];
                                         const invMeta = getInventoryTypeMeta(room.inventoryType, room.name);
                                         const roomBadge = roomIsDorm ? 'Shared Dorm' : (invMeta?.badge || room.type?.toUpperCase() || typeMeta.unitTerm);
                                         const isRoomLevel = !roomIsDorm && (
@@ -1016,6 +1017,23 @@ return (
                                                         <span style={{ background: '#121613', color: '#D5ED55', fontSize: '10.5px', fontWeight: '800', padding: '3px 8px', borderRadius: '6px' }}>
                                                             {roomBadge}
                                                         </span>
+                                                        {liveRoom && (
+                                                            <span style={{
+                                                                fontSize: '11px',
+                                                                fontWeight: '800',
+                                                                padding: '2px 8px',
+                                                                borderRadius: '6px',
+                                                                background: liveRoom.availableUnits === 0 ? '#FEF2F2' : (liveRoom.availableUnits <= 2 ? '#FFFBEB' : '#F0FDF4'),
+                                                                color: liveRoom.availableUnits === 0 ? '#DC2626' : (liveRoom.availableUnits <= 2 ? '#B45309' : '#166534'),
+                                                                border: `1px solid ${liveRoom.availableUnits === 0 ? '#FECACA' : (liveRoom.availableUnits <= 2 ? '#FDE68A' : '#BBF7D0')}`
+                                                            }}>
+                                                                {liveRoom.availableUnits === 0 ? 'Sold Out' : (
+                                                                    roomIsDorm
+                                                                        ? `${liveRoom.availableUnits} of ${liveRoom.totalUnits || 10} Beds Left`
+                                                                        : `${liveRoom.availableUnits} of ${liveRoom.totalUnits || 5} Units Left`
+                                                                )}
+                                                            </span>
+                                                        )}
                                                         <span style={{ fontSize: '12px', fontWeight: '700', color: '#59655D', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                                             <Users size={13} color="#166534" />
                                                             <span>{roomIsDorm ? (room.capacity && room.capacity.toLowerCase().includes('bed') ? room.capacity : '10 Beds') : `Capacity: ${room.guestCapacity || room.capacity || '2 Persons'}`}</span>
@@ -1027,15 +1045,15 @@ return (
                                                             </span>
                                                         )}
                                                         {room.bathroomType && (
-                                                            <span style={{ fontSize: '11px', fontWeight: '600', color: '#4B5563', background: '#F1F3EC', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                                                <Bath size={11} color="#4B5563" />
-                                                                <span>{room.bathroomType}</span>
+                                                            <span style={{ fontSize: '11px', fontWeight: '700', color: '#0369A1', background: '#E0F2FE', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                                <Bath size={11} color="#0369A1" />
+                                                                <span>{room.bathroomType === 'ATTACHED' ? 'Attached Bath' : (room.bathroomType === 'COMMON' ? 'Shared Bath' : room.bathroomType)}</span>
                                                             </span>
                                                         )}
-                                                        {(room.roomSize || (!roomIsDorm && invMeta?.defaultSizeSqFt)) && (
+                                                        {(room.roomSizeSqFt || room.roomSize || (!roomIsDorm && invMeta?.defaultSizeSqFt)) && (
                                                             <span style={{ fontSize: '11px', fontWeight: '600', color: '#4B5563', background: '#F1F3EC', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                                                 <Maximize2 size={11} color="#4B5563" />
-                                                                <span>{room.roomSize || `${invMeta.defaultSizeSqFt} sq ft`}</span>
+                                                                <span>{room.roomSizeSqFt ? `${room.roomSizeSqFt} sq ft` : (room.roomSize || `${invMeta.defaultSizeSqFt} sq ft`)}</span>
                                                             </span>
                                                         )}
                                                     </div>
@@ -1066,7 +1084,7 @@ return (
                                                     <div style={{ textAlign: 'right' }}>
                                                         <span style={{ fontSize: '10px', color: '#7D8880', fontWeight: '700', textTransform: 'uppercase', display: 'block' }}>{priceSubtext}</span>
                                                         <span style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#121613', whiteSpace: 'nowrap' }}>
-                                                            ₹{(room.price || room.pricePerPerson || camp.price || 0).toLocaleString('en-IN')}
+                                                            ₹{((liveRoom && typeof liveRoom.price === 'number') ? liveRoom.price : (room.price || room.pricePerPerson || camp.price || 0)).toLocaleString('en-IN')}
                                                         </span>
                                                     </div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -1403,6 +1421,10 @@ return (
                                             value={selectedDate}
                                             onChange={setSelectedDate}
                                             label="Select Batch Date"
+                                            propertyId={camp?.id}
+                                            campsiteId={camp?.id}
+                                            checkInTime={camp?.checkInTime}
+                                            checkOutTime={camp?.checkOutTime}
                                         />
                                     </div>
 
@@ -1417,9 +1439,11 @@ return (
                                             options={availableRooms.map(r => {
                                                 const dorm = isDormRoom(r);
                                                 const capLabel = dorm ? (r.capacity && r.capacity.toLowerCase().includes('bed') ? r.capacity : '10 Beds') : (r.capacity || '2 Guests');
+                                                const live = liveInventory?.[r.id];
+                                                const availTag = live ? (live.availableUnits === 0 ? ' · [SOLD OUT]' : ` · ${live.availableUnits} ${dorm ? 'Beds' : 'Units'} Left`) : '';
                                                 return {
                                                     value: r.id,
-                                                    label: `${r.name} (${capLabel}) — ₹${(r.price || r.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}`
+                                                    label: `${r.name} (${capLabel}) — ₹${(live?.price || r.price || r.pricePerPerson || camp.price || 2499).toLocaleString('en-IN')}${availTag}`
                                                 };
                                             })}
                                         />
@@ -1670,7 +1694,7 @@ return (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Basecamp Check-in:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>02:00 PM (Snacks & Tea)</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkInTime ? (camp.checkInTime.includes(':') ? `${camp.checkInTime} hrs` : camp.checkInTime) : '02:00 PM'} (Snacks & Tea)</span>
                                     </div>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Campfire & Live BBQ:</span>
@@ -1682,10 +1706,32 @@ return (
                                     </div>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Breakfast & Checkout:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>11:00 AM</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkOutTime ? (camp.checkOutTime.includes(':') ? `${camp.checkOutTime} hrs` : camp.checkOutTime) : '11:00 AM'}</span>
                                     </div>
                                 </div>
                             </div>
+
+                            {/* ── CARD 2B: CANCELLATION POLICY FROM PMS ── */}
+                            {camp?.cancellationPolicy && typeof camp.cancellationPolicy === 'string' && (
+                                <div style={{
+                                    background: '#FFFFFF',
+                                    borderRadius: '20px',
+                                    padding: '18px 20px',
+                                    marginTop: '16px',
+                                    border: '1px solid rgba(18, 22, 19, 0.08)',
+                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.03)'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                                        <ShieldCheck size={15} color="#166534" />
+                                        <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                                            Cancellation Policy
+                                        </span>
+                                    </div>
+                                    <p style={{ fontSize: '12px', color: '#59655D', lineHeight: 1.6, margin: 0 }}>
+                                        {camp.cancellationPolicy}
+                                    </p>
+                                </div>
+                            )}
 
                             {/* ── CARD 3: AANANDHAM WILDERNESS SAFETY PROMISE ── */}
                             <div style={{

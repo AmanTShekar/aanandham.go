@@ -110,18 +110,157 @@ export async function fetchLivePropertyBookings(propertyId) {
   }
 }
 
+export async function fetchLivePropertyRooms(propertyId) {
+  const pool = getPgPool();
+  if (!pool) return [];
+
+  const cleanId = String(propertyId || '').trim();
+  const cleanSlug = cleanId.toLowerCase().replace(/^pkg-/, '');
+
+  try {
+    const res = await pool.query(
+      `SELECT rt.id, rt.name, rt.capacity, rt."totalUnits", rt."basePrice", rt."weekendPrice",
+              rt.description, rt.features, rt."inventoryType", rt."bedConfig", rt."roomSizeSqFt",
+              rt."bathroomType", rt."pricingModel", rt.summary, rt.images
+       FROM "RoomType" rt
+       JOIN "Property" p ON p.id = rt."propertyId"
+       WHERE (p.id = $1 OR p.id = $2 OR p.id = $3 OR p.slug = $1 OR p.slug = $3)
+       ORDER BY rt."basePrice" ASC`,
+      [cleanId, `pkg-${cleanSlug}`, cleanSlug]
+    );
+    return res.rows.map(r => ({
+      id: r.id,
+      name: r.name,
+      capacity: r.capacity ? `${r.capacity} Persons` : '2 Guests',
+      guestCapacity: r.capacity || 2,
+      totalUnits: Number(r.totalUnits) || 1,
+      price: Number(r.basePrice || 0),
+      basePrice: Number(r.basePrice || 0),
+      weekendPrice: r.weekendPrice ? Number(r.weekendPrice) : null,
+      description: r.description || r.summary || '',
+      features: Array.isArray(r.features) ? r.features : (typeof r.features === 'string' ? r.features.split(',').map(s => s.trim()).filter(Boolean) : []),
+      inventoryType: r.inventoryType || 'PRIVATE_UNIT',
+      bedConfig: r.bedConfig || '1 King Bed',
+      roomSizeSqFt: r.roomSizeSqFt || 350,
+      bathroomType: r.bathroomType || 'Ensuite Private Bathroom',
+      pricingModel: r.pricingModel || (r.inventoryType === 'DORM_BED' ? 'PER_BED' : 'PER_ROOM'),
+      images: Array.isArray(r.images) ? r.images : []
+    }));
+  } catch (err) {
+    console.error('[fetchLivePropertyRooms error]', err?.message);
+    return [];
+  }
+}
+
+export async function fetchLivePropertyDetails(propertyId) {
+  const pool = getPgPool();
+  if (!pool) return null;
+
+  const cleanId = String(propertyId || '').trim();
+  const cleanSlug = cleanId.toLowerCase().replace(/^pkg-/, '');
+
+  try {
+    const res = await pool.query(
+      `SELECT id, title, slug, category, region, location, altitude, "basePrice", rating,
+              image, gallery, description, inclusions, exclusions, amenities,
+              "checkInTime", "checkOutTime", "cancellationPolicy", "isActive",
+              latitude, longitude, phone
+       FROM "Property"
+       WHERE (id = $1 OR id = $2 OR id = $3 OR slug = $1 OR slug = $3)
+       LIMIT 1`,
+      [cleanId, `pkg-${cleanSlug}`, cleanSlug]
+    );
+    return res.rows[0] || null;
+  } catch (err) {
+    console.error('[fetchLivePropertyDetails error]', err?.message);
+    return null;
+  }
+}
+
+export async function computeLiveMonthCalendar({ propertyId, rooms = [], yearMonth }) {
+  const now = new Date();
+  const [yStr, mStr] = String(yearMonth || `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`).split('-');
+  const year = parseInt(yStr, 10) || now.getFullYear();
+  const month = parseInt(mStr, 10) || (now.getMonth() + 1);
+
+  let effectiveRooms = rooms && rooms.length > 0 ? rooms : await fetchLivePropertyRooms(propertyId);
+  const totalCapacity = (effectiveRooms || []).reduce((sum, r) => {
+    return sum + Math.max(1, Number(r.totalUnits) || 1);
+  }, 0) || 15;
+
+  const bookings = await fetchLivePropertyBookings(propertyId);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const calendarMap = {};
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dStr = String(day).padStart(2, '0');
+    const mPad = String(month).padStart(2, '0');
+    const dateIso = `${year}-${mPad}-${dStr}`;
+    const nextDateIso = new Date(new Date(`${dateIso}T00:00:00.000Z`).getTime() + 86400000).toISOString().slice(0, 10);
+
+    const activeOnDate = bookings.filter((b) => {
+      const bIn = toIstDateString(b.arrivalDate);
+      const bOut = toIstDateString(b.departureDate);
+      if (!bIn || !bOut) return false;
+      return bIn < nextDateIso && dateIso < bOut;
+    });
+
+    let bookedUnits = 0;
+    for (const b of activeOnDate) {
+      bookedUnits += Math.max(1, Number(b.totalUnits) || 1);
+    }
+
+    const remaining = Math.max(0, totalCapacity - bookedUnits);
+    let status = 'available';
+    let dotColor = '#22C55E';
+    let badgeText = `${remaining} Units Left · Available`;
+
+    if (remaining === 0) {
+      status = 'sold_out';
+      dotColor = '#EF4444';
+      badgeText = 'Sold Out';
+    } else if (remaining <= 2) {
+      status = 'limited';
+      dotColor = '#EF4444';
+      badgeText = `Only ${remaining} Left · Almost Full!`;
+    } else if (remaining <= 5) {
+      status = 'filling_fast';
+      dotColor = '#E5A93B';
+      badgeText = `${remaining} Left · Filling Fast`;
+    }
+
+    calendarMap[dateIso] = {
+      date: dateIso,
+      remaining,
+      totalCapacity,
+      bookedUnits,
+      status,
+      dotColor,
+      badgeText
+    };
+  }
+
+  return {
+    propertyId,
+    yearMonth: `${year}-${String(month).padStart(2, '0')}`,
+    totalCapacity,
+    dates: calendarMap
+  };
+}
+
 export async function computeLiveAvailability({ propertyId, rooms = [], dateStr }) {
   const interval = parseBatchDateInterval(dateStr) || {
     checkInDate: new Date().toISOString().slice(0, 10),
     checkOutDate: new Date(Date.now() + 86400000).toISOString().slice(0, 10)
   };
 
+  let effectiveRooms = rooms && rooms.length > 0 ? rooms : await fetchLivePropertyRooms(propertyId);
   const bookings = await fetchLivePropertyBookings(propertyId);
   const { checkInDate, checkOutDate } = interval;
 
   const roomMap = {};
 
-  for (const room of rooms) {
+  for (const room of effectiveRooms) {
     const totalUnits = Math.max(0, Math.floor(Number(room.totalUnits) || 1));
     const matchingBookings = bookings.filter((b) => {
       const bIn = toIstDateString(b.arrivalDate);
@@ -150,7 +289,12 @@ export async function computeLiveAvailability({ propertyId, rooms = [], dateStr 
       totalUnits,
       bookedUnits,
       availableUnits,
-      isAvailable: availableUnits > 0
+      isAvailable: availableUnits > 0,
+      price: room.price || room.basePrice,
+      pricingModel: room.pricingModel,
+      inventoryType: room.inventoryType,
+      bedConfig: room.bedConfig,
+      bathroomType: room.bathroomType
     };
   }
 

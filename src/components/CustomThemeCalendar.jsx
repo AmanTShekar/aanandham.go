@@ -55,7 +55,8 @@ export default function CustomThemeCalendar({
     theme = 'light', // 'light' | 'dark' | 'gold'
     inline = false,
     label = 'SELECT EXPEDITION DATE',
-    defaultDuration = 2 // Fixed 2 Days / 1 Night
+    defaultDuration = 2, // Fixed 2 Days / 1 Night
+    propertyId = null
 }) {
     const notifyDateSelect = onDateSelect || onSelectDate || (() => {});
     const today = useMemo(() => new Date(), []);
@@ -66,6 +67,23 @@ export default function CustomThemeCalendar({
     const [isOpen, setIsOpen] = useState(inline);
     const [stagedDate, setStagedDate] = useState(selectedDate || '');
     const [durationDays, setDurationDays] = useState(defaultDuration || 2);
+    const [liveCalendarMap, setLiveCalendarMap] = useState({});
+
+    // Live PMS month calendar lookup if propertyId is provided
+    useEffect(() => {
+        if (!propertyId) return;
+        let isMounted = true;
+        const ym = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+        fetch(`/api/camps/${encodeURIComponent(propertyId)}/availability?month=${ym}`, { cache: 'no-store' })
+            .then(res => res.json())
+            .then(data => {
+                if (isMounted && data.success && data.calendar?.dates) {
+                    setLiveCalendarMap(data.calendar.dates);
+                }
+            })
+            .catch(() => {});
+        return () => { isMounted = false; };
+    }, [propertyId, currentYear, currentMonth]);
 
     // Prevent background scroll when calendar modal dialog is open (if not inline)
     useEffect(() => {
@@ -440,13 +458,17 @@ export default function CustomThemeCalendar({
                     const special = specialBatches[dateStr];
                     const isPast = new Date(currentYear, currentMonth, day) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
                     const isWeekend = new Date(currentYear, currentMonth, day).getDay() === 0 || new Date(currentYear, currentMonth, day).getDay() === 6;
+                    const liveAvail = liveCalendarMap[dateStr];
+                    const isSoldOut = !isPast && liveAvail ? (liveAvail.isSoldOut || liveAvail.availableUnits === 0) : false;
+                    const dotColor = liveAvail ? liveAvail.dotColor : getDateAvailability(dateStr).dotColor;
 
                     return (
                         <button
                             key={day}
                             type="button"
-                            disabled={isPast}
+                            disabled={isPast || isSoldOut}
                             onClick={() => handleDayClick(day)}
+                            title={isSoldOut ? 'Sold Out' : (liveAvail ? `${liveAvail.availableUnits} units available` : undefined)}
                             style={{
                                 width: '100%',
                                 aspectRatio: '1',
@@ -469,14 +491,16 @@ export default function CustomThemeCalendar({
                                     ? '#121613'
                                     : isInRange
                                         ? (isDark ? '#FFFFFF' : '#121613')
-                                        : isPast
+                                        : (isPast || isSoldOut)
                                             ? (isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(18, 22, 19, 0.25)')
                                             : special
                                                 ? (isDark ? accentColor : '#2A4B1A')
                                                 : (isDark ? '#FFFFFF' : '#121613'),
                                 fontSize: 'clamp(12px, 2.8vw, 13.5px)',
                                 fontWeight: isStart || isInRange || special ? '800' : '600',
-                                cursor: isPast ? 'not-allowed' : 'pointer',
+                                cursor: (isPast || isSoldOut) ? 'not-allowed' : 'pointer',
+                                textDecoration: isSoldOut ? 'line-through' : 'none',
+                                opacity: isSoldOut ? 0.4 : 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 alignItems: 'center',
@@ -492,7 +516,7 @@ export default function CustomThemeCalendar({
                                     width: '4px',
                                     height: '4px',
                                     borderRadius: '50%',
-                                    background: isStart ? '#121613' : getDateAvailability(dateStr).dotColor,
+                                    background: isStart ? '#121613' : dotColor,
                                     marginTop: '2px'
                                 }} />
                             )}

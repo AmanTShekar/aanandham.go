@@ -164,11 +164,16 @@ export default function CustomDateBatchPicker({
     onChange,
     theme = 'light', // 'light' | 'dark'
     label = 'SELECT EXPEDITION DATES',
-    durationDays = 2 // default 2 Days / 1 Night
+    durationDays = 2, // default 2 Days / 1 Night
+    propertyId = null,
+    campsiteId = null,
+    checkInTime = null,
+    checkOutTime = null
 }) {
     const effectiveSelectedDate = selectedDate || value || '';
     const handleDateChange = onDateChange || onChange || (() => {});
     const containerRef = useRef(null);
+    const activePropertyId = propertyId || campsiteId;
 
     const today = useMemo(() => {
         const t = new Date();
@@ -200,6 +205,33 @@ export default function CustomDateBatchPicker({
     // Current viewing month & year
     const [currentMonth, setCurrentMonth] = useState(parsedInitial.start.getMonth());
     const [currentYear, setCurrentYear] = useState(parsedInitial.start.getFullYear());
+    const [liveCalendarMap, setLiveCalendarMap] = useState({});
+
+    // Live PMS Calendar Availability Sync for specific property
+    useEffect(() => {
+        if (!activePropertyId) return;
+        let isMounted = true;
+        const monthPad = String(currentMonth + 1).padStart(2, '0');
+        const monthQuery = `${currentYear}-${monthPad}`;
+
+        fetch(`/api/camps/${encodeURIComponent(activePropertyId)}/availability?month=${monthQuery}`, { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                if (isMounted && data.success && data.calendar) {
+                    setLiveCalendarMap(prev => ({ ...prev, ...data.calendar }));
+                }
+            })
+            .catch(() => {});
+
+        return () => { isMounted = false; };
+    }, [activePropertyId, currentMonth, currentYear]);
+
+    const resolveDateAvail = (isoStr) => {
+        if (liveCalendarMap && liveCalendarMap[isoStr]) {
+            return liveCalendarMap[isoStr];
+        }
+        return getDateAvailability(isoStr);
+    };
 
     // Lock scroll when modal is open and coordinate with other modals (e.g. BookingEngineModal)
     useEffect(() => {
@@ -347,20 +379,20 @@ export default function CustomDateBatchPicker({
     const selectedStartIso = useMemo(() => formatDateToIso(startDate), [startDate]);
     const selectedEndIso = useMemo(() => formatDateToIso(endDate), [endDate]);
     const activeAvailability = useMemo(() => {
-        return getDateAvailability(selectedStartIso);
-    }, [selectedStartIso]);
+        return resolveDateAvail(selectedStartIso);
+    }, [selectedStartIso, liveCalendarMap]);
 
     // Hovered date details
     const hoveredDetails = useMemo(() => {
         if (!hoveredDateIso) return null;
-        const avail = getDateAvailability(hoveredDateIso);
+        const avail = resolveDateAvail(hoveredDateIso);
         const parsed = parseIso(hoveredDateIso);
         if (!parsed) return null;
         return {
             dateStr: `${MONTH_SHORT[parsed.getMonth()]} ${parsed.getDate()}`,
             avail
         };
-    }, [hoveredDateIso]);
+    }, [hoveredDateIso, liveCalendarMap]);
 
     const isDark = theme === 'dark';
     const displayLabel = useMemo(() => {
@@ -453,7 +485,7 @@ export default function CustomDateBatchPicker({
                                 gap: '4px'
                             }}>
                                 <Clock size={10} strokeWidth={2.4} />
-                                <span>Check-in 2:00 PM · Out 11:00 AM</span>
+                                <span>Check-in {checkInTime || '2:00 PM'} · Out {checkOutTime || '11:00 AM'}</span>
                             </span>
                             <span style={{
                                 fontSize: '10px',
@@ -838,13 +870,14 @@ export default function CustomDateBatchPicker({
                                             const isInRange = startDate && endDate && thisDate > startDate && thisDate < endDate;
                                             
                                             const isWeekend = thisDate.getDay() === 0 || thisDate.getDay() === 6;
-                                            const avail = getDateAvailability(thisIso);
+                                            const avail = resolveDateAvail(thisIso);
+                                            const isSoldOut = avail?.status === 'sold_out' || avail?.remaining === 0;
 
                                             return (
                                                 <button
                                                     key={dayNum}
                                                     type="button"
-                                                    disabled={isPast}
+                                                    disabled={isPast || isSoldOut}
                                                     onClick={() => handleDayClick(dayNum)}
                                                     onMouseEnter={() => !isPast && setHoveredDateIso(thisIso)}
                                                     onMouseLeave={() => setHoveredDateIso(null)}

@@ -5,7 +5,7 @@ import CustomThemeCalendar from '../CustomThemeCalendar';
 import CustomDateBatchPicker from '../CustomDateBatchPicker';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
 import VerifiedStayBadge from '../common/VerifiedStayBadge';
-import { inr } from '../../lib/utils';
+import { inr, getDefaultUpcomingBatch } from '../../lib/utils';
 import { parseRoomCapacity } from './BookingConstants';
 import BookingValidationPopup from './BookingValidationPopup';
 import { resolvePropertyType, getPricingUnitLabel, getInventoryTypeMeta } from '../../lib/propertyStayTypes';
@@ -404,19 +404,26 @@ export default function Step1CampsiteLodging({
                             );
                             const priceSuffix = isDorm ? '/ bed' : (isRoomLevel ? '/ room' : (typeMeta.id === 'campsite' ? '/ camper' : '/ night'));
 
+                            const liveRoom = liveInventory?.[room.id];
+                            const isRoomSoldOut = liveRoom && typeof liveRoom.availableUnits === 'number' && liveRoom.availableUnits === 0;
+                            const effectivePrice = (liveRoom && typeof liveRoom.price === 'number') ? liveRoom.price : (room.price || room.pricePerPerson || currentPkg.price || 2499);
+
                             return (
                                 <div
                                     key={room.id}
                                     onClick={() => {
-                                        setSelectedRoomId(room.id);
-                                        setCustomUnits(null);
+                                        if (!isRoomSoldOut) {
+                                            setSelectedRoomId(room.id);
+                                            setCustomUnits(null);
+                                        }
                                     }}
                                     style={{
                                         borderRadius: '12px',
                                         border: isRoomSelected ? '2px solid #166534' : '1px solid rgba(18, 22, 19, 0.12)',
-                                        background: isRoomSelected ? '#FFFFFF' : '#FFFFFF',
+                                        background: isRoomSoldOut ? '#FAFAFA' : '#FFFFFF',
                                         padding: '10px 12px',
-                                        cursor: 'pointer',
+                                        cursor: isRoomSoldOut ? 'not-allowed' : 'pointer',
+                                        opacity: isRoomSoldOut ? 0.55 : 1,
                                         transition: 'all 0.18s ease',
                                         boxShadow: isRoomSelected ? '0 4px 14px rgba(22, 101, 52, 0.12)' : '0 1px 3px rgba(0,0,0,0.03)',
                                         position: 'relative'
@@ -470,8 +477,23 @@ export default function Step1CampsiteLodging({
                                         )}
 
                                         <div style={{ flex: 1, minWidth: 0 }}>
-                                            <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                                {room.name}
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                                                <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#121613', marginBottom: '2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                                    {room.name}
+                                                </div>
+                                                {liveRoom && (
+                                                    <span style={{
+                                                        fontSize: '9px',
+                                                        fontWeight: '800',
+                                                        padding: '1px 6px',
+                                                        borderRadius: '6px',
+                                                        background: isRoomSoldOut ? '#FEE2E2' : '#DCFCE7',
+                                                        color: isRoomSoldOut ? '#DC2626' : '#166534',
+                                                        flexShrink: 0
+                                                    }}>
+                                                        {isRoomSoldOut ? 'Sold Out' : `${liveRoom.availableUnits} Left`}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div style={{ fontSize: '10.5px', color: '#59655D', fontWeight: '600', marginBottom: '2px', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
                                                 <Users size={11} color="#59655D" />
@@ -481,9 +503,19 @@ export default function Step1CampsiteLodging({
                                                         {room.bedConfig}
                                                     </span>
                                                 )}
+                                                {room.bathroomType && (
+                                                    <span style={{ fontSize: '9.5px', color: '#0369A1', background: '#E0F2FE', padding: '1px 5px', borderRadius: '4px' }}>
+                                                        {room.bathroomType === 'ATTACHED' ? 'Attached Bath' : room.bathroomType === 'COMMON' ? 'Shared Bath' : room.bathroomType}
+                                                    </span>
+                                                )}
+                                                {room.roomSizeSqFt && (
+                                                    <span style={{ fontSize: '9.5px', color: '#59655D', background: '#F1F3EC', padding: '1px 5px', borderRadius: '4px' }}>
+                                                        {room.roomSizeSqFt} sq ft
+                                                    </span>
+                                                )}
                                             </div>
-                                            <div style={{ fontSize: '13px', fontWeight: '900', color: '#166534' }}>
-                                                ₹{(room.price || room.pricePerPerson || currentPkg.price || 2499).toLocaleString('en-IN')} <span style={{ fontSize: '10px', color: '#59655D', fontWeight: '600' }}>{priceSuffix}</span>
+                                            <div style={{ fontSize: '13px', fontWeight: '900', color: isRoomSoldOut ? '#9CA3AF' : '#166534' }}>
+                                                ₹{effectivePrice.toLocaleString('en-IN')} <span style={{ fontSize: '10px', color: '#59655D', fontWeight: '600' }}>{priceSuffix}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -516,6 +548,10 @@ export default function Step1CampsiteLodging({
                                     </label>
                                     <CustomDateBatchPicker
                                         label="Check-In Date"
+                                        propertyId={currentPkg?.id}
+                                        campsiteId={currentPkg?.id}
+                                        checkInTime={currentPkg?.checkInTime}
+                                        checkOutTime={currentPkg?.checkOutTime}
                                         selectedDate={travelDate || getDefaultUpcomingBatch()}
                                         onDateChange={(date) => {
                                             setTravelDate(date);
