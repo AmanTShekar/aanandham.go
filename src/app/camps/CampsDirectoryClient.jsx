@@ -12,7 +12,7 @@ import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
 import { SkeletonCampGrid, AssetImage } from '../../components/common/SkeletonLoader';
 import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap, Building2, Home, Compass, Bed, Trees, Mountain, Landmark, Check } from 'lucide-react';
-import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
+import { INITIAL_ALL_CAMPS, getAllCamps, getInitialCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 import { resolvePropertyType, getPricingUnitLabel, PROPERTY_STAY_CATEGORIES } from '../../lib/propertyStayTypes';
 
@@ -50,7 +50,7 @@ export default function CampsDirectoryClient({
     extraContent = null
 }) {
     const router = useRouter();
-    const [camps, setCamps] = useState(() => (initialCamps && initialCamps.length > 0 ? initialCamps : getAllCamps()));
+    const [camps, setCamps] = useState(() => (initialCamps && initialCamps.length > 0 ? initialCamps : getInitialCamps()));
     const [isLoading, setIsLoading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     // In coming-soon mode the grid shows live Kerala basecamps, so default filter to All

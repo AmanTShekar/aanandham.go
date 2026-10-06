@@ -14,7 +14,7 @@ import Footer from '../components/Footer';
 import SiteHeader from '../components/SiteHeader';
 const BookingEngineModal = dynamic(() => import('../components/BookingEngineModal'), { ssr: false });
 import { useAuth } from '../hooks/useAuth';
-import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps } from '../lib/campsData';
+import { INITIAL_ALL_CAMPS, getAllCamps, getInitialCamps, saveAllCamps } from '../lib/campsData';
 import { inr } from '../lib/utils';
 import { waLink } from '../lib/whatsapp';
 import { GraduationCap, Building2, Tent, Flame, Check, ChevronLeft, ChevronRight, ChevronDown, Download, Play, ShieldCheck, Stethoscope, Truck, Heart, MapPin, Clock, Zap, Camera, Search, MessageCircle, Star, Sunrise, Footprints, PersonStanding, Telescope, Leaf, Mountain, Waves, Link2 } from 'lucide-react';
@@ -788,9 +788,9 @@ export default function HomePage() {
         if (pkg) setSelectedPackage(pkg);
         setIsBookingModalOpen(true);
     };
-    const [selectedPackage, setSelectedPackage] = useState(() => getAllCamps()[0] || null);
+    const [selectedPackage, setSelectedPackage] = useState(() => getInitialCamps()[0] || null);
     const { user: currentUser, logout } = useAuth();
-    const [campsList, setCampsList] = useState(() => getAllCamps());
+    const [campsList, setCampsList] = useState(() => getInitialCamps());
     const [isLoadingCamps, setIsLoadingCamps] = useState(false);
 
     useEffect(() => {

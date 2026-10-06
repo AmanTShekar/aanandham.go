@@ -1433,6 +1433,11 @@ export const DEPRECATED_CAMP_IDS = new Set([
   "pkg-wayanad",
 ]);
 
+// Helper to get all static verified camps (hydration-safe)
+export function getInitialCamps() {
+  return INITIAL_ALL_CAMPS.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived);
+}
+
 // Helper to get all active verified camps with live PMS sync
 export function getAllCamps(bookings = null) {
   if (typeof window !== 'undefined') {
