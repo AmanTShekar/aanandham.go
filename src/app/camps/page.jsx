@@ -3,16 +3,16 @@ import CampsDirectoryClient from './CampsDirectoryClient';
 import { INITIAL_ALL_CAMPS, DEPRECATED_CAMP_IDS } from '@/lib/campsData';
 
 export const metadata = {
-  title: 'Wilderness Campsites & Tent Stays in Kerala',
+  title: "All India Wilderness Campsites & High-Altitude Stays | Aanandham.go",
   description:
-    'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ. Book with Aanandham.go.',
+    'Explore verified high-altitude campsites and wilderness stays across India — Munnar, Suryanelli, Vagamon, Wayanad, and Himachal Himalayas with 4x4 sunrise treks & campfire BBQ. Book with Aanandham.go.',
   alternates: {
     canonical: 'https://www.aanandham.in/camps',
   },
   openGraph: {
-    title: 'Wilderness Campsites & Tent Stays in Kerala',
+    title: "All India Wilderness Campsites & High-Altitude Stays | Aanandham.go",
     description:
-      'Explore verified high-altitude campsites in Munnar, Suryanelli, Vagamon & Wayanad with 4x4 sunrise treks & campfire BBQ.',
+      'Explore verified high-altitude campsites and wilderness stays across India — Munnar, Suryanelli, Vagamon, Wayanad, and Himachal Himalayas with 4x4 sunrise treks & campfire BBQ.',
     url: 'https://www.aanandham.in/camps',
     siteName: 'Aanandham.go',
     images: [
@@ -28,8 +28,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Wilderness Campsites & Tent Stays in Kerala',
-    description: 'Explore verified high-altitude campgrounds in Munnar, Suryanelli, Vagamon and Wayanad.',
+    title: "All India Wilderness Campsites & High-Altitude Stays | Aanandham.go",
+    description: 'Explore verified high-altitude campgrounds across Munnar, Suryanelli, Vagamon, Wayanad, and Himachal Himalayas.',
     images: ['https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&h=630&q=80'],
   },
 };
@@ -40,8 +40,8 @@ export default function CampsPage() {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: 'Aanandham.go Verified Kerala Wilderness Campsites',
-    description: 'Verified high-altitude camping, tent stays, and ridge dome glamping sites in Kerala.',
+    name: 'Aanandham.go Verified All India Wilderness Campsites',
+    description: 'Verified high-altitude camping, tent stays, and ridge dome glamping sites across India.',
     itemListElement: activeCamps.map((camp, index) => ({
       '@type': 'ListItem',
       position: index + 1,

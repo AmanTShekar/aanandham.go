@@ -168,7 +168,7 @@ export default function CampsDirectoryClient({
             await navigator.clipboard.writeText(shareUrl);
             showToast('✓ Link copied to clipboard!');
         } catch (err) {
-            window.open(waLink(`Check out this Kerala wilderness camp: ${camp.title} - ${shareUrl}`), '_blank');
+            window.open(waLink(`Check out this wilderness camp: ${camp.title} - ${shareUrl}`), '_blank');
         }
     };
 
@@ -266,7 +266,7 @@ export default function CampsDirectoryClient({
                                 color: '#FFFFFF'
                             }}>
                                 {heroTitle ? heroTitle : (
-                                    <>Kerala High-Altitude Camps & <span style={{ color: '#D5ED55' }}>Wilderness Basecamps</span></>
+                                    <>All India High-Altitude Camps & <span style={{ color: '#D5ED55' }}>Wilderness Basecamps</span></>
                                 )}
                             </h1>
 
@@ -276,7 +276,7 @@ export default function CampsDirectoryClient({
                                 lineHeight: 1.7,
                                 margin: '0 0 28px'
                             }}>
-                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds. Featuring luxury ridge glamping tents, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Vagamon, Wayanad — plus new Himalayan stays in Himachal.'}
+                                {heroSubtitle ? heroSubtitle : 'Explore verified campgrounds perched above rolling cloud beds across India — featuring luxury ridge glamping tents, 4x4 summit convoys, private campfire barbecues, and live availability across Munnar, Suryanelli, Vagamon, Wayanad, and Himalayan retreats in Himachal.'}
                             </p>
 
                             {/* Wishlist Bar Pill (Only shown if wishlist has items) */}
@@ -402,7 +402,7 @@ export default function CampsDirectoryClient({
                                                 transition: 'all 0.2s ease'
                                             }}
                                         >
-                                            {reg === 'All' ? 'All Kerala' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {reg}</span>}
+                                            {reg === 'All' ? 'All India' : <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={12} /> {reg}</span>}
                                         </button>
                                     );
                                 })}
@@ -737,7 +737,7 @@ export default function CampsDirectoryClient({
                                 No campsites match your filters
                             </h3>
                             <p style={{ fontSize: '14px', color: '#59655D', marginBottom: '20px' }}>
-                                Try clearing search filters or switching to "All Kerala" regions.
+                                Try clearing search filters or switching to "All India" regions.
                             </p>
                             <button
                                 onClick={() => {
