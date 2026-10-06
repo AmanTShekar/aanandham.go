@@ -682,7 +682,7 @@ export default function CampsDirectoryClient({
                                             </span>
                                             <span style={{ fontSize: '10.5px', color: '#6B8A72', fontWeight: '600' }}>Suryanelli / Kolukkumalai, Munnar</span>
                                         </div>
-                                        <div style={{ fontSize: 'clamp(16px, 2vw, 18px)', fontWeight: '900', color: '#FFFFFF', marginBottom: '6px', lineHeight: 1.3 }}>Kolukkumalai Teddy's Campsite</div>
+                                        <div style={{ fontSize: 'clamp(16px, 2vw, 18px)', fontWeight: '900', color: '#FFFFFF', marginBottom: '6px', lineHeight: 1.3 }}>Kolukkumalai Teddy's Campsite — Sky Deck &amp; Kolukkumalai Sunrise</div>
                                         <div style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.5, marginBottom: '14px' }}>Sky deck &amp; geodesic dome sanctuary overlooking Suryanelli tea valleys with 4x4 sunrise safari to Kolukkumalai summit.</div>
                                         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
                                             {['4x4 Sunrise Safari', 'Sky Deck & Domes', 'Campfire & BBQ', 'Sunset Ridge Trek'].map((f, i) => (
@@ -1048,7 +1048,7 @@ export default function CampsDirectoryClient({
                                                             }}>
                                                                 <Check size={8} color="#121613" strokeWidth={3.5} />
                                                             </span>
-                                                            Verified by Aanandham.Go
+                                                            Verified
                                                         </span>
                                                     )}
                                                 </div>

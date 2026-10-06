@@ -257,7 +257,7 @@ export default function Step1CampsiteLodging({
                                         }}>
                                             <Check size={7} color="#121613" strokeWidth={3.5} />
                                         </span>
-                                        Verified by Aanandham.Go
+                                        Verified
                                     </span>
                                 )}
                                 <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '1px 7px', borderRadius: '999px' }}>

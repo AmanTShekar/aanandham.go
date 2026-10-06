@@ -2700,7 +2700,7 @@ export default function HomePage() {
                                 </div>
 
                                 <h3 style={{ fontSize: 'clamp(18px, 2.2vw, 22px)', fontWeight: '900', color: '#FFFFFF', marginBottom: '8px', lineHeight: 1.25, margin: '0 0 8px' }}>
-                                    Kolukkumalai Teddy's Campsite
+                                    Kolukkumalai Teddy's Campsite — Sky Deck &amp; Kolukkumalai Sunrise
                                 </h3>
                                 <p style={{ fontSize: '13px', color: '#A2B6A6', lineHeight: 1.55, marginBottom: '16px', margin: '0 0 16px' }}>
                                     Sky deck &amp; geodesic dome sanctuary overlooking Suryanelli tea valleys with 4x4 sunrise safari to Kolukkumalai summit.

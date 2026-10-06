@@ -657,7 +657,7 @@ return (
                                             <span style={{ width: '13px', height: '13px', borderRadius: '50%', background: '#D5ED55', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
                                                 <Check size={8} color="#121613" strokeWidth={3.5} />
                                             </span>
-                                            Verified by Aanandham.Go
+                                            Verified
                                         </span>
                                     )}
                                     <span className="camp-hero-badge" style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
