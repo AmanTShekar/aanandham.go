@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarDays } from 'lucide-react';
 import { getDateAvailability } from './CustomDateBatchPicker';
@@ -73,10 +74,27 @@ export default function CustomThemeCalendar({
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
-                window.__lenis?.start();
-                document.body.style.overflow = originalOverflow || '';
+                const isAnotherModalOpen = 
+                    document.body.classList.contains('booking-modal-open') || 
+                    document.querySelector('.booking-modal-overlay') !== null;
+                if (!isAnotherModalOpen) {
+                    window.__lenis?.start();
+                    document.body.style.overflow = originalOverflow || '';
+                } else {
+                    document.body.style.overflow = 'hidden';
+                }
             };
         }
+    }, [isOpen, inline]);
+
+    // Close on Escape key press
+    useEffect(() => {
+        if (!isOpen || inline) return;
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setIsOpen(false);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, inline]);
 
     // Update staged date when selectedDate prop changes
@@ -684,20 +702,23 @@ export default function CustomThemeCalendar({
             )}
 
             {/* Fixed Backdrop Modal Dialog Mode — Centered Horizontally & Vertically */}
-            {!inline && (
+            {!inline && typeof document !== 'undefined' && createPortal(
                 <AnimatePresence>
                     {isOpen && (
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            onClick={() => setIsOpen(false)}
+                            onClick={(e) => {
+                                if (e.target === e.currentTarget) setIsOpen(false);
+                            }}
                             style={{
                                 position: 'fixed',
                                 inset: 0,
-                                zIndex: 100000,
+                                zIndex: 200000,
                                 background: 'rgba(0, 0, 0, 0.78)',
                                 backdropFilter: 'blur(12px)',
+                                WebkitBackdropFilter: 'blur(12px)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -717,7 +738,8 @@ export default function CustomThemeCalendar({
                             </motion.div>
                         </motion.div>
                     )}
-                </AnimatePresence>
+                </AnimatePresence>,
+                document.body
             )}
         </div>
     );

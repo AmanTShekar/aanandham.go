@@ -201,17 +201,36 @@ export default function CustomDateBatchPicker({
     const [currentMonth, setCurrentMonth] = useState(parsedInitial.start.getMonth());
     const [currentYear, setCurrentYear] = useState(parsedInitial.start.getFullYear());
 
-    // Lock scroll when modal is open
+    // Lock scroll when modal is open and coordinate with other modals (e.g. BookingEngineModal)
     useEffect(() => {
         if (isModalOpen) {
             window.__lenis?.stop();
             const originalOverflow = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
             return () => {
-                window.__lenis?.start();
-                document.body.style.overflow = originalOverflow || '';
+                const isAnotherModalOpen = 
+                    document.body.classList.contains('booking-modal-open') || 
+                    document.querySelector('.booking-modal-overlay') !== null;
+                if (!isAnotherModalOpen) {
+                    window.__lenis?.start();
+                    document.body.style.overflow = originalOverflow || '';
+                } else {
+                    document.body.style.overflow = 'hidden';
+                }
             };
         }
+    }, [isModalOpen]);
+
+    // Close on Escape key press
+    useEffect(() => {
+        if (!isModalOpen) return;
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setIsModalOpen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isModalOpen]);
 
     // Sync state when external prop changes
@@ -474,13 +493,18 @@ export default function CustomDateBatchPicker({
                     {isModalOpen && (
                         <div 
                             className="batch-picker-overlay"
-                            onClick={() => setIsModalOpen(false)}
+                            onClick={(e) => {
+                                if (e.target === e.currentTarget) {
+                                    setIsModalOpen(false);
+                                }
+                            }}
                             style={{
                                 position: 'fixed',
                                 inset: 0,
-                                zIndex: 10001,
-                                background: 'rgba(7, 14, 9, 0.75)',
-                                backdropFilter: 'blur(8px)',
+                                zIndex: 200000,
+                                background: 'rgba(7, 14, 9, 0.82)',
+                                backdropFilter: 'blur(12px)',
+                                WebkitBackdropFilter: 'blur(12px)',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',

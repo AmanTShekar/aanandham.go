@@ -105,22 +105,47 @@ function BookingEngineModalInner({
         return () => window.removeEventListener('storage', syncCamps);
     }, [isOpen]);
 
-    // Freeze background body scrolling while modal is open
+    // Freeze background body scrolling and Lenis smooth scroll while modal is open
     useEffect(() => {
         if (isOpen && typeof document !== 'undefined') {
+            window.__lenis?.stop();
             document.body.classList.add('booking-modal-open');
             document.documentElement.classList.add('booking-modal-open');
+            document.body.style.overflow = 'hidden';
         } else if (typeof document !== 'undefined') {
-            document.body.classList.remove('booking-modal-open');
-            document.documentElement.classList.remove('booking-modal-open');
+            const hasOtherModal = document.querySelector('.batch-picker-overlay');
+            if (!hasOtherModal) {
+                document.body.classList.remove('booking-modal-open');
+                document.documentElement.classList.remove('booking-modal-open');
+                document.body.style.overflow = '';
+                window.__lenis?.start();
+            }
         }
         return () => {
             if (typeof document !== 'undefined') {
-                document.body.classList.remove('booking-modal-open');
-                document.documentElement.classList.remove('booking-modal-open');
+                const hasOtherModal = document.querySelector('.batch-picker-overlay');
+                if (!hasOtherModal) {
+                    document.body.classList.remove('booking-modal-open');
+                    document.documentElement.classList.remove('booking-modal-open');
+                    document.body.style.overflow = '';
+                    window.__lenis?.start();
+                }
             }
         };
     }, [isOpen]);
+
+    // Close on Escape key press (unless child date picker is active)
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleKeyDown = (e) => {
+            if (document.querySelector('.batch-picker-overlay')) return;
+            if (e.key === 'Escape') {
+                onClose();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isOpen, onClose]);
 
     // ── Live PMS Funnel Tracking Dispatches ──
     useEffect(() => {
@@ -644,6 +669,7 @@ _Hi Aanandham Basecamp Concierge! Please check availability and confirm permit d
             <motion.div
                 ref={modalRef}
                 className="booking-modal-container"
+                onClick={(e) => e.stopPropagation()}
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 20 }}

@@ -5283,7 +5283,7 @@ body.booking-modal-open nav.mobile-sticky-action-bar {
 .batch-picker-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999999;
+  z-index: 200000 !important;
   background: rgba(5, 12, 8, 0.82);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
