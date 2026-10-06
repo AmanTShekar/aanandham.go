@@ -525,6 +525,10 @@ export default function CustomDateBatchPicker({
                     {isModalOpen && (
                         <div 
                             className="batch-picker-overlay"
+                            data-lenis-prevent="true"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label="Select stay check-in and check-out dates"
                             onClick={(e) => {
                                 if (e.target === e.currentTarget) {
                                     setIsModalOpen(false);
@@ -541,7 +545,9 @@ export default function CustomDateBatchPicker({
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 padding: '16px',
-                                overflowY: 'auto'
+                                overflowY: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                overscrollBehavior: 'contain'
                             }}
                         >
                             <motion.div
@@ -550,6 +556,7 @@ export default function CustomDateBatchPicker({
                                 exit={{ opacity: 0, scale: 0.95, y: 16 }}
                                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                                 onClick={(e) => e.stopPropagation()}
+                                data-lenis-prevent="true"
                                 className="batch-picker-modal"
                             >
                                 {/* Modal Header */}
@@ -719,7 +726,13 @@ export default function CustomDateBatchPicker({
                                 </div>
 
                                 {/* Calendar Container Body */}
-                                <div className="batch-picker-body">
+                                <div 
+                                    className="batch-picker-body"
+                                    data-lenis-prevent="true"
+                                    tabIndex={0}
+                                    role="region"
+                                    aria-label="Calendar month dates"
+                                >
 
                                     {/* Month & Year Navigation Header */}
                                     <div style={{
@@ -878,6 +891,9 @@ export default function CustomDateBatchPicker({
                                                     key={dayNum}
                                                     type="button"
                                                     disabled={isPast || isSoldOut}
+                                                    aria-disabled={isPast || isSoldOut}
+                                                    aria-pressed={isStart || isEnd || isInRange}
+                                                    aria-label={`${MONTH_NAMES[currentMonth]} ${dayNum}, ${currentYear}${isSoldOut ? ' - Sold out' : ` - ${avail.remaining} units available`}${isStart ? ' - Selected check-in' : ''}${isEnd ? ' - Selected check-out' : ''}`}
                                                     onClick={() => handleDayClick(dayNum)}
                                                     onMouseEnter={() => !isPast && setHoveredDateIso(thisIso)}
                                                     onMouseLeave={() => setHoveredDateIso(null)}

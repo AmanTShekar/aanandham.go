@@ -254,9 +254,9 @@ export default function CustomThemeCalendar({
     const calendarContent = (
         <div
             data-lenis-prevent="true"
-            data-lenis-prevent-wheel="true"
-            data-lenis-prevent-touch="true"
-            onWheel={(e) => e.stopPropagation()}
+            tabIndex={0}
+            role="region"
+            aria-label="Expedition Calendar Grid"
             style={{
                 background: isDark ? '#0B150E' : '#FFFFFF',
                 borderRadius: '24px',
@@ -267,7 +267,11 @@ export default function CustomThemeCalendar({
                 margin: '0 auto',
                 border: isDark ? '1.5px solid rgba(229, 169, 59, 0.4)' : '1px solid rgba(11, 21, 14, 0.12)',
                 boxShadow: isDark ? '0 25px 80px rgba(0, 0, 0, 0.7), 0 0 30px rgba(229, 169, 59, 0.12)' : '0 20px 60px rgba(0, 0, 0, 0.12)',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                maxHeight: inline ? 'none' : 'min(88vh, 88dvh)',
+                overflowY: inline ? 'visible' : 'auto',
+                WebkitOverflowScrolling: 'touch',
+                overscrollBehavior: 'contain'
             }}
         >
             {/* Modal / Card Header — Centered & Balanced */}
@@ -467,6 +471,9 @@ export default function CustomThemeCalendar({
                             key={day}
                             type="button"
                             disabled={isPast || isSoldOut}
+                            aria-disabled={isPast || isSoldOut}
+                            aria-pressed={isStart || isInRange}
+                            aria-label={`${MONTH_NAMES[currentMonth]} ${day}, ${currentYear}${isSoldOut ? ' - Sold out' : ''}${isStart ? ' - Selected start' : ''}${isEnd ? ' - Check out' : ''}`}
                             onClick={() => handleDayClick(day)}
                             title={isSoldOut ? 'Sold Out' : (liveAvail ? `${liveAvail.availableUnits} units available` : undefined)}
                             style={{
@@ -736,6 +743,10 @@ export default function CustomThemeCalendar({
                             onClick={(e) => {
                                 if (e.target === e.currentTarget) setIsOpen(false);
                             }}
+                            data-lenis-prevent="true"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label="Expedition Date Calendar"
                             style={{
                                 position: 'fixed',
                                 inset: 0,
@@ -747,7 +758,10 @@ export default function CustomThemeCalendar({
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 padding: '16px',
-                                boxSizing: 'border-box'
+                                boxSizing: 'border-box',
+                                overflowY: 'auto',
+                                WebkitOverflowScrolling: 'touch',
+                                overscrollBehavior: 'contain'
                             }}
                         >
                             <motion.div
@@ -756,7 +770,15 @@ export default function CustomThemeCalendar({
                                 exit={{ opacity: 0, scale: 0.94, y: 15 }}
                                 transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
                                 onClick={(e) => e.stopPropagation()}
-                                style={{ width: '100%', maxWidth: '440px', margin: '0 auto' }}
+                                data-lenis-prevent="true"
+                                style={{
+                                    width: '100%',
+                                    maxWidth: '440px',
+                                    margin: 'auto',
+                                    maxHeight: 'min(92vh, 92dvh)',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}
                             >
                                 {calendarContent}
                             </motion.div>
