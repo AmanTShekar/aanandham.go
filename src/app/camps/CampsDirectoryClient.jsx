@@ -11,7 +11,7 @@ const BookingEngineModal = dynamic(() => import('../../components/BookingEngineM
 import LucideAmenityIcon from '../../components/common/LucideAmenityIcon';
 import VerifiedStayBadge from '../../components/common/VerifiedStayBadge';
 import { SkeletonCampGrid, AssetImage } from '../../components/common/SkeletonLoader';
-import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap, Building2, Home, Compass, Bed, Trees, Mountain, Landmark } from 'lucide-react';
+import { MapPin, Clock, Heart, Camera, Star, Search, X, Share2, Tent, Sunrise, Flame, Footprints, Telescope, Leaf, Zap, Building2, Home, Compass, Bed, Trees, Mountain, Landmark, Check } from 'lucide-react';
 import { INITIAL_ALL_CAMPS, getAllCamps, saveAllCamps, DEPRECATED_CAMP_IDS } from '../../lib/campsData';
 import { waLink } from '../../lib/whatsapp';
 import { resolvePropertyType, getPricingUnitLabel, PROPERTY_STAY_CATEGORIES } from '../../lib/propertyStayTypes';
@@ -501,76 +501,210 @@ export default function CampsDirectoryClient({
                 )}
 
                 {/* ── AANANDHAM.STAYS LAUNCH BANNER ── */}
-                <section style={{ maxWidth: '1440px', margin: '0 auto 36px', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                <section style={{ maxWidth: '1440px', margin: '0 auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
                     <div style={{
                         background: 'linear-gradient(135deg, #0B1A0E 0%, #121E15 50%, #0D1A10 100%)',
-                        borderRadius: '28px',
-                        padding: 'clamp(28px, 4vw, 40px) clamp(24px, 4vw, 44px)',
+                        borderRadius: '28px 28px 0 0',
+                        padding: 'clamp(28px, 4vw, 44px) clamp(24px, 4vw, 52px) clamp(24px, 3vw, 36px)',
                         position: 'relative',
                         overflow: 'hidden',
                         border: '1px solid rgba(213, 237, 85, 0.18)',
+                        borderBottom: 'none',
                         boxShadow: '0 20px 60px rgba(0,0,0,0.25)'
                     }}>
                         {/* Glow blur */}
                         <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '380px', height: '280px', background: 'radial-gradient(circle, rgba(213,237,85,0.14) 0%, transparent 70%)', filter: 'blur(60px)', pointerEvents: 'none' }} />
                         <div style={{ position: 'absolute', bottom: '-60px', left: '10%', width: '300px', height: '200px', background: 'radial-gradient(circle, rgba(37,211,102,0.08) 0%, transparent 70%)', filter: 'blur(50px)', pointerEvents: 'none' }} />
 
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-                            <div style={{ flex: 1, minWidth: '280px' }}>
-                                {/* Eyebrow */}
-                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(213,237,85,0.12)', border: '1px solid rgba(213,237,85,0.3)', borderRadius: '999px', padding: '5px 14px', marginBottom: '16px' }}>
-                                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#D5ED55', boxShadow: '0 0 8px #D5ED55', display: 'inline-block', animation: 'pulse-dot 1.8s ease-in-out infinite' }} />
-                                    <span style={{ fontSize: '11px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase' }}>Now Open · Aanandham.Stays</span>
+                        <div style={{ position: 'relative', zIndex: 2 }}>
+                            {/* Header row */}
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '28px' }}>
+                                <div style={{ flex: 1, minWidth: '260px' }}>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(213,237,85,0.12)', border: '1px solid rgba(213,237,85,0.3)', borderRadius: '999px', padding: '5px 14px', marginBottom: '14px' }}>
+                                        <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#D5ED55', boxShadow: '0 0 8px #D5ED55', display: 'inline-block', animation: 'pulse-dot 1.8s ease-in-out infinite' }} />
+                                        <span style={{ fontSize: '11px', fontWeight: '900', color: '#D5ED55', letterSpacing: '1px', textTransform: 'uppercase' }}>Now Open · Aanandham.Stays</span>
+                                    </div>
+                                    <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: '900', color: '#FFFFFF', margin: '0 0 10px', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
+                                        Stays by Aanandham
+                                        <span style={{ color: '#D5ED55' }}>.Stays</span>
+                                    </h2>
+                                    <p style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#A2B6A6', lineHeight: 1.65, margin: 0, maxWidth: '560px' }}>
+                                        Owner-operated, personally verified mountain stays. Every detail handpicked by our team — from Himalayan sunrises to campfire dinners.
+                                    </p>
                                 </div>
-
-                                <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(22px, 3.5vw, 34px)', fontWeight: '900', color: '#FFFFFF', margin: '0 0 10px', letterSpacing: '-0.03em', lineHeight: 1.2 }}>
-                                    Curated Stays by Aanandham —
-                                    <span style={{ color: '#D5ED55' }}> Now Launching</span>
-                                </h2>
-                                <p style={{ fontSize: 'clamp(13px, 1.5vw, 15px)', color: '#A2B6A6', lineHeight: 1.65, margin: '0 0 18px', maxWidth: '580px' }}>
-                                    From our 8,000 FT Himalayan basecamp in Kalga to upcoming mountain retreats — Aanandham.Stays is our new curated stays vertical. Every property is personally verified, hosted by our own team, and built to feel like home at altitude.
-                                </p>
-
-                                {/* Property Chips */}
-                                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '22px' }}>
-                                    {[
-                                        { label: 'The Nest Kalga', sub: 'Kasol · 7,900 FT · Live' },
-                                        { label: 'Teddys', sub: 'Coming Soon · Himachal' }
-                                    ].map((p, i) => (
-                                        <div key={i} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                            <span style={{ fontSize: '12.5px', fontWeight: '800', color: '#FFFFFF' }}>{p.label}</span>
-                                            <span style={{ fontSize: '10.5px', color: '#6B8A72', fontWeight: '600' }}>{p.sub}</span>
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                    <a href="#aanandham-stays-section" onClick={e => { e.preventDefault(); document.getElementById('aanandham-stays-section')?.scrollIntoView({ behavior: 'smooth' }); }} style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: '#D5ED55', color: '#121613', fontWeight: '900', fontSize: '13.5px', padding: '11px 22px', borderRadius: '12px', textDecoration: 'none', boxShadow: '0 6px 20px rgba(213,237,85,0.35)', transition: 'transform 0.15s ease' }}>
-                                        <span>Explore Aanandham.Stays</span>
-                                        <span>↓</span>
-                                    </a>
-                                    <a href="https://wa.me/919074858014?text=Hi! I want to know more about Aanandham.Stays" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: 'rgba(255,255,255,0.07)', color: '#FFFFFF', fontWeight: '800', fontSize: '13.5px', padding: '11px 22px', borderRadius: '12px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)' }}>
-                                        WhatsApp Enquiry →
+                                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignSelf: 'center' }}>
+                                    <a href="https://wa.me/919074858014?text=Hi! I want to know more about Aanandham.Stays" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', background: 'rgba(255,255,255,0.07)', color: '#FFFFFF', fontWeight: '800', fontSize: '13px', padding: '10px 20px', borderRadius: '12px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)' }}>
+                                        Enquire on WhatsApp →
                                     </a>
                                 </div>
                             </div>
 
-                            {/* Right: Stats */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', flexShrink: 0 }}>
-                                {[
-                                    { num: '8,000 FT', label: 'Himalayan Altitude' },
-                                    { num: '100%', label: 'Owner Operated' },
-                                    { num: '₹249', label: 'Starts at · Per Bed' }
-                                ].map((s, i) => (
-                                    <div key={i} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '12px 20px', textAlign: 'center', minWidth: '130px' }}>
-                                        <div style={{ fontFamily: 'var(--font-heading)', fontSize: '20px', fontWeight: '900', color: '#D5ED55', lineHeight: 1 }}>{s.num}</div>
-                                        <div style={{ fontSize: '10.5px', color: '#6B8A72', fontWeight: '700', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{s.label}</div>
+                            {/* ── TWO FEATURED PROPERTY CARDS ── */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '16px' }}>
+
+                                {/* — Card 1: The Nest Kalga (LIVE FROM PMS) — */}
+                                <div
+                                    onClick={() => router.push('/camps/cmu7f7c7q0001jf2bn12igi66')}
+                                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(213,237,85,0.22)', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s ease, box-shadow 0.2s ease', position: 'relative' }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                                >
+                                    {/* Image — No stock image fallback when real photos not uploaded */}
+                                    <div style={{ height: '200px', position: 'relative', overflow: 'hidden', background: 'radial-gradient(circle at 50% 40%, #162419 0%, #0A130C 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                        <Mountain size={38} color="#D5ED55" strokeWidth={1.5} style={{ opacity: 0.85 }} />
+                                        <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', letterSpacing: '0.5px', textTransform: 'uppercase' }}>8,000 FT Alpine Sanctuary</span>
+                                        <span style={{ fontSize: '10px', color: '#6B8A72', fontWeight: '600' }}>Live Photos Being Verified</span>
+                                        {/* Top badges */}
+                                        <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '6px' }}>
+                                            <span style={{ background: '#D5ED55', color: '#121613', fontSize: '10px', fontWeight: '900', padding: '4px 10px', borderRadius: '999px' }}>Cottages &amp; Cabins</span>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>8,000 FT</span>
+                                        </div>
+                                        {/* Live dot bottom-right */}
+                                        <div style={{ position: 'absolute', bottom: '12px', right: '12px', display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'rgba(22,101,52,0.9)', border: '1px solid #166534', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+                                            <span className="live-available-dot" />
+                                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#FFFFFF' }}>Live Available</span>
+                                        </div>
                                     </div>
-                                ))}
+                                    {/* Body */}
+                                    <div style={{ padding: '18px 20px 20px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                                            <span style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4.5px',
+                                                background: 'rgba(213,237,85,0.12)',
+                                                border: '1px solid rgba(213,237,85,0.3)',
+                                                color: '#D5ED55',
+                                                fontSize: '10px',
+                                                fontWeight: '900',
+                                                padding: '3px 9px',
+                                                borderRadius: '999px'
+                                            }}>
+                                                <span style={{
+                                                    width: '12px',
+                                                    height: '12px',
+                                                    borderRadius: '50%',
+                                                    background: '#D5ED55',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <Check size={8} color="#121613" strokeWidth={3.5} />
+                                                </span>
+                                                by Aanandham.Stays
+                                            </span>
+                                            <span style={{ fontSize: '10.5px', color: '#6B8A72', fontWeight: '600' }}>Kasol, Himachal</span>
+                                        </div>
+                                        <div style={{ fontSize: 'clamp(16px, 2vw, 18px)', fontWeight: '900', color: '#FFFFFF', marginBottom: '6px', lineHeight: 1.3 }}>The Nest Kalga by Aanandham.Go</div>
+                                        <div style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.5, marginBottom: '14px' }}>Solar-powered mountain basecamp with panoramic sunrise deck, 10-bed dorm, private balcony rooms &amp; guided ridge treks.</div>
+                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                                            {['Sunrise Deck', 'Campfire & BBQ', 'Guided Trek', 'Solar Powered'].map((f, i) => (
+                                                <span key={i} style={{ fontSize: '10.5px', fontWeight: '700', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#D5ED55', padding: '3px 9px', borderRadius: '6px' }}>✓ {f}</span>
+                                            ))}
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                                            <div>
+                                                <div style={{ fontSize: '9.5px', fontWeight: '700', color: '#6B8A72', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Starts at</div>
+                                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#D5ED55', lineHeight: 1 }}>₹249 <span style={{ fontSize: '11px', fontWeight: '600', color: '#A2B6A6' }}>/ bed / night</span></div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button onClick={e => { e.stopPropagation(); router.push('/camps/cmu7f7c7q0001jf2bn12igi66'); }} style={{ padding: '9px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>Details →</button>
+                                                <button onClick={e => { e.stopPropagation(); const kalgaCamp = camps.find(c => c.id === 'cmu7f7c7q0001jf2bn12igi66'); if (kalgaCamp) { setSelectedPackageForBooking(kalgaCamp); setIsBookingModalOpen(true); } }} style={{ padding: '9px 16px', borderRadius: '10px', background: '#D5ED55', border: 'none', color: '#121613', fontSize: '12px', fontWeight: '900', cursor: 'pointer' }}>Book Now</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* — Card 2: Kolukkumalai Teddy's (LIVE IN MUNNAR) — */}
+                                <div
+                                    onClick={() => router.push('/camps/pkg-kolukkumalai-teddy-domes')}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.04)',
+                                        border: '1px solid rgba(213,237,85,0.22)',
+                                        borderRadius: '20px',
+                                        overflow: 'hidden',
+                                        cursor: 'pointer',
+                                        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                                        position: 'relative'
+                                    }}
+                                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+                                >
+                                    {/* Image */}
+                                    <div style={{ height: '200px', position: 'relative', overflow: 'hidden', background: '#0D1A10' }}>
+                                        <img
+                                            src="/images/teddy/teddy-dome-1.jpg"
+                                            alt="Kolukkumalai Teddy's Campsite"
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.88 }}
+                                            loading="lazy"
+                                        />
+                                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 40%, rgba(0,0,0,0.7) 100%)' }} />
+                                        {/* Top badges */}
+                                        <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                                            <span style={{ background: '#D5ED55', color: '#121613', fontSize: '10px', fontWeight: '900', padding: '4px 10px', borderRadius: '999px' }}>Sky Deck &amp; Domes</span>
+                                            <span style={{ background: '#E5A93B', color: '#121613', fontSize: '10px', fontWeight: '800', padding: '4px 10px', borderRadius: '999px' }}>7,100 FT</span>
+                                        </div>
+                                        {/* Live dot bottom-right */}
+                                        <div style={{ position: 'absolute', bottom: '12px', right: '12px', display: 'inline-flex', alignItems: 'center', gap: '5px', background: 'rgba(22,101,52,0.9)', border: '1px solid #166534', padding: '4px 10px', borderRadius: '999px', backdropFilter: 'blur(6px)' }}>
+                                            <span className="live-available-dot" />
+                                            <span style={{ fontSize: '10.5px', fontWeight: '800', color: '#FFFFFF' }}>Live Available</span>
+                                        </div>
+                                    </div>
+                                    {/* Body */}
+                                    <div style={{ padding: '18px 20px 20px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                                            <span style={{
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4.5px',
+                                                background: 'rgba(213,237,85,0.12)',
+                                                border: '1px solid rgba(213,237,85,0.3)',
+                                                color: '#D5ED55',
+                                                fontSize: '10px',
+                                                fontWeight: '900',
+                                                padding: '3px 9px',
+                                                borderRadius: '999px'
+                                            }}>
+                                                <span style={{
+                                                    width: '12px',
+                                                    height: '12px',
+                                                    borderRadius: '50%',
+                                                    background: '#D5ED55',
+                                                    display: 'inline-flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    flexShrink: 0
+                                                }}>
+                                                    <Check size={8} color="#121613" strokeWidth={3.5} />
+                                                </span>
+                                                by Aanandham.Stays
+                                            </span>
+                                            <span style={{ fontSize: '10.5px', color: '#6B8A72', fontWeight: '600' }}>Suryanelli / Kolukkumalai, Munnar</span>
+                                        </div>
+                                        <div style={{ fontSize: 'clamp(16px, 2vw, 18px)', fontWeight: '900', color: '#FFFFFF', marginBottom: '6px', lineHeight: 1.3 }}>Kolukkumalai Teddy's Campsite</div>
+                                        <div style={{ fontSize: '12.5px', color: '#A2B6A6', lineHeight: 1.5, marginBottom: '14px' }}>Sky deck &amp; geodesic dome sanctuary overlooking Suryanelli tea valleys with 4x4 sunrise safari to Kolukkumalai summit.</div>
+                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                                            {['4x4 Sunrise Safari', 'Sky Deck & Domes', 'Campfire & BBQ', 'Sunset Ridge Trek'].map((f, i) => (
+                                                <span key={i} style={{ fontSize: '10.5px', fontWeight: '700', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#D5ED55', padding: '3px 9px', borderRadius: '6px' }}>✓ {f}</span>
+                                            ))}
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                                            <div>
+                                                <div style={{ fontSize: '9.5px', fontWeight: '700', color: '#6B8A72', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Starts at</div>
+                                                <div style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#D5ED55', lineHeight: 1 }}>₹2,299 <span style={{ fontSize: '11px', fontWeight: '600', color: '#A2B6A6' }}>/ camper</span></div>
+                                            </div>
+                                            <div style={{ display: 'flex', gap: '8px' }}>
+                                                <button onClick={e => { e.stopPropagation(); router.push('/camps/pkg-kolukkumalai-teddy-domes'); }} style={{ padding: '9px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>Details →</button>
+                                                <button onClick={e => { e.stopPropagation(); const teddyCamp = camps.find(c => c.id === 'pkg-kolukkumalai-teddy-domes' || c.id?.includes('teddy')); if (teddyCamp) { setSelectedPackageForBooking(teddyCamp); setIsBookingModalOpen(true); } else { router.push('/camps/pkg-kolukkumalai-teddy-domes'); } }} style={{ padding: '9px 16px', borderRadius: '10px', background: '#D5ED55', border: 'none', color: '#121613', fontSize: '12px', fontWeight: '900', cursor: 'pointer' }}>Book Now</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
                 {/* ── CAMPSITES LISTING GRID ── */}
                 <section id="aanandham-stays-section" style={{ maxWidth: '1440px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 48px)', scrollMarginTop: '90px' }}>
@@ -625,11 +759,15 @@ export default function CampsDirectoryClient({
                                 const galleryList = camp.gallery && camp.gallery.length > 0 ? camp.gallery : [camp.image];
                                 const typeMeta = resolvePropertyType(camp.propertyTypeSlug || camp.propertyType?.slug || camp.category, camp.title);
                                 const pricingUnit = getPricingUnitLabel(camp);
-                                // Detect Aanandham.Stays curated properties (Himachal / Stays brand)
+                                // Detect Aanandham.Stays curated properties (The Nest Kalga & Kolukkumalai Teddy's)
                                 const isAanandhamStays = (camp.region === 'Himachal') ||
+                                    camp.id === 'cmu7f7c7q0001jf2bn12igi66' ||
+                                    camp.id === 'pkg-kolukkumalai-teddy-domes' ||
                                     String(camp.location || '').toLowerCase().includes('himachal') ||
                                     String(camp.location || '').toLowerCase().includes('kasol') ||
-                                    String(camp.location || '').toLowerCase().includes('kalga');
+                                    String(camp.location || '').toLowerCase().includes('kalga') ||
+                                    String(camp.title || '').toLowerCase().includes('nest') ||
+                                    String(camp.title || '').toLowerCase().includes('teddy');
 
                                 return (
                                     <div
@@ -858,22 +996,60 @@ export default function CampsDirectoryClient({
                                                         <span style={{
                                                             display: 'inline-flex',
                                                             alignItems: 'center',
-                                                            gap: '4px',
+                                                            gap: '4.5px',
                                                             background: 'linear-gradient(135deg, #0B1A0E 0%, #121E15 100%)',
                                                             color: '#D5ED55',
                                                             fontSize: '10px',
                                                             fontWeight: '900',
-                                                            padding: '3px 8px',
+                                                            padding: '3px 9px',
                                                             borderRadius: '999px',
                                                             border: '1px solid rgba(213,237,85,0.35)',
                                                             letterSpacing: '0.2px',
                                                             boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
                                                         }}>
-                                                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#D5ED55', display: 'inline-block', flexShrink: 0 }} />
+                                                            <span style={{
+                                                                width: '12px',
+                                                                height: '12px',
+                                                                borderRadius: '50%',
+                                                                background: '#D5ED55',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                flexShrink: 0
+                                                            }}>
+                                                                <Check size={8} color="#121613" strokeWidth={3.5} />
+                                                            </span>
                                                             by Aanandham.Stays
                                                         </span>
                                                     ) : (
-                                                        <VerifiedStayBadge size="sm" />
+                                                        <span style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            gap: '4.5px',
+                                                            background: '#121613',
+                                                            color: '#D5ED55',
+                                                            fontSize: '10px',
+                                                            fontWeight: '900',
+                                                            padding: '3px 9px',
+                                                            borderRadius: '999px',
+                                                            border: '1px solid rgba(213,237,85,0.25)',
+                                                            letterSpacing: '0.2px',
+                                                            boxShadow: '0 2px 6px rgba(0,0,0,0.18)'
+                                                        }}>
+                                                            <span style={{
+                                                                width: '12px',
+                                                                height: '12px',
+                                                                borderRadius: '50%',
+                                                                background: '#D5ED55',
+                                                                display: 'inline-flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                flexShrink: 0
+                                                            }}>
+                                                                <Check size={8} color="#121613" strokeWidth={3.5} />
+                                                            </span>
+                                                            Verified by Aanandham.Go
+                                                        </span>
                                                     )}
                                                 </div>
                                             </div>

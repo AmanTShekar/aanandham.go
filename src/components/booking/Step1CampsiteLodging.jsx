@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useMemo } from 'react';
-import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle, Building2, Home, Compass, Bed, Trees, Mountain, Landmark, BedDouble, Bath, ImageOff } from 'lucide-react';
+import { Users, Tent, Sparkles, ArrowRight, Minus, Plus, AlertCircle, Building2, Home, Compass, Bed, Trees, Mountain, Landmark, BedDouble, Bath, ImageOff, Check } from 'lucide-react';
 import CustomThemeCalendar from '../CustomThemeCalendar';
 import CustomDateBatchPicker from '../CustomDateBatchPicker';
 import LucideAmenityIcon from '../common/LucideAmenityIcon';
@@ -196,7 +196,70 @@ export default function Step1CampsiteLodging({
                         )}
                         <div style={{ minWidth: 0, flex: 1 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px', flexWrap: 'wrap' }}>
-                                <VerifiedStayBadge size="sm" iconOnly={true} />
+                                {((currentPkg.region === 'Himachal') ||
+                                    String(currentPkg.location || '').toLowerCase().includes('himachal') ||
+                                    String(currentPkg.location || '').toLowerCase().includes('kasol') ||
+                                    String(currentPkg.location || '').toLowerCase().includes('kalga') ||
+                                    String(currentPkg.title || currentPkg.name || '').toLowerCase().includes('nest') ||
+                                    String(currentPkg.title || currentPkg.name || '').toLowerCase().includes('teddy') ||
+                                    currentPkg.id === 'cmu7f7c7q0001jf2bn12igi66' ||
+                                    currentPkg.id === 'the-nest-kalga' ||
+                                    currentPkg.id === 'teddys') ? (
+                                    <span style={{
+                                        fontSize: '9.5px',
+                                        fontWeight: '900',
+                                        background: 'linear-gradient(135deg, #0B1A0E, #121E15)',
+                                        color: '#D5ED55',
+                                        padding: '2px 8px',
+                                        borderRadius: '999px',
+                                        border: '1px solid rgba(213,237,85,0.3)',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '3.5px'
+                                    }}>
+                                        <span style={{
+                                            width: '10px',
+                                            height: '10px',
+                                            borderRadius: '50%',
+                                            background: '#D5ED55',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0
+                                        }}>
+                                            <Check size={7} color="#121613" strokeWidth={3.5} />
+                                        </span>
+                                        by Aanandham.Stays
+                                    </span>
+                                ) : (
+                                    <span style={{
+                                        fontSize: '9.5px',
+                                        fontWeight: '900',
+                                        background: '#121613',
+                                        color: '#D5ED55',
+                                        padding: '2px 8px',
+                                        borderRadius: '999px',
+                                        border: '1px solid rgba(213,237,85,0.25)',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '3.5px',
+                                        boxShadow: '0 2px 5px rgba(0,0,0,0.18)'
+                                    }}>
+                                        <span style={{
+                                            width: '10px',
+                                            height: '10px',
+                                            borderRadius: '50%',
+                                            background: '#D5ED55',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            flexShrink: 0
+                                        }}>
+                                            <Check size={7} color="#121613" strokeWidth={3.5} />
+                                        </span>
+                                        Verified by Aanandham.Go
+                                    </span>
+                                )}
                                 <span style={{ fontSize: '9.5px', fontWeight: '800', background: '#121613', color: '#D5ED55', padding: '1px 7px', borderRadius: '999px' }}>
                                     {currentPkg.propertyType?.label || typeMeta.badge || typeMeta.label}
                                 </span>

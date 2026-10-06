@@ -9,7 +9,7 @@ import { Check } from 'lucide-react';
  */
 export default function VerifiedStayBadge({ 
     size = 'sm', 
-    text = 'Verified Stay', 
+    text = 'Verified by Aanandham.Go', 
     iconOnly = false,
     style = {},
     className = ''

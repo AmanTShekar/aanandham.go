@@ -604,16 +604,14 @@ export const INITIAL_ALL_CAMPS = [
     "title": "The Nest Kalga by Aanandham.Go",
     "shortTitle": "The Nest Kalga by Aanandham.Go",
     "slug": null,
-    "category": "Cottage",
-    "region": "Himachal",
-    "location": "Kalga, Kasol, Himachal",
-    "altitude": "7,900 FT",
+    "category": "Cottages & Cabins",
+    "region": "Kalga",
+    "location": "Kasol",
+    "altitude": "8000 FT",
     "basePrice": 249,
     "rating": 5,
-    "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80",
-    "gallery": [
-      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80"
-    ],
+    "image": "",
+    "gallery": [],
     "description": "Authentic mountain sanctuary glamping experience curated by certified camp staff.",
     "inclusions": [
       "Welcome Drink",

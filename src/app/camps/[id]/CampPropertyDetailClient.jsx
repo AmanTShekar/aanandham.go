@@ -47,6 +47,29 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const [customUnits, setCustomUnits] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [discounts, setDiscounts] = useState(null);
+    const [liveInventory, setLiveInventory] = useState({});
+    const [isCheckingInventory, setIsCheckingInventory] = useState(false);
+
+    // Fetch real-time room availability from PMS for selected date batch
+    useEffect(() => {
+        if (!camp?.id || !selectedDate) return;
+        let isMounted = true;
+        setIsCheckingInventory(true);
+        fetch(`/api/camps/${encodeURIComponent(camp.id)}/availability?date=${encodeURIComponent(selectedDate)}`, { cache: 'no-store' })
+            .then(r => r.json())
+            .then(data => {
+                if (isMounted && data.success && data.rooms) {
+                    setLiveInventory(data.rooms);
+                }
+            })
+            .catch(err => {
+                console.warn('Failed to load real-time availability:', err);
+            })
+            .finally(() => {
+                if (isMounted) setIsCheckingInventory(false);
+            });
+        return () => { isMounted = false; };
+    }, [camp?.id, selectedDate]);
 
     // Load active discount campaigns (server authoritative, localStorage fallback)
     useEffect(() => {
@@ -270,13 +293,27 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const currentRoom = availableRooms.find(r => r.id === selectedRoomId) || availableRooms[0];
     const currentRoomIsDorm = isDormRoom(currentRoom);
     const roomPrice = currentRoom?.price || currentRoom?.pricePerPerson || camp.price || 2499;
+
+    const isAanandhamStays = Boolean(
+        camp.id === 'cmu7f7c7q0001jf2bn12igi66' ||
+        camp.id === 'the-nest-kalga' ||
+        camp.id === 'teddys' ||
+        camp.id === 'pkg-kolukkumalai-teddy-domes' ||
+        String(camp.title || '').toLowerCase().includes('nest') ||
+        String(camp.title || '').toLowerCase().includes('teddy') ||
+        String(camp.location || '').toLowerCase().includes('kasol')
+    );
     const capacityNum = parseRoomCapacity(currentRoom?.capacity || currentRoom?.guestCapacity);
 
     // Dynamic maximum capacity calculation based on live room inventory and configuration
     const maxAllowedCapacity = useMemo(() => {
         if (!currentRoom) return 10;
+        const liveRoom = liveInventory?.[currentRoom.id];
         if (currentRoomIsDorm) {
             // Dorm room: Each unit represents 1 bed
+            if (liveRoom && typeof liveRoom.availableUnits === 'number') {
+                return Math.max(0, liveRoom.availableUnits);
+            }
             const units = Number(currentRoom.totalUnits) || 0;
             const capDigits = parseInt(String(currentRoom.capacity || '').match(/\d+/)?.[0] || '0', 10);
             const nameDigits = parseInt(String(currentRoom.name || '').match(/(\d+)\s*[- ]*(bed|bunk|person|sharing)/i)?.[1] || String(currentRoom.name || '').match(/\d+/)?.[0] || '0', 10);
@@ -287,10 +324,12 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         } else {
             // Private room / cabin / suite / tent
             const unitCap = parseRoomCapacity(currentRoom.capacity || currentRoom.guestCapacity || 2);
-            const availableUnits = Math.max(1, Number(currentRoom.totalUnits) || 3);
+            const availableUnits = liveRoom && typeof liveRoom.availableUnits === 'number'
+                ? liveRoom.availableUnits
+                : Math.max(1, Number(currentRoom.totalUnits) || 3);
             return unitCap * availableUnits;
         }
-    }, [currentRoom, currentRoomIsDorm]);
+    }, [currentRoom, currentRoomIsDorm, liveInventory]);
 
     // Enforce dynamic capacity clamp whenever selected room changes or guest count exceeds capacity
     useEffect(() => {
@@ -584,6 +623,43 @@ return (
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px' }}>
                             <div>
                                 <div className="camp-hero-badges" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
+                                    {isAanandhamStays ? (
+                                        <span className="camp-hero-badge" style={{
+                                            background: 'rgba(213, 237, 85, 0.15)',
+                                            color: '#D5ED55',
+                                            fontSize: '11.5px',
+                                            fontWeight: '900',
+                                            padding: '5px 12px',
+                                            borderRadius: '999px',
+                                            border: '1px solid rgba(213, 237, 85, 0.4)',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '5px'
+                                        }}>
+                                            <span style={{ width: '13px', height: '13px', borderRadius: '50%', background: '#D5ED55', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Check size={8} color="#121613" strokeWidth={3.5} />
+                                            </span>
+                                            by Aanandham.Stays
+                                        </span>
+                                    ) : (
+                                        <span className="camp-hero-badge" style={{
+                                            background: '#121613',
+                                            color: '#D5ED55',
+                                            fontSize: '11.5px',
+                                            fontWeight: '900',
+                                            padding: '5px 12px',
+                                            borderRadius: '999px',
+                                            border: '1px solid rgba(213, 237, 85, 0.3)',
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '5px'
+                                        }}>
+                                            <span style={{ width: '13px', height: '13px', borderRadius: '50%', background: '#D5ED55', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <Check size={8} color="#121613" strokeWidth={3.5} />
+                                            </span>
+                                            Verified by Aanandham.Go
+                                        </span>
+                                    )}
                                     <span className="camp-hero-badge" style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
                                         {camp.altitude || 'Western Ghats'}
                                     </span>
