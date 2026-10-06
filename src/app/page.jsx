@@ -1915,13 +1915,21 @@ export default function HomePage() {
                                         }}
                                     >
                                         {/* Image Container with Badges & Action Buttons */}
-                                        <div className="package-card-img" style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                                            <AssetImage 
-                                                src={pkg.image} 
-                                                alt={pkg.title} 
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, 33vw"
-                                            />
+                                        <div className="package-card-img" style={{ position: 'relative', height: '240px', overflow: 'hidden', background: '#0D1A10' }}>
+                                            {pkg.image ? (
+                                                <AssetImage 
+                                                    src={pkg.image} 
+                                                    alt={pkg.title} 
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                                />
+                                            ) : (
+                                                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 40%, #162419 0%, #0A130C 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                                    <Mountain size={40} color="#D5ED55" strokeWidth={1.5} style={{ opacity: 0.85 }} />
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', letterSpacing: '0.5px', textTransform: 'uppercase' }}>8,000 FT Alpine Sanctuary</span>
+                                                    <span style={{ fontSize: '10px', color: '#6B8A72', fontWeight: '600' }}>Live Photos Being Verified</span>
+                                                </div>
+                                            )}
                                             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(14,24,17,0.72) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.42) 100%)', pointerEvents: 'none', zIndex: 2 }} />
                                             
                                             {/* Unified Top Header Bar: Badges Left, Actions Right (Zero Overlap) */}
@@ -2139,7 +2147,7 @@ export default function HomePage() {
                                                             }}>
                                                                 <Check size={8} color="#121613" strokeWidth={3.5} />
                                                             </span>
-                                                            Verified by Aanandham.Go
+                                                            Verified
                                                         </span>
                                                     )}
                                                 </div>

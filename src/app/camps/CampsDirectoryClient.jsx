@@ -796,13 +796,21 @@ export default function CampsDirectoryClient({
                                         }}
                                     >
                                         {/* Top Image & Media Header with Shimmer Skeleton */}
-                                        <div className="camps-card-media" style={{ position: 'relative', height: '270px', overflow: 'hidden' }}>
-                                            <AssetImage
-                                                src={camp.image || galleryList[0]}
-                                                alt={camp.title}
-                                                fill
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                            />
+                                        <div className="camps-card-media" style={{ position: 'relative', height: '270px', overflow: 'hidden', background: '#0D1A10' }}>
+                                            {camp.image || galleryList[0] ? (
+                                                <AssetImage
+                                                    src={camp.image || galleryList[0]}
+                                                    alt={camp.title}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                />
+                                            ) : (
+                                                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 50% 40%, #162419 0%, #0A130C 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                                    <Mountain size={44} color="#D5ED55" strokeWidth={1.5} style={{ opacity: 0.85 }} />
+                                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#D5ED55', letterSpacing: '0.5px', textTransform: 'uppercase' }}>8,000 FT Alpine Sanctuary</span>
+                                                    <span style={{ fontSize: '10px', color: '#6B8A72', fontWeight: '600' }}>Live Photos Being Verified</span>
+                                                </div>
+                                            )}
                                             
                                             {/* Gradient Overlay for Readability */}
                                             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.4) 0%, transparent 40%, rgba(0,0,0,0.65) 100%)', pointerEvents: 'none', zIndex: 2 }} />
