@@ -513,32 +513,23 @@ export default function CustomDateBatchPicker({
                             }}
                         >
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.94, y: 16 }}
+                                initial={{ opacity: 0, scale: 0.95, y: 16 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.94, y: 16 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 16 }}
                                 transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                                 onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    width: '100%',
-                                    maxWidth: '560px',
-                                    background: '#FFFFFF',
-                                    borderRadius: '24px',
-                                    boxShadow: '0 25px 80px rgba(0, 0, 0, 0.35)',
-                                    overflow: 'hidden',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    border: '1px solid rgba(18, 22, 19, 0.12)'
-                                }}
+                                className="batch-picker-modal"
                             >
                                 {/* Modal Header */}
-                                <div style={{
-                                    padding: '18px 22px 14px',
+                                <div className="batch-picker-header" style={{
+                                    padding: '16px 20px 14px',
                                     borderBottom: '1px solid rgba(18, 22, 19, 0.08)',
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F9F5 100%)',
-                                    gap: '12px'
+                                    gap: '12px',
+                                    flexShrink: 0
                                 }}>
                                     <div>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -548,7 +539,7 @@ export default function CustomDateBatchPicker({
                                             </h3>
                                         </div>
                                         <p style={{ margin: '3px 0 0', fontSize: '12px', color: '#59655D' }}>
-                                            Check-in <strong>2:00 PM</strong> · Check-out <strong>11:00 AM</strong> · Live PMS Availability
+                                            Check-in <strong>2:00 PM</strong> · Check-out <strong>11:00 AM</strong> · Live PMS
                                         </p>
                                     </div>
 
@@ -559,13 +550,13 @@ export default function CustomDateBatchPicker({
                                         style={{
                                             display: 'inline-flex',
                                             alignItems: 'center',
-                                            gap: '5px',
+                                            gap: '6px',
                                             background: '#F1F3EC',
                                             border: '1px solid rgba(18, 22, 19, 0.12)',
                                             borderRadius: '999px',
-                                            padding: '7px 15px',
+                                            padding: '8px 16px',
                                             color: '#121613',
-                                            fontSize: '12.5px',
+                                            fontSize: '13px',
                                             fontWeight: '800',
                                             cursor: 'pointer',
                                             flexShrink: 0
@@ -576,11 +567,12 @@ export default function CustomDateBatchPicker({
                                     </button>
                                 </div>
 
-                                {/* Custom Stay Duration Pills (1 Night, 2 Nights, 3 Nights, 4 Nights, Custom Range) */}
+                                {/* Custom Stay Duration: Mobile Dropdown & Desktop Segmented Buttons */}
                                 <div style={{
                                     padding: '12px 20px',
                                     background: '#F6F8F2',
-                                    borderBottom: '1px solid rgba(18, 22, 19, 0.06)'
+                                    borderBottom: '1px solid rgba(18, 22, 19, 0.06)',
+                                    flexShrink: 0
                                 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                                         <span style={{ fontSize: '11px', fontWeight: '800', color: '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
@@ -591,7 +583,72 @@ export default function CustomDateBatchPicker({
                                         </span>
                                     </div>
 
-                                    <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '2px' }}>
+                                    {/* Mobile Dropdown (Clean, full width, never overflows) */}
+                                    <div className="batch-picker-mobile-dropdown">
+                                        <div style={{ position: 'relative' }}>
+                                            <select
+                                                value={String(selectedDurationPreset)}
+                                                onChange={(e) => {
+                                                    const val = e.target.value;
+                                                    const preset = DURATION_PRESETS.find(p => String(p.nights) === val);
+                                                    if (preset) handleDurationPresetClick(preset);
+                                                }}
+                                                style={{
+                                                    width: '100%',
+                                                    padding: '12px 38px 12px 14px',
+                                                    borderRadius: '12px',
+                                                    background: '#FFFFFF',
+                                                    border: '1.5px solid #166534',
+                                                    color: '#121613',
+                                                    fontSize: '13.5px',
+                                                    fontWeight: '800',
+                                                    appearance: 'none',
+                                                    WebkitAppearance: 'none',
+                                                    cursor: 'pointer',
+                                                    boxShadow: '0 2px 6px rgba(22, 101, 52, 0.08)'
+                                                }}
+                                            >
+                                                <option value="1">1 Night (2D / 1N)</option>
+                                                <option value="2">2 Nights (3D / 2N)</option>
+                                                <option value="3">3 Nights (4D / 3N)</option>
+                                                <option value="4">4 Nights (5D / 4N)</option>
+                                                <option value="custom">Custom Range (Flexible Check-In & Check-Out)</option>
+                                            </select>
+                                            <div style={{
+                                                position: 'absolute',
+                                                right: '12px',
+                                                top: '50%',
+                                                transform: 'translateY(-50%)',
+                                                pointerEvents: 'none',
+                                                color: '#166534',
+                                                display: 'flex',
+                                                alignItems: 'center'
+                                            }}>
+                                                <ChevronDown size={17} strokeWidth={2.6} />
+                                            </div>
+                                        </div>
+                                        {selectedDurationPreset === 'custom' && (
+                                            <div style={{
+                                                marginTop: '7px',
+                                                padding: '7px 11px',
+                                                borderRadius: '9px',
+                                                background: '#E9EFE6',
+                                                border: '1px solid rgba(22, 101, 52, 0.2)',
+                                                fontSize: '11.5px',
+                                                color: '#166534',
+                                                fontWeight: '700',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px'
+                                            }}>
+                                                <Sparkles size={13} color="#166534" />
+                                                <span>Tap check-in date, then tap check-out date below</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Desktop Segmented Buttons (Visible on desktop only) */}
+                                    <div className="batch-picker-desktop-pills">
                                         {DURATION_PRESETS.map((preset) => {
                                             const isSelected = selectedDurationPreset === preset.nights;
                                             return (
@@ -629,8 +686,8 @@ export default function CustomDateBatchPicker({
                                     </div>
                                 </div>
 
-                                {/* Calendar Container */}
-                                <div style={{ padding: '16px 20px 14px' }}>
+                                {/* Calendar Container Body */}
+                                <div className="batch-picker-body">
 
                                     {/* Month & Year Navigation Header */}
                                     <div style={{
@@ -879,7 +936,7 @@ export default function CustomDateBatchPicker({
                                 </div>
 
                                 {/* Modal Bottom Summary & Confirm Action Bar */}
-                                <div style={{
+                                <div className="batch-picker-footer" style={{
                                     padding: '16px 20px',
                                     background: '#F8F9F5',
                                     borderTop: '1px solid rgba(18, 22, 19, 0.08)',
@@ -887,9 +944,10 @@ export default function CustomDateBatchPicker({
                                     alignItems: 'center',
                                     justifyContent: 'space-between',
                                     flexWrap: 'wrap',
-                                    gap: '12px'
+                                    gap: '12px',
+                                    flexShrink: 0
                                 }}>
-                                    <div style={{ minWidth: '180px' }}>
+                                    <div style={{ minWidth: '160px' }}>
                                         <div style={{ fontSize: '13px', fontWeight: '900', color: '#121613' }}>
                                             {startDate && endDate ? formatStayDateRange(startDate, endDate, nights) : 'Select Check-in Date'}
                                         </div>
@@ -916,9 +974,10 @@ export default function CustomDateBatchPicker({
 
                                     <button
                                         type="button"
+                                        className="batch-picker-footer-btn"
                                         onClick={handleConfirmDates}
                                         style={{
-                                            padding: '12px 24px',
+                                            padding: '13px 26px',
                                             borderRadius: '12px',
                                             background: '#121613',
                                             color: '#D5ED55',
