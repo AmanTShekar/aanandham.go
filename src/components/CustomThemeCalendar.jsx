@@ -2,6 +2,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CalendarDays } from 'lucide-react';
+import { getDateAvailability } from './CustomDateBatchPicker';
 
 // Dynamic Wilderness Event Batches & Calendar Annotations
 export function getSpecialBatchesForMonth(year, month) {
@@ -63,7 +64,7 @@ export default function CustomThemeCalendar({
     const [currentYear, setCurrentYear] = useState(initialDate.getFullYear());
     const [isOpen, setIsOpen] = useState(inline);
     const [stagedDate, setStagedDate] = useState(selectedDate || '');
-    const durationDays = 2; // Strictly 2 Days / 1 Night (no 3D)
+    const [durationDays, setDurationDays] = useState(defaultDuration || 2);
 
     // Prevent background scroll when calendar modal dialog is open (if not inline)
     useEffect(() => {
@@ -331,37 +332,45 @@ export default function CustomThemeCalendar({
                 </div>
             </div>
 
-            {/* Trip Duration Badge (Fixed 2 Days / 1 Night) — Centered & Balanced */}
+            {/* Trip Duration Selector — Custom Stay */}
             <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '8px',
+                gap: '6px',
                 background: isDark ? 'rgba(255, 255, 255, 0.05)' : '#F5F7EF',
-                padding: '6px 12px',
+                padding: '6px 10px',
                 borderRadius: '14px',
                 marginBottom: '12px',
                 flexWrap: 'wrap'
             }}>
-                <span style={{ fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-                    Duration:
+                <span style={{ fontSize: '10.5px', fontWeight: '800', color: isDark ? '#A2B6A6' : '#59655D', textTransform: 'uppercase', letterSpacing: '0.6px', marginRight: '2px' }}>
+                    Stay:
                 </span>
-                <span
-                    style={{
-                        padding: '4px 12px',
-                        borderRadius: '8px',
-                        border: `1.5px solid ${accentColor}`,
-                        background: isDark ? 'rgba(229, 169, 59, 0.22)' : '#FFFFFF',
-                        color: isDark ? accentColor : '#121613',
-                        fontSize: '11px',
-                        fontWeight: '800',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px'
-                    }}
-                >
-                    2 Days / 1 Night
-                </span>
+                {[
+                    { days: 2, label: '1N (2D/1N)' },
+                    { days: 3, label: '2N (3D/2N)' },
+                    { days: 4, label: '3N (4D/3N)' },
+                    { days: 5, label: '4N (5D/4N)' }
+                ].map(opt => (
+                    <button
+                        key={opt.days}
+                        type="button"
+                        onClick={() => setDurationDays(opt.days)}
+                        style={{
+                            padding: '4px 9px',
+                            borderRadius: '8px',
+                            border: durationDays === opt.days ? `1.5px solid ${accentColor}` : '1px solid rgba(18,22,19,0.12)',
+                            background: durationDays === opt.days ? (isDark ? 'rgba(229, 169, 59, 0.22)' : '#166534') : (isDark ? 'rgba(255,255,255,0.06)' : '#FFFFFF'),
+                            color: durationDays === opt.days ? (isDark ? accentColor : '#FFFFFF') : (isDark ? '#A2B6A6' : '#121613'),
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {opt.label}
+                    </button>
+                ))}
             </div>
 
             {/* Days of Week Header — Centered & Equal Width */}
@@ -460,6 +469,15 @@ export default function CustomThemeCalendar({
                             }}
                         >
                             <span>{day}</span>
+                            {!isPast && (
+                                <span style={{
+                                    width: '4px',
+                                    height: '4px',
+                                    borderRadius: '50%',
+                                    background: isStart ? '#121613' : getDateAvailability(dateStr).dotColor,
+                                    marginTop: '2px'
+                                }} />
+                            )}
                             {special && !isInRange && (
                                 <span style={{
                                     position: 'absolute',

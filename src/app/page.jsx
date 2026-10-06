@@ -821,8 +821,10 @@ export default function HomePage() {
             e.preventDefault();
             if (e.detail?.camp) {
                 setSelectedPackage(e.detail.camp);
+                setIsBookingModalOpen(true);
+            } else {
+                router.push('/camps');
             }
-            setIsBookingModalOpen(true);
         };
         window.addEventListener('aanandham_open_booking', handleGlobalBooking);
         return () => window.removeEventListener('aanandham_open_booking', handleGlobalBooking);

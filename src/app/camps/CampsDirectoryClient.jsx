@@ -115,10 +115,11 @@ export default function CampsDirectoryClient({
             e.preventDefault();
             if (e.detail?.camp) {
                 setSelectedPackageForBooking(e.detail.camp);
-            } else if (camps && camps.length > 0) {
-                setSelectedPackageForBooking(camps[0]);
+                setIsBookingModalOpen(true);
+            } else {
+                const el = document.getElementById('aanandham-stays-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
             }
-            setIsBookingModalOpen(true);
         };
         window.addEventListener('aanandham_open_booking', handleGlobalBooking);
         return () => window.removeEventListener('aanandham_open_booking', handleGlobalBooking);

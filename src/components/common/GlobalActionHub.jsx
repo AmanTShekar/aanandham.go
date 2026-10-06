@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { Phone, Calendar, X, ChevronRight } from 'lucide-react';
 import { waLink, DEFAULT_WA_PHONE, logWhatsAppInquiry, telLink } from '@/lib/whatsapp';
@@ -18,6 +18,7 @@ const DOCK_SPRING = {
 
 export default function GlobalActionHub() {
     const pathname = usePathname();
+    const router = useRouter();
     const [isExpanded, setIsExpanded] = useState(false);
     const [activeCampContext, setActiveCampContext] = useState(null);
     const [isGlobalBookingModalOpen, setIsGlobalBookingModalOpen] = useState(false);

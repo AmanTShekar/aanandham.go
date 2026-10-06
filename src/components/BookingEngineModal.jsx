@@ -273,6 +273,13 @@ function BookingEngineModalInner({
     const totalUnits = customUnits !== null ? customUnits : autoRequiredUnits;
     const totalRoomCapacity = totalUnits * roomCapacity;
 
+    const stayNights = useMemo(() => {
+        if (!travelDate) return 1;
+        const match = String(travelDate).match(/(\d+)\s*Nights?/i);
+        if (match) return Math.max(1, parseInt(match[1], 10));
+        return 1;
+    }, [travelDate]);
+
     // Pricing calculation — guaranteed non-zero, server-matched per-person calculation
     const baseLodgingAmount = useMemo(() => {
         const ratePerPerson = Number(
@@ -287,8 +294,9 @@ function BookingEngineModalInner({
         );
         const adultCount = Math.max(1, Number(adults) || 1);
         const childCount = Math.max(0, Number(children) || 0);
-        return (ratePerPerson * adultCount) + Math.round(ratePerPerson * 0.5 * childCount);
-    }, [selectedRoom, selectedPkg, initialRoom, initialPackage, adults, children]);
+        const perNight = (ratePerPerson * adultCount) + Math.round(ratePerPerson * 0.5 * childCount);
+        return perNight * stayNights;
+    }, [selectedRoom, selectedPkg, initialRoom, initialPackage, adults, children, stayNights]);
 
     const addonsAmount = useMemo(() => {
         return selectedAddons.reduce((sum, addonId) => {
