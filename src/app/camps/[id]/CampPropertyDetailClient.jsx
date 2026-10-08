@@ -38,6 +38,19 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const [isLoaded, setIsLoaded] = useState(!!initialCamp);
     const [activePhotoIdx, setActivePhotoIdx] = useState(0);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [lightboxPhotos, setLightboxPhotos] = useState([]);
+    const [lightboxTitle, setLightboxTitle] = useState('');
+    const [lightboxSub, setLightboxSub] = useState('');
+
+    const openLightbox = (photos, startIdx = 0, title = '', sub = '') => {
+        const valid = Array.isArray(photos) ? photos.filter(Boolean) : [];
+        if (valid.length === 0) return;
+        setLightboxPhotos(valid);
+        setActivePhotoIdx(Math.max(0, Math.min(startIdx, valid.length - 1)));
+        setLightboxTitle(title);
+        setLightboxSub(sub);
+        setIsLightboxOpen(true);
+    };
     
     // Booking Selector State with Dynamic Date
     const [selectedRoomId, setSelectedRoomId] = useState(initialCamp?.rooms?.[0]?.id || null);
@@ -747,7 +760,7 @@ return (
                 ) : gallery.length === 1 ? (
                     <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
                         <div
-                            onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
+                            onClick={() => openLightbox(gallery, 0, camp.title, 'Property Gallery')}
                             className="card-img-zoom"
                             style={{ position: 'relative', height: 'clamp(260px, 40vw, 440px)', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer' }}
                         >
@@ -768,7 +781,7 @@ return (
                         <div className="camp-gallery-mosaic">
                             {/* Main Featured Photo (Left Large) */}
                             <div
-                                onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
+                                onClick={() => openLightbox(gallery, 0, camp.title, 'Property Gallery')}
                                 className="gallery-tile-main card-img-zoom"
                                 style={{ position: 'relative' }}
                             >
@@ -786,7 +799,7 @@ return (
 
                             {/* Sub Photo 1 (Top Right) */}
                             <div
-                                onClick={() => { setActivePhotoIdx(1 % gallery.length); setIsLightboxOpen(true); }}
+                                onClick={() => openLightbox(gallery, 1 % gallery.length, camp.title, 'Property Gallery')}
                                 className="gallery-tile-top card-img-zoom"
                                 style={{ position: 'relative' }}
                             >
@@ -800,7 +813,7 @@ return (
 
                             {/* Sub Photo 2 (Bottom Right 1) */}
                             <div
-                                onClick={() => { setActivePhotoIdx(2 % gallery.length); setIsLightboxOpen(true); }}
+                                onClick={() => openLightbox(gallery, 2 % gallery.length, camp.title, 'Property Gallery')}
                                 className="gallery-tile-bot-1 card-img-zoom"
                                 style={{ position: 'relative' }}
                             >
@@ -814,7 +827,7 @@ return (
 
                             {/* Sub Photo 3 (Bottom Right 2 with View All overlay) */}
                             <div
-                                onClick={() => { setActivePhotoIdx(3 % gallery.length); setIsLightboxOpen(true); }}
+                                onClick={() => openLightbox(gallery, 3 % gallery.length, camp.title, 'Property Gallery')}
                                 className="gallery-tile-bot-2 card-img-zoom"
                                 style={{ position: 'relative' }}
                             >
@@ -916,87 +929,140 @@ return (
                                                     flexWrap: 'wrap'
                                                 }}
                                             >
-                                                {/* Lodging Photo Showcase */}
-                                                {isRealPhoto(room.image) ? (
-                                                    <div
-                                                        className="room-card-media card-img-zoom"
-                                                        onClick={(e) => {
-                                                             e.stopPropagation();
-                                                            const photoUrl = room.image;
-                                                            const idx = gallery.findIndex(g => g === photoUrl);
-                                                            setActivePhotoIdx(idx >= 0 ? idx : 0);
-                                                            setIsLightboxOpen(true);
-                                                        }}
-                                                        style={{
-                                                            width: 'clamp(120px, 18vw, 150px)',
-                                                            height: '110px',
-                                                            borderRadius: '14px',
-                                                            overflow: 'hidden',
-                                                            position: 'relative',
-                                                            flexShrink: 0,
-                                                            cursor: 'pointer',
-                                                            background: '#EAECE4'
-                                                        }}
-                                                    >
-                                                        <img
-                                                            src={room.image}
-                                                            alt={`${camp.title} - ${room.name}`}
-                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                                            loading="lazy"
-                                                            decoding="async"
-                                                            onError={(e) => {
-                                                                e.currentTarget.style.display = 'none';
-                                                                if (e.currentTarget.nextElementSibling) {
-                                                                    e.currentTarget.nextElementSibling.style.display = 'none';
-                                                                }
-                                                                const fallback = document.createElement('div');
-                                                                fallback.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#7D8880;gap:4px;background:#F1F3EC;';
-                                                                fallback.innerHTML = '<span style="font-size:11px;font-weight:700;">No preview</span>';
-                                                                e.currentTarget.parentElement.appendChild(fallback);
+                                                {/* Lodging Photo Showcase with Multi-Image Gallery Support */}
+                                                {(() => {
+                                                    const rawRoomImages = Array.isArray(room.images) 
+                                                        ? room.images.filter(isRealPhoto) 
+                                                        : (isRealPhoto(room.image) ? [room.image] : []);
+                                                    
+                                                    if (rawRoomImages.length > 0) {
+                                                        return (
+                                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flexShrink: 0 }}>
+                                                                <div
+                                                                    className="room-card-media card-img-zoom"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        openLightbox(rawRoomImages, 0, room.name, `${camp.title} · ${roomBadge}`);
+                                                                    }}
+                                                                    style={{
+                                                                        width: 'clamp(120px, 18vw, 150px)',
+                                                                        height: '110px',
+                                                                        borderRadius: '14px',
+                                                                        overflow: 'hidden',
+                                                                        position: 'relative',
+                                                                        cursor: 'pointer',
+                                                                        background: '#EAECE4'
+                                                                    }}
+                                                                >
+                                                                    <img
+                                                                        src={rawRoomImages[0]}
+                                                                        alt={`${camp.title} - ${room.name}`}
+                                                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                                        loading="lazy"
+                                                                        decoding="async"
+                                                                        onError={(e) => {
+                                                                            e.currentTarget.style.display = 'none';
+                                                                            const fallback = document.createElement('div');
+                                                                            fallback.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:#7D8880;gap:4px;background:#F1F3EC;';
+                                                                            fallback.innerHTML = '<span style="font-size:11px;font-weight:700;">No preview</span>';
+                                                                            e.currentTarget.parentElement.appendChild(fallback);
+                                                                        }}
+                                                                    />
+                                                                    <div style={{
+                                                                        position: 'absolute',
+                                                                        bottom: '6px',
+                                                                        right: '6px',
+                                                                        background: 'rgba(0,0,0,0.65)',
+                                                                        backdropFilter: 'blur(4px)',
+                                                                        color: '#FFFFFF',
+                                                                        fontSize: '10px',
+                                                                        fontWeight: '700',
+                                                                        padding: '2px 7px',
+                                                                        borderRadius: '6px',
+                                                                        display: 'inline-flex',
+                                                                        alignItems: 'center',
+                                                                        gap: '3px'
+                                                                    }}>
+                                                                        <Camera size={10} />
+                                                                        <span>{rawRoomImages.length > 1 ? `${rawRoomImages.length} Photos` : 'Photo'}</span>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Multi-Photo Thumbnail Strip */}
+                                                                {rawRoomImages.length > 1 && (
+                                                                    <div style={{ display: 'flex', gap: '4px', maxWidth: '150px' }}>
+                                                                        {rawRoomImages.slice(0, 3).map((thumbUrl, tIdx) => (
+                                                                            <div
+                                                                                key={tIdx}
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    openLightbox(rawRoomImages, tIdx, room.name, `${camp.title} · ${roomBadge}`);
+                                                                                }}
+                                                                                style={{
+                                                                                    width: '32px',
+                                                                                    height: '24px',
+                                                                                    borderRadius: '4px',
+                                                                                    overflow: 'hidden',
+                                                                                    border: '1px solid rgba(18,22,19,0.15)',
+                                                                                    cursor: 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                <img src={thumbUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                                            </div>
+                                                                        ))}
+                                                                        {rawRoomImages.length > 3 && (
+                                                                            <div
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    openLightbox(rawRoomImages, 3, room.name, `${camp.title} · ${roomBadge}`);
+                                                                                }}
+                                                                                style={{
+                                                                                    width: '32px',
+                                                                                    height: '24px',
+                                                                                    borderRadius: '4px',
+                                                                                    background: '#121613',
+                                                                                    color: '#D5ED55',
+                                                                                    fontSize: '9.5px',
+                                                                                    fontWeight: '800',
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    cursor: 'pointer'
+                                                                                }}
+                                                                            >
+                                                                                +{rawRoomImages.length - 3}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <div
+                                                            className="room-card-media"
+                                                            style={{
+                                                                width: 'clamp(120px, 18vw, 150px)',
+                                                                height: '110px',
+                                                                borderRadius: '14px',
+                                                                background: '#F1F3EC',
+                                                                border: '1px dashed rgba(18, 22, 19, 0.15)',
+                                                                display: 'flex',
+                                                                flexDirection: 'column',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center',
+                                                                gap: '6px',
+                                                                flexShrink: 0,
+                                                                color: '#7D8880'
                                                             }}
-                                                        />
-                                                        <div style={{
-                                                            position: 'absolute',
-                                                            bottom: '6px',
-                                                            right: '6px',
-                                                            background: 'rgba(0,0,0,0.65)',
-                                                            backdropFilter: 'blur(4px)',
-                                                            color: '#FFFFFF',
-                                                            fontSize: '10px',
-                                                            fontWeight: '700',
-                                                            padding: '2px 7px',
-                                                            borderRadius: '6px',
-                                                            display: 'inline-flex',
-                                                            alignItems: 'center',
-                                                            gap: '3px'
-                                                        }}>
-                                                            <Camera size={10} />
-                                                            <span>Photo</span>
+                                                            title="No room photo provided"
+                                                        >
+                                                            <ImageOff size={22} color="#9CA3AF" />
+                                                            <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.2px' }}>No preview</span>
                                                         </div>
-                                                    </div>
-                                                ) : (
-                                                    <div
-                                                        className="room-card-media"
-                                                        style={{
-                                                            width: 'clamp(120px, 18vw, 150px)',
-                                                            height: '110px',
-                                                            borderRadius: '14px',
-                                                            background: '#F1F3EC',
-                                                            border: '1px dashed rgba(18, 22, 19, 0.15)',
-                                                            display: 'flex',
-                                                            flexDirection: 'column',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            gap: '6px',
-                                                            flexShrink: 0,
-                                                            color: '#7D8880'
-                                                        }}
-                                                        title="No room photo provided"
-                                                    >
-                                                        <ImageOff size={22} color="#9CA3AF" />
-                                                        <span style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '0.2px' }}>No preview</span>
-                                                    </div>
-                                                )}
+                                                    );
+                                                })()}
 
                                                 <div className="room-card-main" style={{ flex: 1, minWidth: '200px' }}>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', flexWrap: 'wrap' }}>
@@ -1395,6 +1461,7 @@ return (
 
                                 {/* Map View */}
                                 {hasMapEmbed ? (
+                                    <>
                                     <div style={{
                                         position: 'relative',
                                         width: '100%',
@@ -1415,6 +1482,28 @@ return (
                                             referrerPolicy="no-referrer-when-downgrade"
                                         />
                                     </div>
+                                    
+                                    {/* Trail Arrival & Access Guide */}
+                                    <div style={{ marginTop: '16px', background: '#F8F9F5', borderRadius: '16px', padding: '16px 18px', border: '1px solid rgba(18,22,19,0.06)' }}>
+                                        <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '8px' }}>
+                                            Navigation & Arrival Route
+                                        </div>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#3A443E', lineHeight: 1.5 }}>
+                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                                                <span style={{ fontWeight: '800', color: '#121613' }}>1.</span>
+                                                <span><strong>To Kasol / Manikaran:</strong> Take an overnight bus or cab from Delhi / Chandigarh to Bhuntar, then local cab to Kasol.</span>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                                                <span style={{ fontWeight: '800', color: '#121613' }}>2.</span>
+                                                <span><strong>To Barshaini (Road End):</strong> Drive 14 km past Manikaran to Barshaini parking base (where the motorable road ends).</span>
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                                                <span style={{ fontWeight: '800', color: '#121613' }}>3.</span>
+                                                <span><strong>Pine Forest Walk to Kalga:</strong> Cross the dam and follow the peaceful 20–25 min stone trail through apple orchards up to The Nest Kalga. Porter luggage assistance is available upon arrival.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </>
                                 ) : (
                                     <div style={{
                                         padding: '32px 20px',
@@ -1713,7 +1802,7 @@ return (
                                             </div>
                                         )}
                                         <div style={{ fontSize: '11px', color: '#166534', fontWeight: '600' }}>
-                                            ✓ Includes {currentRoomIsDorm ? `${guestsCount} × ${currentRoom.name} Bed${guestsCount > 1 ? 's' : ''}` : `${effectiveUnits} × ${currentRoom.name}`} for {stayNights} Night{stayNights > 1 ? 's' : ''}, Dinner BBQ & Guided Trek
+                                            ✓ Includes {currentRoomIsDorm ? `${guestsCount} × ${currentRoom.name} Bed${guestsCount > 1 ? 's' : ''}` : `${effectiveUnits} × ${currentRoom.name}`} for {stayNights} Night{stayNights > 1 ? 's' : ''}{safeInclusions.length > 0 ? ` · ${safeInclusions[0]}` : ''}
                                         </div>
                                     </div>
 
@@ -2089,49 +2178,99 @@ Hi Aanandham! I have questions regarding availability and squad booking for this
                             animate={{ scale: 1, opacity: 1 }}
                             exit={{ scale: 0.9, opacity: 0 }}
                             onClick={e => e.stopPropagation()}
-                            style={{ position: 'relative', maxWidth: '1000px', width: '100%', maxHeight: '85vh' }}
+                            style={{ position: 'relative', maxWidth: '1000px', width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                         >
-                            <img
-                                src={gallery[activePhotoIdx]}
-                                alt={`${camp.title} Full View`}
-                                style={{ width: '100%', height: 'auto', maxHeight: '75vh', objectFit: 'contain', display: 'block', margin: '0 auto', borderRadius: '16px' }}
-                             loading="lazy" decoding="async"/>
-                            
-                            {/* Controls */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', color: '#FFFFFF' }}>
+                            {/* Lightbox Header with Title & Subtitle */}
+                            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', color: '#FFFFFF' }}>
+                                <div>
+                                    <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '800', color: '#D5ED55' }}>
+                                        {lightboxTitle || camp.title}
+                                    </h4>
+                                    {lightboxSub && (
+                                        <div style={{ fontSize: '12px', color: '#A2B6A6', marginTop: '2px' }}>
+                                            {lightboxSub}
+                                        </div>
+                                    )}
+                                </div>
                                 <button
-                                    onClick={() => setActivePhotoIdx((activePhotoIdx - 1 + gallery.length) % gallery.length)}
-                                    style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#FFFFFF', padding: '10px 20px', borderRadius: '999px', cursor: 'pointer', fontWeight: '800' }}
+                                    onClick={() => setIsLightboxOpen(false)}
+                                    style={{
+                                        background: 'rgba(255,255,255,0.15)',
+                                        border: 'none',
+                                        color: '#FFFFFF',
+                                        width: '36px',
+                                        height: '36px',
+                                        borderRadius: '50%',
+                                        fontSize: '18px',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontWeight: '800'
+                                    }}
                                 >
-                                    ← Previous
-                                </button>
-                                <span style={{ fontSize: '13px', fontWeight: '700' }}>
-                                    {activePhotoIdx + 1} / {gallery.length}
-                                </span>
-                                <button
-                                    onClick={() => setActivePhotoIdx((activePhotoIdx + 1) % gallery.length)}
-                                    style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#FFFFFF', padding: '10px 20px', borderRadius: '999px', cursor: 'pointer', fontWeight: '800' }}
-                                >
-                                    Next →
+                                    ✕
                                 </button>
                             </div>
 
-                            <button
-                                onClick={() => setIsLightboxOpen(false)}
-                                style={{
-                                    position: 'absolute',
-                                    top: '-40px',
-                                    right: '0',
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#FFFFFF',
-                                    fontSize: '24px',
-                                    cursor: 'pointer',
-                                    fontWeight: '800'
-                                }}
-                            >
-                                ✕
-                            </button>
+                            <img
+                                src={(lightboxPhotos.length > 0 ? lightboxPhotos[activePhotoIdx] : gallery[activePhotoIdx]) || ''}
+                                alt={lightboxTitle || camp.title}
+                                style={{ width: '100%', height: 'auto', maxHeight: '65vh', objectFit: 'contain', display: 'block', margin: '0 auto', borderRadius: '16px' }}
+                                loading="lazy" decoding="async"
+                            />
+                            
+                            {/* Controls */}
+                            {((lightboxPhotos.length > 0 ? lightboxPhotos.length : gallery.length) > 1) && (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', marginTop: '14px', color: '#FFFFFF' }}>
+                                    <button
+                                        onClick={() => {
+                                            const total = lightboxPhotos.length > 0 ? lightboxPhotos.length : gallery.length;
+                                            setActivePhotoIdx((activePhotoIdx - 1 + total) % total);
+                                        }}
+                                        style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#FFFFFF', padding: '8px 18px', borderRadius: '999px', cursor: 'pointer', fontWeight: '800', fontSize: '13px' }}
+                                    >
+                                        ← Previous
+                                    </button>
+                                    <span style={{ fontSize: '13px', fontWeight: '700', color: '#D5ED55' }}>
+                                        {activePhotoIdx + 1} / {lightboxPhotos.length > 0 ? lightboxPhotos.length : gallery.length}
+                                    </span>
+                                    <button
+                                        onClick={() => {
+                                            const total = lightboxPhotos.length > 0 ? lightboxPhotos.length : gallery.length;
+                                            setActivePhotoIdx((activePhotoIdx + 1) % total);
+                                        }}
+                                        style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#FFFFFF', padding: '8px 18px', borderRadius: '999px', cursor: 'pointer', fontWeight: '800', fontSize: '13px' }}
+                                    >
+                                        Next →
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Bottom Thumbnail Strip */}
+                            {((lightboxPhotos.length > 0 ? lightboxPhotos : gallery).length > 1) && (
+                                <div style={{ display: 'flex', gap: '8px', marginTop: '14px', overflowX: 'auto', maxWidth: '100%', padding: '4px' }}>
+                                    {(lightboxPhotos.length > 0 ? lightboxPhotos : gallery).map((photoUrl, pIdx) => (
+                                        <div
+                                            key={pIdx}
+                                            onClick={() => setActivePhotoIdx(pIdx)}
+                                            style={{
+                                                width: '54px',
+                                                height: '40px',
+                                                borderRadius: '8px',
+                                                overflow: 'hidden',
+                                                border: activePhotoIdx === pIdx ? '2px solid #D5ED55' : '1px solid rgba(255,255,255,0.3)',
+                                                cursor: 'pointer',
+                                                opacity: activePhotoIdx === pIdx ? 1 : 0.6,
+                                                flexShrink: 0,
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                        >
+                                            <img src={photoUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </motion.div>
                     </div>
                 )}

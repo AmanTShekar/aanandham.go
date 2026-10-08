@@ -1445,7 +1445,7 @@ export function getInitialCamps() {
 export function getAllCamps(bookings = null) {
   if (typeof window !== 'undefined') {
     try {
-      const saved = localStorage.getItem('aanandham_admin_properties_v2');
+      const saved = localStorage.getItem('aanandham_admin_properties_v3');
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -1491,7 +1491,7 @@ export function saveAllCamps(camps) {
   if (typeof window !== 'undefined') {
     try {
       const valid = Array.isArray(camps) ? camps.filter(c => c && c.id && !DEPRECATED_CAMP_IDS.has(c.id) && !c.archived) : [];
-      localStorage.setItem('aanandham_admin_properties_v2', JSON.stringify(valid));
+      localStorage.setItem('aanandham_admin_properties_v3', JSON.stringify(valid));
       window.dispatchEvent(new Event('storage'));
     } catch (e) {
       console.error('Error saving camps to localStorage:', e);
