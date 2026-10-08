@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { INITIAL_ALL_CAMPS, getCampById, getAllCamps } from '../../../lib/campsData';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
 import { requestPms, pmsTenantId } from '@/lib/pmsServerBridge';
+import { fetchLivePropertyDetails, fetchLivePropertyRooms } from '@/lib/pmsLiveAvailability';
 import CampPropertyDetailClient from './CampPropertyDetailClient';
 
 function ensureArray(val, fallback = []) {
@@ -20,6 +21,65 @@ function ensureArray(val, fallback = []) {
 async function resolveCamp(id) {
     if (!id) return null;
 
+    // 1. Live PMS query via postgres connection pool (authoritative live database)
+    try {
+        const liveDetails = await fetchLivePropertyDetails(id);
+        if (liveDetails) {
+            const liveRooms = await fetchLivePropertyRooms(id);
+            const basePrice = Number(liveDetails.basePrice || 0);
+            return {
+                id: liveDetails.id,
+                slug: liveDetails.slug || id,
+                title: liveDetails.title || 'Sanctuary',
+                shortTitle: liveDetails.shortTitle || liveDetails.title,
+                name: liveDetails.title,
+                category: liveDetails.category || 'Campsite',
+                price: basePrice,
+                basePrice: basePrice,
+                originalPrice: basePrice > 0 ? Math.round(basePrice * 1.3) : 0,
+                region: liveDetails.region || (liveDetails.location ? liveDetails.location.split(',')[0].trim() : '') || '',
+                location: liveDetails.location || '',
+                altitude: liveDetails.altitude || '',
+                rating: Number(liveDetails.rating || 5.0),
+                description: liveDetails.description || '',
+                highlights: ensureArray(liveDetails.amenities || liveDetails.highlights, []),
+                inclusions: ensureArray(liveDetails.inclusions, []),
+                exclusions: ensureArray(liveDetails.exclusions, []),
+                amenities: liveDetails.amenities || '',
+                checkInTime: liveDetails.checkInTime || '14:00',
+                checkOutTime: liveDetails.checkOutTime || '11:00',
+                cancellationPolicy: liveDetails.cancellationPolicy || null,
+                latitude: (liveDetails.latitude !== null && !isNaN(Number(liveDetails.latitude))) ? Number(liveDetails.latitude) : null,
+                longitude: (liveDetails.longitude !== null && !isNaN(Number(liveDetails.longitude))) ? Number(liveDetails.longitude) : null,
+                phone: (liveDetails.phone && liveDetails.phone !== 'null') ? liveDetails.phone : null,
+                image: (liveDetails.image && liveDetails.image.trim()) ? liveDetails.image.trim() : '',
+                gallery: ensureArray(liveDetails.gallery, []),
+                isAvailable: liveDetails.isActive !== false,
+                rooms: (Array.isArray(liveRooms) ? liveRooms : []).map(rt => ({
+                    id: rt.id,
+                    name: rt.name,
+                    price: Number(rt.price ?? rt.basePrice ?? basePrice),
+                    basePrice: Number(rt.price ?? rt.basePrice ?? basePrice),
+                    weekendPrice: rt.weekendPrice ? Number(rt.weekendPrice) : null,
+                    capacity: rt.capacity || '2 Guests',
+                    guestCapacity: rt.guestCapacity || 2,
+                    totalUnits: Number(rt.totalUnits) || 1,
+                    features: Array.isArray(rt.features) ? rt.features : [],
+                    description: rt.description || '',
+                    inventoryType: rt.inventoryType || 'PRIVATE_UNIT',
+                    bedConfig: rt.bedConfig || '',
+                    roomSizeSqFt: rt.roomSizeSqFt || null,
+                    bathroomType: rt.bathroomType || '',
+                    pricingModel: rt.pricingModel || (rt.inventoryType === 'DORM_BED' ? 'PER_BED' : 'PER_ROOM'),
+                    image: (Array.isArray(rt.images) && rt.images[0]) ? rt.images[0] : (typeof rt.images === 'string' ? rt.images : '')
+                }))
+            };
+        }
+    } catch (e) {
+        console.error('Error fetching live property from PMS DB:', e);
+    }
+
+    // 2. PMS HTTP API bridge
     try {
         const pmsRes = await requestPms(`/api/properties?tenantId=${pmsTenantId()}`);
         if (pmsRes && pmsRes.payload && Array.isArray(pmsRes.payload.properties)) {
@@ -35,24 +95,32 @@ async function resolveCamp(id) {
         // Fall back gracefully if PMS is unreachable
     }
 
+    // 3. Local Prisma database fallback
     if (isPrismaConfigured && prisma) {
         try {
             const rows = await prisma.$queryRawUnsafe(`
                 SELECT p.id, p.title, p."shortTitle", p.slug, p.category, p.region, p.location, 
                        p.altitude, p."basePrice", p.rating, p.image, p.gallery, p.description, 
-                       p.inclusions, p.exclusions, p.amenities, p."isActive",
+                       p.inclusions, p.exclusions, p.amenities, p."checkInTime", p."checkOutTime",
+                       p."cancellationPolicy", p.latitude, p.longitude, p.phone, p."isActive",
                        COALESCE(
                            json_agg(
-                               json_build_object(
-                                   'id', rt.id, 
-                                   'name', rt.name, 
-                                   'price', rt."basePrice", 
-                                   'basePrice', rt."basePrice", 
-                                   'capacity', rt.capacity, 
-                                   'totalUnits', rt."totalUnits", 
-                                   'description', rt.description,
-                                   'images', rt.images
-                               )
+                                json_build_object(
+                                    'id', rt.id, 
+                                    'name', rt.name, 
+                                    'price', rt."basePrice", 
+                                    'basePrice', rt."basePrice", 
+                                    'capacity', rt.capacity, 
+                                    'totalUnits', rt."totalUnits", 
+                                    'description', rt.description,
+                                    'features', rt.features,
+                                    'inventoryType', rt."inventoryType",
+                                    'bedConfig', rt."bedConfig",
+                                    'roomSizeSqFt', rt."roomSizeSqFt",
+                                    'bathroomType', rt."bathroomType",
+                                    'pricingModel', rt."pricingModel",
+                                    'images', rt.images
+                                )
                            ) FILTER (WHERE rt.id IS NOT NULL), '[]'::json
                        ) as rooms
                 FROM "Property" p
@@ -63,46 +131,33 @@ async function resolveCamp(id) {
 
             if (Array.isArray(rows) && rows.length > 0) {
                 const dbProp = rows[0];
-                const basePrice = Number(dbProp.basePrice || 1499);
-                const normInclusions = ensureArray(dbProp.inclusions, [
-                    'Welcome tea & hot snacks at basecamp check-in',
-                    'Buffet dinner with chicken/veg barbecue platter',
-                    'Morning hot breakfast & tea/coffee',
-                    'Stargazing campfire & live music setup',
-                    '4x4 Jeep transfer to Kolukkumalai sunrise point',
-                    'Certified camp staff & wilderness first-aid kit'
-                ]);
-                const normExclusions = ensureArray(dbProp.exclusions, [
-                    'Personal vehicle fuel & highway toll charges',
-                    'Personal trekking gear (shoes, jackets, torches)',
-                    'Extra barbecue meat portions (order on site)',
-                    'Entry tickets to commercial viewpoints outside itinerary',
-                    'Medical evacuation expenses or insurance coverage'
-                ]);
-                const normHighlights = ensureArray(dbProp.highlights || dbProp.amenities, [
-                    'Panoramic Sunrise View',
-                    'Campfire & BBQ',
-                    'Staff Guide Support',
-                    'Solar Powered Stay'
-                ]);
+                const basePrice = Number(dbProp.basePrice || 0);
 
                 return {
                     id: dbProp.id,
-                    title: dbProp.title || 'Wilderness Camp',
+                    slug: dbProp.slug || id,
+                    title: dbProp.title || 'Wilderness Sanctuary',
                     shortTitle: dbProp.shortTitle || dbProp.title,
                     name: dbProp.title,
                     category: dbProp.category || 'Campsite',
                     price: basePrice,
                     basePrice: basePrice,
-                    originalPrice: Math.round(basePrice * 1.3),
-                    region: dbProp.region || (dbProp.location ? dbProp.location.split(',')[0].trim() : '') || 'Munnar',
-                    location: dbProp.location || 'Kerala, India',
-                    altitude: dbProp.altitude || '6,500 FT',
-                    rating: Number(dbProp.rating || 4.95),
-                    description: dbProp.description && dbProp.description.trim() ? dbProp.description : 'Authentic mountain sanctuary glamping experience curated by certified camp staff.',
-                    highlights: normHighlights,
-                    inclusions: normInclusions,
-                    exclusions: normExclusions,
+                    originalPrice: basePrice > 0 ? Math.round(basePrice * 1.3) : 0,
+                    region: dbProp.region || (dbProp.location ? dbProp.location.split(',')[0].trim() : '') || '',
+                    location: dbProp.location || '',
+                    altitude: dbProp.altitude || '',
+                    rating: Number(dbProp.rating || 5.0),
+                    description: dbProp.description || '',
+                    highlights: ensureArray(dbProp.highlights || dbProp.amenities, []),
+                    inclusions: ensureArray(dbProp.inclusions, []),
+                    exclusions: ensureArray(dbProp.exclusions, []),
+                    amenities: dbProp.amenities || '',
+                    checkInTime: dbProp.checkInTime || '14:00',
+                    checkOutTime: dbProp.checkOutTime || '11:00',
+                    cancellationPolicy: dbProp.cancellationPolicy || null,
+                    latitude: (dbProp.latitude !== null && !isNaN(Number(dbProp.latitude))) ? Number(dbProp.latitude) : null,
+                    longitude: (dbProp.longitude !== null && !isNaN(Number(dbProp.longitude))) ? Number(dbProp.longitude) : null,
+                    phone: (dbProp.phone && dbProp.phone !== 'null') ? dbProp.phone : null,
                     image: dbProp.image || '',
                     gallery: ensureArray(dbProp.gallery, []),
                     isAvailable: dbProp.isActive !== false,
@@ -112,9 +167,15 @@ async function resolveCamp(id) {
                         price: Number(rt.price ?? rt.basePrice ?? basePrice),
                         basePrice: Number(rt.price ?? rt.basePrice ?? basePrice),
                         capacity: typeof rt.capacity === 'number' ? `${rt.capacity} Persons` : (rt.capacity || '2 Adults'),
-                        totalUnits: Number(rt.totalUnits) || 8,
-                        features: ['Mountain View', 'Bedding', 'Campfire Access'],
-                        image: (Array.isArray(rt.images) && rt.images[0]) ? rt.images[0] : (typeof rt.images === 'string' ? rt.images : (rt.image || ''))
+                        totalUnits: Number(rt.totalUnits) || 1,
+                        features: Array.isArray(rt.features) ? rt.features : [],
+                        description: rt.description || '',
+                        inventoryType: rt.inventoryType || 'PRIVATE_UNIT',
+                        bedConfig: rt.bedConfig || '',
+                        roomSizeSqFt: rt.roomSizeSqFt || null,
+                        bathroomType: rt.bathroomType || '',
+                        pricingModel: rt.pricingModel || (rt.inventoryType === 'DORM_BED' ? 'PER_BED' : 'PER_ROOM'),
+                        image: (Array.isArray(rt.images) && rt.images[0]) ? rt.images[0] : (typeof rt.images === 'string' ? rt.images : '')
                     }))
                 };
             }
@@ -123,6 +184,7 @@ async function resolveCamp(id) {
         }
     }
 
+    // 4. Static catalog fallback
     const cleanTarget = String(id).toLowerCase().replace('pkg-', '').trim();
     const fallbackMatch = INITIAL_ALL_CAMPS.find(c => {
         const cleanId = String(c.id).toLowerCase().replace('pkg-', '').trim();

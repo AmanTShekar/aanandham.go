@@ -614,17 +614,18 @@ export const INITIAL_ALL_CAMPS = [
     "rating": 5,
     "image": "",
     "gallery": [],
-    "description": "Authentic mountain sanctuary glamping experience curated by certified camp staff.",
+    "description": "",
     "inclusions": [
-      "Welcome Drink",
-      "Dinner & Breakfast",
-      "Guided Ridge Trek",
-      "Tent Stay"
+      "Clean private en-suite restrooms with hot water geysers"
     ],
     "exclusions": [
       "Personal transport to basecamp"
     ],
-    "amenities": "Campfire & BBQ, Panoramic Sunrise View, Staff Guide Support",
+    "amenities": "",
+    "checkInTime": "14:00",
+    "checkOutTime": "11:00",
+    "latitude": null,
+    "longitude": null,
     "isActive": true,
     "rooms": [
       {

@@ -17,7 +17,7 @@ import CustomDateBatchPicker from '../../../components/CustomDateBatchPicker';
 import CustomSelectDropdown from '../../../components/CustomSelectDropdown';
 import LucideAmenityIcon from '../../../components/common/LucideAmenityIcon';
 import { SkeletonPropertyDetail, AssetImage } from '../../../components/common/SkeletonLoader';
-import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2, Building2, Home, Bed, Landmark, Bath, BedDouble, Maximize2, ImageOff } from 'lucide-react';
+import { Check, X, Sparkles, MapPin, Mountain, Clock, Compass, Share2, Heart, Tent, Users, ShieldCheck, Trees, Camera, Zap, Lock, TriangleAlert, CheckCircle2, Building2, Home, Bed, Landmark, Bath, BedDouble, Maximize2, ImageOff, Navigation, ExternalLink, MapPinOff } from 'lucide-react';
 import { WhatsAppIcon } from '../../../components/common/BrandIcons';
 import { INITIAL_ALL_CAMPS, getAllCamps, getCampById, saveAllCamps } from '../../../lib/campsData';
 import { inr, getDefaultUpcomingBatch, parseStayNights } from '../../../lib/utils';
@@ -98,14 +98,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
             } catch {}
             return camp.inclusions.split(',').map(s => s.trim()).filter(Boolean);
         }
-        return [
-            'Welcome tea & hot snacks at basecamp check-in',
-            'Buffet dinner with chicken/veg barbecue platter',
-            'Morning hot breakfast & tea/coffee',
-            'Stargazing campfire & live music setup',
-            '4x4 Jeep transfer to Kolukkumalai sunrise point',
-            'Certified camp staff & wilderness first-aid kit'
-        ];
+        return [];
     }, [camp?.inclusions]);
 
     const safeExclusions = React.useMemo(() => {
@@ -117,13 +110,7 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
             } catch {}
             return camp.exclusions.split(',').map(s => s.trim()).filter(Boolean);
         }
-        return [
-            'Personal vehicle fuel & highway toll charges',
-            'Personal trekking gear (shoes, jackets, torches)',
-            'Extra barbecue meat portions (order on site)',
-            'Entry tickets to commercial viewpoints outside itinerary',
-            'Medical evacuation expenses or insurance coverage'
-        ];
+        return [];
     }, [camp?.exclusions]);
 
     const safeHighlights = React.useMemo(() => {
@@ -136,17 +123,16 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
             } catch {}
             return raw.split(',').map(s => s.trim()).filter(Boolean);
         }
-        return [
-            'Panoramic Sunrise View',
-            'Campfire & BBQ',
-            'Staff Guide Support',
-            'Solar Powered Stay'
-        ];
+        return [];
     }, [camp?.highlights, camp?.amenities]);
 
     useEffect(() => {
         let isMounted = true;
         const refreshCampData = async () => {
+            if (initialCamp) {
+                if (isMounted) setIsLoaded(true);
+                return;
+            }
             try {
                 const res = await fetch('/api/admin/camps', { cache: 'no-store' });
                 if (res.ok) {
@@ -265,8 +251,31 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         );
     }
 
+    const isRealPhoto = (url) => {
+        if (!url || typeof url !== 'string') return false;
+        const trimmed = url.trim();
+        if (!trimmed) return false;
+        if (trimmed.includes('images.unsplash.com')) return false;
+        return true;
+    };
+
     const isLiked = wishlist.includes(camp.id);
-    const gallery = camp.gallery && camp.gallery.length > 0 ? camp.gallery : (camp.image ? [camp.image] : []);
+    const rawGallery = Array.isArray(camp.gallery) ? camp.gallery.filter(g => isRealPhoto(g)) : [];
+    const mainImg = isRealPhoto(camp.image) ? camp.image.trim() : null;
+    const gallery = rawGallery.length > 0 ? rawGallery : (mainImg ? [mainImg] : []);
+
+    const hasCoords = typeof camp.latitude === 'number' && typeof camp.longitude === 'number' && !isNaN(camp.latitude) && !isNaN(camp.longitude);
+    const hasLocationName = Boolean((camp.location && camp.location.trim()) || (camp.region && camp.region.trim()));
+    const hasMapEmbed = hasCoords || hasLocationName;
+    const mapEmbedUrl = hasCoords
+        ? `https://maps.google.com/maps?q=${camp.latitude},${camp.longitude}&hl=en&z=14&output=embed`
+        : `https://maps.google.com/maps?q=${encodeURIComponent(`${camp.title} ${camp.location || ''} ${camp.region || ''}`.trim())}&hl=en&z=13&output=embed`;
+    const directionsUrl = hasCoords
+        ? `https://www.google.com/maps/dir/?api=1&destination=${camp.latitude},${camp.longitude}`
+        : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${camp.title}, ${camp.location || ''}, ${camp.region || ''}`.trim())}`;
+    const googleMapsSearchUrl = hasCoords
+        ? `https://www.google.com/maps/search/?api=1&query=${camp.latitude},${camp.longitude}`
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${camp.title} ${camp.location || ''}`.trim())}`;
     const typeMeta = resolvePropertyType(camp.propertyTypeSlug || camp.propertyType?.slug || camp.category, camp.title);
     const availableRooms = camp.rooms && camp.rooms.length > 0 ? camp.rooms : [
         {
@@ -432,11 +441,17 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
         }
     ];
 
-    // ── Robust normalization of Basecamp Perks (defaults to the 6 official basecamp inclusions) ──
+    // ── Robust normalization of Basecamp Perks from PMS ──
     const normalizedAmenities = useMemo(() => {
         let raw = camp?.amenities;
         if (typeof raw === 'string') {
-            raw = raw.split(',').map(s => s.trim()).filter(Boolean);
+            try {
+                const parsed = JSON.parse(raw);
+                if (Array.isArray(parsed)) raw = parsed;
+                else raw = raw.split(',').map(s => s.trim()).filter(Boolean);
+            } catch {
+                raw = raw.split(',').map(s => s.trim()).filter(Boolean);
+            }
         }
         if (Array.isArray(raw) && raw.length > 0) {
             const valid = raw
@@ -446,80 +461,29 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
                     const num = String(idx + 1).padStart(2, '0');
                     return {
                         num,
-                        tag: a.tag || OFFICIAL_BASECAMP_PERKS[idx % OFFICIAL_BASECAMP_PERKS.length]?.tag || 'Basecamp Perk',
+                        tag: typeof a === 'object' && a.tag ? a.tag : 'Verified Amenity',
                         title: name,
-                        desc: a.desc || OFFICIAL_BASECAMP_PERKS[idx % OFFICIAL_BASECAMP_PERKS.length]?.desc || 'Verified basecamp amenity & comfort facility.'
+                        desc: typeof a === 'object' && a.desc ? a.desc : `Verified amenity facility provided at ${camp?.title || 'the stay'}.`
                     };
                 })
                 .filter(a => Boolean(a.title));
             if (valid.length > 0) return valid;
         }
-        return OFFICIAL_BASECAMP_PERKS;
-    }, [camp?.amenities, isHimachal]);
+        return [];
+    }, [camp?.amenities, camp?.title]);
 
-    // ── Robust normalization of 2-Day Expedition Timeline (guarantees complete schedule for every stay) ──
+    // ── Robust normalization of Stay Timeline / Schedule from PMS ──
     const normalizedItinerary = useMemo(() => {
         if (Array.isArray(camp?.itinerary) && camp.itinerary.length > 0) {
-            const valid = camp.itinerary.filter(d => d && (Array.isArray(d.items) ? d.items.length > 0 : Boolean(d.title)));
+            const valid = camp.itinerary.filter(d => d && (Array.isArray(d.items) ? d.items.length > 0 : Boolean(d.title && d.title.trim())));
             if (valid.length > 0) return valid;
         }
-
-        const titleLower = String(camp?.title || '').toLowerCase();
-        const isKolukkumalai = titleLower.includes('kolukkumalai') || locLower.includes('kolukkumalai');
-        const isMeesapulimala = titleLower.includes('meesapulimala');
-        const isVattavada = titleLower.includes('vattavada') || locLower.includes('vattavada');
-
-        let day2Morning = "06:00 AM – Early morning mist walk through mountain trails.";
-        let day2Highlight = "07:30 AM – Scenic ridge viewpoints and high-altitude photography.";
-        const day1Dinner = isHimachal
-            ? "08:30 PM – Live BBQ skewers followed by hearty mountain dinner & local delicacies."
-            : "08:30 PM – Live BBQ skewers followed by authentic Kerala buffet dinner.";
-        const day2Breakfast = isHimachal
-            ? "08:30 AM – Wholesome hot mountain breakfast & freshly brewed tea."
-            : "08:30 AM – Wholesome hot Kerala breakfast buffet (Appam / Puttu / Poori).";
-
-        if (isKolukkumalai) {
-            day2Morning = "04:30 AM – Wake up & hot black tea briefing.";
-            day2Highlight = "05:00 AM – 4x4 Rugged Jeep climb to Kolukkumalai Tiger Rock (7,900 FT) for golden cloud bed sunrise.";
-        } else if (isMeesapulimala) {
-            day2Morning = "05:00 AM – Early morning summit trek across the 8 rolling ridges.";
-            day2Highlight = "08:30 AM – Stand atop Meesapulimala Summit (8,661 FT) above the sea of clouds.";
-        } else if (isVattavada) {
-            day2Morning = "06:30 AM – Organic strawberry farm stroll & crisp eucalyptus morning walk.";
-            day2Highlight = "07:30 AM – Pampadum Shola border exploration & birdwatching.";
-        } else if (isHimachal) {
-            day2Morning = "06:30 AM – Crisp morning walk through apple orchards and deodar pine groves.";
-            day2Highlight = "07:30 AM – Panoramic viewpoint trek overlooking the snow-capped Himalayan ranges.";
+        if (camp?.cancellationPolicy && typeof camp.cancellationPolicy === 'object' && Array.isArray(camp.cancellationPolicy.itinerary)) {
+            const valid = camp.cancellationPolicy.itinerary.filter(d => d && (Array.isArray(d.items) ? d.items.length > 0 : Boolean(d.title && d.title.trim())));
+            if (valid.length > 0) return valid;
         }
-
-        return [
-            {
-                day: "Day 1",
-                title: "Basecamp Check-in, Sunset Ridge Walk & Campfire Barbecue",
-                subtitle: "Sanctuary Arrival & Starlit Evening",
-                items: [
-                    "02:00 PM – Arrival at basecamp, welcome mountain herbal tea & check-in.",
-                    "03:00 PM – Tent / Glamp allocation and briefing by certified camp guides.",
-                    "04:30 PM – Guided sunset nature hike along panoramic mountain ridges.",
-                    "07:00 PM – Roaring campfire lighting with acoustic music circle.",
-                    day1Dinner,
-                    "10:30 PM – Stargazing under crystal-clear skies & overnight mountain rest."
-                ]
-            },
-            {
-                day: "Day 2",
-                title: isKolukkumalai ? "Kolukkumalai Sunrise 4x4 Safari & Tea Tasting" : (isMeesapulimala ? "Meesapulimala Summit Push & Return" : "Morning Sunrise Trail, Breakfast & Departure"),
-                subtitle: "Dawn High-Altitude Trail & Farewell",
-                items: [
-                    day2Morning,
-                    day2Highlight,
-                    day2Breakfast,
-                    "10:00 AM – Leisure photography and peaceful basecamp relaxation.",
-                    "11:00 AM – Check-out with unforgettable wilderness memories."
-                ]
-            }
-        ];
-    }, [camp?.itinerary, camp?.title, camp?.location, camp?.region, locLower, isHimachal]);
+        return [];
+    }, [camp?.itinerary, camp?.cancellationPolicy]);
 
     // ── Synchronize active stay context for GlobalActionHub & Sticky Bar ──
     useEffect(() => {
@@ -675,7 +639,7 @@ return (
                                         {camp.altitude || 'Western Ghats'}
                                     </span>
                                     <span className="camp-hero-badge" style={{ background: 'rgba(213, 237, 85, 0.2)', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.4)' }}>
-                                        ★ {camp.rating || '4.98'} ({camp.reviewsCount || 342} verified campers)
+                                        ★ {camp.rating ? Number(camp.rating).toFixed(1) : '5.0'} {camp.reviewsCount ? `(${camp.reviewsCount} verified campers)` : '(Verified Stay)'}
                                     </span>
                                     {camp.tag && (
                                         <span className="camp-hero-badge" style={{ background: 'rgba(255,255,255,0.12)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.18)' }}>
@@ -700,12 +664,14 @@ return (
                                     </span>
                                     <span style={ROW_GAP_6}>
                                         <Clock size={16} color="#D5ED55" />
-                                        <span>{camp.duration || '2 Days / 1 Night'}</span>
+                                        <span>{camp.duration || `In ${camp.checkInTime || '14:00'} · Out ${camp.checkOutTime || '11:00'}`}</span>
                                     </span>
-                                    <span style={ROW_GAP_6}>
-                                        <Compass size={16} color="#D5ED55" />
-                                        <span>{camp.difficulty || 'Easy - Moderate Expedition'}</span>
-                                    </span>
+                                    {camp.difficulty && (
+                                        <span style={ROW_GAP_6}>
+                                            <Compass size={16} color="#D5ED55" />
+                                            <span>{camp.difficulty}</span>
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
@@ -759,7 +725,6 @@ return (
                 </section>
 
                 {/* ── PHOTO GALLERY MOSAIC SECTION (RESPONSIVE) ── */}
-                {/* ── PHOTO GALLERY MOSAIC SECTION (RESPONSIVE) ── */}
                 {gallery.length === 0 ? (
                     <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
                         <div style={{
@@ -776,7 +741,26 @@ return (
                         }}>
                             <ImageOff size={32} color="#9CA3AF" />
                             <div style={{ fontSize: '13.5px', fontWeight: '800', color: '#121613' }}>No property photos uploaded yet</div>
-                            <div style={{ fontSize: '11.5px', color: '#6A7D6E' }}>Photos for this sanctuary will be available soon</div>
+                            <div style={{ fontSize: '11.5px', color: '#6A7D6E' }}>Live verified photos for this stay will appear here once uploaded in PMS</div>
+                        </div>
+                    </section>
+                ) : gallery.length === 1 ? (
+                    <section style={{ maxWidth: '1440px', margin: '32px auto 0', padding: '0 clamp(20px, 4vw, 48px)' }}>
+                        <div
+                            onClick={() => { setActivePhotoIdx(0); setIsLightboxOpen(true); }}
+                            className="card-img-zoom"
+                            style={{ position: 'relative', height: 'clamp(260px, 40vw, 440px)', borderRadius: '24px', overflow: 'hidden', cursor: 'pointer' }}
+                        >
+                            <AssetImage
+                                src={gallery[0]}
+                                alt={`${camp.title} Main View`}
+                                fill
+                                priority
+                                sizes="(max-width: 768px) 100vw, 90vw"
+                            />
+                            <div style={{ position: 'absolute', bottom: '16px', left: '16px', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(6px)', padding: '6px 14px', borderRadius: '999px', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', zIndex: 2 }}>
+                                <span style={ROW_GAP_6}><Camera size={13} /> View Photo</span>
+                            </div>
                         </div>
                     </section>
                 ) : (
@@ -807,8 +791,8 @@ return (
                                 style={{ position: 'relative' }}
                             >
                                 <AssetImage
-                                    src={gallery[1] || gallery[0]}
-                                    alt={`${camp.title} Ridge Tent`}
+                                    src={gallery[1]}
+                                    alt={`${camp.title} Unit`}
                                     fill
                                     sizes="(max-width: 768px) 50vw, 25vw"
                                 />
@@ -821,8 +805,8 @@ return (
                                 style={{ position: 'relative' }}
                             >
                                 <AssetImage
-                                    src={gallery[2] || gallery[0]}
-                                    alt={`${camp.title} Campfire Area`}
+                                    src={gallery[2] || gallery[1]}
+                                    alt={`${camp.title} Exterior`}
                                     fill
                                     sizes="(max-width: 768px) 50vw, 25vw"
                                 />
@@ -835,15 +819,17 @@ return (
                                 style={{ position: 'relative' }}
                             >
                                 <AssetImage
-                                    src={gallery[3] || gallery[0]}
-                                    alt={`${camp.title} Valley Sunset`}
+                                    src={gallery[3] || gallery[1]}
+                                    alt={`${camp.title} View`}
                                     fill
                                     sizes="(max-width: 768px) 50vw, 25vw"
-                                    style={{ opacity: 0.8 }}
+                                    style={{ opacity: gallery.length > 4 ? 0.8 : 1 }}
                                 />
-                                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px', zIndex: 2, background: 'rgba(0,0,0,0.35)' }}>
-                                    +{Math.max(1, gallery.length - 3)} More
-                                </div>
+                                {gallery.length > 4 && (
+                                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D5ED55', fontWeight: '800', fontSize: '13px', textAlign: 'center', padding: '10px', zIndex: 2, background: 'rgba(0,0,0,0.35)' }}>
+                                        +{gallery.length - 4} More
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </section>
@@ -865,7 +851,7 @@ return (
                                     About This Wilderness Basecamp
                                 </h2>
                                 <p style={{ fontSize: '15px', color: '#3A443E', lineHeight: 1.75, margin: '0 0 24px' }}>
-                                    {camp.description || 'Perched at high altitude across the pristine Western Ghats, this campsite offers direct sunrise panoramic views, cloud-bed valleys, and secluded timber platforms for a tranquil mountain getaway.'}
+                                    {camp.description || `Experience an authentic mountain sanctuary getaway at ${camp.title} in ${camp.location || camp.region || 'the wilderness'}. Booking includes reserved units, verified amenities, and on-ground host support.`}
                                 </p>
 
                                 {/* Highlights Chips (Lucide Icons) */}
@@ -931,7 +917,7 @@ return (
                                                 }}
                                             >
                                                 {/* Lodging Photo Showcase */}
-                                                {room.image ? (
+                                                {isRealPhoto(room.image) ? (
                                                     <div
                                                         className="room-card-media card-img-zoom"
                                                         onClick={(e) => {
@@ -1143,6 +1129,7 @@ return (
                             </div>
 
                             {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (SWIPEABLE ON MOBILE, CLEAN LOGO-FREE) */}
+                            {normalizedAmenities.length > 0 && (
                             <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> BASECAMP PERKS
@@ -1181,11 +1168,13 @@ return (
 
                                 {/* Mobile Horizontal Swipe Hint */}
                                 <div className="basecamp-perks-swipe-hint">
-                                    <span>← Swipe to explore all 6 inclusions →</span>
+                                    <span>← Swipe to explore amenities →</span>
                                 </div>
                             </div>
+                            )}
 
                             {/* SECTION 4: 2-DAY DETAILED ITINERARY */}
+                            {normalizedItinerary.length > 0 && (
                             <div className="camp-section-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
                                     <div className="star-badge">
@@ -1290,7 +1279,10 @@ return (
                                 })()}
                             </div>
 
+                            )}
+
                             {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
+                            {(safeInclusions.length > 0 || safeExclusions.length > 0) && (
                             <div className="camp-section-card">
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '24px' }}>
                                     <div>
@@ -1323,6 +1315,148 @@ return (
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            )}
+
+                            {/* SECTION: PROPERTY LOCATION & INTERACTIVE MAP */}
+                            <div className="camp-section-card" id="location-map">
+                                <div className="star-badge" style={{ marginBottom: '8px' }}>
+                                    <span className="star-icon">★</span> LOCATION & ACCESS
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
+                                    <div>
+                                        <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
+                                            Sanctuary Location & Access Map
+                                        </h2>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13.5px', color: '#59655D', flexWrap: 'wrap' }}>
+                                            <MapPin size={15} color="#166534" />
+                                            <span style={{ fontWeight: '700', color: '#121613' }}>
+                                                {camp.location ? `${camp.location}${camp.region ? `, ${camp.region}` : ''}` : (camp.region || 'Wilderness Sanctuary')}
+                                            </span>
+                                            {camp.altitude && (
+                                                <span style={{ background: '#F1F3EC', padding: '2px 8px', borderRadius: '6px', fontSize: '11.5px', fontWeight: '700', color: '#166534' }}>
+                                                    {camp.altitude}
+                                                </span>
+                                            )}
+                                            {hasCoords && (
+                                                <span style={{ fontSize: '11.5px', color: '#7D8880' }}>
+                                                    ({camp.latitude.toFixed(4)}° N, {camp.longitude.toFixed(4)}° E)
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Action Buttons: Get Directions & View on Google Maps */}
+                                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                                        <a
+                                            href={directionsUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn-lime"
+                                            style={{
+                                                padding: '9px 16px',
+                                                borderRadius: '10px',
+                                                fontSize: '12.5px',
+                                                fontWeight: '800',
+                                                textDecoration: 'none',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '6px',
+                                                boxShadow: '0 2px 8px rgba(213,237,85,0.3)'
+                                            }}
+                                        >
+                                            <Navigation size={14} />
+                                            <span>Get Directions</span>
+                                        </a>
+                                        <a
+                                            href={googleMapsSearchUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                padding: '9px 14px',
+                                                borderRadius: '10px',
+                                                background: '#F1F3EC',
+                                                border: '1px solid rgba(18,22,19,0.12)',
+                                                color: '#121613',
+                                                fontSize: '12.5px',
+                                                fontWeight: '800',
+                                                textDecoration: 'none',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '6px'
+                                            }}
+                                        >
+                                            <ExternalLink size={13} />
+                                            <span>View in Google Maps</span>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                {/* Map View */}
+                                {hasMapEmbed ? (
+                                    <div style={{
+                                        position: 'relative',
+                                        width: '100%',
+                                        height: '340px',
+                                        borderRadius: '18px',
+                                        overflow: 'hidden',
+                                        border: '1px solid rgba(18, 22, 19, 0.1)',
+                                        boxShadow: '0 4px 16px rgba(0,0,0,0.04)'
+                                    }}>
+                                        <iframe
+                                            title={`Map location for ${camp.title}`}
+                                            src={mapEmbedUrl}
+                                            width="100%"
+                                            height="100%"
+                                            style={{ border: 0 }}
+                                            allowFullScreen=""
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer-when-downgrade"
+                                        />
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        padding: '32px 20px',
+                                        borderRadius: '18px',
+                                        background: '#F8F9F5',
+                                        border: '1.5px dashed rgba(18, 22, 19, 0.15)',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        textAlign: 'center',
+                                        gap: '8px'
+                                    }}>
+                                        <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: '#EAECE4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <MapPinOff size={24} color="#7D8880" />
+                                        </div>
+                                        <div style={{ fontSize: '14.5px', fontWeight: '800', color: '#121613' }}>
+                                            Location Map Coordinates Not Available
+                                        </div>
+                                        <p style={{ fontSize: '12.5px', color: '#59655D', maxWidth: '480px', margin: 0, lineHeight: 1.5 }}>
+                                            Exact GPS coordinates and offline trail guide are being verified by property management. Full navigation instructions and host phone number are shared immediately upon booking confirmation.
+                                        </p>
+                                        <a
+                                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${camp.title} ${camp.location || camp.region || ''}`.trim())}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            style={{
+                                                marginTop: '8px',
+                                                fontSize: '12px',
+                                                fontWeight: '800',
+                                                color: '#166534',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '5px',
+                                                textDecoration: 'underline'
+                                            }}
+                                        >
+                                            <ExternalLink size={12} />
+                                            <span>Search on Google Maps →</span>
+                                        </a>
+                                    </div>
+                                )}
                             </div>
 
                             {/* SECTION 6: ROUTE & NAVIGATION GUIDE */}
@@ -1688,25 +1822,17 @@ return (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                                     <Clock size={15} color="#166534" />
                                     <span style={{ fontSize: '12px', fontWeight: '800', color: '#121613', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                                        Expedition Timings
+                                        Stay & Check-in Schedule
                                     </span>
                                 </div>
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <div style={ROW_SPACE_12}>
-                                        <span style={{ color: '#59655D' }}>Basecamp Check-in:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkInTime ? (camp.checkInTime.includes(':') ? `${camp.checkInTime} hrs` : camp.checkInTime) : '02:00 PM'} (Snacks & Tea)</span>
+                                        <span style={{ color: '#59655D' }}>Check-in:</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkInTime ? (camp.checkInTime.includes(':') ? `${camp.checkInTime} hrs` : camp.checkInTime) : '14:00 hrs'}</span>
                                     </div>
                                     <div style={ROW_SPACE_12}>
-                                        <span style={{ color: '#59655D' }}>Campfire & Live BBQ:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>08:00 PM</span>
-                                    </div>
-                                    <div style={ROW_SPACE_12}>
-                                        <span style={{ color: '#59655D' }}>{locLower.includes('kolukkumalai') ? '4x4 Sunrise Jeep Safari:' : 'Morning Sunrise View:'}</span>
-                                        <span style={{ fontWeight: '800', color: '#166534' }}>{locLower.includes('kolukkumalai') ? '04:30 AM (Peak Sunrise)' : '06:30 AM (Scenic Ridge)'}</span>
-                                    </div>
-                                    <div style={ROW_SPACE_12}>
-                                        <span style={{ color: '#59655D' }}>Breakfast & Checkout:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkOutTime ? (camp.checkOutTime.includes(':') ? `${camp.checkOutTime} hrs` : camp.checkOutTime) : '11:00 AM'}</span>
+                                        <span style={{ color: '#59655D' }}>Check-out:</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkOutTime ? (camp.checkOutTime.includes(':') ? `${camp.checkOutTime} hrs` : camp.checkOutTime) : '11:00 hrs'}</span>
                                     </div>
                                 </div>
                             </div>

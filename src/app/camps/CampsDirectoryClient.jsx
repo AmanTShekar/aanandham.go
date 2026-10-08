@@ -36,6 +36,14 @@ const SORT_OPTIONS = [
     { value: 'rating', label: 'Top Rated (4.9+)', icon: 'Star' }
 ];
 
+const isRealPhoto = (url) => {
+    if (!url || typeof url !== 'string') return false;
+    const trimmed = url.trim();
+    if (!trimmed) return false;
+    if (trimmed.includes('images.unsplash.com')) return false;
+    return true;
+};
+
 export default function CampsDirectoryClient({ 
     initialCamps = null,
     initialRegion = 'All',
@@ -991,7 +999,7 @@ export default function CampsDirectoryClient({
                                                 }}>
                                                     <Star size={12} fill="#E5A93B" color="#E5A93B" />
                                                     <span>{camp.rating || 4.98}</span>
-                                                    <span style={{ opacity: 0.65, fontWeight: '600', fontSize: '10px' }}>({camp.reviewsCount || 342})</span>
+                                                    {camp.reviewsCount ? <span style={{ opacity: 0.65, fontWeight: '600', fontSize: '10px' }}>({camp.reviewsCount})</span> : null}
                                                 </span>
                                             </div>
                                         </div>
