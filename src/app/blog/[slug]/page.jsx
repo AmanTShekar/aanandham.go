@@ -123,6 +123,15 @@ export default async function BlogPostPage({ params }) {
 
           <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
             <div style={{ maxWidth: '860px' }}>
+              {/* Visual Breadcrumb Navigation */}
+              <nav aria-label="Breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#A2B6A6', marginBottom: '14px', flexWrap: 'wrap', fontWeight: '600' }}>
+                <Link href="/" style={{ color: '#A2B6A6', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+                <span style={{ color: '#5A6E5F' }}>/</span>
+                <Link href="/blog" style={{ color: '#A2B6A6', textDecoration: 'none', transition: 'color 0.2s' }}>Field Guides</Link>
+                <span style={{ color: '#5A6E5F' }}>/</span>
+                <span style={{ color: '#D5ED55', fontWeight: '700' }}>{post.category}</span>
+              </nav>
+
               <div className="star-badge dark-section" style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', marginBottom: '16px' }}>
                 <span className="star-icon">★</span> Field Guide · {post.category}
               </div>

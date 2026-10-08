@@ -37,29 +37,52 @@ export const metadata = {
 export default function CampsPage() {
   const activeCamps = INITIAL_ALL_CAMPS.filter(camp => !camp.archived && !DEPRECATED_CAMP_IDS.has(camp.id));
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
+
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Aanandham.go Verified All India Wilderness Campsites',
-    description: 'Verified high-altitude camping, tent stays, and ridge dome glamping sites across India.',
-    itemListElement: activeCamps.map((camp, index) => ({
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'Campground',
-        name: camp.title,
-        url: `https://aanandham.in/camps/${camp.id}`,
-        image: camp.image,
-        description: camp.description,
-        address: {
-          '@type': 'PostalAddress',
-          addressLocality: camp.region || 'Munnar',
-          addressRegion: 'Kerala',
-          addressCountry: 'IN',
-        },
-        priceRange: `₹${camp.price}`,
+    '@graph': [
+      {
+        '@type': 'ItemList',
+        name: 'Aanandham.go Verified All India Wilderness Campsites',
+        description: 'Verified high-altitude camping, tent stays, and ridge dome glamping sites across India.',
+        itemListElement: activeCamps.map((camp, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          item: {
+            '@type': 'Campground',
+            name: camp.title,
+            url: `${siteUrl}/camps/${camp.id}`,
+            image: camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : undefined,
+            description: camp.description,
+            address: {
+              '@type': 'PostalAddress',
+              addressLocality: camp.region || 'Munnar',
+              addressRegion: 'Kerala',
+              addressCountry: 'IN',
+            },
+            priceRange: `₹${camp.price}`,
+          },
+        })),
       },
-    })),
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          {
+            '@type': 'ListItem',
+            position: 1,
+            name: 'Home',
+            item: siteUrl,
+          },
+          {
+            '@type': 'ListItem',
+            position: 2,
+            name: 'Wilderness Campsites',
+            item: `${siteUrl}/camps`,
+          },
+        ],
+      },
+    ],
   };
 
   return (

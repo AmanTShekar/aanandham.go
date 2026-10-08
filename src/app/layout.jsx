@@ -1,4 +1,4 @@
-﻿import './globals.css';
+import './globals.css';
 import { Bricolage_Grotesque, Plus_Jakarta_Sans } from 'next/font/google';
 import Script from 'next/script';
 import SmoothScroll from '@/components/SmoothScroll';
@@ -111,28 +111,30 @@ export const metadata = {
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'Campground',
-  name: 'Aanandham.go Wilderness Camps',
+  '@type': ['Campground', 'LodgingBusiness', 'TravelAgency'],
+  name: 'Aanandham.go Wilderness Basecamps',
+  alternateName: 'Aanandham Wilderness Platform',
   image: 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=1200&q=80',
   logo: `${siteUrl}/logo.png`,
-  '@id': siteUrl,
+  '@id': `${siteUrl}/#organization`,
   url: siteUrl,
   telephone: process.env.NEXT_PUBLIC_ADMIN_WHATSAPP ? `+${process.env.NEXT_PUBLIC_ADMIN_WHATSAPP}` : '+919074858014',
   email: 'bookings@aanandham.in',
   priceRange: '₹₹',
   address: {
     '@type': 'PostalAddress',
-    streetAddress: 'Kolukkumalai Road, Suryanelli',
-    addressLocality: 'Munnar',
+    streetAddress: 'Kolukkumalai Road, Suryanelli Basecamp',
+    addressLocality: 'Suryanelli, Munnar',
     addressRegion: 'Kerala',
     postalCode: '685618',
     addressCountry: 'IN'
   },
   geo: {
     '@type': 'GeoCoordinates',
-    latitude: 10.0889,
-    longitude: 77.0595
+    latitude: 10.0261,
+    longitude: 77.1420
   },
+  hasMap: 'https://www.google.com/maps/search/?api=1&query=10.0261,77.1420',
   openingHoursSpecification: [
     {
       '@type': 'OpeningHoursSpecification',
@@ -153,7 +155,8 @@ const jsonLd = {
     'https://www.instagram.com/aanandham.go',
     'https://www.facebook.com/aanandham.go',
     'https://twitter.com/aanandham_go',
-    'https://www.linkedin.com/company/aanandhamgo'
+    'https://www.linkedin.com/company/aanandhamgo',
+    'https://youtube.com/@aanandhamgo'
   ],
   amenityFeature: [
     { '@type': 'LocationFeatureSpecification', name: '4x4 Offroad Mountain Jeep Transfers', value: true },

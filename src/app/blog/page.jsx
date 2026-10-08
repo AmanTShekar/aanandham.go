@@ -53,9 +53,33 @@ const MARQUEE_ITEMS = [
 export default function BlogIndexPage() {
   const sorted = [...BLOG_POSTS].sort((a, b) => (a.date < b.date ? 1 : -1));
   const featured = sorted[0];
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
+
+  const blogBreadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Field Guides & Blog',
+        item: `${siteUrl}/blog`,
+      },
+    ],
+  };
 
   return (
     <div style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogBreadcrumbJsonLd) }}
+      />
       <SiteHeader transparentOnTop={false} activePage="blog" />
       <main style={{ fontFamily: 'var(--font-jakarta), "Plus Jakarta Sans", sans-serif', backgroundColor: '#F8F9F5', color: '#121613', minHeight: '100vh' }}>
         {/* ── HERO: MATCHES CAMPS/ABOUT LANDING DESIGN ── */}
@@ -81,6 +105,13 @@ export default function BlogIndexPage() {
 
           <div style={{ maxWidth: '1440px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
             <div style={{ maxWidth: '820px' }}>
+              {/* Visual Breadcrumb */}
+              <nav aria-label="Breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#A2B6A6', marginBottom: '14px', flexWrap: 'wrap', fontWeight: '600' }}>
+                <Link href="/" style={{ color: '#A2B6A6', textDecoration: 'none', transition: 'color 0.2s' }}>Home</Link>
+                <span style={{ color: '#5A6E5F' }}>/</span>
+                <span style={{ color: '#D5ED55', fontWeight: '700' }}>Field Guides & Blog</span>
+              </nav>
+
               <div className="star-badge dark-section" style={{ background: 'rgba(213, 237, 85, 0.15)', color: '#D5ED55', border: '1px solid rgba(213, 237, 85, 0.3)', marginBottom: '16px' }}>
                 <span className="star-icon">★</span> The Expedition Journal
               </div>

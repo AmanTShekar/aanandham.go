@@ -88,10 +88,10 @@ const CONTACT_CHANNELS = [
         badge: 'SANCTUARY LOCATION',
         title: 'Suryanelli Base Station',
         val: 'Suryanelli, Munnar, Kerala 685618',
-        sub: '6,500 FT Elevation · Western Ghats',
+        sub: '6,500 FT Elevation · GPS: 10.0261° N, 77.1420° E',
         icon: Mountain,
-        href: 'https://maps.google.com/?q=Suryanelli+Munnar+Kerala',
-        actionLabel: 'Google Maps →',
+        href: 'https://www.google.com/maps/search/?api=1&query=10.0261,77.1420+(Aanandham.go+Wilderness+Basecamp+Suryanelli)',
+        actionLabel: 'Basecamp Pin & Directions →',
         accent: '#F28B66'
     }
 ];
@@ -764,6 +764,130 @@ export default function ContactPage() {
                                 </motion.div>
                             ))}
                         </motion.div>
+                    </div>
+                </motion.section>
+
+                {/* ─────────────────────────────────────────────────────────────
+                    2B. SECTION: BASECAMP COORDINATES & INTERACTIVE MAP (Local SEO & Wayfinding)
+                ───────────────────────────────────────────────────────────── */}
+                <motion.section
+                    id="basecamp-map-section"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: "-60px" }}
+                    variants={sectionReveal}
+                    style={{
+                        padding: '60px clamp(20px, 4vw, 48px) 80px',
+                        background: '#F8F9F5',
+                        borderBottom: '1px solid rgba(18, 22, 19, 0.08)'
+                    }}
+                >
+                    <div style={{ maxWidth: '1280px', margin: '0 auto', width: '100%' }}>
+                        <div style={{
+                            background: '#FFFFFF',
+                            borderRadius: '28px',
+                            border: '1px solid rgba(18, 22, 19, 0.08)',
+                            overflow: 'hidden',
+                            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.04)'
+                        }}>
+                            <div style={{
+                                padding: 'clamp(28px, 4vw, 44px)',
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(clamp(280px, 30vw, 420px), 1fr))',
+                                gap: '32px',
+                                alignItems: 'center'
+                            }}>
+                                <div>
+                                    <div className="star-badge" style={{ marginBottom: '14px' }}>
+                                        <span className="star-icon">★</span> VERIFIED BASECAMP PIN · SURYANELLI
+                                    </div>
+                                    <h2 style={{
+                                        fontFamily: 'var(--font-heading)',
+                                        fontSize: 'clamp(24px, 3.2vw, 36px)',
+                                        fontWeight: '800',
+                                        color: '#121613',
+                                        letterSpacing: '-0.025em',
+                                        lineHeight: 1.15,
+                                        margin: '0 0 12px'
+                                    }}>
+                                        Find Us at Suryanelli Basecamp
+                                    </h2>
+                                    <p style={{ fontSize: '15px', color: '#59655D', lineHeight: 1.65, margin: '0 0 20px' }}>
+                                        Our central base station is situated at 6,500 FT on the Kolukkumalai foothills. Guests arriving in standard hatchbacks, sedans, or SUVs park here securely before our private 4x4 Jeep convoys take over.
+                                    </p>
+
+                                    <div style={{
+                                        background: '#F8F9F5',
+                                        borderRadius: '16px',
+                                        padding: '16px 20px',
+                                        border: '1px solid rgba(18, 22, 19, 0.06)',
+                                        marginBottom: '24px',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '10px'
+                                    }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <MapPin size={16} color="#166534" />
+                                            <span style={{ fontSize: '13.5px', fontWeight: '700', color: '#121613' }}>
+                                                GPS Coordinates: 10.0261° N, 77.1420° E
+                                            </span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <Mountain size={16} color="#E5A93B" />
+                                            <span style={{ fontSize: '13.5px', color: '#59655D' }}>
+                                                Altitude: 6,500 FT (1,980 M) · Western Ghats
+                                            </span>
+                                        </div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <SquareParking size={16} color="#2563EB" />
+                                            <span style={{ fontSize: '13.5px', color: '#59655D' }}>
+                                                Safe Private Parking for All 2WD / 4WD Vehicles
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <a
+                                        href="https://www.google.com/maps/search/?api=1&query=10.0261,77.1420+(Aanandham.go+Wilderness+Basecamp+Suryanelli)"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="btn-lime"
+                                        style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '8px',
+                                            padding: '14px 28px',
+                                            borderRadius: '999px',
+                                            fontWeight: '800',
+                                            fontSize: '14.5px',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        <span>Open in Google Maps App →</span>
+                                    </a>
+                                </div>
+
+                                {/* Map Frame / Embedded Visual Pin */}
+                                <div style={{
+                                    borderRadius: '20px',
+                                    overflow: 'hidden',
+                                    height: '360px',
+                                    border: '1px solid rgba(18, 22, 19, 0.1)',
+                                    position: 'relative',
+                                    background: '#E2E8F0'
+                                }}>
+                                    <iframe
+                                        title="Aanandham.go Suryanelli Basecamp Map"
+                                        src="https://maps.google.com/maps?q=10.0261,77.1420&z=14&output=embed"
+                                        width="100%"
+                                        height="100%"
+                                        style={{ border: 0, display: 'block' }}
+                                        allowFullScreen=""
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </motion.section>
 

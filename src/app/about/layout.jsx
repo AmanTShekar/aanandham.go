@@ -29,6 +29,70 @@ export const metadata = {
   }
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
+
+const aboutJsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      '@id': `${siteUrl}/about#webpage`,
+      url: `${siteUrl}/about`,
+      name: 'About Aanandham.go Wilderness Community',
+      description: 'The story behind Aanandham.go. High-altitude ridge glamping, 4x4 sunrise expeditions, and certified mountain pathfinders in Munnar, Kerala.',
+      mainEntity: {
+        '@type': 'Organization',
+        name: 'Aanandham.go Wilderness Platform',
+        url: siteUrl,
+        logo: `${siteUrl}/logo.png`,
+        founder: [
+          {
+            '@type': 'Person',
+            name: 'Aanandham Founding Team'
+          }
+        ],
+        foundingLocation: {
+          '@type': 'Place',
+          name: 'Munnar, Kerala'
+        },
+        sameAs: [
+          'https://www.instagram.com/aanandham.go',
+          'https://www.facebook.com/aanandham.go',
+          'https://twitter.com/aanandham_go',
+          'https://www.linkedin.com/company/aanandhamgo',
+          'https://youtube.com/@aanandhamgo'
+        ]
+      }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${siteUrl}/about#breadcrumb`,
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: siteUrl
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'About Us',
+          item: `${siteUrl}/about`
+        }
+      ]
+    }
+  ]
+};
+
 export default function AboutLayout({ children }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutJsonLd) }}
+      />
+      {children}
+    </>
+  );
 }
