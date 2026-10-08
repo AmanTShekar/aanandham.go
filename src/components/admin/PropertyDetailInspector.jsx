@@ -15,6 +15,14 @@ import {
     SECTION_LABEL_STYLE, IMG_FILL_STYLE, uploadImageMedia, compressImageFile 
 } from './AdminSharedStyles';
 
+const isRealPhoto = (url) => {
+    if (!url || typeof url !== 'string') return false;
+    const trimmed = url.trim();
+    if (!trimmed) return false;
+    if (trimmed.includes('images.unsplash.com')) return false;
+    return true;
+};
+
 export default function PropertyDetailInspector({
     currentDetailProperty = {},
     setActivePropertyDetailId = () => {},
@@ -241,7 +249,7 @@ Cover
                                     }}
                                 >
                                     <div style={{ position: 'relative', height: '170px' }}>
-                                        {room.image ? (
+                                        {isRealPhoto(room.image) ? (
                                             <img src={room.image} alt={room.name} style={IMG_FILL_STYLE} loading="lazy" decoding="async"/>
                                         ) : (
                                             <div style={{ width: '100%', height: '100%', background: '#F1F3EC', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '6px', color: '#7D8880' }}>

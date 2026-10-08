@@ -10,6 +10,14 @@ import { parseRoomCapacity } from './BookingConstants';
 import BookingValidationPopup from './BookingValidationPopup';
 import { resolvePropertyType, getPricingUnitLabel, getInventoryTypeMeta } from '../../lib/propertyStayTypes';
 
+const isRealPhoto = (url) => {
+    if (!url || typeof url !== 'string') return false;
+    const trimmed = url.trim();
+    if (!trimmed) return false;
+    if (trimmed.includes('images.unsplash.com')) return false;
+    return true;
+};
+
 export default function Step1CampsiteLodging({
     campsList = [],
     selectedPkgId,
@@ -442,7 +450,7 @@ export default function Step1CampsiteLodging({
                                             transition: 'all 0.15s ease'
                                         }} />
 
-                                        {room.image ? (
+                                        {isRealPhoto(room.image) ? (
                                             <img
                                                 src={room.image}
                                                 alt={room.name}
@@ -451,9 +459,10 @@ export default function Step1CampsiteLodging({
                                                 decoding="async"
                                                 onError={(e) => {
                                                     e.currentTarget.style.display = 'none';
-                                                    if (e.currentTarget.nextElementSibling) {
-                                                        e.currentTarget.nextElementSibling.style.display = 'flex';
-                                                    }
+                                                    const fallback = document.createElement('div');
+                                                    fallback.style.cssText = 'width:42px;height:42px;border-radius:8px;background:#F1F3EC;border:1px dashed rgba(18,22,19,0.15);display:flex;align-items:center;justify-content:center;color:#9CA3AF;flex-shrink:0;';
+                                                    fallback.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="2" x2="22" y2="22"></line><path d="M10.41 10.41a2 2 0 1 1-2.83-2.83"></path><line x1="13.5" y1="13.5" x2="6" y2="21"></line><line x1="18" y1="12" x2="21" y2="15"></line><path d="M3.59 3.59A1.99 1.99 0 0 0 3 5v14a2 2 0 0 0 2 2h14c.55 0 1.05-.22 1.41-.59"></path><path d="M21 15V5a2 2 0 0 0-2-2H9"></path></svg>';
+                                                    e.currentTarget.parentElement.insertBefore(fallback, e.currentTarget);
                                                 }}
                                             />
                                         ) : (
