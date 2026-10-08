@@ -63,7 +63,7 @@ function HimachalStayGuide() {
               backpackers, college groups and anyone comparing budget stays in Kasol — hostel prices with a
               sunrise view included.
             </p>
-            <Link href="/camps/cmu7f7c7q0001jf2bn12igi66" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check dorm availability →</Link>
+            <Link href="/camps/the-nest-kalga" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check dorm availability →</Link>
           </div>
           <div style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', borderRadius: '20px', padding: '24px' }}>
             <div style={{ fontSize: '12px', fontWeight: '900', color: '#166534', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>Scenic · Best for couples</div>
@@ -72,7 +72,7 @@ function HimachalStayGuide() {
               Twin beds, mountain-view window, scenic balcony, hot shower geyser and work desk. The classic
               scenic stay in Parvati Valley — wake up above the clouds, fall asleep to the sound of the forest.
             </p>
-            <Link href="/camps/cmu7f7c7q0001jf2bn12igi66" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check balcony room dates →</Link>
+            <Link href="/camps/the-nest-kalga" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check balcony room dates →</Link>
           </div>
           <div style={{ background: '#F8F9F5', border: '1px solid rgba(18,22,19,0.1)', borderRadius: '20px', padding: '24px' }}>
             <div style={{ fontSize: '12px', fontWeight: '900', color: '#166534', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '8px' }}>Comfort · Private suite</div>
@@ -81,7 +81,7 @@ function HimachalStayGuide() {
               King bed, ensuite bathroom, high-speed Wi-Fi and daily housekeeping for 3 guests. The easy,
               comfortable basecamp for families and workation stays in Himachal.
             </p>
-            <Link href="/camps/cmu7f7c7q0001jf2bn12igi66" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check suite availability →</Link>
+            <Link href="/camps/the-nest-kalga" style={{ fontSize: '13.5px', fontWeight: '800', color: '#166534' }}>Check suite availability →</Link>
           </div>
         </div>
 
@@ -113,7 +113,7 @@ function HimachalStayGuide() {
             <p style={{ fontSize: '13.5px', color: '#A2B6A6', margin: '0' }}>Early-bird dates go to the waitlist first. Kalga is bookable today.</p>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <Link href="/camps/cmu7f7c7q0001jf2bn12igi66" className="btn-lime" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '900', textDecoration: 'none', borderRadius: '999px' }}>
+            <Link href="/camps/the-nest-kalga" className="btn-lime" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '900', textDecoration: 'none', borderRadius: '999px' }}>
               Book Kalga Stay →
             </Link>
             <Link href="/blog" style={{ padding: '13px 26px', fontSize: '14px', fontWeight: '800', textDecoration: 'none', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.25)', color: '#fff' }}>

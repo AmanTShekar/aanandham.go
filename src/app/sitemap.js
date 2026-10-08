@@ -67,7 +67,7 @@ export default function sitemap() {
   const campRoutes = INITIAL_ALL_CAMPS
     .filter((camp) => !camp.archived && !DEPRECATED_CAMP_IDS.has(camp.id))
     .map((camp) => ({
-      url: `${siteUrl}/camps/${camp.id}`,
+      url: `${siteUrl}/camps/${camp.slug || camp.id}`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.9,

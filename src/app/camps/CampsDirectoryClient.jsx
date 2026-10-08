@@ -554,7 +554,7 @@ export default function CampsDirectoryClient({
 
                                 {/* — Card 1: The Nest Kalga (LIVE FROM PMS) — */}
                                 <div
-                                    onClick={() => router.push('/camps/cmu7f7c7q0001jf2bn12igi66')}
+                                    onClick={() => router.push('/camps/the-nest-kalga')}
                                     style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(213,237,85,0.22)', borderRadius: '20px', overflow: 'hidden', cursor: 'pointer', transition: 'transform 0.2s ease, box-shadow 0.2s ease', position: 'relative' }}
                                     onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4)'; }}
                                     onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
@@ -619,8 +619,8 @@ export default function CampsDirectoryClient({
                                                 <div style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: '900', color: '#D5ED55', lineHeight: 1 }}>₹249 <span style={{ fontSize: '11px', fontWeight: '600', color: '#A2B6A6' }}>/ bed / night</span></div>
                                             </div>
                                             <div style={{ display: 'flex', gap: '8px' }}>
-                                                <button onClick={e => { e.stopPropagation(); router.push('/camps/cmu7f7c7q0001jf2bn12igi66'); }} style={{ padding: '9px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>Details →</button>
-                                                <button onClick={e => { e.stopPropagation(); const kalgaCamp = camps.find(c => c.id === 'cmu7f7c7q0001jf2bn12igi66'); if (kalgaCamp) { setSelectedPackageForBooking(kalgaCamp); setIsBookingModalOpen(true); } }} style={{ padding: '9px 16px', borderRadius: '10px', background: '#D5ED55', border: 'none', color: '#121613', fontSize: '12px', fontWeight: '900', cursor: 'pointer' }}>Book Now</button>
+                                                <button onClick={e => { e.stopPropagation(); router.push('/camps/the-nest-kalga'); }} style={{ padding: '9px 16px', borderRadius: '10px', background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', color: '#FFFFFF', fontSize: '12px', fontWeight: '800', cursor: 'pointer' }}>Details →</button>
+                                                <button onClick={e => { e.stopPropagation(); const kalgaCamp = camps.find(c => (c.id === 'the-nest-kalga' || c.id === 'cmu7f7c7q0001jf2bn12igi66' || c.slug === 'the-nest-kalga')); if (kalgaCamp) { setSelectedPackageForBooking(kalgaCamp); setIsBookingModalOpen(true); } }} style={{ padding: '9px 16px', borderRadius: '10px', background: '#D5ED55', border: 'none', color: '#121613', fontSize: '12px', fontWeight: '900', cursor: 'pointer' }}>Book Now</button>
                                             </div>
                                         </div>
                                     </div>
@@ -771,7 +771,7 @@ export default function CampsDirectoryClient({
                                 const pricingUnit = getPricingUnitLabel(camp);
                                 // Detect Aanandham.Stays curated properties (The Nest Kalga & Kolukkumalai Teddy's)
                                 const isAanandhamStays = (camp.region === 'Himachal') ||
-                                    camp.id === 'cmu7f7c7q0001jf2bn12igi66' ||
+                                    camp.id === 'the-nest-kalga' || camp.id === 'cmu7f7c7q0001jf2bn12igi66' || camp.slug === 'the-nest-kalga' ||
                                     camp.id === 'pkg-kolukkumalai-teddy-domes' ||
                                     String(camp.location || '').toLowerCase().includes('himachal') ||
                                     String(camp.location || '').toLowerCase().includes('kasol') ||

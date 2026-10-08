@@ -788,7 +788,7 @@ export const BLOG_POSTS = [
           'Dorm life suits solo backpackers, college groups and workation travellers who want company in the evenings and silence in the mornings. If you have never tried a mountain dorm, Kalga is a gentle first one: small village, short trails, and staff who know every shortcut.'
         ],
         internalLinks: [
-          { href: '/camps/cmu7f7c7q0001jf2bn12igi66', text: 'Check live dorm bed availability at The Nest Kalga' },
+          { href: '/camps/the-nest-kalga', text: 'Check live dorm bed availability at The Nest Kalga' },
           { href: '/camps/himachal', text: 'Explore all Himachal stays & upcoming circuits' }
         ]
       },
@@ -858,7 +858,7 @@ export const BLOG_POSTS = [
           'Evenings follow the mountain routine: guided ridge walk at golden hour, campfire with music as the light drops, and some of the clearest Milky Way skies in North India. No filters needed — though your Instagram will suggest otherwise.'
         ],
         internalLinks: [
-          { href: '/camps/cmu7f7c7q0001jf2bn12igi66', text: 'See live photos & book The Nest Kalga' },
+          { href: '/camps/the-nest-kalga', text: 'See live photos & book The Nest Kalga' },
           { href: '/camps/himachal', text: 'All Himachal stays & the Manali–Spiti waitlist' }
         ]
       },

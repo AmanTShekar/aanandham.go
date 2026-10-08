@@ -600,10 +600,12 @@ export const INITIAL_ALL_CAMPS = [
     "name": "Mini Mexico — Vattavada Cabins, Wood House & Tent Camp"
   },
   {
-    "id": "cmu7f7c7q0001jf2bn12igi66",
+    "id": "the-nest-kalga",
+    "slug": "the-nest-kalga",
+    "pmsPropertyId": "cmu7f7c7q0001jf2bn12igi66",
+    "aliases": ["cmu7f7c7q0001jf2bn12igi66", "pkg-the-nest-kalga", "pkg-kalga", "kalga"],
     "title": "The Nest Kalga by Aanandham.Go",
     "shortTitle": "The Nest Kalga by Aanandham.Go",
-    "slug": null,
     "category": "Cottages & Cabins",
     "region": "Kalga",
     "location": "Kasol",
@@ -1462,18 +1464,24 @@ export function getCampById(id) {
     return all[0] || INITIAL_ALL_CAMPS[0];
   }
   const cleanTarget = String(id).toLowerCase().replace("pkg-", "").trim();
+  const matchFn = (c) => {
+    if (!c) return false;
+    const cleanId = String(c.id || "").toLowerCase().replace("pkg-", "").trim();
+    const cleanSlug = String(c.slug || "").toLowerCase().replace("pkg-", "").trim();
+    return cleanId === cleanTarget ||
+      cleanSlug === cleanTarget ||
+      c.id === id ||
+      c.slug === id ||
+      c.pmsPropertyId === id ||
+      (Array.isArray(c.aliases) && c.aliases.includes(id));
+  };
+
   const all = getAllCamps();
-  const foundActive = all.find((c) => {
-    const cleanId = String(c.id).toLowerCase().replace("pkg-", "").trim();
-    return cleanId === cleanTarget || c.id === id;
-  });
+  const foundActive = all.find(matchFn);
   if (foundActive) return foundActive;
 
   // Search initial all camps (including archived/deprecated so direct links load properly)
-  const foundAny = INITIAL_ALL_CAMPS.find((c) => {
-    const cleanId = String(c.id).toLowerCase().replace("pkg-", "").trim();
-    return cleanId === cleanTarget || c.id === id;
-  });
+  const foundAny = INITIAL_ALL_CAMPS.find(matchFn);
   return foundAny || all[0] || INITIAL_ALL_CAMPS[0];
 }
 

@@ -2455,7 +2455,7 @@ export default function HomePage() {
                     }}>
                         {/* ── CARD 1: The Nest Kalga (LIVE AVAILABLE) ── */}
                         <div
-                            onClick={() => router.push('/camps/cmu7f7c7q0001jf2bn12igi66')}
+                            onClick={() => router.push('/camps/the-nest-kalga')}
                             style={{
                                 background: 'rgba(255,255,255,0.04)',
                                 border: '1px solid rgba(213,237,85,0.25)',
@@ -2573,7 +2573,7 @@ export default function HomePage() {
                                         <button
                                             onClick={e => {
                                                 e.stopPropagation();
-                                                router.push('/camps/cmu7f7c7q0001jf2bn12igi66');
+                                                router.push('/camps/the-nest-kalga');
                                             }}
                                             style={{
                                                 padding: '9px 16px',
@@ -2596,7 +2596,7 @@ export default function HomePage() {
                                                     setSelectedPackage(kalgaCamp);
                                                     setIsBookingModalOpen(true);
                                                 } else {
-                                                    router.push('/camps/cmu7f7c7q0001jf2bn12igi66');
+                                                    router.push('/camps/the-nest-kalga');
                                                 }
                                             }}
                                             style={{

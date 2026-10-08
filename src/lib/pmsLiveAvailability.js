@@ -99,7 +99,8 @@ export async function fetchLivePropertyBookings(propertyId) {
     const res = await pool.query(
       `SELECT b.id, b."propertyId", b."roomId", b."roomType", b."arrivalDate", b."departureDate", b."totalUnits", b.status
        FROM "Booking" b
-       WHERE (b."propertyId" = $1 OR b."propertyId" = $2 OR b."propertyId" = $3)
+       LEFT JOIN "Property" p ON p.id = b."propertyId"
+       WHERE (b."propertyId" = $1 OR b."propertyId" = $2 OR b."propertyId" = $3 OR p.slug = $1 OR p.slug = $3)
          AND LOWER(TRIM(b.status)) NOT IN ('cancelled', 'canceled', 'refunded', 'failed', 'expired')`,
       [cleanId, `pkg-${cleanSlug}`, cleanSlug]
     );

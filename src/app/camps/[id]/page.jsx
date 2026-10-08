@@ -1,4 +1,5 @@
 import React from 'react';
+import { redirect } from 'next/navigation';
 import { INITIAL_ALL_CAMPS, getCampById, getAllCamps } from '../../../lib/campsData';
 import { prisma, isPrismaConfigured } from '@/lib/prisma';
 import { requestPms, pmsTenantId } from '@/lib/pmsServerBridge';
@@ -125,15 +126,27 @@ async function resolveCamp(id) {
     const cleanTarget = String(id).toLowerCase().replace('pkg-', '').trim();
     const fallbackMatch = INITIAL_ALL_CAMPS.find(c => {
         const cleanId = String(c.id).toLowerCase().replace('pkg-', '').trim();
-        return cleanId === cleanTarget || c.id === id;
+        const cleanSlug = String(c.slug || '').toLowerCase().replace('pkg-', '').trim();
+        return cleanId === cleanTarget ||
+               cleanSlug === cleanTarget ||
+               c.id === id ||
+               c.slug === id ||
+               c.pmsPropertyId === id ||
+               (Array.isArray(c.aliases) && c.aliases.includes(id));
     });
     return fallbackMatch || null;
 }
 
 export async function generateStaticParams() {
-    return INITIAL_ALL_CAMPS.map(camp => ({
-        id: camp.id
-    }));
+    const params = new Set();
+    INITIAL_ALL_CAMPS.forEach(camp => {
+        if (camp.id) params.add(camp.id);
+        if (camp.slug) params.add(camp.slug);
+        if (Array.isArray(camp.aliases)) {
+            camp.aliases.forEach(a => params.add(a));
+        }
+    });
+    return Array.from(params).map(id => ({ id }));
 }
 
 export async function generateMetadata({ params }) {
@@ -157,12 +170,12 @@ export async function generateMetadata({ params }) {
         title: cleanTitle,
         description: cleanDesc,
         alternates: {
-            canonical: `${siteUrl}/camps/${camp.id}`
+            canonical: `${siteUrl}/camps/${camp.slug || camp.id}`
         },
         openGraph: {
             title: cleanTitle,
             description: cleanDesc,
-            url: `${siteUrl}/camps/${camp.id}`,
+            url: `${siteUrl}/camps/${camp.slug || camp.id}`,
             siteName: 'Aanandham.go',
             images: [
                 {
@@ -186,6 +199,13 @@ export async function generateMetadata({ params }) {
 export default async function CampPropertyDetailPage({ params }) {
     const { id } = await params;
     const camp = await resolveCamp(id);
+
+    // If accessed via raw DB CUID or legacy alias, permanently redirect to clean slug URL
+    if (camp && camp.slug && id !== camp.slug) {
+        if (id === 'cmu7f7c7q0001jf2bn12igi66' || (Array.isArray(camp.aliases) && camp.aliases.includes(id)) || camp.pmsPropertyId === id) {
+            redirect(`/camps/${camp.slug}`);
+        }
+    }
     const allCamps = getAllCamps();
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
 
@@ -198,7 +218,7 @@ export default async function CampPropertyDetailPage({ params }) {
                 "name": camp.title,
                 "description": camp.description,
                 "image": camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : undefined,
-                "url": `${siteUrl}/camps/${camp.id}`,
+                "url": `${siteUrl}/camps/${camp.slug || camp.id}`,
                 "telephone": "+919074858014",
                 "priceRange": `₹${camp.price || 1800}`,
                 "address": {
@@ -225,7 +245,7 @@ export default async function CampPropertyDetailPage({ params }) {
                     "priceCurrency": "INR",
                     "priceValidUntil": "2027-12-31",
                     "availability": "https://schema.org/InStock",
-                    "url": `${siteUrl}/camps/${camp.id}`
+                    "url": `${siteUrl}/camps/${camp.slug || camp.id}`
                 }
             },
             {
@@ -248,7 +268,7 @@ export default async function CampPropertyDetailPage({ params }) {
                         "@type": "ListItem",
                         "position": 3,
                         "name": camp.shortTitle || camp.title,
-                        "item": `${siteUrl}/camps/${camp.id}`
+                        "item": `${siteUrl}/camps/${camp.slug || camp.id}`
                     }
                 ]
             }
