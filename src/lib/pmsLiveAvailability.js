@@ -132,7 +132,7 @@ export async function fetchLivePropertyRooms(propertyId) {
     return res.rows.map(r => ({
       id: r.id,
       name: r.name,
-      capacity: r.capacity ? `${r.capacity} Persons` : '2 Guests',
+      capacity: r.capacity ? (typeof r.capacity === 'number' ? `${r.capacity} Persons` : r.capacity) : null,
       guestCapacity: r.capacity || 2,
       totalUnits: Number(r.totalUnits) || 1,
       price: Number(r.basePrice || 0),
@@ -141,9 +141,9 @@ export async function fetchLivePropertyRooms(propertyId) {
       description: r.description || r.summary || '',
       features: Array.isArray(r.features) ? r.features : (typeof r.features === 'string' ? r.features.split(',').map(s => s.trim()).filter(Boolean) : []),
       inventoryType: r.inventoryType || 'PRIVATE_UNIT',
-      bedConfig: r.bedConfig || '1 King Bed',
-      roomSizeSqFt: r.roomSizeSqFt || 350,
-      bathroomType: r.bathroomType || 'Ensuite Private Bathroom',
+      bedConfig: r.bedConfig || null,
+      roomSizeSqFt: r.roomSizeSqFt || null,
+      bathroomType: r.bathroomType || null,
       pricingModel: r.pricingModel || (r.inventoryType === 'DORM_BED' ? 'PER_BED' : 'PER_ROOM'),
       images: Array.isArray(r.images) ? r.images : []
     }));

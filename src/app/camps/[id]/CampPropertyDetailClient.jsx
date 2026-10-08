@@ -648,11 +648,17 @@ return (
                                             Verified
                                         </span>
                                     )}
-                                    <span className="camp-hero-badge" style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
-                                        {camp.altitude || 'Western Ghats'}
-                                    </span>
+                                    {camp.altitude ? (
+                                        <span className="camp-hero-badge" style={{ background: '#E5A93B', color: '#0B150E', fontSize: '12px', fontWeight: '900', padding: '5px 14px', borderRadius: '999px', letterSpacing: '0.3px', boxShadow: '0 2px 8px rgba(229,169,59,0.3)' }}>
+                                            {camp.altitude}
+                                        </span>
+                                    ) : (
+                                        <span className="camp-hero-badge" style={{ background: 'rgba(255,255,255,0.08)', color: '#A2B6A6', fontSize: '12px', fontWeight: '700', padding: '5px 14px', borderRadius: '999px' }}>
+                                            Altitude Unavailable
+                                        </span>
+                                    )}
                                     <span className="camp-hero-badge" style={{ background: 'rgba(213, 237, 85, 0.2)', color: '#D5ED55', fontSize: '12px', fontWeight: '800', padding: '5px 14px', borderRadius: '999px', border: '1px solid rgba(213, 237, 85, 0.4)' }}>
-                                        ★ {camp.rating ? Number(camp.rating).toFixed(1) : '5.0'} {camp.reviewsCount ? `(${camp.reviewsCount} verified campers)` : '(Verified Stay)'}
+                                        ★ {camp.rating ? Number(camp.rating).toFixed(1) : 'Unrated'} {camp.reviewsCount ? `(${camp.reviewsCount} verified campers)` : '(Verified Stay)'}
                                     </span>
                                     {camp.tag && (
                                         <span className="camp-hero-badge" style={{ background: 'rgba(255,255,255,0.12)', color: '#FFFFFF', fontSize: '11.5px', fontWeight: '800', padding: '5px 12px', borderRadius: '999px', border: '1px solid rgba(255,255,255,0.18)' }}>
@@ -673,11 +679,11 @@ return (
                                 <div className="camp-hero-info" style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '14px', color: '#C5D8C8', flexWrap: 'wrap', fontWeight: '600' }}>
                                     <span style={ROW_GAP_6}>
                                         <MapPin size={16} color="#D5ED55" />
-                                        <span>{camp.location || 'Suryanelli, Munnar'}</span>
+                                        <span>{camp.location || camp.region || 'Location Unavailable'}</span>
                                     </span>
                                     <span style={ROW_GAP_6}>
                                         <Clock size={16} color="#D5ED55" />
-                                        <span>{camp.duration || `In ${camp.checkInTime || '14:00'} · Out ${camp.checkOutTime || '11:00'}`}</span>
+                                        <span>{camp.duration || (camp.checkInTime || camp.checkOutTime ? `In ${camp.checkInTime || 'N/A'} · Out ${camp.checkOutTime || 'N/A'}` : 'Schedule Unavailable')}</span>
                                     </span>
                                     {camp.difficulty && (
                                         <span style={ROW_GAP_6}>
@@ -864,15 +870,15 @@ return (
                                     About This Wilderness Basecamp
                                 </h2>
                                 <p style={{ fontSize: '15px', color: '#3A443E', lineHeight: 1.75, margin: '0 0 24px' }}>
-                                    {camp.description || `Experience an authentic mountain sanctuary getaway at ${camp.title} in ${camp.location || camp.region || 'the wilderness'}. Booking includes reserved units, verified amenities, and on-ground host support.`}
+                                    {camp.description || 'Property description unavailable (Not provided in PMS).'}
                                 </p>
 
                                 {/* Highlights Chips (Lucide Icons) */}
-                                {safeHighlights.length > 0 && (
-                                    <div>
-                                        <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px', margin: '0 0 12px' }}>
-                                            Key Highlights & Experiences
-                                        </h3>
+                                <div>
+                                    <h3 style={{ fontSize: '13px', fontWeight: '800', color: '#7D8880', textTransform: 'uppercase', letterSpacing: '0.6px', margin: '0 0 12px' }}>
+                                        Key Highlights & Experiences
+                                    </h3>
+                                    {safeHighlights.length > 0 ? (
                                         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                                             {safeHighlights.map((hl, hidx) => (
                                                 <div key={hidx} style={{ background: '#F1F3EC', padding: '8px 14px', borderRadius: '10px', fontSize: '13px', fontWeight: '700', color: '#121613', display: 'inline-flex', alignItems: 'center', gap: '7px' }}>
@@ -881,8 +887,12 @@ return (
                                                 </div>
                                             ))}
                                         </div>
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div style={{ fontSize: '13px', color: '#7D8880', fontStyle: 'italic' }}>
+                                            Highlights unavailable (Not specified in PMS)
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
                             {/* SECTION 2: LODGING ROOM TYPES & TENT SELECTION */}
@@ -1102,10 +1112,10 @@ return (
                                                                 <span>{room.bathroomType === 'ATTACHED' ? 'Attached Bath' : (room.bathroomType === 'COMMON' ? 'Shared Bath' : room.bathroomType)}</span>
                                                             </span>
                                                         )}
-                                                        {(room.roomSizeSqFt || room.roomSize || (!roomIsDorm && invMeta?.defaultSizeSqFt)) && (
+                                                        {(room.roomSizeSqFt || room.roomSize) && (
                                                             <span style={{ fontSize: '11px', fontWeight: '600', color: '#4B5563', background: '#F1F3EC', padding: '2px 7px', borderRadius: '6px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                                                                 <Maximize2 size={11} color="#4B5563" />
-                                                                <span>{room.roomSizeSqFt ? `${room.roomSizeSqFt} sq ft` : (room.roomSize || `${invMeta.defaultSizeSqFt} sq ft`)}</span>
+                                                                <span>{room.roomSizeSqFt ? `${room.roomSizeSqFt} sq ft` : `${room.roomSize} sq ft`}</span>
                                                             </span>
                                                         )}
                                                     </div>
@@ -1194,8 +1204,7 @@ return (
                                 </div>
                             </div>
 
-                            {/* SECTION 3: INCLUDED AMENITIES & FACILITIES (SWIPEABLE ON MOBILE, CLEAN LOGO-FREE) */}
-                            {normalizedAmenities.length > 0 && (
+                            {/* SECTION 3: INCLUDED AMENITIES & FACILITIES */}
                             <div className="camp-section-card">
                                 <div className="star-badge" style={{ marginBottom: '8px' }}>
                                     <span className="star-icon">★</span> BASECAMP PERKS
@@ -1203,152 +1212,160 @@ return (
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', margin: '0 0 6px', color: '#121613' }}>
                                     Included Amenities & Basecamp Facilities
                                 </h2>
-                                <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 18px', lineHeight: 1.5 }}>
-                                    Every Aanandham basecamp is verified for wilderness safety, hygienic washrooms, and curated culinary experiences.
-                                </p>
-                                
-                                {/* Responsive Basecamp Inclusions: 3-Col Grid on Desktop / Smooth Swipeable Rail on Mobile */}
-                                <div className="basecamp-perks-container">
-                                    {normalizedAmenities.map((perk, aIdx) => (
-                                        <div
-                                            key={aIdx}
-                                            className="basecamp-perk-card"
-                                        >
-                                            <div className="basecamp-perk-header">
-                                                <span className="basecamp-perk-num">
-                                                    {perk.num || String(aIdx + 1).padStart(2, '0')}
-                                                </span>
-                                                <span className="basecamp-perk-tag">
-                                                    {perk.tag || 'Basecamp Perk'}
-                                                </span>
-                                            </div>
-                                            <h3 className="basecamp-perk-title">
-                                                {perk.title || perk.name}
-                                            </h3>
-                                            <p className="basecamp-perk-desc">
-                                                {perk.desc}
-                                            </p>
+                                {normalizedAmenities.length > 0 ? (
+                                    <>
+                                        <p style={{ fontSize: '13.5px', color: '#59655D', margin: '0 0 18px', lineHeight: 1.5 }}>
+                                            Every Aanandham stay amenities verified directly via property management system.
+                                        </p>
+                                        
+                                        <div className="basecamp-perks-container">
+                                            {normalizedAmenities.map((perk, aIdx) => (
+                                                <div
+                                                    key={aIdx}
+                                                    className="basecamp-perk-card"
+                                                >
+                                                    <div className="basecamp-perk-header">
+                                                        <span className="basecamp-perk-num">
+                                                            {perk.num || String(aIdx + 1).padStart(2, '0')}
+                                                        </span>
+                                                        <span className="basecamp-perk-tag">
+                                                            {perk.tag || 'Basecamp Perk'}
+                                                        </span>
+                                                    </div>
+                                                    <h3 className="basecamp-perk-title">
+                                                        {perk.title || perk.name}
+                                                    </h3>
+                                                    <p className="basecamp-perk-desc">
+                                                        {perk.desc}
+                                                    </p>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
 
-                                {/* Mobile Horizontal Swipe Hint */}
-                                <div className="basecamp-perks-swipe-hint">
-                                    <span>← Swipe to explore amenities →</span>
-                                </div>
+                                        <div className="basecamp-perks-swipe-hint">
+                                            <span>← Swipe to explore amenities →</span>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div style={{ padding: '20px', background: '#F8F9F5', borderRadius: '14px', fontSize: '13px', color: '#7D8880', fontStyle: 'italic', border: '1px dashed rgba(18,22,19,0.1)' }}>
+                                        Amenities details unavailable (Not provided by PMS)
+                                    </div>
+                                )}
                             </div>
-                            )}
 
                             {/* SECTION 4: 2-DAY DETAILED ITINERARY */}
-                            {normalizedItinerary.length > 0 && (
                             <div className="camp-section-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px', marginBottom: '8px' }}>
                                     <div className="star-badge">
                                         <span className="star-icon">★</span> EXPEDITION TIMELINE
                                     </div>
-                                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 10px', borderRadius: '999px' }}>
-                                        2 Days / 1 Night Rhythm
-                                    </span>
+                                    {normalizedItinerary.length > 0 && (
+                                        <span style={{ fontSize: '11px', fontWeight: '800', color: '#166534', background: '#DCFCE7', padding: '3px 10px', borderRadius: '999px' }}>
+                                            {normalizedItinerary.length} Day Schedule
+                                        </span>
+                                    )}
                                 </div>
                                 <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(20px, 2.8vw, 24px)', fontWeight: '800', margin: '0 0 14px', color: '#121613' }}>
-                                    Detailed 2-Day Schedule
+                                    Detailed Expedition Schedule
                                 </h2>
 
-                                {/* Mobile / Desktop Day Selector Tabs */}
-                                <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', background: '#F1F3EC', padding: '4px', borderRadius: '12px' }}>
-                                    {normalizedItinerary.map((dayPlan, didx) => {
-                                        const isDayActive = activeTimelineDay === didx;
-                                        return (
-                                            <button
-                                                key={didx}
-                                                type="button"
-                                                onClick={() => setActiveTimelineDay(didx)}
-                                                style={{
-                                                    flex: 1,
-                                                    padding: '9px 12px',
-                                                    borderRadius: '9px',
-                                                    border: 'none',
-                                                    background: isDayActive ? '#121613' : 'transparent',
-                                                    color: isDayActive ? '#D5ED55' : '#59655D',
-                                                    fontSize: '12.5px',
-                                                    fontWeight: '800',
-                                                    cursor: 'pointer',
-                                                    transition: 'all 0.2s ease',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: '6px'
-                                                }}
-                                            >
-                                                <span>{dayPlan.day}</span>
-                                                <span style={{ opacity: isDayActive ? 0.8 : 0.6, fontSize: '11px', fontWeight: '600' }}>
-                                                    {didx === 0 ? '· Afternoon & BBQ' : '· Dawn & Sunrise'}
-                                                </span>
-                                            </button>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Active Day Content - Compact Vertical Timeline */}
-                                {(() => {
-                                    const currentDay = normalizedItinerary[activeTimelineDay] || normalizedItinerary[0];
-                                    if (!currentDay) return null;
-                                    return (
-                                        <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '16px 14px', border: '1px solid rgba(18,22,19,0.05)' }}>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                                                <span style={{ background: '#121613', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '3px 9px', borderRadius: '6px' }}>
-                                                    {currentDay.day}
-                                                </span>
-                                                <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15.5px', fontWeight: '800', margin: 0, color: '#121613' }}>
-                                                    {currentDay.title}
-                                                </h3>
-                                            </div>
-
-                                            {/* Milestone Items List */}
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                                {currentDay.items.map((item, itemIdx) => {
-                                                    const dashIndex = item.indexOf('–');
-                                                    const hasDash = dashIndex > -1;
-                                                    const timePart = hasDash ? item.slice(0, dashIndex).trim() : null;
-                                                    const descPart = hasDash ? item.slice(dashIndex + 1).trim() : item;
-
-                                                    return (
-                                                        <div key={itemIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                                                            {timePart ? (
-                                                                <span style={{
-                                                                    flexShrink: 0,
-                                                                    minWidth: '68px',
-                                                                    fontSize: '10.5px',
-                                                                    fontWeight: '800',
-                                                                    color: '#121613',
-                                                                    background: '#FFFFFF',
-                                                                    border: '1px solid rgba(18, 22, 19, 0.1)',
-                                                                    padding: '3px 6px',
-                                                                    borderRadius: '6px',
-                                                                    textAlign: 'center',
-                                                                    marginTop: '1px'
-                                                                }}>
-                                                                    {timePart}
-                                                                </span>
-                                                            ) : (
-                                                                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#166534', flexShrink: 0, marginTop: '7px' }} />
-                                                            )}
-                                                            <div style={{ fontSize: '13px', color: '#2D3748', lineHeight: 1.45, fontWeight: '600' }}>
-                                                                {descPart}
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
+                                {normalizedItinerary.length > 0 ? (
+                                    <>
+                                        {/* Mobile / Desktop Day Selector Tabs */}
+                                        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', background: '#F1F3EC', padding: '4px', borderRadius: '12px' }}>
+                                            {normalizedItinerary.map((dayPlan, didx) => {
+                                                const isDayActive = activeTimelineDay === didx;
+                                                return (
+                                                    <button
+                                                        key={didx}
+                                                        type="button"
+                                                        onClick={() => setActiveTimelineDay(didx)}
+                                                        style={{
+                                                            flex: 1,
+                                                            padding: '9px 12px',
+                                                            borderRadius: '9px',
+                                                            border: 'none',
+                                                            background: isDayActive ? '#121613' : 'transparent',
+                                                            color: isDayActive ? '#D5ED55' : '#59655D',
+                                                            fontSize: '12.5px',
+                                                            fontWeight: '800',
+                                                            cursor: 'pointer',
+                                                            transition: 'all 0.2s ease',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'center',
+                                                            gap: '6px'
+                                                        }}
+                                                    >
+                                                        <span>{dayPlan.day}</span>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
-                                    );
-                                })()}
+
+                                        {/* Active Day Content - Compact Vertical Timeline */}
+                                        {(() => {
+                                            const currentDay = normalizedItinerary[activeTimelineDay] || normalizedItinerary[0];
+                                            if (!currentDay) return null;
+                                            return (
+                                                <div style={{ background: '#F8F9F5', borderRadius: '16px', padding: '16px 14px', border: '1px solid rgba(18,22,19,0.05)' }}>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                                                        <span style={{ background: '#121613', color: '#D5ED55', fontSize: '11px', fontWeight: '800', padding: '3px 9px', borderRadius: '6px' }}>
+                                                            {currentDay.day}
+                                                        </span>
+                                                        <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '15.5px', fontWeight: '800', margin: 0, color: '#121613' }}>
+                                                            {currentDay.title}
+                                                        </h3>
+                                                    </div>
+
+                                                    {/* Milestone Items List */}
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                                        {(currentDay.items || []).map((item, itemIdx) => {
+                                                            const dashIndex = item.indexOf('–');
+                                                            const hasDash = dashIndex > -1;
+                                                            const timePart = hasDash ? item.slice(0, dashIndex).trim() : null;
+                                                            const descPart = hasDash ? item.slice(dashIndex + 1).trim() : item;
+
+                                                            return (
+                                                                <div key={itemIdx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                                                                    {timePart ? (
+                                                                        <span style={{
+                                                                            flexShrink: 0,
+                                                                            minWidth: '68px',
+                                                                            fontSize: '10.5px',
+                                                                            fontWeight: '800',
+                                                                            color: '#121613',
+                                                                            background: '#FFFFFF',
+                                                                            border: '1px solid rgba(18, 22, 19, 0.1)',
+                                                                            padding: '3px 6px',
+                                                                            borderRadius: '6px',
+                                                                            textAlign: 'center',
+                                                                            marginTop: '1px'
+                                                                        }}>
+                                                                            {timePart}
+                                                                        </span>
+                                                                    ) : (
+                                                                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#166534', flexShrink: 0, marginTop: '7px' }} />
+                                                                    )}
+                                                                    <div style={{ fontSize: '13px', color: '#2D3748', lineHeight: 1.45, fontWeight: '600' }}>
+                                                                        {descPart}
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })()}
+                                    </>
+                                ) : (
+                                    <div style={{ padding: '20px', background: '#F8F9F5', borderRadius: '14px', fontSize: '13px', color: '#7D8880', fontStyle: 'italic', border: '1px dashed rgba(18,22,19,0.1)' }}>
+                                        Detailed schedule unavailable (Not provided by PMS)
+                                    </div>
+                                )}
                             </div>
 
-                            )}
-
                             {/* SECTION 5: INCLUSIONS & EXCLUSIONS */}
-                            {(safeInclusions.length > 0 || safeExclusions.length > 0) && (
                             <div className="camp-section-card">
                                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: '24px' }}>
                                     <div>
@@ -1357,12 +1374,18 @@ return (
                                             What's Included
                                         </h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                                            {safeInclusions.map((inc, iidx) => (
-                                                <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#3A443E', lineHeight: 1.45 }}>
-                                                    <span style={{ color: '#166534', fontWeight: '800', marginTop: '1px' }}>✓</span>
-                                                    <span>{inc}</span>
+                                            {safeInclusions.length > 0 ? (
+                                                safeInclusions.map((inc, iidx) => (
+                                                    <div key={iidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#3A443E', lineHeight: 1.45 }}>
+                                                        <span style={{ color: '#166534', fontWeight: '800', marginTop: '1px' }}>✓</span>
+                                                        <span>{inc}</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div style={{ fontSize: '13px', color: '#7D8880', fontStyle: 'italic' }}>
+                                                    Unavailable (Not specified by PMS)
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
                                     </div>
 
@@ -1372,18 +1395,22 @@ return (
                                             What's Not Included
                                         </h3>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '9px' }}>
-                                            {safeExclusions.map((exc, eidx) => (
-                                                <div key={eidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#59655D', lineHeight: 1.45 }}>
-                                                    <span style={{ color: '#DC2626', fontWeight: '800', marginTop: '1px' }}>✕</span>
-                                                    <span>{exc}</span>
+                                            {safeExclusions.length > 0 ? (
+                                                safeExclusions.map((exc, eidx) => (
+                                                    <div key={eidx} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', color: '#59655D', lineHeight: 1.45 }}>
+                                                        <span style={{ color: '#DC2626', fontWeight: '800', marginTop: '1px' }}>✕</span>
+                                                        <span>{exc}</span>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div style={{ fontSize: '13px', color: '#7D8880', fontStyle: 'italic' }}>
+                                                    Unavailable (Not specified by PMS)
                                                 </div>
-                                            ))}
+                                            )}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            )}
 
                             {/* SECTION: PROPERTY LOCATION & INTERACTIVE MAP */}
                             <div className="camp-section-card" id="location-map">
@@ -1661,7 +1688,9 @@ return (
                                             onChange={(val) => { setSelectedRoomId(val); setCustomUnits(null); }}
                                             options={availableRooms.map(r => {
                                                 const dorm = isDormRoom(r);
-                                                const capLabel = dorm ? (r.capacity && r.capacity.toLowerCase().includes('bed') ? r.capacity : '10 Beds') : (r.capacity || '2 Guests');
+                                                const capLabel = dorm
+                                                    ? (r.capacity ? (r.capacity.toLowerCase().includes('bed') ? r.capacity : `${r.capacity} Beds`) : 'Dorm')
+                                                    : (r.capacity || 'Unit');
                                                 const live = liveInventory?.[r.id];
                                                 const availTag = live ? (live.availableUnits === 0 ? ' · [SOLD OUT]' : ` · ${live.availableUnits} ${dorm ? 'Beds' : 'Units'} Left`) : '';
                                                 return {
@@ -1917,11 +1946,11 @@ return (
                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Check-in:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkInTime ? (camp.checkInTime.includes(':') ? `${camp.checkInTime} hrs` : camp.checkInTime) : '14:00 hrs'}</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkInTime ? (camp.checkInTime.includes(':') ? `${camp.checkInTime} hrs` : camp.checkInTime) : 'Unavailable'}</span>
                                     </div>
                                     <div style={ROW_SPACE_12}>
                                         <span style={{ color: '#59655D' }}>Check-out:</span>
-                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkOutTime ? (camp.checkOutTime.includes(':') ? `${camp.checkOutTime} hrs` : camp.checkOutTime) : '11:00 hrs'}</span>
+                                        <span style={{ fontWeight: '800', color: '#121613' }}>{camp?.checkOutTime ? (camp.checkOutTime.includes(':') ? `${camp.checkOutTime} hrs` : camp.checkOutTime) : 'Unavailable'}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1985,7 +2014,7 @@ return (
                                         const estPrice = (currentRoom?.price || camp.price || 2499) * guestsCount;
                                         const squadInquiryMsg = `*Aanandham Wilderness — Campsite Inquiry*
 
-- *Campsite:* ${camp.title} (${camp.location || 'Munnar, Kerala'})
+- *Campsite:* ${camp.title} (${camp.location || camp.region || 'Unavailable'})
 - *Lodging:* ${currentRoom?.name || 'Standard Tent'}
 - *Travel Dates:* ${selectedDate}
 - *Campers:* ${guestsCount} guest(s)

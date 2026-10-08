@@ -46,8 +46,8 @@ async function resolveCamp(id) {
                 inclusions: ensureArray(liveDetails.inclusions, []),
                 exclusions: ensureArray(liveDetails.exclusions, []),
                 amenities: liveDetails.amenities || '',
-                checkInTime: liveDetails.checkInTime || '14:00',
-                checkOutTime: liveDetails.checkOutTime || '11:00',
+                checkInTime: liveDetails.checkInTime || '',
+                checkOutTime: liveDetails.checkOutTime || '',
                 cancellationPolicy: liveDetails.cancellationPolicy || null,
                 latitude: (liveDetails.latitude !== null && !isNaN(Number(liveDetails.latitude))) ? Number(liveDetails.latitude) : null,
                 longitude: (liveDetails.longitude !== null && !isNaN(Number(liveDetails.longitude))) ? Number(liveDetails.longitude) : null,
@@ -152,8 +152,8 @@ async function resolveCamp(id) {
                     inclusions: ensureArray(dbProp.inclusions, []),
                     exclusions: ensureArray(dbProp.exclusions, []),
                     amenities: dbProp.amenities || '',
-                    checkInTime: dbProp.checkInTime || '14:00',
-                    checkOutTime: dbProp.checkOutTime || '11:00',
+                    checkInTime: dbProp.checkInTime || '',
+                    checkOutTime: dbProp.checkOutTime || '',
                     cancellationPolicy: dbProp.cancellationPolicy || null,
                     latitude: (dbProp.latitude !== null && !isNaN(Number(dbProp.latitude))) ? Number(dbProp.latitude) : null,
                     longitude: (dbProp.longitude !== null && !isNaN(Number(dbProp.longitude))) ? Number(dbProp.longitude) : null,
@@ -226,7 +226,7 @@ export async function generateMetadata({ params }) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.aanandham.in';
     const ogImage = camp.image ? (camp.image.startsWith('http') ? camp.image : `${siteUrl}${camp.image}`) : `${siteUrl}/logo.png`;
     const cleanTitle = `${camp.shortTitle || camp.title} (${camp.altitude || 'Kerala'})`;
-    const cleanDesc = `Book ${camp.shortTitle || camp.title} at ${camp.altitude || 'Western Ghats'} in ${camp.location}. 4x4 jeep safari, campfire BBQ & tent stays with Aanandham.go.`;
+    const cleanDesc = camp.description || `Book ${camp.shortTitle || camp.title}${camp.altitude ? ` at ${camp.altitude}` : ''}${camp.location ? ` in ${camp.location}` : ''} with Aanandham.go.`;
 
     return {
         title: cleanTitle,
