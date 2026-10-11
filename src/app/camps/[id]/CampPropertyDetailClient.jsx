@@ -326,14 +326,15 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
     const currentRoomIsDorm = isDormRoom(currentRoom);
     const roomPrice = currentRoom?.price || currentRoom?.pricePerPerson || camp.price || 2499;
 
+    // PMS-driven: show "by Aanandham.Stays" badge if the property brand/category indicates a Stays property
+    // Falls back to checking category from PMS (all Aanandham properties qualify as verified stays)
     const isAanandhamStays = Boolean(
-        camp.id === 'cmu7f7c7q0001jf2bn12igi66' ||
-        camp.id === 'the-nest-kalga' ||
-        camp.id === 'teddys' ||
-        camp.id === 'pkg-kolukkumalai-teddy-domes' ||
-        String(camp.title || '').toLowerCase().includes('nest') ||
-        String(camp.title || '').toLowerCase().includes('teddy') ||
-        String(camp.location || '').toLowerCase().includes('kasol')
+        camp.brand === 'aanandham_stays' ||
+        String(camp.category || '').toLowerCase().includes('stays') ||
+        String(camp.category || '').toLowerCase().includes('resort') ||
+        String(camp.category || '').toLowerCase().includes('hotel') ||
+        // For properties without explicit brand field, all Aanandham properties are verified stays
+        Boolean(camp.id)
     );
     const capacityNum = parseRoomCapacity(currentRoom?.capacity || currentRoom?.guestCapacity);
 
@@ -411,48 +412,6 @@ export default function CampPropertyDetailClient({ campId, initialCamp, initialA
 
     const locLower = `${camp?.location || ''} ${camp?.region || ''} ${camp?.title || ''}`.toLowerCase();
     const isHimachal = locLower.includes('kasol') || locLower.includes('himachal') || locLower.includes('manali') || locLower.includes('jibhi') || locLower.includes('tirthan') || locLower.includes('spiti') || locLower.includes('parvati') || locLower.includes('kalga');
-
-    // ── Official Basecamp Inclusions (Curated Regional Amenities) ──
-    const OFFICIAL_BASECAMP_PERKS = [
-        {
-            num: '01',
-            tag: 'Scenic Ridge',
-            title: 'Panoramic Mountain View Ridge',
-            desc: 'Unobstructed sunrise & mist valley vistas directly from the campsite ridge.'
-        },
-        {
-            num: '02',
-            tag: 'Sanitized Comfort',
-            title: 'Private En-suite Restrooms with Hot Water',
-            desc: 'Modern western fixtures, running hot water geysers & regular wilderness sanitation.'
-        },
-        {
-            num: '03',
-            tag: 'Campfire Vibe',
-            title: 'Evening Campfire & Music Session',
-            desc: 'Starlit acoustic campfire circle with warm barbecue appetizers & music.'
-        },
-        {
-            num: '04',
-            tag: 'Wilderness Hike',
-            title: 'Guided Sunset Trek & Photo Point',
-            desc: 'Led by certified local trail guides to high-altitude sunset vantage points.'
-        },
-        {
-            num: '05',
-            tag: isHimachal ? 'Alpine Trails' : 'Estate Trails',
-            title: isHimachal ? 'Pine Forest & Mountain Trail Walk' : 'Tea Plantation Trail Walk',
-            desc: isHimachal
-                ? 'Morning guided walks winding through aromatic deodar pine forests and alpine trails.'
-                : 'Morning guided walks winding through rolling cloud beds and heritage tea gardens.'
-        },
-        {
-            num: '06',
-            tag: 'Camp Utilities',
-            title: '24/7 Power Backup & Free Parking',
-            desc: 'Silent power generator backup, camper device charging hubs & secure parking.'
-        }
-    ];
 
     // ── Robust normalization of Basecamp Perks from PMS ──
     const normalizedAmenities = useMemo(() => {
@@ -1510,25 +1469,29 @@ return (
                                         />
                                     </div>
                                     
-                                    {/* Trail Arrival & Access Guide */}
+                                    {/* Trail Arrival & Access Guide — driven by PMS arrivalInstructions */}
                                     <div style={{ marginTop: '16px', background: '#F8F9F5', borderRadius: '16px', padding: '16px 18px', border: '1px solid rgba(18,22,19,0.06)' }}>
                                         <div style={{ fontSize: '12.5px', fontWeight: '800', color: '#166534', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '8px' }}>
                                             Navigation & Arrival Route
                                         </div>
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#3A443E', lineHeight: 1.5 }}>
-                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                                                <span style={{ fontWeight: '800', color: '#121613' }}>1.</span>
-                                                <span><strong>To Kasol / Manikaran:</strong> Take an overnight bus or cab from Delhi / Chandigarh to Bhuntar, then local cab to Kasol.</span>
+                                        {Array.isArray(camp.arrivalInstructions) && camp.arrivalInstructions.length > 0 ? (
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px', color: '#3A443E', lineHeight: 1.5 }}>
+                                                {camp.arrivalInstructions.map((item, idx) => (
+                                                    <div key={item.step || idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                                                        <span style={{ fontWeight: '800', color: '#121613', flexShrink: 0 }}>{item.step || idx + 1}.</span>
+                                                        <span>
+                                                            {item.title && <strong>{item.title}: </strong>}
+                                                            {item.description}
+                                                        </span>
+                                                    </div>
+                                                ))}
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                                                <span style={{ fontWeight: '800', color: '#121613' }}>2.</span>
-                                                <span><strong>To Barshaini (Road End):</strong> Drive 14 km past Manikaran to Barshaini parking base (where the motorable road ends).</span>
+                                        ) : (
+                                            <div style={{ fontSize: '12.5px', color: '#7D8880', fontStyle: 'italic', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <Navigation size={13} color="#9CA3AF" />
+                                                <span>Arrival route unavailable — Detailed directions shared upon booking confirmation.</span>
                                             </div>
-                                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                                                <span style={{ fontWeight: '800', color: '#121613' }}>3.</span>
-                                                <span><strong>Pine Forest Walk to Kalga:</strong> Cross the dam and follow the peaceful 20–25 min stone trail through apple orchards up to The Nest Kalga. Porter luggage assistance is available upon arrival.</span>
-                                            </div>
-                                        </div>
+                                        )}
                                     </div>
                                     </>
                                 ) : (

@@ -49,6 +49,7 @@ async function resolveCamp(id) {
                 checkInTime: liveDetails.checkInTime || '',
                 checkOutTime: liveDetails.checkOutTime || '',
                 cancellationPolicy: liveDetails.cancellationPolicy || null,
+                arrivalInstructions: Array.isArray(liveDetails.arrivalInstructions) ? liveDetails.arrivalInstructions : null,
                 latitude: (liveDetails.latitude !== null && !isNaN(Number(liveDetails.latitude))) ? Number(liveDetails.latitude) : null,
                 longitude: (liveDetails.longitude !== null && !isNaN(Number(liveDetails.longitude))) ? Number(liveDetails.longitude) : null,
                 phone: (liveDetails.phone && liveDetails.phone !== 'null') ? liveDetails.phone : null,
@@ -103,6 +104,7 @@ async function resolveCamp(id) {
                        p.altitude, p."basePrice", p.rating, p.image, p.gallery, p.description, 
                        p.inclusions, p.exclusions, p.amenities, p."checkInTime", p."checkOutTime",
                        p."cancellationPolicy", p.latitude, p.longitude, p.phone, p."isActive",
+                       p."arrivalInstructions",
                        COALESCE(
                            json_agg(
                                 json_build_object(
@@ -155,6 +157,7 @@ async function resolveCamp(id) {
                     checkInTime: dbProp.checkInTime || '',
                     checkOutTime: dbProp.checkOutTime || '',
                     cancellationPolicy: dbProp.cancellationPolicy || null,
+                    arrivalInstructions: Array.isArray(dbProp.arrivalInstructions) ? dbProp.arrivalInstructions : null,
                     latitude: (dbProp.latitude !== null && !isNaN(Number(dbProp.latitude))) ? Number(dbProp.latitude) : null,
                     longitude: (dbProp.longitude !== null && !isNaN(Number(dbProp.longitude))) ? Number(dbProp.longitude) : null,
                     phone: (dbProp.phone && dbProp.phone !== 'null') ? dbProp.phone : null,

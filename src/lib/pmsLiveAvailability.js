@@ -165,7 +165,7 @@ export async function fetchLivePropertyDetails(propertyId) {
       `SELECT id, title, slug, category, region, location, altitude, "basePrice", rating,
               image, gallery, description, inclusions, exclusions, amenities,
               "checkInTime", "checkOutTime", "cancellationPolicy", "isActive",
-              latitude, longitude, phone
+              latitude, longitude, phone, "arrivalInstructions"
        FROM "Property"
        WHERE (id = $1 OR id = $2 OR id = $3 OR slug = $1 OR slug = $3)
        LIMIT 1`,
